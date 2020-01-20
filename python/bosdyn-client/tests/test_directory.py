@@ -1,0 +1,198 @@
+"""Unit tests for the directory module."""
+import pytest
+
+import bosdyn.api.directory_pb2 as directory_proto
+import bosdyn.api.directory_service_pb2 as directory_service_proto
+import bosdyn.api.directory_service_pb2_grpc as directory_service
+import bosdyn.api.header_pb2 as HeaderProto
+import bosdyn.client.common
+import bosdyn.client.directory
+import bosdyn.client.processors
+
+from . import helpers
+from bosdyn.client import InternalServerError, UnsetStatusError
+
+
+class MockDirectoryServicer(directory_service.DirectoryServiceServicer):
+    """MockDirectoryService implements the DirectoryService in a simple way.
+
+    MockDirectoryService is only intended to exercise the control paths of the
+    directory_client. It does not act like the actual implementation of the
+    DirectoryService.
+    """
+
+    def __init__(self):
+        """Create mock that is a pretend directory."""
+        super(MockDirectoryServicer, self).__init__()
+        self.service_entries = []
+        self.error_code = HeaderProto.CommonError.CODE_OK
+        self.error_message = None
+        self.use_unspecified_status = False
+
+    def ListServiceEntries(self, request, context):
+        """Implement the ListServiceEntries function of the service."""
+        response = directory_service_proto.ListServiceEntriesResponse()
+        helpers.add_common_header(
+            response, request, self.error_code, self.error_message)
+        if self.error_code != HeaderProto.CommonError.CODE_OK:
+            return response
+        for service_entry in self.service_entries:
+            x = response.service_entries.add()
+            x.CopyFrom(service_entry)
+        return response
+
+    def GetServiceEntry(self, request, context):
+        """Implement the GetServiceEntry function of the service."""
+        response = directory_service_proto.GetServiceEntryResponse()
+        helpers.add_common_header(
+            response, request, self.error_code, self.error_message)
+        if self.error_code != HeaderProto.CommonError.CODE_OK:
+            return response
+        matching_entry = None
+        for service_entry in self.service_entries:
+            if service_entry.name == request.service_name:
+                matching_entry = service_entry
+                break
+        if matching_entry:
+            response.status = directory_service_proto.GetServiceEntryResponse.STATUS_OK
+            response.service_entry.CopyFrom(matching_entry)
+        else:
+            response.status = directory_service_proto.GetServiceEntryResponse.STATUS_NONEXISTENT_SERVICE
+        if self.use_unspecified_status:
+            response.status = directory_service_proto.GetServiceEntryResponse.STATUS_UNKNOWN
+        return response
+
+
+def _setup():
+    client = bosdyn.client.directory.DirectoryClient()
+    client.request_processors.append(
+        bosdyn.client.processors.AddRequestHeader(lambda: 'test'))
+    service = MockDirectoryServicer()
+    helpers.setup_client_and_service(
+        client, service, directory_service.add_DirectoryServiceServicer_to_server)
+    return client, service
+
+
+_SERVICE_ENTRIES = [
+    directory_proto.ServiceEntry(name='foo', type='bosdyn.api.FooService',
+                                 authority='foo.spot.robot', user_token_required=True),
+    directory_proto.ServiceEntry(name='bar', type='bosdyn.api.BarService',
+                                 authority='bar.spot.robot', application_token_required=True),
+]
+
+
+def test_list_empty():
+    client, service = _setup()
+    directory_list = client.list()
+    assert 0 == len(directory_list)
+
+
+def _has_service_name(name, directory_list):
+    return name in [s.name for s in directory_list]
+
+
+def test_list_single_entry():
+    client, service = _setup()
+    service.service_entries = _SERVICE_ENTRIES[:1]
+    directory_list = client.list()
+    assert 1 == len(directory_list)
+    assert _has_service_name('foo', directory_list)
+
+
+def test_list_multiple_entries():
+    client, service = _setup()
+    service.service_entries = _SERVICE_ENTRIES
+    directory_list = client.list()
+    assert 2 == len(directory_list)
+    assert _has_service_name('foo', directory_list)
+    assert _has_service_name('bar', directory_list)
+
+
+def test_list_internal_error():
+    client, service = _setup()
+    service.error_code = HeaderProto.CommonError.CODE_INTERNAL_SERVER_ERROR
+    service.error_message = 'Something is wrong'
+    with pytest.raises(InternalServerError):
+        directory_list = client.list()
+
+
+def test_list_empty_async():
+    client, service = _setup()
+    fut = client.list_async()
+    directory_list = fut.result()
+    assert 0 == len(directory_list)
+
+
+def test_list_single_entry_async():
+    client, service = _setup()
+    service.service_entries = _SERVICE_ENTRIES[:1]
+    fut = client.list_async()
+    directory_list = fut.result()
+    assert 1 == len(directory_list)
+    assert _has_service_name('foo', directory_list)
+
+
+def test_list_multiple_entries_async():
+    client, service = _setup()
+    service.service_entries = _SERVICE_ENTRIES
+    fut = client.list_async()
+    directory_list = fut.result()
+    assert 2 == len(directory_list)
+    assert _has_service_name('foo', directory_list)
+    assert _has_service_name('bar', directory_list)
+
+
+def test_list_internal_error_async():
+    client, service = _setup()
+    service.error_code = HeaderProto.CommonError.CODE_INTERNAL_SERVER_ERROR
+    service.error_message = 'Something is wrong'
+    fut = client.list_async()
+    with pytest.raises(InternalServerError):
+        directory_list = fut.result()
+
+
+def test_get_entry_match():
+    client, service = _setup()
+    service.service_entries = _SERVICE_ENTRIES
+    entry = client.get_entry('foo')
+    assert 'foo' == entry.name
+
+
+def test_get_entry_miss():
+    client, service = _setup()
+    service.service_entries = _SERVICE_ENTRIES
+    with pytest.raises(bosdyn.client.directory.NonexistentServiceError):
+        entry = client.get_entry('not-a-match')
+
+
+def test_get_entry_unspecified():
+    client, service = _setup()
+    service.service_entries = _SERVICE_ENTRIES
+    service.use_unspecified_status = True
+    with pytest.raises(UnsetStatusError):
+        entry = client.get_entry('foo')
+
+
+def test_get_entry_match_async():
+    client, service = _setup()
+    service.service_entries = _SERVICE_ENTRIES
+    fut = client.get_entry_async('foo')
+    entry = fut.result()
+    assert 'foo' == entry.name
+
+
+def test_get_entry_miss_async():
+    client, service = _setup()
+    service.service_entries = _SERVICE_ENTRIES
+    fut = client.get_entry_async('not-a-match')
+    with pytest.raises(bosdyn.client.directory.NonexistentServiceError):
+        entry = fut.result()
+
+
+def test_get_entry_unspecified_async():
+    client, service = _setup()
+    service.service_entries = _SERVICE_ENTRIES
+    service.use_unspecified_status = True
+    fut = client.get_entry_async('foo')
+    with pytest.raises(UnsetStatusError):
+        entry = fut.result()

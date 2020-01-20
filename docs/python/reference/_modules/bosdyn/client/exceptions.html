@@ -1,0 +1,276 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bosdyn.client.exceptions &mdash; Spot 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Spot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Services:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../client_index.html">Client API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core_index.html">Core API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bosdyn.client.exceptions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bosdyn.client.exceptions</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="Error"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.Error">[docs]</a><span></span><span class="k">class</span> <span class="nc">Error</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base exception that all public api exceptions are derived from.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="ResponseError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.ResponseError">[docs]</a><span class="k">class</span> <span class="nc">ResponseError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Exception triggered by a server response whose rpc succeeded.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="n">response</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span> <span class="ow">or</span> <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">message</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">full_classname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">full_name</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">full_classname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_message</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InvalidRequestError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.InvalidRequestError">[docs]</a><span class="k">class</span> <span class="nc">InvalidRequestError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The provided request arguments are ill-formed or invalid.</span>
+
+<span class="sd">       This is programmer error, hence it should be fixed and not ignored.</span>
+<span class="sd">       This error does not depend on the state of the system.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="LeaseUseError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.LeaseUseError">[docs]</a><span class="k">class</span> <span class="nc">LeaseUseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Request was rejected due to using an invalid lease.</span>
+
+<span class="sd">       This is thrown by services outside of LeaseService.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="ServerError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.ServerError">[docs]</a><span class="k">class</span> <span class="nc">ServerError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Service encountered an unrecoverable error.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="InternalServerError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.InternalServerError">[docs]</a><span class="k">class</span> <span class="nc">InternalServerError</span><span class="p">(</span><span class="n">ServerError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Service experienced an unexpected error state.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="UnsetStatusError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.UnsetStatusError">[docs]</a><span class="k">class</span> <span class="nc">UnsetStatusError</span><span class="p">(</span><span class="n">ServerError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Response&#39;s status field (in either message or common header) was UNKNOWN value.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="RpcError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.RpcError">[docs]</a><span class="k">class</span> <span class="nc">RpcError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The system does not know how to handle this error.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original_error</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RpcError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">original_error</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">original_error</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">full_classname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">full_classname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_message</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClientCancelledOperationError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.ClientCancelledOperationError">[docs]</a><span class="k">class</span> <span class="nc">ClientCancelledOperationError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The user cancelled the rpc request.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="InvalidAppTokenError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.InvalidAppTokenError">[docs]</a><span class="k">class</span> <span class="nc">InvalidAppTokenError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The provided app token is invalid.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="InvalidClientCertificateError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.InvalidClientCertificateError">[docs]</a><span class="k">class</span> <span class="nc">InvalidClientCertificateError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The provided client certificate is invalid.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="NonexistentAuthorityError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.NonexistentAuthorityError">[docs]</a><span class="k">class</span> <span class="nc">NonexistentAuthorityError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The app token&#39;s authority field names a nonexistent service.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="ProxyConnectionError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.ProxyConnectionError">[docs]</a><span class="k">class</span> <span class="nc">ProxyConnectionError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The proxy on the robot could not be reached.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="ServiceUnavailableError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.ServiceUnavailableError">[docs]</a><span class="k">class</span> <span class="nc">ServiceUnavailableError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The proxy could not find the (possibly unregistered) service.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="ServiceFailedDuringExecutionError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.ServiceFailedDuringExecutionError">[docs]</a><span class="k">class</span> <span class="nc">ServiceFailedDuringExecutionError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The service encountered an unexpected failure.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="TimedOutError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.TimedOutError">[docs]</a><span class="k">class</span> <span class="nc">TimedOutError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The remote procedure call did not terminate within the allotted time.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="UnableToConnectToRobotError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.UnableToConnectToRobotError">[docs]</a><span class="k">class</span> <span class="nc">UnableToConnectToRobotError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The robot may be offline.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="UnauthenticatedError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.UnauthenticatedError">[docs]</a><span class="k">class</span> <span class="nc">UnauthenticatedError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The user needs to authenticate to get a user token.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="UnknownDnsNameError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.UnknownDnsNameError">[docs]</a><span class="k">class</span> <span class="nc">UnknownDnsNameError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The system is unable to translate the domain name.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="UnimplementedError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.UnimplementedError">[docs]</a><span class="k">class</span> <span class="nc">UnimplementedError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The API does not recognize the request and is unable to complete the request.&quot;&quot;&quot;</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Boston Dynamics
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

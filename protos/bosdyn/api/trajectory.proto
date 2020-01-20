@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "TrajectoryProto";
+import "bosdyn/api/geometry.proto";
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+/// Parameters for how positional trajectories will be interpolated on robot.
+enum PositionalInterpolation {
+    POS_INTERP_UNKNOWN = 0;
+    POS_INTERP_LINEAR = 1;
+    POS_INTERP_CUBIC = 2;
+}
+
+/// Parameters for how angular trajectories will be interpolated on robot.
+enum AngularInterpolation {
+    ANG_INTERP_UNKNOWN = 0;
+    ANG_INTERP_LINEAR = 1;
+    ANG_INTERP_CUBIC_EULER = 2;
+}
+
+/// A 3D pose trajectory.
+message SE2Trajectory {
+    /// The points in trajectory
+    repeated SE2TrajectoryPoint points = 1;
+
+    /// A required reference frame of the points in the trajectory..
+    Frame frame = 2;
+
+    /// All trajectories specify times relative to this reference time. The reference time should be
+    /// in robot clock. If this field is not included, this time will be the receive time of the
+    /// command.
+    google.protobuf.Timestamp reference_time = 3;
+
+    /// Parameters for how trajectories will be interpolated on robot.
+    PositionalInterpolation interpolation = 4;
+}
+
+message SE2TrajectoryPoint {
+    /// Required pose the robot will try and achieve.
+    SE2Pose pose = 1;
+
+    /// The duration to reach the point relative to the trajectory reference time.
+    google.protobuf.Duration time_since_reference = 3;
+}
+
+/// A 2D pose trajectory.
+message SE3Trajectory {
+    /// The points in trajectory
+    repeated SE3TrajectoryPoint points = 1;
+
+    /// A required reference frame of the points in the trajectory..
+    Frame frame = 2;
+
+    /// All trajectories specify times relative to this reference time. The reference time should be
+    /// in robot clock. If this field is not included, this time will be the receive time of the
+    /// command.
+    google.protobuf.Timestamp reference_time = 3;
+
+    /// Parameters for how trajectories will be interpolated on robot.
+    PositionalInterpolation pos_interpolation = 4;
+    AngularInterpolation ang_interpolation = 5;
+}
+
+message SE3TrajectoryPoint {
+    /// Required pose the robot will try and achieve.
+    SE3Pose pose = 1;
+
+    /// Optional velocity the robot will try and achieve.
+    SE3Velocity vel = 2;
+
+    /// The duration to reach the point relative to the trajectory reference time.
+    google.protobuf.Duration time_since_reference = 3;
+
+}

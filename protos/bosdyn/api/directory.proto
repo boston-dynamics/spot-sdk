@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option java_outer_classname = "DirectoryProto";
+
+import "google/protobuf/timestamp.proto";
+
+package bosdyn.api;
+
+// A record representing a discoverable service.  By definition, all services
+// discoverable by this system are expected to be grpc "services" provided by
+// some server.
+
+message ServiceEntry {
+    // The unique user-friendly name of this service.
+    string name = 1;
+
+    // The type of this service. Usually identifies the underlying implementation.
+	// Does not have to be unique among all ServiceEntry objects.
+    string type = 2;
+
+    // Information used to route to the desired Service.
+    string authority = 3;
+
+    // Last update time in robot timebase for this service record.
+    google.protobuf.Timestamp last_update = 4;
+
+    // If |user_token_required| is true, any requests to this service must contain
+    // a user token for the machine.  Requests without a user token will result in a
+    // 401. Most services will want to require a user_token, but ones like auth_service
+    // do not.
+    bool user_token_required = 5;
+
+    // If |application_token_required| is true, any requests to this service must
+    // contain an application token signed by Boston Dynamics. Requests without
+    // an application token or without a valid application token will result in
+    // a 403.
+    bool application_token_required = 6;
+
+    // If |permission_required| is non-empty, any requests to this service must
+    // have the same string in the "per" claim of the user token. If
+    // |application_token_required| is also true, the |permission_required| string
+    // must also be present in the "per" claim of the application token.
+    string permission_required = 7;
+}

@@ -1,0 +1,787 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bosdyn.client.command_line &mdash; Spot 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Spot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Services:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../client_index.html">Client API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core_index.html">Core API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bosdyn.client.command_line</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bosdyn.client.command_line</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Command-line utility code for interacting with robot services.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">signal</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="kn">import</span> <span class="nn">bosdyn.client</span>
+<span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="k">import</span> <span class="p">(</span><span class="n">duration_str</span><span class="p">,</span> <span class="n">timestamp_to_datetime</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">.auth</span> <span class="k">import</span> <span class="n">InvalidLoginError</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">InvalidAppTokenError</span><span class="p">,</span> <span class="n">ProxyConnectionError</span>
+<span class="kn">from</span> <span class="nn">.directory</span> <span class="k">import</span> <span class="n">DirectoryClient</span><span class="p">,</span> <span class="n">NonexistentServiceError</span>
+<span class="kn">from</span> <span class="nn">.estop</span> <span class="k">import</span> <span class="n">EstopClient</span><span class="p">,</span> <span class="n">EstopEndpoint</span><span class="p">,</span> <span class="n">EstopKeepAlive</span>
+<span class="kn">from</span> <span class="nn">.image</span> <span class="k">import</span> <span class="p">(</span><span class="n">ImageClient</span><span class="p">,</span> <span class="n">UnknownImageSourceError</span><span class="p">,</span> <span class="n">ImageResponseError</span><span class="p">,</span> <span class="n">build_image_request</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.lease</span> <span class="k">import</span> <span class="n">LeaseClient</span>
+<span class="kn">from</span> <span class="nn">.log_annotation</span> <span class="k">import</span> <span class="p">(</span><span class="n">LogAnnotationClient</span><span class="p">,</span> <span class="n">LogAnnotationTextMessage</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.robot_id</span> <span class="k">import</span> <span class="n">RobotIdClient</span>
+<span class="kn">from</span> <span class="nn">.robot_state</span> <span class="k">import</span> <span class="n">RobotStateClient</span>
+<span class="kn">from</span> <span class="nn">.sdk</span> <span class="k">import</span> <span class="n">SdkError</span>
+<span class="kn">from</span> <span class="nn">.time_sync</span> <span class="k">import</span> <span class="p">(</span><span class="n">TimeSyncClient</span><span class="p">,</span> <span class="n">TimeSyncEndpoint</span><span class="p">,</span> <span class="n">TimeSyncError</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="k">import</span> <span class="p">(</span><span class="n">add_common_arguments</span><span class="p">,</span> <span class="n">setup_logging</span><span class="p">)</span>
+
+
+<span class="c1"># pylint: disable=too-few-public-methods</span>
+<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">with_metaclass</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;Command-line command&quot;&quot;&quot;</span>
+
+    <span class="c1"># The name of the command the user should enter on the command line to select this command.</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Whether authentication is needed before the command is run.</span>
+    <span class="c1"># Most commands need authentication.</span>
+    <span class="n">NEED_AUTHENTICATION</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="n">command_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">NAME</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NAME</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Command.run"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.Command.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Invoke the command.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">NEED_AUTHENTICATION</span><span class="p">:</span>
+                <span class="n">robot</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ProxyConnectionError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Could not contact robot with hostname &quot;</span><span class="si">{}</span><span class="s1">&quot;.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">hostname</span><span class="p">))</span>
+        <span class="k">except</span> <span class="n">InvalidAppTokenError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The provided app token &quot;</span><span class="si">{}</span><span class="s1">&quot; is invalid.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">app_token</span><span class="p">))</span>
+        <span class="k">except</span> <span class="n">InvalidLoginError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Username &quot;</span><span class="si">{}</span><span class="s1">&quot; and/or password are invalid.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">username</span><span class="p">))</span>
+        <span class="k">except</span> <span class="n">Error</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span></div>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Implementation of the command.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="Subcommands"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.Subcommands">[docs]</a><span class="k">class</span> <span class="nc">Subcommands</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run subcommands.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span> <span class="n">subcommands</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="n">command_dest</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_command&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NAME</span><span class="p">)</span>
+        <span class="n">cmd_subparsers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="n">command_dest</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_subcommands</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">subcommand</span> <span class="ow">in</span> <span class="n">subcommands</span><span class="p">:</span>
+            <span class="n">subcommand</span><span class="p">(</span><span class="n">cmd_subparsers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subcommands</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">command_dest</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_command&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NAME</span><span class="p">)</span>
+        <span class="n">subcommand</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">options</span><span class="p">)[</span><span class="n">command_dest</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subcommands</span><span class="p">[</span><span class="n">subcommand</span><span class="p">]</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DirectoryCommands"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.DirectoryCommands">[docs]</a><span class="k">class</span> <span class="nc">DirectoryCommands</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Commands related to the directory service&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;dir&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DirectoryCommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span>
+                                                <span class="p">[</span><span class="n">DirectoryListCommand</span><span class="p">,</span> <span class="n">DirectoryGetCommand</span><span class="p">])</span></div>
+
+
+<span class="k">def</span> <span class="nf">_format_dir_entry</span><span class="p">(</span><span class="n">service_name</span><span class="p">,</span> <span class="n">service_type</span><span class="p">,</span> <span class="n">authority</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:23}</span><span class="s2"> </span><span class="si">{:31}</span><span class="s2"> </span><span class="si">{:27}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">service_name</span><span class="p">,</span> <span class="n">service_type</span><span class="p">,</span> <span class="n">authority</span><span class="p">,</span> <span class="n">tokens</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_token_req_str</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a string representing tokens required for using the service.&quot;&quot;&quot;</span>
+    <span class="n">required</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">application_token_required</span><span class="p">:</span>
+        <span class="n">required</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">user_token_required</span><span class="p">:</span>
+        <span class="n">required</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">required</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">return</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">required</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_show_directory_list</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">as_proto</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Print service directory list for robot.&quot;&quot;&quot;</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">DirectoryClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">entries</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No services found&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">as_proto</span><span class="p">:</span>
+        <span class="n">_format_dir_entry</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;authority&#39;</span><span class="p">,</span> <span class="s1">&#39;tokens&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">90</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">as_proto</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_format_dir_entry</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">authority</span><span class="p">,</span> <span class="n">_token_req_str</span><span class="p">(</span><span class="n">entry</span><span class="p">))</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">_show_directory_entry</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">service</span><span class="p">,</span> <span class="n">as_proto</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Print a service directory entry.&quot;&quot;&quot;</span>
+    <span class="n">entry</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">DirectoryClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="n">service</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">as_proto</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_format_dir_entry</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;authority&#39;</span><span class="p">,</span> <span class="s1">&#39;tokens&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">90</span><span class="p">)</span>
+        <span class="n">_format_dir_entry</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">authority</span><span class="p">,</span> <span class="n">_token_req_str</span><span class="p">(</span><span class="n">entry</span><span class="p">))</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<div class="viewcode-block" id="DirectoryListCommand"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.DirectoryListCommand">[docs]</a><span class="k">class</span> <span class="nc">DirectoryListCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;List all services in the directory.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;list&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DirectoryListCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--proto&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                                  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">_show_directory_list</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">as_proto</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">proto</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="DirectoryGetCommand"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.DirectoryGetCommand">[docs]</a><span class="k">class</span> <span class="nc">DirectoryGetCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get entry for a given service in the directory.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;get&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DirectoryGetCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--proto&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                                  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;service&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;service name to get entry for&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">_show_directory_entry</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">service</span><span class="p">,</span> <span class="n">as_proto</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">proto</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">NonexistentServiceError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The requested service name &quot;</span><span class="si">{}</span><span class="s1">&quot; does not exist.  Available services:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">service</span><span class="p">))</span>
+            <span class="n">_show_directory_list</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">as_proto</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">proto</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="RobotIdCommand"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.RobotIdCommand">[docs]</a><span class="k">class</span> <span class="nc">RobotIdCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Show robot-id.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;id&#39;</span>
+    <span class="n">NEED_AUTHENTICATION</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RobotIdCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--proto&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                                  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">proto</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">RobotIdClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">proto</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="n">nickname</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">proto</span><span class="o">.</span><span class="n">nickname</span> <span class="ow">and</span> <span class="n">proto</span><span class="o">.</span><span class="n">nickname</span> <span class="o">!=</span> <span class="n">proto</span><span class="o">.</span><span class="n">serial_number</span><span class="p">:</span>
+            <span class="n">nickname</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">nickname</span>
+        <span class="n">release</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">software_release</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">release</span><span class="o">.</span><span class="n">version</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:20}</span><span class="s2"> </span><span class="si">{:10}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">serial_number</span><span class="p">,</span> <span class="n">nickname</span><span class="p">,</span> <span class="n">proto</span><span class="o">.</span><span class="n">species</span><span class="p">,</span>
+                                           <span class="n">proto</span><span class="o">.</span><span class="n">version</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Software: </span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="o">.</span><span class="n">major_version</span><span class="p">,</span> <span class="n">version</span><span class="o">.</span><span class="n">minor_version</span><span class="p">,</span>
+                                                   <span class="n">version</span><span class="o">.</span><span class="n">patch_level</span><span class="p">,</span> <span class="n">release</span><span class="o">.</span><span class="n">changeset</span><span class="p">,</span>
+                                                   <span class="n">timestamp_to_datetime</span><span class="p">(</span><span class="n">release</span><span class="o">.</span><span class="n">changeset_date</span><span class="p">)))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Installed: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">timestamp_to_datetime</span><span class="p">(</span><span class="n">release</span><span class="o">.</span><span class="n">install_date</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="LogAnnotationCommands"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.LogAnnotationCommands">[docs]</a><span class="k">class</span> <span class="nc">LogAnnotationCommands</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Commands related to the log-annotation service&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;log&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LogAnnotationCommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span>
+                                                    <span class="p">[</span><span class="n">LogTextMsgCommand</span><span class="p">,</span> <span class="n">LogOperatorCommentCommand</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="LogTextMsgCommand"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.LogTextMsgCommand">[docs]</a><span class="k">class</span> <span class="nc">LogTextMsgCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Send a text-message to the robot to be logged.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;textmsg&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LogTextMsgCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--timestamp&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                                  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;achieve time-sync and send timestamp&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--service&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;bosdyn.client&#39;</span><span class="p">,</span>
+                                  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of service for message&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--tag&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Tag for message&#39;</span><span class="p">)</span>
+        <span class="n">parser_log_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
+        <span class="n">parser_log_level</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--debug&#39;</span><span class="p">,</span> <span class="s1">&#39;-D&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                                      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Log at debug-level&#39;</span><span class="p">)</span>
+        <span class="n">parser_log_level</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--info&#39;</span><span class="p">,</span> <span class="s1">&#39;-I&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Log at info-level&#39;</span><span class="p">)</span>
+        <span class="n">parser_log_level</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--warn&#39;</span><span class="p">,</span> <span class="s1">&#39;-W&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Log at warn-level&#39;</span><span class="p">)</span>
+        <span class="n">parser_log_level</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--error&#39;</span><span class="p">,</span> <span class="s1">&#39;-E&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                                      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Log at error-level&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Message to log&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">robot_timestamp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">timestamp</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">robot_timestamp</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">time_sync</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span> <span class="n">timesync_timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">TimeSyncError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to send message with timestamp: </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">msg_proto</span> <span class="o">=</span> <span class="n">LogAnnotationTextMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">robot_timestamp</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="n">msg_proto</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">LogAnnotationTextMessage</span><span class="o">.</span><span class="n">LEVEL_DEBUG</span>
+        <span class="k">elif</span> <span class="n">options</span><span class="o">.</span><span class="n">warn</span><span class="p">:</span>
+            <span class="n">msg_proto</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">LogAnnotationTextMessage</span><span class="o">.</span><span class="n">LEVEL_WARN</span>
+        <span class="k">elif</span> <span class="n">options</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+            <span class="n">msg_proto</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">LogAnnotationTextMessage</span><span class="o">.</span><span class="n">LEVEL_ERROR</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg_proto</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">LogAnnotationTextMessage</span><span class="o">.</span><span class="n">LEVEL_INFO</span>
+
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">service</span><span class="p">:</span>
+            <span class="n">msg_proto</span><span class="o">.</span><span class="n">service</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">service</span>
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">tag</span><span class="p">:</span>
+            <span class="n">msg_proto</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">tag</span>
+
+        <span class="n">log_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">LogAnnotationClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="n">log_client</span><span class="o">.</span><span class="n">add_text_messages</span><span class="p">([</span><span class="n">msg_proto</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="LogOperatorCommentCommand"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.LogOperatorCommentCommand">[docs]</a><span class="k">class</span> <span class="nc">LogOperatorCommentCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Send an operator comment to the robot to be logged.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;comment&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LogOperatorCommentCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--timestamp&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                                  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;achieve time-sync and send timestamp&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;operator comment text&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">client_timestamp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">timestamp</span><span class="p">:</span>
+            <span class="n">client_timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">robot</span><span class="o">.</span><span class="n">time_sync</span><span class="o">.</span><span class="n">wait_for_sync</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">TimeSyncError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to get timesync for setting comment timestamp: </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">robot</span><span class="o">.</span><span class="n">operator_comment</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">timestamp_secs</span><span class="o">=</span><span class="n">client_timestamp</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="RobotStateCommands"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.RobotStateCommands">[docs]</a><span class="k">class</span> <span class="nc">RobotStateCommands</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Commands for querying robot state&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;state&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RobotStateCommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span>
+                                                 <span class="p">[</span><span class="n">FullStateCommand</span><span class="p">,</span> <span class="n">MetricsCommand</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="FullStateCommand"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.FullStateCommand">[docs]</a><span class="k">class</span> <span class="nc">FullStateCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Show robot state.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;full&#39;</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">proto</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">RobotStateClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span><span class="o">.</span><span class="n">get_robot_state</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MetricsCommand"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.MetricsCommand">[docs]</a><span class="k">class</span> <span class="nc">MetricsCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Show metrics (runtime, etc...).&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;metrics&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MetricsCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--proto&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                                  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print metrics in proto format&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">proto</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">RobotStateClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span><span class="o">.</span><span class="n">get_robot_metrics</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">proto</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">proto</span><span class="o">.</span><span class="n">metrics</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_format_metric</span><span class="p">(</span><span class="n">metric</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_secs_to_hms</span><span class="p">(</span><span class="n">seconds</span><span class="p">):</span>
+        <span class="n">isecs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
+        <span class="n">seconds</span> <span class="o">=</span> <span class="n">isecs</span> <span class="o">%</span> <span class="mi">60</span>
+        <span class="n">minutes</span> <span class="o">=</span> <span class="p">(</span><span class="n">isecs</span> <span class="o">//</span> <span class="mi">60</span><span class="p">)</span> <span class="o">%</span> <span class="mi">60</span>
+        <span class="n">hours</span> <span class="o">=</span> <span class="n">isecs</span> <span class="o">//</span> <span class="mi">3600</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_distance_str</span><span class="p">(</span><span class="n">meters</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">meters</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1"> m&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meters</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1"> km&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">meters</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_format_metric</span><span class="p">(</span><span class="n">metric</span><span class="p">):</span>  <span class="c1"># pylint: disable=too-many-return-statements</span>
+        <span class="k">if</span> <span class="n">metric</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s1">&#39;float_value&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">metric</span><span class="o">.</span><span class="n">units</span> <span class="o">==</span> <span class="s1">&#39;m&#39;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:20}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
+                                         <span class="n">MetricsCommand</span><span class="o">.</span><span class="n">_distance_str</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">float_value</span><span class="p">))</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:20}</span><span class="s1"> </span><span class="si">{:.2f}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">metric</span><span class="o">.</span><span class="n">float_value</span><span class="p">,</span> <span class="n">metric</span><span class="o">.</span><span class="n">units</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">metric</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s1">&#39;int_value&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:20}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">metric</span><span class="o">.</span><span class="n">int_value</span><span class="p">,</span> <span class="n">metric</span><span class="o">.</span><span class="n">units</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">metric</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s1">&#39;bool_value&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:20}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">metric</span><span class="o">.</span><span class="n">bool_value</span><span class="p">,</span> <span class="n">metric</span><span class="o">.</span><span class="n">units</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">metric</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s1">&#39;duration&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:20}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
+                                     <span class="n">MetricsCommand</span><span class="o">.</span><span class="n">_secs_to_hms</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">duration</span><span class="o">.</span><span class="n">seconds</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">metric</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s1">&#39;string&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:20}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">metric</span><span class="o">.</span><span class="n">string_value</span><span class="p">)</span>
+        <span class="c1"># ??</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:20}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">metric</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">metric</span><span class="o">.</span><span class="n">units</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TimeSyncCommand"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.TimeSyncCommand">[docs]</a><span class="k">class</span> <span class="nc">TimeSyncCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find clock difference between this and the robot clock.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;time-sync&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TimeSyncCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--proto&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                                  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">endpoint</span> <span class="o">=</span> <span class="n">TimeSyncEndpoint</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">TimeSyncClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">establish_timesync</span><span class="p">(</span><span class="n">break_on_success</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to acheive time sync&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">proto</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">endpoint</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GRPC round-trip time: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">duration_str</span><span class="p">(</span><span class="n">endpoint</span><span class="o">.</span><span class="n">round_trip_time</span><span class="p">)))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Local time to robot time: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">duration_str</span><span class="p">(</span><span class="n">endpoint</span><span class="o">.</span><span class="n">clock_skew</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="LeaseCommands"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.LeaseCommands">[docs]</a><span class="k">class</span> <span class="nc">LeaseCommands</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Commands related to the lease service&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;lease&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LeaseCommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span> <span class="p">[</span><span class="n">LeaseListCommand</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="LeaseListCommand"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.LeaseListCommand">[docs]</a><span class="k">class</span> <span class="nc">LeaseListCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;List all leases&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;list&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LeaseListCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--proto&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                                  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">lease_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">LeaseClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="n">resources</span> <span class="o">=</span> <span class="n">lease_client</span><span class="o">.</span><span class="n">list_leases</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">proto</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">resources</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">resource</span> <span class="ow">in</span> <span class="n">resources</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_format_lease_resource</span><span class="p">(</span><span class="n">resource</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_format_lease_resource</span><span class="p">(</span><span class="n">resource</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BecomeEstopCommand"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.BecomeEstopCommand">[docs]</a><span class="k">class</span> <span class="nc">BecomeEstopCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Grab and hold estop until Ctl-C&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;become-estop&#39;</span>
+
+    <span class="n">_RPC_PRINT_CHOICES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> <span class="s1">&#39;full&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BecomeEstopCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--timeout&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;EStop timeout (seconds)&#39;</span><span class="p">,</span>
+                                  <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--rpc-print&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_RPC_PRINT_CHOICES</span><span class="p">,</span>
+                                  <span class="n">default</span><span class="o">=</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span>
+                                  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;How much of the request/response messages to print&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="c1"># Get a client to the estop service.</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">EstopClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+
+        <span class="c1"># If we&#39;d only like to print timestamps of messages, change the client&#39;s callbacks that</span>
+        <span class="c1"># convert messages to string.</span>
+
+        <span class="k">def</span> <span class="nf">_timestamp_fmt_request</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s1">&#39;(request timestamp: </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">request_timestamp</span><span class="o">.</span><span class="n">ToSeconds</span><span class="p">())</span>
+
+        <span class="k">def</span> <span class="nf">_timestamp_fmt_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s1">&#39;(response timestamp: </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">response_timestamp</span><span class="o">.</span><span class="n">ToSeconds</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">rpc_print</span> <span class="o">==</span> <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">request_trim_for_log</span> <span class="o">=</span> <span class="n">_timestamp_fmt_request</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">response_trim_for_log</span> <span class="o">=</span> <span class="n">_timestamp_fmt_response</span>
+
+        <span class="c1"># Create the endpoint to the robot estop system.</span>
+        <span class="c1"># Timeout should be chosen to balance safety considerations with expected service latency.</span>
+        <span class="c1"># See the estop documentation for details.</span>
+        <span class="n">endpoint</span> <span class="o">=</span> <span class="n">EstopEndpoint</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;command-line&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="c1"># Have this endpoint to set up the robot&#39;s estop system such that it is the sole estop.</span>
+        <span class="c1"># See the function&#39;s docstring and the estop documentation for details.</span>
+        <span class="n">endpoint</span><span class="o">.</span><span class="n">force_simple_setup</span><span class="p">()</span>
+        <span class="c1"># Create the helper class that does periodic check-ins. This also starts the checking-in.</span>
+        <span class="n">exit_signal</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+
+        <span class="c1"># Define a function to call on SIGINT that asserts an estop and cleanly shuts down.</span>
+        <span class="k">def</span> <span class="nf">sigint_handler</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Cleanly shut down the application on interrupt.&quot;&quot;&quot;</span>
+            <span class="c1">#pylint: disable=unused-argument</span>
+            <span class="c1"># Signal that we want to exit the program.</span>
+            <span class="n">exit_signal</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Press Ctrl-C or send SIGINT to exit&#39;</span><span class="p">)</span>
+        <span class="c1"># Install our signal handler function.</span>
+        <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGINT</span><span class="p">,</span> <span class="n">sigint_handler</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">EstopKeepAlive</span><span class="p">(</span><span class="n">endpoint</span><span class="p">)</span> <span class="k">as</span> <span class="n">keep_alive</span><span class="p">:</span>
+            <span class="c1"># Now we wait. The thread in EstopKeepAlive will continue sending messages to the estop</span>
+            <span class="c1"># service on its own.</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="n">exit_signal</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+                <span class="k">pass</span>
+            <span class="c1"># EStop the robot.</span>
+            <span class="n">keep_alive</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="c1"># The keep_alive object&#39;s exit() function will shut down the thread.</span>
+
+        <span class="c1"># This will let another endpoint fill our role, if they want to use the current</span>
+        <span class="c1"># configuration. For details, see the estop documentation.</span>
+        <span class="n">endpoint</span><span class="o">.</span><span class="n">deregister</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="ImageCommands"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.ImageCommands">[docs]</a><span class="k">class</span> <span class="nc">ImageCommands</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Commands for querying images&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;image&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ImageCommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span>
+                                            <span class="p">[</span><span class="n">ListImageSourcesCommand</span><span class="p">,</span> <span class="n">GetImageCommand</span><span class="p">])</span></div>
+
+<span class="k">def</span> <span class="nf">_show_image_sources_list</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">as_proto</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Print available image sources.&quot;&quot;&quot;</span>
+    <span class="n">proto</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">ImageClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span><span class="o">.</span><span class="n">list_image_sources</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">as_proto</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">image_source</span> <span class="ow">in</span> <span class="n">proto</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:30s}</span><span class="s2"> (</span><span class="si">{:d}</span><span class="s2">x</span><span class="si">{:d}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image_source</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">image_source</span><span class="o">.</span><span class="n">rows</span><span class="p">,</span>
+                                              <span class="n">image_source</span><span class="o">.</span><span class="n">cols</span><span class="p">))</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<div class="viewcode-block" id="ListImageSourcesCommand"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.ListImageSourcesCommand">[docs]</a><span class="k">class</span> <span class="nc">ListImageSourcesCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;List image sources.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;list-sources&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ListImageSourcesCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--proto&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                                  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">_show_image_sources_list</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">as_proto</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">proto</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GetImageCommand"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.GetImageCommand">[docs]</a><span class="k">class</span> <span class="nc">GetImageCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get an image from the robot.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;get-image&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GetImageCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--outfile&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;filename into which to save the image&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--quality-percent&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span>
+                                  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Percent image quaility (0-100)&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;source_name&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;image source name&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">image_request</span> <span class="o">=</span> <span class="n">build_image_request</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">source_name</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">quality_percent</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">ImageClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span><span class="o">.</span><span class="n">get_image</span><span class="p">([</span><span class="n">image_request</span><span class="p">])</span>
+        <span class="k">except</span> <span class="n">UnknownImageSourceError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Requested image source &quot;</span><span class="si">{}</span><span class="s1">&quot; does not exist.  Available image sources:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">source_name</span><span class="p">))</span>
+            <span class="n">_show_image_sources_list</span><span class="p">(</span><span class="n">robot</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">except</span> <span class="n">ImageResponseError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Robot cannot generate the &quot;</span><span class="si">{}</span><span class="s1">&quot; at this time.  Retry the command.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">source_name</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">image_response</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+            <span class="n">image_source_filename</span> <span class="o">=</span> <span class="s1">&#39;image-</span><span class="si">{}</span><span class="s1">.jpg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image_response</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">outfile</span> <span class="ow">or</span> <span class="n">image_source_filename</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+                    <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">image_response</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saved &quot;</span><span class="si">{}</span><span class="s1">&quot; to &quot;</span><span class="si">{}</span><span class="s1">&quot;.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image_response</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Failed to save &quot;</span><span class="si">{}</span><span class="s1">&quot;.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image_response</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Command-line interface for interacting with robot services.&quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s1">&#39;bosdyn.client&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">main</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+    <span class="n">add_common_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+
+    <span class="n">command_dict</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># command name to fn which takes parsed options</span>
+    <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;commands&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;command&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Register commands that can be run.</span>
+    <span class="n">DirectoryCommands</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+    <span class="n">RobotIdCommand</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+    <span class="n">RobotStateCommands</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+    <span class="n">LogAnnotationCommands</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+    <span class="n">TimeSyncCommand</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+    <span class="n">LeaseCommands</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+    <span class="n">BecomeEstopCommand</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+    <span class="n">ImageCommands</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+
+    <span class="n">options</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="n">setup_logging</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># Create robot object and authenticate.</span>
+    <span class="n">sdk</span> <span class="o">=</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">create_standard_sdk</span><span class="p">(</span><span class="s1">&#39;BosdynClient&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">sdk</span><span class="o">.</span><span class="n">load_app_token</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">app_token</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">SdkError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cannot retrieve app token from &quot;</span><span class="si">{}</span><span class="s1">&quot;.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">app_token</span><span class="p">))</span>
+        <span class="k">return</span>
+
+    <span class="n">robot</span> <span class="o">=</span> <span class="n">sdk</span><span class="o">.</span><span class="n">create_robot</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">hostname</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">command_dict</span><span class="p">[</span><span class="n">options</span><span class="o">.</span><span class="n">command</span><span class="p">]</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="k">return</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Boston Dynamics
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

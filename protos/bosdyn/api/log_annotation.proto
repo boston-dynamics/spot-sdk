@@ -1,0 +1,70 @@
+syntax = "proto3";
+package bosdyn.api;
+
+option java_outer_classname = "LogAnnotationProto";
+
+
+import "google/protobuf/timestamp.proto";
+
+
+/// A container for elements to be added to the robot's logs.
+message LogAnnotations {
+    /// Text messages to be added to the log.
+    repeated LogAnnotationTextMessage text_messages = 1;
+
+    /// Messages from the robot operator to be added to the log.
+    repeated LogAnnotationOperatorMessage operator_messages = 2;
+
+}
+
+/// A text message to add to the robot's logs.
+/// These could be internal text-log messages from a client for use in debugging, for
+///  example.
+message LogAnnotationTextMessage {
+    /// String annotation message to add to the log.
+    string message = 1;
+
+    /// The timestamp of the annotation.  This must be in robot time.
+    google.protobuf.Timestamp timestamp = 2;
+
+    /// The service responsible for the annotation. May be omitted.
+    string service = 3;
+
+    enum Level {
+        /// Invalid, do not use.
+        LEVEL_UNKNOWN = 0;
+
+        /// Events likely of interest only in a debugging context.
+        LEVEL_DEBUG = 1;
+
+        /// Informational message during normal operation.
+        LEVEL_INFO = 2;
+
+        /// Information about an unexpected but recoverable condition.
+        LEVEL_WARN = 3;
+
+        /// Information about an operation which did not succeed.
+        LEVEL_ERROR = 4;
+    }
+    Level level = 4;  /// Significance of the message.
+
+    /// Optional tag to identify from what code/module this message originated from.
+    string tag = 5;
+
+    /// Optional source file name originating the log message.
+    string filename = 6;
+
+    /// Optional source file line number originating the log message.
+    int32 line_number = 7;
+}
+
+/// An operator message to be added to the robot's logs.
+/// These are notes especially intended to mark when logs should be preserved and reviewed
+///  to ensure that robot hardware and/or software is working as intended.
+message LogAnnotationOperatorMessage {
+    /// String annotation message to add to the log.
+    string message = 1;
+
+    /// The timestamp of the annotation.  This must be in robot time.
+    google.protobuf.Timestamp timestamp = 2;
+}

@@ -1,0 +1,119 @@
+/// Geometric primitives used in the API.
+syntax = "proto3";
+
+package bosdyn.api;
+option java_outer_classname = "GeometryProto";
+
+message Vec2 {
+    double x = 1;
+    double y = 2;
+}
+
+message Vec3 {
+    double x = 1;
+    double y = 2;
+    double z = 3;
+}
+
+message Quaternion {
+    double x = 1;
+    double y = 2;
+    double z = 3;
+    double w = 4;
+}
+
+message Plane {
+    Vec3 point = 1;   ///< A point on the plane.
+    Vec3 normal = 2;  ///< The direction of the planes normal.
+}
+
+message SE2Pose {
+    Vec2 position = 1;  ///< (m)
+    double angle = 2;   ///< (rad)
+}
+
+message SE2Velocity {
+    Vec2 linear = 1;     ///< (m/s)
+    double angular = 2;  ///< (rad/s)
+}
+
+message SE2VelocityLimit {
+    // If set, limits the maximum velocity.
+    SE2Velocity max_vel = 1;
+    // If set, limits the minimum velocity.
+    SE2Velocity min_vel = 2;
+}
+
+message SE3Pose {
+    Vec3 position = 1;  ///< (m)
+    Quaternion rotation = 2;
+}
+
+message SE3Velocity {
+    Vec3 linear = 1;   ///< (m/s)
+    Vec3 angular = 2;  ///< (rad/s)
+}
+
+// Used to specify forces and torques.
+message Wrench {
+    Vec3 force = 1;   ///< (N)
+    Vec3 torque = 2;  ///< (Nm)
+}
+
+enum FrameType {
+    /// Invalid; do not use.
+    FRAME_UNKNOWN = 0;
+
+    /// Aligned with the robot's base link.
+    FRAME_BODY = 1;
+
+    /// Fixed gravity-aligned frame based on where robot started.
+    FRAME_KO = 2;
+
+    /// Fixed gravity-aligned, drift reduced frame based on where robot started.
+    FRAME_VO = 3;
+
+    /// Some other frame, specified by the base_frame_id field.
+    FRAME_OTHER = 100;
+}
+
+/// A description of how a particular frame should be interpreted.
+message Frame {
+    /// Some basic frames. Can be used to specify frame entirely, or as a basis for a custom frame.
+    FrameType base_frame = 1;
+
+    /// You can optionally provide a transform from the canonical frame.
+    SE3Pose base_tform_offset = 2;
+
+    /// Identifier for the base frame. Should only be read if FRAME_OTHER is the base_frame.
+    string base_frame_id = 3;
+}
+
+/// Box2 is short-hand for a two-dimensional box.
+message Box2 {
+    Vec2 size = 1;
+}
+
+message Box2WithFrame {
+    Box2 box = 1;
+    /// The frame in which the box width (y) and length (x) are interpreted in.
+    Frame frame = 2;
+}
+
+/// Represents the translation/rotation covariance of an SE3 Pose.
+message SE3Covariance {
+    /// 3x3 translation covariance. They have to be stored this way instead of having a repeated
+    /// number of floats because otherwise MergeFrom would produce the wrong result.
+    double cov_xx = 3;
+    double cov_xy = 4;
+    double cov_xz = 5;
+    double cov_yx = 6;
+    double cov_yy = 7;
+    double cov_yz = 8;
+    double cov_zx = 9;
+    double cov_zy = 10;
+    double cov_zz = 11;
+    /// Variance of the yaw component of the SE3 Pose.
+    double yaw_variance = 2;
+    // TODO: add other rotational components, upgrade to 6x6 matrix.
+}

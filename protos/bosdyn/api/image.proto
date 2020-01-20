@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package bosdyn.api;
+option java_outer_classname = "ImageProto";
+
+import "bosdyn/api/geometry.proto";
+import "google/protobuf/timestamp.proto";
+
+/// Fields potentially common to different kind of images.
+message SampleCommon {
+    /// This transform tells you how to get from the sensor frame to the canonical frame.
+    Frame frame = 2;
+
+    /// Time this data was acquired in the robot's time basis.
+    /// If specifying this as part of a client-originated command, the client should use the client
+    /// time basis.
+    /// Zero if not set.
+    google.protobuf.Timestamp acquisition_time = 3;
+}
+
+/// Rectangular color/greyscale images.
+message Image {
+    enum Format {
+        FORMAT_UNKNOWN = 0;
+        FORMAT_JPEG = 1;
+        FORMAT_RAW = 2;
+    }
+
+    enum PixelFormat {
+        PIXEL_FORMAT_UNKNOWN = 0;       ///< Unknown pixel format.
+        PIXEL_FORMAT_GREYSCALE_U8 = 1;  ///< One byte per pixel
+        PIXEL_FORMAT_RGB_U8 = 3;        ///< Three bytes per pixel
+        PIXEL_FORMAT_RGBA_U8 = 4;       ///< Four bytes per pixel
+    }
+
+    /// image dimensions in pixels
+    int32 cols = 2;
+    int32 rows = 3;
+
+    /// raw image data
+    bytes data = 4;
+
+    /// How the image is encoded.
+    Format format = 5;
+
+    /// If Format does not imply PixelFormat, this will be set.
+    PixelFormat pixel_format = 6;
+}
+
+/// Rectangular color/greyscale images.
+message ImageCapture {
+    SampleCommon sample = 2;  ///< Time/location of image.
+    Image image = 3;          ///< Image data.
+}
+
+// Proto for a description of an image source on the robot
+message ImageSource {
+    message PinholeModel {
+        // Camera Matrix is
+        // [[focal_length.x,         skew.x, principal_point.x],
+        // [[        skew.y, focal_length.y, principal_point.y],
+        // [[             0,              0,                 1]]
+        // Parameters are in pixel space.
+        message CameraIntrinsics {
+            Vec2 focal_length = 1;
+            Vec2 principal_point = 2;
+            Vec2 skew = 3;
+        }
+
+        CameraIntrinsics intrinsics = 1;
+    }
+
+    // The name of this image source used to get images.
+    string name = 2;
+
+    reserved 3;
+
+    // image dimensions in pixels
+    int32 cols = 4;
+    int32 rows = 5;
+
+    // typically 1000 (converting mm to m).
+    double depth_scale = 6;
+
+    reserved 7;
+
+    oneof camera_models {
+        PinholeModel pinhole = 8; // rectilinear cameras
+    }
+}

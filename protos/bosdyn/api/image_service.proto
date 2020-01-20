@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "ImageServiceProto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/geometry.proto";
+import "bosdyn/api/image.proto";
+
+/// An Image service provides access to one or more images, for example from cameras. It
+/// supports querying for the list of available images provided by the service and then
+/// supports requesting a latest given image by source name.
+service ImageService {
+    /// Obtain the list of ImageSources.
+    /// The name field keys access to individual images when calling GetImage.
+    rpc ListImageSources(ListImageSourcesRequest) returns (ListImageSourcesResponse) {}
+
+    /// Request an image by name, with optional parameters for requesting image quality level.
+    rpc GetImage(GetImageRequest) returns (GetImageResponse) {}
+}
+
+message ListImageSourcesRequest {
+    /// Common request header.
+    RequestHeader header = 1;
+}
+
+message ListImageSourcesResponse {
+    /// Common response Header.
+    ResponseHeader header = 1;
+
+    /// The set of ImageSources available from this service.
+    /// May be empty if the service serves no images (e.g., if no cameras were found on startup).
+    repeated ImageSource image_sources = 2;
+}
+
+message ImageRequest {
+    string image_source_name = 1;
+
+    /// Image quality: a number from 0 (worst) to 100 (highest).
+    /// Note that jpeg quality 100 is still lossy.
+    double quality_percent = 2;
+
+    // Specify the desired image encoding (e.g. JPEG, RAW).
+    Image.Format image_format = 3;
+}
+
+message GetImageRequest {
+    /// Common request header.
+    RequestHeader header = 1;
+
+    repeated ImageRequest image_requests = 2;
+}
+
+message ImageResponse {
+    ImageCapture shot = 1;
+    ImageSource source = 2;
+
+    /// This transform tells you where the robot body was at the time of sensor acquisition,
+    /// for use in determining camera location when the image was taken.
+    SE3Pose ko_tform_body = 3;
+
+    /// Return status.
+    enum Status {
+        // UNKNOWN should never be used.
+        //
+        // An internal ImageService issue has happened if UNKNOWN is set.
+        // None of the other fields are filled out.
+        STATUS_UNKNOWN = 0;
+
+        // Call succeeded at filling out all the fields.
+        STATUS_OK = 1;
+
+        // Image source name in request is unknown.  Other fields are not filled out.
+        STATUS_UNKNOWN_CAMERA = 2;
+
+        // Failed to fill out ImageSource.  All the other fields are not filled out.
+        STATUS_SOURCE_DATA_ERROR = 3;
+
+        // There was a problem with the image data.  Only the ImageSource is filled out.
+        STATUS_IMAGE_DATA_ERROR = 4;
+    }
+    Status status = 4;
+}
+
+message GetImageResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // The ordering of these image responses is defined by the order of the ImageRequests.
+    repeated ImageResponse image_responses = 2;
+}

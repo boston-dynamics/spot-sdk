@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package bosdyn.api.spot;
+
+option java_outer_classname = "RobotCommandProto";
+
+import "bosdyn/api/geometry.proto";
+import "bosdyn/api/trajectory.proto";
+
+enum LocomotionHint {
+    HINT_UNKNOWN = 0;           // Invalid; do not use.
+    HINT_AUTO = 1;              // No hint, robot chooses an appropriate gait (typically trot.)
+    HINT_TROT = 2;              // Most robust gait which moves diagonal legs together.
+    HINT_AUTO_TROT = 3;         // Trot which comes to a stand when not commanded to move.
+    HINT_CRAWL = 4;             // Slow and steady gait which moves only one foot at a time.
+    HINT_AMBLE = 5;             // Four beat gait where one foot touches down at a time.
+    HINT_AUTO_AMBLE = 6;        // Amble which comes to a stand when not commanded to move.
+    HINT_JOG = 7;               // Demo gait which moves diagonal leg pairs together with an aerial phase.
+    HINT_HOP = 8;               // Demo gait which hops while holding some feet in the air.
+    HINT_PACE = 9;              // Demo gait which moves legs on the same side together.
+}
+
+enum SwingHeight {
+    SWING_HEIGHT_UNKNOWN = 0;    // Invalid; do not use.
+    SWING_HEIGHT_LOW = 1;        // Low-stepping. Robot will try to only swing legs a few cm away from ground.
+    SWING_HEIGHT_MEDIUM = 2;     // Default for most cases, use other values with caution.
+    SWING_HEIGHT_HIGH = 3;       // High-stepping. Possibly useful with degraded vision operation.
+}
+
+// Params common across spot movement and mobility.
+message MobilityParams {
+    // Max allowable velocity at any point in trajectory.
+    SE2VelocityLimit vel_limit = 1;
+
+    // Parameters for controlling Spot's body during motion.
+    BodyControlParams body_control = 2;
+
+    // Desired gait during locomotion
+    LocomotionHint locomotion_hint = 3;
+
+    // Stairs are only supported in trot gaits. Using this hint will override some user defaults in
+    // order to optimize stair behavior.
+    bool stair_hint = 4;
+
+    // Allow the robot to move with degraded perception when there are perception faults.
+    bool allow_degraded_perception = 5;
+
+    // Control of obstacle avoidance.
+    ObstacleParams obstacle_params = 6;
+
+    // Swing height setting
+    SwingHeight swing_height = 7;
+}
+
+// Parameters for offsetting the body from the normal default.
+message BodyControlParams {
+    // Notes about frames mentioned here:
+    //
+    // footprint: The footprint frame is a gravity aligned frame with its origin located at the
+    // geometric center of the feet. The yaw of the frame (wrt the world) is calcuated by the average
+    // foot locations, and is aligned with the feet.
+
+    // Desired base offset relative to the footprint frame, ewrt the footprint frame.
+    SE3Trajectory base_offset_rt_footprint = 1;
+}
+
+// Parameters for obstacle avoidance types.
+message ObstacleParams {
+  // Use vision to make the feet avoid obstacles by swinging higher?
+  bool disable_vision_foot_obstacle_avoidance = 1;
+  // Use vision to make the feet avoid constraints like edges of stairs?
+  bool disable_vision_foot_constraint_avoidance = 2;
+  // Use vision to make the body avoid obstacles?
+  bool disable_vision_body_obstacle_avoidance = 3;
+  // Desired padding around the body to use when attempting to avoid obstacles.
+  double obstacle_avoidance_padding = 4; // meters. Must be >= 0.
+  
+}
+
+

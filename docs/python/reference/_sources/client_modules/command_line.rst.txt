@@ -1,0 +1,7 @@
+Command Line
+===================================
+
+.. automodule:: bosdyn.client.command_line
+   :members:
+   :undoc-members:
+   :show-inheritance:

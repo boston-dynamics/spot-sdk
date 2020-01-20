@@ -1,0 +1,7 @@
+Common
+===================================
+
+.. automodule:: bosdyn.client.common
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "EstopProto";
+
+import "google/protobuf/duration.proto";
+
+/// An API client to the robot software-estop system.
+message EstopEndpoint {
+    /// Role of this endpoint. Should be user-friendly, e.g. "OCU"
+    string role = 1;
+
+    /// Name of this endpoint. Specifies a thing to fill the given role, e.g. "patrol-ocu01"
+    string name = 2;
+
+    /// Unique ID assigned by the server.
+    string unique_id = 3;
+
+    /// Maximum delay between challenge and response for this endpoint.
+    google.protobuf.Duration timeout = 4;
+}
+
+/// The state of the estop system.
+enum EstopStopLevel {
+    /// Invalid stop level.
+    ESTOP_LEVEL_UNKNOWN = 0;
+
+    /// Immediately cut power to the actuators.
+    ESTOP_LEVEL_CUT = 1;
+
+    ESTOP_LEVEL_SETTLE_THEN_CUT = 2;
+
+    ESTOP_LEVEL_CEASE = 3;
+
+    /// No-stop level. The endpoint believes the robot is safe to operate.
+    ESTOP_LEVEL_NONE = 4;
+}
+
+/// Configuration of a root / server.
+message EstopConfig {
+    /// EstopEndpoints that are part of this configuration.
+    /// Unique IDs do not have to be filled out, but can be.
+    repeated EstopEndpoint endpoints = 1;
+
+    /// Unique ID for this configuration.
+    string unique_id = 2;
+}
+
+/// EstopEndpoint with some extra status data.
+message EstopEndpointWithStatus {
+    /// The endpoint.
+    EstopEndpoint endpoint = 1;
+
+    /// Stop level most recently requested by the endpoint.
+    EstopStopLevel stop_level = 2;
+
+    /// Time since a valid response was provided by the endpoint.
+    google.protobuf.Duration time_since_valid_response = 3;
+}
+
+/// Status of Estop system.
+message EstopSystemStatus {
+    /// Status for all available endpoints.
+    repeated EstopEndpointWithStatus endpoints = 3;
+
+    /// Current stop level for the system.
+    /// Will be the most-restrictive stop level specified by an endpoint, or a stop level
+    /// asserted by the system as a whole (e.g. if an endpoint timed out).
+    EstopStopLevel stop_level = 4;
+
+    /// Human-readable information on the stop level.
+    string stop_level_details = 5;
+}

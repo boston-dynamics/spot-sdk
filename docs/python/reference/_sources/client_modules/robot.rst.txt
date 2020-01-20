@@ -1,0 +1,7 @@
+Robot
+===================================
+
+.. automodule:: bosdyn.client.robot
+   :members:
+   :undoc-members:
+   :show-inheritance:

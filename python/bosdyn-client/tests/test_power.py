@@ -1,0 +1,186 @@
+"""Tests for the power command client."""
+
+import pytest
+from concurrent import futures
+import time
+
+from bosdyn.client.power import _power_command_error_from_response, _power_feedback_error_from_response
+from bosdyn.client import power
+
+from bosdyn.api import power_service_pb2
+from bosdyn.api import robot_state_pb2
+
+from bosdyn.client import ResponseError, InternalServerError, InvalidRequestError, LeaseUseError, UnsetStatusError
+
+# For coverage report, run with...
+# python -m pytest --cov bosdyn.client.power --cov-report term-missing tests/test_power.py
+
+
+def test_power_command_error():
+    # Test unset header error
+    response = power_service_pb2.PowerCommandResponse()
+    assert isinstance(_power_command_error_from_response(response), UnsetStatusError)
+    # Test header internal server error
+    response.header.error.code = response.header.error.CODE_INTERNAL_SERVER_ERROR
+    assert isinstance(_power_command_error_from_response(response), InternalServerError)
+    # Test header invalid request error
+    response.header.error.code = response.header.error.CODE_INVALID_REQUEST
+    assert isinstance(_power_command_error_from_response(response), InvalidRequestError)
+    # Test no lease error
+    response.header.error.code = response.header.error.CODE_OK
+    assert isinstance(_power_command_error_from_response(response), LeaseUseError)
+    # Test lease use error
+    response.lease_use_result.status = response.lease_use_result.STATUS_INVALID_LEASE
+    assert isinstance(_power_command_error_from_response(response), LeaseUseError)
+    # Test unset status
+    response.lease_use_result.status = response.lease_use_result.STATUS_OK
+    assert isinstance(_power_command_error_from_response(response), UnsetStatusError)
+    # Test status error
+    response.status = power_service_pb2.STATUS_SHORE_POWER_CONNECTED
+    assert isinstance(_power_command_error_from_response(response), ResponseError)
+    # Test unknown status
+    response.status = 1337
+    assert isinstance(_power_command_error_from_response(response), ResponseError)
+    # Test status processing
+    response.status = power_service_pb2.STATUS_IN_PROGRESS
+    assert not _power_command_error_from_response(response)
+    # Test status OK
+    response.status = power_service_pb2.STATUS_SUCCESS
+    assert not _power_command_error_from_response(response)
+
+
+def test_power_feedback_error():
+    # Test unset header error
+    response = power_service_pb2.PowerCommandFeedbackResponse()
+    assert isinstance(_power_feedback_error_from_response(response), UnsetStatusError)
+    # Test header internal server error
+    response.header.error.code = response.header.error.CODE_INTERNAL_SERVER_ERROR
+    assert isinstance(_power_feedback_error_from_response(response), InternalServerError)
+    # Test header invalid request error
+    response.header.error.code = response.header.error.CODE_INVALID_REQUEST
+    assert isinstance(_power_feedback_error_from_response(response), InvalidRequestError)
+    # Test unset status
+    response.header.error.code = response.header.error.CODE_OK
+    assert isinstance(_power_feedback_error_from_response(response), UnsetStatusError)
+    # Test status error
+    response.status = power_service_pb2.STATUS_SHORE_POWER_CONNECTED
+    assert isinstance(_power_feedback_error_from_response(response), ResponseError)
+    # Test unknown status
+    response.status = 1337
+    assert isinstance(_power_feedback_error_from_response(response), ResponseError)
+    # Test status processing
+    response.status = power_service_pb2.STATUS_IN_PROGRESS
+    assert not _power_feedback_error_from_response(response)
+    # Test status OK
+    response.status = power_service_pb2.STATUS_SUCCESS
+    assert not _power_feedback_error_from_response(response)
+
+
+class MockPowerClient(object):
+
+    def __init__(self):
+        self.request = None
+        self.response = power_service_pb2.STATUS_IN_PROGRESS
+        self.feedback_fn = None
+        self.executor = futures.ThreadPoolExecutor(max_workers=2)
+
+    def power_command(self, request, lease=None, **kwargs):
+        self.request = request
+        return power_service_pb2.PowerCommandResponse(power_command_id=1337)
+
+    def power_command_feedback(self, power_command_id, **kwargs):
+        if self.feedback_fn:
+            self.feedback_fn()
+        return self.response
+
+    def power_command_feedback_async(self, power_command_id, **kwargs):
+        return self.executor.submit(self.power_command_feedback, power_command_id, **kwargs)
+
+
+class MockRobotCommandClient(object):
+
+    def __init__(self):
+        pass
+
+    def robot_command(self, command, end_times_sec=None, lease=None, **kwargs):
+        return 1337  # Robot command ID.
+
+
+class MockRobotStateClient(object):
+
+    def __init__(self):
+        self.power_state = robot_state_pb2.PowerState.STATE_ON
+        self.feedback_fn = None
+        self.executor = futures.ThreadPoolExecutor(max_workers=2)
+
+    def get_robot_state(self, **kwargs):
+        if self.feedback_fn:
+            self.feedback_fn()
+        power_state = robot_state_pb2.PowerState(motor_power_state=self.power_state)
+        return robot_state_pb2.RobotState(power_state=power_state)
+
+    def get_robot_state_async(self, **kwargs):
+        return self.executor.submit(self.get_robot_state, **kwargs)
+
+
+def test_power_on_success():
+    mock_client = MockPowerClient()
+    timeout = 1.0
+    mock_client.feedback_fn = lambda: time.sleep(timeout / 2.0)
+    mock_client.response = power_service_pb2.STATUS_SUCCESS
+    power.power_on(mock_client, timeout_sec=timeout)
+
+
+@pytest.mark.parametrize('feedback_fn', [None, lambda: time.sleep(3.0)])
+def test_power_on_timeout(feedback_fn):
+    mock_client = MockPowerClient()
+    mock_client.feedback_fn = feedback_fn
+    start = time.time()
+    timeout = 1.0
+    with pytest.raises(power.CommandTimedOutError):
+        power.power_on(mock_client, timeout_sec=timeout)
+    dt = time.time() - start
+    assert abs(dt - timeout) < 0.1
+
+
+def test_emergency_power_off_success():
+    mock_client = MockPowerClient()
+    timeout = 1.0
+    mock_client.feedback_fn = lambda: time.sleep(timeout / 2.0)
+    mock_client.response = power_service_pb2.STATUS_SUCCESS
+    power.power_off(mock_client, timeout_sec=timeout)
+
+
+@pytest.mark.parametrize('feedback_fn', [None, lambda: time.sleep(3.0)])
+def test_emergency_power_off_timeout(feedback_fn):
+    mock_client = MockPowerClient()
+    mock_client.feedback_fn = feedback_fn
+    start = time.time()
+    timeout = 1.0
+    with pytest.raises(power.CommandTimedOutError):
+        power.power_off(mock_client, timeout_sec=timeout)
+    dt = time.time() - start
+    assert abs(dt - timeout) < 0.1
+
+
+def test_safe_power_off_success():
+    mock_command_client = MockRobotCommandClient()
+    mock_state_client = MockRobotStateClient()
+    mock_state_client.power_state = robot_state_pb2.PowerState.STATE_OFF
+    timeout = 1.0
+    mock_command_client.feedback_fn = lambda: time.sleep(timeout / 2.0)
+    mock_command_client.response = power_service_pb2.STATUS_SUCCESS
+    power.safe_power_off(mock_command_client, mock_state_client, timeout)
+
+
+@pytest.mark.parametrize('feedback_fn', [None, lambda: time.sleep(3.0)])
+def test_safe_power_off_timeout(feedback_fn):
+    mock_command_client = MockRobotCommandClient()
+    mock_state_client = MockRobotStateClient()
+    mock_state_client.feedback_fn = feedback_fn
+    start = time.time()
+    timeout = 1.0
+    with pytest.raises(power.CommandTimedOutError):
+        power.safe_power_off(mock_command_client, mock_state_client, timeout)
+    dt = time.time() - start
+    assert abs(dt - timeout) < 0.1

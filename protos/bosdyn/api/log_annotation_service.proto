@@ -1,0 +1,29 @@
+/// LogAnnotationService allows adding information to the robot's log files.
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "LogAnnotationServiceProto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/log_annotation.proto";
+
+
+/// This service is a mechanism for adding information to the robot's log files.
+service LogAnnotationService {
+    /// Add the specified information to the robot's log files.
+    rpc AddLogAnnotation(AddLogAnnotationRequest) returns (AddLogAnnotationResponse) {}
+}
+
+message AddLogAnnotationRequest {
+     /// Common request/response header.
+    RequestHeader header = 1;
+
+    LogAnnotations annotations = 2;
+}
+
+message AddLogAnnotationResponse {
+    /// Common request/response header.
+    ResponseHeader header = 1;
+
+}

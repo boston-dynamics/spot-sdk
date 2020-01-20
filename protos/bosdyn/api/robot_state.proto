@@ -1,0 +1,365 @@
+syntax = "proto3";
+
+package bosdyn.api;
+option java_outer_classname = "RobotStateProto";
+
+import "bosdyn/api/geometry.proto";
+import "bosdyn/api/parameter.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/wrappers.proto";
+
+
+
+/// Kinematic model of the robot.
+message Skeleton {
+    message Link {
+        string name = 1;
+
+        /// Model to draw, expressed as an obj file.
+        /// Note: To limit the size of responses, obj_file_contents might be omitted..
+        message ObjModel {
+            string file_name = 1;
+            string file_contents = 2;
+        }
+        ObjModel obj_model = 2;
+    }
+    repeated Link links = 2;
+
+    /// URDF description of the robot skeleton.
+    string urdf = 3;
+}
+
+/// Robot Hardware Configuration
+message HardwareConfiguration {
+    /// Robot link and joint description.
+    Skeleton skeleton = 1;
+}
+
+/// The current state of the robot.
+message RobotState {
+    PowerState power_state = 1;
+
+    repeated BatteryState battery_states = 2;
+
+    repeated CommsState comms_states = 3;
+
+    SystemFaultState system_fault_state = 4;
+
+    /// Because there may be multiple EStops, and because EStops may be supplied with payloads,
+    /// this is a repeated field instead of a hardcoded list.
+    repeated EStopState estop_states = 5;
+
+    KinematicState kinematic_state = 6;
+
+    /// Robot behavior fault state.
+    BehaviorFaultState behavior_fault_state = 7;
+
+}
+
+/// Proto defining the robots motor power state.
+/// If a robot is not in the POWER OFF state, if is not safe to approach.
+/// The robot must not be estopped to enter the POWER_ON state.
+message PowerState {
+    /// Robot clock timestamp corresponding to these readings.
+    google.protobuf.Timestamp timestamp = 1;
+
+    enum MotorPowerState {
+        STATE_UNKNOWN = 0;
+
+        /// Motors are off, the robot is safe to approach.
+        STATE_OFF = 1;
+
+        /// The motors are powered.
+        STATE_ON = 2;
+
+        /// The robot has received an ON command, and is turning on.
+        STATE_POWERING_ON = 3;
+
+        /// In the process of powering down, not yet safe to approach.
+        STATE_POWERING_OFF = 4;
+
+        /// The robot is in an error state and must be powered off before attempting to re-power.
+        STATE_ERROR = 5;
+    }
+    MotorPowerState motor_power_state = 2;
+
+    /// State describing if robot is connected to shore (wall) power. Robot can't be powered on
+    /// while on shore power
+    enum ShorePowerState {
+        STATE_UNKNOWN_SHORE_POWER = 0;
+
+        /// The robot is connected to shore power. The robot will not power on while connected to
+        /// shore power.
+        STATE_ON_SHORE_POWER = 1;
+
+        /// The robot is disconnected from shore power and motors can be powered up.
+        STATE_OFF_SHORE_POWER = 2;
+    }
+    ShorePowerState shore_power_state = 3;
+}
+
+/// Proto defining the robot fault state.
+/// An "active" fault indicates a hardware/software currently on the robot.
+/// A "historical" faults indicates a, now cleared, hardware/software problem.
+/// Historical faults are useful to diagnose robot behavior subject to intermittent failed states.
+message SystemFaultState {
+    /// Currently active faults
+    repeated SystemFault faults = 1;
+
+    /// Inactive faults that cleared within the last 10 minutes
+    repeated SystemFault historical_faults = 2;
+
+    /// Aggregated fault data.
+    /// This provides a very quick way of determining if there any
+    /// "battery" or "vision" faults above a certain severity level.
+    map<string, SystemFault.Severity> aggregated = 3;
+}
+
+/// Proto defining an instance of a robot fault.
+/// A fault is an indicator of a hardware or software problem on the robot. An
+/// active fault may indicate the robot may fail to comply with a user request.
+/// The exact response a fault may vary, but possible responses include: failure
+/// to enable motor power, loss of perception enabled behavior, or triggering a
+/// fault recovery behavior on robot.
+message SystemFault {
+    /// Name of the fault.
+    string name = 1;
+
+    /// Time of robot local clock at fault onset.
+    google.protobuf.Timestamp onset_timestamp = 2;
+
+    /// Time elapsed since onset of the fault.
+    google.protobuf.Duration duration = 3;
+
+    /// Error code returned by a fault. The exact interpretation of the fault code
+    /// is unique to each variety of fault on the robot. The code is useful for
+    /// Boston Dynamics support staff to diagnose hardware/software issues on
+    /// robot.
+    int32 code = 4;
+
+    /// User visible description of the fault (and possibly remedies.)
+    string error_message = 5;
+
+    /// Fault attributes
+    // Each fault may be flagged with attribute metadata (strings in this case.)
+    // These attributes are useful to communicate that a particular fault may
+    // have significant effect on robot operations. Some potential attributes
+    // may be "robot", "imu", "vision", or "battery". These attributes would let
+    // us flag a fault as indicating a problem with the base robot hardware,
+    // gyro, perception system, or battery respectively. A fault may have, zero,
+    // one, or more attributes attached to it, i.e. a "battery" fault may also
+    // be considered a "robot" fault.
+    repeated string attributes = 6;
+
+    enum Severity {
+        /// Unknown severity
+        SEVERITY_UNKNOWN = 0;
+
+        /// No hardware problem
+        SEVERITY_INFO = 1;
+
+        /// Robot performance may be degraded
+        SEVERITY_WARN = 2;
+
+        /// Critical fault
+        SEVERITY_CRITICAL = 3;
+    }
+
+    /// Fault severity, how bad is the fault?
+    /// The severity level will have some indication of the potential robot
+    /// response to the fault. For example, a fault marked with "battery"
+    /// attribute and severity level SEVERITY_WARN may indicate a low battery
+    /// state of charge. However a "battery" fault with severity level
+    /// SEVERITY_CRITICAL likely means the robot is going to shutdown
+    /// immediately.
+    Severity severity = 7;
+}
+
+/// Proto defining a robots estop state.
+/// A typical robot has several different estops, all which must be "NOT_ESTOPPED"
+/// in order to run the robot.
+message EStopState {
+    /// Robot clock timestamp corresponding to these readings.
+    google.protobuf.Timestamp timestamp = 1;
+
+    /// Name of the EStop
+    string name = 2;
+    enum Type {
+        TYPE_UNKNOWN = 0;
+
+        /// EStop is a physical button
+        TYPE_HARDWARE = 1;
+
+        /// Estop is a software process
+        TYPE_SOFTWARE = 2;
+    }
+    Type type = 3;
+    enum State {
+        /// No EStop information is present. Only happens in an error case.
+        STATE_UNKNOWN = 0;
+
+        /// EStop is active -- robot cannot power its actuators.
+        STATE_ESTOPPED = 1;
+
+        /// EStop is released -- robot may be able to power its actuators.
+        STATE_NOT_ESTOPPED = 2;
+    }
+    State state = 4;
+    /// Optional description of EStop status.
+    string state_description = 5;
+}
+
+message BatteryState {
+    /// Robot clock timestamp corresponding to these readings.
+    google.protobuf.Timestamp timestamp = 1;
+
+    /// An identifier for this battery (could be a serial number or a name. subject to change).
+    string identifier = 2;
+
+    /// Number from 0 (empty) to 100 (full) indicating the estimated state of charge of the battery.
+    google.protobuf.DoubleValue charge_percentage = 3;
+
+    /// An estimate of remaining runtime. Note that this field might not be populated.
+    google.protobuf.Duration estimated_runtime = 4;
+
+    /// Measured current into (charging, positive) or out of (discharging, negative) the battery in
+    /// Amps.
+    google.protobuf.DoubleValue current = 5;
+
+    /// Measured voltage of the entire battery in Volts.
+    google.protobuf.DoubleValue voltage = 6;
+
+    /// Measured temperature measurements of battery, in Celsius.
+    /// Temperatures may be measured in many locations across the battery.
+    repeated double temperatures = 7;
+
+    enum Status {
+        /// The battery is in an unknown / unexpected state.
+        STATUS_UNKNOWN = 0;
+
+        STATUS_MISSING = 1;
+
+        /// The battery is plugged in to shore power and charging.
+        STATUS_CHARGING = 2;
+
+        /// The battery is not plugged into shore power and discharging.
+        STATUS_DISCHARGING = 3;
+
+        /// The battery was just plugged in and is booting up= 3;
+        STATUS_BOOTING = 4;
+    }
+    Status status = 8;
+
+}
+
+message KinematicState {
+    /// Robot clock timestamp corresponding to these readings.
+    google.protobuf.Timestamp timestamp = 1;
+
+    /// Joint state of all robot joints.
+    repeated JointState joint_states = 2;
+
+    /// Pose of robot body (base link) in kinematic odometry frame.
+    SE3Pose ko_tform_body = 3;
+
+    /// Velocity of robot body (base link) in kinematic odometry frame.
+    SE3Velocity body_twist_rt_ko = 4;
+
+    /// Ground plane in kinematic odometry frame.  Not valid robot traversing stairs, ect.
+    Plane ground_plane_rt_ko = 5;
+
+    /// Pose of robot body (base link) in vision odometry frame.
+    SE3Pose vo_tform_body = 6;
+}
+
+/// Proto containing the state of a joint on the robot.
+message JointState {
+    // This name maps directly to the joints in the URDF.
+    string name = 1;
+    /// This is typically an angle in radians as joints are typically revolute. However, for
+    /// translational joints this could be a distance in meters.
+    google.protobuf.DoubleValue position = 2;
+    google.protobuf.DoubleValue velocity = 3;
+    google.protobuf.DoubleValue acceleration = 4;
+
+    /// This is typically a torque in Newton meters as joints are typically revolute. However, for
+    /// translational joints this could be a force in Newtons.
+    google.protobuf.DoubleValue load = 5;
+}
+
+message BehaviorFaultState {
+    /// Current errors potentially blocking commands on robot
+    repeated BehaviorFault faults = 1;
+}
+
+message BehaviorFault {
+    /// Behavior fault unique id
+    uint32 behavior_fault_id = 1;
+
+    /// Time of robot local clock at time of the error
+    google.protobuf.Timestamp onset_timestamp = 2;
+
+    enum Cause {
+        /// Unknown cause of error
+        CAUSE_UNKNOWN = 0;
+
+        /// Error caused by mobility failure or fall
+        CAUSE_FALL = 1;
+
+        /// Error caused by robot hardware malfunction
+        CAUSE_HARDWARE = 2;
+    }
+    Cause cause = 3;
+
+    enum Status {
+        /// Unknown clearable status
+        STATUS_UNKNOWN = 0;
+
+        /// Fault is clearable
+        STATUS_CLEARABLE = 1;
+
+        /// Fault is currently not clearable
+        STATUS_UNCLEARABLE = 2;
+    }
+    Status status = 4;
+}
+
+/// Key robot metrics (e.g., Gait cycles (count), distance walked, time moving, etc...).
+message RobotMetrics {
+    /// Robot timestamp corresponding to these metrics.
+    google.protobuf.Timestamp timestamp = 1;
+
+    /// Key tracked robot metrics, such as distance walked, runtime, etc.
+    repeated Parameter metrics = 2;
+}
+
+//----- robot/comms.proto
+message CommsState {
+    /// Robot timestamp corresponding to these readings.
+    google.protobuf.Timestamp timestamp = 1;
+
+    oneof state {
+        WiFiState wifi_state = 2;
+    }
+
+}
+
+message WiFiState {
+    enum Mode {
+        /// The robot's comms state is unknown, or no user requested mode.
+        MODE_UNKNOWN = 0;
+
+        /// The robot is acting as an access point.
+        MODE_ACCESS_POINT = 1;
+
+        /// The robot is connected to a network.
+        MODE_CLIENT = 2;
+    }
+    /// Current WiFi mode
+    Mode current_mode = 1;
+
+    /// Essid of robot (master mode) or connected network.
+    string essid = 2;
+
+}

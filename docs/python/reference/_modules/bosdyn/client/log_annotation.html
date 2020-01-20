@@ -1,0 +1,250 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bosdyn.client.log_annotation &mdash; Spot 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Spot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Services:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../client_index.html">Client API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core_index.html">Core API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bosdyn.client.log_annotation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bosdyn.client.log_annotation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Client for the log-annotation service.</span>
+
+<span class="sd">This allows client code to add operator comments and text-messages to the robot&#39;s log files.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c1"># Get LogAnnotationTextMessage so it can be imported from this package.</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.log_annotation_pb2</span> <span class="k">import</span> <span class="n">LogAnnotationTextMessage</span>  <span class="c1">#pylint: disable=unused-import</span>
+<span class="kn">import</span> <span class="nn">bosdyn.api.log_annotation_service_pb2</span> <span class="k">as</span> <span class="nn">log_annotation_protos</span>
+<span class="kn">import</span> <span class="nn">bosdyn.api.log_annotation_service_pb2_grpc</span> <span class="k">as</span> <span class="nn">log_annotation_service</span>
+
+<span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">BaseClient</span><span class="p">,</span> <span class="n">common_header_errors</span>
+
+<span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;log_annotation&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="LogAnnotationClient"><a class="viewcode-back" href="../../../client_modules/log_annotation.html#bosdyn.client.log_annotation.LogAnnotationClient">[docs]</a><span class="k">class</span> <span class="nc">LogAnnotationClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A client adding annotations to robot logs.&quot;&quot;&quot;</span>
+
+    <span class="c1"># http://google.github.io/styleguide/pyguide.html#3164-guidelines-derived-from-guidos-recommendations</span>
+    <span class="n">default_authority</span> <span class="o">=</span> <span class="s2">&quot;log.spot.robot&quot;</span>
+    <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;log-annotation&#39;</span>
+    <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.LogAnnotation&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LogAnnotationClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">log_annotation_service</span><span class="o">.</span><span class="n">LogAnnotationServiceStub</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LogAnnotationClient.add_operator_comment"><a class="viewcode-back" href="../../../client_modules/log_annotation.html#bosdyn.client.log_annotation.LogAnnotationClient.add_operator_comment">[docs]</a>    <span class="k">def</span> <span class="nf">add_operator_comment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add an operator comment to the robot log</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          msg:                  Text of user comment to log.</span>
+<span class="sd">          robot_timestamp:      Time (google.protobuf.Timestamp) of messages, in *robot time*.</span>
+<span class="sd">                                If not set, timestamp will be when the robot receives the message.</span>
+<span class="sd">          kw_args:              Extra arguments to pass to grpc call invocation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">log_annotation_protos</span><span class="o">.</span><span class="n">AddLogAnnotationRequest</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">operator_messages</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">robot_timestamp</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">AddLogAnnotation</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LogAnnotationClient.add_text_messages"><a class="viewcode-back" href="../../../client_modules/log_annotation.html#bosdyn.client.log_annotation.LogAnnotationClient.add_text_messages">[docs]</a>    <span class="k">def</span> <span class="nf">add_text_messages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text_messages</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Log text messages to the robot.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          text_messages:  Sequence of LogAnnotationTextMessage protos.</span>
+<span class="sd">          kw_args:        Extra arguments to pass to grpc call invocation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">request</span> <span class="o">=</span> <span class="n">log_annotation_protos</span><span class="o">.</span><span class="n">AddLogAnnotationRequest</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">in_text_msg</span> <span class="ow">in</span> <span class="n">text_messages</span><span class="p">:</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">text_messages</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">in_text_msg</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">AddLogAnnotation</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Boston Dynamics
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

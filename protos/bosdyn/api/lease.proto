@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package bosdyn.api;
+option java_outer_classname = "LeaseProto";
+
+// Leases are used to verify that a client has exclusive access to a shared
+// resources. Examples of shared resources are the motors for a robot, or
+// indicator lights on a robot.
+//
+// Leases are initially obtained by clients from the LeaseService. Clients
+// then attach Leases to Commands which require them. Clients may also
+// generate sub-Leases to delegate out control of the resource to other
+// services.
+//
+message Lease {
+    // The resource that the Lease is for.
+    string resource = 1;
+
+    // The epoch for the Lease. |sequences| are scoped to a particular epoch.
+    // One example of where this can be used is to generate a random epoch
+    // at LeaseService startup.
+    string epoch = 2;
+
+    // Logical vector clock indicating when the Lease was generated.
+    repeated uint32 sequence = 3;
+}
+
+// Details about who currently owns the Lease for a resource.
+message LeaseOwner {
+    string client_name = 1; // The name of the client application.
+    string user_name = 2; // The name of the user.
+}
+
+// Result for when a Lease is used - for example, in a LeaseRetainer, or
+// associated with a command.
+message LeaseUseResult {
+    enum Status {
+        // An internal issue occurred.
+        STATUS_UNKNOWN = 0;
+
+        // The Lease is the active one and can be used.
+        STATUS_OK = 1;
+
+        // The Lease is invalid.
+        STATUS_INVALID_LEASE = 2;
+
+        // The Lease is older than the current lease, and rejected.
+        STATUS_OLDER = 3;
+
+        // The Lease holder did not check in regularly enough, and the Lease is stale.
+        STATUS_REVOKED = 4;
+
+        // The Lease was for an unmanaged resource.
+        STATUS_UNMANAGED = 5;
+
+        // The Lease was for the wrong epoch.
+        STATUS_WRONG_EPOCH = 6;
+    }
+    Status status = 1;
+
+    // The current lease owner.
+    LeaseOwner owner = 2;
+
+    // The lease which was attempted for use.
+    Lease attempted_lease = 3;
+
+    // The previous lease, if any, which was used.
+    Lease previous_lease = 4;
+}

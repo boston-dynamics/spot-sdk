@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "HeaderProto";
+
+import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
+
+/// Standard header attached to all GRPC requests to services.
+message RequestHeader {
+    /// Time that the request was sent, as measured by the client's local system clock.
+    google.protobuf.Timestamp request_timestamp = 1;
+
+    /// Name of the client to identify itself. The name will typically include a
+    /// symbolic string to identify the program, and a unique integer to identify
+    /// the specific instance of the process running.
+    string client_name = 2;
+}
+
+/// General error code are returned in the header to facilitate error-handling which is not
+/// message-specific.
+/// This can be used for generic error handlers, aggregation, and trend analysis.
+message CommonError {
+    enum Code {
+        /// Code is not specified.
+        CODE_UNSPECIFIED = 0;
+
+        /// Not an error.  Request was successful.
+        CODE_OK = 1;
+
+        /// Service experienced an unexpected error state.
+        CODE_INTERNAL_SERVER_ERROR = 2;
+
+        /// Ill-formed request.  Request arguments were not valid.
+        CODE_INVALID_REQUEST = 3;
+    }
+    Code code = 1;  ///< Error code.
+
+    /// Human-readable error description.  Not for programmatic analysis.
+    string message = 2;
+
+    /// Extra information that can optionally be provided for generic error handling/analysis.
+    google.protobuf.Any data = 3;
+}
+
+/// Standard header attached to all GRPC responses from services.
+message ResponseHeader {
+    /// Echo-back the RequestHeader for timing information, etc....
+    RequestHeader request_header = 1;
+
+    /// Time that the request was received. The server clock is the time basis.
+    google.protobuf.Timestamp request_received_timestamp = 2;
+
+    /// Time that the response was received. The server clock is the time basis.
+    google.protobuf.Timestamp response_timestamp = 3;
+
+    /// Common errors, such as invalid input or internal server problems.
+    /// If there is a common error, the rest of the response message outside of the
+    /// ResponseHeader will be invalid.
+    CommonError error = 4;
+
+    /// Echoed request message. In some cases it may not be present, or it may be a stripped
+    /// down representation of the request.
+    google.protobuf.Any request = 5;
+}

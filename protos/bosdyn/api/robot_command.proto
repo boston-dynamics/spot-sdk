@@ -1,0 +1,205 @@
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "RobotCommandProto";
+
+import "bosdyn/api/geometry.proto";
+import "bosdyn/api/trajectory.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
+
+
+
+/// A command for a robot to execute.
+/// The server decides if a set of commands is valid for a given robot and configuration.
+message RobotCommand {
+    /// Commands which require control of entire robot.
+    FullBodyCommand.Request full_body_command = 1;
+
+    /// A mobility command for a robot to execute.
+    MobilityCommand.Request mobility_command = 2;
+
+}
+
+/// Command specific feedback. Distance to goal, estimated time remaining, probability of
+/// success, etc. Note that the feedback should directly mirror the command request.
+message RobotCommandFeedback {
+    /// Commands which require control of entire robot.
+    FullBodyCommand.Feedback full_body_feedback = 2;
+
+    /// Command to control mobility system of a robot.
+    MobilityCommand.Feedback mobility_feedback = 1;
+
+}
+
+// Freeze all joints at their current positions (no balancing control)
+message FreezeCommand {
+    message Request {
+        // Freeze command takes no args
+    }
+
+    message Feedback {
+        /// Freeze command provides no feedback
+    }
+}
+
+message FullBodyCommand {
+    message Request {
+        oneof command {
+            StopCommand.Request stop_request = 1;
+            FreezeCommand.Request freeze_request = 2;
+            SelfRightCommand.Request selfright_request = 3;
+            SafePowerOffCommand.Request safe_power_off_request = 4;
+
+        }
+
+        // Robot specific command parameters.
+        google.protobuf.Any params = 100;
+    }
+
+    message Feedback {
+        oneof feedback {
+            StopCommand.Feedback stop_feedback = 1;
+            FreezeCommand.Feedback freeze_feedback = 2;
+            SelfRightCommand.Feedback selfright_feedback = 3;
+            SafePowerOffCommand.Feedback safe_power_off_feedback = 4;
+
+        }
+    }
+}
+
+// Get robot a "ready" position
+message SelfRightCommand {
+    message Request {
+        /// SelfRight command takes no args
+    }
+
+    message Feedback {
+        /// SelfRight command provides no feedback
+    }
+}
+
+/// Stop the robot in place with minimal motion.
+message StopCommand {
+    message Request {
+        /// Stop command takes no args
+    }
+
+    message Feedback {
+        /// Stop command provides no feedback
+    }
+}
+
+/// Get robot into a position where it is safe to power down, then power down. If the robot has
+/// fallen, it will power down directly. If the robot is not in a safe position, it will get to a
+/// safe position before powering down. The robot will not power down until it is in a safe state.
+message SafePowerOffCommand {
+    message Request {
+        // SafePowerOff command takes no args
+    }
+
+    message Feedback {
+        enum Status {
+            STATUS_UNKNOWN = 0;
+            STATUS_POWER_ON = 1;
+            STATUS_POWER_OFF = 2;
+        }
+        Status status = 1;
+    }
+}
+
+message MobilityCommand {
+    message Request {
+        oneof command {
+            SE2TrajectoryCommand.Request se2_trajectory_request = 1;
+            SE2VelocityCommand.Request se2_velocity_request = 2;
+            SitCommand.Request sit_request = 3;
+            StandCommand.Request stand_request = 4;
+
+        }
+
+        // Robot specific command parameters.
+        google.protobuf.Any params = 100;
+    }
+
+    message Feedback {
+        oneof feedback {
+            SE2TrajectoryCommand.Feedback se2_trajectory_feedback = 1;
+            SE2VelocityCommand.Feedback se2_velocity_feedback = 2;
+            SitCommand.Feedback sit_feedback = 3;
+            StandCommand.Feedback stand_feedback = 4;
+
+        }
+    }
+}
+
+// Move along a trajectory in 2D space.
+message SE2TrajectoryCommand {
+    message Request {
+        /// The timestamp (in robot time) by which a command must finish executing.
+        /// This is a required field and used to prevent runaway commands.
+        google.protobuf.Timestamp end_time = 1;
+
+        SE2Trajectory trajectory = 2;
+    }
+
+    message Feedback {
+        enum Status {
+            STATUS_UNKNOWN = 0;
+
+            /// The robot has arrived at the goal.
+            STATUS_AT_GOAL = 1;
+
+            /// The robot is attempting to go to a goal.
+            STATUS_GOING_TO_GOAL = 2;
+        }
+        Status status = 1;
+    }
+}
+
+message SE2VelocityCommand {
+    message Request {
+        /// The timestamp (in robot time) by which a command must finish executing. This is a
+        /// required field and used to prevent runaway commands.
+        google.protobuf.Timestamp end_time = 1;
+
+        /// Desired planar velocity.
+        SE2Velocity velocity = 2;
+
+        /// Frame that velocity is specified in.
+        Frame frame = 3;
+
+        /// If set, limits how quickly velocity can change. Otherwise, robot may decide to limit.
+        /// These values should be non-negative.
+        SE2Velocity slew_rate_limit = 4;
+    }
+
+    message Feedback {
+        /// Planar velocity commands provide no feedback
+    }
+}
+
+message SitCommand {
+    message Request {
+        /// Sit commands take no args
+    }
+
+    message Feedback {
+        /// Sit commands provide no feedback
+    }
+}
+
+message StandCommand {
+    message Request {
+    }
+
+    message Feedback {
+        enum Status {
+            STATUS_UNKNOWN = 0;
+            STATUS_STANDING = 1;
+            STATUS_NOT_STANDING = 2;
+        }
+        Status status = 1;
+    }
+}

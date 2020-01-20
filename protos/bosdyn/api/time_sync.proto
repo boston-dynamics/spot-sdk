@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "TimeSyncProto";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+/// Timestamp information from a full GRPC call round-trip.
+/// These are used to estimate the round-trip communication time and difference between
+/// client and server clocks.
+message TimeSyncRoundTrip {
+    /// Client system time when the message was sent, if not zero.
+    google.protobuf.Timestamp client_tx = 1;
+
+    /// Server system time when the message was received, if not zero.
+    google.protobuf.Timestamp server_rx = 2;
+
+    /// Server system time when the response was sent, if not zero.
+    google.protobuf.Timestamp server_tx = 3;
+
+    /// Client time when the response was received, if not zero.
+    google.protobuf.Timestamp client_rx = 4;
+}
+
+/// Estimate of network speed and clock skew.  Both for the last
+/// complete sample and a recent average.  Populated by the server.
+message TimeSyncEstimate {
+    /// Observed network delay (excludes processing between server_rx and server_tx).
+    /// If zero, this estimate is unpopulated.
+    google.protobuf.Duration round_trip_time = 1;
+
+    /// Add the skew to the client system clock to get the server clock.
+    google.protobuf.Duration clock_skew = 2;
+}
+
+
+/// Current best estimate status of time sync.
+message TimeSyncState {
+    /// Best clock synchronization estimate currently available, if any.
+    TimeSyncEstimate best_estimate = 1;
+
+    enum Status {
+        // Invalid, do not use.
+        STATUS_UNKNOWN = 0;
+
+        /// Clock skew is available.
+        STATUS_OK = 1;
+
+        /// More updates are required to establish a synchronization estimate.
+        STATUS_MORE_SAMPLES_NEEDED = 2;
+
+        /// Server still establishing time sync internally.
+        STATUS_SERVICE_NOT_READY = 3;
+    };
+    /// STATUS_OK once time sync is established.
+    Status status = 2;
+
+    /// Time of best estimate, in server time.
+    google.protobuf.Timestamp measurement_time = 3;
+}

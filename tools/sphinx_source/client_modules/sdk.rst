@@ -1,0 +1,7 @@
+SDK
+===================================
+
+.. automodule:: bosdyn.client.sdk
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "AuthServiceProto";
+
+import "bosdyn/api/header.proto";
+
+// The AuthService provides clients the ability to convert a user/password pair into a token. The
+// token can then be added to the http2 headers for future requests in order to establish the
+// identity of the requester.
+service AuthService {
+    rpc GetAuthToken(GetAuthTokenRequest) returns (GetAuthTokenResponse) {}
+}
+
+// Send login information...
+message GetAuthTokenRequest {
+    // Common request header.
+    RequestHeader header = 1;
+    // Username to authenticate with. Must be set if password is set.
+    string username = 2;
+    // Password to authenticate with. Not neccessary if token is set.
+    string password = 3;
+    // Token to authenticate with. Can be used in place of the password, to re-mint a token.
+    string token = 4;
+}
+
+// ... and get a token.
+message GetAuthTokenResponse {
+    ResponseHeader header = 1;
+    enum Status{
+        STATUS_UNKNOWN = 0;       // Should never be used. If used, an internal error has happened.
+        STATUS_OK = 1;            // Auth succeeded.
+        STATUS_INVALID_LOGIN = 2; // Auth failed. Login user/password invalid or not found.
+        STATUS_INVALID_TOKEN = 3; // Auth failed. Token invalid. Decode or signature verification failed.
+    }
+    Status status = 2;
+    // Token data.
+    string token = 3;
+}
