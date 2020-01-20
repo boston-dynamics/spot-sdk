@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 import logging
 import time
 import pytest
@@ -5,18 +11,19 @@ import pytest
 import concurrent.futures
 import grpc
 
-import bosdyn.api.estop_service_pb2
+import bosdyn.api.estop_pb2
 import bosdyn.api.estop_service_pb2_grpc
 import bosdyn.client.estop
 
 from bosdyn.client import InternalServerError
+
 
 class MockEstopServicer(bosdyn.api.estop_service_pb2_grpc.EstopServiceServicer):
     VALID_STOP_LEVEL = 1
     NAME_FOR_ENDPOINT_UNKNOWN = 'mystery'
     NAME_FOR_SERVER_ERROR = 'little-bobby-drop-tables'
     STATUSES_THAT_DO_NOT_PROVIDE_CHALLENGE = \
-        set([bosdyn.api.estop_service_pb2.EstopCheckInResponse.STATUS_UNKNOWN])
+        set([bosdyn.api.estop_pb2.EstopCheckInResponse.STATUS_UNKNOWN])
 
     def __init__(self, rpc_delay=0):
         """Create mock that returns specific token after optional delay."""
@@ -30,7 +37,7 @@ class MockEstopServicer(bosdyn.api.estop_service_pb2_grpc.EstopServiceServicer):
         This does not mirror the actual behavior of the real service. It
         is only intended to trigger all branches of the client.
         """
-        resp = bosdyn.api.estop_service_pb2.EstopCheckInResponse()
+        resp = bosdyn.api.estop_pb2.EstopCheckInResponse()
         resp.header.error.code = bosdyn.api.header_pb2.CommonError.CODE_OK
         if request.endpoint.name == self.NAME_FOR_SERVER_ERROR:
             resp.header.error.code = bosdyn.api.header_pb2.CommonError.CODE_INTERNAL_SERVER_ERROR
@@ -91,6 +98,7 @@ def test_check_in_incorrect_2():
         client.check_in(stop_level=MockEstopServicer.VALID_STOP_LEVEL, endpoint=endpoint,
                         challenge=challenge, response=response)
 
+
 def test_check_in_incorrect_3():
     client, endpoint = _setup_server_and_client()
     challenge = None
@@ -98,9 +106,11 @@ def test_check_in_incorrect_3():
     client.check_in(stop_level=MockEstopServicer.VALID_STOP_LEVEL, endpoint=endpoint,
                     challenge=challenge, response=response, suppress_incorrect=True)
 
+
 def test_server_error_check_in():
     """Test that when we ignore incorrect chal/resp, we still get InternalServerError"""
-    client, endpoint = _setup_server_and_client(endpoint_name=MockEstopServicer.NAME_FOR_SERVER_ERROR)
+    client, endpoint = _setup_server_and_client(
+        endpoint_name=MockEstopServicer.NAME_FOR_SERVER_ERROR)
     challenge = 100
     response = bosdyn.client.estop.response_from_challenge(challenge)
     with pytest.raises(InternalServerError):
@@ -110,7 +120,8 @@ def test_server_error_check_in():
 
 def test_endpoint_unknown_check_in():
     """Test that when we ignore incorrect chal/resp, we still get EndpointUnknownError"""
-    client, endpoint = _setup_server_and_client(endpoint_name=MockEstopServicer.NAME_FOR_ENDPOINT_UNKNOWN)
+    client, endpoint = _setup_server_and_client(
+        endpoint_name=MockEstopServicer.NAME_FOR_ENDPOINT_UNKNOWN)
     challenge = 100
     response = bosdyn.client.estop.response_from_challenge(challenge)
     with pytest.raises(bosdyn.client.estop.EndpointUnknownError):
@@ -131,7 +142,8 @@ def test_challenge():
 
 def test_challenge_exc():
     # Make an endpoint unknown by the system.
-    _, endpoint = _setup_server_and_client(endpoint_name=MockEstopServicer.NAME_FOR_ENDPOINT_UNKNOWN)
+    _, endpoint = _setup_server_and_client(
+        endpoint_name=MockEstopServicer.NAME_FOR_ENDPOINT_UNKNOWN)
 
     old_challenge = 0
     endpoint.set_challenge(old_challenge)
@@ -142,7 +154,8 @@ def test_challenge_exc():
 
 def test_challenge_exc_async():
     # Make an endpoint unknown by the system.
-    _, endpoint = _setup_server_and_client(endpoint_name=MockEstopServicer.NAME_FOR_ENDPOINT_UNKNOWN)
+    _, endpoint = _setup_server_and_client(
+        endpoint_name=MockEstopServicer.NAME_FOR_ENDPOINT_UNKNOWN)
 
     old_challenge = 0
     endpoint.set_challenge(old_challenge)

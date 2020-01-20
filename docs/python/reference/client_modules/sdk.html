@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>SDK &mdash; Spot 1.0 documentation</title>
+  <title>SDK &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Time Sync" href="time_sync.html" />
+    <link rel="next" title="Spot Check" href="spot_check.html" />
     <link rel="prev" title="Robot" href="robot.html" /> 
 </head>
 
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -98,6 +98,8 @@
 <li class="toctree-l2"><a class="reference internal" href="image.html">Image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lease.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="payload.html">Payload</a></li>
 <li class="toctree-l2"><a class="reference internal" href="power.html">Power</a></li>
 <li class="toctree-l2"><a class="reference internal" href="processors.html">Processors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot_command.html">Robot Command</a></li>
@@ -105,7 +107,10 @@
 <li class="toctree-l2"><a class="reference internal" href="robot_state.html">Robot State</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot.html">Robot</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spot_check.html">Spot Check</a></li>
 <li class="toctree-l2"><a class="reference internal" href="time_sync.html">Time Sync</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_cache.html">Token Cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_manager.html">Token Manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.html">Util</a></li>
 </ul>
 </li>
@@ -179,115 +184,116 @@
   <div class="section" id="module-bosdyn.client.sdk">
 <span id="sdk"></span><h1>SDK<a class="headerlink" href="#module-bosdyn.client.sdk" title="Permalink to this headline">¶</a></h1>
 <p>Sdk is  a repository for settings typically common to a single developer and/or robot fleet.</p>
-<dl class="class">
-<dt id="bosdyn.client.sdk.Sdk">
-<em class="property">class </em><code class="descclassname">bosdyn.client.sdk.</code><code class="descname">Sdk</code><span class="sig-paren">(</span><em>name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#Sdk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.Sdk" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Repository for settings typically common to a single developer and/or robot fleet.
-See also Robot for robot-specific settings.</p>
-<dl class="method">
-<dt id="bosdyn.client.sdk.Sdk.create_robot">
-<code class="descname">create_robot</code><span class="sig-paren">(</span><em>address</em>, <em>name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#Sdk.create_robot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.Sdk.create_robot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Robot initialized with this Sdk.
-:param address – Network-resolvable address of the robot, e.g. ‘192.168.80.3’:
-:param name – A unique identifier for the robot, e.g. ‘My First Robot’. Default None to: use the address as the name.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Robot initialized with the current Sdk settings.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.sdk.Sdk.load_app_token">
-<code class="descname">load_app_token</code><span class="sig-paren">(</span><em>resource_path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#Sdk.load_app_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.Sdk.load_app_token" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load an app token.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.sdk.Sdk.load_robot_cert">
-<code class="descname">load_robot_cert</code><span class="sig-paren">(</span><em>resource_path_glob=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#Sdk.load_robot_cert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.Sdk.load_robot_cert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load the SSL certificate for the robot.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>-- Optional path to certificate resource</strong> (<em>resource_path_glob</em>) – If None, will load the certificate in the ‘resources’ package.
-Otherwise, should be a glob expression to match certificates.
-Defaults to None.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.sdk.Sdk.register_service_client">
-<code class="descname">register_service_client</code><span class="sig-paren">(</span><em>creation_func</em>, <em>service_type=None</em>, <em>service_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#Sdk.register_service_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.Sdk.register_service_client" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tell the Sdk how to create a specific type of service client.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>-- Callable that returns a client. Typically just the class.</strong> (<em>creation_func</em>) – </li>
-<li><strong>-- Type of the service. If None</strong> (<em>service_type</em>) – creation_func.</li>
-<li><strong>-- Name of the service. If None</strong> (<em>service_name</em>) – creation_func.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="exception">
 <dt id="bosdyn.client.sdk.SdkError">
-<em class="property">exception </em><code class="descclassname">bosdyn.client.sdk.</code><code class="descname">SdkError</code><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#SdkError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.SdkError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.sdk.</code><code class="sig-name descname">SdkError</code><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#SdkError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.SdkError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.Error</span></code></a></p>
 <p>General class of errors to handle non-response non-grpc errors.</p>
 </dd></dl>
 
 <dl class="exception">
-<dt id="bosdyn.client.sdk.UnableToLoadAppTokenError">
-<em class="property">exception </em><code class="descclassname">bosdyn.client.sdk.</code><code class="descname">UnableToLoadAppTokenError</code><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#UnableToLoadAppTokenError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.UnableToLoadAppTokenError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.sdk.SdkError" title="bosdyn.client.sdk.SdkError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.sdk.SdkError</span></code></a></p>
-<p>Cannot load the provided app token path.</p>
-</dd></dl>
-
-<dl class="exception">
 <dt id="bosdyn.client.sdk.UnsetAppTokenError">
-<em class="property">exception </em><code class="descclassname">bosdyn.client.sdk.</code><code class="descname">UnsetAppTokenError</code><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#UnsetAppTokenError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.UnsetAppTokenError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.sdk.</code><code class="sig-name descname">UnsetAppTokenError</code><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#UnsetAppTokenError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.UnsetAppTokenError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bosdyn.client.sdk.SdkError" title="bosdyn.client.sdk.SdkError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.sdk.SdkError</span></code></a></p>
 <p>Path to app token not set.</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="bosdyn.client.sdk.create_standard_sdk">
-<code class="descclassname">bosdyn.client.sdk.</code><code class="descname">create_standard_sdk</code><span class="sig-paren">(</span><em>client_name_prefix</em>, <em>service_clients=None</em>, <em>cert_resource_glob=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#create_standard_sdk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.create_standard_sdk" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return an Sdk with the most common configuration.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>-- prefix to pass to generate_client_name</strong><strong>(</strong><strong>)</strong> (<em>client_name_prefix</em>) – </li>
-<li><strong>-- List of service client classes to register in addition to the defaults.</strong> (<em>service_clients</em>) – </li>
-<li><strong>-- Glob expression matching robot certificate</strong> (<em>cert_resource_glob</em>) – Default None to use distributed certificate.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+<dl class="exception">
+<dt id="bosdyn.client.sdk.UnableToLoadAppTokenError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.sdk.</code><code class="sig-name descname">UnableToLoadAppTokenError</code><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#UnableToLoadAppTokenError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.UnableToLoadAppTokenError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.sdk.SdkError" title="bosdyn.client.sdk.SdkError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.sdk.SdkError</span></code></a></p>
+<p>Cannot load the provided app token path.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="bosdyn.client.sdk.generate_client_name">
-<code class="descclassname">bosdyn.client.sdk.</code><code class="descname">generate_client_name</code><span class="sig-paren">(</span><em>prefix=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#generate_client_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.generate_client_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">bosdyn.client.sdk.</code><code class="sig-name descname">generate_client_name</code><span class="sig-paren">(</span><em class="sig-param">prefix=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#generate_client_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.generate_client_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a descriptive client name for API clients with an optional prefix.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bosdyn.client.sdk.create_standard_sdk">
+<code class="sig-prename descclassname">bosdyn.client.sdk.</code><code class="sig-name descname">create_standard_sdk</code><span class="sig-paren">(</span><em class="sig-param">client_name_prefix</em>, <em class="sig-param">service_clients=None</em>, <em class="sig-param">cert_resource_glob=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#create_standard_sdk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.create_standard_sdk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an Sdk with the most common configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>-- prefix to pass to generate_client_name</strong><strong>(</strong><strong>)</strong> (<em>client_name_prefix</em>) – </p></li>
+<li><p><strong>-- List of service client classes to register in addition to the defaults.</strong> (<em>service_clients</em>) – </p></li>
+<li><p><strong>-- Glob expression matching robot certificate</strong> (<em>cert_resource_glob</em>) – Default None to use distributed certificate.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="bosdyn.client.sdk.Sdk">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.sdk.</code><code class="sig-name descname">Sdk</code><span class="sig-paren">(</span><em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#Sdk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.Sdk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Repository for settings typically common to a single developer and/or robot fleet.
+See also Robot for robot-specific settings.</p>
+<dl class="method">
+<dt id="bosdyn.client.sdk.Sdk.create_robot">
+<code class="sig-name descname">create_robot</code><span class="sig-paren">(</span><em class="sig-param">address</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#Sdk.create_robot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.Sdk.create_robot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a Robot initialized with this Sdk, creating it if it does not yet exist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>-- Network-resolvable address of the robot</strong><strong>, </strong><strong>e.g. '192.168.80.3'</strong> (<em>address</em>) – </p></li>
+<li><p><strong>-- A unique identifier for the robot</strong><strong>, </strong><strong>e.g. 'My First Robot'. Default None to</strong> (<em>name</em>) – use the address as the name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Robot initialized with the current Sdk settings.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.sdk.Sdk.register_service_client">
+<code class="sig-name descname">register_service_client</code><span class="sig-paren">(</span><em class="sig-param">creation_func</em>, <em class="sig-param">service_type=None</em>, <em class="sig-param">service_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#Sdk.register_service_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.Sdk.register_service_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tell the Sdk how to create a specific type of service client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>-- Callable that returns a client. Typically just the class.</strong> (<em>creation_func</em>) – </p></li>
+<li><p><strong>-- Type of the service. If None</strong> (<em>service_type</em>) – creation_func.</p></li>
+<li><p><strong>-- Name of the service. If None</strong> (<em>service_name</em>) – creation_func.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.sdk.Sdk.load_robot_cert">
+<code class="sig-name descname">load_robot_cert</code><span class="sig-paren">(</span><em class="sig-param">resource_path_glob=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#Sdk.load_robot_cert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.Sdk.load_robot_cert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the SSL certificate for the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>-- Optional path to certificate resource</strong> (<em>resource_path_glob</em>) – If None, will load the certificate in the ‘resources’ package.
+Otherwise, should be a glob expression to match certificates.
+Defaults to None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.sdk.Sdk.load_app_token">
+<code class="sig-name descname">load_app_token</code><span class="sig-paren">(</span><em class="sig-param">resource_path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/sdk.html#Sdk.load_app_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.sdk.Sdk.load_app_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an app token from a file, and set it on the SDK.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>resource_path</strong> – Path to app token file on file system.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#bosdyn.client.sdk.UnsetAppTokenError" title="bosdyn.client.sdk.UnsetAppTokenError"><strong>UnsetAppTokenError</strong></a> – If resource_path is not set.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.sdk.UnableToLoadAppTokenError" title="bosdyn.client.sdk.UnableToLoadAppTokenError"><strong>UnableToLoadAppTokenError</strong></a> – If the file exists, but is unloadable.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -300,7 +306,7 @@ Defaults to None.</td>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="time_sync.html" class="btn btn-neutral float-right" title="Time Sync" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="spot_check.html" class="btn btn-neutral float-right" title="Spot Check" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="robot.html" class="btn btn-neutral float-left" title="Robot" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

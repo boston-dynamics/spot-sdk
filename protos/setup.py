@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 import distutils.command.build_py
 import distutils.cmd
 import os
@@ -7,12 +13,12 @@ import sys
 
 
 
-
 class BuildPy(distutils.command.build_py.build_py, object):
     """Grabs and overwrites the package directory."""
+
     def finalize_options(self):
         build = self.distribution.get_command_obj('build')
-        self.build_base = build.build_base +'/protos/bosdyn'
+        self.build_base = build.build_base + '/protos/bosdyn'
         self.distribution.package_dir['bosdyn'] = self.build_base
         super(BuildPy, self).finalize_options()
 
@@ -24,15 +30,15 @@ class BuildPy(distutils.command.build_py.build_py, object):
 class proto_build(distutils.cmd.Command, object):
 
     user_options = [('build-base=', 'b', 'Directory to compile protobufs into')]
-
     """Compiles protobufs into pb2.py files."""
+
     def __init__(self, dist):
         super(proto_build, self).__init__(dist)
 
     def finalize_options(self):
         if self.build_base is None:
             try:
-                self.build_base = self.distribution.package_dir['bosdyn']+'/..'
+                self.build_base = self.distribution.package_dir['bosdyn'] + '/..'
             except:
                 raise Exception('Must specify build-base for solitary build_protos action')
 
@@ -59,7 +65,6 @@ class proto_build(distutils.cmd.Command, object):
                 with open(str(init_file), 'w') as f:
                     f.write("__path__ = __import__('pkgutil').extend_path(__path__, __name__)")
 
-
         root = os.getcwd()
         os.chdir(root)
 
@@ -76,11 +81,8 @@ class proto_build(distutils.cmd.Command, object):
                     continue
                 file_relative_to_root = os.path.join(cwd_relative_to_root, f)
                 # $!@%!!^ the protoc.main discards the first argument, assuming it's the program.
-                args = ('garbage',
-                        file_relative_to_root,
-                        "--python_out=" + output_dir,
-                        "--grpc_python_out=" + output_dir,
-                        "-I.",
+                args = ('garbage', file_relative_to_root, "--python_out=" + output_dir,
+                        "--grpc_python_out=" + output_dir, "-I.",
                         "-I" + pkg_resources.resource_filename('grpc_tools', '_proto'))
                 if self.verbose:
                     print('Building {}'.format(f))
@@ -90,6 +92,7 @@ class proto_build(distutils.cmd.Command, object):
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+
 def add_pathlib_version(requirements_list):
     """Determines what, if any, version of pathlib needs to be installed for setup."""
     # pathlib is part of python 3.4 and up, but we want exist_ok in the mkdir args (added in 3.5).
@@ -97,11 +100,12 @@ def add_pathlib_version(requirements_list):
         return requirements_list + ['pathlib2']
     return requirements_list
 
+
 setuptools.setup(
     name="bosdyn-api",
-    version="1.0.1",
+    version="1.1.0",
     author="Boston Dynamics",
-    author_email="dev@bostondynamics.com",
+    author_email="support@bostondynamics.com",
     description="Boston Dynamics API protobufs",
     install_requires=["protobuf"],
     long_description=long_description,
@@ -118,9 +122,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
         "Private :: Do Not Upload",
     ],
-
     cmdclass={
         'build_protos': proto_build,
         'build_py': BuildPy,
-    }
-)
+    })

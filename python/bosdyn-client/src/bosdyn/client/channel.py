@@ -1,8 +1,12 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 import logging
 
 import grpc
-
-from six.moves import http_client
 
 from .exceptions import (RpcError, ClientCancelledOperationError, InvalidAppTokenError,
                          InvalidClientCertificateError, NonexistentAuthorityError,
@@ -14,7 +18,9 @@ TransportError = grpc.RpcError
 
 _LOGGER = logging.getLogger(__name__)
 
+
 class RefreshingAccessTokenAuthMetadataPlugin(grpc.AuthMetadataPlugin):
+
     def __init__(self, token_cb):
         """Constructor.
 
@@ -43,25 +49,28 @@ def create_secure_channel_creds(cert, token_cb):
     auth_creds = grpc.metadata_call_credentials(plugin)
     return grpc.composite_channel_credentials(transport_creds, auth_creds)
 
+
 def create_secure_channel(address, port, creds, authority):
     """Create a secure channel to given host:port"""
     socket = '{}:{}'.format(address, port)
-    options = (('grpc.ssl_target_name_override', authority), )
+    options = (('grpc.ssl_target_name_override', authority),)
     return grpc.secure_channel(socket, creds, options)
+
 
 def translate_exception(rpc_error):
     code = rpc_error.code()
     details = rpc_error.details()
+
     if code is grpc.StatusCode.CANCELLED:
-        if str(http_client.UNAUTHORIZED) in details:
+        if str(401) in details:
             return UnauthenticatedError(rpc_error, UnauthenticatedError.__doc__)
-        elif str(http_client.FORBIDDEN) in details:
+        elif str(403) in details:
             return InvalidAppTokenError(rpc_error, InvalidAppTokenError.__doc__)
-        elif str(http_client.NOT_FOUND) in details:
+        elif str(404) in details:
             return UnimplementedError(rpc_error, UnimplementedError.__doc__)
-        elif str(http_client.BAD_GATEWAY) in details:
+        elif str(502) in details:
             return ServiceUnavailableError(rpc_error, ServiceUnavailableError.__doc__)
-        elif str(http_client.GATEWAY_TIMEOUT) in details:
+        elif str(504) in details:
             return TimedOutError(rpc_error, TimedOutError.__doc__)
 
         return ClientCancelledOperationError(rpc_error, ClientCancelledOperationError.__doc__)
@@ -76,7 +85,8 @@ def translate_exception(rpc_error):
     elif 'Failed to connect to remote host' in debug or 'Failed to create subchannel' in debug:
         return ProxyConnectionError(rpc_error, ProxyConnectionError.__doc__)
     elif 'Exception calling application' in debug:
-        return ServiceFailedDuringExecutionError(rpc_error, ServiceFailedDuringExecutionError.__doc__)
+        return ServiceFailedDuringExecutionError(rpc_error,
+                                                 ServiceFailedDuringExecutionError.__doc__)
     elif 'Handshake failed' in debug:
         return InvalidClientCertificateError(rpc_error, InvalidClientCertificateError.__doc__)
     elif 'Name resolution failure' in debug:

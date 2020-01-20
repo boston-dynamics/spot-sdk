@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.power &mdash; Spot 1.0 documentation</title>
+  <title>bosdyn.client.power &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -149,7 +149,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.power</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;For clients to the power command service.&quot;&quot;&quot;</span>
+<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;For clients to the power command service.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="k">import</span> <span class="ne">TimeoutError</span>
 <span class="kn">import</span> <span class="nn">time</span>
@@ -159,7 +165,7 @@
                                   <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_lease_use_result_errors</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="k">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">InternalServerError</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">power_service_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">power_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">power_service_pb2_grpc</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">robot_command_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">robot_state_pb2</span>
@@ -247,11 +253,11 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_power_command_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">power_service_pb2</span><span class="o">.</span><span class="n">PowerCommandRequest</span><span class="p">(</span><span class="n">lease</span><span class="o">=</span><span class="n">lease</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">PowerCommandRequest</span><span class="p">(</span><span class="n">lease</span><span class="o">=</span><span class="n">lease</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_power_command_feedback_request</span><span class="p">(</span><span class="n">power_command_id</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">power_service_pb2</span><span class="o">.</span><span class="n">PowerCommandFeedbackRequest</span><span class="p">(</span><span class="n">power_command_id</span><span class="o">=</span><span class="n">power_command_id</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">PowerCommandFeedbackRequest</span><span class="p">(</span><span class="n">power_command_id</span><span class="o">=</span><span class="n">power_command_id</span><span class="p">)</span></div>
 
 
 <span class="nd">@handle_common_header_errors</span>
@@ -267,24 +273,23 @@
 
 <span class="n">_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 <span class="n">_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-    <span class="n">power_service_pb2</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="n">power_service_pb2</span><span class="o">.</span><span class="n">STATUS_IN_PROGRESS</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="n">power_service_pb2</span><span class="o">.</span><span class="n">STATUS_SHORE_POWER_CONNECTED</span><span class="p">:</span> <span class="p">(</span><span class="n">ShorePowerConnectedError</span><span class="p">,</span>
-                                                     <span class="n">ShorePowerConnectedError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">power_service_pb2</span><span class="o">.</span><span class="n">STATUS_BATTERY_MISSING</span><span class="p">:</span> <span class="p">(</span><span class="n">BatteryMissingError</span><span class="p">,</span> <span class="n">BatteryMissingError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">power_service_pb2</span><span class="o">.</span><span class="n">STATUS_COMMAND_IN_PROGRESS</span><span class="p">:</span> <span class="p">(</span><span class="n">CommandInProgressError</span><span class="p">,</span>
-                                                   <span class="n">CommandInProgressError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">power_service_pb2</span><span class="o">.</span><span class="n">STATUS_ESTOPPED</span><span class="p">:</span> <span class="p">(</span><span class="n">EstoppedError</span><span class="p">,</span> <span class="n">EstoppedError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">power_service_pb2</span><span class="o">.</span><span class="n">STATUS_FAULTED</span><span class="p">:</span> <span class="p">(</span><span class="n">FaultedError</span><span class="p">,</span> <span class="n">FaultedError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">power_service_pb2</span><span class="o">.</span><span class="n">STATUS_INTERNAL_ERROR</span><span class="p">:</span> <span class="p">(</span><span class="n">InternalServerError</span><span class="p">,</span> <span class="n">InternalServerError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_IN_PROGRESS</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_SHORE_POWER_CONNECTED</span><span class="p">:</span> <span class="p">(</span><span class="n">ShorePowerConnectedError</span><span class="p">,</span>
+                                             <span class="n">ShorePowerConnectedError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_BATTERY_MISSING</span><span class="p">:</span> <span class="p">(</span><span class="n">BatteryMissingError</span><span class="p">,</span> <span class="n">BatteryMissingError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_COMMAND_IN_PROGRESS</span><span class="p">:</span> <span class="p">(</span><span class="n">CommandInProgressError</span><span class="p">,</span> <span class="n">CommandInProgressError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_ESTOPPED</span><span class="p">:</span> <span class="p">(</span><span class="n">EstoppedError</span><span class="p">,</span> <span class="n">EstoppedError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_FAULTED</span><span class="p">:</span> <span class="p">(</span><span class="n">FaultedError</span><span class="p">,</span> <span class="n">FaultedError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_INTERNAL_ERROR</span><span class="p">:</span> <span class="p">(</span><span class="n">InternalServerError</span><span class="p">,</span> <span class="n">InternalServerError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
 <span class="p">})</span>
 
 
-<span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">,</span> <span class="n">statustype</span><span class="o">=</span><span class="n">power_service_pb2</span><span class="p">)</span>
+<span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">,</span> <span class="n">statustype</span><span class="o">=</span><span class="n">power_pb2</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_power_status_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
-                         <span class="n">status_to_string</span><span class="o">=</span><span class="n">power_service_pb2</span><span class="o">.</span><span class="n">PowerCommandStatus</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+                         <span class="n">status_to_string</span><span class="o">=</span><span class="n">power_pb2</span><span class="o">.</span><span class="n">PowerCommandStatus</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_STATUS_TO_ERROR</span><span class="p">)</span>
 
 
@@ -314,7 +319,7 @@
     <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">full_body_command</span><span class="o">=</span><span class="n">full_body_command</span><span class="p">)</span>
     <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="n">command</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">while</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">):</span>
+    <span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">:</span>
         <span class="n">time_until_timeout</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">start_call_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">future</span> <span class="o">=</span> <span class="n">state_client</span><span class="o">.</span><span class="n">get_robot_state_async</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -340,7 +345,7 @@
 <span class="sd">    Raises:</span>
 <span class="sd">        Error: Throws on error.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">request</span> <span class="o">=</span> <span class="n">power_service_pb2</span><span class="o">.</span><span class="n">PowerCommandRequest</span><span class="o">.</span><span class="n">REQUEST_ON</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">PowerCommandRequest</span><span class="o">.</span><span class="n">REQUEST_ON</span>
     <span class="n">_power_command</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
@@ -355,7 +360,7 @@
 <span class="sd">    Raises:</span>
 <span class="sd">        Error: Throws on error.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">request</span> <span class="o">=</span> <span class="n">power_service_pb2</span><span class="o">.</span><span class="n">PowerCommandRequest</span><span class="o">.</span><span class="n">REQUEST_OFF</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">PowerCommandRequest</span><span class="o">.</span><span class="n">REQUEST_OFF</span>
     <span class="n">_power_command</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
@@ -367,7 +372,7 @@
 
     <span class="n">response</span> <span class="o">=</span> <span class="n">power_client</span><span class="o">.</span><span class="n">power_command</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">power_command_id</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">power_command_id</span>
-    <span class="k">while</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">):</span>
+    <span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">:</span>
         <span class="c1"># user specified timeout as possible, and differentiate between GRPC timeouts and command</span>
         <span class="c1"># completion timeouts.</span>
         <span class="n">time_until_timeout</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -375,7 +380,7 @@
         <span class="n">future</span> <span class="o">=</span> <span class="n">power_client</span><span class="o">.</span><span class="n">power_command_feedback_async</span><span class="p">(</span><span class="n">power_command_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">time_until_timeout</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="n">power_service_pb2</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span><span class="p">:</span>
                 <span class="k">return</span>
         <span class="k">except</span> <span class="ne">TimeoutError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">CommandTimedOutError</span>

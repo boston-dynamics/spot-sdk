@@ -1,9 +1,16 @@
+// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
 syntax = "proto3";
 
 package bosdyn.api;
 option java_outer_classname = "RobotStateProto";
 
 import "bosdyn/api/geometry.proto";
+import "bosdyn/api/header.proto";
 import "bosdyn/api/parameter.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
@@ -137,6 +144,9 @@ message SystemFault {
     /// Boston Dynamics support staff to diagnose hardware/software issues on
     /// robot.
     int32 code = 4;
+
+    /// Fault UID
+    uint64 uid = 8;
 
     /// User visible description of the fault (and possibly remedies.)
     string error_message = 5;
@@ -362,4 +372,57 @@ message WiFiState {
     /// Essid of robot (master mode) or connected network.
     string essid = 2;
 
+}
+
+message RobotStateRequest {
+    /// Common request/response header.
+    RequestHeader header = 1;
+}
+
+message RobotStateResponse {
+    /// Common request/response header.
+    ResponseHeader header = 1;
+    /// The requested RobotState.
+    RobotState robot_state = 2;
+}
+
+message RobotMetricsRequest {
+    /// Common request/response header.
+    RequestHeader header = 1;
+}
+
+message RobotMetricsResponse {
+    /// Common request/response header.
+    ResponseHeader header = 1;
+
+    /// The requested robot metrics.
+    RobotMetrics robot_metrics = 2;
+}
+
+message RobotHardwareConfigurationRequest {
+    /// Common request/response header.
+    RequestHeader header = 1;
+}
+
+message RobotHardwareConfigurationResponse {
+    /// Common request/response header.
+    ResponseHeader header = 1;
+
+    /// The requested RobotState.
+    HardwareConfiguration hardware_configuration = 2;
+}
+
+message RobotLinkModelRequest {
+    /// Common request/response header.
+    RequestHeader header = 1;
+
+    string link_name = 2;
+}
+
+message RobotLinkModelResponse {
+    /// Common request/response header.
+    ResponseHeader header = 1;
+
+    /// The requested RobotState.
+    Skeleton.Link.ObjModel link_model = 2;
 }

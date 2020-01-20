@@ -1,3 +1,11 @@
+<!--
+Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+
+Downloading, reproducing, distributing or otherwise using the SDK Software
+is subject to the terms and conditions of the Boston Dynamics Software
+Development Kit License (20191101-BDSDK-SL).
+-->
+
 # Boston Dynamics API - Python Quickstart
 
 This guide gets you started with the Boston Dynamics API in Python with a simple example.
@@ -26,13 +34,11 @@ This guide gets you started with the Boston Dynamics API in Python with a simple
 
 ## Getting the code
 
-The Boston Dynamics API works with Python 2.7 or Python 3.6 or higher. Python 3.6 is recommended due to the impending end-of-life for Python 2.
+The Boston Dynamics API works with Python 3.6 or Python 3.7. Note that Python 3.8 does not work at this point.
 
 Downloads and instructions for installing Python can be found at https://www.python.org/.
 
 ### Getting pip3 configured
-
-If you are planning to use Python 2 only, you can skip this step.
 
 First, check if pip3 is installed - and if so, what version.
 
@@ -46,7 +52,7 @@ If pip3 is not found, you'll need to install it. There are a few options:
   * Use the `get-pip.py` [installation script](https://pip.pypa.io/en/stable/installing/).
   * Use an OS-specific package manager (such as the python3-pip package on Ubuntu)
 
-**Important** The rest of the documentation assumes pip3 >= 18.0.0. If `pip3 --version` showed an older version (9.0.1 is quite common) you will need to upgrade it.
+**Important** The rest of the documentation assumes pip3 >= 19.0.0. If `pip3 --version` showed an older version (9.0.1 is quite common) you will need to upgrade it.
 
 ```shell
 $ pip3 --version
@@ -78,59 +84,11 @@ ImportError: cannot import name 'main'
 
 To fix this, you'll need to make a small fix to `/usr/bin/pip3`. See https://stackoverflow.com/a/51462434 for instructions on how to do that.
 
-### Getting pip configured
-
-If you are planning to use Python 3 only, you can skip this step.
-
-First, check if pip is installed - and if so, what version.
-
-```shell
-$ pip --version
-pip 19.2.1 from <path on your computer>
-```
-
-If pip is not found, you'll need to install it. There are a few options:
-  * pip will come preinstalled with all Python 2 versions >= 2.7.9 downloaded from python.org
-  * Use the `get-pip.py` [installation script](https://pip.pypa.io/en/stable/installing/).
-  * Use an OS-specific package manager (such as the python-pip package on Ubuntu)
-
-**Important** The rest of the documentation assumes pip >= 18.0.0. If `pip --version` showed an older version (9.0.1 is quite common) you will need to upgrade it.
-
-```shell
-$ pip --version
-pip 9.0.1 from <path on your computer>
-$ pip install --upgrade pip
-Collecting pip
-  Cache entry deserialization failed, entry ignored
-  Downloading https://files.pythonhosted.org/packages/8d/07/f7d7ced2f97ca3098c16565efbe6b15fafcba53e8d9bdb431e09140514b0/pip-19.2.2-py2.py3-none-any.whl (1.4MB)
-    100% |████████████████████████████████| 1.4MB 1.3MB/s
-Installing collected packages: pip
-Successfully installed pip-19.2.2
-```
-
-Check that pip is up-to-date.
-```shell
-$ pip --version
-pip 19.2.2 from <path on your computer>
-```
-
-**Ubuntu users:** The previous `pip --version` command may fail if you installed pip via the python-pip package. If so, you might see an error like:
-
-```shell
-$ pip --version
-Traceback (most recent call last):
-  File "/usr/bin/pip", line 9, in <module>
-    from pip import main
-ImportError: cannot import name 'main'
-```
-
-To fix this, you'll need to make a small fix to `/usr/bin/pip`. See https://stackoverflow.com/a/51462434 for instructions on how to do that.
-
 ### Installing the Boston Dynamics Python Libraries
 
-Now that you have pip and/or pip3 installed, it's time to install the Boston Dynamics Python libraries.
+Now that you have pip3 installed, it's time to install the Boston Dynamics Python libraries.
 
-#### Python 3 steps for Linux, MacOS, or Windows Subsystem for Linux (WSL)
+#### Installing on Linux, MacOS, or Windows Subsystem for Linux (WSL)
 
 Assuming that the Boston Dynamics SDK directory is downloaded at `~/bosdyn-sdk-beta`, the following commands will install the libraries for Python 3.
 
@@ -155,9 +113,9 @@ Make sure that the packages have been installed. If you don't see listings for b
 
 ```shell
 $ pip3 list --format=columns | grep bosdyn
-bosdyn-api                    1.0.1
-bosdyn-client                 1.0.1
-bosdyn-core                   1.0.1
+bosdyn-api                    1.1.0
+bosdyn-client                 1.1.0
+bosdyn-core                   1.1.0
 ```
 
 Optionally, install Pillow - a library for handling images. Later in the quickstart we will use this to display images from the robot.
@@ -168,7 +126,7 @@ Optionally, install Pillow - a library for handling images. Later in the quickst
 $ pip3 install pillow
 ```
 
-#### Python 3 steps for Windows
+#### Installing on Windows
 
 Assuming that the Boston Dynamics SDK directory is downloaded at `C:\Users\foobar\bosdyn-sdk-beta`, the following commands will install the libraries for Python 3.
 
@@ -193,9 +151,9 @@ Make sure that the packages have been installed. If you don't see listings for b
 
 ```shell
 $ pip3 list --format=columns
-bosdyn-api                    1.0.1
-bosdyn-client                 1.0.1
-bosdyn-core                   1.0.1
+bosdyn-api                    1.1.0
+bosdyn-client                 1.1.0
+bosdyn-core                   1.1.0
 ```
 
 Optionally, install Pillow - a library for handling images. Later in the quickstart we will use this to display images from the robot.
@@ -204,85 +162,9 @@ Optionally, install Pillow - a library for handling images. Later in the quickst
 $ pip3 install pillow
 ```
 
-#### Python 2 steps for Linux, MacOS, or Windows Subsystem for Linux (WSL)
-
-Assuming that the Boston Dynamics SDK directory is downloaded at `~/bosdyn-sdk-beta`, the following commands will install the libraries for Python 2.
-
-```
-$ pip install --upgrade --find-links=~/bosdyn-sdk-beta/prebuilt bosdyn-client
-```
-
-If you see an error like this:
-
-```
-ERROR: Could not install packages due to an EnvironmentError: [Errno 13] Permission denied: <path>
-Consider using the `--user` option or check the permissions.
-```
-
-then try the following command to install the Boston Dynamics Python libraries in a per-user location:
-
-```
-$ pip install --user --upgrade --find-links=~/bosdyn-sdk-beta/prebuilt bosdyn-client
-```
-
-Make sure that the packages have been installed. If you don't see listings for bosdyn-api, bosdyn-client, and bosdyn-core, something went wrong during installation.
-
-```shell
-$ pip list --format=columns | grep bosdyn
-bosdyn-api                    1.0.1
-bosdyn-client                 1.0.1
-bosdyn-core                   1.0.1
-```
-
-Optionally, install Pillow - a library for handling images. Later in the quickstart we will use this to display images from the robot.
-
-**WSL users:** while you can install Pillow, you won't be able to use it since WSL is terminal-based only.
-
-```shell
-$ pip install pillow
-```
-
-#### Python 2 steps for Windows
-
-Assuming that the Boston Dynamics SDK directory is downloaded at `C:\Users\foobar\bosdyn-sdk-beta`, the following commands will install the libraries for Python 2.
-
-```
-$ pip install --upgrade --find-links=C:\Users\foobar\bosdyn-sdk-beta\prebuilt bosdyn-client
-```
-
-If you see an error like this:
-
-```
-ERROR: Could not install packages due to an EnvironmentError: [Errno 13] Permission denied: <path>
-Consider using the `--user` option or check the permissions.
-```
-
-then try the following command to install the Boston Dynamics Python libraries in a per-user location:
-
-```
-$ pip install --user --upgrade --find-links=C:\Users\foobar\bosdyn-sdk-beta\prebuilt bosdyn-client
-```
-
-Make sure that the packages have been installed. If you don't see listings for bosdyn-api, bosdyn-client, and bosdyn-core, something went wrong during installation.
-
-```shell
-$ pip list --format=columns
-bosdyn-api                    1.0.1
-bosdyn-client                 1.0.1
-bosdyn-core                   1.0.1
-```
-
-Optionally, install Pillow - a library for handling images. Later in the quickstart we will use this to display images from the robot.
-
-```shell
-$ pip install pillow
-```
-
 ### Verifying that Boston Dynamics Python libraries are installed.
 
 Verify that the libraries are correctly installed by importing them in Python.
-
-#### Python 3
 
 Start Python 3 in an interactive mode. Windows users may need to start Python 3 via the Start Menu, but users of other OS's will be able to start via a terminal application.
 
@@ -321,54 +203,14 @@ Traceback (most recent call last):
 ModuleNotFoundError: No module named 'bosdyn.client'
 ```
 
-If that's the case, first run `pip3 list` again to make sure that the Boston Dynamics Python libraries are installed. If they are and you run into this issue, send an email to dev@bostondynamics.com explaining the problem.
+If that's the case, first run `pip3 list` again to make sure that the Boston Dynamics Python libraries are installed. If they are and you run into this issue, send an email to support@bostondynamics.com explaining the problem.
 
-#### Python 2
-
-Start Python 2 in an interactive mode. Windows users may need to start Python 2 via the Start Menu, but users of other OS's will be able to start via a terminal application.
-
-```shell
-$ python
-Python 2.7.15rc1 (default, Nov 12 2018, 14:31:15)
-[GCC 7.3.0] on linux2
-Type "help", "copyright", "credits" or "license" for more information.
-```
-
-Now, import the `bosdyn.client` library and get interactive help about the library. Assuming everything is installed correctly, you should see something like the following: 
-
-```python
->>> import bosdyn.client
->>> help(bosdyn.client)
-Help on package bosdyn.client in bosdyn:
-
-NAME
-    bosdyn.client
-
-DESCRIPTION
-    The client library package.
-    Sets up some convenience imports for commonly used classes.
-
-PACKAGE CONTENTS
-    __main__
-...
-```
-
-If the libraries are **not** installed correctly, you may see an error like this one:
-
-```python
->>> import bosdyn.client
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-ModuleNotFoundError: No module named 'bosdyn.client'
-```
-
-If that's the case, first run `pip list` again to make sure that the Boston Dynamics Python libraries are installed. If they are and you run into this issue, send an email to dev@bostondynamics.com explaining the problem.
 
 ## Getting an Application Token
 
 Although you can start playing around with the Python libraries right now, to actually control a robot with you will need to get an Application Token from Boston Dynamics.
 
-To get an Application Token, email dev@bostondynamics.com with subject "Application Token Request". You should receive an email with a link to an Application Token within one business day. Visit the link in your browser, and download the Application Token.
+To get an Application Token, email support@bostondynamics.com with subject "Application Token Request". You should receive an email with a link to an Application Token within one business day. Visit the link in your browser, and download the Application Token.
 
 Once downloaded, it needs to be placed in a special `.bosdyn` directory in your home directory.
 
@@ -380,7 +222,7 @@ $ mkdir .bosdyn
 $ cp ~/Downloads/dev.app_token ~/.bosdyn/
 ```
 
-For Windows, assuming the home directory is `C:\Users\Developer` and the token was downloaded to `C:\Users\Developer\Downloads\dev.app_token`
+For Windows, assuming the home directory is `C:\Users\Developer` and the token was downloaded to `C:\Users\Developer\Downloads\dev.app_token` (replace `cp` command with `copy` if not using WSL)
 
 ```console
 C:\WINDOWS>cd C:\Users\Developer
@@ -410,8 +252,8 @@ On the command line, issue the following command to get information about the ro
 ```
 $ python3 -m bosdyn.client 192.168.80.3 id
 beta-BD-90370002                spot (V3)
- Software: 1.0.0 (ca559484e93 2019-06-03 15:58:43)
-  Installed: 2019-06-03 16:19:11
+ Software: 1.1.0 (538f0876dd4 2019-10-11 08:58:18)
+  Installed: 2019-10-11 10:19:49
 ```
 
 There's two common error cases if that did not work.
@@ -427,11 +269,11 @@ Traceback (most recent call last):
     "__main__", mod_spec)
   File "/usr/lib/python3.6/runpy.py", line 85, in _run_code
     exec(code, run_globals)
-  File "/home/BOSDYN/cbentzel/.local/lib/python3.6/site-packages/bosdyn/client/__main__.py", line 6, in <module>
+  File "${HOME}/.local/lib/python3.6/site-packages/bosdyn/client/__main__.py", line 6, in <module>
     if not main():
-  File "/home/BOSDYN/cbentzel/.local/lib/python3.6/site-packages/bosdyn/client/command_line.py", line 544, in main
+  File "${HOME}/.local/lib/python3.6/site-packages/bosdyn/client/command_line.py", line 544, in main
     sdk.load_app_token(options.app_token)
-  File "/home/BOSDYN/cbentzel/.local/lib/python3.6/site-packages/bosdyn/client/sdk.py", line 175, in load_app_token
+  File "${HOME}/.local/lib/python3.6/site-packages/bosdyn/client/sdk.py", line 175, in load_app_token
     with open(resource_path, 'rb') as token_file:
 TypeError: expected str, bytes or os.PathLike object, not NoneType
 ```
@@ -459,7 +301,7 @@ header {
     seconds: 1559841073
     nanos: 719016960
   }
-  client_name: "BosdynClientlaptop-cbentzel01:__main__.py-32664"
+  client_name: "LAPTOP_NAME:__main__.py-32664"
 }
 
 
@@ -470,7 +312,7 @@ header {
       seconds: 1559841073
       nanos: 719016960
     }
-    client_name: "BosdynClientlaptop-cbentzel01:__main__.py-32664"
+    client_name: "LAPTOP_NAME:__main__.py-32664"
   }
   request_received_timestamp {
     seconds: 1559841069
@@ -485,7 +327,7 @@ header {
   }
   request {
     type_url: "type.googleapis.com/bosdyn.api.RobotIdRequest"
-    value: "\n?\n\014\010\261\222\345\347\005\020\200\250\355\326\002\022/BosdynClientlaptop-cbentzel01:__main__.py-32664"
+    value: "\n?\n\014\010\261\222\345\347\005\020\200\250\355\326\002\022/LAPTOP_NAME:__main__.py-32664"
   }
 }
 robot_id {
@@ -495,6 +337,7 @@ robot_id {
   software_release {
     version {
       major_version: 1
+      minor_version: 1
     }
     changeset_date {
       seconds: 1559591923
@@ -509,12 +352,13 @@ robot_id {
     }
   }
   nickname: "beta-BD-90370002"
+  computer_serial_number: "02-18b28-2258"
 }
 
 
 beta-BD-90370002                spot (V3)
- Software: 1.0.0 (ca559484e93 2019-06-03 15:58:43)
-  Installed: 2019-06-03 16:19:11
+ Software: 1.1.0 (538f0876dd4 2019-10-11 08:58:18)
+  Installed: 2019-10-11 10:19:49
 ```
 
 All Boston Dynamics API examples will start by creating an SDK object, as shown in the log line below. This output text also demonstrates how the Python library makes use of Python's [logging facility](https://docs.python.org/3/library/logging.html).  This facility gives application developers a high level of flexibility for consuming the logged statements.
@@ -548,7 +392,7 @@ header {
     seconds: 1559841073
     nanos: 719016960
   }
-  client_name: "BosdynClientlaptop-cbentzel01:__main__.py-32664"
+  client_name: "LAPTOP_NAME:__main__.py-32664"
 }
 ```
 
@@ -562,7 +406,7 @@ header {
       seconds: 1559841073
       nanos: 719016960
     }
-    client_name: "BosdynClientlaptop-cbentzel01:__main__.py-32664"
+    client_name: "LAPTOP_NAME:__main__.py-32664"
   }
   request_received_timestamp {
     seconds: 1559841069
@@ -577,7 +421,7 @@ header {
   }
   request {
     type_url: "type.googleapis.com/bosdyn.api.RobotIdRequest"
-    value: "\n?\n\014\010\261\222\345\347\005\020\200\250\355\326\002\022/BosdynClientlaptop-cbentzel01:__main__.py-32664"
+    value: "\n?\n\014\010\261\222\345\347\005\020\200\250\355\326\002\022/LAPTOP_NAME:__main__.py-32664"
   }
 }
 robot_id {
@@ -587,6 +431,7 @@ robot_id {
   software_release {
     version {
       major_version: 1
+      minor_version: 1
     }
     changeset_date {
       seconds: 1559591923
@@ -595,12 +440,9 @@ robot_id {
     install_date {
       seconds: 1559593151
     }
-    parameters {
-      label: "use_leases"
-      int_value: 1
-    }
   }
   nickname: "beta-BD-90370002"
+  computer_serial_number: "02-18b28-2258"
 }
 ```
 
@@ -610,18 +452,15 @@ The following command lists all of the services available on the robot.
 
 ```
 $ python3 -m bosdyn.client --user=user --password=password 192.168.80.3 dir list
+```
+
+The output of the command above is in the format (actual list of services will be longer):
+```
 name                    type                            authority                   tokens
 ------------------------------------------------------------------------------------------
 auth                    bosdyn.api.AuthService          auth.spot.robot
 estop                   bosdyn.api.EstopService         estop.spot.robot            app, user
 image                   bosdyn.api.ImageService         api.spot.robot              app, user
-lease                   bosdyn.api.LeaseService         api.spot.robot              app, user
-log-annotation          bosdyn.api.LogAnnotationService log.spot.robot              app, user
-power                   bosdyn.api.PowerService         power.spot.robot            app, user
-robot-command           bosdyn.api.RobotCommandService  command.spot.robot          app, user
-robot-id                bosdyn.api.RobotIdService       id.spot.robot               app
-robot-state             bosdyn.api.RobotStateService    state.spot.robot            app, user
-time-sync               bosdyn.api.TimeSyncService      api.spot.robot              app, user
 ```
 
 Note that a valid username and password is needed to get a list of services. If you don't have one, you'll see an error like below.
@@ -633,15 +472,15 @@ Traceback (most recent call last):
     "__main__", mod_spec)
   File "/usr/lib/python3.6/runpy.py", line 85, in _run_code
     exec(code, run_globals)
-  File "/home/BOSDYN/cbentzel/.local/lib/python3.6/site-packages/bosdyn/client/__main__.py", line 6, in <module>
+  File "${HOME}/.local/lib/python3.6/site-packages/bosdyn/client/__main__.py", line 6, in <module>
     if not main():
-  File "/home/BOSDYN/cbentzel/.local/lib/python3.6/site-packages/bosdyn/client/command_line.py", line 546, in main
+  File "${HOME}/.local/lib/python3.6/site-packages/bosdyn/client/command_line.py", line 546, in main
     robot.authenticate(options.username, options.password)
-  File "/home/BOSDYN/cbentzel/.local/lib/python3.6/site-packages/bosdyn/client/robot.py", line 115, in authenticate
+  File "${HOME}/.local/lib/python3.6/site-packages/bosdyn/client/robot.py", line 115, in authenticate
     self.user_token = auth_client.auth(username, password)
-  File "/home/BOSDYN/cbentzel/.local/lib/python3.6/site-packages/bosdyn/client/auth.py", line 82, in auth
+  File "${HOME}/.local/lib/python3.6/site-packages/bosdyn/client/auth.py", line 82, in auth
     **kwargs)
-  File "/home/BOSDYN/cbentzel/.local/lib/python3.6/site-packages/bosdyn/client/common.py", line 198, in call
+  File "${HOME}/.local/lib/python3.6/site-packages/bosdyn/client/common.py", line 198, in call
     raise exc
 bosdyn.client.auth.AuthInvalidLoginError: bosdyn.api.GetAuthTokenResponse: Username/password is invalid
 ```
@@ -675,7 +514,7 @@ You'll need to let the SDK know about the Application Token to use it.
 
 ```python
 >>> import os
->>> sdk.load_app_token(os.path.expanduser('~/.bosdyn/dev.app_token'))
+>>> sdk.load_app_token('~/.bosdyn/dev.app_token')
 ```
 
 Now, let's get the robot id, similar to the command line example above. You'll first need to create a `robot` object. In this example, you'll only create one `robot` object, but it is possible to create and control multiple robots in the same program with the Boston Dynamics API.
@@ -701,20 +540,18 @@ version: "V3"
 software_release {
   version {
     major_version: 1
+    minor_version: 1
   }
   changeset_date {
-    seconds: 1559664233
+    seconds: 1570798698
   }
-  changeset: "896f9f94b3e"
+  changeset: "538f0876dd4"
   install_date {
-    seconds: 1559665646
-  }
-  parameters {
-    label: "use_leases"
-    int_value: 1
+    seconds: 1570803589
   }
 }
 nickname: "beta-BD-91270003"
+computer_serial_number: "02-18b28-2258"
 ```
 
 The `get_id` call above is blocking - it will not complete until after the RPC completes. It is possible to tweak some parameters for the call, such as a timeout for how long to wait. The following example sets a too short timeout and will likely fail.
@@ -723,13 +560,13 @@ The `get_id` call above is blocking - it will not complete until after the RPC c
 >>> id_client.get_id(timeout=0.0001)
 Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
-  File "/home/BOSDYN/cbentzel/.local/lib/python3.6/site-packages/bosdyn/client/robot_id.py", line 32, in get_id
+  File "${HOME}/.local/lib/python3.6/site-packages/bosdyn/client/robot_id.py", line 32, in get_id
     error_from_response=common_header_errors, **kwargs)
-  File "/home/BOSDYN/cbentzel/.local/lib/python3.6/site-packages/bosdyn/client/common.py", line 190, in call
+  File "${HOME}/.local/lib/python3.6/site-packages/bosdyn/client/common.py", line 190, in call
     response = rpc_method(request, **kwargs)
-  File "/home/BOSDYN/cbentzel/.local/lib/python3.6/site-packages/grpc/_channel.py", line 565, in __call__
+  File "${HOME}/.local/lib/python3.6/site-packages/grpc/_channel.py", line 565, in __call__
     return _end_unary_response_blocking(state, call, False, None)
-  File "/home/BOSDYN/cbentzel/.local/lib/python3.6/site-packages/grpc/_channel.py", line 467, in _end_unary_response_blocking
+  File "${HOME}/.local/lib/python3.6/site-packages/grpc/_channel.py", line 467, in _end_unary_response_blocking
     raise _Rendezvous(state, None, None, deadline)
 grpc._channel._Rendezvous: <_Rendezvous of RPC that terminated with:
         status = StatusCode.DEADLINE_EXCEEDED
@@ -751,16 +588,18 @@ version: "V3"
 software_release {
   version {
     major_version: 1
+    minor_version: 1
   }
   changeset_date {
-    seconds: 1559664233
+    seconds: 1570798698
   }
-  changeset: "896f9f94b3e"
+  changeset: "538f0876dd4"
   install_date {
-    seconds: 1559665646
+    seconds: 1570803589
   }
 }
-nickname: "beta-BD-91270003"
+nickname: "beta16"
+computer_serial_number: "02-18b28-2258"
 ```
 
 ### Inspecting robot state
@@ -810,8 +649,9 @@ Images can be captured from the five fisheye cameras around Spot's body. We use 
 >>> image_client = robot.ensure_client(ImageClient.default_service_name)
 >>> sources = image_client.list_image_sources()
 >>> [source.name for source in sources]
-['back_fisheye_image', 'frontleft_fisheye_image', 'frontright_fisheye_image',
- 'left_fisheye_image', 'right_fisheye_image']
+['back_depth', 'back_fisheye_image', 'frontleft_depth', 'frontleft_fisheye_image', 
+'frontright_depth', 'frontright_fisheye_image', 'left_depth', 'left_fisheye_image', 
+'right_depth', 'right_fisheye_image']
 ```
 
 Using the source names above, we can capture an image from one or more image sources. These images can be captured in RAW format or JPG format (with specified quality). Multiple images requested in a single RPC will be hardware timesynced with one another.
@@ -824,8 +664,8 @@ Using the source names above, we can capture an image from one or more image sou
 >>> from PIL import Image
 >>> import io
 >>> image = Image.open(io.BytesIO(image_response.shot.image.data))
-# Note: the following will *not* work if you are running python3/python
-#  within WSL on Windows.
+# Note: the following will *not* work if you are running python3 on MacOS or
+# within WSL on Windows.
 >>> image.show()
 ```
 
@@ -963,7 +803,7 @@ resources {
     sequence: 3
   }
   lease_owner {
-    client_name: "cmdlaptop-cbentzel01:15239"
+    client_name: "LAPTOP_NAME:15239"
   }
 }
 ```
@@ -1034,8 +874,8 @@ Spot has two methods of turning off motor power. Both types of calls can be made
 If you made it through this QuickStart - congrats! You're well on your way to becoming a developer on the Boston Dynamics API.
 
 The following are a number of possible next steps:
-* Experiment with the API. [hello_spot.py](../../python/bosdyn-tutorials/src/bosdyn/tutorials/hello_spot.py) includes all of the behavior in this document, and you can use it as a starting point for your own behavior.
-* Try out the [WASD tutorial](../../python/bosdyn-tutorials/src/bosdyn/tutorials/wasd.py). This is a more detailed example built on top of the Python API which lets you interactively control Spot using the keyboard on your development machine. It covers issuing commands in far more detail than this quick start.
+* Experiment with the API. [hello_spot.py](../../python/examples/hello_spot/hello_spot.py) includes all of the behavior in this document, and you can use it as a starting point for your own behavior.
+* Try out the [WASD tutorial](../../python/examples/wasd/wasd.py). This is a more detailed example built on top of the Python API which lets you interactively control Spot using the keyboard on your development machine. It covers issuing commands in far more detail than this quick start.
 * Read through the [protocol buffer definitions](../../protos/bosdyn/api) and [python source](reference/index.html) to understand even more.
 
-If you have any questions, please email dev@bostondynamics.com with questions.
+If you have any questions, please email support@bostondynamics.com with questions.

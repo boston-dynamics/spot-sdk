@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.robot_state &mdash; Spot 1.0 documentation</title>
+  <title>bosdyn.client.robot_state &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -149,12 +149,18 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.robot_state</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;For clients to the robot state service.&quot;&quot;&quot;</span>
+<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;For clients to the robot state service.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="k">import</span> <span class="n">BaseClient</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="k">import</span> <span class="n">common_header_errors</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">robot_state_service_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">robot_state_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">robot_state_service_pb2_grpc</span>
 
 
@@ -231,19 +237,19 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_robot_state_request</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">robot_state_service_pb2</span><span class="o">.</span><span class="n">RobotStateRequest</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">robot_state_pb2</span><span class="o">.</span><span class="n">RobotStateRequest</span><span class="p">()</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_robot_metrics_request</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">robot_state_service_pb2</span><span class="o">.</span><span class="n">RobotMetricsRequest</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">robot_state_pb2</span><span class="o">.</span><span class="n">RobotMetricsRequest</span><span class="p">()</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_robot_hardware_configuration_request</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">robot_state_service_pb2</span><span class="o">.</span><span class="n">RobotHardwareConfigurationRequest</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">robot_state_pb2</span><span class="o">.</span><span class="n">RobotHardwareConfigurationRequest</span><span class="p">()</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_robot_link_model_request</span><span class="p">(</span><span class="n">link_name</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">robot_state_service_pb2</span><span class="o">.</span><span class="n">RobotLinkModelRequest</span><span class="p">(</span><span class="n">link_name</span><span class="o">=</span><span class="n">link_name</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">robot_state_pb2</span><span class="o">.</span><span class="n">RobotLinkModelRequest</span><span class="p">(</span><span class="n">link_name</span><span class="o">=</span><span class="n">link_name</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_get_robot_state_value</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>

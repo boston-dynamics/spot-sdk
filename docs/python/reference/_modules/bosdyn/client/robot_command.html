@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.robot_command &mdash; Spot 1.0 documentation</title>
+  <title>bosdyn.client.robot_command &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -149,7 +149,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.robot_command</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;For clients to the robot command service.&quot;&quot;&quot;</span>
+<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;For clients to the robot command service.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="k">import</span> <span class="ne">TimeoutError</span>
 <span class="kn">import</span> <span class="nn">time</span>
@@ -161,12 +167,11 @@
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">robot_command_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.spot</span> <span class="k">import</span> <span class="n">robot_command_pb2</span> <span class="k">as</span> <span class="n">spot_command_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">robot_command_service_pb2_grpc</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">robot_command_service_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">robot_command_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">trajectory_pb2</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="k">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span>
-                                  <span class="n">handle_unset_status_error</span><span class="p">,</span> <span class="n">handle_common_header_errors</span><span class="p">,</span>
-                                  <span class="n">handle_lease_use_result_errors</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="k">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span> <span class="n">handle_unset_status_error</span><span class="p">,</span>
+                                  <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_lease_use_result_errors</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">InvalidRequestError</span>
 <span class="kn">from</span> <span class="nn">.lease</span> <span class="k">import</span> <span class="n">add_lease_wallet_processors</span>
@@ -349,7 +354,7 @@
                                <span class="n">_clear_behavior_fault_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_get_robot_command_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">RobotCommandRequest</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandRequest</span><span class="p">(</span>
             <span class="n">lease</span><span class="o">=</span><span class="n">lease</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="n">command</span><span class="p">,</span> <span class="n">clock_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timesync_endpoint</span><span class="o">.</span><span class="n">clock_identifier</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_update_command_timestamps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">):</span>
@@ -381,13 +386,12 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_robot_command_feedback_request</span><span class="p">(</span><span class="n">robot_command_id</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackRequest</span><span class="p">(</span>
-            <span class="n">robot_command_id</span><span class="o">=</span><span class="n">robot_command_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackRequest</span><span class="p">(</span><span class="n">robot_command_id</span><span class="o">=</span><span class="n">robot_command_id</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_clear_behavior_fault_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">behavior_fault_id</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">ClearBehaviorFaultRequest</span><span class="p">(</span>
-            <span class="n">lease</span><span class="o">=</span><span class="n">lease</span><span class="p">,</span> <span class="n">behavior_fault_id</span><span class="o">=</span><span class="n">behavior_fault_id</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">ClearBehaviorFaultRequest</span><span class="p">(</span><span class="n">lease</span><span class="o">=</span><span class="n">lease</span><span class="p">,</span>
+                                                           <span class="n">behavior_fault_id</span><span class="o">=</span><span class="n">behavior_fault_id</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_robot_command_value</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
@@ -396,19 +400,18 @@
 
 <span class="n">_ROBOT_COMMAND_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 <span class="n">_ROBOT_COMMAND_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-    <span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">STATUS_INVALID_REQUEST</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">InvalidRequestError</span><span class="p">,</span> <span class="n">InvalidRequestError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">STATUS_UNSUPPORTED</span><span class="p">:</span> <span class="p">(</span><span class="n">UnsupportedError</span><span class="p">,</span>
-                                                                        <span class="n">UnsupportedError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">STATUS_NO_TIMESYNC</span><span class="p">:</span> <span class="p">(</span><span class="n">NoTimeSyncError</span><span class="p">,</span>
-                                                                        <span class="n">NoTimeSyncError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">STATUS_EXPIRED</span><span class="p">:</span> <span class="p">(</span><span class="n">ExpiredError</span><span class="p">,</span>
-                                                                    <span class="n">ExpiredError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">STATUS_TOO_DISTANT</span><span class="p">:</span> <span class="p">(</span><span class="n">TooDistantError</span><span class="p">,</span>
-                                                                        <span class="n">TooDistantError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">STATUS_NOT_POWERED_ON</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">NotPoweredOnError</span><span class="p">,</span> <span class="n">NotPoweredOnError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">STATUS_INVALID_REQUEST</span><span class="p">:</span> <span class="p">(</span><span class="n">InvalidRequestError</span><span class="p">,</span>
+                                                                    <span class="n">InvalidRequestError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">STATUS_UNSUPPORTED</span><span class="p">:</span> <span class="p">(</span><span class="n">UnsupportedError</span><span class="p">,</span>
+                                                                <span class="n">UnsupportedError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">STATUS_NO_TIMESYNC</span><span class="p">:</span> <span class="p">(</span><span class="n">NoTimeSyncError</span><span class="p">,</span>
+                                                                <span class="n">NoTimeSyncError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">STATUS_EXPIRED</span><span class="p">:</span> <span class="p">(</span><span class="n">ExpiredError</span><span class="p">,</span> <span class="n">ExpiredError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">STATUS_TOO_DISTANT</span><span class="p">:</span> <span class="p">(</span><span class="n">TooDistantError</span><span class="p">,</span>
+                                                                <span class="n">TooDistantError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">STATUS_NOT_POWERED_ON</span><span class="p">:</span> <span class="p">(</span><span class="n">NotPoweredOnError</span><span class="p">,</span>
+                                                                   <span class="n">NotPoweredOnError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
 <span class="p">})</span>
 
 
@@ -417,10 +420,9 @@
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_robot_command_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span>
-        <span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
-        <span class="n">status_to_string</span><span class="o">=</span><span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
-        <span class="n">status_to_error</span><span class="o">=</span><span class="n">_ROBOT_COMMAND_STATUS_TO_ERROR</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                         <span class="n">status_to_string</span><span class="o">=</span><span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+                         <span class="n">status_to_error</span><span class="o">=</span><span class="n">_ROBOT_COMMAND_STATUS_TO_ERROR</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_robot_command_feedback_value</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
@@ -430,10 +432,9 @@
 <span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_robot_command_feedback_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_PROCESSING</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_PROCESSING</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">status</span> <span class="o">=</span> <span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span>
-                <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Not OK! Status is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Received unknown Status value (</span><span class="si">{}</span><span class="s2">) from remote&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
@@ -441,14 +442,14 @@
 
 
 <span class="k">def</span> <span class="nf">_clear_behavior_fault_value</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">ClearBehaviorFaultResponse</span><span class="o">.</span><span class="n">STATUS_CLEARED</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">ClearBehaviorFaultResponse</span><span class="o">.</span><span class="n">STATUS_CLEARED</span>
 
 
 <span class="n">_CLEAR_BEHAVIOR_FAULT_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 <span class="n">_CLEAR_BEHAVIOR_FAULT_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-    <span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">ClearBehaviorFaultResponse</span><span class="o">.</span><span class="n">STATUS_CLEARED</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">ClearBehaviorFaultResponse</span><span class="o">.</span><span class="n">STATUS_NOT_CLEARED</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">NotClearedError</span><span class="p">,</span> <span class="n">NotClearedError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">ClearBehaviorFaultResponse</span><span class="o">.</span><span class="n">STATUS_CLEARED</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">ClearBehaviorFaultResponse</span><span class="o">.</span><span class="n">STATUS_NOT_CLEARED</span><span class="p">:</span> <span class="p">(</span><span class="n">NotClearedError</span><span class="p">,</span>
+                                                                      <span class="n">NotClearedError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
 <span class="p">})</span>
 
 
@@ -457,10 +458,9 @@
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_clear_behavior_fault_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span>
-        <span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
-        <span class="n">status_to_string</span><span class="o">=</span><span class="n">robot_command_service_pb2</span><span class="o">.</span><span class="n">ClearBehaviorFaultResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
-        <span class="n">status_to_error</span><span class="o">=</span><span class="n">_CLEAR_BEHAVIOR_FAULT_STATUS_TO_ERROR</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                         <span class="n">status_to_string</span><span class="o">=</span><span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">ClearBehaviorFaultResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+                         <span class="n">status_to_error</span><span class="o">=</span><span class="n">_CLEAR_BEHAVIOR_FAULT_STATUS_TO_ERROR</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="RobotCommandBuilder"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder">[docs]</a><span class="k">class</span> <span class="nc">RobotCommandBuilder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -537,7 +537,8 @@
     <span class="k">def</span> <span class="nf">trajectory_command</span><span class="p">(</span><span class="n">goal_x</span><span class="p">,</span> <span class="n">goal_y</span><span class="p">,</span> <span class="n">goal_heading</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
                            <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Command robot to move to pose along a 2D plane. Pose can specified in the world</span>
-<span class="sd">        (kinematic odometry) frame or the robot body frame.</span>
+<span class="sd">        (kinematic odometry) frame or the robot body frame. The arguments body_height and</span>
+<span class="sd">        locomotion_hint are ignored if params argument is passed.</span>
 
 <span class="sd">        A trajectory command requires an end time. End time is not set in this function, but rather</span>
 <span class="sd">        is set externally before call to RobotCommandService.</span>
@@ -563,7 +564,8 @@
     <span class="k">def</span> <span class="nf">velocity_command</span><span class="p">(</span><span class="n">v_x</span><span class="p">,</span> <span class="n">v_y</span><span class="p">,</span> <span class="n">v_rot</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
                          <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Command robot to move along 2D plane. Velocity should be specified in the robot body</span>
-<span class="sd">        frame. Other frames are currently not supported.</span>
+<span class="sd">        frame. Other frames are currently not supported. The arguments body_height and</span>
+<span class="sd">        locomotion_hint are ignored if params argument is passed.</span>
 
 <span class="sd">        A velocity command requires an end time. End time is not set in this function, but rather</span>
 <span class="sd">        is set externally before call to RobotCommandService.</span>
@@ -579,7 +581,8 @@
         <span class="n">vel</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE2Velocity</span><span class="p">(</span><span class="n">linear</span><span class="o">=</span><span class="n">linear</span><span class="p">,</span> <span class="n">angular</span><span class="o">=</span><span class="n">v_rot</span><span class="p">)</span>
         <span class="n">slew_rate_limit</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE2Velocity</span><span class="p">(</span><span class="n">linear</span><span class="o">=</span><span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec2</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span> <span class="n">angular</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="n">base_frame</span><span class="o">=</span><span class="n">geometry_pb2</span><span class="o">.</span><span class="n">FRAME_BODY</span><span class="p">)</span>
-        <span class="n">vel_command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">SE2VelocityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">velocity</span><span class="o">=</span><span class="n">vel</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="n">frame</span><span class="p">,</span> <span class="n">slew_rate_limit</span><span class="o">=</span><span class="n">slew_rate_limit</span><span class="p">)</span>
+        <span class="n">vel_command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">SE2VelocityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">velocity</span><span class="o">=</span><span class="n">vel</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="n">frame</span><span class="p">,</span>
+                                                                   <span class="n">slew_rate_limit</span><span class="o">=</span><span class="n">slew_rate_limit</span><span class="p">)</span>
         <span class="n">mobility_command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">MobilityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
             <span class="n">se2_velocity_request</span><span class="o">=</span><span class="n">vel_command</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">any_params</span><span class="p">)</span>
         <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">mobility_command</span><span class="o">=</span><span class="n">mobility_command</span><span class="p">)</span>
@@ -590,7 +593,8 @@
         <span class="sd">&quot;&quot;&quot;Command robot to stand. If the robot is sitting, it will stand up. If the robot is</span>
 <span class="sd">        moving, it will come to a stop. Params can specify a trajectory for the body to follow</span>
 <span class="sd">        while standing. In the simplest case, this can be a specific position+orientation which the</span>
-<span class="sd">        body will hold at.</span>
+<span class="sd">        body will hold at. The arguments body_height and footprint_R_body are ignored if params</span>
+<span class="sd">        argument is passed.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,</span>
@@ -631,7 +635,7 @@
     <span class="c1">########################</span>
 <div class="viewcode-block" id="RobotCommandBuilder.mobility_params"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.mobility_params">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">mobility_params</span><span class="p">(</span><span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">footprint_R_body</span><span class="o">=</span><span class="n">geometry</span><span class="o">.</span><span class="n">EulerZXY</span><span class="p">(),</span>
-                        <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">):</span>
+                        <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">,</span> <span class="n">stair_hint</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Helper to create Mobility params for spot mobility commands. This function is designed</span>
 <span class="sd">        to help get started issuing commands, but lots of options are not exposed via this</span>
 <span class="sd">        interface. See spot.robot_command_pb2 for more details. If unset, good defaults will be</span>
@@ -649,7 +653,8 @@
         <span class="n">traj</span> <span class="o">=</span> <span class="n">trajectory_pb2</span><span class="o">.</span><span class="n">SE3Trajectory</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="n">point</span><span class="p">],</span> <span class="n">frame</span><span class="o">=</span><span class="n">frame</span><span class="p">)</span>
         <span class="n">body_control</span> <span class="o">=</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyControlParams</span><span class="p">(</span><span class="n">base_offset_rt_footprint</span><span class="o">=</span><span class="n">traj</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">MobilityParams</span><span class="p">(</span><span class="n">body_control</span><span class="o">=</span><span class="n">body_control</span><span class="p">,</span>
-                                               <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">locomotion_hint</span><span class="p">)</span></div>
+                                               <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">locomotion_hint</span><span class="p">,</span>
+                                               <span class="n">stair_hint</span><span class="o">=</span><span class="n">stair_hint</span><span class="p">)</span></div>
 
     <span class="c1">####################</span>
     <span class="c1"># Helper functions #</span>

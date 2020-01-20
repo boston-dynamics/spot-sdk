@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.channel &mdash; Spot 1.0 documentation</title>
+  <title>bosdyn.client.channel &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -149,11 +149,15 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.channel</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">import</span> <span class="nn">grpc</span>
-
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="n">http_client</span>
 
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="p">(</span><span class="n">RpcError</span><span class="p">,</span> <span class="n">ClientCancelledOperationError</span><span class="p">,</span> <span class="n">InvalidAppTokenError</span><span class="p">,</span>
                          <span class="n">InvalidClientCertificateError</span><span class="p">,</span> <span class="n">NonexistentAuthorityError</span><span class="p">,</span>
@@ -165,7 +169,9 @@
 
 <span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
+
 <div class="viewcode-block" id="RefreshingAccessTokenAuthMetadataPlugin"><a class="viewcode-back" href="../../../client_modules/channel.html#bosdyn.client.channel.RefreshingAccessTokenAuthMetadataPlugin">[docs]</a><span class="k">class</span> <span class="nc">RefreshingAccessTokenAuthMetadataPlugin</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">AuthMetadataPlugin</span><span class="p">):</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_cb</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor.</span>
 
@@ -194,25 +200,28 @@
     <span class="n">auth_creds</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">metadata_call_credentials</span><span class="p">(</span><span class="n">plugin</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">composite_channel_credentials</span><span class="p">(</span><span class="n">transport_creds</span><span class="p">,</span> <span class="n">auth_creds</span><span class="p">)</span></div>
 
+
 <div class="viewcode-block" id="create_secure_channel"><a class="viewcode-back" href="../../../client_modules/channel.html#bosdyn.client.channel.create_secure_channel">[docs]</a><span class="k">def</span> <span class="nf">create_secure_channel</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">creds</span><span class="p">,</span> <span class="n">authority</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Create a secure channel to given host:port&quot;&quot;&quot;</span>
     <span class="n">socket</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
-    <span class="n">options</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;grpc.ssl_target_name_override&#39;</span><span class="p">,</span> <span class="n">authority</span><span class="p">),</span> <span class="p">)</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;grpc.ssl_target_name_override&#39;</span><span class="p">,</span> <span class="n">authority</span><span class="p">),)</span>
     <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">secure_channel</span><span class="p">(</span><span class="n">socket</span><span class="p">,</span> <span class="n">creds</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="translate_exception"><a class="viewcode-back" href="../../../client_modules/channel.html#bosdyn.client.channel.translate_exception">[docs]</a><span class="k">def</span> <span class="nf">translate_exception</span><span class="p">(</span><span class="n">rpc_error</span><span class="p">):</span>
     <span class="n">code</span> <span class="o">=</span> <span class="n">rpc_error</span><span class="o">.</span><span class="n">code</span><span class="p">()</span>
     <span class="n">details</span> <span class="o">=</span> <span class="n">rpc_error</span><span class="o">.</span><span class="n">details</span><span class="p">()</span>
+
     <span class="k">if</span> <span class="n">code</span> <span class="ow">is</span> <span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">CANCELLED</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">http_client</span><span class="o">.</span><span class="n">UNAUTHORIZED</span><span class="p">)</span> <span class="ow">in</span> <span class="n">details</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="mi">401</span><span class="p">)</span> <span class="ow">in</span> <span class="n">details</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">UnauthenticatedError</span><span class="p">(</span><span class="n">rpc_error</span><span class="p">,</span> <span class="n">UnauthenticatedError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">http_client</span><span class="o">.</span><span class="n">FORBIDDEN</span><span class="p">)</span> <span class="ow">in</span> <span class="n">details</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="mi">403</span><span class="p">)</span> <span class="ow">in</span> <span class="n">details</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">InvalidAppTokenError</span><span class="p">(</span><span class="n">rpc_error</span><span class="p">,</span> <span class="n">InvalidAppTokenError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">http_client</span><span class="o">.</span><span class="n">NOT_FOUND</span><span class="p">)</span> <span class="ow">in</span> <span class="n">details</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="mi">404</span><span class="p">)</span> <span class="ow">in</span> <span class="n">details</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">UnimplementedError</span><span class="p">(</span><span class="n">rpc_error</span><span class="p">,</span> <span class="n">UnimplementedError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">http_client</span><span class="o">.</span><span class="n">BAD_GATEWAY</span><span class="p">)</span> <span class="ow">in</span> <span class="n">details</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="mi">502</span><span class="p">)</span> <span class="ow">in</span> <span class="n">details</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ServiceUnavailableError</span><span class="p">(</span><span class="n">rpc_error</span><span class="p">,</span> <span class="n">ServiceUnavailableError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">http_client</span><span class="o">.</span><span class="n">GATEWAY_TIMEOUT</span><span class="p">)</span> <span class="ow">in</span> <span class="n">details</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="mi">504</span><span class="p">)</span> <span class="ow">in</span> <span class="n">details</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">TimedOutError</span><span class="p">(</span><span class="n">rpc_error</span><span class="p">,</span> <span class="n">TimedOutError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">ClientCancelledOperationError</span><span class="p">(</span><span class="n">rpc_error</span><span class="p">,</span> <span class="n">ClientCancelledOperationError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
@@ -227,7 +236,8 @@
     <span class="k">elif</span> <span class="s1">&#39;Failed to connect to remote host&#39;</span> <span class="ow">in</span> <span class="n">debug</span> <span class="ow">or</span> <span class="s1">&#39;Failed to create subchannel&#39;</span> <span class="ow">in</span> <span class="n">debug</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ProxyConnectionError</span><span class="p">(</span><span class="n">rpc_error</span><span class="p">,</span> <span class="n">ProxyConnectionError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
     <span class="k">elif</span> <span class="s1">&#39;Exception calling application&#39;</span> <span class="ow">in</span> <span class="n">debug</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">ServiceFailedDuringExecutionError</span><span class="p">(</span><span class="n">rpc_error</span><span class="p">,</span> <span class="n">ServiceFailedDuringExecutionError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ServiceFailedDuringExecutionError</span><span class="p">(</span><span class="n">rpc_error</span><span class="p">,</span>
+                                                 <span class="n">ServiceFailedDuringExecutionError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
     <span class="k">elif</span> <span class="s1">&#39;Handshake failed&#39;</span> <span class="ow">in</span> <span class="n">debug</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">InvalidClientCertificateError</span><span class="p">(</span><span class="n">rpc_error</span><span class="p">,</span> <span class="n">InvalidClientCertificateError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
     <span class="k">elif</span> <span class="s1">&#39;Name resolution failure&#39;</span> <span class="ow">in</span> <span class="n">debug</span><span class="p">:</span>

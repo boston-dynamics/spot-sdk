@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 import copy
 import pytest
 import random
@@ -149,6 +155,7 @@ def test_compare_newer():
 
 # Start of LeaseWallet tests.
 
+
 def test_lease_wallet_constructor():
     lease_wallet = LeaseWallet()
 
@@ -168,8 +175,8 @@ def test_lease_wallet_normal_operation():
 def test_lease_wallet_on_lease_result_empty():
     lease_wallet = LeaseWallet()
     assert None == lease_wallet.get_lease_state(resource='A')
-    lease_use_result = _create_lease_use_result(
-        LeaseProto.LeaseUseResult.STATUS_OK, _create_lease('A', 'B', [1, 0]))
+    lease_use_result = _create_lease_use_result(LeaseProto.LeaseUseResult.STATUS_OK,
+                                                _create_lease('A', 'B', [1, 0]))
     lease_wallet.on_lease_use_result(lease_use_result, resource='A')
     assert None == lease_wallet.get_lease_state(resource='A')
 
@@ -182,22 +189,18 @@ def test_lease_wallet_on_lease_result_ok():
     # Assert that initial state of adding a lease looks fine.
     lease_state = lease_wallet.get_lease_state(resource='A')
     assert None != lease_state
-    assert Lease.CompareResult.SAME == lease.compare(
-        lease_state.lease_original)
-    assert Lease.CompareResult.SUPER_LEASE == lease.compare(
-        lease_state.lease_current)
+    assert Lease.CompareResult.SAME == lease.compare(lease_state.lease_original)
+    assert Lease.CompareResult.SUPER_LEASE == lease.compare(lease_state.lease_current)
     assert LeaseState.STATUS_SELF_OWNER == lease_state.lease_status
 
     # When an "OK" lease_use_result comes, LeaseState should not change.
-    lease_use_result = _create_lease_use_result(
-        LeaseProto.LeaseUseResult.STATUS_OK, lease_state.lease_current, None)
+    lease_use_result = _create_lease_use_result(LeaseProto.LeaseUseResult.STATUS_OK,
+                                                lease_state.lease_current, None)
     lease_wallet.on_lease_use_result(lease_use_result, resource='A')
     new_lease_state = lease_wallet.get_lease_state(resource='A')
     assert None != new_lease_state
-    assert Lease.CompareResult.SAME == lease.compare(
-        new_lease_state.lease_original)
-    assert Lease.CompareResult.SUPER_LEASE == lease.compare(
-        new_lease_state.lease_current)
+    assert Lease.CompareResult.SAME == lease.compare(new_lease_state.lease_original)
+    assert Lease.CompareResult.SUPER_LEASE == lease.compare(new_lease_state.lease_current)
     assert LeaseState.STATUS_SELF_OWNER == new_lease_state.lease_status
 
     # When an "OK" lease_use_result arrives for a lease other than current one, LeaseState also should not change
@@ -205,10 +208,8 @@ def test_lease_wallet_on_lease_result_ok():
     lease_wallet.on_lease_use_result(lease_use_result, resource='A')
     newer_lease_state = lease_wallet.get_lease_state(resource='A')
     assert None != newer_lease_state
-    assert Lease.CompareResult.SAME == lease.compare(
-        newer_lease_state.lease_original)
-    assert Lease.CompareResult.SUPER_LEASE == lease.compare(
-        newer_lease_state.lease_current)
+    assert Lease.CompareResult.SAME == lease.compare(newer_lease_state.lease_original)
+    assert Lease.CompareResult.SUPER_LEASE == lease.compare(newer_lease_state.lease_current)
     assert Lease.CompareResult.OLDER == new_lease_state.lease_current.compare(
         newer_lease_state.lease_current)
     assert LeaseState.STATUS_SELF_OWNER == newer_lease_state.lease_status
@@ -222,10 +223,8 @@ def test_lease_wallet_on_lease_result_older():
     # Assert that initial state of adding a lease looks fine.
     lease_state = lease_wallet.get_lease_state(resource='A')
     assert None != lease_state
-    assert Lease.CompareResult.SAME == lease.compare(
-        lease_state.lease_original)
-    assert Lease.CompareResult.SUPER_LEASE == lease.compare(
-        lease_state.lease_current)
+    assert Lease.CompareResult.SAME == lease.compare(lease_state.lease_original)
+    assert Lease.CompareResult.SUPER_LEASE == lease.compare(lease_state.lease_current)
     assert LeaseState.STATUS_SELF_OWNER == lease_state.lease_status
 
     stale_lease = lease_state.lease_current
@@ -235,21 +234,19 @@ def test_lease_wallet_on_lease_result_older():
 
     # When an "OLDER" result comes in for an attempt which is not the current lease,
     # do not change the current lease state
-    lease_use_result = _create_lease_use_result(
-        LeaseProto.LeaseUseResult.STATUS_OLDER, stale_lease, None)
+    lease_use_result = _create_lease_use_result(LeaseProto.LeaseUseResult.STATUS_OLDER, stale_lease,
+                                                None)
     lease_wallet.on_lease_use_result(lease_use_result, resource='A')
     new_lease_state = lease_wallet.get_lease_state(resource='A')
     assert None != new_lease_state
-    assert Lease.CompareResult.SAME == lease.compare(
-        new_lease_state.lease_original)
-    assert Lease.CompareResult.SUPER_LEASE == lease.compare(
-        new_lease_state.lease_current)
+    assert Lease.CompareResult.SAME == lease.compare(new_lease_state.lease_original)
+    assert Lease.CompareResult.SUPER_LEASE == lease.compare(new_lease_state.lease_current)
     assert LeaseState.STATUS_SELF_OWNER == new_lease_state.lease_status
 
     # When an "OLDER" result comes in for an attempt which is the current lease,
     # the lease state should change to other owner.
-    lease_use_result = _create_lease_use_result(
-        LeaseProto.LeaseUseResult.STATUS_OLDER, recent_lease, None)
+    lease_use_result = _create_lease_use_result(LeaseProto.LeaseUseResult.STATUS_OLDER,
+                                                recent_lease, None)
     lease_wallet.on_lease_use_result(lease_use_result, resource='A')
     newer_lease_state = lease_wallet.get_lease_state(resource='A')
     assert None != newer_lease_state
@@ -266,10 +263,8 @@ def test_lease_wallet_on_lease_result_revoked():
     # Assert that initial state of adding a lease looks fine.
     lease_state = lease_wallet.get_lease_state(resource='A')
     assert None != lease_state
-    assert Lease.CompareResult.SAME == lease.compare(
-        lease_state.lease_original)
-    assert Lease.CompareResult.SUPER_LEASE == lease.compare(
-        lease_state.lease_current)
+    assert Lease.CompareResult.SAME == lease.compare(lease_state.lease_original)
+    assert Lease.CompareResult.SUPER_LEASE == lease.compare(lease_state.lease_current)
     assert LeaseState.STATUS_SELF_OWNER == lease_state.lease_status
 
     stale_lease = lease_state.lease_current
@@ -279,21 +274,19 @@ def test_lease_wallet_on_lease_result_revoked():
 
     # When a "REVOKED" result comes in for an attempt which is not the current lease,
     # do not change the current lease state
-    lease_use_result = _create_lease_use_result(
-        LeaseProto.LeaseUseResult.STATUS_REVOKED, stale_lease, None)
+    lease_use_result = _create_lease_use_result(LeaseProto.LeaseUseResult.STATUS_REVOKED,
+                                                stale_lease, None)
     lease_wallet.on_lease_use_result(lease_use_result, resource='A')
     new_lease_state = lease_wallet.get_lease_state(resource='A')
     assert None != new_lease_state
-    assert Lease.CompareResult.SAME == lease.compare(
-        new_lease_state.lease_original)
-    assert Lease.CompareResult.SUPER_LEASE == lease.compare(
-        new_lease_state.lease_current)
+    assert Lease.CompareResult.SAME == lease.compare(new_lease_state.lease_original)
+    assert Lease.CompareResult.SUPER_LEASE == lease.compare(new_lease_state.lease_current)
     assert LeaseState.STATUS_SELF_OWNER == new_lease_state.lease_status
 
     # When an "REVOKED" result comes in for an attempt which is the current lease,
     # the lease state should change to revoked status
-    lease_use_result = _create_lease_use_result(
-        LeaseProto.LeaseUseResult.STATUS_REVOKED, recent_lease, None)
+    lease_use_result = _create_lease_use_result(LeaseProto.LeaseUseResult.STATUS_REVOKED,
+                                                recent_lease, None)
     lease_wallet.on_lease_use_result(lease_use_result, resource='A')
     newer_lease_state = lease_wallet.get_lease_state(resource='A')
     assert None != newer_lease_state
@@ -310,10 +303,8 @@ def test_lease_wallet_on_lease_result_wrong_epoch():
     # Assert that initial state of adding a lease looks fine.
     lease_state = lease_wallet.get_lease_state(resource='A')
     assert None != lease_state
-    assert Lease.CompareResult.SAME == lease.compare(
-        lease_state.lease_original)
-    assert Lease.CompareResult.SUPER_LEASE == lease.compare(
-        lease_state.lease_current)
+    assert Lease.CompareResult.SAME == lease.compare(lease_state.lease_original)
+    assert Lease.CompareResult.SUPER_LEASE == lease.compare(lease_state.lease_current)
     assert LeaseState.STATUS_SELF_OWNER == lease_state.lease_status
 
     stale_lease = lease_state.lease_current
@@ -323,21 +314,19 @@ def test_lease_wallet_on_lease_result_wrong_epoch():
 
     # When a "REVOKED" result comes in for an attempt which is not the current lease,
     # do not change the current lease state
-    lease_use_result = _create_lease_use_result(
-        LeaseProto.LeaseUseResult.STATUS_WRONG_EPOCH, stale_lease, None)
+    lease_use_result = _create_lease_use_result(LeaseProto.LeaseUseResult.STATUS_WRONG_EPOCH,
+                                                stale_lease, None)
     lease_wallet.on_lease_use_result(lease_use_result, resource='A')
     new_lease_state = lease_wallet.get_lease_state(resource='A')
     assert None != new_lease_state
-    assert Lease.CompareResult.SAME == lease.compare(
-        new_lease_state.lease_original)
-    assert Lease.CompareResult.SUPER_LEASE == lease.compare(
-        new_lease_state.lease_current)
+    assert Lease.CompareResult.SAME == lease.compare(new_lease_state.lease_original)
+    assert Lease.CompareResult.SUPER_LEASE == lease.compare(new_lease_state.lease_current)
     assert LeaseState.STATUS_SELF_OWNER == new_lease_state.lease_status
 
     # When an "REVOKED" result comes in for an attempt which is the current lease,
     # the lease state should change to revoked status
-    lease_use_result = _create_lease_use_result(
-        LeaseProto.LeaseUseResult.STATUS_WRONG_EPOCH, recent_lease, None)
+    lease_use_result = _create_lease_use_result(LeaseProto.LeaseUseResult.STATUS_WRONG_EPOCH,
+                                                recent_lease, None)
     lease_wallet.on_lease_use_result(lease_use_result, resource='A')
     newer_lease_state = lease_wallet.get_lease_state(resource='A')
     assert None != newer_lease_state
@@ -347,6 +336,7 @@ def test_lease_wallet_on_lease_result_wrong_epoch():
 
 
 class LeaseWalletThread(threading.Thread):
+
     def __init__(self, lease_wallet):
         super(LeaseWalletThread, self).__init__()
         self._lease_wallet = lease_wallet
@@ -359,8 +349,8 @@ class LeaseWalletThread(threading.Thread):
             assert None != stale_lease
             new_lease = self._lease_wallet.advance(resource)
             assert None != new_lease
-            lease_use_result = _create_lease_use_result(
-                LeaseProto.LeaseUseResult.STATUS_OLDER, stale_lease, None)
+            lease_use_result = _create_lease_use_result(LeaseProto.LeaseUseResult.STATUS_OLDER,
+                                                        stale_lease, None)
             self._lease_wallet.on_lease_use_result(lease_use_result)
             time.sleep(.1)
 
@@ -382,10 +372,12 @@ def test_lease_wallet_multithreaded():
     for thread in threads:
         thread.stop()
 
+
 # Start of LeaseKeepAlive tests
 
 
 class MockLeaseClient(object):
+
     def __init__(self, lease_wallet, error_on_call_N=0):
         self.lease_wallet = lease_wallet
         self.retain_lease_calls = 0
@@ -402,6 +394,7 @@ class MockLeaseClient(object):
 
 
 class MaxKeepAliveLoops(object):
+
     def __init__(self, max_loops):
         self.max_loops = max_loops
         self.cur_loops = 0
@@ -418,8 +411,8 @@ def test_lease_keep_alive_empty_wallet():
     lease_wallet = LeaseWallet()
     lease_client = MockLeaseClient(lease_wallet)
     max_loops = MaxKeepAliveLoops(3)
-    keep_alive = LeaseKeepAlive(
-        lease_client, resource='A', rpc_interval_seconds=.1, keep_running_cb=max_loops)
+    keep_alive = LeaseKeepAlive(lease_client, resource='A', rpc_interval_seconds=.1,
+                                keep_running_cb=max_loops)
     keep_alive.wait_until_done()
     assert 3 == max_loops.cur_loops
     assert 0 == lease_client.retain_lease_calls
@@ -433,8 +426,8 @@ def test_lease_keep_alive_filled_wallet():
     lease_wallet.add(lease_A)
     lease_client = MockLeaseClient(lease_wallet)
     max_loops = MaxKeepAliveLoops(3)
-    keep_alive = LeaseKeepAlive(
-        lease_client, resource='A', rpc_interval_seconds=.1, keep_running_cb=max_loops)
+    keep_alive = LeaseKeepAlive(lease_client, resource='A', rpc_interval_seconds=.1,
+                                keep_running_cb=max_loops)
     keep_alive.wait_until_done()
     assert 3 == max_loops.cur_loops
     assert 3 == lease_client.retain_lease_calls
@@ -449,8 +442,8 @@ def test_lease_keep_alive_lease_use_result_error():
     lease_wallet.add(lease_A)
     lease_client = MockLeaseClient(lease_wallet, error_on_call_N=6)
     max_loops = MaxKeepAliveLoops(10)
-    keep_alive = LeaseKeepAlive(
-        lease_client, resource='A', rpc_interval_seconds=.1, keep_running_cb=max_loops)
+    keep_alive = LeaseKeepAlive(lease_client, resource='A', rpc_interval_seconds=.1,
+                                keep_running_cb=max_loops)
     keep_alive.wait_until_done()
     assert 10 == max_loops.cur_loops
     assert 6 == lease_client.retain_lease_calls
@@ -461,8 +454,7 @@ def test_lease_keep_alive_shutdown():
     # Tests that shutdown will stop the loop.
     lease_wallet = LeaseWallet()
     lease_client = MockLeaseClient(lease_wallet)
-    keep_alive = LeaseKeepAlive(
-        lease_client, resource='A', rpc_interval_seconds=.1)
+    keep_alive = LeaseKeepAlive(lease_client, resource='A', rpc_interval_seconds=.1)
     assert keep_alive.is_alive()
     time.sleep(.5)
     assert keep_alive.is_alive()

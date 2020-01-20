@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """A script for managing API python distributions as wheels.
 
 This includes building wheels, and installing them in editable mode.
@@ -163,8 +169,7 @@ def install_requirements(requirements_file, index_url=None, find_links=None, qui
     # Earlier versions of pip will install the right package, but leave the incorrect version info.
     if is_pip_dumb():
         try:
-            run_pip(["uninstall", "-r", requirements_file],
-                    quiet=quiet, verbose=verbose)
+            run_pip(["uninstall", "-r", requirements_file], quiet=quiet, verbose=verbose)
         except subprocess.CalledProcessError:
             # There may be errors returns if any requirements were not already installed.
             pass
@@ -283,11 +288,11 @@ def setup_logging_from_options(options):
 
     streamlog = logging.StreamHandler()
     streamlog.setLevel(level)
-    streamlog.setFormatter(logging.Formatter(
-        '%(asctime)s - %(levelname)s - %(message)s'))
+    streamlog.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
     logger = logging.getLogger()
     logger.addHandler(streamlog)
     logger.setLevel(level)
+
 
 # -- Command-line infrastructure
 
@@ -363,8 +368,7 @@ def _check_git_status(srcdir):
     validity_txt = 'nothing to commit, working tree clean'
 
     if validity_txt not in output:
-        LOGGER.error(
-            "Failed to find '%s' in git status output:\n\n%s", validity_txt, output)
+        LOGGER.error("Failed to find '%s' in git status output:\n\n%s", validity_txt, output)
         return False
 
     return True
@@ -376,8 +380,7 @@ def build_wheel(wheel, srcdir=None, dry_run=False, verbose=False, skip_git=False
     if not remove_built_wheel(wheel, dry_run=dry_run):
         return False
 
-    cmd = [sys.executable, 'setup.py', 'bdist_wheel',
-           '-b', BUILD_DIR, '-d', DIST_DIR]
+    cmd = [sys.executable, 'setup.py', 'bdist_wheel', '-b', BUILD_DIR, '-d', DIST_DIR]
     if not verbose:
         cmd.append('-q')
 
@@ -392,8 +395,7 @@ def build_wheel(wheel, srcdir=None, dry_run=False, verbose=False, skip_git=False
         return True
 
     if subprocess.call(cmd, cwd=srcdir) != 0:
-        LOGGER.error("Failed to build %s\n (%s)",
-                     os.path.basename(srcdir), cmd)
+        LOGGER.error("Failed to build %s\n (%s)", os.path.basename(srcdir), cmd)
         return False
 
     LOGGER.debug("Built '%s'.", wheel)
@@ -425,11 +427,7 @@ def build_proto_wheel(latest_requirements=False, dry_run=False, verbose=False, s
     if not _try_run(
             'install build dependencies',
             dry_run,
-            lambda: install_requirements(
-                os.path.join(PROTO_DIR, req_file),
-                # index_url=INDEX_URL,
-                # find_links=FIND_LINKS,
-                quiet=not verbose)):
+            lambda: install_requirements(os.path.join(PROTO_DIR, req_file), quiet=not verbose)):
         return False
 
     # Build the wheel.
@@ -452,11 +450,11 @@ class BuildWheelsCommand(Command):
     def __init__(self, subparsers, command_dict):
         super(BuildWheelsCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument(
-            '--latest-build-requirements', action='store_true', help='Install the latest supported versions of python dependencies for building bosdyn-api.')
+            '--latest-build-requirements', action='store_true', help=
+            'Install the latest supported versions of python dependencies for building bosdyn-api.')
         self.parser.add_argument('--skip-git-check', action='store_true',
                                  help="Do not check git status before building wheel")
-        self._parser.add_argument(
-            'wheels', nargs='*', help="Names of wheels to build.")
+        self._parser.add_argument('wheels', nargs='*', help="Names of wheels to build.")
 
     def run(self, options):
         ret = True
@@ -486,6 +484,7 @@ class ListBuildWheelsCommand(Command):
 
 # ----- Installing wheels
 
+
 def install_wheels(wheels, dry_run=False, verbose=False):
     """Install specified built wheels."""
 
@@ -494,8 +493,8 @@ def install_wheels(wheels, dry_run=False, verbose=False):
 
     # Generate a function for installing a package using pip, with all arguments specified
     #  except the wheel to install.
-    install_fn = partial(install_package, package_dir=DIST_DIR, index_url=INDEX_URL,
-                         constraints=constraints, quiet=not verbose)
+    install_fn = partial(install_package, package_dir=DIST_DIR, constraints=constraints,
+                         quiet=not verbose)
 
     ret = True
     for wheel in _list_built_wheels(wheels):
@@ -513,17 +512,16 @@ def install_wheels(wheels, dry_run=False, verbose=False):
 def install_wheels_editable(wheels, dry_run=False, verbose=False):
     """Install specified built wheels, or optionally list wheels available for installing."""
 
-    install_fn = partial(install_package_editable, index_url=INDEX_URL, no_deps=True,
-                         quiet=not verbose)
+    install_fn = partial(install_package_editable, no_deps=True, quiet=not verbose)
 
     for wheel in _list_editable_installs(wheels):
-        install_wheel_thunk = partial(
-            install_fn, source_dir=_wheel_name_to_source_dir(wheel))
+        install_wheel_thunk = partial(install_fn, source_dir=_wheel_name_to_source_dir(wheel))
         if _try_run("install editable '{}'".format(wheel), dry_run, install_wheel_thunk):
             LOGGER.info("Editable-installed %s", wheel)
         else:
             return False
     return True
+
 
 # -- Developer setup.
 
@@ -556,8 +554,7 @@ def dev_setup_main():
     """Command-line interface for developer setup. """
 
     dev_setup_command = DeveloperSetupCommand()
-    dev_setup_command.parser.add_argument(
-        '-n', '--dry-run', action='store_true', help='Dry run')
+    dev_setup_command.parser.add_argument('-n', '--dry-run', action='store_true', help='Dry run')
 
     options = dev_setup_command.parser.parse_args()
 
@@ -570,8 +567,7 @@ def main():
     # -- Setup command-line argument parser.
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-n', '--dry-run', action='store_true', help='Dry run')
-    parser.add_argument('-v', '--verbose',
-                        action='store_true', help='Verbose output')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Verbose output')
     subparsers = parser.add_subparsers(title='commands', dest='command')
 
     command_dict = {}  # command name to fn which takes parsed options

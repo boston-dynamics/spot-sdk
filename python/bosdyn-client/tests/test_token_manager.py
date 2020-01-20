@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """Unit tests for the token_manager module."""
 import datetime
 import pytest
@@ -7,7 +13,9 @@ from bosdyn.client.exceptions import Error
 from bosdyn.client.token_manager import TokenManager
 from bosdyn.client.util import cli_login_prompt, cli_auth
 
+
 class MockRobot:
+
     def __init__(self, token=None):
         self.user_token = token
         self.address = 'mock-address'
@@ -20,6 +28,7 @@ class MockRobot:
 
     def authenticate_with_token(self, token):
         self.user_token = 'mock-token-refresh'
+
 
 def test_token_refresh():
     robot = MockRobot(token='mock-token-default')
@@ -34,12 +43,14 @@ def test_token_refresh():
 
     tm.stop()
 
+
 def test_cli_login(monkeypatch):
     real_login = ('user', 'password')
     monkeypatch.setattr('six.moves.input', lambda _: real_login[0])
     monkeypatch.setattr('getpass.getpass', lambda: real_login[1])
     login = cli_login_prompt()
     assert login == real_login
+
 
 def test_cli_login_with_username(monkeypatch):
     real_login = ('bad_user', 'bad_password')
@@ -48,12 +59,14 @@ def test_cli_login_with_username(monkeypatch):
     login = cli_login_prompt('mock-user')
     assert login == real_login
 
+
 def test_cli_login_with_password(monkeypatch):
     real_login = ('bad_user', 'good_password')
     monkeypatch.setattr('six.moves.input', lambda _: real_login[0])
     monkeypatch.setattr('getpass.getpass', lambda: 'bad_password')
     login = cli_login_prompt('mock-user', real_login[1])
     assert login == real_login
+
 
 def test_cli_authentication(monkeypatch):
     robot = MockRobot(token='mock-token-default')
@@ -63,4 +76,3 @@ def test_cli_authentication(monkeypatch):
     cli_auth(robot)
 
     assert robot.user_token == 'mock-token-auth'
-

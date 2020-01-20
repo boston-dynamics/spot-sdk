@@ -1,8 +1,15 @@
+// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
 syntax = "proto3";
 
 option java_outer_classname = "DirectoryProto";
 
 import "google/protobuf/timestamp.proto";
+import "bosdyn/api/header.proto";
 
 package bosdyn.api;
 
@@ -41,4 +48,50 @@ message ServiceEntry {
     // |application_token_required| is also true, the |permission_required| string
     // must also be present in the "per" claim of the application token.
     string permission_required = 7;
+}
+
+message GetServiceEntryRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The unique user-friendly name of the service.
+    string service_name = 2;
+}
+
+message GetServiceEntryResponse {
+    // Common response Header.
+    ResponseHeader header = 1;
+
+    // Return status.
+    enum Status {
+        // UNKNOWN should never be used.
+        //
+        // An internal DirectoryService issue has happened if UNKNOWN is set.
+        STATUS_UNKNOWN = 0;
+
+        // GetService was successful.
+        //
+        // |service_entry| is filled out.
+        STATUS_OK = 1;
+
+        // GetService failed because the requested service name does not exist.
+        STATUS_NONEXISTENT_SERVICE = 2;
+    }
+    Status status = 2;
+
+    // The record for the discovered service.  Only set if |status| == OK.
+    ServiceEntry service_entry = 3;
+}
+
+message ListServiceEntriesRequest {
+    // Common request header.
+    RequestHeader header = 1;
+}
+
+message ListServiceEntriesResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // The resources managed by the LeaseService.
+    repeated ServiceEntry service_entries = 2;
 }

@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """Sdk is  a repository for settings typically common to a single developer and/or robot fleet."""
 from __future__ import absolute_import
 import glob
@@ -14,27 +20,34 @@ from .estop import EstopClient
 from .image import ImageClient
 from .lease import LeaseClient
 from .log_annotation import LogAnnotationClient
+from .payload import PayloadClient
 from .power import PowerClient
 from .processors import AddRequestHeader
 from .robot import Robot
 from .robot_command import RobotCommandClient
 from .robot_id import RobotIdClient
 from .robot_state import RobotStateClient
+from .spot_check import SpotCheckClient
 from .time_sync import TimeSyncClient
+
 
 class SdkError(Error):
     """General class of errors to handle non-response non-grpc errors."""
 
+
 class UnsetAppTokenError(SdkError):
     """Path to app token not set."""
 
+
 class UnableToLoadAppTokenError(SdkError):
     """Cannot load the provided app token path."""
+
 
 _LOGGER = logging.getLogger(__name__)
 
 BOSDYN_RESOURCE_ROOT = os.environ.get('BOSDYN_RESOURCE_ROOT',
                                       os.path.join(os.path.expanduser('~'), '.bosdyn'))
+
 
 def generate_client_name(prefix=''):
     """Returns a descriptive client name for API clients with an optional prefix."""
@@ -63,12 +76,15 @@ _DEFAULT_SERVICE_CLIENTS = [
     ImageClient,
     LeaseClient,
     LogAnnotationClient,
+    PayloadClient,
     PowerClient,
     RobotCommandClient,
     RobotIdClient,
     RobotStateClient,
+    SpotCheckClient,
     TimeSyncClient,
 ]
+
 
 def create_standard_sdk(client_name_prefix, service_clients=None, cert_resource_glob=None):
     """Return an Sdk with the most common configuration.
@@ -107,12 +123,15 @@ class Sdk(object):
         self.request_processors = []
         self.service_client_factories_by_type = {}
         self.service_type_by_name = {}
+        # Robots created by this Sdk, keyed by address.
+        self.robots = {}
 
         #self.app_token_processor = None
 
 
     def create_robot(self, address, name=None):
-        """Create a Robot initialized with this Sdk.
+        """Get a Robot initialized with this Sdk, creating it if it does not yet exist.
+
         Args:
             address -- Network-resolvable address of the robot, e.g. '192.168.80.3'
             name -- A unique identifier for the robot, e.g. 'My First Robot'. Default None to
@@ -122,10 +141,12 @@ class Sdk(object):
         """
         if self.app_token is None:
             raise UnsetAppTokenError
-        name = name or address
-        robot = Robot(name=name)
+        if address in self.robots:
+            return self.robots[address]
+        robot = Robot(name=name or address)
         robot.address = address
         robot.update_from(self)
+        self.robots[address] = robot
         return robot
 
     def register_service_client(self, creation_func, service_type=None, service_name=None):
@@ -166,15 +187,25 @@ class Sdk(object):
                 with open(cert_path, 'rb') as cert_file:
                     self.cert += cert_file.read()
 
-
     def load_app_token(self, resource_path):
-        """Load an app token."""
+        """Load an app token from a file, and set it on the SDK.
+
+        Arguments:
+            resource_path: Path to app token file on file system.
+
+        Raises:
+            UnsetAppTokenError: If resource_path is not set.
+            UnableToLoadAppTokenError: If the file exists, but is unloadable.
+        """
+        if not resource_path:
+            raise UnsetAppTokenError
         try:
-            with open(resource_path, 'rb') as token_file:
+            with open(os.path.expanduser(resource_path), 'rb') as token_file:
                 token = token_file.read().decode().strip()
         except IOError as e:
             _LOGGER.exception(e)
-            raise UnableToLoadAppTokenError('Unable to retrieve app token from "{}".'.format(resource_path))
+            raise UnableToLoadAppTokenError(
+                'Unable to retrieve app token from "{}".'.format(resource_path))
         except TypeError as e:
             _LOGGER.exception(e)
             raise UnsetAppTokenError

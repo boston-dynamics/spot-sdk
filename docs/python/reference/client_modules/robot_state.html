@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Robot State &mdash; Spot 1.0 documentation</title>
+  <title>Robot State &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -98,6 +98,8 @@
 <li class="toctree-l2"><a class="reference internal" href="image.html">Image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lease.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="payload.html">Payload</a></li>
 <li class="toctree-l2"><a class="reference internal" href="power.html">Power</a></li>
 <li class="toctree-l2"><a class="reference internal" href="processors.html">Processors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot_command.html">Robot Command</a></li>
@@ -105,7 +107,10 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Robot State</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot.html">Robot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sdk.html">SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spot_check.html">Spot Check</a></li>
 <li class="toctree-l2"><a class="reference internal" href="time_sync.html">Time Sync</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_cache.html">Token Cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_manager.html">Token Manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.html">Util</a></li>
 </ul>
 </li>
@@ -181,86 +186,83 @@
 <p>For clients to the robot state service.</p>
 <dl class="class">
 <dt id="bosdyn.client.robot_state.RobotStateClient">
-<em class="property">class </em><code class="descclassname">bosdyn.client.robot_state.</code><code class="descname">RobotStateClient</code><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.robot_state.</code><code class="sig-name descname">RobotStateClient</code><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="common.html#bosdyn.client.common.BaseClient" title="bosdyn.client.common.BaseClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.common.BaseClient</span></code></a></p>
 <p>Client for the RobotState service.</p>
 <dl class="attribute">
 <dt id="bosdyn.client.robot_state.RobotStateClient.default_authority">
-<code class="descname">default_authority</code><em class="property"> = 'state.spot.robot'</em><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.default_authority" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">default_authority</code><em class="property"> = 'state.spot.robot'</em><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.default_authority" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="bosdyn.client.robot_state.RobotStateClient.default_service_name">
-<code class="descname">default_service_name</code><em class="property"> = 'robot-state'</em><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.default_service_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">default_service_name</code><em class="property"> = 'robot-state'</em><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.default_service_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="bosdyn.client.robot_state.RobotStateClient.service_type">
+<code class="sig-name descname">service_type</code><em class="property"> = 'bosdyn.api.RobotStateService'</em><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.service_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="bosdyn.client.robot_state.RobotStateClient.get_hardware_config_with_link_info">
-<code class="descname">get_hardware_config_with_link_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_hardware_config_with_link_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_hardware_config_with_link_info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convenience function which first requests a robots hardware configuration followed by
-requests to get link models for all robot links.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bosdyn.api.robot_state_pb2.HardwareConfiguration with all link models filled out.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot_state.RobotStateClient.get_robot_hardware_configuration">
-<code class="descname">get_robot_hardware_configuration</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_robot_hardware_configuration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_robot_hardware_configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Obtain current hardware configuration of robot.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot_state.RobotStateClient.get_robot_hardware_configuration_async">
-<code class="descname">get_robot_hardware_configuration_async</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_robot_hardware_configuration_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_robot_hardware_configuration_async" title="Permalink to this definition">¶</a></dt>
-<dd><p>Async version of get_robot_hardware_configuration()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot_state.RobotStateClient.get_robot_link_model">
-<code class="descname">get_robot_link_model</code><span class="sig-paren">(</span><em>link_name</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_robot_link_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_robot_link_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Obtain link model OBJ for a specific link.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot_state.RobotStateClient.get_robot_link_model_async">
-<code class="descname">get_robot_link_model_async</code><span class="sig-paren">(</span><em>link_name</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_robot_link_model_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_robot_link_model_async" title="Permalink to this definition">¶</a></dt>
-<dd><p>Async version of get_robot_joint_model_async()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot_state.RobotStateClient.get_robot_metrics">
-<code class="descname">get_robot_metrics</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_robot_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_robot_metrics" title="Permalink to this definition">¶</a></dt>
-<dd><p>Obtain robot metrics, such as distance traveled or time powered on.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot_state.RobotStateClient.get_robot_metrics_async">
-<code class="descname">get_robot_metrics_async</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_robot_metrics_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_robot_metrics_async" title="Permalink to this definition">¶</a></dt>
-<dd><p>Async version of get_robot_state()</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="bosdyn.client.robot_state.RobotStateClient.get_robot_state">
-<code class="descname">get_robot_state</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_robot_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_robot_state" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_robot_state</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_robot_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_robot_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Obtain current state of the robot.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="bosdyn.client.robot_state.RobotStateClient.get_robot_state_async">
-<code class="descname">get_robot_state_async</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_robot_state_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_robot_state_async" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_robot_state_async</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_robot_state_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_robot_state_async" title="Permalink to this definition">¶</a></dt>
 <dd><p>Async version of get_robot_state()</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="bosdyn.client.robot_state.RobotStateClient.service_type">
-<code class="descname">service_type</code><em class="property"> = 'bosdyn.api.RobotStateService'</em><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.service_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="method">
+<dt id="bosdyn.client.robot_state.RobotStateClient.get_robot_metrics">
+<code class="sig-name descname">get_robot_metrics</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_robot_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_robot_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain robot metrics, such as distance traveled or time powered on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot_state.RobotStateClient.get_robot_metrics_async">
+<code class="sig-name descname">get_robot_metrics_async</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_robot_metrics_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_robot_metrics_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of get_robot_state()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot_state.RobotStateClient.get_robot_hardware_configuration">
+<code class="sig-name descname">get_robot_hardware_configuration</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_robot_hardware_configuration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_robot_hardware_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain current hardware configuration of robot.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot_state.RobotStateClient.get_robot_hardware_configuration_async">
+<code class="sig-name descname">get_robot_hardware_configuration_async</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_robot_hardware_configuration_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_robot_hardware_configuration_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of get_robot_hardware_configuration()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot_state.RobotStateClient.get_robot_link_model">
+<code class="sig-name descname">get_robot_link_model</code><span class="sig-paren">(</span><em class="sig-param">link_name</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_robot_link_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_robot_link_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain link model OBJ for a specific link.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot_state.RobotStateClient.get_robot_link_model_async">
+<code class="sig-name descname">get_robot_link_model_async</code><span class="sig-paren">(</span><em class="sig-param">link_name</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_robot_link_model_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_robot_link_model_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of get_robot_joint_model_async()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot_state.RobotStateClient.get_hardware_config_with_link_info">
+<code class="sig-name descname">get_hardware_config_with_link_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_state.html#RobotStateClient.get_hardware_config_with_link_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_state.RobotStateClient.get_hardware_config_with_link_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function which first requests a robots hardware configuration followed by
+requests to get link models for all robot links.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>bosdyn.api.robot_state_pb2.HardwareConfiguration with all link models filled out.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

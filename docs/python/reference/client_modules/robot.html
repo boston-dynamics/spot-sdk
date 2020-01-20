@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Robot &mdash; Spot 1.0 documentation</title>
+  <title>Robot &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -98,6 +98,8 @@
 <li class="toctree-l2"><a class="reference internal" href="image.html">Image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lease.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="payload.html">Payload</a></li>
 <li class="toctree-l2"><a class="reference internal" href="power.html">Power</a></li>
 <li class="toctree-l2"><a class="reference internal" href="processors.html">Processors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot_command.html">Robot Command</a></li>
@@ -105,7 +107,10 @@
 <li class="toctree-l2"><a class="reference internal" href="robot_state.html">Robot State</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Robot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sdk.html">SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spot_check.html">Spot Check</a></li>
 <li class="toctree-l2"><a class="reference internal" href="time_sync.html">Time Sync</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_cache.html">Token Cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_manager.html">Token Manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.html">Util</a></li>
 </ul>
 </li>
@@ -181,202 +186,188 @@
 <p>Settings common to a user’s access to one robot.</p>
 <dl class="class">
 <dt id="bosdyn.client.robot.Robot">
-<em class="property">class </em><code class="descclassname">bosdyn.client.robot.</code><code class="descname">Robot</code><span class="sig-paren">(</span><em>name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.robot.</code><code class="sig-name descname">Robot</code><span class="sig-paren">(</span><em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Settings common to one user’s access to one robot.</p>
 <p>See also Sdk and BaseClient</p>
 <dl class="method">
-<dt id="bosdyn.client.robot.Robot.authenticate">
-<code class="descname">authenticate</code><span class="sig-paren">(</span><em>username</em>, <em>password</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.authenticate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.authenticate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Authenticate to this Robot with the username/password at the given service.</p>
-<p>This method may throw TokenCache.WriteFailedError.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot.Robot.authenticate_from_cache">
-<code class="descname">authenticate_from_cache</code><span class="sig-paren">(</span><em>username</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.authenticate_from_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.authenticate_from_cache" title="Permalink to this definition">¶</a></dt>
-<dd><p>Authenticate to this Robot with a cached token at the given service.</p>
-<p>This method may throw TokenCache.NotInCacheError or TokenCache.WriteFailedError.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot.Robot.authenticate_with_token">
-<code class="descname">authenticate_with_token</code><span class="sig-paren">(</span><em>token</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.authenticate_with_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.authenticate_with_token" title="Permalink to this definition">¶</a></dt>
-<dd><p>Authenticate to this Robot with the token at the given service.</p>
-<p>This method may throw TokenCache.WriteFailedError.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot.Robot.ensure_channel">
-<code class="descname">ensure_channel</code><span class="sig-paren">(</span><em>authority</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.ensure_channel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.ensure_channel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the channel to access the given authority, creating it if it doesn’t exist.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot.Robot.ensure_client">
-<code class="descname">ensure_client</code><span class="sig-paren">(</span><em>service_name</em>, <em>channel=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.ensure_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.ensure_client" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ensure a Client for a given service.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>-- The name of the service.</strong> (<em>service_name</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body"><strong>-- gRPC channel object to use. Default None</strong><strong>, </strong><strong>in which case the Sdk data is used</strong> (<a class="reference internal" href="channel.html#module-bosdyn.client.channel" title="bosdyn.client.channel"><em>channel</em></a>) – to generate a channel</td>
-</tr>
-</tbody>
-</table>
-<p>Throws NonexistentServiceError if the service is not found.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot.Robot.get_cached_usernames">
-<code class="descname">get_cached_usernames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.get_cached_usernames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.get_cached_usernames" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return an ordered list of usernames queryable from the cache.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot.Robot.get_id">
-<code class="descname">get_id</code><span class="sig-paren">(</span><em>id_service_name='robot-id'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.get_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.get_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all the information that identifies the robot.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot.Robot.is_powered_on">
-<code class="descname">is_powered_on</code><span class="sig-paren">(</span><em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.is_powered_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.is_powered_on" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check the power state of the robot.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timeout</strong> – Number of seconds to wait for RPC response.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Returns True if robot is powered on, False otherwise.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Error</span></code> – On any failure –&gt; Lots to list here.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot.Robot.list_services">
-<code class="descname">list_services</code><span class="sig-paren">(</span><em>directory_service_name='directory'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.list_services"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.list_services" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all the available services on the robot.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot.Robot.operator_comment">
-<code class="descname">operator_comment</code><span class="sig-paren">(</span><em>comment</em>, <em>timestamp_secs=None</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.operator_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.operator_comment" title="Permalink to this definition">¶</a></dt>
-<dd><p>Send an operator comment to the robot for the robot’s log files.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>comment</strong> (<em>string</em>) – Operator comment text to be added to the log.</li>
-<li><strong>timestamp_secs</strong> – <p>Comment time in seconds since the unix epoch (client clock).
-If set, this is converted to robot time when sent to the robot.
-If None and time sync is available, the current time is converted</p>
-<blockquote>
-<div>to robot time and sent as the comment timestamp.</div></blockquote>
-<dl class="docutils">
-<dt>If None and time sync is unavailable, the logged timestamp will</dt>
-<dd>be the time the robot receives this message.</dd>
-</dl>
-</li>
-<li><strong>timeout</strong> – Number of seconds to wait for RPC response.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li>NotReadyError   <a href="#id1"><span class="problematic" id="id2">|timestamp_secs|</span></a> given, but time-sync thread is not ready.</li>
-<li>Timeout         <a href="#id3"><span class="problematic" id="id4">|timestamp_secs|</span></a> given, but time-sync has not been achieved.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot.Robot.power_off">
-<code class="descname">power_off</code><span class="sig-paren">(</span><em>cut_immediately=False</em>, <em>timeout_sec=20</em>, <em>update_frequency=1.0</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.power_off"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.power_off" title="Permalink to this definition">¶</a></dt>
-<dd><p>Power off robot. This function blocks until robot powers off. By default, this will
-attempt to put the robot in a safe state before cutting power.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>cut_immediately</strong> (<em>bool</em>) – True to cut power to the robot immediately. False to issue a
-safe power off command to the robot.</li>
-<li><strong>timeout_sec</strong> (<em>float</em>) – Max time this function will block for.</li>
-<li><strong>update_frequency</strong> (<em>float</em>) – Frequency at which power status is checked.</li>
-<li><strong>timeout</strong> – Number of seconds to wait for RPC response.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Error</span></code> – On any failure –&gt; Lots to list here.</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot.Robot.power_on">
-<code class="descname">power_on</code><span class="sig-paren">(</span><em>timeout_sec=20</em>, <em>update_frequency=1.0</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.power_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.power_on" title="Permalink to this definition">¶</a></dt>
-<dd><p>Power on robot. This function blocks until robot powers on.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>timeout_sec</strong> (<em>float</em>) – Max time this function will block for.</li>
-<li><strong>update_frequency</strong> (<em>float</em>) – Frequency at which power status is checked.</li>
-<li><strong>timeout</strong> – Number of seconds to wait for RPC response.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Error</span></code> – On any failure –&gt; Lots to list here.</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="bosdyn.client.robot.Robot.setup_token_cache">
-<code class="descname">setup_token_cache</code><span class="sig-paren">(</span><em>token_cache=None</em>, <em>unique_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.setup_token_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.setup_token_cache" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setup_token_cache</code><span class="sig-paren">(</span><em class="sig-param">token_cache=None</em>, <em class="sig-param">unique_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.setup_token_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.setup_token_cache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Instantiates a token cache to persist the user token.</p>
 <p>If the user provides a cache, it will be saved in the robot object for convenience.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="bosdyn.client.robot.Robot.start_time_sync">
-<code class="descname">start_time_sync</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.start_time_sync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.start_time_sync" title="Permalink to this definition">¶</a></dt>
-<dd><p>Start time sync thread if needed.</p>
+<dt id="bosdyn.client.robot.Robot.update_from">
+<code class="sig-name descname">update_from</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.update_from"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.update_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds to this object’s processors, etc based on other</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot.Robot.ensure_client">
+<code class="sig-name descname">ensure_client</code><span class="sig-paren">(</span><em class="sig-param">service_name</em>, <em class="sig-param">channel=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.ensure_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.ensure_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure a Client for a given service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>-- The name of the service.</strong> (<em>service_name</em>) – </p>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><p><strong>-- gRPC channel object to use. Default None</strong><strong>, </strong><strong>in which case the Sdk data is used</strong> (<a class="reference internal" href="channel.html#module-bosdyn.client.channel" title="bosdyn.client.channel"><em>channel</em></a>) – to generate a channel</p>
+</dd>
+</dl>
+<p>Throws NonexistentServiceError if the service is not found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot.Robot.ensure_channel">
+<code class="sig-name descname">ensure_channel</code><span class="sig-paren">(</span><em class="sig-param">authority</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.ensure_channel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.ensure_channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the channel to access the given authority, creating it if it doesn’t exist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot.Robot.authenticate">
+<code class="sig-name descname">authenticate</code><span class="sig-paren">(</span><em class="sig-param">username</em>, <em class="sig-param">password</em>, <em class="sig-param">timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.authenticate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.authenticate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Authenticate to this Robot with the username/password at the given service.</p>
+<p>This method may throw TokenCache.WriteFailedError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot.Robot.authenticate_with_token">
+<code class="sig-name descname">authenticate_with_token</code><span class="sig-paren">(</span><em class="sig-param">token</em>, <em class="sig-param">timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.authenticate_with_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.authenticate_with_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>Authenticate to this Robot with the token at the given service.</p>
+<p>This method may throw TokenCache.WriteFailedError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot.Robot.authenticate_from_cache">
+<code class="sig-name descname">authenticate_from_cache</code><span class="sig-paren">(</span><em class="sig-param">username</em>, <em class="sig-param">timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.authenticate_from_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.authenticate_from_cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Authenticate to this Robot with a cached token at the given service.</p>
+<p>This method may throw TokenCache.NotInCacheError or TokenCache.WriteFailedError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot.Robot.get_cached_usernames">
+<code class="sig-name descname">get_cached_usernames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.get_cached_usernames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.get_cached_usernames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an ordered list of usernames queryable from the cache.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot.Robot.get_id">
+<code class="sig-name descname">get_id</code><span class="sig-paren">(</span><em class="sig-param">id_service_name='robot-id'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.get_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.get_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all the information that identifies the robot.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot.Robot.list_services">
+<code class="sig-name descname">list_services</code><span class="sig-paren">(</span><em class="sig-param">directory_service_name='directory'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.list_services"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.list_services" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all the available services on the robot.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="bosdyn.client.robot.Robot.sync_with_directory">
-<code class="descname">sync_with_directory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.sync_with_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.sync_with_directory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">sync_with_directory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.sync_with_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.sync_with_directory" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="method">
+<dt id="bosdyn.client.robot.Robot.start_time_sync">
+<code class="sig-name descname">start_time_sync</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.start_time_sync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.start_time_sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start time sync thread if needed.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="bosdyn.client.robot.Robot.time_sync">
-<code class="descname">time_sync</code><a class="headerlink" href="#bosdyn.client.robot.Robot.time_sync" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">time_sync</code><a class="headerlink" href="#bosdyn.client.robot.Robot.time_sync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor for the time-sync thread.  Creates and starts thread if not already started.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="bosdyn.client.robot.Robot.update_from">
-<code class="descname">update_from</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.update_from"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.update_from" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds to this object’s processors, etc based on other</p>
+<dt id="bosdyn.client.robot.Robot.operator_comment">
+<code class="sig-name descname">operator_comment</code><span class="sig-paren">(</span><em class="sig-param">comment</em>, <em class="sig-param">timestamp_secs=None</em>, <em class="sig-param">timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.operator_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.operator_comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send an operator comment to the robot for the robot’s log files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>comment</strong> (<em>string</em>) – Operator comment text to be added to the log.</p></li>
+<li><p><strong>timestamp_secs</strong> – <p>Comment time in seconds since the unix epoch (client clock).
+If set, this is converted to robot time when sent to the robot.
+If None and time sync is available, the current time is converted</p>
+<blockquote>
+<div><p>to robot time and sent as the comment timestamp.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>If None and time sync is unavailable, the logged timestamp will</dt><dd><p>be the time the robot receives this message.</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>timeout</strong> – Number of seconds to wait for RPC response.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>NotReadyError   timestamp_secs given</strong><strong>, </strong><strong>but time-sync thread is not ready.</strong> – </p></li>
+<li><p><strong>Timeout         timestamp_secs given</strong><strong>, </strong><strong>but time-sync has not been achieved.</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot.Robot.power_on">
+<code class="sig-name descname">power_on</code><span class="sig-paren">(</span><em class="sig-param">timeout_sec=20</em>, <em class="sig-param">update_frequency=1.0</em>, <em class="sig-param">timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.power_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.power_on" title="Permalink to this definition">¶</a></dt>
+<dd><p>Power on robot. This function blocks until robot powers on.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeout_sec</strong> (<em>float</em>) – Max time this function will block for.</p></li>
+<li><p><strong>update_frequency</strong> (<em>float</em>) – Frequency at which power status is checked.</p></li>
+<li><p><strong>timeout</strong> – Number of seconds to wait for RPC response.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><strong>Error</strong></a> – On any failure –&gt; Lots to list here.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot.Robot.power_off">
+<code class="sig-name descname">power_off</code><span class="sig-paren">(</span><em class="sig-param">cut_immediately=False</em>, <em class="sig-param">timeout_sec=20</em>, <em class="sig-param">update_frequency=1.0</em>, <em class="sig-param">timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.power_off"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.power_off" title="Permalink to this definition">¶</a></dt>
+<dd><p>Power off robot. This function blocks until robot powers off. By default, this will
+attempt to put the robot in a safe state before cutting power.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cut_immediately</strong> (<em>bool</em>) – True to cut power to the robot immediately. False to issue a
+safe power off command to the robot.</p></li>
+<li><p><strong>timeout_sec</strong> (<em>float</em>) – Max time this function will block for.</p></li>
+<li><p><strong>update_frequency</strong> (<em>float</em>) – Frequency at which power status is checked.</p></li>
+<li><p><strong>timeout</strong> – Number of seconds to wait for RPC response.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><strong>Error</strong></a> – On any failure –&gt; Lots to list here.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot.Robot.is_powered_on">
+<code class="sig-name descname">is_powered_on</code><span class="sig-paren">(</span><em class="sig-param">timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot.html#Robot.is_powered_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.is_powered_on" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the power state of the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timeout</strong> – Number of seconds to wait for RPC response.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns True if robot is powered on, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><strong>Error</strong></a> – On any failure –&gt; Lots to list here.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

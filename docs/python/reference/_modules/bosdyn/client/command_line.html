@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.command_line &mdash; Spot 1.0 documentation</title>
+  <title>bosdyn.client.command_line &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -149,7 +149,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.command_line</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Command-line utility code for interacting with robot services.&quot;&quot;&quot;</span>
+<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;Command-line utility code for interacting with robot services.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
 <span class="kn">import</span> <span class="nn">abc</span>
@@ -157,9 +163,12 @@
 <span class="kn">import</span> <span class="nn">signal</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">InvalidRequestError</span>
 
 <span class="kn">import</span> <span class="nn">six</span>
 
+<span class="kn">from</span> <span class="nn">bosdyn.api.log_annotation_pb2</span> <span class="k">import</span> <span class="n">LogAnnotationTextMessage</span>
 <span class="kn">import</span> <span class="nn">bosdyn.client</span>
 <span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="k">import</span> <span class="p">(</span><span class="n">duration_str</span><span class="p">,</span> <span class="n">timestamp_to_datetime</span><span class="p">)</span>
 
@@ -169,7 +178,7 @@
 <span class="kn">from</span> <span class="nn">.estop</span> <span class="k">import</span> <span class="n">EstopClient</span><span class="p">,</span> <span class="n">EstopEndpoint</span><span class="p">,</span> <span class="n">EstopKeepAlive</span>
 <span class="kn">from</span> <span class="nn">.image</span> <span class="k">import</span> <span class="p">(</span><span class="n">ImageClient</span><span class="p">,</span> <span class="n">UnknownImageSourceError</span><span class="p">,</span> <span class="n">ImageResponseError</span><span class="p">,</span> <span class="n">build_image_request</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.lease</span> <span class="k">import</span> <span class="n">LeaseClient</span>
-<span class="kn">from</span> <span class="nn">.log_annotation</span> <span class="k">import</span> <span class="p">(</span><span class="n">LogAnnotationClient</span><span class="p">,</span> <span class="n">LogAnnotationTextMessage</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.log_annotation</span> <span class="k">import</span> <span class="n">LogAnnotationClient</span>
 <span class="kn">from</span> <span class="nn">.robot_id</span> <span class="k">import</span> <span class="n">RobotIdClient</span>
 <span class="kn">from</span> <span class="nn">.robot_state</span> <span class="k">import</span> <span class="n">RobotStateClient</span>
 <span class="kn">from</span> <span class="nn">.sdk</span> <span class="k">import</span> <span class="n">SdkError</span>
@@ -314,7 +323,8 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">_show_directory_entry</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">service</span><span class="p">,</span> <span class="n">as_proto</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">proto</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">NonexistentServiceError</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The requested service name &quot;</span><span class="si">{}</span><span class="s1">&quot; does not exist.  Available services:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">service</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The requested service name &quot;</span><span class="si">{}</span><span class="s1">&quot; does not exist.  Available services:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">.</span><span class="n">service</span><span class="p">))</span>
             <span class="n">_show_directory_list</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">as_proto</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">proto</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">True</span></div>
@@ -341,8 +351,8 @@
             <span class="n">nickname</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">nickname</span>
         <span class="n">release</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">software_release</span>
         <span class="n">version</span> <span class="o">=</span> <span class="n">release</span><span class="o">.</span><span class="n">version</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:20}</span><span class="s2"> </span><span class="si">{:15}</span><span class="s2"> </span><span class="si">{:10}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">serial_number</span><span class="p">,</span> <span class="n">proto</span><span class="o">.</span><span class="n">computer_serial_number</span><span class="p">,</span>
-                                           <span class="n">nickname</span><span class="p">,</span> <span class="n">proto</span><span class="o">.</span><span class="n">species</span><span class="p">,</span> <span class="n">proto</span><span class="o">.</span><span class="n">version</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;</span><span class="si">{:20}</span><span class="s2"> </span><span class="si">{:15}</span><span class="s2"> </span><span class="si">{:10}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">serial_number</span><span class="p">,</span> <span class="n">proto</span><span class="o">.</span><span class="n">computer_serial_number</span><span class="p">,</span>
+                                                  <span class="n">nickname</span><span class="p">,</span> <span class="n">proto</span><span class="o">.</span><span class="n">species</span><span class="p">,</span> <span class="n">proto</span><span class="o">.</span><span class="n">version</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Software: </span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="o">.</span><span class="n">major_version</span><span class="p">,</span> <span class="n">version</span><span class="o">.</span><span class="n">minor_version</span><span class="p">,</span>
                                                    <span class="n">version</span><span class="o">.</span><span class="n">patch_level</span><span class="p">,</span> <span class="n">release</span><span class="o">.</span><span class="n">changeset</span><span class="p">,</span>
                                                    <span class="n">timestamp_to_datetime</span><span class="p">(</span><span class="n">release</span><span class="o">.</span><span class="n">changeset_date</span><span class="p">)))</span>
@@ -442,7 +452,7 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RobotStateCommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span>
-                                                 <span class="p">[</span><span class="n">FullStateCommand</span><span class="p">,</span> <span class="n">MetricsCommand</span><span class="p">])</span></div>
+                                                 <span class="p">[</span><span class="n">FullStateCommand</span><span class="p">,</span> <span class="n">MetricsCommand</span><span class="p">,</span> <span class="n">RobotModel</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="FullStateCommand"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.FullStateCommand">[docs]</a><span class="k">class</span> <span class="nc">FullStateCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
@@ -453,6 +463,65 @@
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
         <span class="n">proto</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">RobotStateClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span><span class="o">.</span><span class="n">get_robot_state</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RobotModel"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.RobotModel">[docs]</a><span class="k">class</span> <span class="nc">RobotModel</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write robot URDF and mesh to local files.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;model&#39;</span>
+    <span class="n">NEED_AUTHENTICATION</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RobotModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--outdir&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;Model_Files&#39;</span><span class="p">,</span>
+                                  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;directory into which to save the files&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">robot_state_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">RobotStateClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="n">hardware</span> <span class="o">=</span> <span class="n">robot_state_client</span><span class="o">.</span><span class="n">get_robot_hardware_configuration</span><span class="p">()</span>
+
+        <span class="c1"># Write files in user-specified directory, or use default name</span>
+        <span class="n">model_directory</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">outdir</span>
+
+        <span class="c1"># Make the directory, if it does not already exist</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">model_directory</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+        <span class="c1"># Write each link model to its own file</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">hardware</span><span class="o">.</span><span class="n">skeleton</span><span class="o">.</span><span class="n">links</span><span class="p">:</span>
+            <span class="c1"># Request a Skeleton.Link.ObjModel from the robot for link.name and write it to a file</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">obj_model_proto</span> <span class="o">=</span> <span class="n">robot_state_client</span><span class="o">.</span><span class="n">get_robot_link_model</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">InvalidRequestError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Name of link: &quot;</span> <span class="o">+</span> <span class="n">l</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># If file_name is empty, ignore</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">obj_model_proto</span><span class="o">.</span><span class="n">file_name</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Write to a file, ignoring the robot path</span>
+            <span class="n">sub_path</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">obj_model_proto</span><span class="o">.</span><span class="n">file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># robot defined path</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_directory</span><span class="p">,</span> <span class="n">sub_path</span><span class="p">)</span>  <span class="c1"># local path + robot path</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">):</span>
+                <span class="k">pass</span>
+
+            <span class="n">path_and_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">obj_model_proto</span><span class="o">.</span><span class="n">file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_and_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">obj_file</span><span class="p">:</span>
+                <span class="n">obj_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">obj_model_proto</span><span class="o">.</span><span class="n">file_contents</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Link file written to &#39;</span> <span class="o">+</span> <span class="n">path_and_name</span><span class="p">)</span>
+
+        <span class="c1"># Write the corresponding urdf file inside the link directory</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_directory</span><span class="p">,</span> <span class="s2">&quot;model.urdf&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">urdf_file</span><span class="p">:</span>
+            <span class="n">urdf_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">hardware</span><span class="o">.</span><span class="n">skeleton</span><span class="o">.</span><span class="n">urdf</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;URDF file written to &#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_directory</span><span class="p">,</span> <span class="s2">&quot;model.urdf&quot;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
 
 
 <div class="viewcode-block" id="MetricsCommand"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.MetricsCommand">[docs]</a><span class="k">class</span> <span class="nc">MetricsCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
@@ -646,6 +715,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">ImageCommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span>
                                             <span class="p">[</span><span class="n">ListImageSourcesCommand</span><span class="p">,</span> <span class="n">GetImageCommand</span><span class="p">])</span></div>
 
+
 <span class="k">def</span> <span class="nf">_show_image_sources_list</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">as_proto</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Print available image sources.&quot;&quot;&quot;</span>
     <span class="n">proto</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">ImageClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span><span class="o">.</span><span class="n">list_image_sources</span><span class="p">()</span>
@@ -683,18 +753,24 @@
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;filename into which to save the image&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--quality-percent&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span>
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Percent image quaility (0-100)&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;source_name&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;image source name&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;source_name&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;SRC&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;image source name&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="n">image_request</span> <span class="o">=</span> <span class="n">build_image_request</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">source_name</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">quality_percent</span><span class="p">)</span>
+        <span class="n">image_requests</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">build_image_request</span><span class="p">(</span><span class="n">source_name</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">quality_percent</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">source_name</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">source_name</span>
+        <span class="p">]</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">ImageClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span><span class="o">.</span><span class="n">get_image</span><span class="p">([</span><span class="n">image_request</span><span class="p">])</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span>
+                <span class="n">ImageClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span><span class="o">.</span><span class="n">get_image</span><span class="p">(</span><span class="n">image_requests</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">UnknownImageSourceError</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Requested image source &quot;</span><span class="si">{}</span><span class="s1">&quot; does not exist.  Available image sources:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">source_name</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Requested image source &quot;</span><span class="si">{}</span><span class="s1">&quot; does not exist.  Available image sources:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">.</span><span class="n">source_name</span><span class="p">))</span>
             <span class="n">_show_image_sources_list</span><span class="p">(</span><span class="n">robot</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">except</span> <span class="n">ImageResponseError</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Robot cannot generate the &quot;</span><span class="si">{}</span><span class="s1">&quot; at this time.  Retry the command.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">source_name</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Robot cannot generate the &quot;</span><span class="si">{}</span><span class="s1">&quot; at this time.  Retry the command.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">options</span><span class="o">.</span><span class="n">source_name</span><span class="p">))</span>
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="k">for</span> <span class="n">image_response</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>

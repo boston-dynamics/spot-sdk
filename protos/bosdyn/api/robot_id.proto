@@ -1,3 +1,9 @@
+// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
 /// Id contains basic information about a robot which is made available over the network as part of
 ///  robot discovery without requiring user authentication.
 syntax = "proto3";
@@ -6,6 +12,7 @@ package bosdyn.api;
 
 option java_outer_classname = "RobotIdProto";
 
+import "bosdyn/api/header.proto";
 import "bosdyn/api/parameter.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -70,4 +77,13 @@ message RobotSoftwareRelease {
 
     /// Other information about the build.
     repeated Parameter parameters = 9;
+}
+
+message RobotIdRequest {
+    RequestHeader header = 1;  ///< Common request/response header.
+}
+
+message RobotIdResponse {
+    ResponseHeader header = 1;  ///< Common request/response header.
+    RobotId robot_id = 2;       ///< The requested RobotId information.
 }

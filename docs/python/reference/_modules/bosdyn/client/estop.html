@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.estop &mdash; Spot 1.0 documentation</title>
+  <title>bosdyn.client.estop &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -149,7 +149,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.estop</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;For clients to the emergency stop (estop) service.&quot;&quot;&quot;</span>
+<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;For clients to the emergency stop (estop) service.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">ctypes</span>
@@ -157,17 +163,19 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="n">queue</span>
 
 <span class="kn">from</span> <span class="nn">google.protobuf.duration_pb2</span> <span class="k">import</span> <span class="n">Duration</span>
 
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">estop_service_pb2_grpc</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">estop_service_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">estop_pb2</span>
 
 <span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">BaseClient</span>
 <span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_unset_status_error</span>
 <span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">error_factory</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">RpcError</span><span class="p">,</span> <span class="n">TimedOutError</span>
+
 
 <div class="viewcode-block" id="EstopResponseError"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopResponseError">[docs]</a><span class="k">class</span> <span class="nc">EstopResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;General class of errors for Estop service.&quot;&quot;&quot;</span></div>
@@ -207,8 +215,8 @@
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;estop&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.EstopService&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">EstopClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">estop_service_pb2_grpc</span><span class="o">.</span><span class="n">EstopServiceStub</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;EstopClient - PID: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">())):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EstopClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">estop_service_pb2_grpc</span><span class="o">.</span><span class="n">EstopServiceStub</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EstopClient.register"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopClient.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_config_id</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Register the endpoint in the target configuration.</span>
@@ -254,12 +262,12 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            estop_pb2.EstopConfig the robot is currently using.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetEstopConfig</span><span class="p">,</span> <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">GetEstopConfigRequest</span><span class="p">(),</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetEstopConfig</span><span class="p">,</span> <span class="n">estop_pb2</span><span class="o">.</span><span class="n">GetEstopConfigRequest</span><span class="p">(),</span>
                          <span class="n">_active_config_from_config_response</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EstopClient.get_config_async"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopClient.get_config_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_config_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Async version of get_config()&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetEstopConfig</span><span class="p">,</span> <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">GetEstopConfigRequest</span><span class="p">(),</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetEstopConfig</span><span class="p">,</span> <span class="n">estop_pb2</span><span class="o">.</span><span class="n">GetEstopConfigRequest</span><span class="p">(),</span>
                                <span class="n">_active_config_from_config_response</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EstopClient.set_config"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopClient.set_config">[docs]</a>    <span class="k">def</span> <span class="nf">set_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">target_config_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -273,15 +281,13 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            estop_pb2.EstopConfig the robot is currently using.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">req</span> <span class="o">=</span> <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">SetEstopConfigRequest</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
-                                                      <span class="n">target_config_id</span><span class="o">=</span><span class="n">target_config_id</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">estop_pb2</span><span class="o">.</span><span class="n">SetEstopConfigRequest</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">target_config_id</span><span class="o">=</span><span class="n">target_config_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetEstopConfig</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_active_config_from_config_response</span><span class="p">,</span>
                          <span class="n">_set_config_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EstopClient.set_config_async"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopClient.set_config_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_config_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">target_config_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Async version of set_config()&quot;&quot;&quot;</span>
-        <span class="n">req</span> <span class="o">=</span> <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">SetEstopConfigRequest</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
-                                                      <span class="n">target_config_id</span><span class="o">=</span><span class="n">target_config_id</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">estop_pb2</span><span class="o">.</span><span class="n">SetEstopConfigRequest</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">target_config_id</span><span class="o">=</span><span class="n">target_config_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetEstopConfig</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_active_config_from_config_response</span><span class="p">,</span>
                                <span class="n">_set_config_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -293,14 +299,13 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            estop_pb2.EstopSystemStatus from the server.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetEstopSystemStatus</span><span class="p">,</span>
-                         <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">GetEstopSystemStatusRequest</span><span class="p">(),</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetEstopSystemStatus</span><span class="p">,</span> <span class="n">estop_pb2</span><span class="o">.</span><span class="n">GetEstopSystemStatusRequest</span><span class="p">(),</span>
                          <span class="n">_estop_sys_status_from_response</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EstopClient.get_status_async"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopClient.get_status_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_status_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Async version of get_status()&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetEstopSystemStatus</span><span class="p">,</span>
-                               <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">GetEstopSystemStatusRequest</span><span class="p">(),</span>
+                               <span class="n">estop_pb2</span><span class="o">.</span><span class="n">GetEstopSystemStatusRequest</span><span class="p">(),</span>
                                <span class="n">_estop_sys_status_from_response</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EstopClient.check_in"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopClient.check_in">[docs]</a>    <span class="k">def</span> <span class="nf">check_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stop_level</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">challenge</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">suppress_incorrect</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -337,15 +342,15 @@
     <span class="k">def</span> <span class="nf">_build_check_in_request</span><span class="p">(</span><span class="n">stop_level</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">challenge</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">EstopEndpoint</span><span class="p">):</span>
             <span class="n">endpoint</span> <span class="o">=</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">to_proto</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">EstopCheckInRequest</span><span class="p">(</span><span class="n">stop_level</span><span class="o">=</span><span class="n">stop_level</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">,</span>
-                                                     <span class="n">challenge</span><span class="o">=</span><span class="n">challenge</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">estop_pb2</span><span class="o">.</span><span class="n">EstopCheckInRequest</span><span class="p">(</span><span class="n">stop_level</span><span class="o">=</span><span class="n">stop_level</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">,</span>
+                                             <span class="n">challenge</span><span class="o">=</span><span class="n">challenge</span><span class="p">,</span> <span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_build_register_request</span><span class="p">(</span><span class="n">target_config_id</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">EstopEndpoint</span><span class="p">):</span>
             <span class="n">endpoint</span> <span class="o">=</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">to_proto</span><span class="p">()</span>
-        <span class="n">req</span> <span class="o">=</span> <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">RegisterEstopEndpointRequest</span><span class="p">(</span><span class="n">target_config_id</span><span class="o">=</span><span class="n">target_config_id</span><span class="p">,</span>
-                                                             <span class="n">new_endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">estop_pb2</span><span class="o">.</span><span class="n">RegisterEstopEndpointRequest</span><span class="p">(</span><span class="n">target_config_id</span><span class="o">=</span><span class="n">target_config_id</span><span class="p">,</span>
+                                                     <span class="n">new_endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">)</span>
         <span class="n">req</span><span class="o">.</span><span class="n">target_endpoint</span><span class="o">.</span><span class="n">role</span> <span class="o">=</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">role</span>
         <span class="k">return</span> <span class="n">req</span>
 
@@ -353,8 +358,8 @@
     <span class="k">def</span> <span class="nf">_build_deregister_request</span><span class="p">(</span><span class="n">target_config_id</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">EstopEndpoint</span><span class="p">):</span>
             <span class="n">endpoint</span> <span class="o">=</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">to_proto</span><span class="p">()</span>
-        <span class="n">req</span> <span class="o">=</span> <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">DeregisterEstopEndpointRequest</span><span class="p">(</span><span class="n">target_config_id</span><span class="o">=</span><span class="n">target_config_id</span><span class="p">,</span>
-                                                               <span class="n">target_endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">estop_pb2</span><span class="o">.</span><span class="n">DeregisterEstopEndpointRequest</span><span class="p">(</span><span class="n">target_config_id</span><span class="o">=</span><span class="n">target_config_id</span><span class="p">,</span>
+                                                       <span class="n">target_endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">req</span>
 
     <span class="nd">@staticmethod</span>
@@ -371,10 +376,12 @@
     <span class="c1"># This is an estop role required in every configuration.</span>
     <span class="n">REQUIRED_ROLE</span> <span class="o">=</span> <span class="s1">&#39;PDB_rooted&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">estop_timeout</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">REQUIRED_ROLE</span><span class="p">,</span> <span class="n">first_checkin</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">estop_timeout</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">REQUIRED_ROLE</span><span class="p">,</span> <span class="n">first_checkin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">estop_cut_power_timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">role</span> <span class="o">=</span> <span class="n">role</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">estop_timeout</span> <span class="o">=</span> <span class="n">estop_timeout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estop_cut_power_timeout</span> <span class="o">=</span> <span class="n">estop_cut_power_timeout</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_challenge</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_unique_id</span> <span class="o">=</span> <span class="kc">None</span>
@@ -385,7 +392,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (timeout </span><span class="si">{:.3}</span><span class="s1">s)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estop_timeout</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">estop_cut_power_timeout</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (timeout </span><span class="si">{:.3}</span><span class="s1">s)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estop_timeout</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (timeout </span><span class="si">{:.3}</span><span class="s1">s, cut_power_timeout </span><span class="si">{:.3}</span><span class="s1">s)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estop_timeout</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estop_cut_power_timeout</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_first_checkin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
@@ -435,7 +446,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">active_config</span><span class="o">.</span><span class="n">unique_id</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EstopEndpoint.stop"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopEndpoint.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Issue a CUT stop level command to the robot.</span>
+        <span class="sd">&quot;&quot;&quot;Issue a CUT stop level command to the robot, cutting motor power immediately.</span>
 
 <span class="sd">        Kwargs:</span>
 <span class="sd">            Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.</span>
@@ -443,18 +454,21 @@
 <span class="sd">            None. Will raise an error if RPC failed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Stopping&#39;</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_challenge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">check_in</span><span class="p">(</span><span class="n">StopLevel</span><span class="o">.</span><span class="n">ESTOP_LEVEL_CUT</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span>
-                                                    <span class="bp">self</span><span class="o">.</span><span class="n">get_challenge</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_response</span><span class="p">(),</span>
-                                                    <span class="n">suppress_incorrect</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_first_checkin</span><span class="p">(),</span>
-                                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-        <span class="k">except</span> <span class="n">EstopResponseError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_challenge</span><span class="p">(</span><span class="n">_challenge_from_check_in_response</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">response</span><span class="p">))</span>
-            <span class="k">raise</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_set_first_checkin</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_in_at_level</span><span class="p">(</span><span class="n">StopLevel</span><span class="o">.</span><span class="n">ESTOP_LEVEL_CUT</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EstopEndpoint.settle_then_cut"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopEndpoint.settle_then_cut">[docs]</a>    <span class="k">def</span> <span class="nf">settle_then_cut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Issue a SETTLE_THEN_CUT stop level. The robot will attempt to sit before cutting motor power.</span>
+
+<span class="sd">        Kwargs:</span>
+<span class="sd">            Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None. Will raise an error if RPC failed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Stopping with SETTLE_THEN_CUT&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_in_at_level</span><span class="p">(</span><span class="n">StopLevel</span><span class="o">.</span><span class="n">ESTOP_LEVEL_SETTLE_THEN_CUT</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EstopEndpoint.allow"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopEndpoint.allow">[docs]</a>    <span class="k">def</span> <span class="nf">allow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Issue a NONE stop level command to the robot.</span>
+        <span class="sd">&quot;&quot;&quot;Issue a NONE stop level command to the robot, allowing motor power.</span>
 
 <span class="sd">        Kwargs:</span>
 <span class="sd">            Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.</span>
@@ -462,11 +476,17 @@
 <span class="sd">            None. Will raise an error if RPC failed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Releasing&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_in_at_level</span><span class="p">(</span><span class="n">StopLevel</span><span class="o">.</span><span class="n">ESTOP_LEVEL_NONE</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EstopEndpoint.check_in_at_level"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopEndpoint.check_in_at_level">[docs]</a>    <span class="k">def</span> <span class="nf">check_in_at_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check in at a specified level.</span>
+
+<span class="sd">        Meant for internal use, but may be helpful for higher-level wrappers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_challenge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">check_in</span><span class="p">(</span><span class="n">StopLevel</span><span class="o">.</span><span class="n">ESTOP_LEVEL_NONE</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span>
-                                                    <span class="bp">self</span><span class="o">.</span><span class="n">get_challenge</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_response</span><span class="p">(),</span>
-                                                    <span class="n">suppress_incorrect</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_first_checkin</span><span class="p">(),</span>
-                                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_challenge</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">check_in</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_challenge</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_response</span><span class="p">(),</span>
+                                     <span class="n">suppress_incorrect</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_first_checkin</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
         <span class="k">except</span> <span class="n">EstopResponseError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_challenge</span><span class="p">(</span><span class="n">_challenge_from_check_in_response</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">response</span><span class="p">))</span>
             <span class="k">raise</span>
@@ -492,19 +512,21 @@
 <div class="viewcode-block" id="EstopEndpoint.stop_async"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopEndpoint.stop_async">[docs]</a>    <span class="k">def</span> <span class="nf">stop_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Async version of stop()&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Stopping (async)&#39;</span><span class="p">)</span>
-        <span class="n">fut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">check_in_async</span><span class="p">(</span><span class="n">StopLevel</span><span class="o">.</span><span class="n">ESTOP_LEVEL_CUT</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_challenge</span><span class="p">(),</span>
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">_response</span><span class="p">(),</span> <span class="n">suppress_incorrect</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_first_checkin</span><span class="p">(),</span>
-                                         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">fut</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="k">lambda</span> <span class="n">fut</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_challenge_without_exception_from_future</span><span class="p">(</span><span class="n">fut</span><span class="p">))</span>
-        <span class="n">fut</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="k">lambda</span> <span class="n">fut</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_first_checkin</span><span class="p">(</span><span class="kc">False</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">fut</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_in_at_level_async</span><span class="p">(</span><span class="n">StopLevel</span><span class="o">.</span><span class="n">ESTOP_LEVEL_CUT</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EstopEndpoint.settle_then_cut_async"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopEndpoint.settle_then_cut_async">[docs]</a>    <span class="k">def</span> <span class="nf">settle_then_cut_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of settle_then_cut()&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Stopping with SETTLE_THEN_CUT (async)&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_in_at_level_async</span><span class="p">(</span><span class="n">StopLevel</span><span class="o">.</span><span class="n">ESTOP_LEVEL_SETTLE_THEN_CUT</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EstopEndpoint.allow_async"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopEndpoint.allow_async">[docs]</a>    <span class="k">def</span> <span class="nf">allow_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Async version of allow()&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Releasing (async)&#39;</span><span class="p">)</span>
-        <span class="n">fut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">check_in_async</span><span class="p">(</span><span class="n">StopLevel</span><span class="o">.</span><span class="n">ESTOP_LEVEL_NONE</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_challenge</span><span class="p">(),</span>
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">_response</span><span class="p">(),</span> <span class="n">suppress_incorrect</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_first_checkin</span><span class="p">(),</span>
-                                         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_in_at_level_async</span><span class="p">(</span><span class="n">StopLevel</span><span class="o">.</span><span class="n">ESTOP_LEVEL_NONE</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EstopEndpoint.check_in_at_level_async"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopEndpoint.check_in_at_level_async">[docs]</a>    <span class="k">def</span> <span class="nf">check_in_at_level_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">fut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">check_in_async</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_challenge</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_response</span><span class="p">(),</span>
+                                         <span class="n">suppress_incorrect</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_first_checkin</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">fut</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="k">lambda</span> <span class="n">fut</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_challenge_without_exception_from_future</span><span class="p">(</span><span class="n">fut</span><span class="p">))</span>
         <span class="n">fut</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="k">lambda</span> <span class="n">fut</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_first_checkin</span><span class="p">(</span><span class="kc">False</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">fut</span></div>
@@ -522,20 +544,38 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">role</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">role</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">estop_timeout</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">seconds</span> <span class="o">+</span> <span class="n">proto</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">nanos</span> <span class="o">*</span> <span class="mf">1e-9</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_unique_id</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">unique_id</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_unique_id</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">unique_id</span>
+        <span class="k">if</span> <span class="n">proto</span><span class="o">.</span><span class="n">cut_power_timeout</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">estop_cut_power_timeout</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">estop_cut_power_timeout</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">cut_power_timeout</span><span class="o">.</span><span class="n">seconds</span> <span class="o">+</span> <span class="n">proto</span><span class="o">.</span><span class="n">cut_power_timeout</span><span class="o">.</span><span class="n">nanos</span> <span class="o">*</span> <span class="mf">1e-9</span></div>
 
 <div class="viewcode-block" id="EstopEndpoint.to_proto"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopEndpoint.to_proto">[docs]</a>    <span class="k">def</span> <span class="nf">to_proto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return estop_pb2.EstopEndpoint based on current member variables.&quot;&quot;&quot;</span>
-        <span class="n">seconds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estop_timeout</span><span class="p">)</span>
-        <span class="n">nanos</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">estop_timeout</span> <span class="o">-</span> <span class="n">seconds</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">estop_pb2</span><span class="o">.</span><span class="n">EstopEndpoint</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">role</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="n">unique_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_unique_id</span><span class="p">,</span>
-                                       <span class="n">timeout</span><span class="o">=</span><span class="n">Duration</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span><span class="p">,</span> <span class="n">nanos</span><span class="o">=</span><span class="n">nanos</span><span class="p">))</span></div>
+        <span class="n">t_seconds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estop_timeout</span><span class="p">)</span>
+        <span class="n">t_nanos</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">estop_timeout</span> <span class="o">-</span> <span class="n">t_seconds</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">estop_cut_power_timeout</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">estop_pb2</span><span class="o">.</span><span class="n">EstopEndpoint</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">role</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
+                                           <span class="n">unique_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_unique_id</span><span class="p">,</span>
+                                           <span class="n">timeout</span><span class="o">=</span><span class="n">Duration</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">t_seconds</span><span class="p">,</span> <span class="n">nanos</span><span class="o">=</span><span class="n">t_nanos</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cpt_seconds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estop_cut_power_timeout</span><span class="p">)</span>
+            <span class="n">cpt_nanos</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">estop_cut_power_timeout</span> <span class="o">-</span> <span class="n">cpt_seconds</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">estop_pb2</span><span class="o">.</span><span class="n">EstopEndpoint</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">role</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span>
+                                           <span class="n">unique_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_unique_id</span><span class="p">,</span>
+                                           <span class="n">timeout</span><span class="o">=</span><span class="n">Duration</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">t_seconds</span><span class="p">,</span> <span class="n">nanos</span><span class="o">=</span><span class="n">t_nanos</span><span class="p">),</span>
+                                           <span class="n">cut_power_timeout</span><span class="o">=</span><span class="n">Duration</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">cpt_seconds</span><span class="p">,</span>
+                                                                      <span class="n">nanos</span><span class="o">=</span><span class="n">cpt_nanos</span><span class="p">))</span></div>
 
     <span class="k">def</span> <span class="nf">_response</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate a response for self._challenge.&quot;&quot;&quot;</span>
         <span class="n">challenge</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_challenge</span><span class="p">()</span>
-        <span class="k">return</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">challenge</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">response_from_challenge</span><span class="p">(</span><span class="n">challenge</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">challenge</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">response_from_challenge</span><span class="p">(</span><span class="n">challenge</span><span class="p">)</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">unique_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the _unique_id. Should be used as read-only.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_id</span></div>
 
 
 <div class="viewcode-block" id="EstopKeepAlive"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopKeepAlive">[docs]</a><span class="k">class</span> <span class="nc">EstopKeepAlive</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -547,14 +587,14 @@
 <span class="sd">    You should not access any of the &quot;private&quot; members, or the wrapped endpoint.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">rpc_timeout_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rpc_interval_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">keep_running_cb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Kicks off periodic check-in on a thread.&quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_endpoint</span> <span class="o">=</span> <span class="n">endpoint</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_end_check_in_signal</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_want_stop</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_desired_stop_level</span> <span class="o">=</span> <span class="n">StopLevel</span><span class="o">.</span><span class="n">ESTOP_LEVEL_NONE</span>
         <span class="c1"># By default, only let our RPCs last as long as the estop timeout.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rpc_timeout</span> <span class="o">=</span> <span class="n">rpc_timeout_seconds</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_endpoint</span><span class="o">.</span><span class="n">estop_timeout</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_in_period</span> <span class="o">=</span> <span class="n">rpc_interval_seconds</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_endpoint</span><span class="o">.</span><span class="n">estop_timeout</span> <span class="o">/</span> <span class="mf">3.0</span>
@@ -566,6 +606,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_keep_running</span> <span class="o">=</span> <span class="n">keep_running_cb</span> <span class="ow">or</span> <span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">True</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;New </span><span class="si">%s</span><span class="s1"> for endpoint &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_endpoint</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">status_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">KeepAliveStatus</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span>
 
         <span class="c1"># Do an initial check-in, and just log any errors that occur.</span>
         <span class="c1"># This lets us get a challenge from the estop system, so we can begin using</span>
@@ -598,12 +641,22 @@
 
 <div class="viewcode-block" id="EstopKeepAlive.allow"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopKeepAlive.allow">[docs]</a>    <span class="k">def</span> <span class="nf">allow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_want_stop</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_desired_stop_level</span> <span class="o">=</span> <span class="n">StopLevel</span><span class="o">.</span><span class="n">ESTOP_LEVEL_NONE</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_in</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="EstopKeepAlive.settle_then_cut"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopKeepAlive.settle_then_cut">[docs]</a>    <span class="k">def</span> <span class="nf">settle_then_cut</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_desired_stop_level</span> <span class="o">=</span> <span class="n">StopLevel</span><span class="o">.</span><span class="n">ESTOP_LEVEL_SETTLE_THEN_CUT</span>
+        <span class="c1"># In the case of stopping, we want the RPC to timeout only after the estop itself has</span>
+        <span class="c1"># timed out. This handles the case where a user calls settle_then_cut() with :</span>
+        <span class="c1">#  - a very low self._rpc_timeout and</span>
+        <span class="c1">#  - a very large check-in period and</span>
+        <span class="c1">#  - doesn&#39;t handle RPC timeout errors themselves.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_in</span><span class="p">(</span><span class="n">rpc_timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_endpoint</span><span class="o">.</span><span class="n">estop_timeout</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EstopKeepAlive.stop"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopKeepAlive.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_want_stop</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_desired_stop_level</span> <span class="o">=</span> <span class="n">StopLevel</span><span class="o">.</span><span class="n">ESTOP_LEVEL_CUT</span>
         <span class="c1"># In the case of stopping, we want the RPC to timeout only after the estop itself has</span>
         <span class="c1"># timed out. This handles the case where a user calls stop() with :</span>
         <span class="c1">#  - a very low self._rpc_timeout and</span>
@@ -616,17 +669,34 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Stopping check-in&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_end_check_in_signal</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 
+    <span class="k">def</span> <span class="nf">_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Handle an error message; optionally disable the application.</span>
+
+<span class="sd">        GUI applications should override this function, to make sure the error_msg gets to the GUI.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">KeepAliveStatus</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">disable</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_end_periodic_check_in</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">KeepAliveStatus</span><span class="o">.</span><span class="n">DISABLED</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">_ok</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Handle an ok message.</span>
+
+<span class="sd">        GUI applications should override this function, to make sure the error_msg gets to the GUI.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">KeepAliveStatus</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Check-in successful&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the estop_keep_alive status by populating the queue. Raise exception if full.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">status</span><span class="p">,</span> <span class="n">msg</span><span class="p">),</span> <span class="n">block</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_check_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rpc_timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check in, optionally specifying a non-standard RPC timeout.&quot;&quot;&quot;</span>
         <span class="n">rpc_timeout</span> <span class="o">=</span> <span class="n">rpc_timeout</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rpc_timeout</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_want_stop</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_endpoint</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">rpc_timeout</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_endpoint</span><span class="o">.</span><span class="n">allow</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">rpc_timeout</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_endpoint</span><span class="o">.</span><span class="n">check_in_at_level</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_desired_stop_level</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">rpc_timeout</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_periodic_check_in</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Send estop API CheckIn messages to robot estop system in loop.&quot;&quot;&quot;</span>
@@ -641,14 +711,14 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_check_in</span><span class="p">()</span>
             <span class="k">except</span> <span class="n">TimedOutError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;RPC took longer than </span><span class="si">%.2f</span><span class="s1"> seconds&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rpc_timeout</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_error</span><span class="p">(</span><span class="s1">&#39;RPC took longer than </span><span class="si">{:.2f}</span><span class="s1"> seconds&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rpc_timeout</span><span class="p">),</span>
+                            <span class="n">exception</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">RpcError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Transport exception during check-in:</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span>
-                                  <span class="s1">&#39;    (resuming check-in)&#39;</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_error</span><span class="p">(</span><span class="s1">&#39;Transport exception during check-in:</span><span class="se">\n</span><span class="si">{s}</span><span class="se">\n</span><span class="s1">&#39;</span>
+                            <span class="s1">&#39;    (resuming check-in)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span> <span class="n">exception</span><span class="o">=</span><span class="n">exc</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">EndpointUnknownError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span>
                 <span class="c1"># Disable ourself to show we cannot estop any longer.</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_end_periodic_check_in</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">),</span> <span class="n">exception</span><span class="o">=</span><span class="n">exc</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="c1"># We really do want to catch anything.</span>
             <span class="c1">#pylint: disable=broad-except</span>
@@ -668,7 +738,22 @@
             <span class="c1"># (values &lt; 0 are OK and will return immediately)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_check_in_signal</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_check_in_period</span> <span class="o">-</span> <span class="n">exec_sec</span><span class="p">):</span>
                 <span class="k">break</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Estop check-in stopped&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Estop check-in stopped&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">endpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the _endpoint. Should be used as read-only.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_endpoint</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the _endpoint.client. Should be used as read-only.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_endpoint</span><span class="o">.</span><span class="n">client</span>
+
+<div class="viewcode-block" id="EstopKeepAlive.KeepAliveStatus"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopKeepAlive.KeepAliveStatus">[docs]</a>    <span class="k">class</span> <span class="nc">KeepAliveStatus</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="n">OK</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ERROR</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">DISABLED</span> <span class="o">=</span> <span class="mi">2</span></div></div>
 
 
 <div class="viewcode-block" id="response_from_challenge"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.response_from_challenge">[docs]</a><span class="k">def</span> <span class="nf">response_from_challenge</span><span class="p">(</span><span class="n">challenge</span><span class="p">):</span>
@@ -677,10 +762,10 @@
 
 <span class="n">_CHECK_IN_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 <span class="n">_CHECK_IN_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-    <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">EstopCheckInResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">EstopCheckInResponse</span><span class="o">.</span><span class="n">STATUS_ENDPOINT_UNKNOWN</span><span class="p">:</span> <span class="p">(</span><span class="n">EndpointUnknownError</span><span class="p">,</span>
-                                                                     <span class="n">EndpointUnknownError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">EstopCheckInResponse</span><span class="o">.</span><span class="n">STATUS_INCORRECT_CHALLENGE_RESPONSE</span><span class="p">:</span>
+    <span class="n">estop_pb2</span><span class="o">.</span><span class="n">EstopCheckInResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">estop_pb2</span><span class="o">.</span><span class="n">EstopCheckInResponse</span><span class="o">.</span><span class="n">STATUS_ENDPOINT_UNKNOWN</span><span class="p">:</span> <span class="p">(</span><span class="n">EndpointUnknownError</span><span class="p">,</span>
+                                                             <span class="n">EndpointUnknownError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">estop_pb2</span><span class="o">.</span><span class="n">EstopCheckInResponse</span><span class="o">.</span><span class="n">STATUS_INCORRECT_CHALLENGE_RESPONSE</span><span class="p">:</span>
     <span class="p">(</span><span class="n">IncorrectChallengeResponseError</span><span class="p">,</span> <span class="n">IncorrectChallengeResponseError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
 <span class="p">})</span>
 
@@ -690,22 +775,21 @@
 <span class="k">def</span> <span class="nf">_check_in_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return an exception based on response from EstopCheckIn RPC, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
-                         <span class="n">status_to_string</span><span class="o">=</span><span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">EstopCheckInResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+                         <span class="n">status_to_string</span><span class="o">=</span><span class="n">estop_pb2</span><span class="o">.</span><span class="n">EstopCheckInResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_CHECK_IN_STATUS_TO_ERROR</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_check_in_error_from_response_no_incorrect</span><span class="p">(</span><span class="n">resp</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return an exception based on response from EstopCheckIn RPC, ignoring incorrect chal/resp&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">EstopCheckInResponse</span><span class="o">.</span><span class="n">STATUS_INCORRECT_CHALLENGE_RESPONSE</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">estop_pb2</span><span class="o">.</span><span class="n">EstopCheckInResponse</span><span class="o">.</span><span class="n">STATUS_INCORRECT_CHALLENGE_RESPONSE</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">_check_in_error_from_response</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
 
 
 <span class="n">_SET_CONFIG_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 <span class="n">_SET_CONFIG_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-    <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">SetEstopConfigResponse</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">SetEstopConfigResponse</span><span class="o">.</span><span class="n">STATUS_INVALID_ID</span><span class="p">:</span> <span class="p">(</span><span class="n">InvalidIdError</span><span class="p">,</span>
-                                                                 <span class="n">InvalidIdError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">estop_pb2</span><span class="o">.</span><span class="n">SetEstopConfigResponse</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">estop_pb2</span><span class="o">.</span><span class="n">SetEstopConfigResponse</span><span class="o">.</span><span class="n">STATUS_INVALID_ID</span><span class="p">:</span> <span class="p">(</span><span class="n">InvalidIdError</span><span class="p">,</span> <span class="n">InvalidIdError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
 <span class="p">})</span>
 
 
@@ -714,17 +798,17 @@
 <span class="k">def</span> <span class="nf">_set_config_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return an exception based on response from SetEstopConfig RPC, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
-                         <span class="n">status_to_string</span><span class="o">=</span><span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">SetEstopConfigResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+                         <span class="n">status_to_string</span><span class="o">=</span><span class="n">estop_pb2</span><span class="o">.</span><span class="n">SetEstopConfigResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_SET_CONFIG_STATUS_TO_ERROR</span><span class="p">)</span>
 
 
 <span class="n">_DEREGISTER_ENDPOINT_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 <span class="n">_DEREGISTER_ENDPOINT_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-    <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">DeregisterEstopEndpointResponse</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">DeregisterEstopEndpointResponse</span><span class="o">.</span><span class="n">STATUS_ENDPOINT_MISMATCH</span><span class="p">:</span>
+    <span class="n">estop_pb2</span><span class="o">.</span><span class="n">DeregisterEstopEndpointResponse</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">estop_pb2</span><span class="o">.</span><span class="n">DeregisterEstopEndpointResponse</span><span class="o">.</span><span class="n">STATUS_ENDPOINT_MISMATCH</span><span class="p">:</span>
     <span class="p">(</span><span class="n">EndpointMismatchError</span><span class="p">,</span> <span class="n">EndpointMismatchError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">DeregisterEstopEndpointResponse</span><span class="o">.</span><span class="n">STATUS_CONFIG_MISMATCH</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">ConfigMismatchError</span><span class="p">,</span> <span class="n">ConfigMismatchError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">estop_pb2</span><span class="o">.</span><span class="n">DeregisterEstopEndpointResponse</span><span class="o">.</span><span class="n">STATUS_CONFIG_MISMATCH</span><span class="p">:</span> <span class="p">(</span><span class="n">ConfigMismatchError</span><span class="p">,</span>
+                                                                       <span class="n">ConfigMismatchError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
 <span class="p">})</span>
 
 
@@ -732,21 +816,20 @@
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_deregister_endpoint_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return an exception based on response from DeregisterEstopEndpoint RPC, None if no error.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span>
-        <span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
-        <span class="n">status_to_string</span><span class="o">=</span><span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">DeregisterEstopEndpointResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
-        <span class="n">status_to_error</span><span class="o">=</span><span class="n">_DEREGISTER_ENDPOINT_STATUS_TO_ERROR</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                         <span class="n">status_to_string</span><span class="o">=</span><span class="n">estop_pb2</span><span class="o">.</span><span class="n">DeregisterEstopEndpointResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+                         <span class="n">status_to_error</span><span class="o">=</span><span class="n">_DEREGISTER_ENDPOINT_STATUS_TO_ERROR</span><span class="p">)</span>
 
 
 <span class="n">_REGISTER_ENDPOINT_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 <span class="n">_REGISTER_ENDPOINT_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-    <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">RegisterEstopEndpointResponse</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">RegisterEstopEndpointResponse</span><span class="o">.</span><span class="n">STATUS_ENDPOINT_MISMATCH</span><span class="p">:</span>
+    <span class="n">estop_pb2</span><span class="o">.</span><span class="n">RegisterEstopEndpointResponse</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">estop_pb2</span><span class="o">.</span><span class="n">RegisterEstopEndpointResponse</span><span class="o">.</span><span class="n">STATUS_ENDPOINT_MISMATCH</span><span class="p">:</span>
     <span class="p">(</span><span class="n">EndpointMismatchError</span><span class="p">,</span> <span class="n">EndpointMismatchError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">RegisterEstopEndpointResponse</span><span class="o">.</span><span class="n">STATUS_CONFIG_MISMATCH</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">ConfigMismatchError</span><span class="p">,</span> <span class="n">ConfigMismatchError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">RegisterEstopEndpointResponse</span><span class="o">.</span><span class="n">STATUS_INVALID_ENDPOINT</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">InvalidEndpointError</span><span class="p">,</span> <span class="n">InvalidEndpointError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">estop_pb2</span><span class="o">.</span><span class="n">RegisterEstopEndpointResponse</span><span class="o">.</span><span class="n">STATUS_CONFIG_MISMATCH</span><span class="p">:</span> <span class="p">(</span><span class="n">ConfigMismatchError</span><span class="p">,</span>
+                                                                     <span class="n">ConfigMismatchError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">estop_pb2</span><span class="o">.</span><span class="n">RegisterEstopEndpointResponse</span><span class="o">.</span><span class="n">STATUS_INVALID_ENDPOINT</span><span class="p">:</span> <span class="p">(</span><span class="n">InvalidEndpointError</span><span class="p">,</span>
+                                                                      <span class="n">InvalidEndpointError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
 <span class="p">})</span>
 
 
@@ -754,10 +837,9 @@
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_register_endpoint_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return an exception based on response from RegisterEstopEndpoint RPC, None if no error.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span>
-        <span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
-        <span class="n">status_to_string</span><span class="o">=</span><span class="n">estop_service_pb2</span><span class="o">.</span><span class="n">RegisterEstopEndpointResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
-        <span class="n">status_to_error</span><span class="o">=</span><span class="n">_REGISTER_ENDPOINT_STATUS_TO_ERROR</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                         <span class="n">status_to_string</span><span class="o">=</span><span class="n">estop_pb2</span><span class="o">.</span><span class="n">RegisterEstopEndpointResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+                         <span class="n">status_to_error</span><span class="o">=</span><span class="n">_REGISTER_ENDPOINT_STATUS_TO_ERROR</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_new_endpoint_from_register_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>

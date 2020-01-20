@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.robot &mdash; Spot 1.0 documentation</title>
+  <title>bosdyn.client.robot &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -149,7 +149,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.robot</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Settings common to a user&#39;s access to one robot.&quot;&quot;&quot;</span>
+<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;Settings common to a user&#39;s access to one robot.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">time</span>
@@ -175,6 +181,7 @@
 
 <span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">_DEFAULT_SECURE_CHANNEL_PORT</span> <span class="o">=</span> <span class="mi">443</span>
+
 
 <div class="viewcode-block" id="Robot"><a class="viewcode-back" href="../../../client_modules/robot.html#bosdyn.client.robot.Robot">[docs]</a><span class="k">class</span> <span class="nc">Robot</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Settings common to one user&#39;s access to one robot.</span>
@@ -284,8 +291,8 @@
 
         <span class="c1"># Channel doesn&#39;t exist, so create it.</span>
         <span class="n">port</span> <span class="o">=</span> <span class="n">_DEFAULT_SECURE_CHANNEL_PORT</span>
-        <span class="n">creds</span> <span class="o">=</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">create_secure_channel_creds</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cert</span><span class="p">,</span>
-                                                                  <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_token</span><span class="p">))</span>
+        <span class="n">creds</span> <span class="o">=</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">create_secure_channel_creds</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cert</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_token</span><span class="p">))</span>
         <span class="n">channel</span> <span class="o">=</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">create_secure_channel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">creds</span><span class="p">,</span> <span class="n">authority</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Created channel to </span><span class="si">%s</span><span class="s1"> at port </span><span class="si">%i</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">channels_by_authority</span><span class="p">[</span><span class="n">authority</span><span class="p">]</span> <span class="o">=</span> <span class="n">channel</span>
@@ -432,7 +439,8 @@
             <span class="c1"># we are releasing. See bugzilla bug 4111 for more details.</span>
             <span class="n">command_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">RobotCommandClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
             <span class="n">state_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">RobotStateClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
-            <span class="n">pkg_safe_power_off</span><span class="p">(</span><span class="n">command_client</span><span class="p">,</span> <span class="n">state_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span></div>
+            <span class="n">pkg_safe_power_off</span><span class="p">(</span><span class="n">command_client</span><span class="p">,</span> <span class="n">state_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span>
+                               <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.is_powered_on"><a class="viewcode-back" href="../../../client_modules/robot.html#bosdyn.client.robot.Robot.is_powered_on">[docs]</a>    <span class="k">def</span> <span class="nf">is_powered_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check the power state of the robot.</span>

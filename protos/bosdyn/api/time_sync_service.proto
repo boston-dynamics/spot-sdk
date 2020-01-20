@@ -1,3 +1,9 @@
+// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
 /// The time-sync service estimates the difference between server and client clocks.
 syntax = "proto3";
 
@@ -5,7 +11,6 @@ package bosdyn.api;
 
 option java_outer_classname = "TimeSyncServiceProto";
 
-import "bosdyn/api/header.proto";
 import "bosdyn/api/time_sync.proto";
 
 /// Time synchronization is a tool which allows applications to work in a unified timebase with
@@ -27,50 +32,4 @@ service TimeSyncService {
     rpc TimeSyncStatus(TimeSyncStatusRequest) returns (TimeSyncStatusResponse) {}
 }
 
-/// Request message for a time-sync Update RPC.
-message TimeSyncUpdateRequest {
-    /// Common request header.
-    RequestHeader header = 1;
 
-    /// Round-trip timing information from the previous Update().
-    TimeSyncRoundTrip previous_round_trip = 2;
-
-    /// Identifier to verify time sync between robot and client. If unset, server will assign
-    /// one to client.
-    string clock_identifier = 3;
-}
-
-/// Request message for a time-sync Update RPC.
-message TimeSyncUpdateResponse {
-    /// Common response header.
-    ResponseHeader header = 1;
-
-    /// Clock synchronization estimate from the previous RPC round-trip, if available.
-    TimeSyncEstimate previous_estimate = 2;
-
-    /// Current best clock synchronization estimate according to server.
-    TimeSyncState state = 3;
-
-    /// Identifier to verify time sync between robot and client. Assigned upon first Request and
-    /// echoed with each subsequent request.
-    string clock_identifier = 4;
-}
-
-message TimeSyncStatusRequest {
-    /// Common request header.
-    RequestHeader header = 1;
-
-    /// Identifier assigned to specific client. If not set, this service will return time sync info
-    /// from all clients.
-    string clock_identifier = 2;
-}
-
-
-message TimeSyncStatusResponse {
-    /// Common response header.
-    ResponseHeader header = 1;
-
-    /// Map from client ids to best time sync estimate.
-    /// This only returns clients which have established a valid time sync estimate.
-    map<string, TimeSyncState> time_sync_status_map = 3;
-}

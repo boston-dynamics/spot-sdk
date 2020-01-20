@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Robot Command &mdash; Spot 1.0 documentation</title>
+  <title>Robot Command &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -98,6 +98,8 @@
 <li class="toctree-l2"><a class="reference internal" href="image.html">Image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lease.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="payload.html">Payload</a></li>
 <li class="toctree-l2"><a class="reference internal" href="power.html">Power</a></li>
 <li class="toctree-l2"><a class="reference internal" href="processors.html">Processors</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Robot Command</a></li>
@@ -105,7 +107,10 @@
 <li class="toctree-l2"><a class="reference internal" href="robot_state.html">Robot State</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot.html">Robot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sdk.html">SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spot_check.html">Spot Check</a></li>
 <li class="toctree-l2"><a class="reference internal" href="time_sync.html">Time Sync</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_cache.html">Token Cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_manager.html">Token Manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.html">Util</a></li>
 </ul>
 </li>
@@ -180,43 +185,134 @@
 <span id="robot-command"></span><h1>Robot Command<a class="headerlink" href="#module-bosdyn.client.robot_command" title="Permalink to this headline">¶</a></h1>
 <p>For clients to the robot command service.</p>
 <dl class="exception">
-<dt id="bosdyn.client.robot_command.CommandTimedOutError">
-<em class="property">exception </em><code class="descclassname">bosdyn.client.robot_command.</code><code class="descname">CommandTimedOutError</code><span class="sig-paren">(</span><em>response</em>, <em>error_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#CommandTimedOutError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.CommandTimedOutError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot_command.RobotCommandResponseError" title="bosdyn.client.robot_command.RobotCommandResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.robot_command.RobotCommandResponseError</span></code></a></p>
-<p>Timed out waiting for SUCCESS response from robot command.</p>
-</dd></dl>
-
-<dl class="exception">
-<dt id="bosdyn.client.robot_command.ExpiredError">
-<em class="property">exception </em><code class="descclassname">bosdyn.client.robot_command.</code><code class="descname">ExpiredError</code><span class="sig-paren">(</span><em>response</em>, <em>error_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#ExpiredError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.ExpiredError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot_command.RobotCommandResponseError" title="bosdyn.client.robot_command.RobotCommandResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.robot_command.RobotCommandResponseError</span></code></a></p>
-<p>The command was received after its max_duration had already passed.</p>
+<dt id="bosdyn.client.robot_command.RobotCommandResponseError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.robot_command.</code><code class="sig-name descname">RobotCommandResponseError</code><span class="sig-paren">(</span><em class="sig-param">response</em>, <em class="sig-param">error_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandResponseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandResponseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.ResponseError</span></code></a></p>
+<p>General class of errors for RobotCommand service.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="bosdyn.client.robot_command.NoTimeSyncError">
-<em class="property">exception </em><code class="descclassname">bosdyn.client.robot_command.</code><code class="descname">NoTimeSyncError</code><span class="sig-paren">(</span><em>response</em>, <em>error_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#NoTimeSyncError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.NoTimeSyncError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.robot_command.</code><code class="sig-name descname">NoTimeSyncError</code><span class="sig-paren">(</span><em class="sig-param">response</em>, <em class="sig-param">error_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#NoTimeSyncError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.NoTimeSyncError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot_command.RobotCommandResponseError" title="bosdyn.client.robot_command.RobotCommandResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.robot_command.RobotCommandResponseError</span></code></a></p>
 <p>Client has not done timesync with robot.</p>
 </dd></dl>
 
 <dl class="exception">
+<dt id="bosdyn.client.robot_command.ExpiredError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.robot_command.</code><code class="sig-name descname">ExpiredError</code><span class="sig-paren">(</span><em class="sig-param">response</em>, <em class="sig-param">error_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#ExpiredError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.ExpiredError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot_command.RobotCommandResponseError" title="bosdyn.client.robot_command.RobotCommandResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.robot_command.RobotCommandResponseError</span></code></a></p>
+<p>The command was received after its max_duration had already passed.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="bosdyn.client.robot_command.TooDistantError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.robot_command.</code><code class="sig-name descname">TooDistantError</code><span class="sig-paren">(</span><em class="sig-param">response</em>, <em class="sig-param">error_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#TooDistantError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.TooDistantError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot_command.RobotCommandResponseError" title="bosdyn.client.robot_command.RobotCommandResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.robot_command.RobotCommandResponseError</span></code></a></p>
+<p>The command end time was too far in the future.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="bosdyn.client.robot_command.NotPoweredOnError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.robot_command.</code><code class="sig-name descname">NotPoweredOnError</code><span class="sig-paren">(</span><em class="sig-param">response</em>, <em class="sig-param">error_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#NotPoweredOnError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.NotPoweredOnError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot_command.RobotCommandResponseError" title="bosdyn.client.robot_command.RobotCommandResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.robot_command.RobotCommandResponseError</span></code></a></p>
+<p>The robot must be powered on to accept a command.</p>
+</dd></dl>
+
+<dl class="exception">
 <dt id="bosdyn.client.robot_command.NotClearedError">
-<em class="property">exception </em><code class="descclassname">bosdyn.client.robot_command.</code><code class="descname">NotClearedError</code><span class="sig-paren">(</span><em>response</em>, <em>error_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#NotClearedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.NotClearedError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.robot_command.</code><code class="sig-name descname">NotClearedError</code><span class="sig-paren">(</span><em class="sig-param">response</em>, <em class="sig-param">error_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#NotClearedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.NotClearedError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot_command.RobotCommandResponseError" title="bosdyn.client.robot_command.RobotCommandResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.robot_command.RobotCommandResponseError</span></code></a></p>
 <p>Behavior fault could not be cleared.</p>
 </dd></dl>
 
 <dl class="exception">
-<dt id="bosdyn.client.robot_command.NotPoweredOnError">
-<em class="property">exception </em><code class="descclassname">bosdyn.client.robot_command.</code><code class="descname">NotPoweredOnError</code><span class="sig-paren">(</span><em>response</em>, <em>error_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#NotPoweredOnError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.NotPoweredOnError" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.robot_command.UnsupportedError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.robot_command.</code><code class="sig-name descname">UnsupportedError</code><span class="sig-paren">(</span><em class="sig-param">response</em>, <em class="sig-param">error_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#UnsupportedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.UnsupportedError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot_command.RobotCommandResponseError" title="bosdyn.client.robot_command.RobotCommandResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.robot_command.RobotCommandResponseError</span></code></a></p>
-<p>The robot must be powered on to accept a command.</p>
+<p>The API supports this request, but the system does not support this request.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="bosdyn.client.robot_command.CommandTimedOutError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.robot_command.</code><code class="sig-name descname">CommandTimedOutError</code><span class="sig-paren">(</span><em class="sig-param">response</em>, <em class="sig-param">error_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#CommandTimedOutError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.CommandTimedOutError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot_command.RobotCommandResponseError" title="bosdyn.client.robot_command.RobotCommandResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.robot_command.RobotCommandResponseError</span></code></a></p>
+<p>Timed out waiting for SUCCESS response from robot command.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="bosdyn.client.robot_command.RobotCommandClient">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.robot_command.</code><code class="sig-name descname">RobotCommandClient</code><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="common.html#bosdyn.client.common.BaseClient" title="bosdyn.client.common.BaseClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.common.BaseClient</span></code></a></p>
+<p>Client for calling RobotCommand services.</p>
+<dl class="attribute">
+<dt id="bosdyn.client.robot_command.RobotCommandClient.default_authority">
+<code class="sig-name descname">default_authority</code><em class="property"> = 'command.spot.robot'</em><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.default_authority" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="bosdyn.client.robot_command.RobotCommandClient.default_service_name">
+<code class="sig-name descname">default_service_name</code><em class="property"> = 'robot-command'</em><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.default_service_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="bosdyn.client.robot_command.RobotCommandClient.service_type">
+<code class="sig-name descname">service_type</code><em class="property"> = 'bosdyn.api.RobotCommand'</em><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.service_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot_command.RobotCommandClient.update_from">
+<code class="sig-name descname">update_from</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandClient.update_from"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.update_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adopt key objects like processors, logger, and wallet from other.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot_command.RobotCommandClient.timesync_endpoint">
+<em class="property">property </em><code class="sig-name descname">timesync_endpoint</code><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.timesync_endpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor for timesync-endpoint that was grabbed via ‘update_from()’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot_command.RobotCommandClient.robot_command">
+<code class="sig-name descname">robot_command</code><span class="sig-paren">(</span><em class="sig-param">command</em>, <em class="sig-param">end_time_secs=None</em>, <em class="sig-param">timesync_endpoint=None</em>, <em class="sig-param">lease=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandClient.robot_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.robot_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Issue a command to the robot.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot_command.RobotCommandClient.robot_command_async">
+<code class="sig-name descname">robot_command_async</code><span class="sig-paren">(</span><em class="sig-param">command</em>, <em class="sig-param">end_time_secs=None</em>, <em class="sig-param">timesync_endpoint=None</em>, <em class="sig-param">lease=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandClient.robot_command_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.robot_command_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of robot_command().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback">
+<code class="sig-name descname">robot_command_feedback</code><span class="sig-paren">(</span><em class="sig-param">robot_command_id</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandClient.robot_command_feedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get feedback from a previously issued command.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback_async">
+<code class="sig-name descname">robot_command_feedback_async</code><span class="sig-paren">(</span><em class="sig-param">robot_command_id</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandClient.robot_command_feedback_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of robot_command_feedback().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot_command.RobotCommandClient.clear_behavior_fault">
+<code class="sig-name descname">clear_behavior_fault</code><span class="sig-paren">(</span><em class="sig-param">behavior_fault_id</em>, <em class="sig-param">lease=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandClient.clear_behavior_fault"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.clear_behavior_fault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear a behavior fault on the robot.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.robot_command.RobotCommandClient.clear_behavior_fault_async">
+<code class="sig-name descname">clear_behavior_fault_async</code><span class="sig-paren">(</span><em class="sig-param">behavior_fault_id</em>, <em class="sig-param">lease=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandClient.clear_behavior_fault_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.clear_behavior_fault_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of clear_behavior_fault().</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="bosdyn.client.robot_command.RobotCommandBuilder">
-<em class="property">class </em><code class="descclassname">bosdyn.client.robot_command.</code><code class="descname">RobotCommandBuilder</code><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.robot_command.</code><code class="sig-name descname">RobotCommandBuilder</code><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class contains a set of static helper functions to build and issue robot commands. This
 is not intended to cover every use case, but rather give developers a starting point for
@@ -225,255 +321,139 @@ including the use of Any and OneOf.</p>
 <p>A RobotCommand is composed of one or more commands. The set of valid commands is robot /
 hardware specific. An armless spot only accepts one command at a time. Each command may or may
 not takes a generic param object. These params are also robot / hardware dependent.</p>
-<dl class="staticmethod">
+<dl class="method">
+<dt id="bosdyn.client.robot_command.RobotCommandBuilder.stop_command">
+<em class="property">static </em><code class="sig-name descname">stop_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.stop_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.stop_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Command to stop with minimal motion. If the robot is walking, it will transition to
+stand. If the robot is standing or sitting, it will do nothing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>RobotCommand, which can be issued to the robot command service.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="bosdyn.client.robot_command.RobotCommandBuilder.freeze_command">
-<em class="property">static </em><code class="descname">freeze_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.freeze_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.freeze_command" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">freeze_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.freeze_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.freeze_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Command to freeze all joints at their current positions (no balancing control)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">RobotCommand, which can be issued to the robot command service.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>RobotCommand, which can be issued to the robot command service.</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="staticmethod">
-<dt id="bosdyn.client.robot_command.RobotCommandBuilder.mobility_params">
-<em class="property">static </em><code class="descname">mobility_params</code><span class="sig-paren">(</span><em>body_height=0.0</em>, <em>footprint_R_body=&lt;bosdyn.geometry.EulerZXY object&gt;</em>, <em>locomotion_hint=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.mobility_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.mobility_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper to create Mobility params for spot mobility commands. This function is designed
-to help get started issuing commands, but lots of options are not exposed via this
-interface. See spot.robot_command_pb2 for more details. If unset, good defaults will be
-chosen by the robot.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">spot.MobilityParams, params for spot mobility commands.</td>
-</tr>
-</tbody>
-</table>
+<dl class="method">
+<dt id="bosdyn.client.robot_command.RobotCommandBuilder.selfright_command">
+<em class="property">static </em><code class="sig-name descname">selfright_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.selfright_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.selfright_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Command to get the robot in a ready, sitting position. If the robot is on its back, it
+will attempt to flip over.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>RobotCommand, which can be issued to the robot command service.</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="staticmethod">
+<dl class="method">
 <dt id="bosdyn.client.robot_command.RobotCommandBuilder.safe_power_off_command">
-<em class="property">static </em><code class="descname">safe_power_off_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.safe_power_off_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.safe_power_off_command" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">safe_power_off_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.safe_power_off_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.safe_power_off_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Command to get robot into a position where it is safe to power down, then power down. If
 the robot has fallen, it will power down directly. If the robot is not in a safe position,
 it will get to a safe position before powering down. The robot will not power down until it
 is in a safe state.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">RobotCommand, which can be issued to the robot command service.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>RobotCommand, which can be issued to the robot command service.</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="staticmethod">
-<dt id="bosdyn.client.robot_command.RobotCommandBuilder.selfright_command">
-<em class="property">static </em><code class="descname">selfright_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.selfright_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.selfright_command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Command to get the robot in a ready, sitting position. If the robot is on its back, it
-will attempt to flip over.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">RobotCommand, which can be issued to the robot command service.</td>
-</tr>
-</tbody>
-</table>
+<dl class="method">
+<dt id="bosdyn.client.robot_command.RobotCommandBuilder.trajectory_command">
+<em class="property">static </em><code class="sig-name descname">trajectory_command</code><span class="sig-paren">(</span><em class="sig-param">goal_x</em>, <em class="sig-param">goal_y</em>, <em class="sig-param">goal_heading</em>, <em class="sig-param">frame</em>, <em class="sig-param">params=None</em>, <em class="sig-param">body_height=0.0</em>, <em class="sig-param">locomotion_hint=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.trajectory_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.trajectory_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Command robot to move to pose along a 2D plane. Pose can specified in the world
+(kinematic odometry) frame or the robot body frame. The arguments body_height and
+locomotion_hint are ignored if params argument is passed.</p>
+<p>A trajectory command requires an end time. End time is not set in this function, but rather
+is set externally before call to RobotCommandService.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>RobotCommand, which can be issued to the robot command service.</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="staticmethod">
-<dt id="bosdyn.client.robot_command.RobotCommandBuilder.sit_command">
-<em class="property">static </em><code class="descname">sit_command</code><span class="sig-paren">(</span><em>params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.sit_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.sit_command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Command the robot to sit.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">RobotCommand, which can be issued to the robot command service.</td>
-</tr>
-</tbody>
-</table>
+<dl class="method">
+<dt id="bosdyn.client.robot_command.RobotCommandBuilder.velocity_command">
+<em class="property">static </em><code class="sig-name descname">velocity_command</code><span class="sig-paren">(</span><em class="sig-param">v_x</em>, <em class="sig-param">v_y</em>, <em class="sig-param">v_rot</em>, <em class="sig-param">params=None</em>, <em class="sig-param">body_height=0.0</em>, <em class="sig-param">locomotion_hint=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.velocity_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.velocity_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Command robot to move along 2D plane. Velocity should be specified in the robot body
+frame. Other frames are currently not supported. The arguments body_height and
+locomotion_hint are ignored if params argument is passed.</p>
+<p>A velocity command requires an end time. End time is not set in this function, but rather
+is set externally before call to RobotCommandService.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>RobotCommand, which can be issued to the robot command service.</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="staticmethod">
+<dl class="method">
 <dt id="bosdyn.client.robot_command.RobotCommandBuilder.stand_command">
-<em class="property">static </em><code class="descname">stand_command</code><span class="sig-paren">(</span><em>params=None</em>, <em>body_height=0.0</em>, <em>footprint_R_body=&lt;bosdyn.geometry.EulerZXY object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.stand_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.stand_command" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">stand_command</code><span class="sig-paren">(</span><em class="sig-param">params=None</em>, <em class="sig-param">body_height=0.0</em>, <em class="sig-param">footprint_R_body=&lt;bosdyn.geometry.EulerZXY object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.stand_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.stand_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Command robot to stand. If the robot is sitting, it will stand up. If the robot is
 moving, it will come to a stop. Params can specify a trajectory for the body to follow
 while standing. In the simplest case, this can be a specific position+orientation which the
-body will hold at.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>params</strong> (<em>spot.MobilityParams</em>) – Spot specific parameters for mobility commands. If not set,
-this will be constructed using other args.</li>
-<li><strong>body_height</strong> (<em>float</em>) – Height, meters, to stand at relative to a nominal stand height.</li>
-<li><strong>footprint_R_body</strong> (<a class="reference internal" href="../core_modules/geometry.html#bosdyn.geometry.EulerZXY" title="bosdyn.geometry.EulerZXY"><em>EulerZXY</em></a>) – The orientation of the body frame with respect to the
-footprint frame (gravity aligned framed with yaw computed from the stance feet)</li>
+body will hold at. The arguments body_height and footprint_R_body are ignored if params
+argument is passed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>spot.MobilityParams</em>) – Spot specific parameters for mobility commands. If not set,
+this will be constructed using other args.</p></li>
+<li><p><strong>body_height</strong> (<em>float</em>) – Height, meters, to stand at relative to a nominal stand height.</p></li>
+<li><p><strong>footprint_R_body</strong> (<a class="reference internal" href="../core_modules/geometry.html#bosdyn.geometry.EulerZXY" title="bosdyn.geometry.EulerZXY"><em>EulerZXY</em></a>) – The orientation of the body frame with respect to the
+footprint frame (gravity aligned framed with yaw computed from the stance feet)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">RobotCommand, which can be issued to the robot command service.</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="bosdyn.client.robot_command.RobotCommandBuilder.stop_command">
-<em class="property">static </em><code class="descname">stop_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.stop_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.stop_command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Command to stop with minimal motion. If the robot is walking, it will transition to
-stand. If the robot is standing or sitting, it will do nothing.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">RobotCommand, which can be issued to the robot command service.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="bosdyn.client.robot_command.RobotCommandBuilder.trajectory_command">
-<em class="property">static </em><code class="descname">trajectory_command</code><span class="sig-paren">(</span><em>goal_x</em>, <em>goal_y</em>, <em>goal_heading</em>, <em>frame</em>, <em>params=None</em>, <em>body_height=0.0</em>, <em>locomotion_hint=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.trajectory_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.trajectory_command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Command robot to move to pose along a 2D plane. Pose can specified in the world
-(kinematic odometry) frame or the robot body frame.</p>
-<p>A trajectory command requires an end time. End time is not set in this function, but rather
-is set externally before call to RobotCommandService.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">RobotCommand, which can be issued to the robot command service.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="bosdyn.client.robot_command.RobotCommandBuilder.velocity_command">
-<em class="property">static </em><code class="descname">velocity_command</code><span class="sig-paren">(</span><em>v_x</em>, <em>v_y</em>, <em>v_rot</em>, <em>params=None</em>, <em>body_height=0.0</em>, <em>locomotion_hint=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.velocity_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.velocity_command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Command robot to move along 2D plane. Velocity should be specified in the robot body
-frame. Other frames are currently not supported.</p>
-<p>A velocity command requires an end time. End time is not set in this function, but rather
-is set externally before call to RobotCommandService.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">RobotCommand, which can be issued to the robot command service.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="bosdyn.client.robot_command.RobotCommandClient">
-<em class="property">class </em><code class="descclassname">bosdyn.client.robot_command.</code><code class="descname">RobotCommandClient</code><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="common.html#bosdyn.client.common.BaseClient" title="bosdyn.client.common.BaseClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.common.BaseClient</span></code></a></p>
-<p>Client for calling RobotCommand services.</p>
-<dl class="method">
-<dt id="bosdyn.client.robot_command.RobotCommandClient.clear_behavior_fault">
-<code class="descname">clear_behavior_fault</code><span class="sig-paren">(</span><em>behavior_fault_id</em>, <em>lease=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandClient.clear_behavior_fault"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.clear_behavior_fault" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clear a behavior fault on the robot.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>RobotCommand, which can be issued to the robot command service.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="bosdyn.client.robot_command.RobotCommandClient.clear_behavior_fault_async">
-<code class="descname">clear_behavior_fault_async</code><span class="sig-paren">(</span><em>behavior_fault_id</em>, <em>lease=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandClient.clear_behavior_fault_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.clear_behavior_fault_async" title="Permalink to this definition">¶</a></dt>
-<dd><p>Async version of clear_behavior_fault().</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="bosdyn.client.robot_command.RobotCommandClient.default_authority">
-<code class="descname">default_authority</code><em class="property"> = 'command.spot.robot'</em><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.default_authority" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="bosdyn.client.robot_command.RobotCommandClient.default_service_name">
-<code class="descname">default_service_name</code><em class="property"> = 'robot-command'</em><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.default_service_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot_command.RobotCommandClient.robot_command">
-<code class="descname">robot_command</code><span class="sig-paren">(</span><em>command</em>, <em>end_time_secs=None</em>, <em>timesync_endpoint=None</em>, <em>lease=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandClient.robot_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.robot_command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Issue a command to the robot.</p>
+<dt id="bosdyn.client.robot_command.RobotCommandBuilder.sit_command">
+<em class="property">static </em><code class="sig-name descname">sit_command</code><span class="sig-paren">(</span><em class="sig-param">params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.sit_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.sit_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Command the robot to sit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>RobotCommand, which can be issued to the robot command service.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="bosdyn.client.robot_command.RobotCommandClient.robot_command_async">
-<code class="descname">robot_command_async</code><span class="sig-paren">(</span><em>command</em>, <em>end_time_secs=None</em>, <em>timesync_endpoint=None</em>, <em>lease=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandClient.robot_command_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.robot_command_async" title="Permalink to this definition">¶</a></dt>
-<dd><p>Async version of robot_command().</p>
+<dt id="bosdyn.client.robot_command.RobotCommandBuilder.mobility_params">
+<em class="property">static </em><code class="sig-name descname">mobility_params</code><span class="sig-paren">(</span><em class="sig-param">body_height=0.0</em>, <em class="sig-param">footprint_R_body=&lt;bosdyn.geometry.EulerZXY object&gt;</em>, <em class="sig-param">locomotion_hint=1</em>, <em class="sig-param">stair_hint=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.mobility_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.mobility_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper to create Mobility params for spot mobility commands. This function is designed
+to help get started issuing commands, but lots of options are not exposed via this
+interface. See spot.robot_command_pb2 for more details. If unset, good defaults will be
+chosen by the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>spot.MobilityParams, params for spot mobility commands.</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback">
-<code class="descname">robot_command_feedback</code><span class="sig-paren">(</span><em>robot_command_id</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandClient.robot_command_feedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get feedback from a previously issued command.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback_async">
-<code class="descname">robot_command_feedback_async</code><span class="sig-paren">(</span><em>robot_command_id</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandClient.robot_command_feedback_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback_async" title="Permalink to this definition">¶</a></dt>
-<dd><p>Async version of robot_command_feedback().</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="bosdyn.client.robot_command.RobotCommandClient.service_type">
-<code class="descname">service_type</code><em class="property"> = 'bosdyn.api.RobotCommand'</em><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.service_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="bosdyn.client.robot_command.RobotCommandClient.timesync_endpoint">
-<code class="descname">timesync_endpoint</code><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.timesync_endpoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor for timesync-endpoint that was grabbed via ‘update_from()’.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.robot_command.RobotCommandClient.update_from">
-<code class="descname">update_from</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandClient.update_from"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandClient.update_from" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adopt key objects like processors, logger, and wallet from other.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="exception">
-<dt id="bosdyn.client.robot_command.RobotCommandResponseError">
-<em class="property">exception </em><code class="descclassname">bosdyn.client.robot_command.</code><code class="descname">RobotCommandResponseError</code><span class="sig-paren">(</span><em>response</em>, <em>error_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#RobotCommandResponseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandResponseError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.ResponseError</span></code></a></p>
-<p>General class of errors for RobotCommand service.</p>
-</dd></dl>
-
-<dl class="exception">
-<dt id="bosdyn.client.robot_command.TooDistantError">
-<em class="property">exception </em><code class="descclassname">bosdyn.client.robot_command.</code><code class="descname">TooDistantError</code><span class="sig-paren">(</span><em>response</em>, <em>error_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#TooDistantError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.TooDistantError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot_command.RobotCommandResponseError" title="bosdyn.client.robot_command.RobotCommandResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.robot_command.RobotCommandResponseError</span></code></a></p>
-<p>The command end time was too far in the future.</p>
-</dd></dl>
-
-<dl class="exception">
-<dt id="bosdyn.client.robot_command.UnsupportedError">
-<em class="property">exception </em><code class="descclassname">bosdyn.client.robot_command.</code><code class="descname">UnsupportedError</code><span class="sig-paren">(</span><em>response</em>, <em>error_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#UnsupportedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.UnsupportedError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot_command.RobotCommandResponseError" title="bosdyn.client.robot_command.RobotCommandResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.robot_command.RobotCommandResponseError</span></code></a></p>
-<p>The API supports this request, but the system does not support this request.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="bosdyn.client.robot_command.blocking_stand">
-<code class="descclassname">bosdyn.client.robot_command.</code><code class="descname">blocking_stand</code><span class="sig-paren">(</span><em>command_client</em>, <em>timeout_sec=10</em>, <em>update_frequency=1.0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#blocking_stand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.blocking_stand" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">bosdyn.client.robot_command.</code><code class="sig-name descname">blocking_stand</code><span class="sig-paren">(</span><em class="sig-param">command_client</em>, <em class="sig-param">timeout_sec=10</em>, <em class="sig-param">update_frequency=1.0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/robot_command.html#blocking_stand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.blocking_stand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper function which uses the RobotCommandService to stand. This function blocks until spot
 is standing.</p>
 </dd></dl>

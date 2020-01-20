@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.auth &mdash; Spot 1.0 documentation</title>
+  <title>bosdyn.client.auth &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -149,7 +149,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.auth</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;For clients to acquire a user token from the authentication service.</span>
+<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;For clients to acquire a user token from the authentication service.</span>
 
 <span class="sd">AuthClient -- Wrapper around service stub.</span>
 <span class="sd">InvalidLoginError -- Raised when authentication response indicates invalid login.</span>
@@ -159,7 +165,7 @@
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">auth_service_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">auth_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">auth_service_pb2_grpc</span>
 
 <span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">BaseClient</span>
@@ -181,13 +187,19 @@
     <span class="sd">&quot;&quot;&quot;Provided user token is invalid or cannot be re-minted.&quot;&quot;&quot;</span></div>
 
 
+<div class="viewcode-block" id="TemporarilyLockedOutError"><a class="viewcode-back" href="../../../client_modules/auth.html#bosdyn.client.auth.TemporarilyLockedOutError">[docs]</a><span class="k">class</span> <span class="nc">TemporarilyLockedOutError</span><span class="p">(</span><span class="n">AuthResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;User is temporarily locked out of authentication.&quot;&quot;&quot;</span></div>
+
+
 <span class="n">_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 <span class="n">_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-    <span class="n">auth_service_pb2</span><span class="o">.</span><span class="n">GetAuthTokenResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="n">auth_service_pb2</span><span class="o">.</span><span class="n">GetAuthTokenResponse</span><span class="o">.</span><span class="n">STATUS_INVALID_LOGIN</span><span class="p">:</span> <span class="p">(</span><span class="n">InvalidLoginError</span><span class="p">,</span>
-                                                                 <span class="n">InvalidLoginError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">auth_service_pb2</span><span class="o">.</span><span class="n">GetAuthTokenResponse</span><span class="o">.</span><span class="n">STATUS_INVALID_TOKEN</span><span class="p">:</span> <span class="p">(</span><span class="n">InvalidTokenError</span><span class="p">,</span>
-                                                                 <span class="n">InvalidTokenError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenResponse</span><span class="o">.</span><span class="n">STATUS_INVALID_LOGIN</span><span class="p">:</span> <span class="p">(</span><span class="n">InvalidLoginError</span><span class="p">,</span>
+                                                         <span class="n">InvalidLoginError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenResponse</span><span class="o">.</span><span class="n">STATUS_INVALID_TOKEN</span><span class="p">:</span> <span class="p">(</span><span class="n">InvalidTokenError</span><span class="p">,</span>
+                                                         <span class="n">InvalidTokenError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenResponse</span><span class="o">.</span><span class="n">STATUS_TEMPORARILY_LOCKED_OUT</span><span class="p">:</span> <span class="p">(</span><span class="n">TemporarilyLockedOutError</span><span class="p">,</span>
+                                                                  <span class="n">TemporarilyLockedOutError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
 <span class="p">})</span>
 
 
@@ -196,7 +208,7 @@
 <span class="k">def</span> <span class="nf">_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
-                         <span class="n">status_to_string</span><span class="o">=</span><span class="n">auth_service_pb2</span><span class="o">.</span><span class="n">GetAuthTokenResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+                         <span class="n">status_to_string</span><span class="o">=</span><span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_STATUS_TO_ERROR</span><span class="p">)</span>
 
 
@@ -205,11 +217,11 @@
 
 
 <span class="k">def</span> <span class="nf">_build_auth_request</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">auth_service_pb2</span><span class="o">.</span><span class="n">GetAuthTokenRequest</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenRequest</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_build_auth_token_request</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">auth_service_pb2</span><span class="o">.</span><span class="n">GetAuthTokenRequest</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenRequest</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="AuthClient"><a class="viewcode-back" href="../../../client_modules/auth.html#bosdyn.client.auth.AuthClient">[docs]</a><span class="k">class</span> <span class="nc">AuthClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
@@ -222,8 +234,8 @@
     <span class="c1"># Full service name in the robot&#39;s directory listing.</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.AuthService&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">AuthClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">auth_service_pb2_grpc</span><span class="o">.</span><span class="n">AuthServiceStub</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AuthClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">auth_service_pb2_grpc</span><span class="o">.</span><span class="n">AuthServiceStub</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
 <div class="viewcode-block" id="AuthClient.auth"><a class="viewcode-back" href="../../../client_modules/auth.html#bosdyn.client.auth.AuthClient.auth">[docs]</a>    <span class="k">def</span> <span class="nf">auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Authenticate to the robot with a username/password combo.</span>

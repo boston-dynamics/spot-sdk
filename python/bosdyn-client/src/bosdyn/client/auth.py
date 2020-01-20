@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """For clients to acquire a user token from the authentication service.
 
 AuthClient -- Wrapper around service stub.
@@ -8,7 +14,7 @@ InvalidTokenError -- Raised when authentication response indicates invalid token
 import collections
 import logging
 
-from bosdyn.api import auth_service_pb2
+from bosdyn.api import auth_pb2
 from bosdyn.api import auth_service_pb2_grpc
 
 from .common import BaseClient
@@ -30,13 +36,19 @@ class InvalidTokenError(AuthResponseError):
     """Provided user token is invalid or cannot be re-minted."""
 
 
+class TemporarilyLockedOutError(AuthResponseError):
+    """User is temporarily locked out of authentication."""
+
+
 _STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _STATUS_TO_ERROR.update({
-    auth_service_pb2.GetAuthTokenResponse.STATUS_OK: (None, None),
-    auth_service_pb2.GetAuthTokenResponse.STATUS_INVALID_LOGIN: (InvalidLoginError,
-                                                                 InvalidLoginError.__doc__),
-    auth_service_pb2.GetAuthTokenResponse.STATUS_INVALID_TOKEN: (InvalidTokenError,
-                                                                 InvalidTokenError.__doc__),
+    auth_pb2.GetAuthTokenResponse.STATUS_OK: (None, None),
+    auth_pb2.GetAuthTokenResponse.STATUS_INVALID_LOGIN: (InvalidLoginError,
+                                                         InvalidLoginError.__doc__),
+    auth_pb2.GetAuthTokenResponse.STATUS_INVALID_TOKEN: (InvalidTokenError,
+                                                         InvalidTokenError.__doc__),
+    auth_pb2.GetAuthTokenResponse.STATUS_TEMPORARILY_LOCKED_OUT: (TemporarilyLockedOutError,
+                                                                  TemporarilyLockedOutError.__doc__)
 })
 
 
@@ -45,7 +57,7 @@ _STATUS_TO_ERROR.update({
 def _error_from_response(response):
     """Return a custom exception based on response, None if no error."""
     return error_factory(response, response.status,
-                         status_to_string=auth_service_pb2.GetAuthTokenResponse.Status.Name,
+                         status_to_string=auth_pb2.GetAuthTokenResponse.Status.Name,
                          status_to_error=_STATUS_TO_ERROR)
 
 
@@ -54,11 +66,11 @@ def _token_from_response(response):
 
 
 def _build_auth_request(username, password):
-    return auth_service_pb2.GetAuthTokenRequest(username=username, password=password)
+    return auth_pb2.GetAuthTokenRequest(username=username, password=password)
 
 
 def _build_auth_token_request(token):
-    return auth_service_pb2.GetAuthTokenRequest(token=token)
+    return auth_pb2.GetAuthTokenRequest(token=token)
 
 
 class AuthClient(BaseClient):
@@ -71,8 +83,8 @@ class AuthClient(BaseClient):
     # Full service name in the robot's directory listing.
     service_type = 'bosdyn.api.AuthService'
 
-    def __init__(self):
-        super(AuthClient, self).__init__(auth_service_pb2_grpc.AuthServiceStub)
+    def __init__(self, name=None):
+        super(AuthClient, self).__init__(auth_service_pb2_grpc.AuthServiceStub, name=name)
 
     def auth(self, username, password, **kwargs):
         """Authenticate to the robot with a username/password combo.

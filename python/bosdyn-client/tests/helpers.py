@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """Common unit test helpers for bosdyn.client tests."""
 
 import concurrent
@@ -30,7 +36,8 @@ def setup_client_and_service(client, service, service_adder):
     client.channel = channel
 
 
-def add_common_header(response, request, error_code=HeaderProto.CommonError.CODE_OK, error_message=None):
+def add_common_header(response, request, error_code=HeaderProto.CommonError.CODE_OK,
+                      error_message=None):
     """Sets the common header on the response.
 
     Args:

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Async Tasks &mdash; Spot 1.0 documentation</title>
+  <title>Async Tasks &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -98,6 +98,8 @@
 <li class="toctree-l2"><a class="reference internal" href="image.html">Image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lease.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="payload.html">Payload</a></li>
 <li class="toctree-l2"><a class="reference internal" href="power.html">Power</a></li>
 <li class="toctree-l2"><a class="reference internal" href="processors.html">Processors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot_command.html">Robot Command</a></li>
@@ -105,7 +107,10 @@
 <li class="toctree-l2"><a class="reference internal" href="robot_state.html">Robot State</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot.html">Robot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sdk.html">SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spot_check.html">Spot Check</a></li>
 <li class="toctree-l2"><a class="reference internal" href="time_sync.html">Time Sync</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_cache.html">Token Cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_manager.html">Token Manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.html">Util</a></li>
 </ul>
 </li>
@@ -180,15 +185,34 @@
 <span id="async-tasks"></span><h1>Async Tasks<a class="headerlink" href="#module-bosdyn.client.async_tasks" title="Permalink to this headline">¶</a></h1>
 <p>Utilities for managing periodic tasks consisting of asynchronous GRPC calls.</p>
 <dl class="class">
+<dt id="bosdyn.client.async_tasks.AsyncTasks">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.async_tasks.</code><code class="sig-name descname">AsyncTasks</code><span class="sig-paren">(</span><em class="sig-param">tasks=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/async_tasks.html#AsyncTasks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.async_tasks.AsyncTasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages a set of tasks which work by periodically calling an update() method.</p>
+<dl class="method">
+<dt id="bosdyn.client.async_tasks.AsyncTasks.add_task">
+<code class="sig-name descname">add_task</code><span class="sig-paren">(</span><em class="sig-param">task</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/async_tasks.html#AsyncTasks.add_task"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.async_tasks.AsyncTasks.add_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a task to be managed by this object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.async_tasks.AsyncTasks.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/async_tasks.html#AsyncTasks.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.async_tasks.AsyncTasks.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call this periodically to manage execution of tasks owned by this object.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="bosdyn.client.async_tasks.AsyncGRPCTask">
-<em class="property">class </em><code class="descclassname">bosdyn.client.async_tasks.</code><code class="descname">AsyncGRPCTask</code><a class="reference internal" href="../_modules/bosdyn/client/async_tasks.html#AsyncGRPCTask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.async_tasks.AsyncGRPCTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.async_tasks.</code><code class="sig-name descname">AsyncGRPCTask</code><a class="reference internal" href="../_modules/bosdyn/client/async_tasks.html#AsyncGRPCTask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.async_tasks.AsyncGRPCTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Task to be accomplished using asynchronous GRPC calls.</p>
 <p>When it is time to run the task, an async GRPC call is run resulting in a FutureWrapper object.
 The FutureWrapper is monitored for completion, and then an action is taken in response.</p>
 <dl class="method">
 <dt id="bosdyn.client.async_tasks.AsyncGRPCTask.update">
-<code class="descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/async_tasks.html#AsyncGRPCTask.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.async_tasks.AsyncGRPCTask.update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/async_tasks.html#AsyncGRPCTask.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.async_tasks.AsyncGRPCTask.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call this periodically to manage execution of task represented by this object.</p>
 </dd></dl>
 
@@ -196,7 +220,7 @@ The FutureWrapper is monitored for completion, and then an action is taken in re
 
 <dl class="class">
 <dt id="bosdyn.client.async_tasks.AsyncPeriodicGRPCTask">
-<em class="property">class </em><code class="descclassname">bosdyn.client.async_tasks.</code><code class="descname">AsyncPeriodicGRPCTask</code><span class="sig-paren">(</span><em>period_sec</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/async_tasks.html#AsyncPeriodicGRPCTask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.async_tasks.AsyncPeriodicGRPCTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.async_tasks.</code><code class="sig-name descname">AsyncPeriodicGRPCTask</code><span class="sig-paren">(</span><em class="sig-param">period_sec</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/async_tasks.html#AsyncPeriodicGRPCTask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.async_tasks.AsyncPeriodicGRPCTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bosdyn.client.async_tasks.AsyncGRPCTask" title="bosdyn.client.async_tasks.AsyncGRPCTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.async_tasks.AsyncGRPCTask</span></code></a></p>
 <p>Periodic task to be accomplished using asynchronous GRPC calls.</p>
 <p>When it is time to run the task, an async GRPC call is run resulting in a FutureWrapper object.
@@ -205,32 +229,13 @@ The FutureWrapper is monitored for completion, and then an action is taken in re
 
 <dl class="class">
 <dt id="bosdyn.client.async_tasks.AsyncPeriodicQuery">
-<em class="property">class </em><code class="descclassname">bosdyn.client.async_tasks.</code><code class="descname">AsyncPeriodicQuery</code><span class="sig-paren">(</span><em>query_name</em>, <em>client</em>, <em>logger</em>, <em>period_sec</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/async_tasks.html#AsyncPeriodicQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.async_tasks.AsyncPeriodicQuery" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.async_tasks.</code><code class="sig-name descname">AsyncPeriodicQuery</code><span class="sig-paren">(</span><em class="sig-param">query_name</em>, <em class="sig-param">client</em>, <em class="sig-param">logger</em>, <em class="sig-param">period_sec</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/async_tasks.html#AsyncPeriodicQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.async_tasks.AsyncPeriodicQuery" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bosdyn.client.async_tasks.AsyncPeriodicGRPCTask" title="bosdyn.client.async_tasks.AsyncPeriodicGRPCTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.async_tasks.AsyncPeriodicGRPCTask</span></code></a></p>
 <p>Query for robot data at some regular interval.</p>
-<dl class="attribute">
+<dl class="method">
 <dt id="bosdyn.client.async_tasks.AsyncPeriodicQuery.proto">
-<code class="descname">proto</code><a class="headerlink" href="#bosdyn.client.async_tasks.AsyncPeriodicQuery.proto" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">proto</code><a class="headerlink" href="#bosdyn.client.async_tasks.AsyncPeriodicQuery.proto" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get latest response proto.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="bosdyn.client.async_tasks.AsyncTasks">
-<em class="property">class </em><code class="descclassname">bosdyn.client.async_tasks.</code><code class="descname">AsyncTasks</code><span class="sig-paren">(</span><em>tasks=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/async_tasks.html#AsyncTasks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.async_tasks.AsyncTasks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Manages a set of tasks which work by periodically calling an update() method.</p>
-<dl class="method">
-<dt id="bosdyn.client.async_tasks.AsyncTasks.add_task">
-<code class="descname">add_task</code><span class="sig-paren">(</span><em>task</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/async_tasks.html#AsyncTasks.add_task"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.async_tasks.AsyncTasks.add_task" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a task to be managed by this object.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.async_tasks.AsyncTasks.update">
-<code class="descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/async_tasks.html#AsyncTasks.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.async_tasks.AsyncTasks.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call this periodically to manage execution of tasks owned by this object.</p>
 </dd></dl>
 
 </dd></dl>

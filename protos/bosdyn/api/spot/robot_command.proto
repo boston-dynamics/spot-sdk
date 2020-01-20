@@ -1,3 +1,9 @@
+// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
 syntax = "proto3";
 
 package bosdyn.api.spot;
@@ -6,18 +12,27 @@ option java_outer_classname = "RobotCommandProto";
 
 import "bosdyn/api/geometry.proto";
 import "bosdyn/api/trajectory.proto";
+import "google/protobuf/wrappers.proto";
 
 enum LocomotionHint {
-    HINT_UNKNOWN = 0;           // Invalid; do not use.
-    HINT_AUTO = 1;              // No hint, robot chooses an appropriate gait (typically trot.)
-    HINT_TROT = 2;              // Most robust gait which moves diagonal legs together.
-    HINT_AUTO_TROT = 3;         // Trot which comes to a stand when not commanded to move.
-    HINT_CRAWL = 4;             // Slow and steady gait which moves only one foot at a time.
-    HINT_AMBLE = 5;             // Four beat gait where one foot touches down at a time.
-    HINT_AUTO_AMBLE = 6;        // Amble which comes to a stand when not commanded to move.
-    HINT_JOG = 7;               // Demo gait which moves diagonal leg pairs together with an aerial phase.
-    HINT_HOP = 8;               // Demo gait which hops while holding some feet in the air.
-    HINT_PACE = 9;              // Demo gait which moves legs on the same side together.
+    option allow_alias = true;
+    HINT_UNKNOWN = 0;             // Invalid; do not use.
+    HINT_AUTO = 1;                // No hint, robot chooses an appropriate gait (typically trot.)
+    HINT_TROT = 2;                // Most robust gait which moves diagonal legs together.
+    HINT_SPEED_SELECT_TROT = 3;   // Trot which comes to a stand when not commanded to move.
+    HINT_CRAWL = 4;               // Slow and steady gait which moves only one foot at a time.
+    HINT_AMBLE = 5;               // Four beat gait where one foot touches down at a time.
+    HINT_SPEED_SELECT_AMBLE = 6;  // Amble which comes to a stand when not commanded to move.
+    HINT_JOG = 7;                 // Demo gait which moves diagonal leg pairs together with an aerial phase.
+    HINT_HOP = 8;                 // Demo gait which hops while holding some feet in the air.
+    /// HINT_AUTO_TROT is deprecated due to the name being too similar to the Spot Autowalk feature.
+    /// It has been replaced by HINT_SPEED_SELECT_TROT. Keeping this value in here for now for backwards
+    /// compatibility, but this may be removed in future releases.
+    HINT_AUTO_TROT = 3;           // Same as HINT_SPEED_SELECT_TROT.
+    /// HINT_AUTO_AMBLE is deprecated due to the name being too similar to the Spot Autowalk feature.
+    /// It has been replaced by HINT_SPEED_SELECT_AMBLE. Keeping this value in here for now for backwards
+    /// compatibility, but this may be removed in future releases.
+    HINT_AUTO_AMBLE = 6;          // Same as HINT_SPEED_SELECT_AMBLE.
 }
 
 enum SwingHeight {
@@ -50,6 +65,9 @@ message MobilityParams {
 
     // Swing height setting
     SwingHeight swing_height = 7;
+
+    // Ground terrain parameters.
+    TerrainParams terrain_params = 8;
 }
 
 // Parameters for offsetting the body from the normal default.
@@ -74,7 +92,17 @@ message ObstacleParams {
   bool disable_vision_body_obstacle_avoidance = 3;
   // Desired padding around the body to use when attempting to avoid obstacles.
   double obstacle_avoidance_padding = 4; // meters. Must be >= 0.
-  
+
 }
 
 
+// Ground contact parameters
+message TerrainParams {
+    // Terrain coefficient of friction user hint. This value must be postive and will clamped if
+    // necessary on the robot side. Best suggested values lie in the range between 0.4 and 0.8
+    // (which is the robot's default.)
+    google.protobuf.DoubleValue ground_mu_hint = 2;
+    // When true, the robot will assume the ground below it is made of grated metal.
+    bool enable_grated_floor = 3;
+    // TODO: add support for reflecting current robot ground mu.
+}

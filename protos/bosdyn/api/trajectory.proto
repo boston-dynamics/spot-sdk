@@ -1,3 +1,9 @@
+// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
 syntax = "proto3";
 
 package bosdyn.api;
@@ -47,7 +53,7 @@ message SE2TrajectoryPoint {
     google.protobuf.Duration time_since_reference = 3;
 }
 
-/// A 2D pose trajectory.
+/// A 3D pose trajectory.
 message SE3Trajectory {
     /// The points in trajectory
     repeated SE3TrajectoryPoint points = 1;
@@ -71,6 +77,40 @@ message SE3TrajectoryPoint {
 
     /// Optional velocity the robot will try and achieve.
     SE3Velocity vel = 2;
+
+    /// The duration to reach the point relative to the trajectory reference time.
+    google.protobuf.Duration time_since_reference = 3;
+
+}
+
+/// A 3D point trajectory.
+message Vec3Trajectory {
+    /// The points in trajectory
+    repeated Vec3TrajectoryPoint points = 1;
+
+    /// A required reference frame of the points in the trajectory..
+    Frame frame = 2;
+
+    /// All trajectories specify times relative to this reference time. The reference time should be
+    /// in robot clock. If this field is not included, this time will be the receive time of the
+    /// command.
+    google.protobuf.Timestamp reference_time = 3;
+
+    /// Parameters for how trajectories will be interpolated on robot.
+    PositionalInterpolation pos_interpolation = 4;
+
+    /// Velocity of the starting point.
+    Vec3 starting_velocity = 5;
+    /// Velocity of the ending point.
+    Vec3 ending_velocity = 6;
+}
+
+message Vec3TrajectoryPoint {
+    Vec3 point = 1;
+
+    /// These are all optional.  If nothing is specified, good defaults will be chosen
+    /// server-side.
+    double linear_speed = 4;
 
     /// The duration to reach the point relative to the trajectory reference time.
     google.protobuf.Duration time_since_reference = 3;

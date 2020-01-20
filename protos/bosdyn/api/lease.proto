@@ -1,7 +1,15 @@
+// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
 syntax = "proto3";
 
 package bosdyn.api;
 option java_outer_classname = "LeaseProto";
+
+import "bosdyn/api/header.proto";
 
 // Leases are used to verify that a client has exclusive access to a shared
 // resources. Examples of shared resources are the motors for a robot, or
@@ -66,4 +74,173 @@ message LeaseUseResult {
 
     // The previous lease, if any, which was used.
     Lease previous_lease = 4;
+}
+
+
+message AcquireLeaseRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The resource to obtain a Lease for.
+    string resource = 2;
+}
+
+message AcquireLeaseResponse {
+    // Common response Header.
+    ResponseHeader header = 1;
+
+    // Return status.
+    enum Status {
+        // UNKNOWN should never be used.
+        //
+        // An internal LeaseService issue has happened if UNKNOWN is set.
+        STATUS_UNKNOWN = 0;
+
+        // AcquireLease was successful.
+        //
+        // |lease| will be populated with the new lease for the resource.
+        // The client is expected to call the RetainLease method immediately
+        // after.
+        STATUS_OK = 1;
+
+        // AcquireLease failed since the resource has already been claimed.
+        //
+        // The TakeLease method may be used to forcefully grab the lease.
+        STATUS_RESOURCE_ALREADY_CLAIMED = 2;
+
+        // AcquireLease failed since the resource is not known to LeaseService.
+        //
+        // The ListLeaseResources method may be used to list all known
+        // resources.
+        STATUS_INVALID_RESOURCE = 3;
+
+        // The LeaseService is not authoritative - so Acquire should not work.
+        STATUS_NOT_AUTHORITATIVE_SERVICE = 4;
+    }
+    Status status = 2;
+
+    // The lease for the resource. Only set if |status| == OK.
+    Lease lease = 3;
+
+    // The owner for the lease. Set if |status| == OK or |status| == RESOURCE_ALREADY_CLAIMED.
+    LeaseOwner lease_owner = 4;
+}
+
+message TakeLeaseRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+     // The resource to obtain a Lease for.
+    string resource = 2;
+}
+
+message TakeLeaseResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Return status.
+    enum Status {
+        // UNKNOWN should never be used.
+        //
+        // An internal LeaseService issue has happened if UNKNOWN is set.
+        STATUS_UNKNOWN = 0;
+
+        // TakeLease was successful.
+        //
+        // |lease| will be populated with the new lease for the resource.
+        // The client is expected to call the RetainLease method immediately
+        // after.
+        STATUS_OK = 1;
+
+        // TakeLease failed since the resource is not known to LeaseService.
+        //
+        // The ListLeaseResources method may be used to list all known
+        // resources.
+        STATUS_INVALID_RESOURCE = 2;
+
+        // The LeaseService is not authoritative - so Acquire should not work.
+        STATUS_NOT_AUTHORITATIVE_SERVICE = 3;
+    }
+    Status status = 2;
+
+    // The lease for the resource. Only set if |status| == OK.
+    Lease lease = 3;
+
+    // The owner for the lease. Set if |status| == OK.
+    LeaseOwner lease_owner = 4;
+}
+
+message ReturnLeaseRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The Lease to return back to the LeaseService.
+    Lease lease = 2;
+}
+
+message ReturnLeaseResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Return status.
+    enum Status {
+        // UNKNOWN should never be used.
+        //
+        // An internal LeaseService issue has happened if UNKNOWN is set.
+        STATUS_UNKNOWN = 0;
+
+        // ReturnLease was successful.
+        STATUS_OK = 1;
+
+        // ReturnLease failed because the resource covered by the lease
+        // is not being managed by the LeaseService.
+        STATUS_INVALID_RESOURCE = 2;
+
+        // ReturnLease failed because the lease was not the active lease.
+        STATUS_NOT_ACTIVE_LEASE = 3;
+
+        
+        // The LeaseService is not authoritative - so Acquire should not work.
+        STATUS_NOT_AUTHORITATIVE_SERVICE = 4;
+    }
+    Status status = 2;
+}
+
+message ListLeasesRequest {
+    // Common request header.
+    RequestHeader header = 1;
+}
+
+message LeaseResource {
+    // The resource name.
+    string resource = 1;
+
+    // The active lease, if any.
+    Lease lease = 2;
+
+    // The Lease Owner, if there is a Lease.
+    LeaseOwner lease_owner = 3;
+}
+
+message ListLeasesResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // The resources managed by the LeaseService.
+    repeated LeaseResource resources = 2;
+}
+
+message RetainLeaseRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The Lease to retain ownership over.
+    Lease lease = 2;
+}
+
+message RetainLeaseResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    LeaseUseResult lease_use_result = 2;
 }

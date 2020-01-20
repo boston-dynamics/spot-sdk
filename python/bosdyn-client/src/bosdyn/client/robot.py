@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """Settings common to a user's access to one robot."""
 import copy
 import logging
@@ -24,6 +30,7 @@ from .token_cache import TokenCache
 
 _LOGGER = logging.getLogger(__name__)
 _DEFAULT_SECURE_CHANNEL_PORT = 443
+
 
 class Robot(object):
     """Settings common to one user's access to one robot.
@@ -133,8 +140,8 @@ class Robot(object):
 
         # Channel doesn't exist, so create it.
         port = _DEFAULT_SECURE_CHANNEL_PORT
-        creds = bosdyn.client.channel.create_secure_channel_creds(self.cert,
-                                                                  lambda: (self.app_token, self.user_token))
+        creds = bosdyn.client.channel.create_secure_channel_creds(
+            self.cert, lambda: (self.app_token, self.user_token))
         channel = bosdyn.client.channel.create_secure_channel(self.address, port, creds, authority)
         self.logger.debug('Created channel to %s at port %i', self.address, port)
         self.channels_by_authority[authority] = channel
@@ -281,7 +288,8 @@ class Robot(object):
             # we are releasing. See bugzilla bug 4111 for more details.
             command_client = self.ensure_client(RobotCommandClient.default_service_name)
             state_client = self.ensure_client(RobotStateClient.default_service_name)
-            pkg_safe_power_off(command_client, state_client, timeout_sec, update_frequency, timeout=timeout)
+            pkg_safe_power_off(command_client, state_client, timeout_sec, update_frequency,
+                               timeout=timeout)
 
     def is_powered_on(self, timeout=None):
         """Check the power state of the robot.

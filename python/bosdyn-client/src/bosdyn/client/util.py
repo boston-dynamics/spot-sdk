@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 import getpass
 import glob
 import logging
@@ -9,6 +15,7 @@ from .auth import InvalidLoginError
 from .exceptions import Error
 
 _LOGGER = logging.getLogger(__name__)
+
 
 def cli_login_prompt(username=None, password=None):
     """Interactive CLI for scripting conveniences."""
@@ -22,6 +29,7 @@ def cli_login_prompt(username=None, password=None):
     password = password or getpass.getpass()
     return (username, password)
 
+
 def cli_auth(robot, username=None, password=None):
     """Interactive CLI for authenticating with the robot."""
     successful = False
@@ -32,6 +40,7 @@ def cli_auth(robot, username=None, password=None):
             successful = True
         except (InvalidLoginError, Error) as e:
             _LOGGER.exception(e)
+
 
 def setup_logging(verbose=False):
     """Setup a basic streaming console handler at the root logger.

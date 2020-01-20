@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.common &mdash; Spot 1.0 documentation</title>
+  <title>bosdyn.client.common &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -149,7 +149,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.common</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Contains elements common to all service clients.&quot;&quot;&quot;</span>
+<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;Contains elements common to all service clients.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -158,6 +164,7 @@
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">InternalServerError</span><span class="p">,</span> <span class="n">InvalidRequestError</span><span class="p">,</span> <span class="n">LeaseUseError</span><span class="p">,</span> <span class="n">UnsetStatusError</span>
 
 <span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="common_header_errors"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.common_header_errors">[docs]</a><span class="k">def</span> <span class="nf">common_header_errors</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return an exception based on common response header. None if no error.&quot;&quot;&quot;</span>
@@ -180,10 +187,10 @@
 <div class="viewcode-block" id="error_factory"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.error_factory">[docs]</a><span class="k">def</span> <span class="nf">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">status_to_string</span><span class="p">,</span> <span class="n">status_to_error</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return an error based on the status field of the given response.</span>
 
-<span class="sd">    NOTE: Since most callers of this function are &quot;response to error&quot; callbacks, any exceptions</span>
-<span class="sd">          raised by this function are a considered a serious problem. Strongly consider using</span>
-<span class="sd">          collections.defaultdict for the status_to_error mapping, and/or wrapping calls to this</span>
-<span class="sd">          function in try/except blocks.</span>
+<span class="sd">    Since most callers of this function are &quot;response to error&quot; callbacks, any exceptions</span>
+<span class="sd">    raised by this function are a considered a serious problem. Strongly consider using</span>
+<span class="sd">    collections.defaultdict for the status_to_error mapping, and/or wrapping calls to this</span>
+<span class="sd">    function in try/except blocks.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        response -- Protobuf message to examine.</span>
@@ -256,6 +263,21 @@
     <span class="k">return</span> <span class="n">wrapper</span></div>
 
 
+<div class="viewcode-block" id="print_response"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.print_response">[docs]</a><span class="k">def</span> <span class="nf">print_response</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Decorate &quot;error from response&quot; functions to print for debugging specific messages.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">print_message</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+    <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=no-value-for-parameter</span>
+        <span class="n">print_message</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">wrapper</span></div>
+
+
 <div class="viewcode-block" id="BaseClient"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.BaseClient">[docs]</a><span class="k">class</span> <span class="nc">BaseClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Helper base class for all clients to Boston Dynamics services.&quot;&quot;&quot;</span>
 
@@ -263,7 +285,8 @@
     <span class="n">_SPLIT_METHOD</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stub_creation_func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_service_type_short</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="s1">&#39;service_type&#39;</span><span class="p">,</span> <span class="s1">&#39;BaseClient&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">BaseClient</span><span class="o">.</span><span class="n">_SPLIT_SERVICE</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_service_type_short</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="s1">&#39;service_type&#39;</span><span class="p">,</span>
+                                           <span class="s1">&#39;BaseClient&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">BaseClient</span><span class="o">.</span><span class="n">_SPLIT_SERVICE</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_channel</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="kc">None</span>
@@ -306,7 +329,7 @@
              <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns result of calling rpc_method(request, **kwargs) after running processors.</span>
 
-<span class="sd">        NOTE: value_from_response and error_from_response should not raise their own exceptions!</span>
+<span class="sd">        value_from_response and error_from_response should not raise their own exceptions!</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_request_processors</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_logger</span><span class="p">(</span><span class="n">rpc_method</span><span class="p">)</span>
@@ -333,7 +356,7 @@
                    <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a Future for rpc_method(request, **kwargs) after running processors.</span>
 
-<span class="sd">        NOTE: value_from_response and error_from_response should not raise their own exceptions!</span>
+<span class="sd">        value_from_response and error_from_response should not raise their own exceptions!</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_request_processors</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_logger</span><span class="p">(</span><span class="n">rpc_method</span><span class="p">)</span>
@@ -427,8 +450,8 @@
         <span class="sd">&quot;&quot;&quot;Get exceptions from the Future, or from custom response processing.&quot;&quot;&quot;</span>
         <span class="n">error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_future</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>	
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_error_from_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original_future</span><span class="o">.</span><span class="n">result</span><span class="p">())</span>	
+        <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_error_from_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original_future</span><span class="o">.</span><span class="n">result</span><span class="p">())</span>
 
         <span class="k">return</span> <span class="n">translate_exception</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div></div>
 </pre></div>

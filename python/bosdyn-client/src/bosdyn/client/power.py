@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """For clients to the power command service."""
 import collections
 from concurrent.futures import TimeoutError
@@ -8,7 +14,7 @@ from bosdyn.client.common import (error_factory, handle_unset_status_error,
                                   handle_common_header_errors, handle_lease_use_result_errors)
 from bosdyn.client.exceptions import Error, ResponseError, InternalServerError
 
-from bosdyn.api import power_service_pb2
+from bosdyn.api import power_pb2
 from bosdyn.api import power_service_pb2_grpc
 from bosdyn.api import robot_command_pb2
 from bosdyn.api import robot_state_pb2
@@ -96,11 +102,11 @@ class PowerClient(BaseClient):
 
     @staticmethod
     def _power_command_request(lease, request):
-        return power_service_pb2.PowerCommandRequest(lease=lease, request=request)
+        return power_pb2.PowerCommandRequest(lease=lease, request=request)
 
     @staticmethod
     def _power_command_feedback_request(power_command_id):
-        return power_service_pb2.PowerCommandFeedbackRequest(power_command_id=power_command_id)
+        return power_pb2.PowerCommandFeedbackRequest(power_command_id=power_command_id)
 
 
 @handle_common_header_errors
@@ -116,24 +122,23 @@ def _power_feedback_error_from_response(response):
 
 _STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _STATUS_TO_ERROR.update({
-    power_service_pb2.STATUS_SUCCESS: (None, None),
-    power_service_pb2.STATUS_IN_PROGRESS: (None, None),
-    power_service_pb2.STATUS_SHORE_POWER_CONNECTED: (ShorePowerConnectedError,
-                                                     ShorePowerConnectedError.__doc__),
-    power_service_pb2.STATUS_BATTERY_MISSING: (BatteryMissingError, BatteryMissingError.__doc__),
-    power_service_pb2.STATUS_COMMAND_IN_PROGRESS: (CommandInProgressError,
-                                                   CommandInProgressError.__doc__),
-    power_service_pb2.STATUS_ESTOPPED: (EstoppedError, EstoppedError.__doc__),
-    power_service_pb2.STATUS_FAULTED: (FaultedError, FaultedError.__doc__),
-    power_service_pb2.STATUS_INTERNAL_ERROR: (InternalServerError, InternalServerError.__doc__),
+    power_pb2.STATUS_SUCCESS: (None, None),
+    power_pb2.STATUS_IN_PROGRESS: (None, None),
+    power_pb2.STATUS_SHORE_POWER_CONNECTED: (ShorePowerConnectedError,
+                                             ShorePowerConnectedError.__doc__),
+    power_pb2.STATUS_BATTERY_MISSING: (BatteryMissingError, BatteryMissingError.__doc__),
+    power_pb2.STATUS_COMMAND_IN_PROGRESS: (CommandInProgressError, CommandInProgressError.__doc__),
+    power_pb2.STATUS_ESTOPPED: (EstoppedError, EstoppedError.__doc__),
+    power_pb2.STATUS_FAULTED: (FaultedError, FaultedError.__doc__),
+    power_pb2.STATUS_INTERNAL_ERROR: (InternalServerError, InternalServerError.__doc__),
 })
 
 
-@handle_unset_status_error(unset='STATUS_UNKNOWN', statustype=power_service_pb2)
+@handle_unset_status_error(unset='STATUS_UNKNOWN', statustype=power_pb2)
 def _power_status_error_from_response(response):
     """Return a custom exception based on response, None if no error."""
     return error_factory(response, response.status,
-                         status_to_string=power_service_pb2.PowerCommandStatus.Name,
+                         status_to_string=power_pb2.PowerCommandStatus.Name,
                          status_to_error=_STATUS_TO_ERROR)
 
 
@@ -163,7 +168,7 @@ def safe_power_off(command_client, state_client, timeout_sec=30, update_frequenc
     command = robot_command_pb2.RobotCommand(full_body_command=full_body_command)
     command_client.robot_command(command=command, **kwargs)
 
-    while (time.time() < end_time):
+    while time.time() < end_time:
         time_until_timeout = end_time - time.time()
         start_call_time = time.time()
         future = state_client.get_robot_state_async(**kwargs)
@@ -189,7 +194,7 @@ def power_on(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
     Raises:
         Error: Throws on error.
     """
-    request = power_service_pb2.PowerCommandRequest.REQUEST_ON
+    request = power_pb2.PowerCommandRequest.REQUEST_ON
     _power_command(power_client, request, timeout_sec, update_frequency, **kwargs)
 
 
@@ -204,7 +209,7 @@ def power_off(client, timeout_sec=30, update_frequency=1.0, **kwargs):
     Raises:
         Error: Throws on error.
     """
-    request = power_service_pb2.PowerCommandRequest.REQUEST_OFF
+    request = power_pb2.PowerCommandRequest.REQUEST_OFF
     _power_command(client, request, timeout_sec, update_frequency, **kwargs)
 
 
@@ -216,7 +221,7 @@ def _power_command(power_client, request, timeout_sec=30, update_frequency=1.0, 
 
     response = power_client.power_command(request, **kwargs)
     power_command_id = response.power_command_id
-    while (time.time() < end_time):
+    while time.time() < end_time:
         # user specified timeout as possible, and differentiate between GRPC timeouts and command
         # completion timeouts.
         time_until_timeout = end_time - time.time()
@@ -224,7 +229,7 @@ def _power_command(power_client, request, timeout_sec=30, update_frequency=1.0, 
         future = power_client.power_command_feedback_async(power_command_id, **kwargs)
         try:
             response = future.result(timeout=time_until_timeout)
-            if response == power_service_pb2.STATUS_SUCCESS:
+            if response == power_pb2.STATUS_SUCCESS:
                 return
         except TimeoutError:
             raise CommandTimedOutError

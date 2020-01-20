@@ -1,11 +1,15 @@
+// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
 syntax = "proto3";
 
 package bosdyn.api;
 option java_outer_classname = "RobotCommandServiceProto";
 
-import "bosdyn/api/header.proto";
 import "bosdyn/api/robot_command.proto";
-import "bosdyn/api/lease.proto";
 
 service RobotCommandService {
     /// Starts a behavior command on the robot. Issuing a new command overrides the active command.
@@ -20,119 +24,4 @@ service RobotCommandService {
 
     /// Clear robot behavior fault
     rpc ClearBehaviorFault(ClearBehaviorFaultRequest) returns (ClearBehaviorFaultResponse) {}
-}
-
-message RobotCommandRequest {
-    /// Common request header.
-    RequestHeader header = 1;
-
-    /// The Lease to show ownership of the robot.
-    Lease lease = 2;
-
-    // A command for a robot to execute. A command can be comprised of several subcommands.
-    RobotCommand command = 3;
-
-    /// Identifier provided by the time sync service to verify time sync between robot and client.
-    string clock_identifier = 4;
-}
-
-message RobotCommandResponse {
-    /// Common response header.
-    ResponseHeader header = 1;
-
-    /// Details about how the lease was used.
-    LeaseUseResult lease_use_result = 2;
-
-    enum Status {
-        STATUS_UNKNOWN = 0;          ///< An unknown / unexpected error occurred.
-        STATUS_OK = 1;               ///< Request was accepted.
-
-        // Programming errors.
-        STATUS_INVALID_REQUEST = 2;  ///< Request was invalid / malformed in some way.
-        STATUS_UNSUPPORTED = 3;      ///< The robot does not understand this command.
-
-        // Timesync errors.
-        STATUS_NO_TIMESYNC = 4;      ///< Client has not done timesync with robot.
-        STATUS_EXPIRED = 5;          ///< The command was received after its max_duration had already passed.
-        STATUS_TOO_DISTANT = 6;      ///< The command end time was too far in the future.
-
-        // Robot hardware errors.
-        STATUS_NOT_POWERED_ON = 7;   ///< The robot must be powered on to accept a command.
-    }
-    Status status = 3;
-
-    /// Human-readable error description.  Not for programmatic analysis.
-    string message = 4;
-
-    /// Unique identifier for the command, If empty, command was not accepted.
-    uint32 robot_command_id = 5;
-}
-
-message RobotCommandFeedbackRequest {
-    /// Common request header.
-    RequestHeader header = 1;
-
-    /// Unique identifier for the command, provided by StartRequest.
-    uint32 robot_command_id = 2;
-}
-
-message RobotCommandFeedbackResponse {
-    /// Common response header.
-    ResponseHeader header = 1;
-
-    /// General status whether or not command is still processing.
-    enum Status {
-        /// Behavior execution is in an unknown / unexpected state.
-        STATUS_UNKNOWN = 0;
-
-        /// The robot is actively working on the command
-        STATUS_PROCESSING = 1;
-
-        /// The command was replaced by a new command
-        STATUS_COMMAND_OVERRIDDEN = 2;
-
-        /// The command expired
-        STATUS_COMMAND_TIMED_OUT = 3;
-
-        /// The robot is in an unsafe state, and will only respond to known safe commands.
-        STATUS_ROBOT_FROZEN = 4;
-    }
-    Status status = 2;
-
-    /// Human-readable status message.  Not for programmatic analysis.
-    string message = 3;
-
-    /// Command specific feedback.
-    RobotCommandFeedback feedback = 4;
-}
-
-message ClearBehaviorFaultRequest {
-    /// Common request header.
-    RequestHeader header = 1;
-
-    /// The Lease to show ownership of the robot.
-    Lease lease = 2;
-
-    /// Unique identifier for the error
-    uint32 behavior_fault_id = 3;
-}
-
-message ClearBehaviorFaultResponse {
-    /// Common response header.
-    ResponseHeader header = 1;
-
-    /// Details about how the lease was used.
-    LeaseUseResult lease_use_result = 2;
-
-    enum Status {
-        /// An unknown / unexpected error occurred.
-        STATUS_UNKNOWN = 0;
-
-        /// The BehaviorFault has been cleared.
-        STATUS_CLEARED = 1;
-
-        /// The BehaviorFault could not be cleared.
-        STATUS_NOT_CLEARED = 2;
-    }
-    Status status = 3;
 }

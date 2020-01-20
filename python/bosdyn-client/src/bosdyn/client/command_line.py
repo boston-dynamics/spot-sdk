@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """Command-line utility code for interacting with robot services."""
 
 from __future__ import print_function, division
@@ -6,9 +12,12 @@ import argparse
 import signal
 import threading
 import time
+import os
+from .exceptions import InvalidRequestError
 
 import six
 
+from bosdyn.api.log_annotation_pb2 import LogAnnotationTextMessage
 import bosdyn.client
 from bosdyn.util import (duration_str, timestamp_to_datetime)
 
@@ -18,7 +27,7 @@ from .directory import DirectoryClient, NonexistentServiceError
 from .estop import EstopClient, EstopEndpoint, EstopKeepAlive
 from .image import (ImageClient, UnknownImageSourceError, ImageResponseError, build_image_request)
 from .lease import LeaseClient
-from .log_annotation import (LogAnnotationClient, LogAnnotationTextMessage)
+from .log_annotation import LogAnnotationClient
 from .robot_id import RobotIdClient
 from .robot_state import RobotStateClient
 from .sdk import SdkError
@@ -163,7 +172,8 @@ class DirectoryGetCommand(Command):
         try:
             _show_directory_entry(robot, options.service, as_proto=options.proto)
         except NonexistentServiceError:
-            print('The requested service name "{}" does not exist.  Available services:'.format(options.service))
+            print('The requested service name "{}" does not exist.  Available services:'.format(
+                options.service))
             _show_directory_list(robot, as_proto=options.proto)
             return False
         return True
@@ -190,8 +200,8 @@ class RobotIdCommand(Command):
             nickname = proto.nickname
         release = proto.software_release
         version = release.version
-        print("{:20} {:15} {:10} {} ({})".format(proto.serial_number, proto.computer_serial_number,
-                                           nickname, proto.species, proto.version))
+        print(u"{:20} {:15} {:10} {} ({})".format(proto.serial_number, proto.computer_serial_number,
+                                                  nickname, proto.species, proto.version))
         print(" Software: {}.{}.{} ({} {})".format(version.major_version, version.minor_version,
                                                    version.patch_level, release.changeset,
                                                    timestamp_to_datetime(release.changeset_date)))
@@ -291,7 +301,7 @@ class RobotStateCommands(Subcommands):
 
     def __init__(self, subparsers, command_dict):
         super(RobotStateCommands, self).__init__(subparsers, command_dict,
-                                                 [FullStateCommand, MetricsCommand])
+                                                 [FullStateCommand, MetricsCommand, RobotModel])
 
 
 class FullStateCommand(Command):
@@ -302,6 +312,65 @@ class FullStateCommand(Command):
     def _run(self, robot, options):
         proto = robot.ensure_client(RobotStateClient.default_service_name).get_robot_state()
         print(proto)
+
+
+class RobotModel(Command):
+    """Write robot URDF and mesh to local files."""
+
+    NAME = 'model'
+    NEED_AUTHENTICATION = False
+
+    def __init__(self, subparsers, command_dict):
+        super(RobotModel, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('--outdir', default='Model_Files',
+                                  help='directory into which to save the files')
+
+    def _run(self, robot, options):
+        robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
+        hardware = robot_state_client.get_robot_hardware_configuration()
+
+        # Write files in user-specified directory, or use default name
+        model_directory = options.outdir
+
+        # Make the directory, if it does not already exist
+        try:
+            os.makedirs(model_directory)
+        except (OSError):
+            pass
+
+        # Write each link model to its own file
+        for l in hardware.skeleton.links:
+            # Request a Skeleton.Link.ObjModel from the robot for link.name and write it to a file
+            try:
+                obj_model_proto = robot_state_client.get_robot_link_model(l.name)
+            except InvalidRequestError as e:
+                print(e, end='')
+                print(" Name of link: " + l.name)
+                continue
+
+            # If file_name is empty, ignore
+            if not obj_model_proto.file_name:
+                continue
+
+            # Write to a file, ignoring the robot path
+            sub_path = ''.join(obj_model_proto.file_name.split('/')[:-1])  # robot defined path
+            path = os.path.join(model_directory, sub_path)  # local path + robot path
+            try:
+                os.makedirs(path)
+            except (OSError):
+                pass
+
+            path_and_name = os.path.join(path, obj_model_proto.file_name.split('/')[-1])
+            with open(path_and_name, "w") as obj_file:
+                obj_file.write(obj_model_proto.file_contents)
+            print('Link file written to ' + path_and_name)
+
+        # Write the corresponding urdf file inside the link directory
+        with open(os.path.join(model_directory, "model.urdf"), "w") as urdf_file:
+            urdf_file.write(hardware.skeleton.urdf)
+        print('URDF file written to ' + os.path.join(model_directory, "model.urdf"))
+
+        return True
 
 
 class MetricsCommand(Command):
@@ -495,6 +564,7 @@ class ImageCommands(Subcommands):
         super(ImageCommands, self).__init__(subparsers, command_dict,
                                             [ListImageSourcesCommand, GetImageCommand])
 
+
 def _show_image_sources_list(robot, as_proto=False):
     """Print available image sources."""
     proto = robot.ensure_client(ImageClient.default_service_name).list_image_sources()
@@ -532,18 +602,24 @@ class GetImageCommand(Command):
                                   help='filename into which to save the image')
         self._parser.add_argument('--quality-percent', type=int, default=75,
                                   help='Percent image quaility (0-100)')
-        self._parser.add_argument('source_name', help='image source name')
+        self._parser.add_argument('source_name', metavar='SRC', nargs='+', help='image source name')
 
     def _run(self, robot, options):
-        image_request = build_image_request(options.source_name, options.quality_percent)
+        image_requests = [
+            build_image_request(source_name, options.quality_percent)
+            for source_name in options.source_name
+        ]
         try:
-            response = robot.ensure_client(ImageClient.default_service_name).get_image([image_request])
+            response = robot.ensure_client(
+                ImageClient.default_service_name).get_image(image_requests)
         except UnknownImageSourceError:
-            print('Requested image source "{}" does not exist.  Available image sources:'.format(options.source_name))
+            print('Requested image source "{}" does not exist.  Available image sources:'.format(
+                options.source_name))
             _show_image_sources_list(robot)
             return False
         except ImageResponseError:
-            print('Robot cannot generate the "{}" at this time.  Retry the command.'.format(options.source_name))
+            print('Robot cannot generate the "{}" at this time.  Retry the command.'.format(
+                options.source_name))
             return False
 
         for image_response in response:

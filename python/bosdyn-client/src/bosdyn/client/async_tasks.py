@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """Utilities for managing periodic tasks consisting of asynchronous GRPC calls."""
 import abc
 import time
@@ -23,7 +29,6 @@ class AsyncTasks(object):
         """Call this periodically to manage execution of tasks owned by this object."""
         for task in self._tasks:
             task.update()
-
 
 
 @six.add_metaclass(abc.ABCMeta)  # pylint: disable=too-few-public-methods
@@ -70,6 +75,7 @@ class AsyncGRPCTask(object):
         elif self._should_query(now_sec):
             self._last_call = now_sec
             self._future = self._start_query()
+
 
 # pylint: disable=too-few-public-methods
 @six.add_metaclass(abc.ABCMeta)

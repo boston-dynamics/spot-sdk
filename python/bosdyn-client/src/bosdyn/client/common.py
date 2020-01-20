@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """Contains elements common to all service clients."""
 import copy
 import functools
@@ -7,6 +13,7 @@ from .channel import TransportError, translate_exception
 from .exceptions import Error, InternalServerError, InvalidRequestError, LeaseUseError, UnsetStatusError
 
 _LOGGER = logging.getLogger(__name__)
+
 
 def common_header_errors(response):
     """Return an exception based on common response header. None if no error."""
@@ -29,10 +36,10 @@ def common_lease_errors(response):
 def error_factory(response, status, status_to_string, status_to_error):
     """Return an error based on the status field of the given response.
 
-    NOTE: Since most callers of this function are "response to error" callbacks, any exceptions
-          raised by this function are a considered a serious problem. Strongly consider using
-          collections.defaultdict for the status_to_error mapping, and/or wrapping calls to this
-          function in try/except blocks.
+    Since most callers of this function are "response to error" callbacks, any exceptions
+    raised by this function are a considered a serious problem. Strongly consider using
+    collections.defaultdict for the status_to_error mapping, and/or wrapping calls to this
+    function in try/except blocks.
 
     Args:
         response -- Protobuf message to examine.
@@ -105,6 +112,21 @@ def handle_lease_use_result_errors(func):
     return wrapper
 
 
+def print_response(func):
+    """Decorate "error from response" functions to print for debugging specific messages."""
+
+    def print_message(response):
+        print(response)
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        # pylint: disable=no-value-for-parameter
+        print_message(*args)
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
 class BaseClient(object):
     """Helper base class for all clients to Boston Dynamics services."""
 
@@ -112,7 +134,8 @@ class BaseClient(object):
     _SPLIT_METHOD = '/'
 
     def __init__(self, stub_creation_func, name=None):
-        self._service_type_short = getattr(self.__class__, 'service_type', 'BaseClient').split(BaseClient._SPLIT_SERVICE)[-1]
+        self._service_type_short = getattr(self.__class__, 'service_type',
+                                           'BaseClient').split(BaseClient._SPLIT_SERVICE)[-1]
 
         self._channel = None
         self._logger = None
@@ -155,7 +178,7 @@ class BaseClient(object):
              **kwargs):
         """Returns result of calling rpc_method(request, **kwargs) after running processors.
 
-        NOTE: value_from_response and error_from_response should not raise their own exceptions!
+        value_from_response and error_from_response should not raise their own exceptions!
         """
         request = self._apply_request_processors(copy.deepcopy(request))
         logger = self._get_logger(rpc_method)
@@ -182,7 +205,7 @@ class BaseClient(object):
                    **kwargs):
         """Returns a Future for rpc_method(request, **kwargs) after running processors.
 
-        NOTE: value_from_response and error_from_response should not raise their own exceptions!
+        value_from_response and error_from_response should not raise their own exceptions!
         """
         request = self._apply_request_processors(copy.deepcopy(request))
         logger = self._get_logger(rpc_method)
@@ -276,7 +299,7 @@ class FutureWrapper():
         """Get exceptions from the Future, or from custom response processing."""
         error = self.original_future.exception(**kwargs)
 
-        if error is None:	
-            return self._error_from_response(self.original_future.result())	
+        if error is None:
+            return self._error_from_response(self.original_future.result())
 
         return translate_exception(error)

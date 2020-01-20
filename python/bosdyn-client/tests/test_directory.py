@@ -1,8 +1,14 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """Unit tests for the directory module."""
 import pytest
 
 import bosdyn.api.directory_pb2 as directory_proto
-import bosdyn.api.directory_service_pb2 as directory_service_proto
+import bosdyn.api.directory_pb2 as directory_service_proto
 import bosdyn.api.directory_service_pb2_grpc as directory_service
 import bosdyn.api.header_pb2 as HeaderProto
 import bosdyn.client.common
@@ -32,8 +38,7 @@ class MockDirectoryServicer(directory_service.DirectoryServiceServicer):
     def ListServiceEntries(self, request, context):
         """Implement the ListServiceEntries function of the service."""
         response = directory_service_proto.ListServiceEntriesResponse()
-        helpers.add_common_header(
-            response, request, self.error_code, self.error_message)
+        helpers.add_common_header(response, request, self.error_code, self.error_message)
         if self.error_code != HeaderProto.CommonError.CODE_OK:
             return response
         for service_entry in self.service_entries:
@@ -44,8 +49,7 @@ class MockDirectoryServicer(directory_service.DirectoryServiceServicer):
     def GetServiceEntry(self, request, context):
         """Implement the GetServiceEntry function of the service."""
         response = directory_service_proto.GetServiceEntryResponse()
-        helpers.add_common_header(
-            response, request, self.error_code, self.error_message)
+        helpers.add_common_header(response, request, self.error_code, self.error_message)
         if self.error_code != HeaderProto.CommonError.CODE_OK:
             return response
         matching_entry = None
@@ -65,11 +69,10 @@ class MockDirectoryServicer(directory_service.DirectoryServiceServicer):
 
 def _setup():
     client = bosdyn.client.directory.DirectoryClient()
-    client.request_processors.append(
-        bosdyn.client.processors.AddRequestHeader(lambda: 'test'))
+    client.request_processors.append(bosdyn.client.processors.AddRequestHeader(lambda: 'test'))
     service = MockDirectoryServicer()
-    helpers.setup_client_and_service(
-        client, service, directory_service.add_DirectoryServiceServicer_to_server)
+    helpers.setup_client_and_service(client, service,
+                                     directory_service.add_DirectoryServiceServicer_to_server)
     return client, service
 
 

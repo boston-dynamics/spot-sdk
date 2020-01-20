@@ -1,3 +1,9 @@
+// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
 /// Geometric primitives used in the API.
 syntax = "proto3";
 
@@ -13,6 +19,14 @@ message Vec3 {
     double x = 1;
     double y = 2;
     double z = 3;
+}
+
+/// Cylindrical coordinates are a generalization of polar coordiates, adding a height
+///  axis. See (http://mathworld.wolfram.com/CylindricalCoordinates.html) for more details.
+message CylindricalCoordinate {
+    double r     = 1; ///< Radial coordinate
+    double theta = 2; ///< Azimuthal coordinate
+    double z     = 3; ///< Vertical coordiante
 }
 
 message Quaternion {
@@ -116,4 +130,11 @@ message SE3Covariance {
     /// Variance of the yaw component of the SE3 Pose.
     double yaw_variance = 2;
     // TODO: add other rotational components, upgrade to 6x6 matrix.
+}
+
+// Time derivative of Yaw-Roll-Pitch Euler angle, expressed in radians per second.
+message EulerZXYRate {
+    double yaw = 1;
+    double roll = 2;
+    double pitch = 3;
 }

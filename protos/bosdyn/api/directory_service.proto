@@ -1,3 +1,9 @@
+// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
 syntax = "proto3";
 
 package bosdyn.api;
@@ -5,7 +11,7 @@ package bosdyn.api;
 option java_outer_classname = "DirectoryServiceProto";
 
 import "bosdyn/api/directory.proto";
-import "bosdyn/api/header.proto";
+
 
 // DirectoryService lets clients discover which API services are available on a robot.
 
@@ -15,50 +21,4 @@ service DirectoryService {
 
     // List all known services at time of call.
     rpc ListServiceEntries(ListServiceEntriesRequest) returns (ListServiceEntriesResponse);
-}
-
-message GetServiceEntryRequest {
-    // Common request header.
-    RequestHeader header = 1;
-
-    // The unique user-friendly name of the service.
-    string service_name = 2;
-}
-
-message GetServiceEntryResponse {
-    // Common response Header.
-    ResponseHeader header = 1;
-
-    // Return status.
-    enum Status {
-        // UNKNOWN should never be used.
-        //
-        // An internal DirectoryService issue has happened if UNKNOWN is set.
-        STATUS_UNKNOWN = 0;
-
-        // GetService was successful.
-        //
-        // |service_entry| is filled out.
-        STATUS_OK = 1;
-
-        // GetService failed because the requested service name does not exist.
-        STATUS_NONEXISTENT_SERVICE = 2;
-    }
-    Status status = 2;
-
-    // The record for the discovered service.  Only set if |status| == OK.
-    ServiceEntry service_entry = 3;
-}
-
-message ListServiceEntriesRequest {
-    // Common request header.
-    RequestHeader header = 1;
-}
-
-message ListServiceEntriesResponse {
-    // Common response header.
-    ResponseHeader header = 1;
-
-    // The resources managed by the LeaseService.
-    repeated ServiceEntry service_entries = 2;
 }

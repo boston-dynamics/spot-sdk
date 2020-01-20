@@ -1,11 +1,18 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 import pkg_resources
 import unittest
 
 import bosdyn.client
 import bosdyn.client.processors
+import bosdyn.client.common
 
 
-class ServiceClientMock(bosdyn.client.BaseClient):
+class ServiceClientMock(bosdyn.client.common.BaseClient):
     default_authority = 'the-knights-of-ni'
     default_service_name = 'mock'
     service_type = 'bosdyn.api.Mock'
@@ -15,8 +22,9 @@ class ServiceClientMock(bosdyn.client.BaseClient):
 
 
 class ClientTest(unittest.TestCase):
+
     def test_constructors(self):
-        client = bosdyn.client.BaseClient(lambda channel: None)
+        client = bosdyn.client.common.BaseClient(lambda channel: None)
         self.assertEqual(len(client.request_processors), 0)
         self.assertEqual(len(client.response_processors), 0)
 
@@ -58,11 +66,14 @@ Spam, Spam, Spam, Spam!
         sdk.request_processors.append(request_p)
         sdk.response_processors.append(response_p)
 
-        robot = self._create_robot(sdk, 'test-robot')
+        kAddress = 'foo.bar'
+        robot = self._create_robot(sdk, address=kAddress)
+        self.assertIn(kAddress, sdk.robots)
         self.assertIn(request_p, robot.request_processors)
         self.assertIn(response_p, robot.response_processors)
         self.assertNotIn(request_p, robot.response_processors)
         self.assertNotIn(response_p, robot.request_processors)
+        self.assertEqual(sdk.robots[kAddress], sdk.create_robot(kAddress))
 
     def test_robot_creation_without_app_token(self):
         sdk = self._create_sdk(app_token=None)
@@ -78,7 +89,8 @@ Spam, Spam, Spam, Spam!
 
     def test_client_name_propogation(self):
         sdk = self._create_sdk()
-        sdk.request_processors.append(bosdyn.client.processors.AddRequestHeader(lambda: sdk.client_name))
+        sdk.request_processors.append(
+            bosdyn.client.processors.AddRequestHeader(lambda: sdk.client_name))
         robot = self._create_robot(sdk, 'test-robot')
         sdk.client_name = 'changed-my-mind'
 
@@ -100,15 +112,17 @@ Spam, Spam, Spam, Spam!
         # Register the ServiceClientMock constructor as the function to call for the service.
         robot.service_type_by_name[service_name] = service_type
         robot.service_client_factories_by_type[service_type] = ServiceClientMock
-        client = robot.ensure_client(service_name)
+        client = robot.ensure_client(service_name, channel=robot.ensure_channel(
+            ServiceClientMock.default_authority))
 
     def test_load_robot_cert(self):
         sdk = bosdyn.client.Sdk()
         sdk.load_robot_cert()
-        self.assertEqual(sdk.cert, pkg_resources.resource_stream('bosdyn.client.resources', 'robot.pem').read())
+        self.assertEqual(sdk.cert,
+                         pkg_resources.resource_stream('bosdyn.client.resources',
+                                                       'robot.pem').read())
         with self.assertRaises(IOError):
             sdk.load_robot_cert('this-path-does-not-exist')
-
 
     def test_load_app_token(self):
         sdk = bosdyn.client.Sdk()
@@ -118,6 +132,7 @@ Spam, Spam, Spam, Spam!
 
         with self.assertRaises(bosdyn.client.sdk.UnsetAppTokenError):
             sdk.load_app_token(None)
+
 
 
 if __name__ == '__main__':

@@ -1,7 +1,0 @@
-Util
-===================================
-
-.. automodule:: bosdyn.client.util
-   :members:
-   :undoc-members:
-   :show-inheritance:

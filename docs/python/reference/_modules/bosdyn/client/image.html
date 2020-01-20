@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.image &mdash; Spot 1.0 documentation</title>
+  <title>bosdyn.client.image &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -149,23 +149,30 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.image</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;For clients to the image service.&quot;&quot;&quot;</span>
+<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;For clients to the image service.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="k">import</span> <span class="n">BaseClient</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="k">import</span> <span class="p">(</span><span class="n">error_factory</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">handle_common_header_errors</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="k">import</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">UnsetStatusError</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.api.image_pb2</span> <span class="k">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">image_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">image_service_pb2_grpc</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">image_service_pb2</span>
 
 
 <div class="viewcode-block" id="ImageResponseError"><a class="viewcode-back" href="../../../client_modules/image.html#bosdyn.client.image.ImageResponseError">[docs]</a><span class="k">class</span> <span class="nc">ImageResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;General class of errors for Image service.&quot;&quot;&quot;</span></div>
 
+
 <div class="viewcode-block" id="UnknownImageSourceError"><a class="viewcode-back" href="../../../client_modules/image.html#bosdyn.client.image.UnknownImageSourceError">[docs]</a><span class="k">class</span> <span class="nc">UnknownImageSourceError</span><span class="p">(</span><span class="n">ImageResponseError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;System cannot find the requested image source name.&quot;&quot;&quot;</span></div>
+
 
 <div class="viewcode-block" id="SourceDataError"><a class="viewcode-back" href="../../../client_modules/image.html#bosdyn.client.image.SourceDataError">[docs]</a><span class="k">class</span> <span class="nc">SourceDataError</span><span class="p">(</span><span class="n">ImageResponseError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;System cannot generate the ImageSource at this time.&quot;&quot;&quot;</span></div>
@@ -177,13 +184,11 @@
 
 <span class="n">_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 <span class="n">_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-    <span class="n">image_service_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="n">image_service_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_UNKNOWN_CAMERA</span><span class="p">:</span>
-        <span class="p">(</span><span class="n">UnknownImageSourceError</span><span class="p">,</span> <span class="n">UnknownImageSourceError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">image_service_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_SOURCE_DATA_ERROR</span><span class="p">:</span> <span class="p">(</span><span class="n">SourceDataError</span><span class="p">,</span>
-                                                               <span class="n">SourceDataError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">image_service_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_IMAGE_DATA_ERROR</span><span class="p">:</span> <span class="p">(</span><span class="n">ImageDataError</span><span class="p">,</span>
-                                                              <span class="n">ImageDataError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_UNKNOWN_CAMERA</span><span class="p">:</span> <span class="p">(</span><span class="n">UnknownImageSourceError</span><span class="p">,</span>
+                                                    <span class="n">UnknownImageSourceError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_SOURCE_DATA_ERROR</span><span class="p">:</span> <span class="p">(</span><span class="n">SourceDataError</span><span class="p">,</span> <span class="n">SourceDataError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_IMAGE_DATA_ERROR</span><span class="p">:</span> <span class="p">(</span><span class="n">ImageDataError</span><span class="p">,</span> <span class="n">ImageDataError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
 <span class="p">})</span>
 
 
@@ -191,11 +196,11 @@
 <span class="k">def</span> <span class="nf">_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a custom exception based on the first invalid image response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">image_response</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">image_responses</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">image_response</span><span class="o">.</span><span class="n">status</span> <span class="ow">is</span> <span class="n">image_service_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_UNKNOWN</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">image_response</span><span class="o">.</span><span class="n">status</span> <span class="ow">is</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_UNKNOWN</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">UnsetStatusError</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">UnsetStatusError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
 
         <span class="n">result</span> <span class="o">=</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">image_response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
-                               <span class="n">status_to_string</span><span class="o">=</span><span class="n">image_service_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+                               <span class="n">status_to_string</span><span class="o">=</span><span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                                <span class="n">status_to_error</span><span class="o">=</span><span class="n">_STATUS_TO_ERROR</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">result</span>
@@ -245,18 +250,18 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_image_request</span><span class="p">(</span><span class="n">image_requests</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">image_service_pb2</span><span class="o">.</span><span class="n">GetImageRequest</span><span class="p">(</span><span class="n">image_requests</span><span class="o">=</span><span class="n">image_requests</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">GetImageRequest</span><span class="p">(</span><span class="n">image_requests</span><span class="o">=</span><span class="n">image_requests</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_list_image_source_request</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">image_service_pb2</span><span class="o">.</span><span class="n">ListImageSourcesRequest</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ListImageSourcesRequest</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="build_image_request"><a class="viewcode-back" href="../../../client_modules/image.html#bosdyn.client.image.build_image_request">[docs]</a><span class="k">def</span> <span class="nf">build_image_request</span><span class="p">(</span><span class="n">image_source_name</span><span class="p">,</span> <span class="n">quality_percent</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span> <span class="n">image_format</span><span class="o">=</span><span class="n">Image</span><span class="o">.</span><span class="n">FORMAT_JPEG</span><span class="p">):</span>
+<div class="viewcode-block" id="build_image_request"><a class="viewcode-back" href="../../../client_modules/image.html#bosdyn.client.image.build_image_request">[docs]</a><span class="k">def</span> <span class="nf">build_image_request</span><span class="p">(</span><span class="n">image_source_name</span><span class="p">,</span> <span class="n">quality_percent</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span>
+                        <span class="n">image_format</span><span class="o">=</span><span class="n">image_pb2</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">FORMAT_JPEG</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Helper function which builds an ImageRequest from an image source name.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">image_service_pb2</span><span class="o">.</span><span class="n">ImageRequest</span><span class="p">(</span><span class="n">image_source_name</span><span class="o">=</span><span class="n">image_source_name</span><span class="p">,</span>
-                                          <span class="n">quality_percent</span><span class="o">=</span><span class="n">quality_percent</span><span class="p">,</span>
-                                          <span class="n">image_format</span><span class="o">=</span><span class="n">image_format</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageRequest</span><span class="p">(</span><span class="n">image_source_name</span><span class="o">=</span><span class="n">image_source_name</span><span class="p">,</span>
+                                  <span class="n">quality_percent</span><span class="o">=</span><span class="n">quality_percent</span><span class="p">,</span> <span class="n">image_format</span><span class="o">=</span><span class="n">image_format</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_list_image_sources_value</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>

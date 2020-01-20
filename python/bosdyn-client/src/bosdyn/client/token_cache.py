@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """For clients to delegate saving of tokens.
 
 TokenCache -- Separate token storage from token management.
@@ -10,17 +16,22 @@ import tempfile
 
 from bosdyn.client.exceptions import Error
 
+
 class TokenCacheError(Error):
     """General class of errors to handle non-response non-grpc errors."""
+
 
 class ClearFailedError(TokenCacheError):
     """Failed to delete the token from storage."""
 
+
 class NotInCacheError(TokenCacheError):
     """Failed to read the token from cache."""
 
+
 class WriteFailedError(TokenCacheError):
     """Failed to write the token to storage."""
+
 
 def atomic_file_write(data, filename, permissions=0o600):
     # Atomically write data.
@@ -50,8 +61,10 @@ def atomic_file_write(data, filename, permissions=0o600):
 
     os.chmod(filename, permissions)
 
+
 class TokenCache:
     """No-op default cache that serves as an interface."""
+
     def __init__(self):
         pass
 
@@ -68,8 +81,10 @@ class TokenCache:
         """Returns a set of valid keys that contains the name."""
         return set()
 
+
 class TokenCacheFilesystem:
     """Handles transfer from in memory tokens to arbitrary storage e.g. filesystem."""
+
     def __init__(self, cache_directory='~/.bosdyn/user_tokens'):
         self.directory = os.path.join(os.path.expanduser(cache_directory))
 

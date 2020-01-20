@@ -1,9 +1,15 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """For clients to the robot state service."""
 
 from bosdyn.client.common import BaseClient
 from bosdyn.client.common import common_header_errors
 
-from bosdyn.api import robot_state_service_pb2
+from bosdyn.api import robot_state_pb2
 from bosdyn.api import robot_state_service_pb2_grpc
 
 
@@ -80,19 +86,19 @@ class RobotStateClient(BaseClient):
 
     @staticmethod
     def _get_robot_state_request():
-        return robot_state_service_pb2.RobotStateRequest()
+        return robot_state_pb2.RobotStateRequest()
 
     @staticmethod
     def _get_robot_metrics_request():
-        return robot_state_service_pb2.RobotMetricsRequest()
+        return robot_state_pb2.RobotMetricsRequest()
 
     @staticmethod
     def _get_robot_hardware_configuration_request():
-        return robot_state_service_pb2.RobotHardwareConfigurationRequest()
+        return robot_state_pb2.RobotHardwareConfigurationRequest()
 
     @staticmethod
     def _get_robot_link_model_request(link_name):
-        return robot_state_service_pb2.RobotLinkModelRequest(link_name=link_name)
+        return robot_state_pb2.RobotLinkModelRequest(link_name=link_name)
 
 
 def _get_robot_state_value(response):

@@ -1,8 +1,15 @@
+// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
 syntax = "proto3";
 
 package bosdyn.api;
 option java_outer_classname = "ImageProto";
 
+import "bosdyn/api/header.proto";
 import "bosdyn/api/geometry.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -18,26 +25,44 @@ message SampleCommon {
     google.protobuf.Timestamp acquisition_time = 3;
 }
 
-/// Rectangular color/greyscale images.
+/// Rectangular color/greyscale/depth images.
 message Image {
     enum Format {
         FORMAT_UNKNOWN = 0;
+
+        // Color/greyscale formats.
+        /// JPEG format
         FORMAT_JPEG = 1;
+
+        /// Uncompressed.  Requires pixel_format.
         FORMAT_RAW = 2;
+
+        /// 1 byte run-length before each pixel value.
+        FORMAT_RLE = 3;
     }
 
     enum PixelFormat {
-        PIXEL_FORMAT_UNKNOWN = 0;       ///< Unknown pixel format.
-        PIXEL_FORMAT_GREYSCALE_U8 = 1;  ///< One byte per pixel
-        PIXEL_FORMAT_RGB_U8 = 3;        ///< Three bytes per pixel
-        PIXEL_FORMAT_RGBA_U8 = 4;       ///< Four bytes per pixel
+        /// Unspecified value -- should not be used.
+        PIXEL_FORMAT_UNKNOWN = 0;
+
+        /// One byte per pixell.
+        PIXEL_FORMAT_GREYSCALE_U8 = 1;
+
+        /// Three bytes per pixel.
+        PIXEL_FORMAT_RGB_U8 = 3;
+
+        /// Four bytes per pixel.
+        PIXEL_FORMAT_RGBA_U8 = 4;
+
+        /// Little-endian uint16 z-distance from camera (mm).
+        PIXEL_FORMAT_DEPTH_U16 = 5;
     }
 
-    /// image dimensions in pixels
+    /// Image dimensions in pixels.
     int32 cols = 2;
     int32 rows = 3;
 
-    /// raw image data
+    /// Raw image data.
     bytes data = 4;
 
     /// How the image is encoded.
@@ -49,11 +74,14 @@ message Image {
 
 /// Rectangular color/greyscale images.
 message ImageCapture {
-    SampleCommon sample = 2;  ///< Time/location of image.
-    Image image = 3;          ///< Image data.
+    /// Time/location of image.
+    SampleCommon sample = 2;
+
+    /// Image data.
+    Image image = 3;
 }
 
-// Proto for a description of an image source on the robot
+/// Proto for a description of an image source on the robot
 message ImageSource {
     message PinholeModel {
         // Camera Matrix is
@@ -70,21 +98,107 @@ message ImageSource {
         CameraIntrinsics intrinsics = 1;
     }
 
-    // The name of this image source used to get images.
+    /// The name of this image source used to get images.
     string name = 2;
 
     reserved 3;
 
-    // image dimensions in pixels
+    /// image dimensions in pixels
     int32 cols = 4;
     int32 rows = 5;
 
-    // typically 1000 (converting mm to m).
+    /// typically 1000 (converting mm to m).
     double depth_scale = 6;
 
     reserved 7;
 
     oneof camera_models {
-        PinholeModel pinhole = 8; // rectilinear cameras
+        /// Rectilinear camera model.
+        PinholeModel pinhole = 8;
     }
+
+    /// The kind of images returned by this image source.
+    enum ImageType {
+        /// Unspecified -- do not use.
+        IMAGE_TYPE_UNKNOWN = 0;
+
+        /// Color or greyscale intensity image.
+        IMAGE_TYPE_VISUAL = 1;
+
+        /// Pixel values represent distances to objects/surfaces.
+        IMAGE_TYPE_DEPTH = 2;
+    };
+    ImageType image_type = 9;
+}
+
+
+message ListImageSourcesRequest {
+    /// Common request header.
+    RequestHeader header = 1;
+}
+
+message ListImageSourcesResponse {
+    /// Common response Header.
+    ResponseHeader header = 1;
+
+    /// The set of ImageSources available from this service.
+    /// May be empty if the service serves no images (e.g., if no cameras were found on startup).
+    repeated ImageSource image_sources = 2;
+}
+
+message ImageRequest {
+    string image_source_name = 1;
+
+    /// Image quality: a number from 0 (worst) to 100 (highest).
+    /// Note that jpeg quality 100 is still lossy.
+    double quality_percent = 2;
+
+    // Specify the desired image encoding (e.g. JPEG, RAW).
+    Image.Format image_format = 3;
+}
+
+message GetImageRequest {
+    /// Common request header.
+    RequestHeader header = 1;
+
+    repeated ImageRequest image_requests = 2;
+}
+
+message ImageResponse {
+    ImageCapture shot = 1;
+    ImageSource source = 2;
+
+    /// This transform tells you where the robot body was at the time of sensor acquisition,
+    /// for use in determining camera location when the image was taken.
+    SE3Pose ko_tform_body = 3;
+
+    /// Return status.
+    enum Status {
+        // UNKNOWN should never be used.
+        //
+        // An internal ImageService issue has happened if UNKNOWN is set.
+        // None of the other fields are filled out.
+        STATUS_UNKNOWN = 0;
+
+        // Call succeeded at filling out all the fields.
+        STATUS_OK = 1;
+
+        // Image source name in request is unknown.  Other fields are not filled out.
+        STATUS_UNKNOWN_CAMERA = 2;
+
+        // Failed to fill out ImageSource.  All the other fields are not filled out.
+        STATUS_SOURCE_DATA_ERROR = 3;
+
+        // There was a problem with the image data.  Only the ImageSource is filled out.
+        STATUS_IMAGE_DATA_ERROR = 4;
+    }
+    Status status = 4;
+}
+
+message GetImageResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // The ordering of these image responses is defined by the order of the ImageRequests.
+    repeated ImageResponse image_responses = 2;
 }

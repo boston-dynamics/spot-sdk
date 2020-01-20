@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """For clients to the emergency stop (estop) service."""
 
 import collections
@@ -6,17 +12,19 @@ import enum
 import logging
 import threading
 import time
+import os
+from six.moves import queue
 
 from google.protobuf.duration_pb2 import Duration
 
 from bosdyn.api import estop_service_pb2_grpc
-from bosdyn.api import estop_service_pb2
 from bosdyn.api import estop_pb2
 
 from .common import BaseClient
 from .common import common_header_errors, handle_common_header_errors, handle_unset_status_error
 from .common import error_factory
 from .exceptions import Error, ResponseError, RpcError, TimedOutError
+
 
 class EstopResponseError(ResponseError):
     """General class of errors for Estop service."""
@@ -56,8 +64,8 @@ class EstopClient(BaseClient):
     default_service_name = 'estop'
     service_type = 'bosdyn.api.EstopService'
 
-    def __init__(self):
-        super(EstopClient, self).__init__(estop_service_pb2_grpc.EstopServiceStub)
+    def __init__(self, name="EstopClient - PID: " + str(os.getpid())):
+        super(EstopClient, self).__init__(estop_service_pb2_grpc.EstopServiceStub, name=name)
 
     def register(self, target_config_id, endpoint, **kwargs):
         """Register the endpoint in the target configuration.
@@ -103,12 +111,12 @@ class EstopClient(BaseClient):
         Returns:
             estop_pb2.EstopConfig the robot is currently using.
         """
-        return self.call(self._stub.GetEstopConfig, estop_service_pb2.GetEstopConfigRequest(),
+        return self.call(self._stub.GetEstopConfig, estop_pb2.GetEstopConfigRequest(),
                          _active_config_from_config_response, common_header_errors, **kwargs)
 
     def get_config_async(self, **kwargs):
         """Async version of get_config()"""
-        return self.call_async(self._stub.GetEstopConfig, estop_service_pb2.GetEstopConfigRequest(),
+        return self.call_async(self._stub.GetEstopConfig, estop_pb2.GetEstopConfigRequest(),
                                _active_config_from_config_response, common_header_errors, **kwargs)
 
     def set_config(self, config, target_config_id, **kwargs):
@@ -122,15 +130,13 @@ class EstopClient(BaseClient):
         Returns:
             estop_pb2.EstopConfig the robot is currently using.
         """
-        req = estop_service_pb2.SetEstopConfigRequest(config=config,
-                                                      target_config_id=target_config_id)
+        req = estop_pb2.SetEstopConfigRequest(config=config, target_config_id=target_config_id)
         return self.call(self._stub.SetEstopConfig, req, _active_config_from_config_response,
                          _set_config_error_from_response, **kwargs)
 
     def set_config_async(self, config, target_config_id, **kwargs):
         """Async version of set_config()"""
-        req = estop_service_pb2.SetEstopConfigRequest(config=config,
-                                                      target_config_id=target_config_id)
+        req = estop_pb2.SetEstopConfigRequest(config=config, target_config_id=target_config_id)
         return self.call_async(self._stub.SetEstopConfig, req, _active_config_from_config_response,
                                _set_config_error_from_response, **kwargs)
 
@@ -142,14 +148,13 @@ class EstopClient(BaseClient):
         Returns:
             estop_pb2.EstopSystemStatus from the server.
         """
-        return self.call(self._stub.GetEstopSystemStatus,
-                         estop_service_pb2.GetEstopSystemStatusRequest(),
+        return self.call(self._stub.GetEstopSystemStatus, estop_pb2.GetEstopSystemStatusRequest(),
                          _estop_sys_status_from_response, common_header_errors, **kwargs)
 
     def get_status_async(self, **kwargs):
         """Async version of get_status()"""
         return self.call_async(self._stub.GetEstopSystemStatus,
-                               estop_service_pb2.GetEstopSystemStatusRequest(),
+                               estop_pb2.GetEstopSystemStatusRequest(),
                                _estop_sys_status_from_response, common_header_errors, **kwargs)
 
     def check_in(self, stop_level, endpoint, challenge, response, suppress_incorrect=False,
@@ -186,15 +191,15 @@ class EstopClient(BaseClient):
     def _build_check_in_request(stop_level, endpoint, challenge, response):
         if isinstance(endpoint, EstopEndpoint):
             endpoint = endpoint.to_proto()
-        return estop_service_pb2.EstopCheckInRequest(stop_level=stop_level, endpoint=endpoint,
-                                                     challenge=challenge, response=response)
+        return estop_pb2.EstopCheckInRequest(stop_level=stop_level, endpoint=endpoint,
+                                             challenge=challenge, response=response)
 
     @staticmethod
     def _build_register_request(target_config_id, endpoint):
         if isinstance(endpoint, EstopEndpoint):
             endpoint = endpoint.to_proto()
-        req = estop_service_pb2.RegisterEstopEndpointRequest(target_config_id=target_config_id,
-                                                             new_endpoint=endpoint)
+        req = estop_pb2.RegisterEstopEndpointRequest(target_config_id=target_config_id,
+                                                     new_endpoint=endpoint)
         req.target_endpoint.role = endpoint.role
         return req
 
@@ -202,8 +207,8 @@ class EstopClient(BaseClient):
     def _build_deregister_request(target_config_id, endpoint):
         if isinstance(endpoint, EstopEndpoint):
             endpoint = endpoint.to_proto()
-        req = estop_service_pb2.DeregisterEstopEndpointRequest(target_config_id=target_config_id,
-                                                               target_endpoint=endpoint)
+        req = estop_pb2.DeregisterEstopEndpointRequest(target_config_id=target_config_id,
+                                                       target_endpoint=endpoint)
         return req
 
     @staticmethod
@@ -220,10 +225,12 @@ class EstopEndpoint(object):
     # This is an estop role required in every configuration.
     REQUIRED_ROLE = 'PDB_rooted'
 
-    def __init__(self, client, name, estop_timeout, role=REQUIRED_ROLE, first_checkin=True):
+    def __init__(self, client, name, estop_timeout, role=REQUIRED_ROLE, first_checkin=True,
+                 estop_cut_power_timeout=None):
         self.client = client
         self.role = role
         self.estop_timeout = estop_timeout
+        self.estop_cut_power_timeout = estop_cut_power_timeout
         self._challenge = None
         self._name = name
         self._unique_id = None
@@ -234,7 +241,11 @@ class EstopEndpoint(object):
         self.logger = logging.getLogger(self._name)
 
     def __str__(self):
-        return '{} (timeout {:.3}s)'.format(self._name, self.estop_timeout)
+        if self.estop_cut_power_timeout is None:
+            return '{} (timeout {:.3}s)'.format(self._name, self.estop_timeout)
+        else:
+            return '{} (timeout {:.3}s, cut_power_timeout {:.3}s)'.format(
+                self._name, self.estop_timeout, self.estop_cut_power_timeout)
 
     def _first_checkin(self):
         with self._lock:
@@ -284,7 +295,7 @@ class EstopEndpoint(object):
         self.register(active_config.unique_id)
 
     def stop(self, **kwargs):
-        """Issue a CUT stop level command to the robot.
+        """Issue a CUT stop level command to the robot, cutting motor power immediately.
 
         Kwargs:
             Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
@@ -292,18 +303,21 @@ class EstopEndpoint(object):
             None. Will raise an error if RPC failed.
         """
         self.logger.debug('Stopping')
-        try:
-            self.set_challenge(self.client.check_in(StopLevel.ESTOP_LEVEL_CUT, self,
-                                                    self.get_challenge(), self._response(),
-                                                    suppress_incorrect=self._first_checkin(),
-                                                    **kwargs))
-        except EstopResponseError as exc:
-            self.set_challenge(_challenge_from_check_in_response(exc.response))
-            raise
-        self._set_first_checkin(False)
+        self.check_in_at_level(StopLevel.ESTOP_LEVEL_CUT, **kwargs)
+
+    def settle_then_cut(self, **kwargs):
+        """Issue a SETTLE_THEN_CUT stop level. The robot will attempt to sit before cutting motor power.
+
+        Kwargs:
+            Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
+        Returns:
+            None. Will raise an error if RPC failed.
+        """
+        self.logger.debug('Stopping with SETTLE_THEN_CUT')
+        self.check_in_at_level(StopLevel.ESTOP_LEVEL_SETTLE_THEN_CUT, **kwargs)
 
     def allow(self, **kwargs):
-        """Issue a NONE stop level command to the robot.
+        """Issue a NONE stop level command to the robot, allowing motor power.
 
         Kwargs:
             Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
@@ -311,11 +325,17 @@ class EstopEndpoint(object):
             None. Will raise an error if RPC failed.
         """
         self.logger.debug('Releasing')
+        self.check_in_at_level(StopLevel.ESTOP_LEVEL_NONE, **kwargs)
+
+    def check_in_at_level(self, level, **kwargs):
+        """Check in at a specified level.
+
+        Meant for internal use, but may be helpful for higher-level wrappers.
+        """
         try:
-            self.set_challenge(self.client.check_in(StopLevel.ESTOP_LEVEL_NONE, self,
-                                                    self.get_challenge(), self._response(),
-                                                    suppress_incorrect=self._first_checkin(),
-                                                    **kwargs))
+            self.set_challenge(
+                self.client.check_in(level, self, self.get_challenge(), self._response(),
+                                     suppress_incorrect=self._first_checkin(), **kwargs))
         except EstopResponseError as exc:
             self.set_challenge(_challenge_from_check_in_response(exc.response))
             raise
@@ -341,19 +361,21 @@ class EstopEndpoint(object):
     def stop_async(self, **kwargs):
         """Async version of stop()"""
         self.logger.debug('Stopping (async)')
-        fut = self.client.check_in_async(StopLevel.ESTOP_LEVEL_CUT, self, self.get_challenge(),
-                                         self._response(), suppress_incorrect=self._first_checkin(),
-                                         **kwargs)
-        fut.add_done_callback(lambda fut: self._set_challenge_without_exception_from_future(fut))
-        fut.add_done_callback(lambda fut: self._set_first_checkin(False))
-        return fut
+        return self.check_in_at_level_async(StopLevel.ESTOP_LEVEL_CUT, **kwargs)
+
+    def settle_then_cut_async(self, **kwargs):
+        """Async version of settle_then_cut()"""
+        self.logger.debug('Stopping with SETTLE_THEN_CUT (async)')
+        return self.check_in_at_level_async(StopLevel.ESTOP_LEVEL_SETTLE_THEN_CUT, **kwargs)
 
     def allow_async(self, **kwargs):
         """Async version of allow()"""
         self.logger.debug('Releasing (async)')
-        fut = self.client.check_in_async(StopLevel.ESTOP_LEVEL_NONE, self, self.get_challenge(),
-                                         self._response(), suppress_incorrect=self._first_checkin(),
-                                         **kwargs)
+        return self.check_in_at_level_async(StopLevel.ESTOP_LEVEL_NONE, **kwargs)
+
+    def check_in_at_level_async(self, level, **kwargs):
+        fut = self.client.check_in_async(level, self, self.get_challenge(), self._response(),
+                                         suppress_incorrect=self._first_checkin(), **kwargs)
         fut.add_done_callback(lambda fut: self._set_challenge_without_exception_from_future(fut))
         fut.add_done_callback(lambda fut: self._set_first_checkin(False))
         return fut
@@ -372,19 +394,37 @@ class EstopEndpoint(object):
         self.role = proto.role
         self.estop_timeout = proto.timeout.seconds + proto.timeout.nanos * 1e-9
         self._unique_id = proto.unique_id
+        if proto.cut_power_timeout is None:
+            self.estop_cut_power_timeout = None
+        else:
+            self.estop_cut_power_timeout = proto.cut_power_timeout.seconds + proto.cut_power_timeout.nanos * 1e-9
 
     def to_proto(self):
         """Return estop_pb2.EstopEndpoint based on current member variables."""
-        seconds = int(self.estop_timeout)
-        nanos = int((self.estop_timeout - seconds) * 1e9)
-        return estop_pb2.EstopEndpoint(role=self.role, name=self._name, unique_id=self._unique_id,
-                                       timeout=Duration(seconds=seconds, nanos=nanos))
+        t_seconds = int(self.estop_timeout)
+        t_nanos = int((self.estop_timeout - t_seconds) * 1e9)
+        if self.estop_cut_power_timeout is None:
+            return estop_pb2.EstopEndpoint(role=self.role, name=self._name,
+                                           unique_id=self._unique_id,
+                                           timeout=Duration(seconds=t_seconds, nanos=t_nanos))
+        else:
+            cpt_seconds = int(self.estop_cut_power_timeout)
+            cpt_nanos = int((self.estop_cut_power_timeout - cpt_seconds) * 1e9)
+            return estop_pb2.EstopEndpoint(role=self.role, name=self._name,
+                                           unique_id=self._unique_id,
+                                           timeout=Duration(seconds=t_seconds, nanos=t_nanos),
+                                           cut_power_timeout=Duration(seconds=cpt_seconds,
+                                                                      nanos=cpt_nanos))
 
     def _response(self):
         """Generate a response for self._challenge."""
         challenge = self.get_challenge()
         return None if challenge is None else response_from_challenge(challenge)
 
+    @property
+    def unique_id(self):
+        """Return the _unique_id. Should be used as read-only."""
+        return self._unique_id
 
 
 class EstopKeepAlive(object):
@@ -396,14 +436,14 @@ class EstopKeepAlive(object):
     You should not access any of the "private" members, or the wrapped endpoint.
     """
 
-
     def __init__(self, endpoint, rpc_timeout_seconds=None, rpc_interval_seconds=None,
                  keep_running_cb=None):
         """Kicks off periodic check-in on a thread."""
+
         self._endpoint = endpoint
         self._lock = threading.Lock()
         self._end_check_in_signal = threading.Event()
-        self._want_stop = False
+        self._desired_stop_level = StopLevel.ESTOP_LEVEL_NONE
         # By default, only let our RPCs last as long as the estop timeout.
         self._rpc_timeout = rpc_timeout_seconds or self._endpoint.estop_timeout
         self._check_in_period = rpc_interval_seconds or self._endpoint.estop_timeout / 3.0
@@ -415,6 +455,9 @@ class EstopKeepAlive(object):
         self._keep_running = keep_running_cb or (lambda: True)
 
         self.logger.debug('New %s for endpoint "%s"', self.__class__, self._endpoint)
+
+        self.status_queue = queue.Queue()
+        self._update_status(self.KeepAliveStatus.OK)
 
         # Do an initial check-in, and just log any errors that occur.
         # This lets us get a challenge from the estop system, so we can begin using
@@ -447,12 +490,22 @@ class EstopKeepAlive(object):
 
     def allow(self):
         with self._lock:
-            self._want_stop = False
+            self._desired_stop_level = StopLevel.ESTOP_LEVEL_NONE
         self._check_in()
+
+    def settle_then_cut(self):
+        with self._lock:
+            self._desired_stop_level = StopLevel.ESTOP_LEVEL_SETTLE_THEN_CUT
+        # In the case of stopping, we want the RPC to timeout only after the estop itself has
+        # timed out. This handles the case where a user calls settle_then_cut() with :
+        #  - a very low self._rpc_timeout and
+        #  - a very large check-in period and
+        #  - doesn't handle RPC timeout errors themselves.
+        self._check_in(rpc_timeout=self._endpoint.estop_timeout)
 
     def stop(self):
         with self._lock:
-            self._want_stop = True
+            self._desired_stop_level = StopLevel.ESTOP_LEVEL_CUT
         # In the case of stopping, we want the RPC to timeout only after the estop itself has
         # timed out. This handles the case where a user calls stop() with :
         #  - a very low self._rpc_timeout and
@@ -465,17 +518,34 @@ class EstopKeepAlive(object):
         self.logger.debug('Stopping check-in')
         self._end_check_in_signal.set()
 
+    def _error(self, msg, exception=None, disable=False):
+        """Handle an error message; optionally disable the application.
+
+        GUI applications should override this function, to make sure the error_msg gets to the GUI.
+        """
+        self._update_status(self.KeepAliveStatus.ERROR, msg)
+        self.logger.error(msg)
+        if disable:
+            self._end_periodic_check_in()
+            self._update_status(self.KeepAliveStatus.DISABLED, msg)
+
     def _ok(self):
+        """Handle an ok message.
+
+        GUI applications should override this function, to make sure the error_msg gets to the GUI.
+        """
+        self._update_status(self.KeepAliveStatus.OK)
         self.logger.debug('Check-in successful')
+
+    def _update_status(self, status, msg=''):
+        """Update the estop_keep_alive status by populating the queue. Raise exception if full."""
+        self.status_queue.put((status, msg), block=False)
 
     def _check_in(self, rpc_timeout=None):
         """Check in, optionally specifying a non-standard RPC timeout."""
         rpc_timeout = rpc_timeout or self._rpc_timeout
         with self._lock:
-            if self._want_stop:
-                self._endpoint.stop(timeout=rpc_timeout)
-            else:
-                self._endpoint.allow(timeout=rpc_timeout)
+            self._endpoint.check_in_at_level(self._desired_stop_level, timeout=rpc_timeout)
 
     def _periodic_check_in(self):
         """Send estop API CheckIn messages to robot estop system in loop."""
@@ -490,14 +560,14 @@ class EstopKeepAlive(object):
             try:
                 self._check_in()
             except TimedOutError as exc:
-                self.logger.error('RPC took longer than %.2f seconds', self._rpc_timeout)
+                self._error('RPC took longer than {:.2f} seconds'.format(self._rpc_timeout),
+                            exception=exc)
             except RpcError as exc:
-                self.logger.error('Transport exception during check-in:\n%s\n'
-                                  '    (resuming check-in)', exc)
+                self._error('Transport exception during check-in:\n{s}\n'
+                            '    (resuming check-in)'.format(exc), exception=exc)
             except EndpointUnknownError as exc:
-                self.logger.error(str(exc))
                 # Disable ourself to show we cannot estop any longer.
-                self._end_periodic_check_in()
+                self._error(str(exc), exception=exc, disable=True)
 
             # We really do want to catch anything.
             #pylint: disable=broad-except
@@ -519,6 +589,21 @@ class EstopKeepAlive(object):
                 break
         self.logger.info('Estop check-in stopped')
 
+    @property
+    def endpoint(self):
+        """Return the _endpoint. Should be used as read-only."""
+        return self._endpoint
+
+    @property
+    def client(self):
+        """Return the _endpoint.client. Should be used as read-only."""
+        return self._endpoint.client
+
+    class KeepAliveStatus(enum.Enum):
+        OK = 0
+        ERROR = 1
+        DISABLED = 2
+
 
 def response_from_challenge(challenge):
     return ctypes.c_ulonglong(~challenge).value
@@ -526,10 +611,10 @@ def response_from_challenge(challenge):
 
 _CHECK_IN_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _CHECK_IN_STATUS_TO_ERROR.update({
-    estop_service_pb2.EstopCheckInResponse.STATUS_OK: (None, None),
-    estop_service_pb2.EstopCheckInResponse.STATUS_ENDPOINT_UNKNOWN: (EndpointUnknownError,
-                                                                     EndpointUnknownError.__doc__),
-    estop_service_pb2.EstopCheckInResponse.STATUS_INCORRECT_CHALLENGE_RESPONSE:
+    estop_pb2.EstopCheckInResponse.STATUS_OK: (None, None),
+    estop_pb2.EstopCheckInResponse.STATUS_ENDPOINT_UNKNOWN: (EndpointUnknownError,
+                                                             EndpointUnknownError.__doc__),
+    estop_pb2.EstopCheckInResponse.STATUS_INCORRECT_CHALLENGE_RESPONSE:
     (IncorrectChallengeResponseError, IncorrectChallengeResponseError.__doc__),
 })
 
@@ -539,22 +624,21 @@ _CHECK_IN_STATUS_TO_ERROR.update({
 def _check_in_error_from_response(response):
     """Return an exception based on response from EstopCheckIn RPC, None if no error."""
     return error_factory(response, response.status,
-                         status_to_string=estop_service_pb2.EstopCheckInResponse.Status.Name,
+                         status_to_string=estop_pb2.EstopCheckInResponse.Status.Name,
                          status_to_error=_CHECK_IN_STATUS_TO_ERROR)
 
 
 def _check_in_error_from_response_no_incorrect(resp):
     """Return an exception based on response from EstopCheckIn RPC, ignoring incorrect chal/resp"""
-    if resp.status == estop_service_pb2.EstopCheckInResponse.STATUS_INCORRECT_CHALLENGE_RESPONSE:
+    if resp.status == estop_pb2.EstopCheckInResponse.STATUS_INCORRECT_CHALLENGE_RESPONSE:
         return None
     return _check_in_error_from_response(resp)
 
 
 _SET_CONFIG_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _SET_CONFIG_STATUS_TO_ERROR.update({
-    estop_service_pb2.SetEstopConfigResponse.STATUS_SUCCESS: (None, None),
-    estop_service_pb2.SetEstopConfigResponse.STATUS_INVALID_ID: (InvalidIdError,
-                                                                 InvalidIdError.__doc__),
+    estop_pb2.SetEstopConfigResponse.STATUS_SUCCESS: (None, None),
+    estop_pb2.SetEstopConfigResponse.STATUS_INVALID_ID: (InvalidIdError, InvalidIdError.__doc__),
 })
 
 
@@ -563,17 +647,17 @@ _SET_CONFIG_STATUS_TO_ERROR.update({
 def _set_config_error_from_response(response):
     """Return an exception based on response from SetEstopConfig RPC, None if no error."""
     return error_factory(response, response.status,
-                         status_to_string=estop_service_pb2.SetEstopConfigResponse.Status.Name,
+                         status_to_string=estop_pb2.SetEstopConfigResponse.Status.Name,
                          status_to_error=_SET_CONFIG_STATUS_TO_ERROR)
 
 
 _DEREGISTER_ENDPOINT_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _DEREGISTER_ENDPOINT_STATUS_TO_ERROR.update({
-    estop_service_pb2.DeregisterEstopEndpointResponse.STATUS_SUCCESS: (None, None),
-    estop_service_pb2.DeregisterEstopEndpointResponse.STATUS_ENDPOINT_MISMATCH:
+    estop_pb2.DeregisterEstopEndpointResponse.STATUS_SUCCESS: (None, None),
+    estop_pb2.DeregisterEstopEndpointResponse.STATUS_ENDPOINT_MISMATCH:
     (EndpointMismatchError, EndpointMismatchError.__doc__),
-    estop_service_pb2.DeregisterEstopEndpointResponse.STATUS_CONFIG_MISMATCH:
-    (ConfigMismatchError, ConfigMismatchError.__doc__),
+    estop_pb2.DeregisterEstopEndpointResponse.STATUS_CONFIG_MISMATCH: (ConfigMismatchError,
+                                                                       ConfigMismatchError.__doc__),
 })
 
 
@@ -581,21 +665,20 @@ _DEREGISTER_ENDPOINT_STATUS_TO_ERROR.update({
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
 def _deregister_endpoint_error_from_response(response):
     """Return an exception based on response from DeregisterEstopEndpoint RPC, None if no error."""
-    return error_factory(
-        response, response.status,
-        status_to_string=estop_service_pb2.DeregisterEstopEndpointResponse.Status.Name,
-        status_to_error=_DEREGISTER_ENDPOINT_STATUS_TO_ERROR)
+    return error_factory(response, response.status,
+                         status_to_string=estop_pb2.DeregisterEstopEndpointResponse.Status.Name,
+                         status_to_error=_DEREGISTER_ENDPOINT_STATUS_TO_ERROR)
 
 
 _REGISTER_ENDPOINT_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _REGISTER_ENDPOINT_STATUS_TO_ERROR.update({
-    estop_service_pb2.RegisterEstopEndpointResponse.STATUS_SUCCESS: (None, None),
-    estop_service_pb2.RegisterEstopEndpointResponse.STATUS_ENDPOINT_MISMATCH:
+    estop_pb2.RegisterEstopEndpointResponse.STATUS_SUCCESS: (None, None),
+    estop_pb2.RegisterEstopEndpointResponse.STATUS_ENDPOINT_MISMATCH:
     (EndpointMismatchError, EndpointMismatchError.__doc__),
-    estop_service_pb2.RegisterEstopEndpointResponse.STATUS_CONFIG_MISMATCH:
-    (ConfigMismatchError, ConfigMismatchError.__doc__),
-    estop_service_pb2.RegisterEstopEndpointResponse.STATUS_INVALID_ENDPOINT:
-    (InvalidEndpointError, InvalidEndpointError.__doc__),
+    estop_pb2.RegisterEstopEndpointResponse.STATUS_CONFIG_MISMATCH: (ConfigMismatchError,
+                                                                     ConfigMismatchError.__doc__),
+    estop_pb2.RegisterEstopEndpointResponse.STATUS_INVALID_ENDPOINT: (InvalidEndpointError,
+                                                                      InvalidEndpointError.__doc__),
 })
 
 
@@ -603,10 +686,9 @@ _REGISTER_ENDPOINT_STATUS_TO_ERROR.update({
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
 def _register_endpoint_error_from_response(response):
     """Return an exception based on response from RegisterEstopEndpoint RPC, None if no error."""
-    return error_factory(
-        response, response.status,
-        status_to_string=estop_service_pb2.RegisterEstopEndpointResponse.Status.Name,
-        status_to_error=_REGISTER_ENDPOINT_STATUS_TO_ERROR)
+    return error_factory(response, response.status,
+                         status_to_string=estop_pb2.RegisterEstopEndpointResponse.Status.Name,
+                         status_to_error=_REGISTER_ENDPOINT_STATUS_TO_ERROR)
 
 
 def _new_endpoint_from_register_response(response):

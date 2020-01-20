@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """A client for the time-sync service.
 
 The time-sync service helps track the difference between the robot's system clock and the
@@ -11,7 +17,7 @@ import time
 from threading import Event, Lock, Thread
 
 from bosdyn.api import time_sync_pb2
-from bosdyn.api import time_sync_service_pb2
+from bosdyn.api import time_sync_pb2
 from bosdyn.api import time_sync_service_pb2_grpc
 
 from bosdyn.util import RobotTimeConverter
@@ -22,6 +28,7 @@ from bosdyn.util import timestamp_to_nsec
 from .common import BaseClient
 from .common import common_header_errors
 from .exceptions import Error
+
 
 class TimeSyncError(Error):
     """General class of errors for TimeSync non-response / non-grpc errors."""
@@ -66,15 +73,14 @@ class TimeSyncClient(BaseClient):
         return self.call_async(self._stub.TimeSyncUpdate, req, None, common_header_errors, **kwargs)
 
 
-
     @staticmethod
     def _get_time_sync_update_request(previous_round_trip, clock_identifier):
-        return time_sync_service_pb2.TimeSyncUpdateRequest(previous_round_trip=previous_round_trip,
-                                                           clock_identifier=clock_identifier)
+        return time_sync_pb2.TimeSyncUpdateRequest(previous_round_trip=previous_round_trip,
+                                                   clock_identifier=clock_identifier)
 
     @staticmethod
     def _get_time_sync_status_request(clock_identifier=""):
-        return time_sync_service_pb2.TimeSyncStatusRequest(clock_identifier=clock_identifier)
+        return time_sync_pb2.TimeSyncStatusRequest(clock_identifier=clock_identifier)
 
 
 def _get_time_sync_status_value(response):
@@ -312,6 +318,9 @@ class TimeSyncThread(object):
             if time.time() > end_time_sec:
                 raise TimedOutError
             time.sleep(0.1)
+        thread_exc = self.thread_exception
+        if thread_exc:
+            raise thread_exc
         raise InactiveThreadError
 
     @property

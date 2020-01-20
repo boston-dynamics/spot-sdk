@@ -1,17 +1,24 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """Tests for the robot command client."""
 
 from bosdyn.client.robot_command import (_robot_command_error, _robot_command_feedback_error,
                                          _clear_behavior_fault_error, RobotCommandBuilder)
 
-from bosdyn.api import robot_command_service_pb2
+from bosdyn.api import robot_command_pb2
 from bosdyn.api import geometry_pb2
 from bosdyn.api import robot_command_pb2
 
 from bosdyn.client import ResponseError, InternalServerError, LeaseUseError, UnsetStatusError
 
+
 def test_robot_command_error():
     # Test unset header error
-    response = robot_command_service_pb2.RobotCommandResponse()
+    response = robot_command_pb2.RobotCommandResponse()
     assert isinstance(_robot_command_error(response), UnsetStatusError)
     # Test header error
     response.header.error.code = response.header.error.CODE_INTERNAL_SERVER_ERROR
@@ -33,7 +40,7 @@ def test_robot_command_error():
 
 def test_robot_command_feedback_error():
     # Test unset header error
-    response = robot_command_service_pb2.RobotCommandFeedbackResponse()
+    response = robot_command_pb2.RobotCommandFeedbackResponse()
     assert isinstance(_robot_command_feedback_error(response), UnsetStatusError)
     # Test header error
     response.header.error.code = response.header.error.CODE_INTERNAL_SERVER_ERROR
@@ -51,7 +58,7 @@ def test_robot_command_feedback_error():
 
 def test_behavior_fault_clear_error():
     # Test unset header error
-    response = robot_command_service_pb2.ClearBehaviorFaultResponse()
+    response = robot_command_pb2.ClearBehaviorFaultResponse()
     assert isinstance(_clear_behavior_fault_error(response), UnsetStatusError)
     # Test header error
     response.header.error.code = response.header.error.CODE_INTERNAL_SERVER_ERROR

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Time Sync &mdash; Spot 1.0 documentation</title>
+  <title>Time Sync &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Util" href="util.html" />
-    <link rel="prev" title="SDK" href="sdk.html" /> 
+    <link rel="next" title="Token Cache" href="token_cache.html" />
+    <link rel="prev" title="Spot Check" href="spot_check.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -98,6 +98,8 @@
 <li class="toctree-l2"><a class="reference internal" href="image.html">Image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lease.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="payload.html">Payload</a></li>
 <li class="toctree-l2"><a class="reference internal" href="power.html">Power</a></li>
 <li class="toctree-l2"><a class="reference internal" href="processors.html">Processors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot_command.html">Robot Command</a></li>
@@ -105,7 +107,10 @@
 <li class="toctree-l2"><a class="reference internal" href="robot_state.html">Robot State</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot.html">Robot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sdk.html">SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spot_check.html">Spot Check</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Time Sync</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_cache.html">Token Cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_manager.html">Token Manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.html">Util</a></li>
 </ul>
 </li>
@@ -184,45 +189,63 @@ system clock of clients, and sends an estimate of this difference to the client.
 uses this information when it needs to send a timestamp to the robot in a request proto.
 Timestamps in request protos generally need to be specified relative to the robot’s system clock.</p>
 <dl class="exception">
-<dt id="bosdyn.client.time_sync.InactiveThreadError">
-<em class="property">exception </em><code class="descclassname">bosdyn.client.time_sync.</code><code class="descname">InactiveThreadError</code><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#InactiveThreadError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.InactiveThreadError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.time_sync.TimeSyncError" title="bosdyn.client.time_sync.TimeSyncError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.time_sync.TimeSyncError</span></code></a></p>
-<p>Time-sync thread is no longer running.</p>
+<dt id="bosdyn.client.time_sync.TimeSyncError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">TimeSyncError</code><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.Error</span></code></a></p>
+<p>General class of errors for TimeSync non-response / non-grpc errors.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="bosdyn.client.time_sync.NotEstablishedError">
-<em class="property">exception </em><code class="descclassname">bosdyn.client.time_sync.</code><code class="descname">NotEstablishedError</code><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#NotEstablishedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.NotEstablishedError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">NotEstablishedError</code><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#NotEstablishedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.NotEstablishedError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bosdyn.client.time_sync.TimeSyncError" title="bosdyn.client.time_sync.TimeSyncError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.time_sync.TimeSyncError</span></code></a></p>
 <p>Client has not established time-sync with the robot.</p>
 </dd></dl>
 
+<dl class="exception">
+<dt id="bosdyn.client.time_sync.TimedOutError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">TimedOutError</code><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimedOutError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimedOutError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.time_sync.TimeSyncError" title="bosdyn.client.time_sync.TimeSyncError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.time_sync.TimeSyncError</span></code></a></p>
+<p>Exceeded deadline to achieve time-sync.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="bosdyn.client.time_sync.InactiveThreadError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">InactiveThreadError</code><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#InactiveThreadError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.InactiveThreadError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.time_sync.TimeSyncError" title="bosdyn.client.time_sync.TimeSyncError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.time_sync.TimeSyncError</span></code></a></p>
+<p>Time-sync thread is no longer running.</p>
+</dd></dl>
+
 <dl class="class">
 <dt id="bosdyn.client.time_sync.TimeSyncClient">
-<em class="property">class </em><code class="descclassname">bosdyn.client.time_sync.</code><code class="descname">TimeSyncClient</code><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">TimeSyncClient</code><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="common.html#bosdyn.client.common.BaseClient" title="bosdyn.client.common.BaseClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.common.BaseClient</span></code></a></p>
 <p>A client for establishing time-sync with a server/robot.</p>
 <dl class="attribute">
 <dt id="bosdyn.client.time_sync.TimeSyncClient.default_authority">
-<code class="descname">default_authority</code><em class="property"> = 'api.spot.robot'</em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.default_authority" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">default_authority</code><em class="property"> = 'api.spot.robot'</em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.default_authority" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="bosdyn.client.time_sync.TimeSyncClient.default_service_name">
-<code class="descname">default_service_name</code><em class="property"> = 'time_sync'</em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.default_service_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">default_service_name</code><em class="property"> = 'time_sync'</em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.default_service_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="bosdyn.client.time_sync.TimeSyncClient.service_type">
+<code class="sig-name descname">service_type</code><em class="property"> = 'bosdyn.api.TimeSyncService'</em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.service_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="bosdyn.client.time_sync.TimeSyncClient.get_time_sync_update">
-<code class="descname">get_time_sync_update</code><span class="sig-paren">(</span><em>previous_round_trip</em>, <em>clock_identifier</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncClient.get_time_sync_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.get_time_sync_update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_time_sync_update</code><span class="sig-paren">(</span><em class="sig-param">previous_round_trip</em>, <em class="sig-param">clock_identifier</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncClient.get_time_sync_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.get_time_sync_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Obtain an initial or updated timesync estimate with server.</p>
-<dl class="docutils">
-<dt>Params:</dt>
-<dd><dl class="first last docutils">
-<dt>previous_round_trip <span class="classifier-delimiter">:</span> <span class="classifier">bosdyn.api.TimeSyncRoundTrip or None</span></dt>
-<dd>None on first call, then fill out with previous response from server.</dd>
-<dt>clock_identifier <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>Empty on first call, assigned by server in first response.</dd>
+<dl class="simple">
+<dt>Params:</dt><dd><dl class="simple">
+<dt>previous_round_trip<span class="classifier">bosdyn.api.TimeSyncRoundTrip or None</span></dt><dd><p>None on first call, then fill out with previous response from server.</p>
+</dd>
+<dt>clock_identifier<span class="classifier">str</span></dt><dd><p>Empty on first call, assigned by server in first response.</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -230,337 +253,263 @@ Timestamps in request protos generally need to be specified relative to the robo
 
 <dl class="method">
 <dt id="bosdyn.client.time_sync.TimeSyncClient.get_time_sync_update_async">
-<code class="descname">get_time_sync_update_async</code><span class="sig-paren">(</span><em>previous_round_trip</em>, <em>clock_identifier</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncClient.get_time_sync_update_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.get_time_sync_update_async" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_time_sync_update_async</code><span class="sig-paren">(</span><em class="sig-param">previous_round_trip</em>, <em class="sig-param">clock_identifier</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncClient.get_time_sync_update_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.get_time_sync_update_async" title="Permalink to this definition">¶</a></dt>
 <dd><p>Async version of get_time_sync_update()</p>
 </dd></dl>
-
-<dl class="attribute">
-<dt id="bosdyn.client.time_sync.TimeSyncClient.service_type">
-<code class="descname">service_type</code><em class="property"> = 'bosdyn.api.TimeSyncService'</em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.service_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="bosdyn.client.time_sync.TimeSyncEndpoint">
-<em class="property">class </em><code class="descclassname">bosdyn.client.time_sync.</code><code class="descname">TimeSyncEndpoint</code><span class="sig-paren">(</span><em>time_sync_client</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">TimeSyncEndpoint</code><span class="sig-paren">(</span><em class="sig-param">time_sync_client</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A wrapper that uses a TimeSyncClient object to establish and maintain timesync with a robot.</p>
 <p>This class manages internal state, including a clock identifier and previous best time sync
 estimates. This class automatically builds requests passed to the TimeSyncClient, so users
 don’t have to worry about the details of establishing and maintaining timesync.</p>
 <p>This object is thread-safe.</p>
-<dl class="attribute">
-<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.clock_identifier">
-<code class="descname">clock_identifier</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.clock_identifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>A unique identifier for this client. Empty if get_new_estimate has not been called.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Returns</td>
-</tr>
-</tbody>
-</table>
+<dl class="method">
+<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.response">
+<em class="property">property </em><code class="sig-name descname">response</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.response" title="Permalink to this definition">¶</a></dt>
+<dd><p>The last response message from the time-sync service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The bosdyn.api.TimeSyncResponse proto last returned by the server, or None if unset.</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
+<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.has_established_time_sync">
+<em class="property">property </em><code class="sig-name descname">has_established_time_sync</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.has_established_time_sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+Boolean true if the previous time-sync update returned that time sync is OK.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.round_trip_time">
+<em class="property">property </em><code class="sig-name descname">round_trip_time</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.round_trip_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>“The previous round trip time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Round trip time as google.protobuf.Duration proto if available, otherwise None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.clock_identifier">
+<em class="property">property </em><code class="sig-name descname">clock_identifier</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.clock_identifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+A unique identifier for this client. Empty if get_new_estimate has not been called.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="bosdyn.client.time_sync.TimeSyncEndpoint.clock_skew">
-<code class="descname">clock_skew</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.clock_skew" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">clock_skew</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.clock_skew" title="Permalink to this definition">¶</a></dt>
 <dd><p>The best current estimate of clock skew from the time-sync service.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">google.protobuf.Duration</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">NotEstablishedError if time sync has not yet been established.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>google.protobuf.Duration</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NotEstablishedError if time sync has not yet been established.</strong> – </p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="bosdyn.client.time_sync.TimeSyncEndpoint.establish_timesync">
-<code class="descname">establish_timesync</code><span class="sig-paren">(</span><em>max_samples=25</em>, <em>break_on_success=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint.establish_timesync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.establish_timesync" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">establish_timesync</code><span class="sig-paren">(</span><em class="sig-param">max_samples=25</em>, <em class="sig-param">break_on_success=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint.establish_timesync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.establish_timesync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform time-synchronization until time sync established.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Boolean true if valid timesync has been established.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Boolean true if valid timesync has been established.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="bosdyn.client.time_sync.TimeSyncEndpoint.get_new_estimate">
-<code class="descname">get_new_estimate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint.get_new_estimate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.get_new_estimate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_new_estimate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint.get_new_estimate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.get_new_estimate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform an update-cycle toward achieving time-synchronization.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Boolean true if valid timesync has been established.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Boolean true if valid timesync has been established.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="bosdyn.client.time_sync.TimeSyncEndpoint.get_robot_time_converter">
-<code class="descname">get_robot_time_converter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint.get_robot_time_converter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.get_robot_time_converter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_robot_time_converter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint.get_robot_time_converter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.get_robot_time_converter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a RobotTimeConverter for current estimate for robot clock skew from local time.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">TimeSyncFailure   If time sync has not yet been established.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.has_established_time_sync">
-<code class="descname">has_established_time_sync</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.has_established_time_sync" title="Permalink to this definition">¶</a></dt>
-<dd><p>Boolean true if the previous time-sync update returned that time sync is OK.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Returns</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.response">
-<code class="descname">response</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.response" title="Permalink to this definition">¶</a></dt>
-<dd><p>The last response message from the time-sync service.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The bosdyn.api.TimeSyncResponse proto last returned by the server, or None if unset.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>TimeSyncFailure   If time sync has not yet been established.</strong> – </p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="bosdyn.client.time_sync.TimeSyncEndpoint.robot_timestamp_from_local_secs">
-<code class="descname">robot_timestamp_from_local_secs</code><span class="sig-paren">(</span><em>local_time_secs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint.robot_timestamp_from_local_secs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.robot_timestamp_from_local_secs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">robot_timestamp_from_local_secs</code><span class="sig-paren">(</span><em class="sig-param">local_time_secs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint.robot_timestamp_from_local_secs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.robot_timestamp_from_local_secs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a local time in seconds to a timestamp proto in robot time.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Timestamp in seconds since the unix epoch</strong> (<em>local_time_secs</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">google.protobuf.Timestamp  Representing <a href="#id1"><span class="problematic" id="id2">|local_time_secs|</span></a> in robot clock.
-None                       If <a href="#id3"><span class="problematic" id="id4">|local_time_secs|</span></a> is None.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">TimeSyncFailure   If time sync has not yet been established.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Timestamp in seconds since the unix epoch</strong> (<em>local_time_secs</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>google.protobuf.Timestamp  Representing <a href="#id1"><span class="problematic" id="id2">|local_time_secs|</span></a> in robot clock.
+None                       If <a href="#id3"><span class="problematic" id="id4">|local_time_secs|</span></a> is None.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>TimeSyncFailure   If time sync has not yet been established.</strong> – </p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.round_trip_time">
-<code class="descname">round_trip_time</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.round_trip_time" title="Permalink to this definition">¶</a></dt>
-<dd><p>“The previous round trip time.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Round trip time as google.protobuf.Duration proto if available, otherwise None.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="exception">
-<dt id="bosdyn.client.time_sync.TimeSyncError">
-<em class="property">exception </em><code class="descclassname">bosdyn.client.time_sync.</code><code class="descname">TimeSyncError</code><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.Error</span></code></a></p>
-<p>General class of errors for TimeSync non-response / non-grpc errors.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="bosdyn.client.time_sync.TimeSyncThread">
-<em class="property">class </em><code class="descclassname">bosdyn.client.time_sync.</code><code class="descname">TimeSyncThread</code><span class="sig-paren">(</span><em>time_sync_client</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncThread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">TimeSyncThread</code><span class="sig-paren">(</span><em class="sig-param">time_sync_client</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncThread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Background thread for achieving and maintaining time-sync to the robot.</p>
 <dl class="attribute">
 <dt id="bosdyn.client.time_sync.TimeSyncThread.DEFAULT_TIME_SYNC_INTERVAL_SEC">
-<code class="descname">DEFAULT_TIME_SYNC_INTERVAL_SEC</code><em class="property"> = 60</em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.DEFAULT_TIME_SYNC_INTERVAL_SEC" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">DEFAULT_TIME_SYNC_INTERVAL_SEC</code><em class="property"> = 60</em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.DEFAULT_TIME_SYNC_INTERVAL_SEC" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="bosdyn.client.time_sync.TimeSyncThread.TIME_SYNC_SERVICE_NOT_READY_INTERVAL_SEC">
-<code class="descname">TIME_SYNC_SERVICE_NOT_READY_INTERVAL_SEC</code><em class="property"> = 5</em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.TIME_SYNC_SERVICE_NOT_READY_INTERVAL_SEC" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">TIME_SYNC_SERVICE_NOT_READY_INTERVAL_SEC</code><em class="property"> = 5</em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.TIME_SYNC_SERVICE_NOT_READY_INTERVAL_SEC" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.endpoint">
-<code class="descname">endpoint</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.endpoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the TimeSyncEndpoint used by this thread.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.get_robot_clock_skew">
-<code class="descname">get_robot_clock_skew</code><span class="sig-paren">(</span><em>timesync_timeout_sec=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncThread.get_robot_clock_skew"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.get_robot_clock_skew" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get current estimate for robot clock skew from local time.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>Time to wait for timesync before doing conversion.</strong> (<em>timesync_timeout_sec</em>) – </p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first simple">
-<li>InactiveThreadError If time-sync thread exits before time-sync.</li>
-<li>TimedOutError If deadline to achieve time-sync is exceeded.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Clock skew as a google.protobuf.Duration object</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.get_robot_time_converter">
-<code class="descname">get_robot_time_converter</code><span class="sig-paren">(</span><em>timesync_timeout_sec=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncThread.get_robot_time_converter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.get_robot_time_converter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a RobotTimeConverter for current estimate for robot clock skew from local time.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li>InactiveThreadError  If time-sync thread exits before time-sync.</li>
-<li>TimedOutError  If deadline to achieve time-sync is exceeded.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.has_established_time_sync">
-<code class="descname">has_established_time_sync</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.has_established_time_sync" title="Permalink to this definition">¶</a></dt>
-<dd><p>Boolean true if the previous time-sync update returned that time sync is OK.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Returns</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.robot_timestamp_from_local_secs">
-<code class="descname">robot_timestamp_from_local_secs</code><span class="sig-paren">(</span><em>local_time_secs</em>, <em>timesync_timeout_sec=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncThread.robot_timestamp_from_local_secs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.robot_timestamp_from_local_secs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a local time in seconds to a timestamp proto in robot time.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>Timestamp in seconds since the unix epoch</strong> (<em>local_time_secs</em>) – </li>
-<li><strong>Time to wait for timesync before doing conversion.</strong> (<em>timesync_timeout_sec</em>) – </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">google.protobuf.Timestamp  Representing <a href="#id5"><span class="problematic" id="id6">|local_time_secs|</span></a> in robot clock.
-None                       If <a href="#id7"><span class="problematic" id="id8">|local_time_secs|</span></a> is None.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li>InactiveThreadError    If time-sync thread exits before time-sync.</li>
-<li>TimedOutError    If deadline to achieve time-sync is exceeded.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.should_exit">
-<code class="descname">should_exit</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.should_exit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns True if thread should stop iterating.</p>
-</dd></dl>
 
 <dl class="method">
 <dt id="bosdyn.client.time_sync.TimeSyncThread.start">
-<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncThread.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.start" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncThread.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start the thread.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="bosdyn.client.time_sync.TimeSyncThread.stop">
-<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncThread.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.stop" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncThread.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.stop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shut down the thread if it is running.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.stopped">
-<code class="descname">stopped</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.stopped" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns True if thread is no longer running.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.thread_exception">
-<code class="descname">thread_exception</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.thread_exception" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return any exception which ended the time-sync thread.</p>
-</dd></dl>
-
-<dl class="attribute">
+<dl class="method">
 <dt id="bosdyn.client.time_sync.TimeSyncThread.time_sync_interval_sec">
-<code class="descname">time_sync_interval_sec</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.time_sync_interval_sec" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">time_sync_interval_sec</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.time_sync_interval_sec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns interval at which time-sync is updated in the thread.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="bosdyn.client.time_sync.TimeSyncThread.should_exit">
+<em class="property">property </em><code class="sig-name descname">should_exit</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.should_exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if thread should stop iterating.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="bosdyn.client.time_sync.TimeSyncThread.wait_for_sync">
-<code class="descname">wait_for_sync</code><span class="sig-paren">(</span><em>timeout_sec=3.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncThread.wait_for_sync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.wait_for_sync" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">wait_for_sync</code><span class="sig-paren">(</span><em class="sig-param">timeout_sec=3.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncThread.wait_for_sync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.wait_for_sync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait for up to the given timeout for time-sync to be achieved</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>timeout_sec</strong> – maximum time to wait for time-sync to be achieved.</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li>InactiveThreadError  If thread is not running.</li>
-<li>TimedOutError  If deadline to achieve time-sync is exceeded.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timeout_sec</strong> – maximum time to wait for time-sync to be achieved.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>InactiveThreadError  If thread is not running.</strong> – </p></li>
+<li><p><strong>TimedOutError  If deadline to achieve time-sync is exceeded.</strong> – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="bosdyn.client.time_sync.TimeSyncThread.has_established_time_sync">
+<em class="property">property </em><code class="sig-name descname">has_established_time_sync</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.has_established_time_sync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+Boolean true if the previous time-sync update returned that time sync is OK.</p>
 </dd></dl>
 
-<dl class="exception">
-<dt id="bosdyn.client.time_sync.TimedOutError">
-<em class="property">exception </em><code class="descclassname">bosdyn.client.time_sync.</code><code class="descname">TimedOutError</code><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimedOutError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimedOutError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.time_sync.TimeSyncError" title="bosdyn.client.time_sync.TimeSyncError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.time_sync.TimeSyncError</span></code></a></p>
-<p>Exceeded deadline to achieve time-sync.</p>
+<dl class="method">
+<dt id="bosdyn.client.time_sync.TimeSyncThread.stopped">
+<em class="property">property </em><code class="sig-name descname">stopped</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.stopped" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if thread is no longer running.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.time_sync.TimeSyncThread.thread_exception">
+<em class="property">property </em><code class="sig-name descname">thread_exception</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.thread_exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return any exception which ended the time-sync thread.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.time_sync.TimeSyncThread.endpoint">
+<em class="property">property </em><code class="sig-name descname">endpoint</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.endpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the TimeSyncEndpoint used by this thread.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.time_sync.TimeSyncThread.get_robot_clock_skew">
+<code class="sig-name descname">get_robot_clock_skew</code><span class="sig-paren">(</span><em class="sig-param">timesync_timeout_sec=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncThread.get_robot_clock_skew"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.get_robot_clock_skew" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get current estimate for robot clock skew from local time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Time to wait for timesync before doing conversion.</strong> (<em>timesync_timeout_sec</em>) – </p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>InactiveThreadError If time-sync thread exits before time-sync.</strong> – </p></li>
+<li><p><strong>TimedOutError If deadline to achieve time-sync is exceeded.</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Clock skew as a google.protobuf.Duration object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.time_sync.TimeSyncThread.get_robot_time_converter">
+<code class="sig-name descname">get_robot_time_converter</code><span class="sig-paren">(</span><em class="sig-param">timesync_timeout_sec=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncThread.get_robot_time_converter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.get_robot_time_converter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a RobotTimeConverter for current estimate for robot clock skew from local time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>InactiveThreadError  If time-sync thread exits before time-sync.</strong> – </p></li>
+<li><p><strong>TimedOutError  If deadline to achieve time-sync is exceeded.</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.time_sync.TimeSyncThread.robot_timestamp_from_local_secs">
+<code class="sig-name descname">robot_timestamp_from_local_secs</code><span class="sig-paren">(</span><em class="sig-param">local_time_secs</em>, <em class="sig-param">timesync_timeout_sec=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/time_sync.html#TimeSyncThread.robot_timestamp_from_local_secs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.robot_timestamp_from_local_secs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a local time in seconds to a timestamp proto in robot time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Timestamp in seconds since the unix epoch</strong> (<em>local_time_secs</em>) – </p></li>
+<li><p><strong>Time to wait for timesync before doing conversion.</strong> (<em>timesync_timeout_sec</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>google.protobuf.Timestamp  Representing <a href="#id5"><span class="problematic" id="id6">|local_time_secs|</span></a> in robot clock.
+None                       If <a href="#id7"><span class="problematic" id="id8">|local_time_secs|</span></a> is None.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>InactiveThreadError    If time-sync thread exits before time-sync.</strong> – </p></li>
+<li><p><strong>TimedOutError    If deadline to achieve time-sync is exceeded.</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -573,10 +522,10 @@ None                       If <a href="#id7"><span class="problematic" id="id8">
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="util.html" class="btn btn-neutral float-right" title="Util" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="token_cache.html" class="btn btn-neutral float-right" title="Token Cache" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="sdk.html" class="btn btn-neutral float-left" title="SDK" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="spot_check.html" class="btn btn-neutral float-left" title="Spot Check" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

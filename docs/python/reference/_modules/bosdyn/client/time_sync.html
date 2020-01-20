@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.time_sync &mdash; Spot 1.0 documentation</title>
+  <title>bosdyn.client.time_sync &mdash; Spot 1.1.0 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.0
               </div>
             
           
@@ -149,7 +149,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.time_sync</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;A client for the time-sync service.</span>
+<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;A client for the time-sync service.</span>
 
 <span class="sd">The time-sync service helps track the difference between the robot&#39;s system clock and the</span>
 <span class="sd">system clock of clients, and sends an estimate of this difference to the client.  The client</span>
@@ -162,7 +168,7 @@
 <span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Lock</span><span class="p">,</span> <span class="n">Thread</span>
 
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">time_sync_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">time_sync_service_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">time_sync_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">time_sync_service_pb2_grpc</span>
 
 <span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="k">import</span> <span class="n">RobotTimeConverter</span>
@@ -173,6 +179,7 @@
 <span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">BaseClient</span>
 <span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">common_header_errors</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">Error</span>
+
 
 <div class="viewcode-block" id="TimeSyncError"><a class="viewcode-back" href="../../../client_modules/time_sync.html#bosdyn.client.time_sync.TimeSyncError">[docs]</a><span class="k">class</span> <span class="nc">TimeSyncError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;General class of errors for TimeSync non-response / non-grpc errors.&quot;&quot;&quot;</span></div>
@@ -217,15 +224,14 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">TimeSyncUpdate</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_time_sync_update_request</span><span class="p">(</span><span class="n">previous_round_trip</span><span class="p">,</span> <span class="n">clock_identifier</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">time_sync_service_pb2</span><span class="o">.</span><span class="n">TimeSyncUpdateRequest</span><span class="p">(</span><span class="n">previous_round_trip</span><span class="o">=</span><span class="n">previous_round_trip</span><span class="p">,</span>
-                                                           <span class="n">clock_identifier</span><span class="o">=</span><span class="n">clock_identifier</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">time_sync_pb2</span><span class="o">.</span><span class="n">TimeSyncUpdateRequest</span><span class="p">(</span><span class="n">previous_round_trip</span><span class="o">=</span><span class="n">previous_round_trip</span><span class="p">,</span>
+                                                   <span class="n">clock_identifier</span><span class="o">=</span><span class="n">clock_identifier</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_time_sync_status_request</span><span class="p">(</span><span class="n">clock_identifier</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">time_sync_service_pb2</span><span class="o">.</span><span class="n">TimeSyncStatusRequest</span><span class="p">(</span><span class="n">clock_identifier</span><span class="o">=</span><span class="n">clock_identifier</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">time_sync_pb2</span><span class="o">.</span><span class="n">TimeSyncStatusRequest</span><span class="p">(</span><span class="n">clock_identifier</span><span class="o">=</span><span class="n">clock_identifier</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_get_time_sync_status_value</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
@@ -463,6 +469,9 @@
             <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">end_time_sec</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">TimedOutError</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">thread_exc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_exception</span>
+        <span class="k">if</span> <span class="n">thread_exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">thread_exc</span>
         <span class="k">raise</span> <span class="n">InactiveThreadError</span></div>
 
     <span class="nd">@property</span>

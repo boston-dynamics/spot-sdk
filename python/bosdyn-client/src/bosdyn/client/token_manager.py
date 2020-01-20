@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """For clients to automate token refresh.
 
 TokenManager -- Wrapper around token fresh policy.
@@ -13,11 +19,13 @@ from .token_cache import WriteFailedError
 
 _LOGGER = logging.getLogger(__name__)
 
+
 class TokenManager:
     """Refreshes the user token in the robot object.
 
        The refresh policy assumes the token is minted and then the manager is
        launched."""
+
     def __init__(self, robot, timestamp=None):
         self.robot = robot
 
@@ -63,5 +71,6 @@ class TokenManager:
                 elapsed_time = USER_TOKEN_REFRESH_TIME_DELTA
 
             self._exit_thread.wait(elapsed_time.seconds)
-        message = 'Shutting down monitoring of token belonging to robot {}'.format(self.robot.address)
+        message = 'Shutting down monitoring of token belonging to robot {}'.format(
+            self.robot.address)
         _LOGGER.debug(message)

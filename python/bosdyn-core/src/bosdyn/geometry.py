@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 import math
 
 from bosdyn.api.geometry_pb2 import Quaternion
@@ -60,5 +66,6 @@ def to_euler_zxy(self):
         euler_angle.pitch = math.atan2(-m[2][0], m[2][2])
 
     return euler_angle
+
 
 setattr(Quaternion, "to_euler_zxy", to_euler_zxy)

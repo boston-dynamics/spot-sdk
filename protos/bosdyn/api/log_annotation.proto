@@ -1,11 +1,23 @@
+// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
 syntax = "proto3";
 package bosdyn.api;
 
 option java_outer_classname = "LogAnnotationProto";
 
-
+import "bosdyn/api/header.proto";
 import "google/protobuf/timestamp.proto";
 
+message AddLogAnnotationRequest {
+     /// Common request/response header.
+    RequestHeader header = 1;
+
+    LogAnnotations annotations = 2;
+}
 
 /// A container for elements to be added to the robot's logs.
 message LogAnnotations {
@@ -14,6 +26,9 @@ message LogAnnotations {
 
     /// Messages from the robot operator to be added to the log.
     repeated LogAnnotationOperatorMessage operator_messages = 2;
+
+    /// One or more binary blobs to add to the log.
+    repeated LogAnnotationLogBlob blob_data = 3;
 
 }
 
@@ -67,4 +82,43 @@ message LogAnnotationOperatorMessage {
 
     /// The timestamp of the annotation.  This must be in robot time.
     google.protobuf.Timestamp timestamp = 2;
+}
+
+
+/// A unit of binary data to be entered in a log.
+message LogAnnotationLogBlob {
+    /// Timestamp of data in robot clock time.
+    google.protobuf.Timestamp timestamp = 1;
+    /// A general label for this blob.
+    /// This is distinct from type_id, which identifies how the blob is to be parsed.
+    string channel = 2;
+    /// A description of the data's content and its encoding.
+    /// This should be sufficient for deciding how to deserialize the data.
+    /// For example, this could be the full name of a protobuf message type.
+    string type_id = 3;
+    /// Raw data.
+    bytes data = 4;
+}
+
+
+
+message AddLogAnnotationResponse {
+    /// Common request/response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        /// Unknown / unexpected error.
+        STATUS_UNKNOWN = 0;
+
+        /// Successful response.
+        STATUS_OK = 1;
+
+        /// You sent an invalid annotation somehow.
+        STATUS_INVALID = 2;
+
+        /// Sequence ID was not 1 + the last one, comms problem?
+        STATUS_WRONG_SEQUENCE_ID = 5;
+    }
+    
+    Status status = 2;
 }

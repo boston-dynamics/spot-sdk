@@ -1,3 +1,9 @@
+# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+#
+# Downloading, reproducing, distributing or otherwise using the SDK Software
+# is subject to the terms and conditions of the Boston Dynamics Software
+# Development Kit License (20191101-BDSDK-SL).
+
 """For clients to the image service."""
 
 import collections
@@ -5,16 +11,17 @@ from bosdyn.client.common import BaseClient
 from bosdyn.client.common import (error_factory, common_header_errors, handle_common_header_errors)
 from bosdyn.client.exceptions import ResponseError, UnsetStatusError
 
-from bosdyn.api.image_pb2 import Image
+from bosdyn.api import image_pb2
 from bosdyn.api import image_service_pb2_grpc
-from bosdyn.api import image_service_pb2
 
 
 class ImageResponseError(ResponseError):
     """General class of errors for Image service."""
 
+
 class UnknownImageSourceError(ImageResponseError):
     """System cannot find the requested image source name."""
+
 
 class SourceDataError(ImageResponseError):
     """System cannot generate the ImageSource at this time."""
@@ -26,13 +33,11 @@ class ImageDataError(ImageResponseError):
 
 _STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _STATUS_TO_ERROR.update({
-    image_service_pb2.ImageResponse.STATUS_OK: (None, None),
-    image_service_pb2.ImageResponse.STATUS_UNKNOWN_CAMERA:
-        (UnknownImageSourceError, UnknownImageSourceError.__doc__),
-    image_service_pb2.ImageResponse.STATUS_SOURCE_DATA_ERROR: (SourceDataError,
-                                                               SourceDataError.__doc__),
-    image_service_pb2.ImageResponse.STATUS_IMAGE_DATA_ERROR: (ImageDataError,
-                                                              ImageDataError.__doc__),
+    image_pb2.ImageResponse.STATUS_OK: (None, None),
+    image_pb2.ImageResponse.STATUS_UNKNOWN_CAMERA: (UnknownImageSourceError,
+                                                    UnknownImageSourceError.__doc__),
+    image_pb2.ImageResponse.STATUS_SOURCE_DATA_ERROR: (SourceDataError, SourceDataError.__doc__),
+    image_pb2.ImageResponse.STATUS_IMAGE_DATA_ERROR: (ImageDataError, ImageDataError.__doc__),
 })
 
 
@@ -40,11 +45,11 @@ _STATUS_TO_ERROR.update({
 def _error_from_response(response):
     """Return a custom exception based on the first invalid image response, None if no error."""
     for image_response in response.image_responses:
-        if image_response.status is image_service_pb2.ImageResponse.STATUS_UNKNOWN:
+        if image_response.status is image_pb2.ImageResponse.STATUS_UNKNOWN:
             return UnsetStatusError(response, UnsetStatusError.__doc__)
 
         result = error_factory(response, image_response.status,
-                               status_to_string=image_service_pb2.ImageResponse.Status.Name,
+                               status_to_string=image_pb2.ImageResponse.Status.Name,
                                status_to_error=_STATUS_TO_ERROR)
         if result is not None:
             return result
@@ -94,18 +99,18 @@ class ImageClient(BaseClient):
 
     @staticmethod
     def _get_image_request(image_requests):
-        return image_service_pb2.GetImageRequest(image_requests=image_requests)
+        return image_pb2.GetImageRequest(image_requests=image_requests)
 
     @staticmethod
     def _get_list_image_source_request():
-        return image_service_pb2.ListImageSourcesRequest()
+        return image_pb2.ListImageSourcesRequest()
 
 
-def build_image_request(image_source_name, quality_percent=75, image_format=Image.FORMAT_JPEG):
+def build_image_request(image_source_name, quality_percent=75,
+                        image_format=image_pb2.Image.FORMAT_JPEG):
     """Helper function which builds an ImageRequest from an image source name."""
-    return image_service_pb2.ImageRequest(image_source_name=image_source_name,
-                                          quality_percent=quality_percent,
-                                          image_format=image_format)
+    return image_pb2.ImageRequest(image_source_name=image_source_name,
+                                  quality_percent=quality_percent, image_format=image_format)
 
 
 def _list_image_sources_value(response):
