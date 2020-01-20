@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="bosdyn-tutorials",
-    version="0.0.1",
+    version="1.0.1",
     author="Boston Dynamics",
     author_email="dev@bostondynamics.com",
     description="Boston Dynamics API Core code and interfaces",
@@ -16,7 +16,7 @@ setuptools.setup(
     package_dir={'': 'src'},
     
     install_requires=[
-    'bosdyn-api>=0.0.1', 'bosdyn-client>=0.0.1', 'Pillow>=6.0.0', 'matplotlib>=2.2.2'
+    'bosdyn-api==1.0.1', 'bosdyn-client==1.0.1', 'Pillow>=6.0.0', 'matplotlib>=2.2.2'
     ],
 
 

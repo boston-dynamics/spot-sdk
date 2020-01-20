@@ -190,8 +190,8 @@ class RobotIdCommand(Command):
             nickname = proto.nickname
         release = proto.software_release
         version = release.version
-        print("{:20} {:10} {} ({})".format(proto.serial_number, nickname, proto.species,
-                                           proto.version))
+        print("{:20} {:15} {:10} {} ({})".format(proto.serial_number, proto.computer_serial_number,
+                                           nickname, proto.species, proto.version))
         print(" Software: {}.{}.{} ({} {})".format(version.major_version, version.minor_version,
                                                    version.patch_level, release.changeset,
                                                    timestamp_to_datetime(release.changeset_date)))

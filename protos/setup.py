@@ -99,7 +99,7 @@ def add_pathlib_version(requirements_list):
 
 setuptools.setup(
     name="bosdyn-api",
-    version="0.0.1",
+    version="1.0.1",
     author="Boston Dynamics",
     author_email="dev@bostondynamics.com",
     description="Boston Dynamics API protobufs",

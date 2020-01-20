@@ -30,53 +30,289 @@ The Boston Dynamics API works with Python 2.7 or Python 3.6 or higher. Python 3.
 
 Downloads and instructions for installing Python can be found at https://www.python.org/.
 
-If you are using Python 3, ensure that pip3 is installed as well. pip3 comes pre-installed with Python 3.
+### Getting pip3 configured
+
+If you are planning to use Python 2 only, you can skip this step.
+
+First, check if pip3 is installed - and if so, what version.
 
 ```shell
 $ pip3 --version
+pip 19.2.1 from <path on your computer>
 ```
 
-If you are using Python 2, ensure that pip is installed as well. pip is not always pre-installed with Python 2, read [these instructions](https://pip.pypa.io/en/stable/installing/) for how to install it.
+If pip3 is not found, you'll need to install it. There are a few options:
+  * pip3 will come preinstalled with all Python 3 versions >= 3.4 downloaded from python.org
+  * Use the `get-pip.py` [installation script](https://pip.pypa.io/en/stable/installing/).
+  * Use an OS-specific package manager (such as the python3-pip package on Ubuntu)
+
+**Important** The rest of the documentation assumes pip3 >= 18.0.0. If `pip3 --version` showed an older version (9.0.1 is quite common) you will need to upgrade it.
+
+```shell
+$ pip3 --version
+pip 9.0.1 from <path on your computer>
+$ pip3 install --upgrade pip
+Collecting pip
+  Cache entry deserialization failed, entry ignored
+  Downloading https://files.pythonhosted.org/packages/8d/07/f7d7ced2f97ca3098c16565efbe6b15fafcba53e8d9bdb431e09140514b0/pip-19.2.2-py2.py3-none-any.whl (1.4MB)
+    100% |████████████████████████████████| 1.4MB 1.3MB/s
+Installing collected packages: pip
+Successfully installed pip-19.2.2
+```
+
+Check that pip3 is up-to-date.
+```shell
+$ pip3 --version
+pip 19.2.2 from <path on your computer>
+```
+
+**Ubuntu users:** The previous `pip3 --version` command may fail if you installed pip3 via the python3-pip package. If so, you might see an error like:
+
+```shell
+$ pip3 --version
+Traceback (most recent call last):
+  File "/usr/bin/pip3", line 9, in <module>
+    from pip import main
+ImportError: cannot import name 'main'
+```
+
+To fix this, you'll need to make a small fix to `/usr/bin/pip3`. See https://stackoverflow.com/a/51462434 for instructions on how to do that.
+
+### Getting pip configured
+
+If you are planning to use Python 3 only, you can skip this step.
+
+First, check if pip is installed - and if so, what version.
 
 ```shell
 $ pip --version
+pip 19.2.1 from <path on your computer>
 ```
 
-The following examples will also use "pip3". If you are using Python 2, just substitute "pip" for "pip3".
+If pip is not found, you'll need to install it. There are a few options:
+  * pip will come preinstalled with all Python 2 versions >= 2.7.9 downloaded from python.org
+  * Use the `get-pip.py` [installation script](https://pip.pypa.io/en/stable/installing/).
+  * Use an OS-specific package manager (such as the python-pip package on Ubuntu)
 
-Now it's time to install the Python libraries. Assuming that the SDK is installed at SDK_DIRECTORY, the following commands will install the libraries.
+**Important** The rest of the documentation assumes pip >= 18.0.0. If `pip --version` showed an older version (9.0.1 is quite common) you will need to upgrade it.
+
+```shell
+$ pip --version
+pip 9.0.1 from <path on your computer>
+$ pip install --upgrade pip
+Collecting pip
+  Cache entry deserialization failed, entry ignored
+  Downloading https://files.pythonhosted.org/packages/8d/07/f7d7ced2f97ca3098c16565efbe6b15fafcba53e8d9bdb431e09140514b0/pip-19.2.2-py2.py3-none-any.whl (1.4MB)
+    100% |████████████████████████████████| 1.4MB 1.3MB/s
+Installing collected packages: pip
+Successfully installed pip-19.2.2
+```
+
+Check that pip is up-to-date.
+```shell
+$ pip --version
+pip 19.2.2 from <path on your computer>
+```
+
+**Ubuntu users:** The previous `pip --version` command may fail if you installed pip via the python-pip package. If so, you might see an error like:
+
+```shell
+$ pip --version
+Traceback (most recent call last):
+  File "/usr/bin/pip", line 9, in <module>
+    from pip import main
+ImportError: cannot import name 'main'
+```
+
+To fix this, you'll need to make a small fix to `/usr/bin/pip`. See https://stackoverflow.com/a/51462434 for instructions on how to do that.
+
+### Installing the Boston Dynamics Python Libraries
+
+Now that you have pip and/or pip3 installed, it's time to install the Boston Dynamics Python libraries.
+
+#### Python 3 steps for Linux, MacOS, or Windows Subsystem for Linux (WSL)
+
+Assuming that the Boston Dynamics SDK directory is downloaded at `~/bosdyn-sdk-beta`, the following commands will install the libraries for Python 3.
 
 ```
-$ cd SDK_DIRECTORY
-$ pip3 install --user --find-links=prebuilt bosdyn-client
+$ pip3 install --upgrade --find-links=~/bosdyn-sdk-beta/prebuilt bosdyn-client
+```
+
+If you see an error like this:
+
+```
+ERROR: Could not install packages due to an EnvironmentError: [Errno 13] Permission denied: <path>
+Consider using the `--user` option or check the permissions.
+```
+
+then try the following command to install the Boston Dynamics Python libraries in a per-user location:
+
+```
+$ pip3 install --user --upgrade --find-links=~/bosdyn-sdk-beta/prebuilt bosdyn-client
+```
+
+Make sure that the packages have been installed. If you don't see listings for bosdyn-api, bosdyn-client, and bosdyn-core, something went wrong during installation.
+
+```shell
+$ pip3 list --format=columns | grep bosdyn
+bosdyn-api                    1.0.1
+bosdyn-client                 1.0.1
+bosdyn-core                   1.0.1
+```
+
+Optionally, install Pillow - a library for handling images. Later in the quickstart we will use this to display images from the robot.
+
+**WSL users:** while you can install Pillow, you won't be able to use it since WSL is terminal-based only.
+
+```shell
+$ pip3 install pillow
+```
+
+#### Python 3 steps for Windows
+
+Assuming that the Boston Dynamics SDK directory is downloaded at `C:\Users\foobar\bosdyn-sdk-beta`, the following commands will install the libraries for Python 3.
+
+```
+$ pip3 install --upgrade --find-links=C:\Users\foobar\bosdyn-sdk-beta\prebuilt bosdyn-client
+```
+
+If you see an error like this:
+
+```
+ERROR: Could not install packages due to an EnvironmentError: [Errno 13] Permission denied: <path>
+Consider using the `--user` option or check the permissions.
+```
+
+then try the following command to install the Boston Dynamics Python libraries in a per-user location:
+
+```
+$ pip3 install --user --upgrade --find-links=C:\Users\foobar\bosdyn-sdk-beta\prebuilt bosdyn-client
 ```
 
 Make sure that the packages have been installed. If you don't see listings for bosdyn-api, bosdyn-client, and bosdyn-core, something went wrong during installation.
 
 ```shell
 $ pip3 list --format=columns
-bosdyn-api                    0.0.1
-bosdyn-client                 0.0.1
-bosdyn-core                   0.0.1
+bosdyn-api                    1.0.1
+bosdyn-client                 1.0.1
+bosdyn-core                   1.0.1
 ```
 
-Optionally, install Pillow. Later in this guide, we will use Pillow to display images we capture from the robot.
+Optionally, install Pillow - a library for handling images. Later in the quickstart we will use this to display images from the robot.
 
 ```shell
-$ pip3 install --user pillow
+$ pip3 install pillow
 ```
 
-You should also be able to import the libraries in python. Start up an interactive python shell and import to see. If you are using Python 2, use the "python" command instead of the "python3" command below.
+#### Python 2 steps for Linux, MacOS, or Windows Subsystem for Linux (WSL)
+
+Assuming that the Boston Dynamics SDK directory is downloaded at `~/bosdyn-sdk-beta`, the following commands will install the libraries for Python 2.
+
+```
+$ pip install --upgrade --find-links=~/bosdyn-sdk-beta/prebuilt bosdyn-client
+```
+
+If you see an error like this:
+
+```
+ERROR: Could not install packages due to an EnvironmentError: [Errno 13] Permission denied: <path>
+Consider using the `--user` option or check the permissions.
+```
+
+then try the following command to install the Boston Dynamics Python libraries in a per-user location:
+
+```
+$ pip install --user --upgrade --find-links=~/bosdyn-sdk-beta/prebuilt bosdyn-client
+```
+
+Make sure that the packages have been installed. If you don't see listings for bosdyn-api, bosdyn-client, and bosdyn-core, something went wrong during installation.
+
+```shell
+$ pip list --format=columns | grep bosdyn
+bosdyn-api                    1.0.1
+bosdyn-client                 1.0.1
+bosdyn-core                   1.0.1
+```
+
+Optionally, install Pillow - a library for handling images. Later in the quickstart we will use this to display images from the robot.
+
+**WSL users:** while you can install Pillow, you won't be able to use it since WSL is terminal-based only.
+
+```shell
+$ pip install pillow
+```
+
+#### Python 2 steps for Windows
+
+Assuming that the Boston Dynamics SDK directory is downloaded at `C:\Users\foobar\bosdyn-sdk-beta`, the following commands will install the libraries for Python 2.
+
+```
+$ pip install --upgrade --find-links=C:\Users\foobar\bosdyn-sdk-beta\prebuilt bosdyn-client
+```
+
+If you see an error like this:
+
+```
+ERROR: Could not install packages due to an EnvironmentError: [Errno 13] Permission denied: <path>
+Consider using the `--user` option or check the permissions.
+```
+
+then try the following command to install the Boston Dynamics Python libraries in a per-user location:
+
+```
+$ pip install --user --upgrade --find-links=C:\Users\foobar\bosdyn-sdk-beta\prebuilt bosdyn-client
+```
+
+Make sure that the packages have been installed. If you don't see listings for bosdyn-api, bosdyn-client, and bosdyn-core, something went wrong during installation.
+
+```shell
+$ pip list --format=columns
+bosdyn-api                    1.0.1
+bosdyn-client                 1.0.1
+bosdyn-core                   1.0.1
+```
+
+Optionally, install Pillow - a library for handling images. Later in the quickstart we will use this to display images from the robot.
+
+```shell
+$ pip install pillow
+```
+
+### Verifying that Boston Dynamics Python libraries are installed.
+
+Verify that the libraries are correctly installed by importing them in Python.
+
+#### Python 3
+
+Start Python 3 in an interactive mode. Windows users may need to start Python 3 via the Start Menu, but users of other OS's will be able to start via a terminal application.
 
 ```shell
 $ python3
 Python 3.6.7 (default, Oct 22 2018, 11:32:17)
 [GCC 8.2.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
->>> import bosdyn.client
 ```
 
-If paths are set up correctly the import statement will succeed. If not, you'll see an exception like below.
+Now, import the `bosdyn.client` library and get interactive help about the library. Assuming everything is installed correctly, you should see something like the following: 
+
+```python
+>>> import bosdyn.client
+>>> help(bosdyn.client)
+Help on package bosdyn.client in bosdyn:
+
+NAME
+    bosdyn.client
+
+DESCRIPTION
+    The client library package.
+    Sets up some convenience imports for commonly used classes.
+
+PACKAGE CONTENTS
+    __main__
+...
+```
+
+If the libraries are **not** installed correctly, you may see an error like this one:
 
 ```python
 >>> import bosdyn.client
@@ -84,6 +320,49 @@ Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
 ModuleNotFoundError: No module named 'bosdyn.client'
 ```
+
+If that's the case, first run `pip3 list` again to make sure that the Boston Dynamics Python libraries are installed. If they are and you run into this issue, send an email to dev@bostondynamics.com explaining the problem.
+
+#### Python 2
+
+Start Python 2 in an interactive mode. Windows users may need to start Python 2 via the Start Menu, but users of other OS's will be able to start via a terminal application.
+
+```shell
+$ python
+Python 2.7.15rc1 (default, Nov 12 2018, 14:31:15)
+[GCC 7.3.0] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+```
+
+Now, import the `bosdyn.client` library and get interactive help about the library. Assuming everything is installed correctly, you should see something like the following: 
+
+```python
+>>> import bosdyn.client
+>>> help(bosdyn.client)
+Help on package bosdyn.client in bosdyn:
+
+NAME
+    bosdyn.client
+
+DESCRIPTION
+    The client library package.
+    Sets up some convenience imports for commonly used classes.
+
+PACKAGE CONTENTS
+    __main__
+...
+```
+
+If the libraries are **not** installed correctly, you may see an error like this one:
+
+```python
+>>> import bosdyn.client
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ModuleNotFoundError: No module named 'bosdyn.client'
+```
+
+If that's the case, first run `pip list` again to make sure that the Boston Dynamics Python libraries are installed. If they are and you run into this issue, send an email to dev@bostondynamics.com explaining the problem.
 
 ## Getting an Application Token
 

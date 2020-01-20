@@ -61,7 +61,7 @@ def _image_to_ascii(image, new_width):
     scaled_rot_width = (original_rot_width * scaled_rot_height) // original_rot_height
     # Scaling rotated width (height, after rotation) by half because ASCII chars
     #  in terminal seem about 2x as tall as wide.
-    image = image.resize((scaled_rot_width / 2, scaled_rot_height))
+    image = image.resize((scaled_rot_width // 2, scaled_rot_height))
 
     # Rotate image 90 degrees, then convert to grayscale.
     image = image.transpose(Image.ROTATE_270)

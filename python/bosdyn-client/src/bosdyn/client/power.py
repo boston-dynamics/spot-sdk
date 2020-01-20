@@ -173,8 +173,9 @@ def safe_power_off(command_client, state_client, timeout_sec=30, update_frequenc
                 return
         except TimeoutError:
             raise CommandTimedOutError
-        dt = time.time() - start_call_time
-        time.sleep(max(min(dt, update_time), 0.0))
+        call_time = time.time() - start_call_time
+        sleep_time = max(0.0, update_time - call_time)
+        time.sleep(sleep_time)
     raise CommandTimedOutError
 
 
@@ -227,8 +228,9 @@ def _power_command(power_client, request, timeout_sec=30, update_frequency=1.0, 
                 return
         except TimeoutError:
             raise CommandTimedOutError
-        dt = time.time() - start_call_time
-        time.sleep(max(min(dt, update_time), 0.0))
+        call_time = time.time() - start_call_time
+        sleep_time = max(0.0, update_time - call_time)
+        time.sleep(sleep_time)
     raise CommandTimedOutError
 
 
