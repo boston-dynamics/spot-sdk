@@ -68,6 +68,9 @@ message MobilityParams {
 
     // Ground terrain parameters.
     TerrainParams terrain_params = 8;
+
+    // Robot Body External Force parameters
+    BodyExternalForceParams external_force_params = 9;
 }
 
 // Parameters for offsetting the body from the normal default.
@@ -104,5 +107,26 @@ message TerrainParams {
     google.protobuf.DoubleValue ground_mu_hint = 2;
     // When true, the robot will assume the ground below it is made of grated metal.
     bool enable_grated_floor = 3;
-    // TODO: add support for reflecting current robot ground mu.
+}
+
+// External Force on robot body parameters. This is a beta feature and still can have some odd behaviors.
+// By default, the external force estimator is disabled on the robot.
+message BodyExternalForceParams {
+    // Indicates what external force estimate/override the robot should use.
+    // By default, the external force estimator is disabled on the robot.
+    enum ExternalForceIndicator {
+        EXTERNAL_FORCE_NONE = 0;         // No external forces considered.
+        EXTERNAL_FORCE_USE_ESTIMATE = 1; // Use external forces estimated by the robot
+        EXTERNAL_FORCE_USE_OVERRIDE = 2; // Use external forces specified in an override vector.
+    }
+    ExternalForceIndicator external_force_indicator = 1;
+
+    // Frame that the external override force is defined in.
+    // It is currently only accepted in KO or body frames. 
+    Frame frame = 2;
+
+    // Specifies a force that the body should expect to feel. This allows the robot to "lean into"
+    // an external force. Be careful using this override, since incorrect information can cause
+    // the robot to fall over.
+    Vec3 external_force_override = 3;
 }

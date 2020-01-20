@@ -8,11 +8,34 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Boston Dynamics SDK Release Notes
 
+## 1.1.2
+
+### New features
+
+* **Missions API Beta and Callbacks** When an Autowalk Mission is created with a "Callback" event, a client can detect that change using a beta version of the Mission API, then tell the robot to continue or abort the Mission. Example uses include a sensor payload that detects Callback events and captures sensor information before advancing the mission, and a desktop UI which waits for the user to push a button before advancing the mission.
+
+* **External Forces Beta**. Mobility commands can specify how to handle external forces. Examples of external forces could include an object that Spot is towing, or an object Spot is pushing. The default behavior is to do nothing, but clients can specify whether Spot should estimate external forces and compensate for it, or explicitly specify what the external forces are.
+
+### Bug fixes and improvements
+
+* **Depth image** extrinsics are fixed. In earlier 1.1.x releases, the extrinsics were incorrectly the same as the fisheye cameras.
+
+* **App Token expiration logging.**. The Python SDK object logs if the app token will expire in the next 30 days. New tokens can be requested at support@bostondynamics.com.
+
+### Sample Code
+
+* **mission_question_answerer** demonstrates how to build a client which responds to Mission Callbacks.
+
+## 1.1.1
+
+1.1.1 has no SDK-related changes.
+
 ## 1.1.0
 
 The 1.1.0 SDK software is published under a new software license which can be found in the LICENSE file at the top of the SDK directory.
 
 ### New features
+
 * **ImageService** exposes depth maps from on-board stereo cameras as additional image sources. Image Sources specify an ImageType to differentiate depth maps from grayscale images.
 
 * **PayloadService** is a new service which lists all known payloads on the robot.
@@ -28,45 +51,77 @@ The 1.1.0 SDK software is published under a new software license which can be fo
 ### Sample code
 
 The sample code directory structure has changed to directory-per-example under python/examples. Each example includes a requirements.txt file for specifying dependencies.
+
 * **estop** is a desktop GUI which creates an E-Stop endpoint for a robot. This example demonstrates how to use the E-Stop endpoint system, and is a useful utility on its own.
+
 * **follow_fiducial** is an example where Spot will follow an AprilTag fiducial that it can see in its on-board cameras. This demonstrates how to use camera extrinsics and intrinsics to convert pixels to world coordinates, and how to use the trajectory commands.
+
 * **get-image** is a simple example to retrieve images from Spot and save them to disk. It shows how to use the basics of the image service.
+
 * **get-payload** is a simple example which lists all of the payloads on the robot. It shows how to use the payload service.
+
 * **get_robot_state** is a simple example to retrieve robot state.
+
 * **hello_spot** is carried over from prior SDK releases. It is an introductory tutorial showing basic use of the Spot SDK.
+
 * **logging** demonstrates how to add custom annotations to Spot’s log files.
+
 * **spot_check** demonstrates how to use SpotCheck - Spot’s in-the-field calibration behavior..
+
 * **spot_light** is a demo where Spot rotates its body while standing to try to face a flashlight seen in its front cameras.
+
 * **spot_tensorflow_detector** demonstrates how to integrate the Spot SDK with Tensorflow for object classification from images.
+
 * **time_sync** is a simple example demonstrating how to use the TimeSync service.
+
 * **wasd** is carried over from prior SDK releases. It is an interactive program which uses keyboard control for the robot, and demonstrates how to use a variety of commands.
+
 * **xbox_controller** demonstrates how to specify more advanced options for mobility commands.
 
 ### Bug fixes and Improvements
+
 * Too many invalid login attempts will lock a user out from being able to authenticate for a temporary period to prevent brute-force attacks. GetAuthTokenResponse indicates this state with a STATUS_TEMPORARILY_LOCKED_OUT.
+
 * Elliptic Curve (ECDSA) cryptography used for user tokens - reducing the size of RPC requests by several hundred bytes.
+
 * gRPC exceptions are correctly handled in Python 3.
+
 * Command-line tool handles unicode robot nicknames correctly.
+
 * Command-line tool supports retrieving robot model information (URDF and object files)
+
 * Command-line tool supports retrieving multiple images at once.
+
 * “Strict Version” support for software version.
+
 * App Token paths which include “~” will automatically expand, rather than fail.
+
 * Mobility Commands which have MobilityParams.vel_limit with only a min or max velocity are correctly handled. In prior releases, these commands would result in no movement at all.
+
 * Mobility Commands which have BodyControlParams.base_offset_rt_footprint.reference_time in the past result in a STATUS_EXPIRED response rather than a STATUS_INVALID_REQUEST.
+
 * SE2VelocityCommands with unset slew_rate_limit are correctly handled. In prior releases, an unset slew_rate_limit would result in the robot walking in place.
 
 ### Deprecations and breaking changes
+
 * Removed support for Python 2.7. Only Python 3.6+ is supported due to upcoming Python 2 End-of-Life. Windows 10, macOS, and Ubuntu LTS are still supported.
+
 * The HINT_PACE LocomotionHint is no longer supported due to physical stability issues. Any commands which specify a HINT_PACE LocomotionHint will be treated like a HINT_JOG LocomotionHint is specified.
+
 * HINT_AUTO_TROT and HINT_AUTO_AMBLE are deprecated as names - use HINT_SPEED_SELECT_TROT and HINT_SPEED_SELECT_AMBLE respectively going forward.
+
 * Protocol Buffer locations changed to split services from messages. Any direct imports of protocol buffers by client applications will need to change to support the 1.1.0 version changes.
 
 ## 1.0.1
 
 * Improved documentation on SDK installation.
+
 * Clearer Python dependency requirements.
+
 * RobotId service exposes computer serial number in addition to robot serial number.
+
 * wasd image capture works in Python 3.
+
 * Fixed timing bugs in power service.
 
 ## 1.0.0

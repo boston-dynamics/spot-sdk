@@ -11,7 +11,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="bosdyn-client",
-    version="1.1.0",
+    version="1.1.2",
     author="Boston Dynamics",
     author_email="support@bostondynamics.com",
     description="Boston Dynamics API client code and interfaces",
@@ -21,7 +21,7 @@ setuptools.setup(
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
     package_data={'': ['*.pem']},
-    install_requires=['bosdyn-api>=1.1.0', 'bosdyn-core>=1.1.0', 'grpcio'],
+    install_requires=['bosdyn-api>=1.1.2', 'bosdyn-core>=1.1.2', 'grpcio', 'pyjwt'],
     classifiers=[
         "Programming Language :: Python :: 3.6",
         "License :: Other/Proprietary License",

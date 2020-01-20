@@ -160,16 +160,16 @@
 <span class="sd">This allows client code to add operator comments and text-messages to the robot&#39;s log files.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">string</span>
-<span class="kn">from</span> <span class="nn">six.moves.queue</span> <span class="k">import</span> <span class="n">Queue</span>
+<span class="kn">from</span> <span class="nn">six.moves.queue</span> <span class="kn">import</span> <span class="n">Queue</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">struct</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="k">import</span> <span class="n">Error</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="k">import</span> <span class="n">BaseClient</span><span class="p">,</span> <span class="n">common_header_errors</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">Error</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="n">BaseClient</span><span class="p">,</span> <span class="n">common_header_errors</span>
 
 <span class="kn">import</span> <span class="nn">bosdyn.api.log_annotation_pb2</span> <span class="k">as</span> <span class="nn">log_annotation_protos</span>
 <span class="kn">import</span> <span class="nn">bosdyn.api.log_annotation_service_pb2_grpc</span> <span class="k">as</span> <span class="nn">log_annotation_service</span>
@@ -183,7 +183,7 @@
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;log-annotation&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.LogAnnotation&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">LogAnnotationClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">log_annotation_service</span><span class="o">.</span><span class="n">LogAnnotationServiceStub</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log_tick_schemas</span> <span class="o">=</span> <span class="p">{}</span>
 

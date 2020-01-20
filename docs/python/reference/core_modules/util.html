@@ -160,196 +160,237 @@
   <div class="section" id="module-bosdyn.util">
 <span id="util"></span><h1>Util<a class="headerlink" href="#module-bosdyn.util" title="Permalink to this headline">¶</a></h1>
 <p>Common utilities for API Python code.</p>
-<dl class="function">
-<dt id="bosdyn.util.duration_str">
-<code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">duration_str</code><span class="sig-paren">(</span><em class="sig-param">duration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#duration_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.duration_str" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a formatted string for a duration proto.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>A google.protobuf.Duration proto.</strong> (<em>duration</em>) – </p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A string with format ‘{seconds}.{nanoseconds}’.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="bosdyn.util.timestamp_str">
-<code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">timestamp_str</code><span class="sig-paren">(</span><em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#timestamp_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.timestamp_str" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a formatted string for a timestamp or a duration proto.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>A google.protobuf.Timestamp</strong><strong> or </strong><strong>google.protobuf.Durtation proto.</strong> (<em>timestamp</em>) – </p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A string with format ‘{seconds}.{nanoseconds}’.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="bosdyn.util.sec_to_nsec">
-<code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">sec_to_nsec</code><span class="sig-paren">(</span><em class="sig-param">secs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#sec_to_nsec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.sec_to_nsec" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert time in seconds as from time.time() to a timestamp in nanoseconds.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>secs</strong> – Time in seconds</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The time in nanoseconds, as an integer.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="bosdyn.util.now_nsec">
-<code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">now_nsec</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#now_nsec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.now_nsec" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns nanoseconds from dawn of unix epoch until when this is called.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="bosdyn.util.set_timestamp_from_now">
-<code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">set_timestamp_from_now</code><span class="sig-paren">(</span><em class="sig-param">timestamp_proto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#set_timestamp_from_now"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.set_timestamp_from_now" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets google.protobuf.Timestamp to point to the current time on the system clock.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>timestamp_proto</strong><strong>[</strong><strong>out</strong><strong>]</strong> – a google.protobuf.Timestamp into which the time will be written</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="bosdyn.util.now_timestamp">
-<code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">now_timestamp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#now_timestamp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.now_timestamp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a google.protobuf.Timestamp set to the current time on the system clock.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="bosdyn.util.set_timestamp_from_nsec">
-<code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">set_timestamp_from_nsec</code><span class="sig-paren">(</span><em class="sig-param">timestamp_proto</em>, <em class="sig-param">time_nsec</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#set_timestamp_from_nsec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.set_timestamp_from_nsec" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes a timestamp as an integer of nanoseconds from the unix epoch into a Timestamp proto</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>timestamp_proto</strong><strong>[</strong><strong>out</strong><strong>]</strong> – a google.protobuf.Timestamp into which the time will be written</p></li>
-<li><p><strong>time_nsec</strong><strong>[</strong><strong>in</strong><strong>]</strong> – the time, as an integer of nanoseconds from the unix epoch</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="bosdyn.util.nsec_to_timestamp">
-<code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">nsec_to_timestamp</code><span class="sig-paren">(</span><em class="sig-param">time_nsec</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#nsec_to_timestamp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.nsec_to_timestamp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a google.protobuf.Timestamp for a time from nanoseconds from the unix epoch.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>time_nsec</strong> – the time, as an integer of nanoseconds from the unix epoch</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="bosdyn.util.timestamp_to_nsec">
-<code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">timestamp_to_nsec</code><span class="sig-paren">(</span><em class="sig-param">timestamp_proto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#timestamp_to_nsec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.timestamp_to_nsec" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns integer of nanoseconds from the unix epoch from a Timestamp proto.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>timestamp_proto</strong> – a google.protobuf.Timestamp proto</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="bosdyn.util.timestamp_to_datetime">
-<code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">timestamp_to_datetime</code><span class="sig-paren">(</span><em class="sig-param">timestamp_proto</em>, <em class="sig-param">use_nanos=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#timestamp_to_datetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.timestamp_to_datetime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a google.protobuf.Timestamp to a Python datetime.datetime object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>timestamp_proto</strong> – a google.protobuf.Timestamp</p></li>
-<li><p><strong>use_nanos</strong> – use fractional seconds in proto (default=True)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a datetime.datetime proto</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="bosdyn.util.secs_to_hms">
-<code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">secs_to_hms</code><span class="sig-paren">(</span><em class="sig-param">seconds</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#secs_to_hms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.secs_to_hms" title="Permalink to this definition">¶</a></dt>
-<dd><p>Format a time in seconds as ‘H:MM:SS’</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>number of seconds</strong> (<em>seconds</em>) – </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="bosdyn.util.distance_str">
-<code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">distance_str</code><span class="sig-paren">(</span><em class="sig-param">meters</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#distance_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.distance_str" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a distance in meters to a either xxx.xx m or xxx.xx km</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>distance in meters</strong> (<em>meters</em>) – </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="bosdyn.util.format_metric">
-<code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">format_metric</code><span class="sig-paren">(</span><em class="sig-param">metric</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#format_metric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.format_metric" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a string representing a metric.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>bosdyn.api.Parameter proto</strong> (<em>metric</em>) – </p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="class">
 <dt id="bosdyn.util.RobotTimeConverter">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">RobotTimeConverter</code><span class="sig-paren">(</span><em class="sig-param">robot_clock_skew_nsec</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#RobotTimeConverter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.RobotTimeConverter" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">bosdyn.util.</code><code class="descname">RobotTimeConverter</code><span class="sig-paren">(</span><em>robot_clock_skew_nsec</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#RobotTimeConverter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.RobotTimeConverter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Converts times in the local system clock to times in the robot clock.</p>
 <p>Conversions are made given an estimate of clock skew from the local clock to the robot clock.</p>
 <dl class="method">
+<dt id="bosdyn.util.RobotTimeConverter.convert_timestamp_from_local_to_robot">
+<code class="descname">convert_timestamp_from_local_to_robot</code><span class="sig-paren">(</span><em>timestamp_proto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#RobotTimeConverter.convert_timestamp_from_local_to_robot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.RobotTimeConverter.convert_timestamp_from_local_to_robot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edits timestamp_proto in place to convert it from the local clock to the robot_clock.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timestamp_proto</strong><strong>[</strong><strong>in/out</strong><strong>]</strong> – google.protobuf.Timestamp local system time time</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="bosdyn.util.RobotTimeConverter.robot_timestamp_from_local_nsecs">
-<code class="sig-name descname">robot_timestamp_from_local_nsecs</code><span class="sig-paren">(</span><em class="sig-param">local_time_nsecs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#RobotTimeConverter.robot_timestamp_from_local_nsecs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.RobotTimeConverter.robot_timestamp_from_local_nsecs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">robot_timestamp_from_local_nsecs</code><span class="sig-paren">(</span><em>local_time_nsecs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#RobotTimeConverter.robot_timestamp_from_local_nsecs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.RobotTimeConverter.robot_timestamp_from_local_nsecs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a robot-clock Timestamp proto for a local time in nanoseconds.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>local_time_nsecs</strong> – Local system time time, in integer of nanoseconds from the unix epoch.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>local_time_nsecs</strong> – Local system time time, in integer of nanoseconds from the unix epoch.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="bosdyn.util.RobotTimeConverter.robot_timestamp_from_local_secs">
-<code class="sig-name descname">robot_timestamp_from_local_secs</code><span class="sig-paren">(</span><em class="sig-param">local_time_secs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#RobotTimeConverter.robot_timestamp_from_local_secs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.RobotTimeConverter.robot_timestamp_from_local_secs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">robot_timestamp_from_local_secs</code><span class="sig-paren">(</span><em>local_time_secs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#RobotTimeConverter.robot_timestamp_from_local_secs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.RobotTimeConverter.robot_timestamp_from_local_secs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a robot-clock Timestamp proto for a local time in seconds.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>local_time_secs</strong> – Local system time time, in seconds from the unix epoch.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>local_time_secs</strong> – Local system time time, in seconds from the unix epoch.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="method">
-<dt id="bosdyn.util.RobotTimeConverter.convert_timestamp_from_local_to_robot">
-<code class="sig-name descname">convert_timestamp_from_local_to_robot</code><span class="sig-paren">(</span><em class="sig-param">timestamp_proto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#RobotTimeConverter.convert_timestamp_from_local_to_robot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.RobotTimeConverter.convert_timestamp_from_local_to_robot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Edits timestamp_proto in place to convert it from the local clock to the robot_clock.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>timestamp_proto</strong><strong>[</strong><strong>in/out</strong><strong>]</strong> – google.protobuf.Timestamp local system time time</p>
-</dd>
-</dl>
 </dd></dl>
 
+<dl class="function">
+<dt id="bosdyn.util.distance_str">
+<code class="descclassname">bosdyn.util.</code><code class="descname">distance_str</code><span class="sig-paren">(</span><em>meters</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#distance_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.distance_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a distance in meters to a either xxx.xx m or xxx.xx km</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>distance in meters</strong> (<em>meters</em>) – </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bosdyn.util.duration_str">
+<code class="descclassname">bosdyn.util.</code><code class="descname">duration_str</code><span class="sig-paren">(</span><em>duration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#duration_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.duration_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a formatted string for a duration proto.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>A google.protobuf.Duration proto.</strong> (<em>duration</em>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A string with format ‘{seconds}.{nanoseconds}’.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bosdyn.util.format_metric">
+<code class="descclassname">bosdyn.util.</code><code class="descname">format_metric</code><span class="sig-paren">(</span><em>metric</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#format_metric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.format_metric" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string representing a metric.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>bosdyn.api.Parameter proto</strong> (<em>metric</em>) – </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bosdyn.util.now_nsec">
+<code class="descclassname">bosdyn.util.</code><code class="descname">now_nsec</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#now_nsec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.now_nsec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns nanoseconds from dawn of unix epoch until when this is called.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bosdyn.util.now_timestamp">
+<code class="descclassname">bosdyn.util.</code><code class="descname">now_timestamp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#now_timestamp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.now_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a google.protobuf.Timestamp set to the current time on the system clock.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bosdyn.util.nsec_to_timestamp">
+<code class="descclassname">bosdyn.util.</code><code class="descname">nsec_to_timestamp</code><span class="sig-paren">(</span><em>time_nsec</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#nsec_to_timestamp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.nsec_to_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a google.protobuf.Timestamp for a time from nanoseconds from the unix epoch.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>time_nsec</strong> – the time, as an integer of nanoseconds from the unix epoch</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bosdyn.util.sec_to_nsec">
+<code class="descclassname">bosdyn.util.</code><code class="descname">sec_to_nsec</code><span class="sig-paren">(</span><em>secs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#sec_to_nsec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.sec_to_nsec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert time in seconds as from time.time() to a timestamp in nanoseconds.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>secs</strong> – Time in seconds</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The time in nanoseconds, as an integer.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bosdyn.util.secs_to_hms">
+<code class="descclassname">bosdyn.util.</code><code class="descname">secs_to_hms</code><span class="sig-paren">(</span><em>seconds</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#secs_to_hms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.secs_to_hms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format a time in seconds as ‘H:MM:SS’</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>number of seconds</strong> (<em>seconds</em>) – </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bosdyn.util.set_timestamp_from_now">
+<code class="descclassname">bosdyn.util.</code><code class="descname">set_timestamp_from_now</code><span class="sig-paren">(</span><em>timestamp_proto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#set_timestamp_from_now"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.set_timestamp_from_now" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets google.protobuf.Timestamp to point to the current time on the system clock.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timestamp_proto</strong><strong>[</strong><strong>out</strong><strong>]</strong> – a google.protobuf.Timestamp into which the time will be written</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bosdyn.util.set_timestamp_from_nsec">
+<code class="descclassname">bosdyn.util.</code><code class="descname">set_timestamp_from_nsec</code><span class="sig-paren">(</span><em>timestamp_proto</em>, <em>time_nsec</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#set_timestamp_from_nsec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.set_timestamp_from_nsec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a timestamp as an integer of nanoseconds from the unix epoch into a Timestamp proto</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>timestamp_proto</strong><strong>[</strong><strong>out</strong><strong>]</strong> – a google.protobuf.Timestamp into which the time will be written</li>
+<li><strong>time_nsec</strong><strong>[</strong><strong>in</strong><strong>]</strong> – the time, as an integer of nanoseconds from the unix epoch</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bosdyn.util.timestamp_str">
+<code class="descclassname">bosdyn.util.</code><code class="descname">timestamp_str</code><span class="sig-paren">(</span><em>timestamp</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#timestamp_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.timestamp_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a formatted string for a timestamp or a duration proto.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>A google.protobuf.Timestamp</strong><strong> or </strong><strong>google.protobuf.Durtation proto.</strong> (<em>timestamp</em>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A string with format ‘{seconds}.{nanoseconds}’.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bosdyn.util.timestamp_to_datetime">
+<code class="descclassname">bosdyn.util.</code><code class="descname">timestamp_to_datetime</code><span class="sig-paren">(</span><em>timestamp_proto</em>, <em>use_nanos=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#timestamp_to_datetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.timestamp_to_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a google.protobuf.Timestamp to a Python datetime.datetime object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>timestamp_proto</strong> – a google.protobuf.Timestamp</li>
+<li><strong>use_nanos</strong> – use fractional seconds in proto (default=True)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a datetime.datetime proto</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bosdyn.util.timestamp_to_nsec">
+<code class="descclassname">bosdyn.util.</code><code class="descname">timestamp_to_nsec</code><span class="sig-paren">(</span><em>timestamp_proto</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/util.html#timestamp_to_nsec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.timestamp_to_nsec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns integer of nanoseconds from the unix epoch from a Timestamp proto.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timestamp_proto</strong> – a google.protobuf.Timestamp proto</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

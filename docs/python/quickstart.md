@@ -664,8 +664,6 @@ Using the source names above, we can capture an image from one or more image sou
 >>> from PIL import Image
 >>> import io
 >>> image = Image.open(io.BytesIO(image_response.shot.image.data))
-# Note: the following will *not* work if you are running python3 on MacOS or
-# within WSL on Windows.
 >>> image.show()
 ```
 

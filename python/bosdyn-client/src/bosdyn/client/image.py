@@ -107,8 +107,13 @@ class ImageClient(BaseClient):
 
 
 def build_image_request(image_source_name, quality_percent=75,
-                        image_format=image_pb2.Image.FORMAT_JPEG):
-    """Helper function which builds an ImageRequest from an image source name."""
+                        image_format=image_pb2.Image.FORMAT_UNKNOWN):
+    """Helper function which builds an ImageRequest from an image source name.
+
+    By default the robot will choose an appropriate format - such as JPEG for
+    visual images, or RAW for depth images. Clients can override image_format
+    in those cases.
+    """
     return image_pb2.ImageRequest(image_source_name=image_source_name,
                                   quality_percent=quality_percent, image_format=image_format)
 

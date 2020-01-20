@@ -103,11 +103,11 @@ def add_pathlib_version(requirements_list):
 
 setuptools.setup(
     name="bosdyn-api",
-    version="1.1.0",
+    version="1.1.2",
     author="Boston Dynamics",
     author_email="support@bostondynamics.com",
     description="Boston Dynamics API protobufs",
-    install_requires=["protobuf"],
+    install_requires=["protobuf>=3.3.0"],
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://api.bostondynamics.com/",
@@ -117,7 +117,7 @@ setuptools.setup(
     package_dir={},
     setup_requires=add_pathlib_version(['grpcio-tools', 'wheel']),
     classifiers=[
-        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.6",
         "License :: Other/Proprietary License",
         "Operating System :: OS Independent",
         "Private :: Do Not Upload",

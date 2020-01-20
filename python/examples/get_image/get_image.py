@@ -9,10 +9,13 @@
 import argparse
 import sys
 
+from bosdyn.api import image_pb2
 import bosdyn.client
 import bosdyn.client.util
 from bosdyn.client.image import ImageClient
 
+import cv2
+import numpy as np
 
 def main(argv):
     # Parse args
@@ -41,10 +44,20 @@ def main(argv):
         # Capture and save images to disk
         image_responses = image_client.get_image_from_sources(options.image_sources)
         for image in image_responses:
-            filename = image.source.name + ".jpg"
-            with open(filename, "wb") as img_file:
-                img_file.write(image.shot.image.data)
+            if image.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_DEPTH_U16:
+                dtype = np.uint16
+                extension = ".png"
+            else:
+                dtype = np.uint8
+                extension = ".jpg"
 
+            img = np.fromstring(image.shot.image.data, dtype=dtype)
+            if image.shot.image.format == image_pb2.Image.FORMAT_RAW:
+                img = img.reshape(image.shot.image.rows, image.shot.image.cols)
+            else:
+                img = cv2.imdecode(img, -1)
+
+            cv2.imwrite(image.source.name + extension, img)
     return True
 
 

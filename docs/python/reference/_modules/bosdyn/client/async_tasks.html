@@ -161,15 +161,15 @@
 
 <span class="kn">import</span> <span class="nn">six</span>
 
-<span class="kn">from</span> <span class="nn">grpc</span> <span class="k">import</span> <span class="n">RpcError</span>
+<span class="kn">from</span> <span class="nn">grpc</span> <span class="kn">import</span> <span class="n">RpcError</span>
 
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">ResponseError</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ResponseError</span>
 
 
 <div class="viewcode-block" id="AsyncTasks"><a class="viewcode-back" href="../../../client_modules/async_tasks.html#bosdyn.client.async_tasks.AsyncTasks">[docs]</a><span class="k">class</span> <span class="nc">AsyncTasks</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Manages a set of tasks which work by periodically calling an update() method.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tasks</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tasks</span> <span class="o">=</span> <span class="n">tasks</span> <span class="k">if</span> <span class="n">tasks</span> <span class="k">else</span> <span class="p">[]</span>
 
 <div class="viewcode-block" id="AsyncTasks.add_task"><a class="viewcode-back" href="../../../client_modules/async_tasks.html#bosdyn.client.async_tasks.AsyncTasks.add_task">[docs]</a>    <span class="k">def</span> <span class="nf">add_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
@@ -190,7 +190,7 @@
 <span class="sd">    The FutureWrapper is monitored for completion, and then an action is taken in response.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_last_call</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_future</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -237,7 +237,7 @@
 <span class="sd">    The FutureWrapper is monitored for completion, and then an action is taken in response.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period_sec</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period_sec</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">AsyncPeriodicGRPCTask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_period_sec</span> <span class="o">=</span> <span class="n">period_sec</span>
 
@@ -260,7 +260,7 @@
 <div class="viewcode-block" id="AsyncPeriodicQuery"><a class="viewcode-back" href="../../../client_modules/async_tasks.html#bosdyn.client.async_tasks.AsyncPeriodicQuery">[docs]</a><span class="k">class</span> <span class="nc">AsyncPeriodicQuery</span><span class="p">(</span><span class="n">AsyncPeriodicGRPCTask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Query for robot data at some regular interval.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_name</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">period_sec</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_name</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">period_sec</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">AsyncPeriodicQuery</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">period_sec</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_query_name</span> <span class="o">=</span> <span class="n">query_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">client</span>

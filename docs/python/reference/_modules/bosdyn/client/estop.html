@@ -164,17 +164,17 @@
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="n">queue</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="kn">import</span> <span class="n">queue</span>
 
-<span class="kn">from</span> <span class="nn">google.protobuf.duration_pb2</span> <span class="k">import</span> <span class="n">Duration</span>
+<span class="kn">from</span> <span class="nn">google.protobuf.duration_pb2</span> <span class="kn">import</span> <span class="n">Duration</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">estop_service_pb2_grpc</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">estop_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">estop_service_pb2_grpc</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">estop_pb2</span>
 
-<span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">BaseClient</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_unset_status_error</span>
-<span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">error_factory</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">RpcError</span><span class="p">,</span> <span class="n">TimedOutError</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">BaseClient</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_unset_status_error</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">error_factory</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">RpcError</span><span class="p">,</span> <span class="n">TimedOutError</span>
 
 
 <div class="viewcode-block" id="EstopResponseError"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopResponseError">[docs]</a><span class="k">class</span> <span class="nc">EstopResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
@@ -215,7 +215,7 @@
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;estop&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.EstopService&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;EstopClient - PID: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">())):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;EstopClient - PID: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">())):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">EstopClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">estop_service_pb2_grpc</span><span class="o">.</span><span class="n">EstopServiceStub</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EstopClient.register"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopClient.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_config_id</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -376,7 +376,7 @@
     <span class="c1"># This is an estop role required in every configuration.</span>
     <span class="n">REQUIRED_ROLE</span> <span class="o">=</span> <span class="s1">&#39;PDB_rooted&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">estop_timeout</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">REQUIRED_ROLE</span><span class="p">,</span> <span class="n">first_checkin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">estop_timeout</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">REQUIRED_ROLE</span><span class="p">,</span> <span class="n">first_checkin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">estop_cut_power_timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">role</span> <span class="o">=</span> <span class="n">role</span>
@@ -391,7 +391,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">estop_cut_power_timeout</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (timeout </span><span class="si">{:.3}</span><span class="s1">s)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">estop_timeout</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -587,7 +587,7 @@
 <span class="sd">    You should not access any of the &quot;private&quot; members, or the wrapped endpoint.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">rpc_timeout_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rpc_interval_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">rpc_timeout_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rpc_interval_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">keep_running_cb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Kicks off periodic check-in on a thread.&quot;&quot;&quot;</span>
 
@@ -624,10 +624,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
 
 <div class="viewcode-block" id="EstopKeepAlive.shutdown"><a class="viewcode-back" href="../../../client_modules/estop.html#bosdyn.client.estop.EstopKeepAlive.shutdown">[docs]</a>    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

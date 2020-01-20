@@ -160,8 +160,8 @@
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="kn">from</span> <span class="nn">.channel</span> <span class="k">import</span> <span class="n">TransportError</span><span class="p">,</span> <span class="n">translate_exception</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">InternalServerError</span><span class="p">,</span> <span class="n">InvalidRequestError</span><span class="p">,</span> <span class="n">LeaseUseError</span><span class="p">,</span> <span class="n">UnsetStatusError</span>
+<span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="n">TransportError</span><span class="p">,</span> <span class="n">translate_exception</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">InternalServerError</span><span class="p">,</span> <span class="n">InvalidRequestError</span><span class="p">,</span> <span class="n">LeaseUseError</span><span class="p">,</span> <span class="n">UnsetStatusError</span>
 
 <span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -284,7 +284,7 @@
     <span class="n">_SPLIT_SERVICE</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span>
     <span class="n">_SPLIT_METHOD</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stub_creation_func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stub_creation_func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_service_type_short</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="s1">&#39;service_type&#39;</span><span class="p">,</span>
                                            <span class="s1">&#39;BaseClient&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">BaseClient</span><span class="o">.</span><span class="n">_SPLIT_SERVICE</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
@@ -406,12 +406,12 @@
 <div class="viewcode-block" id="FutureWrapper"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.FutureWrapper">[docs]</a><span class="k">class</span> <span class="nc">FutureWrapper</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Wraps a Future to aid more complicated clients&#39; async calls.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">future</span><span class="p">,</span> <span class="n">value_from_response</span><span class="p">,</span> <span class="n">error_from_response</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">future</span><span class="p">,</span> <span class="n">value_from_response</span><span class="p">,</span> <span class="n">error_from_response</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">original_future</span> <span class="o">=</span> <span class="n">future</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_error_from_response</span> <span class="o">=</span> <span class="n">error_from_response</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_value_from_response</span> <span class="o">=</span> <span class="n">value_from_response</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_future</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
 <div class="viewcode-block" id="FutureWrapper.cancel"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.FutureWrapper.cancel">[docs]</a>    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

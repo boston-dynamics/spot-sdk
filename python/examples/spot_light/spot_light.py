@@ -14,7 +14,6 @@ left camera.  The following describes what to expect:
   - shine a light into the front left camera again, spot should start following the light
   - remove the light, spot should sit down
 
-NOTE: Both the light detection and controller is very crude.  One needs to have a very steady
 hands and prevent the robot from "seeing" other bright light in the front left camera.
 
 To run this, do:

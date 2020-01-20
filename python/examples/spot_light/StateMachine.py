@@ -104,7 +104,6 @@ class StateMachine(object):
         @return  True if area found, Image with blob marked, centroid of the blob found
         """
 
-        # Note:  Did not use SimpleBlobDetector because it didn't seem to like irregular shapes
 
         # Binarize the image
         grey_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)

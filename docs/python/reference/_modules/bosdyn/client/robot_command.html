@@ -157,24 +157,24 @@
 
 <span class="sd">&quot;&quot;&quot;For clients to the robot command service.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">collections</span>
-<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="k">import</span> <span class="ne">TimeoutError</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="ne">TimeoutError</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="k">import</span> <span class="n">any_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn</span> <span class="k">import</span> <span class="n">geometry</span>
+<span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">any_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn</span> <span class="kn">import</span> <span class="n">geometry</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">geometry_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">robot_command_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api.spot</span> <span class="k">import</span> <span class="n">robot_command_pb2</span> <span class="k">as</span> <span class="n">spot_command_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">robot_command_service_pb2_grpc</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">robot_command_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">trajectory_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">geometry_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">robot_command_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.spot</span> <span class="kn">import</span> <span class="n">robot_command_pb2</span> <span class="k">as</span> <span class="n">spot_command_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">robot_command_service_pb2_grpc</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">robot_command_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">trajectory_pb2</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="k">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span> <span class="n">handle_unset_status_error</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span> <span class="n">handle_unset_status_error</span><span class="p">,</span>
                                   <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_lease_use_result_errors</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">InvalidRequestError</span>
-<span class="kn">from</span> <span class="nn">.lease</span> <span class="k">import</span> <span class="n">add_lease_wallet_processors</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">InvalidRequestError</span>
+<span class="kn">from</span> <span class="nn">.lease</span> <span class="kn">import</span> <span class="n">add_lease_wallet_processors</span>
 
 
 <div class="viewcode-block" id="RobotCommandResponseError"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandResponseError">[docs]</a><span class="k">class</span> <span class="nc">RobotCommandResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
@@ -212,7 +212,7 @@
 <span class="k">class</span> <span class="nc">_TimeConverter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Constructs a RobotTimeConverter as necessary.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_endpoint</span> <span class="o">=</span> <span class="n">endpoint</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span> <span class="o">=</span> <span class="kc">None</span>
@@ -288,7 +288,7 @@
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;robot-command&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.RobotCommand&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RobotCommandClient</span><span class="p">,</span>
               <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">robot_command_service_pb2_grpc</span><span class="o">.</span><span class="n">RobotCommandServiceStub</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span> <span class="o">=</span> <span class="kc">None</span>
@@ -635,7 +635,8 @@
     <span class="c1">########################</span>
 <div class="viewcode-block" id="RobotCommandBuilder.mobility_params"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.mobility_params">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">mobility_params</span><span class="p">(</span><span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">footprint_R_body</span><span class="o">=</span><span class="n">geometry</span><span class="o">.</span><span class="n">EulerZXY</span><span class="p">(),</span>
-                        <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">,</span> <span class="n">stair_hint</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                        <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">,</span> <span class="n">stair_hint</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">external_force_params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Helper to create Mobility params for spot mobility commands. This function is designed</span>
 <span class="sd">        to help get started issuing commands, but lots of options are not exposed via this</span>
 <span class="sd">        interface. See spot.robot_command_pb2 for more details. If unset, good defaults will be</span>
@@ -654,7 +655,41 @@
         <span class="n">body_control</span> <span class="o">=</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyControlParams</span><span class="p">(</span><span class="n">base_offset_rt_footprint</span><span class="o">=</span><span class="n">traj</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">MobilityParams</span><span class="p">(</span><span class="n">body_control</span><span class="o">=</span><span class="n">body_control</span><span class="p">,</span>
                                                <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">locomotion_hint</span><span class="p">,</span>
-                                               <span class="n">stair_hint</span><span class="o">=</span><span class="n">stair_hint</span><span class="p">)</span></div>
+                                               <span class="n">stair_hint</span><span class="o">=</span><span class="n">stair_hint</span><span class="p">,</span>
+                                               <span class="n">external_force_params</span><span class="o">=</span><span class="n">external_force_params</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RobotCommandBuilder.build_body_external_forces"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.build_body_external_forces">[docs]</a>    <span class="k">def</span> <span class="nf">build_body_external_forces</span><span class="p">(</span><span class="n">external_force_indicator</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="o">.</span><span class="n">EXTERNAL_FORCE_NONE</span><span class="p">,</span>
+                                   <span class="n">override_external_force_vec</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Helper to create Mobility params. This function allows the user to enable an external</span>
+<span class="sd">        force estimator, or set a vector of forces (in the body frame) which override the estimator</span>
+<span class="sd">        with constant external forces. </span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            external_force_indicator: Indicates if the external force estimator should be enabled/disabled</span>
+<span class="sd">                                      or an override force should be used. Can be specified as one of three values:</span>
+<span class="sd">                                         spot_command_pb2.BodyExternalForceParams.{ EXTERNAL_FORCE_NONE, </span>
+<span class="sd">                                                                                    EXTERNAL_FORCE_USE_ESTIMATE, </span>
+<span class="sd">                                                                                    EXTERNAL_FORCE_USE_OVERRIDE }</span>
+<span class="sd">            override_external_force_vec: x/y/z list of forces in the body frame. Only used when the indicator</span>
+<span class="sd">                                         specifies EXTERNAL_FORCE_USE_OVERRIDE</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            spot.MobilityParams, params for spot mobility commands.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">external_force_indicator</span> <span class="o">==</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="o">.</span><span class="n">EXTERNAL_FORCE_USE_OVERRIDE</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">override_external_force_vec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1">#Default the override forces to all zeros if none are specified</span>
+                <span class="n">override_external_force_vec</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">body_frame</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="n">base_frame</span><span class="o">=</span><span class="n">geometry_pb2</span><span class="o">.</span><span class="n">FRAME_BODY</span><span class="p">)</span>
+            <span class="n">ext_forces</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">override_external_force_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">override_external_force_vec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">z</span><span class="o">=</span><span class="n">override_external_force_vec</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="p">(</span><span class="n">external_force_indicator</span><span class="o">=</span><span class="n">external_force_indicator</span><span class="p">,</span>
+                                                            <span class="n">frame</span><span class="o">=</span><span class="n">body_frame</span><span class="p">,</span>
+                                                            <span class="n">external_force_override</span><span class="o">=</span><span class="n">ext_forces</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">external_force_indicator</span> <span class="o">==</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="o">.</span><span class="n">EXTERNAL_FORCE_NONE</span> <span class="ow">or</span>
+              <span class="n">external_force_indicator</span> <span class="o">==</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="o">.</span><span class="n">EXTERNAL_FORCE_USE_ESTIMATE</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="p">(</span><span class="n">external_force_indicator</span><span class="o">=</span><span class="n">external_force_indicator</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
 
     <span class="c1">####################</span>
     <span class="c1"># Helper functions #</span>

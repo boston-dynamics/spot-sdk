@@ -11,6 +11,8 @@ import logging
 import os
 import platform
 
+import datetime
+import jwt
 import pkg_resources
 
 from .auth import AuthClient
@@ -202,6 +204,7 @@ class Sdk(object):
         try:
             with open(os.path.expanduser(resource_path), 'rb') as token_file:
                 token = token_file.read().decode().strip()
+                log_token_time_remaining(token)
         except IOError as e:
             _LOGGER.exception(e)
             raise UnableToLoadAppTokenError(
@@ -211,3 +214,55 @@ class Sdk(object):
             raise UnsetAppTokenError
 
         self.app_token = token
+
+
+def decode_token(token):
+    """Decodes a JWT token without verification.
+
+    Args:
+        token: A string representing a token.
+
+    Returns:
+       Dictionary containing information about the token.
+       Empty dictionary if failed to load token.
+
+    Raises:
+        UnableToLoadAppTokenError: If the token cannot be read.
+    """
+    try:
+        values = jwt.decode(token, verify=False)
+        return values
+    except jwt.exceptions.DecodeError as e:
+        raise UnableToLoadAppTokenError('Incorrectly formatted token {} --- {}'.format(token, e))
+    except Exception as e:
+        raise UnableToLoadAppTokenError('Problem decoding token {} --- {}'.format(token, e))
+
+
+def log_token_time_remaining(token):
+    """Log the time remaining until app token expires.
+
+    Arguments:
+        token: A jwt token
+    
+    Raises:
+        UnableToLoadAppTokenError: If the token expiration information cannot be retrieved.
+    """
+    token_values = decode_token(token)
+    if 'exp' not in token_values:
+        raise UnableToLoadAppTokenError("Unknown token expiration")
+
+    # Log time to expiration, with varying levels based on nearness.
+    expire_time = datetime.datetime.fromtimestamp(token_values['exp'])
+    time_to_expiration = expire_time - datetime.datetime.utcnow()
+    if time_to_expiration < datetime.timedelta(seconds=0):
+        _LOGGER.error('Your application token has expired. Please contact '
+                      'support@bostondynamics.com to request a new token.')
+    elif time_to_expiration <= datetime.timedelta(days=30):
+        _LOGGER.warning('Application token expires in {} days on {}. Please contact '
+                        'support@bostondynamics.com to request a new token before the '
+                        'current token expires.'.format(
+                            time_to_expiration.days,
+                            datetime.datetime.strftime(expire_time, '%Y/%m/%d')))
+    else:
+        _LOGGER.info('Application token expires on {}.'.format(
+            datetime.datetime.strftime(expire_time, '%Y/%m/%d')))

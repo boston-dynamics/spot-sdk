@@ -163,19 +163,19 @@
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="k">import</span> <span class="n">Lease</span> <span class="k">as</span> <span class="n">LeaseProto</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="k">import</span> <span class="n">AcquireLeaseRequest</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="k">import</span> <span class="n">AcquireLeaseResponse</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="k">import</span> <span class="n">ListLeasesRequest</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="k">import</span> <span class="n">RetainLeaseRequest</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="k">import</span> <span class="n">ReturnLeaseRequest</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="k">import</span> <span class="n">ReturnLeaseResponse</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="k">import</span> <span class="n">TakeLeaseRequest</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="k">import</span> <span class="n">TakeLeaseResponse</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api.lease_service_pb2_grpc</span> <span class="k">import</span> <span class="n">LeaseServiceStub</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="kn">import</span> <span class="n">Lease</span> <span class="k">as</span> <span class="n">LeaseProto</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="kn">import</span> <span class="n">AcquireLeaseRequest</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="kn">import</span> <span class="n">AcquireLeaseResponse</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="kn">import</span> <span class="n">ListLeasesRequest</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="kn">import</span> <span class="n">RetainLeaseRequest</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="kn">import</span> <span class="n">ReturnLeaseRequest</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="kn">import</span> <span class="n">ReturnLeaseResponse</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="kn">import</span> <span class="n">TakeLeaseRequest</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="kn">import</span> <span class="n">TakeLeaseResponse</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.lease_service_pb2_grpc</span> <span class="kn">import</span> <span class="n">LeaseServiceStub</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">common</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">ResponseError</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">common</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ResponseError</span>
 
 
 <div class="viewcode-block" id="LeaseResponseError"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseResponseError">[docs]</a><span class="k">class</span> <span class="nc">LeaseResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
@@ -256,7 +256,7 @@
 <span class="sd">    monotonically increasing numbers, similar to a Lamport logical clock.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_proto</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_proto</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initializes a Lease object.</span>
 
 <span class="sd">        Args:</span>
@@ -371,7 +371,7 @@
     <span class="n">STATUS_OTHER_OWNER</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="n">STATUS_NOT_MANAGED</span> <span class="o">=</span> <span class="mi">4</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_status</span><span class="p">,</span> <span class="n">lease_owner</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lease_current</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_status</span><span class="p">,</span> <span class="n">lease_owner</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lease_current</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lease_status</span> <span class="o">=</span> <span class="n">lease_status</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lease_owner</span> <span class="o">=</span> <span class="n">lease_owner</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lease_original</span> <span class="o">=</span> <span class="n">lease</span>
@@ -415,7 +415,7 @@
 <div class="viewcode-block" id="LeaseWallet"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseWallet">[docs]</a><span class="k">class</span> <span class="nc">LeaseWallet</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Thread-safe storage of Leases.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lease_state_map</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
 
@@ -472,7 +472,7 @@
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;lease&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.LeaseService&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_wallet</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_wallet</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">LeaseClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">LeaseServiceStub</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span> <span class="o">=</span> <span class="n">lease_wallet</span>
 
@@ -586,7 +586,7 @@
 <div class="viewcode-block" id="LeaseWalletRequestProcessor"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseWalletRequestProcessor">[docs]</a><span class="k">class</span> <span class="nc">LeaseWalletRequestProcessor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;LeaseWalletRequestProcessor adds a lease from a wallet to a request.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_wallet</span><span class="p">,</span> <span class="n">resource_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_wallet</span><span class="p">,</span> <span class="n">resource_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">        Args:</span>
@@ -649,7 +649,7 @@
 <div class="viewcode-block" id="LeaseWalletResponseProcessor"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseWalletResponseProcessor">[docs]</a><span class="k">class</span> <span class="nc">LeaseWalletResponseProcessor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;LeaseWalletResponseProcessor updates the wallet with a LeaseUseResult.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_wallet</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_wallet</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span> <span class="o">=</span> <span class="n">lease_wallet</span>
 
 <div class="viewcode-block" id="LeaseWalletResponseProcessor.mutate"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseWalletResponseProcessor.mutate">[docs]</a>    <span class="k">def</span> <span class="nf">mutate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
@@ -701,7 +701,7 @@
 <span class="sd">    by using the retain_lease methods on the LeaseClient object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_client</span><span class="p">,</span> <span class="n">lease_wallet</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resource</span><span class="o">=</span><span class="n">_RESOURCE_BODY</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_client</span><span class="p">,</span> <span class="n">lease_wallet</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resource</span><span class="o">=</span><span class="n">_RESOURCE_BODY</span><span class="p">,</span>
                  <span class="n">rpc_interval_seconds</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">keep_running_cb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a new LeaseKeepAlive object.</span>
 
@@ -782,10 +782,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Stopping check-in&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_end_check_in_signal</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_ok</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

@@ -11,7 +11,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="bosdyn-core",
-    version="1.1.0",
+    version="1.1.2",
     author="Boston Dynamics",
     author_email="support@bostondynamics.com",
     description="Boston Dynamics API Core code and interfaces",
@@ -20,7 +20,7 @@ setuptools.setup(
     url="https://api.bostondynamics.com/",
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
-    install_requires=['bosdyn-api>=1.1.0'],
+    install_requires=['bosdyn-api>=1.1.2'],
     classifiers=[
         "Programming Language :: Python :: 2.7",
         "License :: Other/Proprietary License",

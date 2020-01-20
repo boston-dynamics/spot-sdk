@@ -158,12 +158,12 @@
 <span class="sd">&quot;&quot;&quot;For clients to the image service.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">collections</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="k">import</span> <span class="n">BaseClient</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="k">import</span> <span class="p">(</span><span class="n">error_factory</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">handle_common_header_errors</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="k">import</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">UnsetStatusError</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="n">BaseClient</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">error_factory</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">handle_common_header_errors</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">UnsetStatusError</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">image_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="k">import</span> <span class="n">image_service_pb2_grpc</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">image_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">image_service_pb2_grpc</span>
 
 
 <div class="viewcode-block" id="ImageResponseError"><a class="viewcode-back" href="../../../client_modules/image.html#bosdyn.client.image.ImageResponseError">[docs]</a><span class="k">class</span> <span class="nc">ImageResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
@@ -213,7 +213,7 @@
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;robot_image_service&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.ImageService&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ImageClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">image_service_pb2_grpc</span><span class="o">.</span><span class="n">ImageServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ImageClient.list_image_sources"><a class="viewcode-back" href="../../../client_modules/image.html#bosdyn.client.image.ImageClient.list_image_sources">[docs]</a>    <span class="k">def</span> <span class="nf">list_image_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -258,8 +258,13 @@
 
 
 <div class="viewcode-block" id="build_image_request"><a class="viewcode-back" href="../../../client_modules/image.html#bosdyn.client.image.build_image_request">[docs]</a><span class="k">def</span> <span class="nf">build_image_request</span><span class="p">(</span><span class="n">image_source_name</span><span class="p">,</span> <span class="n">quality_percent</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span>
-                        <span class="n">image_format</span><span class="o">=</span><span class="n">image_pb2</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">FORMAT_JPEG</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Helper function which builds an ImageRequest from an image source name.&quot;&quot;&quot;</span>
+                        <span class="n">image_format</span><span class="o">=</span><span class="n">image_pb2</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">FORMAT_UNKNOWN</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper function which builds an ImageRequest from an image source name.</span>
+
+<span class="sd">    By default the robot will choose an appropriate format - such as JPEG for</span>
+<span class="sd">    visual images, or RAW for depth images. Clients can override image_format</span>
+<span class="sd">    in those cases.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageRequest</span><span class="p">(</span><span class="n">image_source_name</span><span class="o">=</span><span class="n">image_source_name</span><span class="p">,</span>
                                   <span class="n">quality_percent</span><span class="o">=</span><span class="n">quality_percent</span><span class="p">,</span> <span class="n">image_format</span><span class="o">=</span><span class="n">image_format</span><span class="p">)</span></div>
 

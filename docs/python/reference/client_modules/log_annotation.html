@@ -187,74 +187,86 @@
 <p>This allows client code to add operator comments and text-messages to the robot’s log files.</p>
 <dl class="class">
 <dt id="bosdyn.client.log_annotation.LogAnnotationClient">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.log_annotation.</code><code class="sig-name descname">LogAnnotationClient</code><a class="reference internal" href="../_modules/bosdyn/client/log_annotation.html#LogAnnotationClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.log_annotation.LogAnnotationClient" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">bosdyn.client.log_annotation.</code><code class="descname">LogAnnotationClient</code><a class="reference internal" href="../_modules/bosdyn/client/log_annotation.html#LogAnnotationClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.log_annotation.LogAnnotationClient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="common.html#bosdyn.client.common.BaseClient" title="bosdyn.client.common.BaseClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.common.BaseClient</span></code></a></p>
 <p>A client for adding annotations to robot logs.</p>
-<dl class="attribute">
-<dt id="bosdyn.client.log_annotation.LogAnnotationClient.default_authority">
-<code class="sig-name descname">default_authority</code><em class="property"> = 'log.spot.robot'</em><a class="headerlink" href="#bosdyn.client.log_annotation.LogAnnotationClient.default_authority" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="bosdyn.client.log_annotation.LogAnnotationClient.default_service_name">
-<code class="sig-name descname">default_service_name</code><em class="property"> = 'log-annotation'</em><a class="headerlink" href="#bosdyn.client.log_annotation.LogAnnotationClient.default_service_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="bosdyn.client.log_annotation.LogAnnotationClient.service_type">
-<code class="sig-name descname">service_type</code><em class="property"> = 'bosdyn.api.LogAnnotation'</em><a class="headerlink" href="#bosdyn.client.log_annotation.LogAnnotationClient.service_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.log_annotation.LogAnnotationClient.add_text_messages">
-<code class="sig-name descname">add_text_messages</code><span class="sig-paren">(</span><em class="sig-param">text_messages</em>, <em class="sig-param">**kw_args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/log_annotation.html#LogAnnotationClient.add_text_messages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.log_annotation.LogAnnotationClient.add_text_messages" title="Permalink to this definition">¶</a></dt>
-<dd><p>Log text messages to the robot.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>text_messages</strong> – Sequence of LogAnnotationTextMessage protos.</p></li>
-<li><p><strong>kw_args</strong> – Extra arguments to pass to grpc call invocation.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="bosdyn.client.log_annotation.LogAnnotationClient.add_operator_comment">
-<code class="sig-name descname">add_operator_comment</code><span class="sig-paren">(</span><em class="sig-param">msg</em>, <em class="sig-param">robot_timestamp=None</em>, <em class="sig-param">**kw_args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/log_annotation.html#LogAnnotationClient.add_operator_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.log_annotation.LogAnnotationClient.add_operator_comment" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add an operator comment to the robot log</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>msg</strong> – Text of user comment to log.</p></li>
-<li><p><strong>robot_timestamp</strong> – Time (google.protobuf.Timestamp) of messages, in <em>robot time</em>.
-If not set, timestamp will be when the robot receives the message.</p></li>
-<li><p><strong>kw_args</strong> – Extra arguments to pass to grpc call invocation.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="method">
 <dt id="bosdyn.client.log_annotation.LogAnnotationClient.add_log_blob">
-<code class="sig-name descname">add_log_blob</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">type_id</em>, <em class="sig-param">channel=None</em>, <em class="sig-param">robot_timestamp=None</em>, <em class="sig-param">**kw_args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/log_annotation.html#LogAnnotationClient.add_log_blob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.log_annotation.LogAnnotationClient.add_log_blob" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_log_blob</code><span class="sig-paren">(</span><em>data</em>, <em>type_id</em>, <em>channel=None</em>, <em>robot_timestamp=None</em>, <em>**kw_args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/log_annotation.html#LogAnnotationClient.add_log_blob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.log_annotation.LogAnnotationClient.add_log_blob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Log blob messages to the robot.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> – Binary data of one blob.</p></li>
-<li><p><strong>type_id</strong> – Type of binary data of blob.</p></li>
-<li><p><strong>robot_timestamp</strong> – Time (google.protobuf.Timestamp) of messages, in <em>robot time</em>.
-If not set, timestamp will be when the robot receives the message.</p></li>
-<li><p><strong>kw_args</strong> – Extra arguments to pass to grpc call invocation.</p></li>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> – Binary data of one blob.</li>
+<li><strong>type_id</strong> – Type of binary data of blob.</li>
+<li><strong>robot_timestamp</strong> – Time (google.protobuf.Timestamp) of messages, in <em>robot time</em>.
+If not set, timestamp will be when the robot receives the message.</li>
+<li><strong>kw_args</strong> – Extra arguments to pass to grpc call invocation.</li>
 </ul>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="bosdyn.client.log_annotation.LogAnnotationClient.add_log_protobuf">
-<code class="sig-name descname">add_log_protobuf</code><span class="sig-paren">(</span><em class="sig-param">proto</em>, <em class="sig-param">robot_timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/log_annotation.html#LogAnnotationClient.add_log_protobuf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.log_annotation.LogAnnotationClient.add_log_protobuf" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_log_protobuf</code><span class="sig-paren">(</span><em>proto</em>, <em>robot_timestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/log_annotation.html#LogAnnotationClient.add_log_protobuf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.log_annotation.LogAnnotationClient.add_log_protobuf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.log_annotation.LogAnnotationClient.add_operator_comment">
+<code class="descname">add_operator_comment</code><span class="sig-paren">(</span><em>msg</em>, <em>robot_timestamp=None</em>, <em>**kw_args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/log_annotation.html#LogAnnotationClient.add_operator_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.log_annotation.LogAnnotationClient.add_operator_comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an operator comment to the robot log</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>msg</strong> – Text of user comment to log.</li>
+<li><strong>robot_timestamp</strong> – Time (google.protobuf.Timestamp) of messages, in <em>robot time</em>.
+If not set, timestamp will be when the robot receives the message.</li>
+<li><strong>kw_args</strong> – Extra arguments to pass to grpc call invocation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bosdyn.client.log_annotation.LogAnnotationClient.add_text_messages">
+<code class="descname">add_text_messages</code><span class="sig-paren">(</span><em>text_messages</em>, <em>**kw_args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/log_annotation.html#LogAnnotationClient.add_text_messages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.log_annotation.LogAnnotationClient.add_text_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log text messages to the robot.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>text_messages</strong> – Sequence of LogAnnotationTextMessage protos.</li>
+<li><strong>kw_args</strong> – Extra arguments to pass to grpc call invocation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="bosdyn.client.log_annotation.LogAnnotationClient.default_authority">
+<code class="descname">default_authority</code><em class="property"> = 'log.spot.robot'</em><a class="headerlink" href="#bosdyn.client.log_annotation.LogAnnotationClient.default_authority" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="bosdyn.client.log_annotation.LogAnnotationClient.default_service_name">
+<code class="descname">default_service_name</code><em class="property"> = 'log-annotation'</em><a class="headerlink" href="#bosdyn.client.log_annotation.LogAnnotationClient.default_service_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="bosdyn.client.log_annotation.LogAnnotationClient.service_type">
+<code class="descname">service_type</code><em class="property"> = 'bosdyn.api.LogAnnotation'</em><a class="headerlink" href="#bosdyn.client.log_annotation.LogAnnotationClient.service_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

@@ -155,16 +155,16 @@
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
 <span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.api.spot</span> <span class="k">import</span> <span class="n">spot_check_service_pb2_grpc</span><span class="p">,</span> <span class="n">spot_check_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.spot</span> <span class="kn">import</span> <span class="n">spot_check_service_pb2_grpc</span><span class="p">,</span> <span class="n">spot_check_pb2</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="k">import</span> <span class="n">BaseClient</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="k">import</span> <span class="p">(</span><span class="n">error_factory</span><span class="p">,</span> <span class="n">handle_unset_status_error</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="n">BaseClient</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">error_factory</span><span class="p">,</span> <span class="n">handle_unset_status_error</span><span class="p">,</span>
                                   <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_lease_use_result_errors</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="k">import</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">LeaseUseError</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">LeaseUseError</span>
 
 
 <div class="viewcode-block" id="SpotCheckError"><a class="viewcode-back" href="../../../client_modules/spot_check.html#bosdyn.client.spot_check.SpotCheckError">[docs]</a><span class="k">class</span> <span class="nc">SpotCheckError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
@@ -253,7 +253,7 @@
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;spot-check&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.spot.SpotCheckService&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SpotCheckClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">spot_check_service_pb2_grpc</span><span class="o">.</span><span class="n">SpotCheckServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SpotCheckClient.spot_check_command"><a class="viewcode-back" href="../../../client_modules/spot_check.html#bosdyn.client.spot_check.SpotCheckClient.spot_check_command">[docs]</a>    <span class="k">def</span> <span class="nf">spot_check_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

@@ -1,0 +1,86 @@
+// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.mission;
+
+option java_outer_classname = "MissionProto";
+
+import "bosdyn/api/header.proto";
+
+// Get the state of the mission.
+message GetStateRequest {
+    /// Common request/response header.
+    RequestHeader header = 1;
+}
+
+// Response to a GetStateRequest.
+message GetStateResponse {
+    /// Common request/response header.
+    ResponseHeader header = 1;
+    /// The requested mission state.
+    State state = 2;
+}
+
+// State of the mission service.
+message State {
+    // What questions are outstanding?
+    repeated Question questions = 1;
+}
+
+// A question posed by some component of the mission.
+// These represent a request for information from ANY listeners that may be out there.
+// For v1.1.2, a question tells third party code that it is time to execute.
+message Question {
+    // Identifier of this question, unique across all missions executing on a single host.
+    int64 id = 1;
+
+    // What's asking the question. Should be unique in the active mission.
+    string source = 2;
+
+    // The text of the question itself.
+    string text = 3;
+
+    // Options to choose from.
+    message Option {
+        // Numeric code corresponding to this option. Passed as part of the answer.
+        // For v1.1.2, the only answer codes will be 0 for success, -1 for failure.
+        int32 answer_code = 2;
+    }
+    repeated Option options = 4;
+}
+
+// Answer one of the outstanding questions.
+message AnswerQuestionRequest {
+    /// Common request/response header.
+    RequestHeader header = 1;
+    // Identifier of the question being answered.
+    int64 question_id = 2;
+    // The answer_code from the Question, corresponding to the user's choice.
+    // For v1.1.2, the only answer codes will be 0 for success, -1 for failure.
+    int32 code = 3;
+}
+
+// Response from the server after a client has answered one of its questions.
+message AnswerQuestionResponse {
+    /// Common request/response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        // Invalid; do not use.
+        STATUS_UNKNOWN = 0;
+        // Answer accepted.
+        STATUS_OK = 1;
+        // Question ID is not valid / unknown by the mission service.
+        STATUS_INVALID_QUESTION_ID = 2;
+        // Answer code is not applicable for the question indicated.
+        STATUS_INVALID_CODE = 3;
+        // Question was already answered.
+        STATUS_ALREADY_ANSWERED = 4;
+    }
+    Status status = 2;
+}

@@ -157,33 +157,33 @@
 
 <span class="sd">&quot;&quot;&quot;Command-line utility code for interacting with robot services.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
 <span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">signal</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">InvalidRequestError</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">InvalidRequestError</span>
 
 <span class="kn">import</span> <span class="nn">six</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.api.log_annotation_pb2</span> <span class="k">import</span> <span class="n">LogAnnotationTextMessage</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.log_annotation_pb2</span> <span class="kn">import</span> <span class="n">LogAnnotationTextMessage</span>
 <span class="kn">import</span> <span class="nn">bosdyn.client</span>
-<span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="k">import</span> <span class="p">(</span><span class="n">duration_str</span><span class="p">,</span> <span class="n">timestamp_to_datetime</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="p">(</span><span class="n">duration_str</span><span class="p">,</span> <span class="n">timestamp_to_datetime</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">.auth</span> <span class="k">import</span> <span class="n">InvalidLoginError</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">InvalidAppTokenError</span><span class="p">,</span> <span class="n">ProxyConnectionError</span>
-<span class="kn">from</span> <span class="nn">.directory</span> <span class="k">import</span> <span class="n">DirectoryClient</span><span class="p">,</span> <span class="n">NonexistentServiceError</span>
-<span class="kn">from</span> <span class="nn">.estop</span> <span class="k">import</span> <span class="n">EstopClient</span><span class="p">,</span> <span class="n">EstopEndpoint</span><span class="p">,</span> <span class="n">EstopKeepAlive</span>
-<span class="kn">from</span> <span class="nn">.image</span> <span class="k">import</span> <span class="p">(</span><span class="n">ImageClient</span><span class="p">,</span> <span class="n">UnknownImageSourceError</span><span class="p">,</span> <span class="n">ImageResponseError</span><span class="p">,</span> <span class="n">build_image_request</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.lease</span> <span class="k">import</span> <span class="n">LeaseClient</span>
-<span class="kn">from</span> <span class="nn">.log_annotation</span> <span class="k">import</span> <span class="n">LogAnnotationClient</span>
-<span class="kn">from</span> <span class="nn">.robot_id</span> <span class="k">import</span> <span class="n">RobotIdClient</span>
-<span class="kn">from</span> <span class="nn">.robot_state</span> <span class="k">import</span> <span class="n">RobotStateClient</span>
-<span class="kn">from</span> <span class="nn">.sdk</span> <span class="k">import</span> <span class="n">SdkError</span>
-<span class="kn">from</span> <span class="nn">.time_sync</span> <span class="k">import</span> <span class="p">(</span><span class="n">TimeSyncClient</span><span class="p">,</span> <span class="n">TimeSyncEndpoint</span><span class="p">,</span> <span class="n">TimeSyncError</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.util</span> <span class="k">import</span> <span class="p">(</span><span class="n">add_common_arguments</span><span class="p">,</span> <span class="n">setup_logging</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">InvalidLoginError</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">InvalidAppTokenError</span><span class="p">,</span> <span class="n">ProxyConnectionError</span>
+<span class="kn">from</span> <span class="nn">.directory</span> <span class="kn">import</span> <span class="n">DirectoryClient</span><span class="p">,</span> <span class="n">NonexistentServiceError</span>
+<span class="kn">from</span> <span class="nn">.estop</span> <span class="kn">import</span> <span class="n">EstopClient</span><span class="p">,</span> <span class="n">EstopEndpoint</span><span class="p">,</span> <span class="n">EstopKeepAlive</span>
+<span class="kn">from</span> <span class="nn">.image</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ImageClient</span><span class="p">,</span> <span class="n">UnknownImageSourceError</span><span class="p">,</span> <span class="n">ImageResponseError</span><span class="p">,</span> <span class="n">build_image_request</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.lease</span> <span class="kn">import</span> <span class="n">LeaseClient</span>
+<span class="kn">from</span> <span class="nn">.log_annotation</span> <span class="kn">import</span> <span class="n">LogAnnotationClient</span>
+<span class="kn">from</span> <span class="nn">.robot_id</span> <span class="kn">import</span> <span class="n">RobotIdClient</span>
+<span class="kn">from</span> <span class="nn">.robot_state</span> <span class="kn">import</span> <span class="n">RobotStateClient</span>
+<span class="kn">from</span> <span class="nn">.sdk</span> <span class="kn">import</span> <span class="n">SdkError</span>
+<span class="kn">from</span> <span class="nn">.time_sync</span> <span class="kn">import</span> <span class="p">(</span><span class="n">TimeSyncClient</span><span class="p">,</span> <span class="n">TimeSyncEndpoint</span><span class="p">,</span> <span class="n">TimeSyncError</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="p">(</span><span class="n">add_common_arguments</span><span class="p">,</span> <span class="n">setup_logging</span><span class="p">)</span>
 
 
 <span class="c1"># pylint: disable=too-few-public-methods</span>
@@ -197,7 +197,7 @@
     <span class="c1"># Most commands need authentication.</span>
     <span class="n">NEED_AUTHENTICATION</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="n">command_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">NAME</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NAME</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
 
@@ -224,7 +224,7 @@
 <div class="viewcode-block" id="Subcommands"><a class="viewcode-back" href="../../../client_modules/command_line.html#bosdyn.client.command_line.Subcommands">[docs]</a><span class="k">class</span> <span class="nc">Subcommands</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Run subcommands.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span> <span class="n">subcommands</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span> <span class="n">subcommands</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
         <span class="n">command_dest</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_command&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NAME</span><span class="p">)</span>
         <span class="n">cmd_subparsers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="n">command_dest</span><span class="p">)</span>
@@ -243,7 +243,7 @@
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;dir&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DirectoryCommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span>
                                                 <span class="p">[</span><span class="n">DirectoryListCommand</span><span class="p">,</span> <span class="n">DirectoryGetCommand</span><span class="p">])</span></div>
 
@@ -298,7 +298,7 @@
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;list&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DirectoryListCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--proto&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
@@ -313,7 +313,7 @@
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;get&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DirectoryGetCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--proto&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
@@ -336,7 +336,7 @@
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;id&#39;</span>
     <span class="n">NEED_AUTHENTICATION</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RobotIdCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--proto&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
@@ -365,7 +365,7 @@
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;log&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">LogAnnotationCommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span>
                                                     <span class="p">[</span><span class="n">LogTextMsgCommand</span><span class="p">,</span> <span class="n">LogOperatorCommentCommand</span><span class="p">])</span></div>
 
@@ -375,7 +375,7 @@
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;textmsg&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">LogTextMsgCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--timestamp&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;achieve time-sync and send timestamp&#39;</span><span class="p">)</span>
@@ -426,7 +426,7 @@
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;comment&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">LogOperatorCommentCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--timestamp&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;achieve time-sync and send timestamp&#39;</span><span class="p">)</span>
@@ -450,7 +450,7 @@
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;state&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RobotStateCommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span>
                                                  <span class="p">[</span><span class="n">FullStateCommand</span><span class="p">,</span> <span class="n">MetricsCommand</span><span class="p">,</span> <span class="n">RobotModel</span><span class="p">])</span></div>
 
@@ -471,7 +471,7 @@
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;model&#39;</span>
     <span class="n">NEED_AUTHENTICATION</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RobotModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--outdir&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;Model_Files&#39;</span><span class="p">,</span>
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;directory into which to save the files&#39;</span><span class="p">)</span>
@@ -529,7 +529,7 @@
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;metrics&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MetricsCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--proto&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print metrics in proto format&#39;</span><span class="p">)</span>
@@ -582,7 +582,7 @@
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;time-sync&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">TimeSyncCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--proto&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
@@ -608,7 +608,7 @@
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;lease&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">LeaseCommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span> <span class="p">[</span><span class="n">LeaseListCommand</span><span class="p">])</span></div>
 
 
@@ -617,7 +617,7 @@
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;list&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">LeaseListCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--proto&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
@@ -644,7 +644,7 @@
 
     <span class="n">_RPC_PRINT_CHOICES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> <span class="s1">&#39;full&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">BecomeEstopCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--timeout&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;EStop timeout (seconds)&#39;</span><span class="p">,</span>
                                   <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
@@ -711,7 +711,7 @@
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;image&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ImageCommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span>
                                             <span class="p">[</span><span class="n">ListImageSourcesCommand</span><span class="p">,</span> <span class="n">GetImageCommand</span><span class="p">])</span></div>
 
@@ -733,7 +733,7 @@
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;list-sources&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ListImageSourcesCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--proto&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
@@ -747,7 +747,7 @@
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;get-image&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">GetImageCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--outfile&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;filename into which to save the image&#39;</span><span class="p">)</span>

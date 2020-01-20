@@ -484,7 +484,8 @@ class RobotCommandBuilder(object):
     ########################
     @staticmethod
     def mobility_params(body_height=0.0, footprint_R_body=geometry.EulerZXY(),
-                        locomotion_hint=spot_command_pb2.HINT_AUTO, stair_hint=False):
+                        locomotion_hint=spot_command_pb2.HINT_AUTO, stair_hint=False,
+                        external_force_params=None):
         """Helper to create Mobility params for spot mobility commands. This function is designed
         to help get started issuing commands, but lots of options are not exposed via this
         interface. See spot.robot_command_pb2 for more details. If unset, good defaults will be
@@ -503,7 +504,41 @@ class RobotCommandBuilder(object):
         body_control = spot_command_pb2.BodyControlParams(base_offset_rt_footprint=traj)
         return spot_command_pb2.MobilityParams(body_control=body_control,
                                                locomotion_hint=locomotion_hint,
-                                               stair_hint=stair_hint)
+                                               stair_hint=stair_hint,
+                                               external_force_params=external_force_params)
+
+    def build_body_external_forces(external_force_indicator=spot_command_pb2.BodyExternalForceParams.EXTERNAL_FORCE_NONE,
+                                   override_external_force_vec=None):
+        """Helper to create Mobility params. This function allows the user to enable an external
+        force estimator, or set a vector of forces (in the body frame) which override the estimator
+        with constant external forces. 
+        
+        Args:
+            external_force_indicator: Indicates if the external force estimator should be enabled/disabled
+                                      or an override force should be used. Can be specified as one of three values:
+                                         spot_command_pb2.BodyExternalForceParams.{ EXTERNAL_FORCE_NONE, 
+                                                                                    EXTERNAL_FORCE_USE_ESTIMATE, 
+                                                                                    EXTERNAL_FORCE_USE_OVERRIDE }
+            override_external_force_vec: x/y/z list of forces in the body frame. Only used when the indicator
+                                         specifies EXTERNAL_FORCE_USE_OVERRIDE
+
+        Returns:
+            spot.MobilityParams, params for spot mobility commands.
+        """
+        if external_force_indicator == spot_command_pb2.BodyExternalForceParams.EXTERNAL_FORCE_USE_OVERRIDE:
+            if override_external_force_vec is None:
+                #Default the override forces to all zeros if none are specified
+                override_external_force_vec = (0.0, 0.0, 0.0)
+            body_frame = geometry_pb2.Frame(base_frame=geometry_pb2.FRAME_BODY)
+            ext_forces = geometry_pb2.Vec3(x=override_external_force_vec[0], y=override_external_force_vec[1], z=override_external_force_vec[2])
+            return spot_command_pb2.BodyExternalForceParams(external_force_indicator=external_force_indicator,
+                                                            frame=body_frame,
+                                                            external_force_override=ext_forces)
+        elif (external_force_indicator == spot_command_pb2.BodyExternalForceParams.EXTERNAL_FORCE_NONE or
+              external_force_indicator == spot_command_pb2.BodyExternalForceParams.EXTERNAL_FORCE_USE_ESTIMATE):
+            return spot_command_pb2.BodyExternalForceParams(external_force_indicator=external_force_indicator)
+        else:
+            return None
 
     ####################
     # Helper functions #

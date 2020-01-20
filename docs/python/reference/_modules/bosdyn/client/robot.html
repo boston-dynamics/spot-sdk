@@ -162,22 +162,22 @@
 
 <span class="kn">import</span> <span class="nn">bosdyn.client.channel</span>
 
-<span class="kn">from</span> <span class="nn">.auth</span> <span class="k">import</span> <span class="n">AuthClient</span>
-<span class="kn">from</span> <span class="nn">.directory</span> <span class="k">import</span> <span class="n">DirectoryClient</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">NonexistentAuthorityError</span>
-<span class="kn">from</span> <span class="nn">.lease</span> <span class="k">import</span> <span class="n">LeaseWallet</span>
-<span class="kn">from</span> <span class="nn">.log_annotation</span> <span class="k">import</span> <span class="n">LogAnnotationClient</span>
-<span class="kn">from</span> <span class="nn">.power</span> <span class="k">import</span> <span class="n">PowerClient</span>
-<span class="kn">from</span> <span class="nn">.power</span> <span class="k">import</span> <span class="n">power_on</span> <span class="k">as</span> <span class="n">pkg_power_on</span>
-<span class="kn">from</span> <span class="nn">.power</span> <span class="k">import</span> <span class="n">power_off</span> <span class="k">as</span> <span class="n">pkg_power_off</span>
-<span class="kn">from</span> <span class="nn">.power</span> <span class="k">import</span> <span class="n">safe_power_off</span> <span class="k">as</span> <span class="n">pkg_safe_power_off</span>
-<span class="kn">from</span> <span class="nn">.power</span> <span class="k">import</span> <span class="n">is_powered_on</span> <span class="k">as</span> <span class="n">pkg_is_powered_on</span>
-<span class="kn">from</span> <span class="nn">.robot_command</span> <span class="k">import</span> <span class="n">RobotCommandClient</span>
-<span class="kn">from</span> <span class="nn">.robot_id</span> <span class="k">import</span> <span class="n">RobotIdClient</span>
-<span class="kn">from</span> <span class="nn">.robot_state</span> <span class="k">import</span> <span class="n">RobotStateClient</span>
-<span class="kn">from</span> <span class="nn">.time_sync</span> <span class="k">import</span> <span class="n">TimeSyncThread</span><span class="p">,</span> <span class="n">TimeSyncClient</span><span class="p">,</span> <span class="n">TimeSyncError</span>
-<span class="kn">from</span> <span class="nn">.token_manager</span> <span class="k">import</span> <span class="n">TokenManager</span>
-<span class="kn">from</span> <span class="nn">.token_cache</span> <span class="k">import</span> <span class="n">TokenCache</span>
+<span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">AuthClient</span>
+<span class="kn">from</span> <span class="nn">.directory</span> <span class="kn">import</span> <span class="n">DirectoryClient</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">NonexistentAuthorityError</span>
+<span class="kn">from</span> <span class="nn">.lease</span> <span class="kn">import</span> <span class="n">LeaseWallet</span>
+<span class="kn">from</span> <span class="nn">.log_annotation</span> <span class="kn">import</span> <span class="n">LogAnnotationClient</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">PowerClient</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">power_on</span> <span class="k">as</span> <span class="n">pkg_power_on</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">power_off</span> <span class="k">as</span> <span class="n">pkg_power_off</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">safe_power_off</span> <span class="k">as</span> <span class="n">pkg_safe_power_off</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">is_powered_on</span> <span class="k">as</span> <span class="n">pkg_is_powered_on</span>
+<span class="kn">from</span> <span class="nn">.robot_command</span> <span class="kn">import</span> <span class="n">RobotCommandClient</span>
+<span class="kn">from</span> <span class="nn">.robot_id</span> <span class="kn">import</span> <span class="n">RobotIdClient</span>
+<span class="kn">from</span> <span class="nn">.robot_state</span> <span class="kn">import</span> <span class="n">RobotStateClient</span>
+<span class="kn">from</span> <span class="nn">.time_sync</span> <span class="kn">import</span> <span class="n">TimeSyncThread</span><span class="p">,</span> <span class="n">TimeSyncClient</span><span class="p">,</span> <span class="n">TimeSyncError</span>
+<span class="kn">from</span> <span class="nn">.token_manager</span> <span class="kn">import</span> <span class="n">TokenManager</span>
+<span class="kn">from</span> <span class="nn">.token_cache</span> <span class="kn">import</span> <span class="n">TokenCache</span>
 
 <span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">_DEFAULT_SECURE_CHANNEL_PORT</span> <span class="o">=</span> <span class="mi">443</span>
@@ -189,7 +189,7 @@
 <span class="sd">    See also Sdk and BaseClient</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">serial_number</span> <span class="o">=</span> <span class="kc">None</span>
@@ -212,7 +212,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span> <span class="o">=</span> <span class="n">LeaseWallet</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 

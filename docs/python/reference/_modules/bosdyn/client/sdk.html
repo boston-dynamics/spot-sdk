@@ -156,30 +156,32 @@
 <span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
 
 <span class="sd">&quot;&quot;&quot;Sdk is  a repository for settings typically common to a single developer and/or robot fleet.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">platform</span>
 
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">jwt</span>
 <span class="kn">import</span> <span class="nn">pkg_resources</span>
 
-<span class="kn">from</span> <span class="nn">.auth</span> <span class="k">import</span> <span class="n">AuthClient</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">Error</span>
-<span class="kn">from</span> <span class="nn">.directory</span> <span class="k">import</span> <span class="n">DirectoryClient</span>
-<span class="kn">from</span> <span class="nn">.estop</span> <span class="k">import</span> <span class="n">EstopClient</span>
-<span class="kn">from</span> <span class="nn">.image</span> <span class="k">import</span> <span class="n">ImageClient</span>
-<span class="kn">from</span> <span class="nn">.lease</span> <span class="k">import</span> <span class="n">LeaseClient</span>
-<span class="kn">from</span> <span class="nn">.log_annotation</span> <span class="k">import</span> <span class="n">LogAnnotationClient</span>
-<span class="kn">from</span> <span class="nn">.payload</span> <span class="k">import</span> <span class="n">PayloadClient</span>
-<span class="kn">from</span> <span class="nn">.power</span> <span class="k">import</span> <span class="n">PowerClient</span>
-<span class="kn">from</span> <span class="nn">.processors</span> <span class="k">import</span> <span class="n">AddRequestHeader</span>
-<span class="kn">from</span> <span class="nn">.robot</span> <span class="k">import</span> <span class="n">Robot</span>
-<span class="kn">from</span> <span class="nn">.robot_command</span> <span class="k">import</span> <span class="n">RobotCommandClient</span>
-<span class="kn">from</span> <span class="nn">.robot_id</span> <span class="k">import</span> <span class="n">RobotIdClient</span>
-<span class="kn">from</span> <span class="nn">.robot_state</span> <span class="k">import</span> <span class="n">RobotStateClient</span>
-<span class="kn">from</span> <span class="nn">.spot_check</span> <span class="k">import</span> <span class="n">SpotCheckClient</span>
-<span class="kn">from</span> <span class="nn">.time_sync</span> <span class="k">import</span> <span class="n">TimeSyncClient</span>
+<span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">AuthClient</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">Error</span>
+<span class="kn">from</span> <span class="nn">.directory</span> <span class="kn">import</span> <span class="n">DirectoryClient</span>
+<span class="kn">from</span> <span class="nn">.estop</span> <span class="kn">import</span> <span class="n">EstopClient</span>
+<span class="kn">from</span> <span class="nn">.image</span> <span class="kn">import</span> <span class="n">ImageClient</span>
+<span class="kn">from</span> <span class="nn">.lease</span> <span class="kn">import</span> <span class="n">LeaseClient</span>
+<span class="kn">from</span> <span class="nn">.log_annotation</span> <span class="kn">import</span> <span class="n">LogAnnotationClient</span>
+<span class="kn">from</span> <span class="nn">.payload</span> <span class="kn">import</span> <span class="n">PayloadClient</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">PowerClient</span>
+<span class="kn">from</span> <span class="nn">.processors</span> <span class="kn">import</span> <span class="n">AddRequestHeader</span>
+<span class="kn">from</span> <span class="nn">.robot</span> <span class="kn">import</span> <span class="n">Robot</span>
+<span class="kn">from</span> <span class="nn">.robot_command</span> <span class="kn">import</span> <span class="n">RobotCommandClient</span>
+<span class="kn">from</span> <span class="nn">.robot_id</span> <span class="kn">import</span> <span class="n">RobotIdClient</span>
+<span class="kn">from</span> <span class="nn">.robot_state</span> <span class="kn">import</span> <span class="n">RobotStateClient</span>
+<span class="kn">from</span> <span class="nn">.spot_check</span> <span class="kn">import</span> <span class="n">SpotCheckClient</span>
+<span class="kn">from</span> <span class="nn">.time_sync</span> <span class="kn">import</span> <span class="n">TimeSyncClient</span>
 
 
 <div class="viewcode-block" id="SdkError"><a class="viewcode-back" href="../../../client_modules/sdk.html#bosdyn.client.sdk.SdkError">[docs]</a><span class="k">class</span> <span class="nc">SdkError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
@@ -265,7 +267,7 @@
 <span class="sd">    See also Robot for robot-specific settings.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">app_token</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cert</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span> <span class="ow">or</span> <span class="s1">&#39;bosdyn.Sdk&#39;</span><span class="p">)</span>
@@ -353,6 +355,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">resource_path</span><span class="p">),</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">token_file</span><span class="p">:</span>
                 <span class="n">token</span> <span class="o">=</span> <span class="n">token_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">log_token_time_remaining</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">_LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">UnableToLoadAppTokenError</span><span class="p">(</span>
@@ -362,6 +365,58 @@
             <span class="k">raise</span> <span class="n">UnsetAppTokenError</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">app_token</span> <span class="o">=</span> <span class="n">token</span></div></div>
+
+
+<div class="viewcode-block" id="decode_token"><a class="viewcode-back" href="../../../client_modules/sdk.html#bosdyn.client.sdk.decode_token">[docs]</a><span class="k">def</span> <span class="nf">decode_token</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Decodes a JWT token without verification.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        token: A string representing a token.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">       Dictionary containing information about the token.</span>
+<span class="sd">       Empty dictionary if failed to load token.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        UnableToLoadAppTokenError: If the token cannot be read.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">values</span>
+    <span class="k">except</span> <span class="n">jwt</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">DecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">UnableToLoadAppTokenError</span><span class="p">(</span><span class="s1">&#39;Incorrectly formatted token </span><span class="si">{}</span><span class="s1"> --- </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">UnableToLoadAppTokenError</span><span class="p">(</span><span class="s1">&#39;Problem decoding token </span><span class="si">{}</span><span class="s1"> --- </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="log_token_time_remaining"><a class="viewcode-back" href="../../../client_modules/sdk.html#bosdyn.client.sdk.log_token_time_remaining">[docs]</a><span class="k">def</span> <span class="nf">log_token_time_remaining</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Log the time remaining until app token expires.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        token: A jwt token</span>
+<span class="sd">    </span>
+<span class="sd">    Raises:</span>
+<span class="sd">        UnableToLoadAppTokenError: If the token expiration information cannot be retrieved.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">token_values</span> <span class="o">=</span> <span class="n">decode_token</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;exp&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">token_values</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">UnableToLoadAppTokenError</span><span class="p">(</span><span class="s2">&quot;Unknown token expiration&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Log time to expiration, with varying levels based on nearness.</span>
+    <span class="n">expire_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">token_values</span><span class="p">[</span><span class="s1">&#39;exp&#39;</span><span class="p">])</span>
+    <span class="n">time_to_expiration</span> <span class="o">=</span> <span class="n">expire_time</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">time_to_expiration</span> <span class="o">&lt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Your application token has expired. Please contact &#39;</span>
+                      <span class="s1">&#39;support@bostondynamics.com to request a new token.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">time_to_expiration</span> <span class="o">&lt;=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Application token expires in </span><span class="si">{}</span><span class="s1"> days on </span><span class="si">{}</span><span class="s1">. Please contact &#39;</span>
+                        <span class="s1">&#39;support@bostondynamics.com to request a new token before the &#39;</span>
+                        <span class="s1">&#39;current token expires.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">time_to_expiration</span><span class="o">.</span><span class="n">days</span><span class="p">,</span>
+                            <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">expire_time</span><span class="p">,</span> <span class="s1">&#39;%Y/%m/</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Application token expires on </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">expire_time</span><span class="p">,</span> <span class="s1">&#39;%Y/%m/</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)))</span></div>
 </pre></div>
 
            </div>
