@@ -63,16 +63,16 @@ class FiducialFollow(object):
         self._dist_y_desired = .05
 
         #Maximum speeds
-        self._max_x_vel = 1.0
-        self._max_y_vel = 1.0
+        self._max_x_vel = 0.5
+        self._max_y_vel = 0.5
         self._max_ang_vel = 1.0
 
         #Indicators for movement and image displays
         self._display_images = True  # Display live from the robot
         self._standup = True  # Stand up the robot
         self._movement_on = True  # Let the robot walk towards the fiducial
-        self._limit_speed = False  # Limit the robot's walking speed
-        self._avoid_obstacles = False  # Disable obstacle avoidance
+        self._limit_speed = True  # Limit the robot's walking speed
+        self._avoid_obstacles = True  # Disable obstacle avoidance
         self._debug = False  # Printouts for debugging purposes
 
         #Robot's id, lease and estop information
