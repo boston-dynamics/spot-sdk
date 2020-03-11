@@ -31,7 +31,7 @@ Python 2.7 is _not_ supported. The [Python 2 End-Of-Life](https://www.python.org
 
 ### Documentation and tutorials
 
-The [Python QuickStart](docs/python/quickstart.html) is a step-by-step guide that will get you up and running on the Python libraries, and cover a number of key concepts along the way.
+The [Python QuickStart](docs/python/quickstart.md) is a step-by-step guide that will get you up and running on the Python libraries, and cover a number of key concepts along the way.
 
 The [Python Reference](docs/python/reference/index.html) is a detailed reference manual for API calls.
 
