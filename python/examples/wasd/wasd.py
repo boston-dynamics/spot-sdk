@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -16,6 +16,7 @@ import threading
 import time
 import math
 import io
+import os
 
 from PIL import Image, ImageEnhance
 
@@ -28,12 +29,14 @@ from bosdyn.client import create_standard_sdk, ResponseError, RpcError
 from bosdyn.client.async_tasks import AsyncGRPCTask, AsyncPeriodicQuery, AsyncTasks
 from bosdyn.client.estop import EstopClient, EstopEndpoint, EstopKeepAlive
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
+from bosdyn.client.lease import Error as LeaseBaseError
 from bosdyn.client.power import PowerClient
 from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder
 from bosdyn.client.image import ImageClient
 from bosdyn.client.robot_state import RobotStateClient
 from bosdyn.client.time_sync import TimeSyncError
 import bosdyn.client.util
+from bosdyn.client.frame_helpers import ODOM_FRAME_NAME
 from bosdyn.util import duration_str, format_metric, secs_to_hms
 
 LOGGER = logging.getLogger()
@@ -43,14 +46,13 @@ VELOCITY_BASE_ANGULAR = 0.8  # rad/sec
 VELOCITY_CMD_DURATION = 0.6  # seconds
 COMMAND_INPUT_RATE = 0.1
 
-#   - program breaks if robot fails to stand (instead of using self-right)
 
 
 def _grpc_or_log(desc, thunk):
     try:
         return thunk()
     except (ResponseError, RpcError) as err:
-        LOGGER.error("Failed %s: %s", desc, err)
+        LOGGER.error("Failed %s: %s" % (desc, err))
 
 
 def _image_to_ascii(image, new_width):
@@ -90,54 +92,28 @@ def _image_to_ascii(image, new_width):
 class ExitCheck(object):
     """A class to help exiting a loop, also capturing SIGTERM to exit the loop."""
 
-    def __init__(self, exit_delay_secs):
-        self._exit_delay_secs = exit_delay_secs
-        self._old_sigterm_handler = None
-        self._time_exit_requested = None
-        self._on_exit_callbacks = OrderedDict()  # name -> callback
-
-    def run_callback_on_exit(self, name, callback):
-        """Adds a callback to be invoked when 'with' scope ends.
-
-        Args:
-         name      string name of callback
-         callback  zero-argument function (thunk) to be called.
-        """
-        self._on_exit_callbacks[name] = callback
+    def __init__(self):
+        self._kill_now = False
+        signal.signal(signal.SIGTERM, self._sigterm_handler)
+        signal.signal(signal.SIGINT, self._sigterm_handler)
 
     def __enter__(self):
-        self._old_sigterm_handler = signal.getsignal(signal.SIGTERM)
-        signal.signal(signal.SIGTERM, self.request_exit)
-        print("Set new signal handler")
         return self
 
     def __exit__(self, _type, _value, _traceback):
-        # Restore the original signal handler
-        for name, callback in self._on_exit_callbacks.items():
-            try:
-                callback()
-            except Exception:  # pylint: disable=broad-except
-                LOGGER.exception("Exception in callback '%s' on exit", name)
-        if self._old_sigterm_handler:
-            signal.signal(signal.SIGTERM, self._old_sigterm_handler)
-            print("Original handler installed")
+        return False
+
+    def _sigterm_handler(self, _signum, _frame):
+        self._kill_now = True
+
+    def request_exit(self):
+        """Manually trigger an exit (rather than sigterm/sigint)."""
+        self._kill_now = True
 
     @property
-    def exit_requested(self):
-        """Returns True if request_exit has been called."""
-        return self._time_exit_requested is not None
-
-    @property
-    def keep_alive(self):
-        """Returns False if the main loop should exit, True if it shold keep running."""
-        return (self._time_exit_requested is None or
-                (time.time() - self._time_exit_requested) < self._exit_delay_secs)
-
-    def request_exit(self, _signum=None, _frame=None):
-        """Causes future checks of keep_alive to return False after exit_delay."""
-        if self._time_exit_requested is None:
-            LOGGER.info("Exit requested")
-            self._time_exit_requested = time.time()
+    def kill_now(self):
+        """Return the status of the exit checker indicating if it should exit."""
+        return self._kill_now
 
 
 class CursesHandler(logging.Handler):
@@ -212,7 +188,7 @@ class AsyncImageCapture(AsyncGRPCTask):
         self._ascii_image = _image_to_ascii(image, new_width=70)
 
     def _handle_error(self, exception):
-        LOGGER.exception("Failure getting image: %s", exception)
+        LOGGER.exception("Failure getting image: %s" % exception)
 
 
 class WasdInterface(object):
@@ -222,8 +198,13 @@ class WasdInterface(object):
         self._robot = robot
         # Create clients -- do not use the for communication yet.
         self._lease_client = robot.ensure_client(LeaseClient.default_service_name)
-        self._estop_client = robot.ensure_client(EstopClient.default_service_name)
-        self._estop_endpoint = EstopEndpoint(self._estop_client, 'wasd', 9.0)
+        try:
+            self._estop_client = self._robot.ensure_client(EstopClient.default_service_name)
+            self._estop_endpoint = EstopEndpoint(self._estop_client, 'GNClient', 9.0)
+        except:
+            # Not the estop.
+            self._estop_client = None
+            self._estop_endpoint = None
         self._power_client = robot.ensure_client(PowerClient.default_service_name)
         self._robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
         self._robot_command_client = robot.ensure_client(RobotCommandClient.default_service_name)
@@ -249,6 +230,7 @@ class WasdInterface(object):
             ord('e'): self._turn_right,
             ord('I'): self._image_task.take_image,
             ord('O'): self._image_task.toggle_video_mode,
+            ord('l'): self._toggle_lease,
         }
         self._locked_messages = ['', '', '']  # string: displayed message for user
         self._estop_keepalive = None
@@ -257,27 +239,28 @@ class WasdInterface(object):
         # Stuff that is set in start()
         self._robot_id = None
         self._lease = None
+        self._lease_keepalive = None
 
     def start(self):
         """Begin communication with the robot."""
-        self._robot_id = self._robot.get_id()
         self._lease = self._lease_client.acquire()
-        self._estop_endpoint.force_simple_setup()  # Set this endpoint as the robot's sole estop.
+        # Construct our lease keep-alive object, which begins RetainLease calls in a thread.
+        self._lease_keepalive = LeaseKeepAlive(self._lease_client)
+
+        self._robot_id = self._robot.get_id()
+        if self._estop_endpoint is not None:
+            self._estop_endpoint.force_simple_setup(
+            )  # Set this endpoint as the robot's sole estop.
 
     def shutdown(self):
         """Release control of robot as gracefully as posssible."""
         LOGGER.info("Shutting down WasdInterface.")
-        if self._robot.time_sync:
-            self._robot.time_sync.stop()
         if self._estop_keepalive:
-            _grpc_or_log("stopping estop", self._estop_keepalive.stop)
-            self._estop_keepalive = None
+            # This stops the check-in thread but does not stop the robot.
+            self._estop_keepalive.shutdown()
         if self._lease:
             _grpc_or_log("returning lease", lambda: self._lease_client.return_lease(self._lease))
             self._lease = None
-
-    def __del__(self):
-        self.shutdown()
 
     def flush_and_estop_buffer(self, stdscr):
         """Manually flush the curses input buffer but trigger any estop requests (space)"""
@@ -309,44 +292,42 @@ class WasdInterface(object):
 
     def drive(self, stdscr):
         """User interface to control the robot via the passed-in curses screen interface object."""
-        with ExitCheck(exit_delay_secs=2.0) as self._exit_check, \
-              LeaseKeepAlive(self._lease_client,
-                             keep_running_cb=lambda: self._exit_check.keep_alive) \
-                             as lease_keep_alive:
+        with ExitCheck() as self._exit_check:
             curses_handler = CursesHandler(self)
             curses_handler.setLevel(logging.INFO)
             LOGGER.addHandler(curses_handler)
 
             stdscr.nodelay(True)  # Don't block for user input.
+            stdscr.resize(26, 96)
+            stdscr.refresh()
 
             # for debug
             curses.echo()
 
             try:
-                while self._exit_check.keep_alive:
+                while not self._exit_check.kill_now:
                     self._async_tasks.update()
-                    self._drive_draw(stdscr, lease_keep_alive)
+                    self._drive_draw(stdscr, self._lease_keepalive)
 
-                    if not self._exit_check.exit_requested:
-                        try:
-                            cmd = stdscr.getch()
-                            # Do not queue up commands on client
-                            self.flush_and_estop_buffer(stdscr)
-                            self._drive_cmd(cmd)
+                    try:
+                        cmd = stdscr.getch()
+                        # Do not queue up commands on client
+                        self.flush_and_estop_buffer(stdscr)
+                        self._drive_cmd(cmd)
+                        time.sleep(COMMAND_INPUT_RATE)
+                    except Exception:
+                        # On robot command fault, sit down safely before killing the program.
+                        self._safe_power_off()
+                        time.sleep(2.0)
+                        raise
 
-                        except Exception:
-                            # On robot command fault, sit down safely before killing the program.
-                            self._safe_power_off()
-                            time.sleep(2.0)
-                            raise
-
-                    time.sleep(COMMAND_INPUT_RATE)
             finally:
                 LOGGER.removeHandler(curses_handler)
 
     def _drive_draw(self, stdscr, lease_keep_alive):
         """Draw the interface screen at each update."""
         stdscr.clear()  # clear screen
+        stdscr.resize(26, 96)
         stdscr.addstr(0, 0, '{:20s} {}'.format(self._robot_id.nickname,
                                                self._robot_id.serial_number))
         stdscr.addstr(1, 0, self._lease_str(lease_keep_alive))
@@ -357,19 +338,22 @@ class WasdInterface(object):
         for i in range(3):
             stdscr.addstr(7 + i, 2, self.message(i))
         self._show_metrics(stdscr)
-        stdscr.addstr(10, 0, "Commands: [TAB]: quit")
+        stdscr.addstr(10, 0, "Commands: [TAB]: quit                               ")
         stdscr.addstr(11, 0, "          [T]: Time-sync, [SPACE]: Estop, [P]: Power")
-        stdscr.addstr(12, 0, "          [I]: Take image, [O]: Video mode")
-        stdscr.addstr(13, 0, "          [v]: Sit, [f]: Stand, [r]: Self-right")
-        stdscr.addstr(14, 0, "          [wasd]: Directional strafing")
-        stdscr.addstr(15, 0, "          [qe]: Turning")
+        stdscr.addstr(12, 0, "          [I]: Take image, [O]: Video mode          ")
+        stdscr.addstr(13, 0, "          [v]: Sit, [f]: Stand, [r]: Self-right     ")
+        stdscr.addstr(14, 0, "          [wasd]: Directional strafing              ")
+        stdscr.addstr(15, 0, "          [qe]: Turning                             ")
+        stdscr.addstr(16, 0, "          [l]: Return/Acquire lease                 ")
+        stdscr.addstr(17, 0, "")
 
         # print as many lines of the image as will fit on the curses screen
         if self._image_task.ascii_image != None:
             max_y, _max_x = stdscr.getmaxyx()
             for y_i, img_line in enumerate(self._image_task.ascii_image):
-                if y_i + 16 >= max_y:
+                if y_i + 17 >= max_y:
                     break
+
                 stdscr.addstr('\n' + img_line)
 
         stdscr.refresh()
@@ -387,13 +371,14 @@ class WasdInterface(object):
     def _try_grpc(self, desc, thunk):
         try:
             return thunk()
-        except (ResponseError, RpcError) as err:
+        except (ResponseError, RpcError, LeaseBaseError) as err:
             self.add_message("Failed {}: {}".format(desc, err))
             return None
 
     def _quit_program(self):
         self._sit()
-        self._exit_check.request_exit()
+        if self._exit_check is not None:
+            self._exit_check.request_exit()
 
     def _toggle_time_sync(self):
         if self._robot.time_sync.stopped:
@@ -403,12 +388,24 @@ class WasdInterface(object):
 
     def _toggle_estop(self):
         """toggle estop on/off. Initial state is ON"""
-        if not self._estop_keepalive:
-            self._estop_keepalive = EstopKeepAlive(self._estop_endpoint)
-        else:
-            self._try_grpc("stopping estop", self._estop_keepalive.stop)
-            self._estop_keepalive.shutdown()
-            self._estop_keepalive = None
+        if self._estop_client is not None and self._estop_endpoint is not None:
+            if not self._estop_keepalive:
+                self._estop_keepalive = EstopKeepAlive(self._estop_endpoint)
+            else:
+                self._try_grpc("stopping estop", self._estop_keepalive.stop)
+                self._estop_keepalive.shutdown()
+                self._estop_keepalive = None
+
+    def _toggle_lease(self):
+        """toggle lease acquisition. Initial state is acquired"""
+        if self._lease_client is not None:
+            if self._lease_keepalive is None:
+                self._lease = self._lease_client.acquire()
+                self._lease_keepalive = LeaseKeepAlive(self._lease_client)
+            else:
+                self._lease_client.return_lease(self._lease)
+                self._lease_keepalive.shutdown()
+                self._lease_keepalive = None
 
     def _start_robot_command(self, desc, command_proto, end_time_secs=None):
 
@@ -451,13 +448,11 @@ class WasdInterface(object):
                                       v_x=v_x, v_y=v_y, v_rot=v_rot),
                                   end_time_secs=time.time() + VELOCITY_CMD_DURATION)
 
-    #  This command makes the robot move very fast and the 'origin' is very unpredictable.
     def _return_to_origin(self):
         self._start_robot_command('fwd_and_rotate',
                                   RobotCommandBuilder.trajectory_command(
                                       goal_x=0.0, goal_y=0.0, goal_heading=0.0,
-                                      frame=geometry_pb2.Frame(base_frame=geometry_pb2.FRAME_KO),
-                                      params=None, body_height=0.0,
+                                      frame_name=ODOM_FRAME_NAME, params=None, body_height=0.0,
                                       locomotion_hint=spot_command_pb2.HINT_SPEED_SELECT_TROT),
                                   end_time_secs=time.time() + 20)
 
@@ -474,10 +469,6 @@ class WasdInterface(object):
         else:
             self._video_mode = True
 
-    # def _clear_behavior_faults(self):
-    #     cmd = robot_state_proto.GetRobotState()
-    #     self._start_robot_command(cmd)
-    #     robot_command_pb2.clear_behavior_fault(behavior_fault_id = , lease = self._lease)
 
     def _toggle_power(self):
         power_state = self._power_state()
@@ -510,8 +501,21 @@ class WasdInterface(object):
         return state.power_state.motor_power_state
 
     def _lease_str(self, lease_keep_alive):
-        alive = 'RUNNING' if lease_keep_alive.is_alive() else 'STOPPED'
-        lease = '{}:{}'.format(self._lease.lease_proto.resource, self._lease.lease_proto.sequence)
+        alive = '??'
+        lease = '??'
+        if lease_keep_alive is None:
+            alive = 'STOPPED'
+            lease = 'RETURNED'
+        else:
+            if self._lease:
+                lease = '{}:{}'.format(self._lease.lease_proto.resource,
+                                       self._lease.lease_proto.sequence)
+            else:
+                lease = '...'
+            if lease_keep_alive.is_alive():
+                alive = 'RUNNING'
+            else:
+                alive = 'STOPPED'
         return 'Lease {} THREAD:{}'.format(lease, alive)
 
     def _power_state_str(self):
@@ -522,7 +526,10 @@ class WasdInterface(object):
         return 'Power: {}'.format(state_str[6:])  # get rid of STATE_ prefix
 
     def _estop_str(self):
-        thread_status = 'RUNNING' if self._estop_keepalive else 'STOPPED'
+        if not self._estop_client:
+            thread_status = 'NOT ESTOP'
+        else:
+            thread_status = 'RUNNING' if self._estop_keepalive else 'STOPPED'
         estop_status = '??'
         state = self.robot_state
         if state:
@@ -614,29 +621,32 @@ def main():
         robot.authenticate(options.username, options.password)
         robot.start_time_sync()
     except RpcError as err:
-        LOGGER.error("Failed to communicate with robot: %s", err)
+        LOGGER.error("Failed to communicate with robot: %s" % err)
         return False
 
     wasd_interface = WasdInterface(robot)
     try:
         wasd_interface.start()
     except (ResponseError, RpcError) as err:
-        LOGGER.error("Failed to initialize robot communication: %s", err)
+        LOGGER.error("Failed to initialize robot communication: %s" % err)
         return False
 
     LOGGER.removeHandler(stream_handler)  # Don't use stream handler in curses mode.
     try:
         # Run wasd interface in curses mode, then restore terminal config.
         curses.wrapper(wasd_interface.drive)
+    except Exception as e:
+        LOGGER.error("WASD has thrown an error: %s" % repr(e))
     finally:
         # Restore stream handler after curses mode.
         LOGGER.addHandler(stream_handler)
-
-    wasd_interface.shutdown()
+        # Do any final cleanup steps.
+        wasd_interface.shutdown()
 
     return True
 
 
 if __name__ == "__main__":
     if not main():
-        sys.exit(1)
+        os._exit(1)
+    os._exit(0)

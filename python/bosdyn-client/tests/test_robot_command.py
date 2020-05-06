@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -10,9 +10,7 @@ from bosdyn.client.robot_command import (_robot_command_error, _robot_command_fe
                                          _clear_behavior_fault_error, RobotCommandBuilder)
 
 from bosdyn.api import robot_command_pb2
-from bosdyn.api import geometry_pb2
-from bosdyn.api import robot_command_pb2
-
+from bosdyn.client.frame_helpers import BODY_FRAME_NAME, ODOM_FRAME_NAME
 from bosdyn.client import ResponseError, InternalServerError, LeaseUseError, UnsetStatusError
 
 
@@ -48,9 +46,9 @@ def test_robot_command_feedback_error():
     # Test unset status error
     response.header.error.code = response.header.error.CODE_OK
     assert isinstance(_robot_command_feedback_error(response), UnsetStatusError)
-    # Test status error
+    # Test status error.
     response.status = response.STATUS_COMMAND_OVERRIDDEN
-    assert isinstance(_robot_command_feedback_error(response), ResponseError)
+    assert not _robot_command_feedback_error(response)
     # Test OK
     response.status = response.STATUS_PROCESSING
     assert not _robot_command_feedback_error(response)
@@ -118,7 +116,7 @@ def test_trajectory_command():
     goal_x = 1.0
     goal_y = 2.0
     goal_heading = 3.0
-    frame = geometry_pb2.Frame(base_frame=geometry_pb2.FRAME_KO)
+    frame = ODOM_FRAME_NAME
     command = RobotCommandBuilder.trajectory_command(goal_x, goal_y, goal_heading, frame)
     _test_has_mobility(command)
     assert command.mobility_command.HasField("se2_trajectory_request")
@@ -127,7 +125,7 @@ def test_trajectory_command():
     assert traj.points[0].pose.position.x == goal_x
     assert traj.points[0].pose.position.y == goal_y
     assert traj.points[0].pose.angle == goal_heading
-    assert traj.frame == frame
+    assert command.mobility_command.se2_trajectory_request.se2_frame_name == ODOM_FRAME_NAME
 
 
 def test_velocity_command():
@@ -141,7 +139,7 @@ def test_velocity_command():
     assert vel_cmd.velocity.linear.x == v_x
     assert vel_cmd.velocity.linear.y == v_y
     assert vel_cmd.velocity.angular == v_rot
-    assert vel_cmd.frame.base_frame == geometry_pb2.FRAME_BODY
+    assert vel_cmd.se2_frame_name == BODY_FRAME_NAME
 
 
 def test_stand_command():

@@ -1,0 +1,102 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.spot_cam;
+
+option java_outer_classname = "NetworkProto";
+
+import "bosdyn/api/header.proto";
+import "google/protobuf/wrappers.proto";
+
+message NetworkTuple {
+    //a big-endian representation of an IPv4 address
+    google.protobuf.UInt32Value address = 2;
+    //The mask used for defining the system's subnet
+    google.protobuf.UInt32Value netmask = 3;
+    //A global routing is set up for the address defined below (if present)
+    google.protobuf.UInt32Value gateway = 4;
+    //If MTU is present, and <16 bits wide, then it is set for the ethernet interface's MTU
+    //if not, the MTU is set to 1500
+    google.protobuf.UInt32Value mtu = 5;
+}
+
+message GetNetworkSettingsRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message GetNetworkSettingsResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    NetworkTuple settings = 2;
+}
+
+message GetSSLCertRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message GetSSLCertResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    // An ascii-armored representation of the ssl certificate
+    string certificate = 2;
+}
+
+message SetNetworkSettingsRequest {
+    bosdyn.api.RequestHeader header = 1;
+    NetworkTuple settings = 2;
+}
+
+message SetNetworkSettingsResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    NetworkTuple settings = 2;
+}
+
+message SetSSLKeyPairRequest {
+    bosdyn.api.RequestHeader header = 1;
+    // An ascii-armored representation of the ssl certificate
+    string certificate = 2;
+    // An ascii-armored representation of the ssl key (or EC pair, in the case of ECDSA keys)
+    string key = 3;
+}
+
+message SetSSLKeyPairResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    // An ascii-armored representation of the ssl certificate
+    string certificate = 2;
+}
+
+//these servers are used in the ICE resolution process. 
+message ICEServer {
+    enum servertype {
+        UNKNOWN = 0;
+        STUN = 1;
+        TURN = 2;
+    }
+    servertype type = 1;
+    string address = 2;
+    //only the least significant 16 bits are used.
+    uint32 port = 3;
+}
+
+message GetICEConfigurationRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message GetICEConfigurationResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    repeated ICEServer servers = 2;
+}
+
+//Note: this configuration replaces any configuration currently present.
+//it is *not* appended
+message SetICEConfigurationRequest {
+    bosdyn.api.RequestHeader header = 1;
+    repeated ICEServer servers = 2;
+}
+
+message SetICEConfigurationResponse {
+    bosdyn.api.ResponseHeader header = 1;
+}

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -14,44 +14,44 @@ import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
 
 enum PowerCommandStatus {
-    /// Status is not specified.
+    // Status is not specified.
     STATUS_UNKNOWN = 0;
 
-    /// Power command is executing.
+    // Power command is executing.
     STATUS_IN_PROGRESS = 1;
 
-    /// Power command succeeded.
+    // Power command succeeded.
     STATUS_SUCCESS = 2;
 
-    /// ERROR: Robot cannot be powered on while on wall power.
+    // ERROR: Robot cannot be powered on while on wall power.
     STATUS_SHORE_POWER_CONNECTED = 3;
 
-    /// ERROR: Battery not inserted into robot.
+    // ERROR: Battery not inserted into robot.
     STATUS_BATTERY_MISSING = 4;
 
-    /// ERROR: Power command cant be overwritten.
+    // ERROR: Power command cant be overwritten.
     STATUS_COMMAND_IN_PROGRESS = 5;
 
-    /// ERROR: Cannot power on while estopped. A robot may have multiple estops.
-    /// Inspect EStopState for additional info.
+    // ERROR: Cannot power on while estopped. A robot may have multiple estops.
+    // Inspect EStopState for additional info.
     STATUS_ESTOPPED = 6;
 
-    /// ERROR: Cannot power due to a fault.Inspect FaultState for more info.
+    // ERROR: Cannot power due to a fault.Inspect FaultState for more info.
     STATUS_FAULTED = 7;
 
-    /// ERROR: Internal error occurred, maybe clear-able by issuing a power off command.
+    // ERROR: Internal error occurred, maybe clear-able by issuing a power off command.
     STATUS_INTERNAL_ERROR = 8;
 }
 
 
 message PowerCommandRequest {
-    /// Common request header.
+    // Common request header.
     RequestHeader header = 1;
 
-    /// The Lease to show ownership of the robot.
+    // The Lease to show ownership of the robot.
     Lease lease = 2;
 
-    /// Commands for the robot to execute.
+    // Commands for the robot to execute.
     enum Request {
         REQUEST_UNKNOWN = 0;    // Invalid request; do not use.
         REQUEST_OFF = 1;        // Cut power to motors immediately.
@@ -61,31 +61,31 @@ message PowerCommandRequest {
 }
 
 message PowerCommandResponse {
-    /// Common response header.
+    // Common response header.
     ResponseHeader header = 1;
 
-    /// Details about how the lease was used.
+    // Details about how the lease was used.
     LeaseUseResult lease_use_result = 2;
 
-    /// Current feedback of specified command.
+    // Current feedback of specified command.
     PowerCommandStatus status = 3;
 
-    /// Unique identifier for the command, If empty, was not accepted.
+    // Unique identifier for the command, If empty, was not accepted.
     uint32 power_command_id = 4;
 }
 
 message PowerCommandFeedbackRequest {
-    /// Common request header.
+    // Common request header.
     RequestHeader header = 1;
 
-    /// Unique identifier for the command of which feedback is desired.
+    // Unique identifier for the command of which feedback is desired.
     uint32 power_command_id = 2;
 }
 
 message PowerCommandFeedbackResponse {
-    /// Common response header.
+    // Common response header.
     ResponseHeader header = 1;
 
-    /// Current status of specified command.
+    // Current status of specified command.
     PowerCommandStatus status = 2;
 }

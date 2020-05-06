@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.common &mdash; Spot 1.1.0 documentation</title>
+  <title>bosdyn.client.common &mdash; Spot 2.0.0 documentation</title>
   
 
   
@@ -17,34 +17,33 @@
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -58,7 +57,7 @@
             
             
               <div class="version">
-                1.1.0
+                2.0.0
               </div>
             
           
@@ -82,10 +81,10 @@
               
             
             
-              <p class="caption"><span class="caption-text">Services:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../client_index.html">Client API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../core_index.html">Core API</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../client_modules/client_index.html">Client SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core_modules/core_index.html">Core SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mission_modules/mission_index.html">Mission SDK</a></li>
 </ul>
 
             
@@ -149,7 +148,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.common</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
@@ -159,6 +158,8 @@
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">types</span>
+<span class="kn">import</span> <span class="nn">grpc</span>
 
 <span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="n">TransportError</span><span class="p">,</span> <span class="n">translate_exception</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">InternalServerError</span><span class="p">,</span> <span class="n">InvalidRequestError</span><span class="p">,</span> <span class="n">LeaseUseError</span><span class="p">,</span> <span class="n">UnsetStatusError</span>
@@ -177,11 +178,60 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
+<div class="viewcode-block" id="streaming_common_header_errors"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.streaming_common_header_errors">[docs]</a><span class="k">def</span> <span class="nf">streaming_common_header_errors</span><span class="p">(</span><span class="n">response_iterator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return an exception based on common response header for a streaming</span>
+<span class="sd">       response iterator. None if no error.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">response_iterator</span><span class="p">:</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">common_header_errors</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">error</span>
+    <span class="c1"># No common header error found.</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
 <div class="viewcode-block" id="common_lease_errors"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.common_lease_errors">[docs]</a><span class="k">def</span> <span class="nf">common_lease_errors</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return an exception based on lease use result. None if no error.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">lease_use_result</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">response</span><span class="o">.</span><span class="n">lease_use_result</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">LeaseUseError</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s1">&#39;lease_use_result&#39;</span><span class="p">):</span>
+        <span class="c1"># On the off chance the protobuf message has a lease_use_result field but the instance does</span>
+        <span class="c1"># not have it filled out...</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s1">&#39;lease_use_result&#39;</span><span class="p">):</span>
+            <span class="n">lease_use_results</span> <span class="o">=</span> <span class="p">[</span><span class="n">response</span><span class="o">.</span><span class="n">lease_use_result</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lease_use_results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s1">&#39;lease_use_results&#39;</span><span class="p">):</span>
+        <span class="n">lease_use_results</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">lease_use_results</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># This means you&#39;re using the wrong error handler.</span>
+        <span class="k">return</span> <span class="n">InternalServerError</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s1">&#39;No LeaseUseResult field found!&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">lease_use_results</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">result</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LeaseUseError</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="streaming_common_lease_errors"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.streaming_common_lease_errors">[docs]</a><span class="k">def</span> <span class="nf">streaming_common_lease_errors</span><span class="p">(</span><span class="n">response_iterator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return an exception based on lease use result for a streaming</span>
+<span class="sd">       response iterator. None if no error.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">response_iterator</span><span class="p">:</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">common_lease_errors</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">error</span>
+    <span class="c1"># No lease use error found.</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="error_pair"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.error_pair">[docs]</a><span class="k">def</span> <span class="nf">error_pair</span><span class="p">(</span><span class="n">error_message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates a pair of an error class and the associated docstring as the error message</span>
+<span class="sd">       which can be used by the error_factory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        error_message: A class that inherits from the python Error class.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The tuple of the error class and it&#39;s associated docstring.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">error_message</span><span class="p">,</span> <span class="n">error_message</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="error_factory"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.error_factory">[docs]</a><span class="k">def</span> <span class="nf">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">status_to_string</span><span class="p">,</span> <span class="n">status_to_error</span><span class="p">):</span>
@@ -193,12 +243,12 @@
 <span class="sd">    function in try/except blocks.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        response -- Protobuf message to examine.</span>
-<span class="sd">        status -- Status from the protobuf message.</span>
-<span class="sd">        status_to_string -- Function that converts numeric status value to string. May raise</span>
+<span class="sd">        response: Protobuf message to examine or an iterator of protobuf responses.</span>
+<span class="sd">        status: Status from the protobuf message.</span>
+<span class="sd">        status_to_string: Function that converts numeric status value to string. May raise</span>
 <span class="sd">                            ValueError, in which case just the numeric code is included in a default</span>
 <span class="sd">                            error message.</span>
-<span class="sd">        status_to_error -- mapping of status -&gt; (error_constructor, error_message)</span>
+<span class="sd">        status_to_error: mapping of status -&gt; (error_constructor, error_message)</span>
 <span class="sd">                           error_constructor must take arguments &quot;response&quot; and &quot;error_message&quot;.</span>
 <span class="sd">                           (and ideally will subclass from ResponseError.)</span>
 
@@ -219,7 +269,16 @@
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Code: </span><span class="si">{}</span><span class="s1"> (Protobuf definition mismatch?)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Code: </span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">status_str</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">error_type</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span></div>
+
+    <span class="c1"># Determine if this is a streaming response or a regular response.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">GeneratorType</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="n">error_type</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="n">resp</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">err</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">error_type</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="handle_unset_status_error"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.handle_unset_status_error">[docs]</a><span class="k">def</span> <span class="nf">handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="n">statustype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -230,9 +289,15 @@
         <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="c1"># See if the given field is the given &quot;unset&quot; value.</span>
-            <span class="n">_statustype</span> <span class="o">=</span> <span class="n">statustype</span> <span class="k">if</span> <span class="n">statustype</span> <span class="k">else</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">field</span><span class="p">)</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_statustype</span><span class="p">,</span> <span class="n">unset</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">UnsetStatusError</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">types</span><span class="o">.</span><span class="n">GeneratorType</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">_statustype</span> <span class="o">=</span> <span class="n">statustype</span> <span class="k">if</span> <span class="n">statustype</span> <span class="k">else</span> <span class="n">resp</span>
+                    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_statustype</span><span class="p">,</span> <span class="n">unset</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="n">UnsetStatusError</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_statustype</span> <span class="o">=</span> <span class="n">statustype</span> <span class="k">if</span> <span class="n">statustype</span> <span class="k">else</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">field</span><span class="p">)</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_statustype</span><span class="p">,</span> <span class="n">unset</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="n">UnsetStatusError</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">wrapper</span>
@@ -247,7 +312,10 @@
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># Look for errors in the common response, before looking for specific errors.</span>
         <span class="c1"># pylint: disable=no-value-for-parameter</span>
-        <span class="k">return</span> <span class="n">common_header_errors</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="ow">or</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">types</span><span class="o">.</span><span class="n">GeneratorType</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">streaming_common_header_errors</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="ow">or</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">common_header_errors</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="ow">or</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">wrapper</span></div>
 
@@ -258,7 +326,10 @@
     <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># pylint: disable=no-value-for-parameter</span>
-        <span class="k">return</span> <span class="n">common_lease_errors</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="ow">or</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">types</span><span class="o">.</span><span class="n">GeneratorType</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">streaming_common_lease_errors</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="ow">or</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">common_lease_errors</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="ow">or</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">wrapper</span></div>
 
@@ -269,13 +340,39 @@
     <span class="k">def</span> <span class="nf">print_message</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">print_streaming_message</span><span class="p">(</span><span class="n">response_iterator</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">response_iterator</span><span class="p">:</span>
+            <span class="n">print_message</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
     <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># pylint: disable=no-value-for-parameter</span>
-        <span class="n">print_message</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">types</span><span class="o">.</span><span class="n">GeneratorType</span><span class="p">):</span>
+            <span class="n">print_streaming_message</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">print_message</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">wrapper</span></div>
+
+
+<div class="viewcode-block" id="process_kwargs"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.process_kwargs">[docs]</a><span class="k">def</span> <span class="nf">process_kwargs</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+
+    <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rpc_method</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;disable_value_handler&quot;</span><span class="p">):</span>
+            <span class="n">value_from_response</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;disable_value_handler&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;disable_error_handler&quot;</span><span class="p">):</span>
+            <span class="n">error_from_response</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;disable_error_handler&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rpc_method</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">value_from_response</span><span class="p">,</span>
+                    <span class="n">error_from_response</span><span class="o">=</span><span class="n">error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">processor</span></div>
 
 
 <div class="viewcode-block" id="BaseClient"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.BaseClient">[docs]</a><span class="k">class</span> <span class="nc">BaseClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -325,23 +422,72 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">getChild</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_service_type_short</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">lease_wallet</span></div>
 
-<div class="viewcode-block" id="BaseClient.call"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.BaseClient.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rpc_method</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="BaseClient.update_request_iterator"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.BaseClient.update_request_iterator">[docs]</a>    <span class="k">def</span> <span class="nf">update_request_iterator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_iterator</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">rpc_method</span><span class="p">,</span> <span class="n">is_blocking</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="n">request_iterator</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_request_processors</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">is_blocking</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;blocking request: </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">request_trim_for_log</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;async request: </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">request_trim_for_log</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+            <span class="k">yield</span> <span class="n">request</span></div>
+
+<div class="viewcode-block" id="BaseClient.update_response_iterator"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.BaseClient.update_response_iterator">[docs]</a>    <span class="k">def</span> <span class="nf">update_response_iterator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response_iterator</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">rpc_method</span><span class="p">,</span> <span class="n">is_blocking</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">response_iterator</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_response_processors</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">response</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">is_blocking</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;blocking response: </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">request_trim_for_log</span><span class="p">(</span><span class="n">response</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;async response: </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">request_trim_for_log</span><span class="p">(</span><span class="n">response</span><span class="p">))</span>
+                <span class="k">yield</span> <span class="n">response</span>
+        <span class="k">except</span> <span class="n">TransportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Iterating through the response_iterator is the point that transport exceptions will</span>
+            <span class="c1"># be thrown for streaming rpcs if any are going to occur.</span>
+            <span class="c1"># Here we make sure that they&#39;re translated to our more meaningful exceptions.</span>
+            <span class="c1"># Any ResponseErrors or other exception types can be let through untranslated.</span>
+            <span class="k">raise</span> <span class="n">translate_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseClient.call"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.BaseClient.call">[docs]</a>    <span class="nd">@process_kwargs</span>
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rpc_method</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
              <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns result of calling rpc_method(request, **kwargs) after running processors.</span>
+        <span class="sd">&quot;&quot;&quot;Returns result of calling rpc_method(request, kwargs) after running processors.</span>
 
 <span class="sd">        value_from_response and error_from_response should not raise their own exceptions!</span>
+<span class="sd">        Additionally, value_from_response and error_from_response that are not common handlers</span>
+<span class="sd">        must accept streaming responses if it is a grpc streaming response.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_request_processors</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_logger</span><span class="p">(</span><span class="n">rpc_method</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;blocking request: </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span>
-                     <span class="bp">self</span><span class="o">.</span><span class="n">request_trim_for_log</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rpc_method</span><span class="p">,</span> <span class="n">grpc</span><span class="o">.</span><span class="n">StreamUnaryMultiCallable</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">rpc_method</span><span class="p">,</span> <span class="n">grpc</span><span class="o">.</span><span class="n">StreamStreamMultiCallable</span><span class="p">):</span>
+            <span class="c1"># The incoming request is a streaming request.</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_request_iterator</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">rpc_method</span><span class="p">,</span> <span class="n">is_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_request_processors</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;blocking request: </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">request_trim_for_log</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="n">rpc_method</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">TransportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">translate_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_response_processors</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;response: </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">response_trim_for_log</span><span class="p">(</span><span class="n">response</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rpc_method</span><span class="p">,</span> <span class="n">grpc</span><span class="o">.</span><span class="n">UnaryStreamMultiCallable</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">rpc_method</span><span class="p">,</span> <span class="n">grpc</span><span class="o">.</span><span class="n">StreamStreamMultiCallable</span><span class="p">):</span>
+            <span class="c1"># The outgoing response is a streaming response.</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_response_iterator</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">rpc_method</span><span class="p">,</span> <span class="n">is_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_response_streaming</span><span class="p">(</span>
+                <span class="nb">list</span><span class="p">(</span><span class="n">response</span><span class="p">),</span> <span class="n">error_from_response</span><span class="p">,</span> <span class="n">value_from_response</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_response_processors</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;response: </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">response_trim_for_log</span><span class="p">(</span><span class="n">response</span><span class="p">))</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">error_from_response</span><span class="p">,</span> <span class="n">value_from_response</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseClient.handle_response"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.BaseClient.handle_response">[docs]</a>    <span class="k">def</span> <span class="nf">handle_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">error_from_response</span><span class="p">,</span> <span class="n">value_from_response</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">error_from_response</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">exc</span> <span class="o">=</span> <span class="n">error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -352,11 +498,25 @@
             <span class="k">return</span> <span class="n">response</span>
         <span class="k">return</span> <span class="n">value_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseClient.call_async"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.BaseClient.call_async">[docs]</a>    <span class="k">def</span> <span class="nf">call_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rpc_method</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="BaseClient.handle_response_streaming"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.BaseClient.handle_response_streaming">[docs]</a>    <span class="k">def</span> <span class="nf">handle_response_streaming</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">error_from_response</span><span class="p">,</span> <span class="n">value_from_response</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">error_from_response</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">exc</span> <span class="o">=</span> <span class="n">error_from_response</span><span class="p">((</span><span class="n">resp</span> <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">response</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">exc</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">exc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exc</span>
+        <span class="k">if</span> <span class="n">value_from_response</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">response</span>
+        <span class="k">return</span> <span class="n">value_from_response</span><span class="p">((</span><span class="n">resp</span> <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">response</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BaseClient.call_async"><a class="viewcode-back" href="../../../client_modules/common.html#bosdyn.client.common.BaseClient.call_async">[docs]</a>    <span class="nd">@process_kwargs</span>
+    <span class="k">def</span> <span class="nf">call_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rpc_method</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a Future for rpc_method(request, **kwargs) after running processors.</span>
+        <span class="sd">&quot;&quot;&quot;Returns a Future for rpc_method(request, kwargs) after running processors.</span>
 
 <span class="sd">        value_from_response and error_from_response should not raise their own exceptions!</span>
+
+<span class="sd">        Asynchronous calls cannot be done with streaming rpc&#39;s right now.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_request_processors</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_logger</span><span class="p">(</span><span class="n">rpc_method</span><span class="p">)</span>
@@ -451,6 +611,8 @@
         <span class="n">error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_future</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_error_from_response</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_error_from_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original_future</span><span class="o">.</span><span class="n">result</span><span class="p">())</span>
 
         <span class="k">return</span> <span class="n">translate_exception</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div></div>
@@ -466,7 +628,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Boston Dynamics
+        &copy; Copyright 2019, Boston Dynamics.
 
     </p>
   </div>
@@ -483,16 +645,36 @@
   
 
 
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

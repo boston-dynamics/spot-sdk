@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -15,104 +15,104 @@ import "google/protobuf/duration.proto";
 
 import "bosdyn/api/header.proto";
 
-/// Timestamp information from a full GRPC call round-trip.
-/// These are used to estimate the round-trip communication time and difference between
-/// client and server clocks.
+// Timestamp information from a full GRPC call round-trip.
+// These are used to estimate the round-trip communication time and difference between
+// client and server clocks.
 message TimeSyncRoundTrip {
-    /// Client system time when the message was sent, if not zero.
+    // Client system time when the message was sent, if not zero.
     google.protobuf.Timestamp client_tx = 1;
 
-    /// Server system time when the message was received, if not zero.
+    // Server system time when the message was received, if not zero.
     google.protobuf.Timestamp server_rx = 2;
 
-    /// Server system time when the response was sent, if not zero.
+    // Server system time when the response was sent, if not zero.
     google.protobuf.Timestamp server_tx = 3;
 
-    /// Client time when the response was received, if not zero.
+    // Client time when the response was received, if not zero.
     google.protobuf.Timestamp client_rx = 4;
 }
 
-/// Estimate of network speed and clock skew.  Both for the last
-/// complete sample and a recent average.  Populated by the server.
+// Estimate of network speed and clock skew.  Both for the last
+// complete sample and a recent average.  Populated by the server.
 message TimeSyncEstimate {
-    /// Observed network delay (excludes processing between server_rx and server_tx).
-    /// If zero, this estimate is unpopulated.
+    // Observed network delay (excludes processing between server_rx and server_tx).
+    // If zero, this estimate is unpopulated.
     google.protobuf.Duration round_trip_time = 1;
 
-    /// Add the skew to the client system clock to get the server clock.
+    // Add the skew to the client system clock to get the server clock.
     google.protobuf.Duration clock_skew = 2;
 }
 
 
-/// Current best estimate status of time sync.
+// Current best estimate status of time sync.
 message TimeSyncState {
-    /// Best clock synchronization estimate currently available, if any.
+    // Best clock synchronization estimate currently available, if any.
     TimeSyncEstimate best_estimate = 1;
 
     enum Status {
         // Invalid, do not use.
         STATUS_UNKNOWN = 0;
 
-        /// Clock skew is available.
+        // Clock skew is available.
         STATUS_OK = 1;
 
-        /// More updates are required to establish a synchronization estimate.
+        // More updates are required to establish a synchronization estimate.
         STATUS_MORE_SAMPLES_NEEDED = 2;
 
-        /// Server still establishing time sync internally.
+        // Server still establishing time sync internally.
         STATUS_SERVICE_NOT_READY = 3;
     };
-    /// STATUS_OK once time sync is established.
+    // STATUS_OK once time sync is established.
     Status status = 2;
 
-    /// Time of best estimate, in server time.
+    // Time of best estimate, in server time.
     google.protobuf.Timestamp measurement_time = 3;
 }
 
-/// Request message for a time-sync Update RPC.
+// Request message for a time-sync Update RPC.
 message TimeSyncUpdateRequest {
-    /// Common request header.
+    // Common request header.
     RequestHeader header = 1;
 
-    /// Round-trip timing information from the previous Update().
+    // Round-trip timing information from the previous Update().
     TimeSyncRoundTrip previous_round_trip = 2;
 
-    /// Identifier to verify time sync between robot and client. If unset, server will assign
-    /// one to client.
+    // Identifier to verify time sync between robot and client. If unset, server will assign
+    // one to client.
     string clock_identifier = 3;
 }
 
-/// Request message for a time-sync Update RPC.
+// Request message for a time-sync Update RPC.
 message TimeSyncUpdateResponse {
-    /// Common response header.
+    // Common response header.
     ResponseHeader header = 1;
 
-    /// Clock synchronization estimate from the previous RPC round-trip, if available.
+    // Clock synchronization estimate from the previous RPC round-trip, if available.
     TimeSyncEstimate previous_estimate = 2;
 
-    /// Current best clock synchronization estimate according to server.
+    // Current best clock synchronization estimate according to server.
     TimeSyncState state = 3;
 
-    /// Identifier to verify time sync between robot and client. Assigned upon first Request and
-    /// echoed with each subsequent request.
+    // Identifier to verify time sync between robot and client. Assigned upon first Request and
+    // echoed with each subsequent request.
     string clock_identifier = 4;
 }
 
 message TimeSyncStatusRequest {
-    /// Common request header.
+    // Common request header.
     RequestHeader header = 1;
 
-    /// Identifier assigned to specific client. If not set, this service will return time sync info
-    /// from all clients.
+    // Identifier assigned to specific client. If not set, this service will return time sync info
+    // from all clients.
     string clock_identifier = 2;
 }
 
 
 message TimeSyncStatusResponse {
-    /// Common response header.
+    // Common response header.
     ResponseHeader header = 1;
 
-    /// Map from client ids to best time sync estimate.
-    /// This only returns clients which have established a valid time sync estimate.
+    // Map from client ids to best time sync estimate.
+    // This only returns clients which have established a valid time sync estimate.
     map<string, TimeSyncState> time_sync_status_map = 3;
 }

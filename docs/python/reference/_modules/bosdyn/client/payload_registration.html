@@ -1,0 +1,447 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bosdyn.client.payload_registration &mdash; Spot 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Spot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../client_modules/client_index.html">Client SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core_modules/core_index.html">Core SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mission_modules/mission_index.html">Mission SDK</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bosdyn.client.payload_registration</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bosdyn.client.payload_registration</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;Client for the payload service.</span>
+
+<span class="sd">This allows client code to write to the robot payload registry.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">bosdyn.api.payload_registration_pb2</span> <span class="k">as</span> <span class="nn">payload_registration_protos</span>
+<span class="kn">import</span> <span class="nn">bosdyn.api.payload_registration_service_pb2_grpc</span> <span class="k">as</span> <span class="nn">payload_registration_service</span>
+
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span> <span class="n">handle_unset_status_error</span><span class="p">,</span>
+                                  <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_lease_use_result_errors</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client</span> <span class="kn">import</span> <span class="n">ResponseError</span>
+
+<span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;payload_registration_client&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># Define payload-registration-specefic errors</span>
+<div class="viewcode-block" id="PayloadRegistrationResponseError"><a class="viewcode-back" href="../../../client_modules/payload_registration.html#bosdyn.client.payload_registration.PayloadRegistrationResponseError">[docs]</a><span class="k">class</span> <span class="nc">PayloadRegistrationResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;General class of errors for PayloadRegistration service.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="InvalidPayloadCredentialsError"><a class="viewcode-back" href="../../../client_modules/payload_registration.html#bosdyn.client.payload_registration.InvalidPayloadCredentialsError">[docs]</a><span class="k">class</span> <span class="nc">InvalidPayloadCredentialsError</span><span class="p">(</span><span class="n">PayloadRegistrationResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The payload credentials do not match any payload registered to the robot.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="PayloadNotAuthorizedError"><a class="viewcode-back" href="../../../client_modules/payload_registration.html#bosdyn.client.payload_registration.PayloadNotAuthorizedError">[docs]</a><span class="k">class</span> <span class="nc">PayloadNotAuthorizedError</span><span class="p">(</span><span class="n">PayloadRegistrationResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The payload is not authorized.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="PayloadAlreadyExistsError"><a class="viewcode-back" href="../../../client_modules/payload_registration.html#bosdyn.client.payload_registration.PayloadAlreadyExistsError">[docs]</a><span class="k">class</span> <span class="nc">PayloadAlreadyExistsError</span><span class="p">(</span><span class="n">PayloadRegistrationResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A payload with this GUID is already registered on the robot.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="PayloadDoesNotExistError"><a class="viewcode-back" href="../../../client_modules/payload_registration.html#bosdyn.client.payload_registration.PayloadDoesNotExistError">[docs]</a><span class="k">class</span> <span class="nc">PayloadDoesNotExistError</span><span class="p">(</span><span class="n">PayloadRegistrationResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A payload with this GUID is not registered on the robot.&quot;&quot;&quot;</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_token</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">token</span>
+
+
+<div class="viewcode-block" id="PayloadRegistrationClient"><a class="viewcode-back" href="../../../client_modules/payload_registration.html#bosdyn.client.payload_registration.PayloadRegistrationClient">[docs]</a><span class="k">class</span> <span class="nc">PayloadRegistrationClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A client registering payload configs onto the robot.&quot;&quot;&quot;</span>
+
+    <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;payload-registration&#39;</span>
+    <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.PayloadRegistrationService&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PayloadRegistrationClient</span><span class="p">,</span>
+              <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">payload_registration_service</span><span class="o">.</span><span class="n">PayloadRegistrationServiceStub</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PayloadRegistrationClient.register_payload"><a class="viewcode-back" href="../../../client_modules/payload_registration.html#bosdyn.client.payload_registration.PayloadRegistrationClient.register_payload">[docs]</a>    <span class="k">def</span> <span class="nf">register_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Register a payload to the robot.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          payload:              The payload protobuf message to register.</span>
+<span class="sd">          secret:               Unique string to verify payload.</span>
+<span class="sd">          kw_args:              Extra arguments to pass to grpc call invocation.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">          RpcError: Problem communicating with the robot.</span>
+<span class="sd">          PayloadAlreadyExistsError: A payload with the provided GUID</span>
+<span class="sd">            already exists.</span>
+<span class="sd">          PayloadRegistrationResponseError: Something went wrong during the payload registration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">payload_registration_protos</span><span class="o">.</span><span class="n">RegisterPayloadRequest</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">secret</span><span class="p">:</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">payload_secret</span> <span class="o">=</span> <span class="n">secret</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RegisterPayload</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">_payload_registration_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PayloadRegistrationClient.register_payload_async"><a class="viewcode-back" href="../../../client_modules/payload_registration.html#bosdyn.client.payload_registration.PayloadRegistrationClient.register_payload_async">[docs]</a>    <span class="k">def</span> <span class="nf">register_payload_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Register a payload to the robot.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          payload:              The payload protobuf message to register.</span>
+<span class="sd">          secret:               Unique string to verify payload.</span>
+<span class="sd">          kw_args:              Extra arguments to pass to grpc call invocation.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">          RpcError: Problem communicating with the robot.</span>
+<span class="sd">          PayloadAlreadyExistsError: A payload with the provided GUID</span>
+<span class="sd">            already exists.</span>
+<span class="sd">          PayloadRegistrationResponseError: Something went wrong during the payload registration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">payload_registration_protos</span><span class="o">.</span><span class="n">RegisterPayloadRequest</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">secret</span><span class="p">:</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">payload_secret</span> <span class="o">=</span> <span class="n">secret</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RegisterPayload</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                               <span class="n">error_from_response</span><span class="o">=</span><span class="n">_payload_registration_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PayloadRegistrationClient.update_payload_version"><a class="viewcode-back" href="../../../client_modules/payload_registration.html#bosdyn.client.payload_registration.PayloadRegistrationClient.update_payload_version">[docs]</a>    <span class="k">def</span> <span class="nf">update_payload_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">updated_version</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update an existing payload&#39;s version on the robot.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          guid:                 The GUID of the payload to update.</span>
+<span class="sd">          secret:               Secret of the payload to update.</span>
+<span class="sd">          updated_version:      The new version to set this payload to.</span>
+<span class="sd">          kw_args:              Extra arguments to pass to grpc call invocation.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">          RpcError: Problem communicating with the robot.</span>
+<span class="sd">          PayloadDoesNotExistError: A payload with the provided GUID does not exist.</span>
+<span class="sd">          InvalidPayloadCredentialsError: The GUID + secret does not match an existing payload.</span>
+<span class="sd">          PayloadRegistrationResponseError: Something went wrong during the payload registration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">payload_registration_protos</span><span class="o">.</span><span class="n">UpdatePayloadVersionRequest</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">payload_guid</span> <span class="o">=</span> <span class="n">guid</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">payload_secret</span> <span class="o">=</span> <span class="n">secret</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">updated_version</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">updated_version</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">UpdatePayloadVersion</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">_update_payload_version_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PayloadRegistrationClient.update_payload_version_async"><a class="viewcode-back" href="../../../client_modules/payload_registration.html#bosdyn.client.payload_registration.PayloadRegistrationClient.update_payload_version_async">[docs]</a>    <span class="k">def</span> <span class="nf">update_payload_version_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">updated_version</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update an existing payload on the robot.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          guid:                 The GUID of the payload to update.</span>
+<span class="sd">          secret:               Secret of the payload to update.</span>
+<span class="sd">          updated_version:      The new version to set this payload to.</span>
+<span class="sd">          kw_args:              Extra arguments to pass to grpc call invocation.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">          RpcError: Problem communicating with the robot.</span>
+<span class="sd">          PayloadDoesNotExistError: A payload with the provided GUID does not exist.</span>
+<span class="sd">          InvalidPayloadCredentialsError: The GUID + secret does not match an existing payload.</span>
+<span class="sd">          PayloadRegistrationResponseError: Something went wrong during the payload registration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">payload_registration_protos</span><span class="o">.</span><span class="n">UpdatePayloadVersionRequest</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">payload_guid</span> <span class="o">=</span> <span class="n">guid</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">payload_secret</span> <span class="o">=</span> <span class="n">secret</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">updated_version</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">updated_version</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">UpdatePayloadVersion</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">_update_payload_version_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PayloadRegistrationClient.get_payload_auth_token"><a class="viewcode-back" href="../../../client_modules/payload_registration.html#bosdyn.client.payload_registration.PayloadRegistrationClient.get_payload_auth_token">[docs]</a>    <span class="k">def</span> <span class="nf">get_payload_auth_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Request a limited-access auth token for a payload.</span>
+<span class="sd">        </span>
+<span class="sd">        Getting the auth token requires payload to be authorized via the web console.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          guid:                 The GUID of the registered payload requesting the token.</span>
+<span class="sd">          secret:               The secret of the registed payload requesting the token.</span>
+<span class="sd">          kw_args:              Extra arguments to pass to grpc call invocation.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          A limited-access user token for the robot</span>
+<span class="sd">        </span>
+<span class="sd">        Raises:</span>
+<span class="sd">          RpcError: Problem communicating with the robot.</span>
+<span class="sd">          PayloadNotAuthorizedError: The payload with the provided GUID is</span>
+<span class="sd">            not authorized and cannot request a token.</span>
+<span class="sd">          InvalidPayloadCredentialsError: The provided GUID + secret combo</span>
+<span class="sd">            does not match any existing payload.</span>
+<span class="sd">          PayloadRegistrationResponseError: Something went wrong during the payload registration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">payload_registration_protos</span><span class="o">.</span><span class="n">GetPayloadAuthTokenRequest</span><span class="p">(</span>
+            <span class="n">payload_guid</span><span class="o">=</span><span class="n">guid</span><span class="p">,</span> <span class="n">payload_secret</span><span class="o">=</span><span class="n">secret</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetPayloadAuthToken</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_token</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">_get_payload_auth_token_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">)</span></div></div>
+
+
+<span class="c1"># Associate proto status errors to python client errors for RegisterPayload</span>
+<span class="n">_REGISTER_PAYLOAD_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+<span class="n">_REGISTER_PAYLOAD_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+    <span class="n">payload_registration_protos</span><span class="o">.</span><span class="n">RegisterPayloadResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">payload_registration_protos</span><span class="o">.</span><span class="n">RegisterPayloadResponse</span><span class="o">.</span><span class="n">STATUS_ALREADY_EXISTS</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">PayloadAlreadyExistsError</span><span class="p">,</span> <span class="n">PayloadAlreadyExistsError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+<span class="p">})</span>
+
+
+<span class="c1"># Function to parse all types of errors from payload registration response</span>
+<span class="nd">@handle_common_header_errors</span>
+<span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_payload_registration_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+        <span class="n">status_to_string</span><span class="o">=</span><span class="n">payload_registration_protos</span><span class="o">.</span><span class="n">RegisterPayloadResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+        <span class="n">status_to_error</span><span class="o">=</span><span class="n">_REGISTER_PAYLOAD_STATUS_TO_ERROR</span><span class="p">)</span>
+
+
+<span class="c1"># Associate proto status errors to python client errors for UpdatePayloadVersion</span>
+<span class="n">_UPDATE_PAYLOAD_VERSION_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+<span class="n">_UPDATE_PAYLOAD_VERSION_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+    <span class="n">payload_registration_protos</span><span class="o">.</span><span class="n">UpdatePayloadVersionResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">payload_registration_protos</span><span class="o">.</span><span class="n">UpdatePayloadVersionResponse</span><span class="o">.</span><span class="n">STATUS_DOES_NOT_EXIST</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">PayloadDoesNotExistError</span><span class="p">,</span> <span class="n">PayloadDoesNotExistError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">payload_registration_protos</span><span class="o">.</span><span class="n">UpdatePayloadVersionResponse</span><span class="o">.</span><span class="n">STATUS_INVALID_CREDENTIALS</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">InvalidPayloadCredentialsError</span><span class="p">,</span> <span class="n">InvalidPayloadCredentialsError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+<span class="p">})</span>
+
+
+<span class="c1"># Function to parse all types of errors from get update payload version response</span>
+<span class="nd">@handle_common_header_errors</span>
+<span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_update_payload_version_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+        <span class="n">status_to_string</span><span class="o">=</span><span class="n">payload_registration_protos</span><span class="o">.</span><span class="n">UpdatePayloadVersionResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+        <span class="n">status_to_error</span><span class="o">=</span><span class="n">_UPDATE_PAYLOAD_VERSION_STATUS_TO_ERROR</span><span class="p">)</span>
+
+
+<span class="c1"># Associate proto status errors to python client errors for GetPayloadAuthToken</span>
+<span class="n">_GET_PAYLOAD_AUTH_TOKEN_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+<span class="n">_GET_PAYLOAD_AUTH_TOKEN_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+    <span class="n">payload_registration_protos</span><span class="o">.</span><span class="n">GetPayloadAuthTokenResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">payload_registration_protos</span><span class="o">.</span><span class="n">GetPayloadAuthTokenResponse</span><span class="o">.</span><span class="n">STATUS_INVALID_CREDENTIALS</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">InvalidPayloadCredentialsError</span><span class="p">,</span> <span class="n">InvalidPayloadCredentialsError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">payload_registration_protos</span><span class="o">.</span><span class="n">GetPayloadAuthTokenResponse</span><span class="o">.</span><span class="n">STATUS_PAYLOAD_NOT_AUTHORIZED</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">PayloadNotAuthorizedError</span><span class="p">,</span> <span class="n">PayloadNotAuthorizedError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+<span class="p">})</span>
+
+
+<span class="c1"># Function to parse all types of errors from get payload auth token response</span>
+<span class="nd">@handle_common_header_errors</span>
+<span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_get_payload_auth_token_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+        <span class="n">status_to_string</span><span class="o">=</span><span class="n">payload_registration_protos</span><span class="o">.</span><span class="n">GetPayloadAuthTokenResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+        <span class="n">status_to_error</span><span class="o">=</span><span class="n">_GET_PAYLOAD_AUTH_TOKEN_STATUS_TO_ERROR</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Boston Dynamics.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

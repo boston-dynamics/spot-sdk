@@ -1,10 +1,10 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""For clients to the image service."""
+"""For clients to use the image service."""
 
 import collections
 from bosdyn.client.common import BaseClient
@@ -57,16 +57,22 @@ def _error_from_response(response):
 
 
 class ImageClient(BaseClient):
-    """Client to the image service."""
-    default_authority = 'api.spot.robot'
-    default_service_name = 'robot_image_service'
+    """Client for the image service."""
+    default_service_name = 'image'
     service_type = 'bosdyn.api.ImageService'
 
     def __init__(self):
         super(ImageClient, self).__init__(image_service_pb2_grpc.ImageServiceStub)
 
     def list_image_sources(self, **kwargs):
-        """ Obtain the list of ImageSources."""
+        """ Obtain the list of ImageSources.
+
+        Returns:
+            A list of the different image sources as strings.
+
+        Raises:
+            RpcError: Problem communicating with the robot.
+        """
         req = self._get_list_image_source_request()
         return self.call(self._stub.ListImageSources, req, _list_image_sources_value,
                          common_header_errors, **kwargs)
@@ -78,7 +84,17 @@ class ImageClient(BaseClient):
                                common_header_errors, **kwargs)
 
     def get_image_from_sources(self, image_sources, **kwargs):
-        """Obtain images from sources using default parameters."""
+        """Obtain images from sources using default parameters.
+
+        Args:
+            image_sources (list of strings): The different image sources to request images from.
+
+        Returns:
+            A list of image responses for each of the requested sources.
+
+        Raises:
+            RpcError: Problem communicating with the robot.
+        """
         return self.get_image([build_image_request(source) for source in image_sources], **kwargs)
 
     def get_image_from_sources_async(self, image_sources, **kwargs):
@@ -87,7 +103,18 @@ class ImageClient(BaseClient):
                                     **kwargs)
 
     def get_image(self, image_requests, **kwargs):
-        """Obtain the set of images from the robot."""
+        """Obtain the set of images from the robot.
+
+        Args:
+            image_requests (list of ImageRequest): A list of the ImageRequest protobuf messages which
+                                                   specify which images to collect.
+
+        Returns:
+            A list of image responses for each of the requested sources.
+
+        Raises:
+            RpcError: Problem communicating with the robot.
+        """
         req = self._get_image_request(image_requests)
         return self.call(self._stub.GetImage, req, _get_image_value, _error_from_response, **kwargs)
 
@@ -113,6 +140,15 @@ def build_image_request(image_source_name, quality_percent=75,
     By default the robot will choose an appropriate format - such as JPEG for
     visual images, or RAW for depth images. Clients can override image_format
     in those cases.
+
+    Args:
+        image_source_name (string): The image source to query.
+        quality_percent (int): The image quality from [0,100] (percent-value).
+        image_format (image_pb2.Image.Format): The type of format for the image
+                                               data, such as JPEG, RAW, or RLE.
+
+    Returns:
+        The ImageRequest protobuf message for the given parameters.
     """
     return image_pb2.ImageRequest(image_source_name=image_source_name,
                                   quality_percent=quality_percent, image_format=image_format)

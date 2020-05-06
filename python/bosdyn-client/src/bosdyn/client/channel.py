@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -9,10 +9,11 @@ import logging
 import grpc
 
 from .exceptions import (RpcError, ClientCancelledOperationError, InvalidAppTokenError,
-                         InvalidClientCertificateError, NonexistentAuthorityError,
-                         ProxyConnectionError, ServiceFailedDuringExecutionError,
-                         ServiceUnavailableError, TimedOutError, UnableToConnectToRobotError,
-                         UnauthenticatedError, UnknownDnsNameError, UnimplementedError)
+                         InvalidClientCertificateError, NonexistentAuthorityError, NotFoundError,
+                         PermissionDeniedError, ProxyConnectionError, ResponseTooLargeError,
+                         ServiceFailedDuringExecutionError, ServiceUnavailableError, TimedOutError,
+                         UnableToConnectToRobotError, UnauthenticatedError, UnknownDnsNameError,
+                         UnimplementedError, TransientFailureError)
 
 TransportError = grpc.RpcError
 
@@ -20,29 +21,35 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class RefreshingAccessTokenAuthMetadataPlugin(grpc.AuthMetadataPlugin):
+    """Plugin to refresh access token.
 
-    def __init__(self, token_cb):
-        """Constructor.
-
-        Args:
-            token_cb -- Callable that returns a tuple of (app token, user token)
-        """
+    Args:
+        token_cb: Callable that returns a tuple of (app_token, user_token)
+        add_app_token (bool): Whether to include an app token in the metadata. This is necessary for compatibility with old robot software.
+    """
+    def __init__(self, token_cb, add_app_token):
         self._token_cb = token_cb
+        self._add_app_token = add_app_token
 
     def __call__(self, context, callback):
         app_token, user_token = self._token_cb()
         user_token_metadata = ('authorization', 'Bearer {}'.format(user_token))
-        metadata = (user_token_metadata, ('x-bosdyn-apptoken', app_token))
+        app_token_metadata = ('x-bosdyn-apptoken', app_token)
+        if self._add_app_token:
+            metadata = (user_token_metadata, app_token_metadata)
+        else:
+            metadata = (user_token_metadata,)
         error = None
         callback(metadata, error)
 
 
-def create_secure_channel_creds(cert, token_cb):
-    """Returns credentials for establishing a secure channel
+def create_secure_channel_creds(cert, token_cb, add_app_token):
+    """Returns credentials for establishing a secure channel.
     Uses previously set values on the linked Sdk and self.
     """
+
     transport_creds = grpc.ssl_channel_credentials(root_certificates=cert)
-    plugin = RefreshingAccessTokenAuthMetadataPlugin(token_cb)
+    plugin = RefreshingAccessTokenAuthMetadataPlugin(token_cb, add_app_token=add_app_token)
     # Encrypted connections carry either just transport credentials sufficient to
     # establish TLS or both transport and authorization credentials. The auth
     # credentials provide the token with every GRPC call on this channel.
@@ -51,13 +58,54 @@ def create_secure_channel_creds(cert, token_cb):
 
 
 def create_secure_channel(address, port, creds, authority):
-    """Create a secure channel to given host:port"""
+    """Create a secure channel to given host:port.
+    
+    Args:
+        address: Connection host address.
+        port: Connection port.
+        creds: A ChannelCredentials instance. 
+        authority: Authority option for the channel.
+
+    Returns:
+        A secure channel.
+    """
+
     socket = '{}:{}'.format(address, port)
     options = (('grpc.ssl_target_name_override', authority),)
     return grpc.secure_channel(socket, creds, options)
 
 
+def create_insecure_channel(address, port, authority=None):
+    """Create an insecure channel to given host and port.
+
+    This method is only used for testing purposes. Applications must use secure channels to
+    communicate with services running on Spot.
+
+    Args:
+        address: Connection host address.
+        port: Connection port.
+        authority: Authority option for the channel.
+
+    Returns:
+        An insecure channel.    
+    """
+
+    socket = '{}:{}'.format(address, port)
+    options = None
+    if authority:
+        options = (('grpc.ssl_target_name_override', authority),)
+    return grpc.insecure_channel(socket, options=options)
+
+
 def translate_exception(rpc_error):
+    """Translated a GRPC error into an SDK RpcError.
+
+    Args:
+        rpc_error: RPC error to translate.
+
+    Returns:
+        Specific sub-type of RpcError.
+    """
     code = rpc_error.code()
     details = rpc_error.details()
 
@@ -67,7 +115,7 @@ def translate_exception(rpc_error):
         elif str(403) in details:
             return InvalidAppTokenError(rpc_error, InvalidAppTokenError.__doc__)
         elif str(404) in details:
-            return UnimplementedError(rpc_error, UnimplementedError.__doc__)
+            return NotFoundError(rpc_error, NotFoundError.__doc__)
         elif str(502) in details:
             return ServiceUnavailableError(rpc_error, ServiceUnavailableError.__doc__)
         elif str(504) in details:
@@ -78,6 +126,11 @@ def translate_exception(rpc_error):
         return TimedOutError(rpc_error, TimedOutError.__doc__)
     elif code is grpc.StatusCode.UNIMPLEMENTED:
         return UnimplementedError(rpc_error, UnimplementedError.__doc__)
+    elif code is grpc.StatusCode.PERMISSION_DENIED:
+        return PermissionDeniedError(rpc_error, PermissionDeniedError.__doc__)
+    elif code is grpc.StatusCode.RESOURCE_EXHAUSTED:
+        if "Received message larger than max" in details:
+            return ResponseTooLargeError(rpc_error, ResponseTooLargeError.__doc__)
 
     debug = rpc_error.debug_error_string()
     if 'is not in peer certificate' in debug:
@@ -91,8 +144,14 @@ def translate_exception(rpc_error):
         return InvalidClientCertificateError(rpc_error, InvalidClientCertificateError.__doc__)
     elif 'Name resolution failure' in debug:
         return UnknownDnsNameError(rpc_error, UnknownDnsNameError.__doc__)
+    elif 'channel is in state TRANSIENT_FAILURE' in debug:
+        return TransientFailureError(rpc_error, TransientFailureError.__doc__)
     elif 'Connect Failed' in debug:
         # This error should be checked last because a lot of grpc errors contain said substring.
+        return UnableToConnectToRobotError(rpc_error, UnableToConnectToRobotError.__doc__)
+
+    # Handle arbitrary UNAVAILABLE cases
+    if code is grpc.StatusCode.UNAVAILABLE:
         return UnableToConnectToRobotError(rpc_error, UnableToConnectToRobotError.__doc__)
 
     _LOGGER.warning('Unclassified exception: %s', rpc_error)

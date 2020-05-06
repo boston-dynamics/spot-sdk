@@ -1,0 +1,53 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.spot_cam;
+
+option java_outer_classname = "CameraProto";
+
+import "bosdyn/api/geometry.proto";
+
+message Camera {
+    string name = 1;
+    bosdyn.api.Vec2 resolution=2;
+
+    // The frame name for the image sensor source. This frame will show up in the FrameTreeSnapshot
+    // grabbed from the payload registration service.
+    string base_frame_name = 3;
+
+    // The transform from the base of spot cam to this specific camera.
+    SE3Pose base_tfrom_sensor = 4;
+
+    message PinholeIntrinsics {
+        bosdyn.api.Vec2 focal_length=1;
+        bosdyn.api.Vec2 center_point=2;
+        //the following 4 parameters are radial distortion coefficeints to 4 orders.
+        //see https://en.wikipedia.org/wiki/Distortion_(optics)#Software_correction
+        //if all 4 of these values are 0, do not apply any correction.
+        float k1=3;
+        float k2=4;
+        float k3=5;
+        float k4=6;
+    }
+
+    //spherical limits are the minimum and maximum angle of the image;
+    //IE the upper left pixel is at min_angle.x, min_angle.y
+    //and the lower right pixel is at max_angle.x, max_angle.y
+    //for a full-FOV image this will be (-180, 90) and (180, -90)
+    message SphericalLimits {
+        bosdyn.api.Vec2 min_angle=1;
+        bosdyn.api.Vec2 max_angle=2;
+    }
+
+    oneof intrinsics{
+        PinholeIntrinsics pinhole=5; //physical cameras
+        SphericalLimits spherical=6; //only synthetic spherical panoramas
+    }
+}
+
+

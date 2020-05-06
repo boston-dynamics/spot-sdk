@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -22,6 +22,8 @@ The protobuf messages and service definitions are the primary interface definiti
  
 **Times are represented with google.protobuf.Timestamp, and are all in “robot time”.** All timestamps are in the robot’s wall clock basis, and use the Timestamp object to represent the time. A separate TimeSync service exists to keep clients and robot in sync on time.
 
+**Durations are represented with google.protobuf.Duration.** Using the Duration type explicitly specifies that the field is a time duration.
+
 **Use MKS units for physical quantities.** Use the [MKS](http://scienceworld.wolfram.com/physics/MKS.html) system of units for physical quantities to be consistent with the rest of the API. Angular variables should be in radians rather than degrees.
 
 **Enums should have an UNKNOWN entry at 0, and other values after that**. Proto3 uses 0 enum values when a variable is unset, so reserve that enum value for `UNKNOWN`. In general, this value should never be written and be treated as an error on read.
@@ -32,6 +34,10 @@ The protobuf messages and service definitions are the primary interface definiti
 
 **Document interfaces and messages**. The proto definitions effectively define the protocol of the API - be sure to document what each field means and what units it is in terms of. Ideally each service will also be unit-tested, and have tutorial code for how to use it. If conceptually difficult to understand, a concepts doc should also be included.
 
+**RPCs are expected to complete quickly.** RPCs are expected to respond within 1 second. Rapid response times let clients differentiate network stalls from processing time. However, there are times where an action triggered by an RPC could take longer than 1 second to complete - such as powering on robot motors, or executing a computationally expensive operation.
+
+In these cases, use the Feedback RPC pattern as demonstrated by the PowerService. The initial RPC to trigger the action (PowerCommand in the PowerService case) will complete quickly. The response to the initial RPC includes whether the preconditions for the action were met, as well as a command id if the preconditions were met. Clients can then poll a feedback RPC (PowerCommandFeedback in the PowerService case) with the command id to track progress on the action.
+
 **Packages**. In addition to the Google style guide, we have a few additional guidelines for the "package" directive:
 
 * Packages are all lowercase.
@@ -40,6 +46,6 @@ The protobuf messages and service definitions are the primary interface definiti
 * Flatter is better. For example, prefer bosdyn.api.spot over bosdyn.api.robot.spot.
 * Consider creating a new package for messages and services which should be distributed separately and versioned separately. For example, services for a particular robot might be packaged separately from core API infrastructure.
 
-**Put Request/Response messages alongside the service definitions** This tends to keep proto dependencies cleaner, and the service RPCs easier to understand.
+**Avoid specifying Request/Response messages in service definition files** Put them into the "foo.proto" file rather than the "foo_service.proto" file, to simplify dependencies in the build system.
 
 **Consider package/namespace when naming messages** A message in the bosdyn.api.spot package doesn't need a "Spot" prefix in its name.

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -14,130 +14,130 @@ import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
 import "google/protobuf/timestamp.proto";
 
-/// Request for the SpotCheckCommand service.
+// Request for the SpotCheckCommand service.
 message SpotCheckCommandRequest {
-     /// Common request header.
+     // Common request header.
     RequestHeader header = 1;
 
-    /// The Lease to show ownership of the robot. Lease required to issue any SpotCheck command.
+    // The Lease to show ownership of the robot. Lease required to issue any SpotCheck command.
     Lease lease = 2;
 
     enum Command {
-        COMMAND_UNKNOWN = 0;        ///< Unused enum.
-        COMMAND_START = 1;          ///< Start spot check joint calibration and camera checks.
-        COMMAND_ABORT = 2;          ///< Abort spot check joint calibration and camera check.
-        COMMAND_REVERT_CAL = 3;     ///< Revert joint calibration back to the previous values.
+        COMMAND_UNKNOWN = 0;        // Unused enum.
+        COMMAND_START = 1;          // Start spot check joint calibration and camera checks.
+        COMMAND_ABORT = 2;          // Abort spot check joint calibration and camera check.
+        COMMAND_REVERT_CAL = 3;     // Revert joint calibration back to the previous values.
     }
     Command command = 3;
 }
 
-/// Response for the SpotCheckCommand service.
+// Response for the SpotCheckCommand service.
 message SpotCheckCommandResponse {
-    /// Common response header.
+    // Common response header.
     ResponseHeader header = 1;
 
-    /// Details about how the lease was used.
+    // Details about how the lease was used.
     LeaseUseResult lease_use_result = 2;
 }
 
-/// Request for the SpotCheckFeedback service.
+// Request for the SpotCheckFeedback service.
 message SpotCheckFeedbackRequest {
-     /// Common request header.
+     // Common request header.
     RequestHeader header = 1;
 }
 
-/// Response for the SpotCheckFeedback service.
+// Response for the SpotCheckFeedback service.
 message SpotCheckFeedbackResponse {
-    /// Common response header.
+    // Common response header.
     ResponseHeader header = 1;
 
-    /// State of spot check routine.
+    // State of spot check routine.
     enum State {
-        STATE_UNKNOWN = 0;               ///< Unused enum.
-        STATE_USER_ABORTED = 1;          ///< SpotCheck is aborted by the user.
-        STATE_STARTING = 2;              ///< SpotCheck is initializing.
-        STATE_LOADCELL_CAL = 3;          ///< Load cell calibration underway.
-        STATE_ENDSTOP_CAL = 4;           ///< Endstop calibration underway.
-        STATE_CAMERA_CHECK = 5;          ///< Camera check underway.
-        STATE_BODY_POSING = 6;           ///< Body pose routine underway.
-        STATE_FINISHED = 7;              ///< Spot check successfully finished.
-        STATE_REVERTING_CAL = 8;         ///< Reverting calibration to previous values.
-        STATE_ERROR = 9;                 ///< Error occurred while running spotcheck. Inspect
-                                         ///  error for more info.
-        STATE_WAITING_FOR_COMMAND = 10;  ///< Waiting for user command.
+        STATE_UNKNOWN = 0;               // Unused enum.
+        STATE_USER_ABORTED = 1;          // SpotCheck is aborted by the user.
+        STATE_STARTING = 2;              // SpotCheck is initializing.
+        STATE_LOADCELL_CAL = 3;          // Load cell calibration underway.
+        STATE_ENDSTOP_CAL = 4;           // Endstop calibration underway.
+        STATE_CAMERA_CHECK = 5;          // Camera check underway.
+        STATE_BODY_POSING = 6;           // Body pose routine underway.
+        STATE_FINISHED = 7;              // Spot check successfully finished.
+        STATE_REVERTING_CAL = 8;         // Reverting calibration to previous values.
+        STATE_ERROR = 9;                 // Error occurred while running spotcheck. Inspect
+                                         //  error for more info.
+        STATE_WAITING_FOR_COMMAND = 10;  // Waiting for user command.
     }
     State state = 2;
 
-    /// The last command executed by Spotcheck. When SpotCheck is in state WAITING_FOR_COMMAND,
-    /// the last command has completed.
+    // The last command executed by Spotcheck. When SpotCheck is in state WAITING_FOR_COMMAND,
+    // the last command has completed.
     SpotCheckCommandRequest.Command last_command = 12;
 
-    /// If SpotCheck experienced an error, specific error details reported here.
-    /// This reflects an error in the routine.
+    // If SpotCheck experienced an error, specific error details reported here.
+    // This reflects an error in the routine.
     enum Error {
-        ERROR_UNKNOWN = 0;                    ///< Unused enum.
-        ERROR_NONE = 1;                       ///< No error has occurred.
-        ERROR_UNEXPECTED_POWER_CHANGE = 2;    ///< Unexpected motor power state transition.
-        ERROR_INIT_IMU_CHECK = 3;             ///< Robot body is not flat on the ground.
-        ERROR_INIT_NOT_SITTING = 4;           ///< Robot body is not close to a sitting pose
-        ERROR_LOADCELL_TIMEOUT = 5;           ///< Timeout during loadcell calibration.
-        ERROR_POWER_ON_FAILURE = 6;           ///< Error enabling motor power.
-        ERROR_ENDSTOP_TIMEOUT = 7;            ///< Timeout during endstop calibration.
-        ERROR_FAILED_STAND = 8;               ///< Robot failed to stand.
-        ERROR_CAMERA_TIMEOUT = 9;             ///< Timeout during camera check.
-        ERROR_GROUND_CHECK = 10;              ///< Flat ground check failed.
-        ERROR_POWER_OFF_FAILURE = 11;         ///< Robot failed to power off.
+        ERROR_UNKNOWN = 0;                    // Unused enum.
+        ERROR_NONE = 1;                       // No error has occurred.
+        ERROR_UNEXPECTED_POWER_CHANGE = 2;    // Unexpected motor power state transition.
+        ERROR_INIT_IMU_CHECK = 3;             // Robot body is not flat on the ground.
+        ERROR_INIT_NOT_SITTING = 4;           // Robot body is not close to a sitting pose
+        ERROR_LOADCELL_TIMEOUT = 5;           // Timeout during loadcell calibration.
+        ERROR_POWER_ON_FAILURE = 6;           // Error enabling motor power.
+        ERROR_ENDSTOP_TIMEOUT = 7;            // Timeout during endstop calibration.
+        ERROR_FAILED_STAND = 8;               // Robot failed to stand.
+        ERROR_CAMERA_TIMEOUT = 9;             // Timeout during camera check.
+        ERROR_GROUND_CHECK = 10;              // Flat ground check failed.
+        ERROR_POWER_OFF_FAILURE = 11;         // Robot failed to power off.
     }
     Error error = 6;
 
-    /// Results from camera check.
-    /// The key string is the location of the camera (e.g. frontright, frontleft, left, ...)
+    // Results from camera check.
+    // The key string is the location of the camera (e.g. frontright, frontleft, left, ...)
     map<string, DepthPlaneSpotCheckResult> camera_results = 3;
 
-    /// Results from load cell calibration.
-    /// The key string is the location of the joint (e.g. fl.hxa, fl.hya, fl.kna, ...)
+    // Results from load cell calibration.
+    // The key string is the location of the joint (e.g. fl.hxa, fl.hya, fl.kna, ...)
     map<string, LoadCellSpotCheckResult> load_cell_results = 4;
 
-    /// Results from output position sensor calibration.
-    /// The key string is the location of the joint (e.g. fl.hx, fl.hy, fl.kn, ...)
+    // Results from output position sensor calibration.
+    // The key string is the location of the joint (e.g. fl.hx, fl.hy, fl.kn, ...)
     map<string, JointKinematicCheckResult> kinematic_cal_results = 5;
 
-    /// Result from the payload check
+    // Result from the payload check
     PayloadCheckResult payload_result = 8;
 
-    /// Results of foot height validation.
-    /// The key string is the name of the leg (e.g. fl, fr, hl, ...)
+    // Results of foot height validation.
+    // The key string is the name of the leg (e.g. fl, fr, hl, ...)
     map<string, FootHeightCheckResult> foot_height_results = 10;
 
-    /// Results of leg pair validation.
-    /// The key string is the name of the leg pair (e.g. fl-fr, fl-hl, ...)
+    // Results of leg pair validation.
+    // The key string is the name of the leg pair (e.g. fl-fr, fl-hl, ...)
     map<string, LegPairCheckResult> leg_pair_results = 11;
 
-    /// The approximate progress of the spot check routine, range [0-1].
+    // The approximate progress of the spot check routine, range [0-1].
     float progress = 7;
 
-    /// Timestamp for the most up-to-date calibration
+    // Timestamp for the most up-to-date calibration
     google.protobuf.Timestamp last_cal_timestamp = 9;
 }
 
-/// Results from camera check.
+// Results from camera check.
 message DepthPlaneSpotCheckResult {
-    /// Errors reflect an issue with camera hardware.
+    // Errors reflect an issue with camera hardware.
     enum Status {
-        STATUS_UNKNOWN = 0;     ///< Unused enum.
-        STATUS_OK = 1;          ///< No detected calibration error.
-        STATUS_WARNING = 2;     ///< Possible calibration error detected.
-        STATUS_ERROR = 3;       ///< Error with robot calibration.
+        STATUS_UNKNOWN = 0;     // Unused enum.
+        STATUS_OK = 1;          // No detected calibration error.
+        STATUS_WARNING = 2;     // Possible calibration error detected.
+        STATUS_ERROR = 3;       // Error with robot calibration.
     }
     Status status = 1;
 
-    /// Higher is worse. Above 100 means the camera is severely out of calibration.
+    // Higher is worse. Above 100 means the camera is severely out of calibration.
     float severity_score = 2;
 }
 
-/// Results of payload check.
+// Results of payload check.
 message PayloadCheckResult {
-    /// Errors reflect an issue with payload configuration.
+    // Errors reflect an issue with payload configuration.
     enum Error {
         ERROR_UNKNOWN = 0;
         ERROR_NONE = 1;
@@ -153,13 +153,13 @@ message PayloadCheckResult {
 }
 
 
-/// Results from load cell check.
+// Results from load cell check.
 message LoadCellSpotCheckResult {
-    /// Errors reflect an issue with robot hardware.
+    // Errors reflect an issue with robot hardware.
     enum Error {
-        ERROR_UNKNOWN = 0;              ///< Unused enum.
-        ERROR_NONE = 1;                 ///< No hardware error detected.
-        ERROR_ZERO_OUT_OF_RANGE = 2;    ///< Load cell calibration failure.
+        ERROR_UNKNOWN = 0;              // Unused enum.
+        ERROR_NONE = 1;                 // No hardware error detected.
+        ERROR_ZERO_OUT_OF_RANGE = 2;    // Load cell calibration failure.
     }
     Error error = 2;
 
@@ -169,36 +169,36 @@ message LoadCellSpotCheckResult {
     float old_zero = 4;
 }
 
-/// Kinematic calibration results
+// Kinematic calibration results
 message JointKinematicCheckResult {
-    /// Errors reflect an issue with robot hardware.
+    // Errors reflect an issue with robot hardware.
     enum Error {
-        ERROR_UNKNOWN = 0;       ///< Unused enum.
-        ERROR_NONE = 1;          ///< No hardware error detected.
-        ERROR_CLUTCH_SLIP = 2;   ///< Error detected in clutch performance.
+        ERROR_UNKNOWN = 0;       // Unused enum.
+        ERROR_NONE = 1;          // No hardware error detected.
+        ERROR_CLUTCH_SLIP = 2;   // Error detected in clutch performance.
     }
     Error error = 2;
 
-    /// The current offset [rad]
+    // The current offset [rad]
     float offset = 3;
-    /// The previous offset [rad]
+    // The previous offset [rad]
     float old_offset = 4;
 
-    /// Joint calibration health score. range [0-1]
-    /// 0 indicates an unhealthy kinematic joint calibration
-    /// 1 indicates a perfect kinematic joint calibration
-    /// Typically, values greater than 0.8 should be expected.
+    // Joint calibration health score. range [0-1]
+    // 0 indicates an unhealthy kinematic joint calibration
+    // 1 indicates a perfect kinematic joint calibration
+    // Typically, values greater than 0.8 should be expected.
     float health_score = 5;
 }
 
 // Results from foot height checks.
 message FootHeightCheckResult {
-    /// Errors reflect an issue with robot calibration.
+    // Errors reflect an issue with robot calibration.
     enum Status {
-        STATUS_UNKNOWN = 0;     ///< Unused enum.
-        STATUS_OK = 1;          ///< No detected calibration error.
-        STATUS_WARNING = 2;     ///< Possible calibration error detected.
-        STATUS_ERROR = 3;       ///< Error with robot calibration.
+        STATUS_UNKNOWN = 0;     // Unused enum.
+        STATUS_OK = 1;          // No detected calibration error.
+        STATUS_WARNING = 2;     // Possible calibration error detected.
+        STATUS_ERROR = 3;       // Error with robot calibration.
     }
     Status status = 2;
 
@@ -208,12 +208,12 @@ message FootHeightCheckResult {
 
 // Results from leg pair checks..
 message LegPairCheckResult {
-    /// Errors reflect an issue with robot calibration.
+    // Errors reflect an issue with robot calibration.
     enum Status {
-        STATUS_UNKNOWN = 0;     ///< Unused enum.
-        STATUS_OK = 1;          ///< No detected calibration error.
-        STATUS_WARNING = 2;     ///< Possible calibration error detected.
-        STATUS_ERROR = 3;       ///< Error with robot calibration.
+        STATUS_UNKNOWN = 0;     // Unused enum.
+        STATUS_OK = 1;          // No detected calibration error.
+        STATUS_WARNING = 2;     // Possible calibration error detected.
+        STATUS_ERROR = 3;       // Error with robot calibration.
     }
     Status status = 2;
 
@@ -221,68 +221,77 @@ message LegPairCheckResult {
     float leg_pair_distance_change = 3;
 }
 
-/// Request for the CameraCalibrationCommand service.
+// Request for the CameraCalibrationCommand service.
 message CameraCalibrationCommandRequest {
-    /// Common request header.
+    // Common request header.
     RequestHeader header = 1;
 
-    /// The Lease to show ownership of the robot. Lease is required for all cal commands.
+    // The Lease to show ownership of the robot. Lease is required for all cal commands.
     Lease lease = 2;
 
     enum Command {
-        COMMAND_UNKNOWN = 0;    ///< Unused enum.
-        COMMAND_START = 1;      ///< Start calibration routine.
-        COMMAND_CANCEL = 2;     ///< Cancel calibration routine.
+        COMMAND_UNKNOWN = 0;    // Unused enum.
+        COMMAND_START = 1;      // Start calibration routine.
+        COMMAND_CANCEL = 2;     // Cancel calibration routine.
     }
     Command command = 3;
 }
 
-/// Response for the CameraCalibrationCommand service.
+// Response for the CameraCalibrationCommand service.
 message CameraCalibrationCommandResponse {
-    /// Common response header.
+    // Common response header.
     ResponseHeader header = 1;
 
-    /// Details about how the lease was used.
+    // Details about how the lease was used.
     LeaseUseResult lease_use_result = 2;
 }
 
-/// Request for the CameraCalibrationFeedback service.
+// Request for the CameraCalibrationFeedback service.
 message CameraCalibrationFeedbackRequest {
-     /// Common request header.
+     // Common request header.
     RequestHeader header = 1;
 }
 
-/// Response for the CameraCalibrationFeedback service.
+// Response for the CameraCalibrationFeedback service.
 message CameraCalibrationFeedbackResponse {
-    /// Common response header.
+    // Common response header.
     ResponseHeader header = 1;
 
-    /// Status of camera calibration procedure.
+    // Status of camera calibration procedure.
     enum Status {
-        STATUS_UNKNOWN = 0;                 ///< Unused enum.
-        STATUS_PROCESSING = 1;              ///< The robot is actively running calibration routine.
-        STATUS_SUCCESS = 2;                 ///< The robot successfully ran calibration routine and
-                                            /// is ready to use again.
-        STATUS_USER_CANCELED = 3;           ///< API client canceled calibration.
-        STATUS_POWER_ERROR = 4;             ///< The robot is not powered on.
-        STATUS_LEASE_ERROR = 5;             ///< Ownership error during calibration.
-        STATUS_TARGET_NOT_CENTERED = 6;     ///< Invalid starting configuration of robot.
-        STATUS_ROBOT_COMMAND_ERROR = 7;     ///< Robot encountered an error while trying to move
-                                            /// around the calibration target. Robot possibly
-                                            /// encountered a fault. Check robot state for more
-                                            /// details
-        STATUS_CALIBRATION_ERROR = 8;       ///< Calibration procedure produced an invalid result.
-                                            /// This may occur in poor lighting conditions or if
-                                            /// calibration target moved during calibration
-                                            /// procedure.
-        STATUS_INTERNAL_ERROR = 9;          ///< Something extraordinary happened. Try power
-                                            /// cycling robot or contact BD.
-        STATUS_NEVER_RUN = 10;              ///< Calibration routine has never been run. No feedback
-                                            /// to give.
+        STATUS_UNKNOWN = 0;                 // Unused enum.
+        STATUS_PROCESSING = 1;              // The robot is actively running calibration routine.
+        STATUS_SUCCESS = 2;                 // The robot successfully ran calibration routine and
+                                            // is ready to use again.
+        STATUS_USER_CANCELED = 3;           // API client canceled calibration.
+        STATUS_POWER_ERROR = 4;             // The robot is not powered on.
+        STATUS_LEASE_ERROR = 5;             // Ownership error during calibration.
+        STATUS_ROBOT_COMMAND_ERROR = 7;     // Robot encountered an error while trying to move
+                                            // around the calibration target. Robot possibly
+                                            // encountered a fault. Check robot state for more
+                                            // details
+        STATUS_CALIBRATION_ERROR = 8;       // Calibration procedure produced an invalid result.
+                                            // This may occur in poor lighting conditions or if
+                                            // calibration target moved during calibration
+                                            // procedure.
+        STATUS_INTERNAL_ERROR = 9;          // Something extraordinary happened. Try power
+                                            // cycling robot or contact BD.
+        STATUS_CAMERA_FOCUS_ERROR = 14;     // Camera focus issue detected. This is a hardware
+                                            //  issue that required
+
+        STATUS_TARGET_NOT_CENTERED = 6;           // Target partially, but not fully, in view when
+                                                  // starting calibration.
+        STATUS_TARGET_NOT_IN_VIEW = 11;           // Target not visible when starting calibration.
+        STATUS_TARGET_NOT_GRAVITY_ALIGNED = 12;   // Target not aligned with gravity when
+                                                  //  starting calibration.
+        STATUS_TARGET_UPSIDE_DOWN = 13;           // Target upside down when starting calibration.
+
+        STATUS_NEVER_RUN = 10;              // Calibration routine has never been run. No feedback
+                                            // to give.
     }
     Status status = 2;
 
-    /// The approximate progress of the calibration routine, range [0-1].
-    /// Status takes precedence over progress value.
+    // The approximate progress of the calibration routine, range [0-1].
+    // Status takes precedence over progress value.
     float progress = 3;
 }

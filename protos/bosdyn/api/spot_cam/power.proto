@@ -1,0 +1,40 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.spot_cam;
+
+option java_outer_classname = "PowerProto";
+
+import "google/protobuf/wrappers.proto";
+import "bosdyn/api/header.proto";
+
+message PowerStatus {
+    //these switches are 'true' for power-on, 'false' for power-off
+    google.protobuf.BoolValue ptz = 2;
+    google.protobuf.BoolValue aux1 = 3;
+    google.protobuf.BoolValue aux2 = 4;
+}
+
+message GetPowerStatusRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message GetPowerStatusResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    PowerStatus status = 2;
+}
+
+message SetPowerStatusRequest {
+    bosdyn.api.RequestHeader header = 1;
+    PowerStatus status = 2;
+}
+
+message SetPowerStatusResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    PowerStatus status = 2;
+}

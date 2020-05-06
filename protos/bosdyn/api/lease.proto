@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -46,7 +46,7 @@ message LeaseUseResult {
         // An internal issue occurred.
         STATUS_UNKNOWN = 0;
 
-        // The Lease is the active one and can be used.
+        // The Lease was accepted.
         STATUS_OK = 1;
 
         // The Lease is invalid.
@@ -234,7 +234,8 @@ message RetainLeaseRequest {
     // Common request header.
     RequestHeader header = 1;
 
-    // The Lease to retain ownership over.
+    // The Lease to retain ownership over. May also be a "super" lease of the lease to retain
+    // ownership over.
     Lease lease = 2;
 }
 

@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -21,7 +21,7 @@ from bosdyn.client.log_annotation import LogAnnotationClient
 
 import bosdyn.api.log_annotation_pb2 as log_annotation_protos
 import bosdyn.api.log_annotation_service_pb2_grpc as log_annotation_service
-import bosdyn.api.robot_command_pb2 as robot_command_protos
+from bosdyn.api import basic_command_pb2
 import bosdyn.api.geometry_pb2 as geometry_protos
 
 LOGGER = logging.getLogger()
@@ -65,7 +65,7 @@ def annotate_spot(config):
     log_annotation_client.add_log_protobuf(geo_proto)
     robot.logger.info('Added geometry log blob to robot log.')
     time.sleep(0.1)
-    cmd_proto = robot_command_protos.SelfRightCommand()
+    cmd_proto = basic_command_pb2.SelfRightCommand()
     log_annotation_client.add_log_protobuf(cmd_proto)
     robot.logger.info('Added robot command log blob to robot log.')
     time.sleep(0.1)

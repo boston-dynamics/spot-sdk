@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -8,6 +8,8 @@
 import copy
 import functools
 import logging
+import types
+import grpc
 
 from .channel import TransportError, translate_exception
 from .exceptions import Error, InternalServerError, InvalidRequestError, LeaseUseError, UnsetStatusError
@@ -26,11 +28,60 @@ def common_header_errors(response):
     return None
 
 
+def streaming_common_header_errors(response_iterator):
+    """Return an exception based on common response header for a streaming
+       response iterator. None if no error."""
+    for response in response_iterator:
+        error = common_header_errors(response)
+        if error is not None:
+            return error
+    # No common header error found.
+    return None
+
+
 def common_lease_errors(response):
     """Return an exception based on lease use result. None if no error."""
-    if response.lease_use_result.status != response.lease_use_result.STATUS_OK:
-        return LeaseUseError(response)
+    if hasattr(response, 'lease_use_result'):
+        # On the off chance the protobuf message has a lease_use_result field but the instance does
+        # not have it filled out...
+        if response.HasField('lease_use_result'):
+            lease_use_results = [response.lease_use_result]
+        else:
+            lease_use_results = []
+    elif hasattr(response, 'lease_use_results'):
+        lease_use_results = response.lease_use_results
+    else:
+        # This means you're using the wrong error handler.
+        return InternalServerError(response, 'No LeaseUseResult field found!')
+
+    for result in lease_use_results:
+        if result.status != result.STATUS_OK:
+            return LeaseUseError(response)
     return None
+
+
+def streaming_common_lease_errors(response_iterator):
+    """Return an exception based on lease use result for a streaming
+       response iterator. None if no error."""
+    for response in response_iterator:
+        error = common_lease_errors(response)
+        if error is not None:
+            return error
+    # No lease use error found.
+    return None
+
+
+def error_pair(error_message):
+    """Creates a pair of an error class and the associated docstring as the error message
+       which can be used by the error_factory.
+
+    Args:
+        error_message: A class that inherits from the python Error class.
+
+    Returns:
+        The tuple of the error class and it's associated docstring.
+    """
+    return (error_message, error_message.__doc__)
 
 
 def error_factory(response, status, status_to_string, status_to_error):
@@ -42,12 +93,12 @@ def error_factory(response, status, status_to_string, status_to_error):
     function in try/except blocks.
 
     Args:
-        response -- Protobuf message to examine.
-        status -- Status from the protobuf message.
-        status_to_string -- Function that converts numeric status value to string. May raise
+        response: Protobuf message to examine or an iterator of protobuf responses.
+        status: Status from the protobuf message.
+        status_to_string: Function that converts numeric status value to string. May raise
                             ValueError, in which case just the numeric code is included in a default
                             error message.
-        status_to_error -- mapping of status -> (error_constructor, error_message)
+        status_to_error: mapping of status -> (error_constructor, error_message)
                            error_constructor must take arguments "response" and "error_message".
                            (and ideally will subclass from ResponseError.)
 
@@ -68,7 +119,16 @@ def error_factory(response, status, status_to_string, status_to_error):
             message = 'Code: {} (Protobuf definition mismatch?)'.format(status)
         else:
             message = 'Code: {} ({})'.format(status, status_str)
-    return error_type(response=response, error_message=message)
+
+    # Determine if this is a streaming response or a regular response.
+    if isinstance(response, types.GeneratorType):
+        for resp in response:
+            err = error_type(response=resp, error_message=message)
+            if err is not None:
+                return err
+        return None
+    else:
+        return error_type(response=response, error_message=message)
 
 
 def handle_unset_status_error(unset, field='status', statustype=None):
@@ -79,9 +139,15 @@ def handle_unset_status_error(unset, field='status', statustype=None):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             # See if the given field is the given "unset" value.
-            _statustype = statustype if statustype else args[0]
-            if getattr(args[0], field) == getattr(_statustype, unset):
-                return UnsetStatusError(args[0])
+            if isinstance(args[0], types.GeneratorType):
+                for resp in args[0]:
+                    _statustype = statustype if statustype else resp
+                    if getattr(resp, field) == getattr(_statustype, unset):
+                        return UnsetStatusError(resp)
+            else:
+                _statustype = statustype if statustype else args[0]
+                if getattr(args[0], field) == getattr(_statustype, unset):
+                    return UnsetStatusError(args[0])
             return func(*args, **kwargs)
 
         return wrapper
@@ -96,7 +162,10 @@ def handle_common_header_errors(func):
     def wrapper(*args, **kwargs):
         # Look for errors in the common response, before looking for specific errors.
         # pylint: disable=no-value-for-parameter
-        return common_header_errors(*args) or func(*args, **kwargs)
+        if isinstance(args[0], types.GeneratorType):
+            return streaming_common_header_errors(*args) or func(*args, **kwargs)
+        else:
+            return common_header_errors(*args) or func(*args, **kwargs)
 
     return wrapper
 
@@ -107,7 +176,10 @@ def handle_lease_use_result_errors(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         # pylint: disable=no-value-for-parameter
-        return common_lease_errors(*args) or func(*args, **kwargs)
+        if isinstance(args[0], types.GeneratorType):
+            return streaming_common_lease_errors(*args) or func(*args, **kwargs)
+        else:
+            return common_lease_errors(*args) or func(*args, **kwargs)
 
     return wrapper
 
@@ -118,13 +190,39 @@ def print_response(func):
     def print_message(response):
         print(response)
 
+    def print_streaming_message(response_iterator):
+        for response in response_iterator:
+            print_message(response)
+
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         # pylint: disable=no-value-for-parameter
-        print_message(*args)
+        if isinstance(args[0], types.GeneratorType):
+            print_streaming_message(*args)
+        else:
+            print_message(*args)
         return func(*args, **kwargs)
 
     return wrapper
+
+
+def process_kwargs(func):
+
+    @functools.wraps(func)
+    def processor(self, rpc_method, request, value_from_response=None, error_from_response=None,
+                  **kwargs):
+        if kwargs.get("disable_value_handler"):
+            value_from_response = None
+        kwargs.pop("disable_value_handler", None)
+
+        if kwargs.get("disable_error_handler"):
+            error_from_response = None
+        kwargs.pop("disable_error_handler", None)
+
+        return func(self, rpc_method, request, value_from_response=value_from_response,
+                    error_from_response=error_from_response, **kwargs)
+
+    return processor
 
 
 class BaseClient(object):
@@ -174,23 +272,72 @@ class BaseClient(object):
         self.logger = other.logger.getChild(self._name or self._service_type_short)
         self.lease_wallet = other.lease_wallet
 
+    def update_request_iterator(self, request_iterator, logger, rpc_method, is_blocking):
+        for request in request_iterator:
+            request = self._apply_request_processors(copy.deepcopy(request))
+            if is_blocking:
+                logger.debug('blocking request: %s %s', rpc_method._method,
+                             self.request_trim_for_log(request))
+            else:
+                logger.debug('async request: %s %s', rpc_method._method,
+                             self.request_trim_for_log(request))
+            yield request
+
+    def update_response_iterator(self, response_iterator, logger, rpc_method, is_blocking):
+        try:
+            for response in response_iterator:
+                response = self._apply_response_processors(copy.deepcopy(response))
+                if is_blocking:
+                    logger.debug('blocking response: %s %s', rpc_method._method,
+                                 self.request_trim_for_log(response))
+                else:
+                    logger.debug('async response: %s %s', rpc_method._method,
+                                 self.request_trim_for_log(response))
+                yield response
+        except TransportError as e:
+            # Iterating through the response_iterator is the point that transport exceptions will
+            # be thrown for streaming rpcs if any are going to occur.
+            # Here we make sure that they're translated to our more meaningful exceptions.
+            # Any ResponseErrors or other exception types can be let through untranslated.
+            raise translate_exception(e)
+
+    @process_kwargs
     def call(self, rpc_method, request, value_from_response=None, error_from_response=None,
              **kwargs):
-        """Returns result of calling rpc_method(request, **kwargs) after running processors.
+        """Returns result of calling rpc_method(request, kwargs) after running processors.
 
         value_from_response and error_from_response should not raise their own exceptions!
+        Additionally, value_from_response and error_from_response that are not common handlers
+        must accept streaming responses if it is a grpc streaming response.
         """
-        request = self._apply_request_processors(copy.deepcopy(request))
         logger = self._get_logger(rpc_method)
-        logger.debug('blocking request: %s %s', rpc_method._method,
-                     self.request_trim_for_log(request))
+        if isinstance(rpc_method, grpc.StreamUnaryMultiCallable) or isinstance(
+                rpc_method, grpc.StreamStreamMultiCallable):
+            # The incoming request is a streaming request.
+            request = self.update_request_iterator(request, logger, rpc_method, is_blocking=True)
+        else:
+            request = self._apply_request_processors(copy.deepcopy(request))
+            logger.debug('blocking request: %s %s', rpc_method._method,
+                         self.request_trim_for_log(request))
+
         try:
             response = rpc_method(request, **kwargs)
         except TransportError as e:
             raise translate_exception(e)
 
-        response = self._apply_response_processors(response)
-        logger.debug('response: %s %s', rpc_method._method, self.response_trim_for_log(response))
+        if isinstance(rpc_method, grpc.UnaryStreamMultiCallable) or isinstance(
+                rpc_method, grpc.StreamStreamMultiCallable):
+            # The outgoing response is a streaming response.
+            response = self.update_response_iterator(response, logger, rpc_method, is_blocking=True)
+            return self.handle_response_streaming(
+                list(response), error_from_response, value_from_response)
+        else:
+            response = self._apply_response_processors(response)
+            logger.debug('response: %s %s', rpc_method._method,
+                         self.response_trim_for_log(response))
+            return self.handle_response(response, error_from_response, value_from_response)
+
+    def handle_response(self, response, error_from_response, value_from_response):
         if error_from_response is not None:
             exc = error_from_response(response)
         else:
@@ -201,11 +348,25 @@ class BaseClient(object):
             return response
         return value_from_response(response)
 
+    def handle_response_streaming(self, response, error_from_response, value_from_response):
+        if error_from_response is not None:
+            exc = error_from_response((resp for resp in response))
+        else:
+            exc = None
+        if exc is not None:
+            raise exc
+        if value_from_response is None:
+            return response
+        return value_from_response((resp for resp in response))
+
+    @process_kwargs
     def call_async(self, rpc_method, request, value_from_response=None, error_from_response=None,
                    **kwargs):
-        """Returns a Future for rpc_method(request, **kwargs) after running processors.
+        """Returns a Future for rpc_method(request, kwargs) after running processors.
 
         value_from_response and error_from_response should not raise their own exceptions!
+
+        Asynchronous calls cannot be done with streaming rpc's right now.
         """
         request = self._apply_request_processors(copy.deepcopy(request))
         logger = self._get_logger(rpc_method)
@@ -300,6 +461,8 @@ class FutureWrapper():
         error = self.original_future.exception(**kwargs)
 
         if error is None:
+            if self._error_from_response is None:
+                return None
             return self._error_from_response(self.original_future.result())
 
         return translate_exception(error)

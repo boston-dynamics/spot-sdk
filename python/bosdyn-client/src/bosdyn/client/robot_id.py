@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -21,11 +21,9 @@ def _get_entry_value(response):
 class RobotIdClient(BaseClient):
     """Client to access robot info."""
 
-    # Typical authority of the service on the robot we want to talk to.
-    default_authority = 'id.spot.robot'
     # Typical name of the service in the robot's directory listing.
     default_service_name = 'robot-id'
-    # Full service name in the robot's directory listing.
+    # gRPC service proto definition implemented by this service
     service_type = 'bosdyn.api.RobotIdService'
 
     def __init__(self):

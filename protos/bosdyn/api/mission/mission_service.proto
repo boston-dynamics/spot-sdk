@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,8 +13,28 @@ option java_outer_classname = "MissionServiceProto";
 import "bosdyn/api/mission/mission.proto";
 
 service MissionService {
+    // Load a mission to run later.
+    rpc LoadMission(LoadMissionRequest) returns (LoadMissionResponse) {}
+
+    // Start executing a loaded mission.
+    // Will not restart a mission that has run to completion. Use RestartMission to do that.
+    rpc PlayMission(PlayMissionRequest) returns (PlayMissionResponse) {}
+
+    // Pause mission execution.
+    rpc PauseMission(PauseMissionRequest) returns (PauseMissionResponse) {}
+
+    // Start executing a loaded mission from the beginning.
+    // Does not need to be called after LoadMission.
+    rpc RestartMission(RestartMissionRequest) returns (RestartMissionResponse) {}
+
     // Get the state of the mission.
     rpc GetState(GetStateRequest) returns (GetStateResponse) {}
+
+    // Get static information regarding the mission.
+    rpc GetInfo(GetInfoRequest) returns (GetInfoResponse) {}
+
+    // Download the mission as it was uploaded to the service.
+    rpc GetMission(GetMissionRequest) returns (GetMissionResponse) {}
 
     // Specify an answer to the question asked by the mission.
     rpc AnswerQuestion(AnswerQuestionRequest) returns (AnswerQuestionResponse) {}

@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -27,6 +27,90 @@ class NonexistentServiceError(DirectoryResponseError):
     """The requested service name does not exist."""
 
 
+def _list_value(response):
+    return response.service_entries
+
+
+def _get_entry_value(response):
+    return response.service_entry
+
+
+class DirectoryClient(BaseClient):
+    """List robot services and get information on them."""
+
+    # Typical name of the service in the robot's directory listing.
+    default_service_name = 'directory'
+    # gRPC service proto definition implemented by this service
+    service_type = 'bosdyn.api.DirectoryService'
+
+    def __init__(self):
+        super(DirectoryClient, self).__init__(directory_service_pb2_grpc.DirectoryServiceStub)
+
+    def list(self, **kwargs):
+        """List all services present on the robot.
+        
+        Returns:
+          A list of the proto message definitions of all registered services
+        
+        Raises:
+          RpcError: Problem communicating with the robot.
+        """
+        req = directory_pb2.ListServiceEntriesRequest()
+        return self.call(self._stub.ListServiceEntries, req, value_from_response=_list_value,
+                         error_from_response=common_header_errors, **kwargs)
+
+    def list_async(self, **kwargs):
+        """List all services present on the robot.
+        
+        Returns:
+          A list of the proto message definitions of all registered services
+        
+        Raises:
+          RpcError: Problem communicating with the robot.
+        """
+        req = directory_pb2.ListServiceEntriesRequest()
+        return self.call_async(self._stub.ListServiceEntries, req, value_from_response=_list_value,
+                               error_from_response=common_header_errors, **kwargs)
+
+    def get_entry(self, service_name, **kwargs):
+        """Get the service entry for one particular service specified by name.
+        
+        Args:
+          service_name:     The name of the service to retrieve.
+
+        Returns:
+          The proto message definition of the service entry
+        
+        Raises:
+          RpcError: Problem communicating with the robot.
+          NonexistentServiceError: The service was not found.
+          DirectoryResponseError: Something went wrong during the directory access.
+        """
+        req = directory_pb2.GetServiceEntryRequest(service_name=service_name)
+        return self.call(self._stub.GetServiceEntry, req, value_from_response=_get_entry_value,
+                         error_from_response=_error_from_response, **kwargs)
+
+    def get_entry_async(self, service_name, **kwargs):
+        """Get the service entry for one particular service specified by name.
+        
+        Args:
+          service_name:     The name of the service to retrieve.
+
+        Returns:
+          The proto message definition of the service entry
+        
+        Raises:
+          RpcError: Problem communicating with the robot.
+          NonexistentServiceError: The service was not found.
+          DirectoryResponseError: Something went wrong during the directory access.
+        """
+        req = directory_pb2.GetServiceEntryRequest(service_name=service_name)
+        return self.call_async(self._stub.GetServiceEntry, req,
+                               value_from_response=_get_entry_value,
+                               error_from_response=_error_from_response, **kwargs)
+
+
+
 _STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _STATUS_TO_ERROR.update({
     directory_pb2.GetServiceEntryResponse.STATUS_OK: (None, None),
@@ -42,49 +126,3 @@ def _error_from_response(response):
     return error_factory(response, response.status,
                          status_to_string=directory_pb2.GetServiceEntryResponse.Status.Name,
                          status_to_error=_STATUS_TO_ERROR)
-
-
-class DirectoryClient(BaseClient):
-    """List robot services and get information on them."""
-
-    default_service_name = 'directory'
-    default_authority = 'api.spot.robot'
-    service_type = 'bosdyn.api.DirectoryService'
-
-    def __init__(self):
-        super(DirectoryClient, self).__init__(directory_service_pb2_grpc.DirectoryServiceStub)
-
-    def list(self, **kwargs):
-        """List all services present on the robot."""
-        req = directory_pb2.ListServiceEntriesRequest()
-        return self.call(self._stub.ListServiceEntries, req, value_from_response=_list_value,
-                         error_from_response=common_header_errors, **kwargs)
-
-    def list_async(self, **kwargs):
-        """List all services present on the robot."""
-        req = directory_pb2.ListServiceEntriesRequest()
-        return self.call_async(self._stub.ListServiceEntries, req, value_from_response=_list_value,
-                               error_from_response=common_header_errors, **kwargs)
-
-    def get_entry(self, service_name, **kwargs):
-        """Get the service entry for one particular service specified by name.
-        Throws NonexistentServiceError if the service is not found."""
-        req = directory_pb2.GetServiceEntryRequest(service_name=service_name)
-        return self.call(self._stub.GetServiceEntry, req, value_from_response=_get_entry_value,
-                         error_from_response=_error_from_response, **kwargs)
-
-    def get_entry_async(self, service_name, **kwargs):
-        """Get the service entry for one particular service specified by name.
-        Throws NonexistentServiceError if the service is not found."""
-        req = directory_pb2.GetServiceEntryRequest(service_name=service_name)
-        return self.call_async(self._stub.GetServiceEntry, req,
-                               value_from_response=_get_entry_value,
-                               error_from_response=_error_from_response, **kwargs)
-
-
-def _list_value(response):
-    return response.service_entries
-
-
-def _get_entry_value(response):
-    return response.service_entry

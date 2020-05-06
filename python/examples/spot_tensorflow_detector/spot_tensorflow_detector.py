@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -220,7 +220,7 @@ class SpotImageCapture:
             images_response = self.image_client.get_image_from_sources(self.source_list)
             for image_response in images_response:
                 source = image_response.source.name
-                acquisition_time = image_response.shot.sample.acquisition_time
+                acquisition_time = image_response.shot.acquisition_time
                 image_time = acquisition_time.seconds + acquisition_time.nanos / pow(10, 9)
 
                 image = Image.open(io.BytesIO(image_response.shot.image.data))

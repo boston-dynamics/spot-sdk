@@ -1,0 +1,62 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.spot_cam;
+
+option java_outer_classname = "StreamQualityProto";
+
+import "bosdyn/api/header.proto";
+import "google/protobuf/wrappers.proto";
+
+
+message StreamParams {
+    //the compression level in target BPS
+    google.protobuf.Int64Value targetbitrate = 1;
+    //how often should the entire feed be refreshed? (in frames)
+    //note: the feed is refreshed on a macroblock level; there are no full I-frames
+    google.protobuf.Int64Value refreshinterval = 2;
+    //how often should an IDR message get sent? (in frames)
+    google.protobuf.Int64Value idrinterval = 3;
+
+    enum AwbModeEnum {
+        OFF = 0;
+        AUTO = 1;
+        INCANDESCENT = 2;
+        FLUORESCENT = 3;
+        WARM_FLUORESCENT = 4;
+        DAYLIGHT = 5;
+        CLOUDY = 6;
+        TWILIGHT = 7;
+        SHADE = 8;
+        DARK = 9;
+    }
+
+    message AwbMode {
+        AwbModeEnum awb = 1;
+    }
+    AwbMode awb = 4;
+}
+
+message GetStreamParamsRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message GetStreamParamsResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    StreamParams params = 2;
+}
+
+message SetStreamParamsRequest {
+    bosdyn.api.RequestHeader header = 1;
+    StreamParams params = 2;
+}
+
+message SetStreamParamsResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    StreamParams params = 2;
+}

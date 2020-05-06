@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -34,6 +34,7 @@ def setup_client_and_service(client, service, service_adder):
     server.start()
     channel = grpc.insecure_channel('localhost:{}'.format(port))
     client.channel = channel
+    return server
 
 
 def add_common_header(response, request, error_code=HeaderProto.CommonError.CODE_OK,

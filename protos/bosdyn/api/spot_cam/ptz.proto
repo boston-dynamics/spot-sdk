@@ -1,0 +1,95 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.spot_cam;
+
+option java_outer_classname = "PtzProto";
+
+import "google/protobuf/wrappers.proto";
+import "bosdyn/api/header.proto";
+
+//PtzDescription provides information about a given PTZ. The name is usually all that's required to
+//describe a PTZ, but ListPtzResponse will include more information.
+message PtzDescription {
+    string name = 1;
+    //maybe we want to filter by type or dimentionality in the future
+
+    message Limits {
+        google.protobuf.FloatValue min = 1;
+        google.protobuf.FloatValue max = 2;
+    }
+
+    Limits pan_limit = 2;
+    Limits tilt_limit = 3;
+    Limits zoom_limit = 4;
+}
+
+message PtzPosition {
+    // The "mech" ptz can pan [0, 360] degrees, tilt [-20, 217] degrees where 0 is the horizon, and zoom between 1x and 30x.
+    PtzDescription ptz = 2; 
+    google.protobuf.FloatValue pan = 3;
+    google.protobuf.FloatValue tilt = 4;
+    google.protobuf.FloatValue zoom = 5;
+}
+
+message PtzVelocity {
+    // The "mech" ptz cannot be used with Velocity.
+    PtzDescription ptz = 2; 
+    google.protobuf.FloatValue pan = 3;
+    google.protobuf.FloatValue tilt = 4;
+    google.protobuf.FloatValue zoom = 5;
+}
+
+message GetPtzPositionRequest {
+    bosdyn.api.RequestHeader header = 1;
+    PtzDescription ptz = 2;
+}
+
+message GetPtzPositionResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    PtzPosition position = 2;
+}
+
+message GetPtzVelocityRequest {
+    bosdyn.api.RequestHeader header = 1;
+    PtzDescription ptz = 2;
+}
+
+message GetPtzVelocityResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    PtzVelocity velocity = 2;
+}
+
+message ListPtzRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message ListPtzResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    repeated PtzDescription ptzs = 2;
+}
+
+message SetPtzPositionRequest {
+    bosdyn.api.RequestHeader header = 1;
+    PtzPosition position = 2;
+}
+
+message SetPtzPositionResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    PtzPosition position = 2;
+}
+
+message SetPtzVelocityRequest {
+    bosdyn.api.RequestHeader header = 1;
+    PtzVelocity velocity = 2;
+}
+
+message SetPtzVelocityResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    PtzVelocity velocity = 2;
+}

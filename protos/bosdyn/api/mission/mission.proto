@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -10,19 +10,38 @@ package bosdyn.api.mission;
 
 option java_outer_classname = "MissionProto";
 
+import "bosdyn/api/geometry.proto";
 import "bosdyn/api/header.proto";
+import "bosdyn/api/lease.proto";
+import "bosdyn/api/mission/nodes.proto";
+import "bosdyn/api/mission/util.proto";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 // Get the state of the mission.
 message GetStateRequest {
-    /// Common request/response header.
+    // Common request/response header.
     RequestHeader header = 1;
+    // Upper bound on the node state to retrieve, inclusive. Leave unset for the latest data.
+    google.protobuf.Int64Value history_upper_tick_bound = 2;
+    // Specify the lower bound of per-node state history to retrieve.
+    // The service may not remember all the state you ask for. In this case, all of the state
+    // available between the specified bounds will be returned.
+    // This is optional -- if left unset, you will get exactly one set of per-node state.
+    oneof lower_bound {
+        // Tick counter for the lower bound of per-node state to retrieve.
+        int64 history_lower_tick_bound = 3;
+        // Number of ticks to look into the past from the upper bound.
+        int64 history_past_ticks = 4;
+    }
 }
 
 // Response to a GetStateRequest.
 message GetStateResponse {
-    /// Common request/response header.
+    // Common request/response header.
     ResponseHeader header = 1;
-    /// The requested mission state.
+    // The requested mission state.
     State state = 2;
 }
 
@@ -30,11 +49,70 @@ message GetStateResponse {
 message State {
     // What questions are outstanding?
     repeated Question questions = 1;
+    // A question that has been answered already.
+    message AnsweredQuestion {
+        Question question = 1;
+        // The answer that was provided.
+        int64 accepted_answer_code = 2;
+    }
+    // History of questions that have been answered.
+    // The server will set some limit on the available history.
+    repeated AnsweredQuestion answered_questions = 2;
+
+    message NodeStatesAtTick {
+        message NodeState {
+            // The result of this node's tick.
+            Result result = 1;
+            // May be set when the 'result' is RESULT_FAILURE or RESULT_ERROR, this describes why
+            // the node failed. Not all nodes will have an error explaining why they failed.
+            string error = 2;
+            // ID from NodeInfo.
+            int64 id = 3;
+        }
+        // The tick counter when this state was produced.
+        int64 tick_counter = 1;
+        // Time at which this tick started, in host time basis.
+        google.protobuf.Timestamp tick_start_timestamp = 2;
+        // At this tick, the state of every node that was ticked, in the order they were ticked.
+        repeated NodeState node_states = 3;
+    }
+
+    // Node states ordered from newest to oldest.
+    // history[0] will always be the data from this tick.
+    repeated NodeStatesAtTick history = 3;
+
+    // Overall status of the mission.
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        // The mission has failed due to a node failure.
+        STATUS_FAILURE = 1;
+        // The mission is still running.
+        STATUS_RUNNING = 2;
+        // The mission succeeded!
+        STATUS_SUCCESS = 3;
+        // Execution has been paused.
+        STATUS_PAUSED = 4;
+        // The mission service itself encountered an unexpected error, outside of a node failing.
+        STATUS_ERROR = 5;
+        // No mission has been loaded.
+        STATUS_NONE = 6;
+    }
+    Status status = 4;
+
+    // Describes the unexpected error encountered by the mission service.
+    // Only filled out if STATUS_ERROR is set.
+    string error = 5;
+
+    // The mission's tick counter when this state was generated.
+    // -1 indicates no mission has been started.
+    int64 tick_counter = 6;
+
+    // The mission's ID.
+    // -1 indicates no mission has been loaded.
+    int64 mission_id = 7;
 }
 
-// A question posed by some component of the mission.
-// These represent a request for information from ANY listeners that may be out there.
-// For v1.1.2, a question tells third party code that it is time to execute.
+// A question posed by a Prompt node.
 message Question {
     // Identifier of this question, unique across all missions executing on a single host.
     int64 id = 1;
@@ -46,28 +124,27 @@ message Question {
     string text = 3;
 
     // Options to choose from.
-    message Option {
-        // Numeric code corresponding to this option. Passed as part of the answer.
-        // For v1.1.2, the only answer codes will be 0 for success, -1 for failure.
-        int32 answer_code = 2;
-    }
-    repeated Option options = 4;
+    // Uses the submessage from the "prompt" node message.
+    repeated Prompt.Option options = 4;
+
+    // Set to true if this question was meant to be answered by some automated system, not a
+    // human. Clients should usually avoid generating a UI element to ask such a question.
+    bool for_autonomous_processing = 5;
 }
 
 // Answer one of the outstanding questions.
 message AnswerQuestionRequest {
-    /// Common request/response header.
+    // Common request/response header.
     RequestHeader header = 1;
     // Identifier of the question being answered.
     int64 question_id = 2;
     // The answer_code from the Question, corresponding to the user's choice.
-    // For v1.1.2, the only answer codes will be 0 for success, -1 for failure.
-    int32 code = 3;
+    int64 code = 3;
 }
 
 // Response from the server after a client has answered one of its questions.
 message AnswerQuestionResponse {
-    /// Common request/response header.
+    // Common request/response header.
     ResponseHeader header = 1;
 
     enum Status {
@@ -83,4 +160,207 @@ message AnswerQuestionResponse {
         STATUS_ALREADY_ANSWERED = 4;
     }
     Status status = 2;
+}
+
+// Static information about the mission.
+message MissionInfo {
+    // Mission ID assigned by the server.
+    int64 id = 1;
+
+    // The root node of the mission.
+    NodeInfo root = 2;
+}
+
+// Provides children and metadata of a single node within the mission.
+message NodeInfo {
+    // Unique to each node within the LOADED mission.
+    // Not guaranteed to be consistent between loads of the same mission.
+    int64 id = 1;
+    // Human-readable name of this node, e.g. "Goto waypoint 1", or "Power On".
+    string name = 2;
+    // Any UserData that was associated with this node.
+    UserData user_data = 3;
+    // Info on all children of this node, if any are present.
+    repeated NodeInfo children = 4;
+}
+
+// General message describing a node that has failed, for example as part of a PlayMission or
+// LoadMission RPC.
+message FailedNode {
+    // Human-readable name of this node, e.g. "Goto waypoint 1", or "Power On".
+    string name = 1;
+    // The reason why this node failed. May not be provided by all nodes.
+    string error = 2;
+}
+
+message PlayMissionRequest {
+    RequestHeader header = 1;
+
+    // Run the mission until this time.
+    // Pause the mission at that time if we have not received a new PlayMissionRequest.
+    // This ensures the mission stops relatively quickly if there is an unexpected client drop-out.
+    // Clients should regularly send PlayMissionRequests with a pause_time that reflects how often
+    // they expect to check in with the mission service.
+    google.protobuf.Timestamp pause_time = 3;
+
+    // Leases that the mission will need, plus the lease on the mission service.
+    repeated bosdyn.api.Lease leases = 4;
+
+    // Settings active until the next PlayMission or RestartMission request.
+    PlaySettings settings = 5;
+}
+
+
+// "Global" settings to use while a mission is running.
+// Some of these settings are not globally applicable. For example, the velocity_limit
+// does not change the speed at which the robot poses the body.
+message PlaySettings {
+    // Velocity limits on the robot motion. Example use: limit velocity in "navigate to" nodes.
+    SE2VelocityLimit velocity_limit = 1;
+}
+
+
+message PlayMissionResponse {
+    ResponseHeader header = 1;
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        // Mission is playing, or the mission has already completed.
+        // Use GetStateResponse to tell the difference.
+        STATUS_OK = 1;
+        // Call LoadMission first.
+        STATUS_NO_MISSION = 2;
+    }
+
+    Status status = 2;
+
+    // Results from any leases that may have been used.
+    // As part of mission validation, some of the non-mission leases may have been used.
+    repeated bosdyn.api.LeaseUseResult lease_use_results = 3;
+}
+
+
+message RestartMissionRequest {
+    RequestHeader header = 1;
+
+    // Run the mission until this time.
+    // Pause the mission at that time if we have not received a new PlayMissionRequest.
+    // This ensures the mission stops relatively quickly if there is an unexpected client drop-out.
+    // Clients should regularly send PlayMissionRequests with a pause_time that reflects how often
+    // they expect to check in with the mission service.
+    google.protobuf.Timestamp pause_time = 2;
+
+    // Leases that the mission will need, plus the lease on the mission service.
+    repeated bosdyn.api.Lease leases = 3;
+
+    // Settings active until the next PlayMission or RestartMission request.
+    PlaySettings settings = 4;
+}
+
+
+message RestartMissionResponse {
+    ResponseHeader header = 1;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        // Mission has restarted.
+        STATUS_OK = 1;
+        // Call LoadMission first.
+        STATUS_NO_MISSION = 2;
+        // Validation failed.
+        STATUS_VALIDATE_ERROR = 3;
+    }
+
+    Status status = 2;
+
+    // Results from any leases that may have been used.
+    // As part of mission validation, some of the non-mission leases may have been used.
+    repeated bosdyn.api.LeaseUseResult lease_use_results = 3;
+
+    // If certain nodes failed validation, they will be reported back in this field.
+    repeated FailedNode failed_nodes = 4;
+}
+
+
+message LoadMissionRequest {
+    RequestHeader header = 1;
+    // Root node of the mission to load.
+    Node root = 2;
+    // Leases that will be needed to validate the mission.
+    repeated bosdyn.api.Lease leases = 3;
+}
+
+
+message LoadMissionResponse {
+    ResponseHeader header = 1;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        // Load-time compilation failed.
+        STATUS_COMPILE_ERROR = 2;
+        // Load-time validation failed.
+        STATUS_VALIDATE_ERROR = 3;
+    }
+    Status status = 2;
+
+    repeated bosdyn.api.LeaseUseResult lease_use_results = 3;
+
+    // Set on success.
+    MissionInfo mission_info = 4;
+
+    // If certain nodes failed compilation or validation, they will be reported back in this field.
+    repeated FailedNode failed_nodes = 5;
+}
+
+
+// Request mission information.
+// This covers information that stays static until a new mission is loaded.
+message GetInfoRequest {
+    RequestHeader header = 1;
+}
+
+
+message GetInfoResponse {
+    ResponseHeader header = 1;
+
+    // Description of the loaded mission.
+    MissionInfo mission_info = 2;
+}
+
+
+message PauseMissionRequest {
+    RequestHeader header = 1;
+    // Lease on the mission service.
+    bosdyn.api.Lease lease = 2;
+}
+
+
+message PauseMissionResponse {
+    ResponseHeader header = 1;
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        // Mission is paused or finished running.
+        STATUS_OK = 1;
+        // No mission has started playing.
+        // NOT returned when two PauseMissionRequests are received back-to-back. In that case,
+        // you will get STATUS_OK.
+        STATUS_NO_MISSION_PLAYING = 2;
+    }
+    Status status = 2;
+    bosdyn.api.LeaseUseResult lease_use_result = 3;
+}
+
+// For requesting the mission as it was loaded in LoadMission.
+message GetMissionRequest {
+    RequestHeader header = 1;
+}
+
+// Responding with the mission as it was loaded in LoadMission.
+message GetMissionResponse {
+    ResponseHeader header = 1;
+    // Root node of the mission loaded.
+    // Unset if no mission has been loaded.
+    Node root = 2;
+    // Mission ID as reported in MissionInfo. -1 if no mission has been loaded.
+    int64 id = 3;
 }

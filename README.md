@@ -1,45 +1,19 @@
 <!--
-Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# Boston Dynamics | Developer
+# Spot SDK
 
-Integrate Boston Dynamics robots into your applications with the Boston Dynamics Developer Toolkit.
+Develop applications and payloads for Spot using the Boston Dynamics Spot SDK.
 
-The Toolkit consists of:
-  * Robot APIs to control the robot and read information about the world.
-  * The Python client library and tests.
-  * Documentation.
-  * Example Programs.
+The SDK consists of:
+  * The Spot [Python client library](docs/python/README.md). Applications using the Python library can control Spot and read sensor and health information from Spot. A wide variety of example programs and a QuickStart guide are also included.
+  * The Spot API [Conceptual Documentation](docs/concepts/README.md). These documents explain the key abstractions used by the Spot API.
+  * The Spot [Payload Developer Guide](docs/payload/README.md). Payloads add additional sensing, communication, and control capabilities beyond what the base platform provides. The Payload ICD covers the mechanical, electrical, and software interfaces that Spot supports.
+  * The Spot API [protocol definition](docs/protobuf/index.html). This reference guide covers the details of the protocol applications used to communicate to Spot. Application Developers who wish to use a language beyond Python can implement clients which speak the protocol.
 
-## Python
-
-### Supported Platforms and Versions
-
-The Python client library is supported on the following platforms:
-  * Windows 10
-  * MacOS 10.14 (Mojave)
-  * Ubuntu 18.04 LTS
-
-Python 3.6 and Python 3.7 are supported. Note that Python 3.8 is not supported at this point.
-
-Python 2.7 is _not_ supported. The [Python 2 End-Of-Life](https://www.python.org/dev/peps/pep-0373/) is coming at the beginning of 2020, and Python developers are encouraged to move to Python 3.
-
-### Documentation and tutorials
-
-The [Python QuickStart](docs/python/quickstart.md) is a step-by-step guide that will get you up and running on the Python libraries, and cover a number of key concepts along the way.
-
-The [Python Reference](docs/python/reference/index.html) is a detailed reference manual for API calls.
-
-Example Programs:
-  * [Hello, Spot!](python/examples/hello_spot/hello_spot.py) provides a basic template for issuing simple commands to Spot.
-  * [WASD](python/examples/wasd/wasd.py) is an interactive terminal-based program for controlling Spot via the keyboard. It demonstrates more advanced use of the command system.
-  * The [Command Line](python/bosdyn-client/src/bosdyn/client/command_line.py) tool lets you inspect the state of the robot, and demonstrates how to handle errors well.
-
-## Contact Us
-
-Email support@bostondynamics.com to get in touch with the Boston Dynamics Support team.
+This is version 2.0.0 of the SDK. Please review the [Release Notes](docs/release_notes.md) to see what has changed. 

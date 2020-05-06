@@ -1,0 +1,40 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "MobilityCommandProto";
+
+import "bosdyn/api/basic_command.proto";
+import "google/protobuf/any.proto";
+
+
+message MobilityCommand {
+    message Request {
+        oneof command {
+            SE2TrajectoryCommand.Request se2_trajectory_request = 1;
+            SE2VelocityCommand.Request se2_velocity_request = 2;
+            SitCommand.Request sit_request = 3;
+            StandCommand.Request stand_request = 4;
+
+        }
+
+        // Robot specific command parameters.
+        google.protobuf.Any params = 100;
+    }
+
+    message Feedback {
+        oneof feedback {
+            SE2TrajectoryCommand.Feedback se2_trajectory_feedback = 1;
+            SE2VelocityCommand.Feedback se2_velocity_feedback = 2;
+            SitCommand.Feedback sit_feedback = 3;
+            StandCommand.Feedback stand_feedback = 4;
+
+        }
+    }
+}

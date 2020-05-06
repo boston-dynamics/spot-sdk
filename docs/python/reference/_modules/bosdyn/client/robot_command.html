@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.robot_command &mdash; Spot 1.1.0 documentation</title>
+  <title>bosdyn.client.robot_command &mdash; Spot 2.0.0 documentation</title>
   
 
   
@@ -17,34 +17,33 @@
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -58,7 +57,7 @@
             
             
               <div class="version">
-                1.1.0
+                2.0.0
               </div>
             
           
@@ -82,10 +81,10 @@
               
             
             
-              <p class="caption"><span class="caption-text">Services:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../client_index.html">Client API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../core_index.html">Core API</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../client_modules/client_index.html">Client SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core_modules/core_index.html">Core SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mission_modules/mission_index.html">Mission SDK</a></li>
 </ul>
 
             
@@ -149,7 +148,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.robot_command</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
@@ -157,7 +156,6 @@
 
 <span class="sd">&quot;&quot;&quot;For clients to the robot command service.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">collections</span>
-<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="ne">TimeoutError</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">any_pb2</span>
@@ -165,20 +163,28 @@
 
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">geometry_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">robot_command_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">full_body_command_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">mobility_command_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">basic_command_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.spot</span> <span class="kn">import</span> <span class="n">robot_command_pb2</span> <span class="k">as</span> <span class="n">spot_command_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">robot_command_service_pb2_grpc</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">robot_command_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">trajectory_pb2</span>
 
 <span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span> <span class="n">handle_unset_status_error</span><span class="p">,</span>
                                   <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_lease_use_result_errors</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">InvalidRequestError</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">InvalidRequestError</span><span class="p">,</span> <span class="n">TimedOutError</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">Error</span> <span class="k">as</span> <span class="n">BaseError</span>
+<span class="kn">from</span> <span class="nn">.frame_helpers</span> <span class="kn">import</span> <span class="n">BODY_FRAME_NAME</span>
 <span class="kn">from</span> <span class="nn">.lease</span> <span class="kn">import</span> <span class="n">add_lease_wallet_processors</span>
 
 
 <div class="viewcode-block" id="RobotCommandResponseError"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandResponseError">[docs]</a><span class="k">class</span> <span class="nc">RobotCommandResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;General class of errors for RobotCommand service.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="Error"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.Error">[docs]</a><span class="k">class</span> <span class="nc">Error</span><span class="p">(</span><span class="n">BaseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for non-response errors in this module.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="NoTimeSyncError"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.NoTimeSyncError">[docs]</a><span class="k">class</span> <span class="nc">NoTimeSyncError</span><span class="p">(</span><span class="n">RobotCommandResponseError</span><span class="p">):</span>
@@ -205,12 +211,25 @@
     <span class="sd">&quot;&quot;&quot;The API supports this request, but the system does not support this request.&quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="CommandTimedOutError"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.CommandTimedOutError">[docs]</a><span class="k">class</span> <span class="nc">CommandTimedOutError</span><span class="p">(</span><span class="n">RobotCommandResponseError</span><span class="p">):</span>
+<div class="viewcode-block" id="CommandFailedError"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.CommandFailedError">[docs]</a><span class="k">class</span> <span class="nc">CommandFailedError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Command indicated it failed in its feedback.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="CommandTimedOutError"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.CommandTimedOutError">[docs]</a><span class="k">class</span> <span class="nc">CommandTimedOutError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Timed out waiting for SUCCESS response from robot command.&quot;&quot;&quot;</span></div>
 
 
+<div class="viewcode-block" id="UnknownFrameError"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.UnknownFrameError">[docs]</a><span class="k">class</span> <span class="nc">UnknownFrameError</span><span class="p">(</span><span class="n">RobotCommandResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Robot does not know how to handle supplied frame.&quot;&quot;&quot;</span></div>
+
+
 <span class="k">class</span> <span class="nc">_TimeConverter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Constructs a RobotTimeConverter as necessary.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Constructs a RobotTimeConverter as necessary.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        parent: Parent for the time sync endpoint.</span>
+<span class="sd">        endpoint: Endpoint for the time converted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
@@ -226,11 +245,19 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span>
 
     <span class="k">def</span> <span class="nf">convert_timestamp_from_local_to_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Calls RobotTimeConverter.convert_timestamp_from_local_to_robot()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Calls RobotTimeConverter.convert_timestamp_from_local_to_robot().</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestamp: Timestamp to convert.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">convert_timestamp_from_local_to_robot</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Calls RobotTimeConverter.robot_timestamp_from_local_secs()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Calls RobotTimeConverter.robot_timestamp_from_local_secs().</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            end_time_secs: Time in seconds to convert.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="n">end_time_secs</span><span class="p">)</span>
 
 
@@ -264,7 +291,14 @@
 
 
 <span class="k">def</span> <span class="nf">_edit_proto</span><span class="p">(</span><span class="n">proto</span><span class="p">,</span> <span class="n">edit_tree</span><span class="p">,</span> <span class="n">edit_fn</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Recursion to update specified fields of a protobuf using a specified edit-function.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Recursion to update specified fields of a protobuf using a specified edit-function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        proto: Protobuf to edit recursively.</span>
+<span class="sd">        edit_tree: Part of the tree to edit.</span>
+<span class="sd">        edit_fn: Edit function to execute.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">subtree</span> <span class="ow">in</span> <span class="n">edit_tree</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">):</span>
             <span class="c1"># Recursion into a one-of message. &#39;@key&#39; means field &#39;key&#39; contains a one-of message.</span>
@@ -284,9 +318,8 @@
 
 <div class="viewcode-block" id="RobotCommandClient"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandClient">[docs]</a><span class="k">class</span> <span class="nc">RobotCommandClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Client for calling RobotCommand services.&#39;&#39;&#39;</span>
-    <span class="n">default_authority</span> <span class="o">=</span> <span class="s1">&#39;command.spot.robot&#39;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;robot-command&#39;</span>
-    <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.RobotCommand&#39;</span>
+    <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.RobotCommandService&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RobotCommandClient</span><span class="p">,</span>
@@ -294,6 +327,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="RobotCommandClient.update_from"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.update_from">[docs]</a>    <span class="k">def</span> <span class="nf">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update instance from another object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            other: The object where to copy from.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RobotCommandClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">update_from</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="p">:</span>
             <span class="n">add_lease_wallet_processors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="p">)</span>
@@ -308,12 +346,36 @@
     <span class="k">def</span> <span class="nf">timesync_endpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Accessor for timesync-endpoint that was grabbed via &#39;update_from()&#39;.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NoTimeSyncError</span><span class="p">(</span><span class="s2">&quot;No timesync endpoint was passed to robot command client.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NoTimeSyncError</span><span class="p">(</span>
+                <span class="n">response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">error_message</span><span class="o">=</span><span class="s2">&quot;No timesync endpoint was passed to robot command client.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span>
 
 <div class="viewcode-block" id="RobotCommandClient.robot_command"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.robot_command">[docs]</a>    <span class="k">def</span> <span class="nf">robot_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Issue a command to the robot.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Issue a command to the robot synchronously.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            command: Command to issue.</span>
+<span class="sd">            end_time_secs: End time for the command in seconds.</span>
+<span class="sd">            timesync_endpoint: Timesync endpoint.</span>
+<span class="sd">            lease: Lease object to use for the command.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Id of the issued robot command.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">            InvalidRequestError: Invalid request received by the robot.</span>
+<span class="sd">            UnsupportedError: The API supports this request, but the system does not support this</span>
+<span class="sd">                              request.</span>
+<span class="sd">            bosdyn.client.robot_command.NoTimeSyncError: Client has not done timesync with robot.</span>
+<span class="sd">            ExpiredError: The command was received after its max_duration had already passed.</span>
+<span class="sd">            bosdyn.client.robot_command.TooDistantError: The command end time was too far in the future.</span>
+<span class="sd">            NotPoweredOnError: The robot must be powered on to accept a command.</span>
+<span class="sd">            UnknownFrameError: Robot does not know how to handle supplied frame.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_robot_command_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
         <span class="c1"># Update req.command instead of command so that we don&#39;t modify an input this this function.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_command_timestamps</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">)</span>
@@ -322,7 +384,29 @@
 
 <div class="viewcode-block" id="RobotCommandClient.robot_command_async"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.robot_command_async">[docs]</a>    <span class="k">def</span> <span class="nf">robot_command_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                             <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Async version of robot_command().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of robot_command().</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            command: Command to issue.</span>
+<span class="sd">            end_time_secs: End time for the command in seconds.</span>
+<span class="sd">            timesync_endpoint: Timesync endpoint.</span>
+<span class="sd">            lease: Lease object to use for the command.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Id of the issued robot command.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">            InvalidRequestError: Invalid request received by the robot.</span>
+<span class="sd">            UnsupportedError: The API supports this request, but the system does not support this</span>
+<span class="sd">                              request.</span>
+<span class="sd">            bosdyn.client.robot_command.NoTimeSyncError: Client has not done timesync with robot.</span>
+<span class="sd">            ExpiredError: The command was received after its max_duration had already passed.</span>
+<span class="sd">            bosdyn.client.robot_command.TooDistantError: The command end time was too far in the future.</span>
+<span class="sd">            NotPoweredOnError: The robot must be powered on to accept a command.</span>
+<span class="sd">            UnknownFrameError: Robot does not know how to handle supplied frame.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_robot_command_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
         <span class="c1"># Update req.command instead of command so that we don&#39;t modify an input this this function.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_command_timestamps</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">)</span>
@@ -330,35 +414,95 @@
                                <span class="n">_robot_command_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobotCommandClient.robot_command_feedback"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback">[docs]</a>    <span class="k">def</span> <span class="nf">robot_command_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_command_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get feedback from a previously issued command.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get feedback from a previously issued command.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            robot_command_id: Id of the robot command to get feedback on.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_robot_command_feedback_request</span><span class="p">(</span><span class="n">robot_command_id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RobotCommandFeedback</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_robot_command_feedback_value</span><span class="p">,</span>
-                         <span class="n">_robot_command_feedback_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RobotCommandFeedback</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">_robot_command_feedback_error</span><span class="p">,</span>
+                         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobotCommandClient.robot_command_feedback_async"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback_async">[docs]</a>    <span class="k">def</span> <span class="nf">robot_command_feedback_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_command_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Async version of robot_command_feedback().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of robot_command_feedback().</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            robot_command_id: Id of the robot command to get feedback on.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_robot_command_feedback_request</span><span class="p">(</span><span class="n">robot_command_id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RobotCommandFeedback</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_robot_command_feedback_value</span><span class="p">,</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RobotCommandFeedback</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
                                <span class="n">_robot_command_feedback_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobotCommandClient.clear_behavior_fault"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.clear_behavior_fault">[docs]</a>    <span class="k">def</span> <span class="nf">clear_behavior_fault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">behavior_fault_id</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Clear a behavior fault on the robot.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Clear a behavior fault on the robot.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            behavior_fault_id: Id of the behavior fault.</span>
+<span class="sd">            lease: Lease information to use in the message.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Boolean whether response status is STATUS_CLEARED.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">            NotClearedError: Behavior fault could not be cleared.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_clear_behavior_fault_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">behavior_fault_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ClearBehaviorFault</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_clear_behavior_fault_value</span><span class="p">,</span>
                          <span class="n">_clear_behavior_fault_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobotCommandClient.clear_behavior_fault_async"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.clear_behavior_fault_async">[docs]</a>    <span class="k">def</span> <span class="nf">clear_behavior_fault_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">behavior_fault_id</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Async version of clear_behavior_fault().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of clear_behavior_fault().</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            behavior_fault_id:</span>
+<span class="sd">            lease:</span>
+<span class="sd">            behavior_fault_id: Id of the behavior fault.</span>
+<span class="sd">            lease: Lease information to use in the message.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Boolean whether response status is STATUS_CLEARED.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">            NotClearedError: Behavior fault could not be cleared.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_clear_behavior_fault_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">behavior_fault_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ClearBehaviorFault</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_clear_behavior_fault_value</span><span class="p">,</span>
                                <span class="n">_clear_behavior_fault_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_get_robot_command_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create RobotCommandRequest message from the given information.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lease: Lease to use for the command.</span>
+<span class="sd">            command: Command to specify in the request message.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Filled out RobotCommandRequest message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandRequest</span><span class="p">(</span>
             <span class="n">lease</span><span class="o">=</span><span class="n">lease</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="n">command</span><span class="p">,</span> <span class="n">clock_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timesync_endpoint</span><span class="o">.</span><span class="n">clock_identifier</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_update_command_timestamps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set or convert fields of the command proto that need timestamps in the robot&#39;s clock.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Set or convert fields of the command proto that need timestamps in the robot&#39;s clock.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            command: Command message to update.</span>
+<span class="sd">            end_time_secs: Command end time in seconds.</span>
+<span class="sd">            timesync_endpoint: Timesync endpoint.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Lazy RobotTimeConverter: initialized only if needed to make a conversion.</span>
         <span class="n">converter</span> <span class="o">=</span> <span class="n">_TimeConverter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">)</span>
@@ -386,15 +530,40 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_robot_command_feedback_request</span><span class="p">(</span><span class="n">robot_command_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create RobotCommandFeedbackRequest message with the given command id.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            robot_command_id: Command id to specify in the request message.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Filled out RobotCommandFeedbackRequest message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackRequest</span><span class="p">(</span><span class="n">robot_command_id</span><span class="o">=</span><span class="n">robot_command_id</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_clear_behavior_fault_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">behavior_fault_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create ClearBehaviorFaultRequest message with the given information.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lease: Lease information to use in the request.</span>
+<span class="sd">            behavior_fault_id: Fault id to specify in the request message.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Filled out ClearBehaviorFaultRequest message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">ClearBehaviorFaultRequest</span><span class="p">(</span><span class="n">lease</span><span class="o">=</span><span class="n">lease</span><span class="p">,</span>
                                                            <span class="n">behavior_fault_id</span><span class="o">=</span><span class="n">behavior_fault_id</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_robot_command_value</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the command id from a RobotCommandResponse.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        response: RobotCommandResponse message.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Robot Command id in the response message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">robot_command_id</span>
 
 
@@ -412,6 +581,8 @@
                                                                 <span class="n">TooDistantError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
     <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">STATUS_NOT_POWERED_ON</span><span class="p">:</span> <span class="p">(</span><span class="n">NotPoweredOnError</span><span class="p">,</span>
                                                                    <span class="n">NotPoweredOnError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">STATUS_UNKNOWN_FRAME</span><span class="p">:</span> <span class="p">(</span><span class="n">UnknownFrameError</span><span class="p">,</span>
+                                                                  <span class="n">UnknownFrameError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
 <span class="p">})</span>
 
 
@@ -419,29 +590,35 @@
 <span class="nd">@handle_lease_use_result_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_robot_command_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        response: Response message to get the status from.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None if status_to_error[status] maps to (None, _).</span>
+<span class="sd">        Otherwise, an instance of an error determined by status_to_error.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_ROBOT_COMMAND_STATUS_TO_ERROR</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_robot_command_feedback_value</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">feedback</span>
-
-
 <span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_robot_command_feedback_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_PROCESSING</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">status</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Not OK! Status is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Received unknown Status value (</span><span class="si">{}</span><span class="s2">) from remote&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ResponseError</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>
 
 
 <span class="k">def</span> <span class="nf">_clear_behavior_fault_value</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if ClearBehaviorFault message status is STATUS_CLEARED.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        response: Response message to check.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Boolean whether status in response message is STATUS_CLEARED.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">ClearBehaviorFaultResponse</span><span class="o">.</span><span class="n">STATUS_CLEARED</span>
 
 
@@ -457,15 +634,23 @@
 <span class="nd">@handle_lease_use_result_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_clear_behavior_fault_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        response: Response message to check.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        custom exception based on response, None if no error</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">ClearBehaviorFaultResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_CLEAR_BEHAVIOR_FAULT_STATUS_TO_ERROR</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="RobotCommandBuilder"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder">[docs]</a><span class="k">class</span> <span class="nc">RobotCommandBuilder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;This class contains a set of static helper functions to build and issue robot commands. This</span>
-<span class="sd">    is not intended to cover every use case, but rather give developers a starting point for</span>
+    <span class="sd">&quot;&quot;&quot;This class contains a set of static helper functions to build and issue robot commands.</span>
+<span class="sd">    </span>
+<span class="sd">    This is not intended to cover every use case, but rather give developers a starting point for</span>
 <span class="sd">    issuing commands to the robot.The robot command proto uses several advanced protobuf techniques,</span>
 <span class="sd">    including the use of Any and OneOf.</span>
 
@@ -485,8 +670,8 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            RobotCommand, which can be issued to the robot command service.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">full_body_command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">FullBodyCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
-            <span class="n">stop_request</span><span class="o">=</span><span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">StopCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">())</span>
+        <span class="n">full_body_command</span> <span class="o">=</span> <span class="n">full_body_command_pb2</span><span class="o">.</span><span class="n">FullBodyCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+            <span class="n">stop_request</span><span class="o">=</span><span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">StopCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">())</span>
         <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">full_body_command</span><span class="o">=</span><span class="n">full_body_command</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">command</span></div>
 
@@ -497,8 +682,8 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            RobotCommand, which can be issued to the robot command service.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">full_body_command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">FullBodyCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
-            <span class="n">freeze_request</span><span class="o">=</span><span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">FreezeCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">())</span>
+        <span class="n">full_body_command</span> <span class="o">=</span> <span class="n">full_body_command_pb2</span><span class="o">.</span><span class="n">FullBodyCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+            <span class="n">freeze_request</span><span class="o">=</span><span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">FreezeCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">())</span>
         <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">full_body_command</span><span class="o">=</span><span class="n">full_body_command</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">command</span></div>
 
@@ -510,8 +695,8 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            RobotCommand, which can be issued to the robot command service.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">full_body_command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">FullBodyCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
-            <span class="n">selfright_request</span><span class="o">=</span><span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">SelfRightCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">())</span>
+        <span class="n">full_body_command</span> <span class="o">=</span> <span class="n">full_body_command_pb2</span><span class="o">.</span><span class="n">FullBodyCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+            <span class="n">selfright_request</span><span class="o">=</span><span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">SelfRightCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">())</span>
         <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">full_body_command</span><span class="o">=</span><span class="n">full_body_command</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">command</span></div>
 
@@ -525,8 +710,8 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            RobotCommand, which can be issued to the robot command service.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">full_body_command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">FullBodyCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
-            <span class="n">safe_power_off_request</span><span class="o">=</span><span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">SafePowerOffCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">())</span>
+        <span class="n">full_body_command</span> <span class="o">=</span> <span class="n">full_body_command_pb2</span><span class="o">.</span><span class="n">FullBodyCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+            <span class="n">safe_power_off_request</span><span class="o">=</span><span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">SafePowerOffCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">())</span>
         <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">full_body_command</span><span class="o">=</span><span class="n">full_body_command</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">command</span></div>
 
@@ -534,7 +719,7 @@
     <span class="c1"># Mobility commands #</span>
     <span class="c1">#####################</span>
 <div class="viewcode-block" id="RobotCommandBuilder.trajectory_command"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.trajectory_command">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">trajectory_command</span><span class="p">(</span><span class="n">goal_x</span><span class="p">,</span> <span class="n">goal_y</span><span class="p">,</span> <span class="n">goal_heading</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">trajectory_command</span><span class="p">(</span><span class="n">goal_x</span><span class="p">,</span> <span class="n">goal_y</span><span class="p">,</span> <span class="n">goal_heading</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
                            <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Command robot to move to pose along a 2D plane. Pose can specified in the world</span>
 <span class="sd">        (kinematic odometry) frame or the robot body frame. The arguments body_height and</span>
@@ -542,6 +727,16 @@
 
 <span class="sd">        A trajectory command requires an end time. End time is not set in this function, but rather</span>
 <span class="sd">        is set externally before call to RobotCommandService.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            goal_x: Position X coordinate.</span>
+<span class="sd">            goal_y: Position Y coordinate.</span>
+<span class="sd">            goal_heading: Pose heading in radians.</span>
+<span class="sd">            frame_name: Name of the frame to use.</span>
+<span class="sd">            params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,</span>
+<span class="sd">                this will be constructed using other args.</span>
+<span class="sd">            body_height: Body height in meters.</span>
+<span class="sd">            locomotion_hint: Locomotion hint to use for the trajectory command.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            RobotCommand, which can be issued to the robot command service.</span>
@@ -553,22 +748,33 @@
         <span class="n">position</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec2</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">goal_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">goal_y</span><span class="p">)</span>
         <span class="n">pose</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE2Pose</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="n">goal_heading</span><span class="p">)</span>
         <span class="n">point</span> <span class="o">=</span> <span class="n">trajectory_pb2</span><span class="o">.</span><span class="n">SE2TrajectoryPoint</span><span class="p">(</span><span class="n">pose</span><span class="o">=</span><span class="n">pose</span><span class="p">)</span>
-        <span class="n">traj</span> <span class="o">=</span> <span class="n">trajectory_pb2</span><span class="o">.</span><span class="n">SE2Trajectory</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="n">point</span><span class="p">],</span> <span class="n">frame</span><span class="o">=</span><span class="n">frame</span><span class="p">)</span>
-        <span class="n">traj_command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">SE2TrajectoryCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">trajectory</span><span class="o">=</span><span class="n">traj</span><span class="p">)</span>
-        <span class="n">mobility_command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">MobilityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+        <span class="n">traj</span> <span class="o">=</span> <span class="n">trajectory_pb2</span><span class="o">.</span><span class="n">SE2Trajectory</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="n">point</span><span class="p">])</span>
+        <span class="n">traj_command</span> <span class="o">=</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">SE2TrajectoryCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">trajectory</span><span class="o">=</span><span class="n">traj</span><span class="p">,</span>
+                                                                      <span class="n">se2_frame_name</span><span class="o">=</span><span class="n">frame_name</span><span class="p">)</span>
+        <span class="n">mobility_command</span> <span class="o">=</span> <span class="n">mobility_command_pb2</span><span class="o">.</span><span class="n">MobilityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
             <span class="n">se2_trajectory_request</span><span class="o">=</span><span class="n">traj_command</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">any_params</span><span class="p">)</span>
         <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">mobility_command</span><span class="o">=</span><span class="n">mobility_command</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">command</span></div>
 
 <div class="viewcode-block" id="RobotCommandBuilder.velocity_command"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.velocity_command">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">velocity_command</span><span class="p">(</span><span class="n">v_x</span><span class="p">,</span> <span class="n">v_y</span><span class="p">,</span> <span class="n">v_rot</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-                         <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">):</span>
+                         <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">,</span> <span class="n">frame_name</span><span class="o">=</span><span class="n">BODY_FRAME_NAME</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Command robot to move along 2D plane. Velocity should be specified in the robot body</span>
 <span class="sd">        frame. Other frames are currently not supported. The arguments body_height and</span>
 <span class="sd">        locomotion_hint are ignored if params argument is passed.</span>
 
 <span class="sd">        A velocity command requires an end time. End time is not set in this function, but rather</span>
 <span class="sd">        is set externally before call to RobotCommandService.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            v_x: Velocity in X direction.</span>
+<span class="sd">            v_y: Velocity in Y direction.</span>
+<span class="sd">            v_rot: Velocity heading in radians.</span>
+<span class="sd">            params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,</span>
+<span class="sd">                this will be constructed using other args.</span>
+<span class="sd">            body_height: Body height in meters.</span>
+<span class="sd">            locomotion_hint: Locomotion hint to use for the velocity command.</span>
+<span class="sd">            frame_name: Name of the frame to use.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            RobotCommand, which can be issued to the robot command service.</span>
@@ -580,10 +786,10 @@
         <span class="n">linear</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec2</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">v_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">v_y</span><span class="p">)</span>
         <span class="n">vel</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE2Velocity</span><span class="p">(</span><span class="n">linear</span><span class="o">=</span><span class="n">linear</span><span class="p">,</span> <span class="n">angular</span><span class="o">=</span><span class="n">v_rot</span><span class="p">)</span>
         <span class="n">slew_rate_limit</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE2Velocity</span><span class="p">(</span><span class="n">linear</span><span class="o">=</span><span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec2</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span> <span class="n">angular</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
-        <span class="n">frame</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="n">base_frame</span><span class="o">=</span><span class="n">geometry_pb2</span><span class="o">.</span><span class="n">FRAME_BODY</span><span class="p">)</span>
-        <span class="n">vel_command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">SE2VelocityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">velocity</span><span class="o">=</span><span class="n">vel</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="n">frame</span><span class="p">,</span>
+        <span class="n">vel_command</span> <span class="o">=</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">SE2VelocityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">velocity</span><span class="o">=</span><span class="n">vel</span><span class="p">,</span>
+                                                                   <span class="n">se2_frame_name</span><span class="o">=</span><span class="n">frame_name</span><span class="p">,</span>
                                                                    <span class="n">slew_rate_limit</span><span class="o">=</span><span class="n">slew_rate_limit</span><span class="p">)</span>
-        <span class="n">mobility_command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">MobilityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+        <span class="n">mobility_command</span> <span class="o">=</span> <span class="n">mobility_command_pb2</span><span class="o">.</span><span class="n">MobilityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
             <span class="n">se2_velocity_request</span><span class="o">=</span><span class="n">vel_command</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">any_params</span><span class="p">)</span>
         <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">mobility_command</span><span class="o">=</span><span class="n">mobility_command</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">command</span></div>
@@ -610,8 +816,8 @@
             <span class="n">params</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">mobility_params</span><span class="p">(</span><span class="n">body_height</span><span class="o">=</span><span class="n">body_height</span><span class="p">,</span>
                                                          <span class="n">footprint_R_body</span><span class="o">=</span><span class="n">footprint_R_body</span><span class="p">)</span>
         <span class="n">any_params</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">_to_any</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-        <span class="n">mobility_command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">MobilityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
-            <span class="n">stand_request</span><span class="o">=</span><span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">StandCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(),</span> <span class="n">params</span><span class="o">=</span><span class="n">any_params</span><span class="p">)</span>
+        <span class="n">mobility_command</span> <span class="o">=</span> <span class="n">mobility_command_pb2</span><span class="o">.</span><span class="n">MobilityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+            <span class="n">stand_request</span><span class="o">=</span><span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">StandCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(),</span> <span class="n">params</span><span class="o">=</span><span class="n">any_params</span><span class="p">)</span>
         <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">mobility_command</span><span class="o">=</span><span class="n">mobility_command</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">command</span></div>
 
@@ -619,14 +825,17 @@
     <span class="k">def</span> <span class="nf">sit_command</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Command the robot to sit.</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">            params(spot.MobilityParams): Spot specific parameters for mobility commands.</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            RobotCommand, which can be issued to the robot command service.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">params</span><span class="p">:</span>
             <span class="n">params</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">mobility_params</span><span class="p">()</span>
         <span class="n">any_params</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">_to_any</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-        <span class="n">mobility_command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">MobilityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
-            <span class="n">sit_request</span><span class="o">=</span><span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">SitCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(),</span> <span class="n">params</span><span class="o">=</span><span class="n">any_params</span><span class="p">)</span>
+        <span class="n">mobility_command</span> <span class="o">=</span> <span class="n">mobility_command_pb2</span><span class="o">.</span><span class="n">MobilityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+            <span class="n">sit_request</span><span class="o">=</span><span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">SitCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(),</span> <span class="n">params</span><span class="o">=</span><span class="n">any_params</span><span class="p">)</span>
         <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">mobility_command</span><span class="o">=</span><span class="n">mobility_command</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">command</span></div>
 
@@ -642,6 +851,16 @@
 <span class="sd">        interface. See spot.robot_command_pb2 for more details. If unset, good defaults will be</span>
 <span class="sd">        chosen by the robot.</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">            body_height: Body height in meters.</span>
+<span class="sd">            footprint_R_body(EulerZXY): The orientation of the body frame with respect to the</span>
+<span class="sd">                                        footprint frame (gravity aligned framed with yaw computed</span>
+<span class="sd">                                        from the stance feet)</span>
+<span class="sd">            locomotion_hint: Locomotion hint to use for the command.</span>
+<span class="sd">            stair_hint: Boolean to specify if stair mode should be used.</span>
+<span class="sd">            external_force_params(spot.BodyExternalForceParams): Robot body external force</span>
+<span class="sd">                                                                 parameters.</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            spot.MobilityParams, params for spot mobility commands.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -650,28 +869,30 @@
         <span class="n">rotation</span> <span class="o">=</span> <span class="n">footprint_R_body</span><span class="o">.</span><span class="n">to_quaternion</span><span class="p">()</span>
         <span class="n">pose</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE3Pose</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="n">rotation</span><span class="p">)</span>
         <span class="n">point</span> <span class="o">=</span> <span class="n">trajectory_pb2</span><span class="o">.</span><span class="n">SE3TrajectoryPoint</span><span class="p">(</span><span class="n">pose</span><span class="o">=</span><span class="n">pose</span><span class="p">)</span>
-        <span class="n">frame</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="n">base_frame</span><span class="o">=</span><span class="n">geometry_pb2</span><span class="o">.</span><span class="n">FRAME_BODY</span><span class="p">)</span>
-        <span class="n">traj</span> <span class="o">=</span> <span class="n">trajectory_pb2</span><span class="o">.</span><span class="n">SE3Trajectory</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="n">point</span><span class="p">],</span> <span class="n">frame</span><span class="o">=</span><span class="n">frame</span><span class="p">)</span>
+        <span class="n">traj</span> <span class="o">=</span> <span class="n">trajectory_pb2</span><span class="o">.</span><span class="n">SE3Trajectory</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="n">point</span><span class="p">])</span>
         <span class="n">body_control</span> <span class="o">=</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyControlParams</span><span class="p">(</span><span class="n">base_offset_rt_footprint</span><span class="o">=</span><span class="n">traj</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">MobilityParams</span><span class="p">(</span><span class="n">body_control</span><span class="o">=</span><span class="n">body_control</span><span class="p">,</span>
                                                <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">locomotion_hint</span><span class="p">,</span>
                                                <span class="n">stair_hint</span><span class="o">=</span><span class="n">stair_hint</span><span class="p">,</span>
                                                <span class="n">external_force_params</span><span class="o">=</span><span class="n">external_force_params</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RobotCommandBuilder.build_body_external_forces"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.build_body_external_forces">[docs]</a>    <span class="k">def</span> <span class="nf">build_body_external_forces</span><span class="p">(</span><span class="n">external_force_indicator</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="o">.</span><span class="n">EXTERNAL_FORCE_NONE</span><span class="p">,</span>
-                                   <span class="n">override_external_force_vec</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Helper to create Mobility params. This function allows the user to enable an external</span>
-<span class="sd">        force estimator, or set a vector of forces (in the body frame) which override the estimator</span>
-<span class="sd">        with constant external forces. </span>
-<span class="sd">        </span>
+<div class="viewcode-block" id="RobotCommandBuilder.build_body_external_forces"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.build_body_external_forces">[docs]</a>    <span class="k">def</span> <span class="nf">build_body_external_forces</span><span class="p">(</span>
+            <span class="n">external_force_indicator</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="o">.</span><span class="n">EXTERNAL_FORCE_NONE</span><span class="p">,</span>
+            <span class="n">override_external_force_vec</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Helper to create Mobility params.</span>
+
+<span class="sd">        This function allows the user to enable an external force estimator, or set a vector of</span>
+<span class="sd">        forces (in the body frame) which override the estimator with constant external forces.</span>
+
 <span class="sd">        Args:</span>
-<span class="sd">            external_force_indicator: Indicates if the external force estimator should be enabled/disabled</span>
-<span class="sd">                                      or an override force should be used. Can be specified as one of three values:</span>
-<span class="sd">                                         spot_command_pb2.BodyExternalForceParams.{ EXTERNAL_FORCE_NONE, </span>
-<span class="sd">                                                                                    EXTERNAL_FORCE_USE_ESTIMATE, </span>
-<span class="sd">                                                                                    EXTERNAL_FORCE_USE_OVERRIDE }</span>
-<span class="sd">            override_external_force_vec: x/y/z list of forces in the body frame. Only used when the indicator</span>
-<span class="sd">                                         specifies EXTERNAL_FORCE_USE_OVERRIDE</span>
+<span class="sd">            external_force_indicator: Indicates if the external force estimator should be</span>
+<span class="sd">                                      enabled/disabled or an override force should be used. Can be</span>
+<span class="sd">                                      specified as one of three values:</span>
+<span class="sd">                                      spot_command_pb2.BodyExternalForceParams.{</span>
+<span class="sd">                                      EXTERNAL_FORCE_NONE, EXTERNAL_FORCE_USE_ESTIMATE, </span>
+<span class="sd">                                      EXTERNAL_FORCE_USE_OVERRIDE }</span>
+<span class="sd">            override_external_force_vec: x/y/z list of forces in the body frame. Only used when the</span>
+<span class="sd">                                         indicator specifies EXTERNAL_FORCE_USE_OVERRIDE</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            spot.MobilityParams, params for spot mobility commands.</span>
@@ -680,14 +901,18 @@
             <span class="k">if</span> <span class="n">override_external_force_vec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1">#Default the override forces to all zeros if none are specified</span>
                 <span class="n">override_external_force_vec</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-            <span class="n">body_frame</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="n">base_frame</span><span class="o">=</span><span class="n">geometry_pb2</span><span class="o">.</span><span class="n">FRAME_BODY</span><span class="p">)</span>
-            <span class="n">ext_forces</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">override_external_force_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">override_external_force_vec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">z</span><span class="o">=</span><span class="n">override_external_force_vec</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-            <span class="k">return</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="p">(</span><span class="n">external_force_indicator</span><span class="o">=</span><span class="n">external_force_indicator</span><span class="p">,</span>
-                                                            <span class="n">frame</span><span class="o">=</span><span class="n">body_frame</span><span class="p">,</span>
-                                                            <span class="n">external_force_override</span><span class="o">=</span><span class="n">ext_forces</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">external_force_indicator</span> <span class="o">==</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="o">.</span><span class="n">EXTERNAL_FORCE_NONE</span> <span class="ow">or</span>
-              <span class="n">external_force_indicator</span> <span class="o">==</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="o">.</span><span class="n">EXTERNAL_FORCE_USE_ESTIMATE</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="p">(</span><span class="n">external_force_indicator</span><span class="o">=</span><span class="n">external_force_indicator</span><span class="p">)</span>
+            <span class="n">ext_forces</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">override_external_force_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                           <span class="n">y</span><span class="o">=</span><span class="n">override_external_force_vec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                           <span class="n">z</span><span class="o">=</span><span class="n">override_external_force_vec</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="p">(</span>
+                <span class="n">external_force_indicator</span><span class="o">=</span><span class="n">external_force_indicator</span><span class="p">,</span> <span class="n">frame_name</span><span class="o">=</span><span class="n">BODY_FRAME_NAME</span><span class="p">,</span>
+                <span class="n">external_force_override</span><span class="o">=</span><span class="n">ext_forces</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">external_force_indicator</span> <span class="o">==</span>
+              <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="o">.</span><span class="n">EXTERNAL_FORCE_NONE</span> <span class="ow">or</span>
+              <span class="n">external_force_indicator</span> <span class="o">==</span>
+              <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="o">.</span><span class="n">EXTERNAL_FORCE_USE_ESTIMATE</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="p">(</span>
+                <span class="n">external_force_indicator</span><span class="o">=</span><span class="n">external_force_indicator</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -701,35 +926,52 @@
         <span class="k">return</span> <span class="n">any_params</span></div>
 
 
-<div class="viewcode-block" id="blocking_stand"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.blocking_stand">[docs]</a><span class="k">def</span> <span class="nf">blocking_stand</span><span class="p">(</span><span class="n">command_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Helper function which uses the RobotCommandService to stand. This function blocks until spot</span>
-<span class="sd">    is standing.</span>
+<div class="viewcode-block" id="blocking_stand"><a class="viewcode-back" href="../../../client_modules/robot_command.html#bosdyn.client.robot_command.blocking_stand">[docs]</a><span class="k">def</span> <span class="nf">blocking_stand</span><span class="p">(</span><span class="n">command_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper function which uses the RobotCommandService to stand.</span>
+
+<span class="sd">    Blocks until robot is standing, or raises an exception if the command times out or fails.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        command_client: RobotCommand client.</span>
+<span class="sd">        timeout_sec: Timeout for the command in seconds.</span>
+<span class="sd">        update_frequency: Update frequency for the command in Hz.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        CommandFailedError: Command feedback from robot is not STATUS_PROCESSING.</span>
+<span class="sd">        bosdyn.client.robot_command.CommandTimedOutError: Command took longer than provided</span>
+<span class="sd">            timeout.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">timeout_sec</span>
     <span class="n">update_time</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">update_frequency</span>
 
     <span class="n">stand_command</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">stand_command</span><span class="p">()</span>
-    <span class="n">command_id</span> <span class="o">=</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command</span><span class="p">(</span><span class="n">stand_command</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">command_id</span> <span class="o">=</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command</span><span class="p">(</span><span class="n">stand_command</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_sec</span><span class="p">)</span>
 
     <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="k">while</span> <span class="n">now</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">:</span>
         <span class="n">time_until_timeout</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">now</span>
+        <span class="n">rpc_timeout</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">time_until_timeout</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">start_call_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">future</span> <span class="o">=</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command_feedback_async</span><span class="p">(</span><span class="n">command_id</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">time_until_timeout</span><span class="p">)</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">mobility_feedback</span><span class="o">.</span><span class="n">stand_feedback</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span>
-                    <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">StandCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_STANDING</span><span class="p">):</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command_feedback</span><span class="p">(</span><span class="n">command_id</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">rpc_timeout</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">TimedOutError</span><span class="p">:</span>
+            <span class="c1"># Excuse the TimedOutError and let the while check bail us out if we&#39;re out of time.</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_PROCESSING</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">CommandFailedError</span><span class="p">(</span><span class="s1">&#39;Stand (ID </span><span class="si">{}</span><span class="s1">) no longer processing (now </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">command_id</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">mobility_feedback</span><span class="o">.</span><span class="n">stand_feedback</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span>
+                    <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">StandCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_IS_STANDING</span><span class="p">):</span>
                 <span class="k">return</span>
-        <span class="k">except</span> <span class="ne">TimeoutError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">CommandTimedOutError</span><span class="p">(</span>
-                <span class="s2">&quot;Timed out waiting for STANDING feedback from stand command.&quot;</span><span class="p">)</span>
         <span class="n">delta_t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_call_time</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">delta_t</span><span class="p">,</span> <span class="n">update_time</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">))</span>
         <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
-    <span class="k">raise</span> <span class="n">CommandTimedOutError</span><span class="p">(</span><span class="s2">&quot;Timed out waiting for STANDING feedback from stand command.&quot;</span><span class="p">)</span></div>
+    <span class="k">raise</span> <span class="n">CommandTimedOutError</span><span class="p">(</span>
+        <span class="s2">&quot;Took longer than </span><span class="si">{:.1f}</span><span class="s2"> seconds to assure the robot stood.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span></div>
 </pre></div>
 
            </div>
@@ -742,7 +984,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Boston Dynamics
+        &copy; Copyright 2019, Boston Dynamics.
 
     </p>
   </div>
@@ -759,16 +1001,36 @@
   
 
 
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -1,0 +1,82 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.spot_cam;
+
+option java_outer_classname = "AudioProto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/data_chunk.proto";
+
+import "google/protobuf/wrappers.proto";
+
+message Sound {
+    //internally, sounds are stored in a flat table. This name is the
+    //identifier of a sound effect
+    string name = 1;
+}
+
+message ListSoundsRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message ListSoundsResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    repeated Sound sounds = 2;
+}
+
+message SetVolumeRequest {
+    bosdyn.api.RequestHeader header = 1;
+    //volume, as a percentage of maximum.
+    float volume = 2;
+}
+
+message SetVolumeResponse {
+    bosdyn.api.ResponseHeader header = 1;
+}
+
+message GetVolumeRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message GetVolumeResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    //volume, as a percentage of maximum.
+    float volume = 2;
+}
+
+message PlaySoundRequest {
+    bosdyn.api.RequestHeader header = 1;
+    Sound sound = 2;
+    //if the gain field is populated, then volume of the sound is
+    //multiplied by this value.
+    google.protobuf.FloatValue gain = 3;
+}
+
+message PlaySoundResponse {
+    bosdyn.api.ResponseHeader header = 1;
+}
+
+message DeleteSoundRequest {
+    bosdyn.api.RequestHeader header = 1;
+    Sound sound = 2;
+}
+
+message DeleteSoundResponse {
+    bosdyn.api.ResponseHeader header = 1;
+}
+
+message LoadSoundRequest {
+    bosdyn.api.RequestHeader header = 1;
+    Sound sound = 2;
+    bosdyn.api.DataChunk data = 3;
+}
+
+message LoadSoundResponse {
+    bosdyn.api.ResponseHeader header = 1;
+}

@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -21,6 +21,7 @@ from .exceptions import (Error,
                                 InvalidAppTokenError,
                                 InvalidClientCertificateError,
                                 NonexistentAuthorityError,
+                                NotFoundError,
                                 ProxyConnectionError,
                                 ServiceUnavailableError,
                                 ServiceFailedDuringExecutionError,
@@ -30,6 +31,6 @@ from .exceptions import (Error,
                                 UnknownDnsNameError,
                                 UnimplementedError)
 # yapf: enable
-from .auth import AuthClient, InvalidLoginError, InvalidTokenError
+from .auth import AuthClient, ExpiredApplicationTokenError, InvalidLoginError, InvalidApplicationTokenError, InvalidTokenError
 from .robot import Robot
 from .sdk import Sdk, create_standard_sdk, BOSDYN_RESOURCE_ROOT

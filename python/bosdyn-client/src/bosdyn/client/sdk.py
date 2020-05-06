@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -12,29 +12,35 @@ import os
 import platform
 
 import datetime
+from enum import Enum
 import jwt
 import pkg_resources
 
 from .auth import AuthClient
 from .exceptions import Error
 from .directory import DirectoryClient
+from .directory_registration import DirectoryRegistrationClient
 from .estop import EstopClient
+from .graph_nav import GraphNavClient
 from .image import ImageClient
 from .lease import LeaseClient
 from .log_annotation import LogAnnotationClient
+from .local_grid import LocalGridClient
 from .payload import PayloadClient
+from .payload_registration import PayloadRegistrationClient
 from .power import PowerClient
 from .processors import AddRequestHeader
+from .recording import GraphNavRecordingServiceClient
 from .robot import Robot
 from .robot_command import RobotCommandClient
 from .robot_id import RobotIdClient
 from .robot_state import RobotStateClient
 from .spot_check import SpotCheckClient
 from .time_sync import TimeSyncClient
-
+from .world_object import WorldObjectClient
 
 class SdkError(Error):
-    """General class of errors to handle non-response non-grpc errors."""
+    """General class of errors to handle non-response non-rpc errors."""
 
 
 class UnsetAppTokenError(SdkError):
@@ -65,7 +71,7 @@ def generate_client_name(prefix=''):
             user_name = getpass.getuser()
         # pylint: disable=broad-except
         except Exception:
-            _LOGGER.warn('Could not get username')
+            _LOGGER.warning('Could not get username')
             user_name = '<unknown host>'
     # Use the name of the host if available, username otherwise.
     return '{}{}:{}'.format(prefix, machine_name or user_name, process_info)
@@ -74,17 +80,23 @@ def generate_client_name(prefix=''):
 _DEFAULT_SERVICE_CLIENTS = [
     AuthClient,
     DirectoryClient,
+    DirectoryRegistrationClient,
     EstopClient,
+    GraphNavClient,
+    GraphNavRecordingServiceClient,
     ImageClient,
     LeaseClient,
     LogAnnotationClient,
+    LocalGridClient,
     PayloadClient,
+    PayloadRegistrationClient,
     PowerClient,
     RobotCommandClient,
     RobotIdClient,
     RobotStateClient,
     SpotCheckClient,
     TimeSyncClient,
+    WorldObjectClient,
 ]
 
 
@@ -92,10 +104,13 @@ def create_standard_sdk(client_name_prefix, service_clients=None, cert_resource_
     """Return an Sdk with the most common configuration.
 
     Args:
-        client_name_prefix -- prefix to pass to generate_client_name()
-        service_clients -- List of service client classes to register in addition to the defaults.
-        cert_resource_glob -- Glob expression matching robot certificate(s).
+        client_name_prefix: prefix to pass to generate_client_name()
+        service_clients: List of service client classes to register in addition to the defaults.
+        cert_resource_glob: Glob expression matching robot certificate(s).
                               Default None to use distributed certificate.
+
+    Raises:
+        IOError: Robot cert could not be loaded.
     """
     _LOGGER.debug('Creating standard Sdk, cert glob: "%s"', cert_resource_glob)
     sdk = Sdk(name=client_name_prefix)
@@ -111,9 +126,14 @@ def create_standard_sdk(client_name_prefix, service_clients=None, cert_resource_
     return sdk
 
 
+
+
 class Sdk(object):
     """Repository for settings typically common to a single developer and/or robot fleet.
     See also Robot for robot-specific settings.
+
+    Args:
+        name: Name to identify the client when communicating with the robot.
     """
 
     def __init__(self, name=None):
@@ -122,30 +142,37 @@ class Sdk(object):
         self.logger = logging.getLogger(name or 'bosdyn.Sdk')
         self.request_processors = []
         self.response_processors = []
-        self.request_processors = []
         self.service_client_factories_by_type = {}
         self.service_type_by_name = {}
         # Robots created by this Sdk, keyed by address.
         self.robots = {}
 
-        #self.app_token_processor = None
 
 
-    def create_robot(self, address, name=None):
+    def create_robot(
+            self,
+            address,
+            name=None
+    ):
         """Get a Robot initialized with this Sdk, creating it if it does not yet exist.
 
         Args:
-            address -- Network-resolvable address of the robot, e.g. '192.168.80.3'
-            name -- A unique identifier for the robot, e.g. 'My First Robot'. Default None to
+            address: Network-resolvable address of the robot, e.g. '192.168.80.3'
+            name: A unique identifier for the robot, e.g. 'My First Robot'. Default None to
                         use the address as the name.
         Returns:
             A Robot initialized with the current Sdk settings.
         """
+
+
         if self.app_token is None:
-            raise UnsetAppTokenError
+                _LOGGER.warning('Warning: App token unset at robot creation time. API access may '
+                             'be limited.')
         if address in self.robots:
             return self.robots[address]
-        robot = Robot(name=name or address)
+        robot = Robot(
+            name=name or address
+        )
         robot.address = address
         robot.update_from(self)
         self.robots[address] = robot
@@ -155,27 +182,32 @@ class Sdk(object):
         """Tell the Sdk how to create a specific type of service client.
 
         Args:
-            creation_func -- Callable that returns a client. Typically just the class.
-            service_type -- Type of the service. If None (default), will try to get the name from
+            creation_func: Callable that returns a client. Typically just the class.
+            service_type: Type of the service. If None (default), will try to get the name from
                 creation_func.
-            service_name -- Name of the service. If None (default), will try to get the name from
+            service_name: Name of the service. If None (default), will try to get the name from
                 creation_func.
         """
 
         service_name = service_name or creation_func.default_service_name
         service_type = service_type or creation_func.service_type
 
-        self.service_type_by_name[service_name] = service_type
+        # Some services won't have a default service name at all.
+        # They will have to get information from the directory.
+        if service_name is not None:
+            self.service_type_by_name[service_name] = service_type
         self.service_client_factories_by_type[service_type] = creation_func
 
     def load_robot_cert(self, resource_path_glob=None):
         """Load the SSL certificate for the robot.
 
         Args:
-            resource_path_glob -- Optional path to certificate resource(s).
+            resource_path_glob: Optional path to certificate resource(s).
                 If None, will load the certificate in the 'resources' package.
                 Otherwise, should be a glob expression to match certificates.
                 Defaults to None.
+        Raises:
+            IOError: Robot cert could not be loaded.
         """
         self.cert = None
         if resource_path_glob is None:
@@ -205,12 +237,12 @@ class Sdk(object):
             with open(os.path.expanduser(resource_path), 'rb') as token_file:
                 token = token_file.read().decode().strip()
                 log_token_time_remaining(token)
-        except IOError as e:
-            _LOGGER.exception(e)
+        except IOError as err:
+            _LOGGER.exception(err)
             raise UnableToLoadAppTokenError(
                 'Unable to retrieve app token from "{}".'.format(resource_path))
-        except TypeError as e:
-            _LOGGER.exception(e)
+        except TypeError as err:
+            _LOGGER.exception(err)
             raise UnsetAppTokenError
 
         self.app_token = token
@@ -232,10 +264,10 @@ def decode_token(token):
     try:
         values = jwt.decode(token, verify=False)
         return values
-    except jwt.exceptions.DecodeError as e:
-        raise UnableToLoadAppTokenError('Incorrectly formatted token {} --- {}'.format(token, e))
-    except Exception as e:
-        raise UnableToLoadAppTokenError('Problem decoding token {} --- {}'.format(token, e))
+    except jwt.exceptions.DecodeError as err:
+        raise UnableToLoadAppTokenError('Incorrectly formatted token {} --- {}'.format(token, err))
+    except Exception as err:
+        raise UnableToLoadAppTokenError('Problem decoding token {} --- {}'.format(token, err))
 
 
 def log_token_time_remaining(token):
@@ -243,7 +275,7 @@ def log_token_time_remaining(token):
 
     Arguments:
         token: A jwt token
-    
+
     Raises:
         UnableToLoadAppTokenError: If the token expiration information cannot be retrieved.
     """
@@ -258,11 +290,10 @@ def log_token_time_remaining(token):
         _LOGGER.error('Your application token has expired. Please contact '
                       'support@bostondynamics.com to request a new token.')
     elif time_to_expiration <= datetime.timedelta(days=30):
-        _LOGGER.warning('Application token expires in {} days on {}. Please contact '
+        _LOGGER.warning('Application token expires in %s days on %s. Please contact '
                         'support@bostondynamics.com to request a new token before the '
-                        'current token expires.'.format(
-                            time_to_expiration.days,
-                            datetime.datetime.strftime(expire_time, '%Y/%m/%d')))
+                        'current token expires.', time_to_expiration.days,
+                        datetime.datetime.strftime(expire_time, '%Y/%m/%d'))
     else:
-        _LOGGER.info('Application token expires on {}.'.format(
-            datetime.datetime.strftime(expire_time, '%Y/%m/%d')))
+        _LOGGER.debug('Application token expires on %s',
+                      datetime.datetime.strftime(expire_time, '%Y/%m/%d'))

@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -14,6 +14,8 @@ from bosdyn.client.lease import Lease
 from bosdyn.client.lease import LeaseKeepAlive
 from bosdyn.client.lease import LeaseState
 from bosdyn.client.lease import LeaseWallet
+from bosdyn.client.lease import NoSuchLease
+from bosdyn.client.lease import LeaseNotOwnedByWallet
 from bosdyn.api import lease_pb2 as LeaseProto
 
 LLAMA = 'llama'
@@ -174,11 +176,15 @@ def test_lease_wallet_normal_operation():
 
 def test_lease_wallet_on_lease_result_empty():
     lease_wallet = LeaseWallet()
-    assert None == lease_wallet.get_lease_state(resource='A')
+    with pytest.raises(NoSuchLease) as excinfo:
+        lease_wallet.get_lease_state(resource='A')
+    assert 'No lease for resource "A"' == str(excinfo.value)
     lease_use_result = _create_lease_use_result(LeaseProto.LeaseUseResult.STATUS_OK,
                                                 _create_lease('A', 'B', [1, 0]))
     lease_wallet.on_lease_use_result(lease_use_result, resource='A')
-    assert None == lease_wallet.get_lease_state(resource='A')
+    with pytest.raises(NoSuchLease) as excinfo:
+        lease_wallet.get_lease_state(resource='A')
+    assert 'No lease for resource "A"' == str(excinfo.value)
 
 
 def test_lease_wallet_on_lease_result_ok():
@@ -253,6 +259,10 @@ def test_lease_wallet_on_lease_result_older():
     assert None == newer_lease_state.lease_current
     assert None == newer_lease_state.lease_original
     assert LeaseState.STATUS_OTHER_OWNER == newer_lease_state.lease_status
+
+    with pytest.raises(LeaseNotOwnedByWallet) as excinfo:
+        lease_wallet.get_lease(resource='A')
+    assert 'Lease on "A" has state ({})'.format(LeaseState.STATUS_OTHER_OWNER) == str(excinfo.value)
 
 
 def test_lease_wallet_on_lease_result_revoked():
@@ -447,7 +457,10 @@ def test_lease_keep_alive_lease_use_result_error():
     keep_alive.wait_until_done()
     assert 10 == max_loops.cur_loops
     assert 6 == lease_client.retain_lease_calls
-    assert None == lease_wallet.get_lease('A')
+    with pytest.raises(NoSuchLease) as excinfo:
+        lease_wallet.get_lease('A')
+    # The exception should be clear when translated to text.
+    assert 'No lease for resource "A"' == str(excinfo.value)
 
 
 def test_lease_keep_alive_shutdown():

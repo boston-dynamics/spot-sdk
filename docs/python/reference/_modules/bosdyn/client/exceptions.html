@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.exceptions &mdash; Spot 1.1.0 documentation</title>
+  <title>bosdyn.client.exceptions &mdash; Spot 2.0.0 documentation</title>
   
 
   
@@ -17,34 +17,33 @@
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -58,7 +57,7 @@
             
             
               <div class="version">
-                1.1.0
+                2.0.0
               </div>
             
           
@@ -82,10 +81,10 @@
               
             
             
-              <p class="caption"><span class="caption-text">Services:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../client_index.html">Client API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../core_index.html">Core API</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../client_modules/client_index.html">Client SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core_modules/core_index.html">Core SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mission_modules/mission_index.html">Mission SDK</a></li>
 </ul>
 
             
@@ -149,7 +148,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.exceptions</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
@@ -165,10 +164,18 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="n">response</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span> <span class="ow">or</span> <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">message</span>
+        <span class="k">if</span> <span class="n">error_message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span>
+        <span class="k">elif</span> <span class="n">response</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">error_message</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">message</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">full_classname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">full_name</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">full_classname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">full_name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">full_classname</span> <span class="o">=</span> <span class="s2">&quot;Error&quot;</span>
         <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">full_classname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_message</span><span class="p">)</span></div>
 
 
@@ -198,7 +205,7 @@
 
 
 <div class="viewcode-block" id="RpcError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.RpcError">[docs]</a><span class="k">class</span> <span class="nc">RpcError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The system does not know how to handle this error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;An error occurred trying to reach a service on the robot.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original_error</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RpcError</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -226,8 +233,16 @@
     <span class="sd">&quot;&quot;&quot;The app token&#39;s authority field names a nonexistent service.&quot;&quot;&quot;</span></div>
 
 
+<div class="viewcode-block" id="PermissionDeniedError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.PermissionDeniedError">[docs]</a><span class="k">class</span> <span class="nc">PermissionDeniedError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The rpc request was denied access.&quot;&quot;&quot;</span></div>
+
+
 <div class="viewcode-block" id="ProxyConnectionError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.ProxyConnectionError">[docs]</a><span class="k">class</span> <span class="nc">ProxyConnectionError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The proxy on the robot could not be reached.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="ResponseTooLargeError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.ResponseTooLargeError">[docs]</a><span class="k">class</span> <span class="nc">ResponseTooLargeError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The rpc response was larger than allowed max size.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="ServiceUnavailableError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.ServiceUnavailableError">[docs]</a><span class="k">class</span> <span class="nc">ServiceUnavailableError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
@@ -243,7 +258,7 @@
 
 
 <div class="viewcode-block" id="UnableToConnectToRobotError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.UnableToConnectToRobotError">[docs]</a><span class="k">class</span> <span class="nc">UnableToConnectToRobotError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The robot may be offline.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The robot may be offline or otherwise unreachable.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="UnauthenticatedError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.UnauthenticatedError">[docs]</a><span class="k">class</span> <span class="nc">UnauthenticatedError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
@@ -254,8 +269,20 @@
     <span class="sd">&quot;&quot;&quot;The system is unable to translate the domain name.&quot;&quot;&quot;</span></div>
 
 
+<div class="viewcode-block" id="NotFoundError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.NotFoundError">[docs]</a><span class="k">class</span> <span class="nc">NotFoundError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The backend system could not be found.&quot;&quot;&quot;</span></div>
+
+
 <div class="viewcode-block" id="UnimplementedError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.UnimplementedError">[docs]</a><span class="k">class</span> <span class="nc">UnimplementedError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The API does not recognize the request and is unable to complete the request.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="TransientFailureError"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.TransientFailureError">[docs]</a><span class="k">class</span> <span class="nc">TransientFailureError</span><span class="p">(</span><span class="n">RpcError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The channel is in state TRANSIENT_FAILURE, often caused by a connection failure.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="TimeSyncRequired"><a class="viewcode-back" href="../../../client_modules/exceptions.html#bosdyn.client.exceptions.TimeSyncRequired">[docs]</a><span class="k">class</span> <span class="nc">TimeSyncRequired</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Time synchronization is required but none seems to be established.&quot;&quot;&quot;</span></div>
 </pre></div>
 
            </div>
@@ -268,7 +295,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Boston Dynamics
+        &copy; Copyright 2019, Boston Dynamics.
 
     </p>
   </div>
@@ -285,16 +312,36 @@
   
 
 
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

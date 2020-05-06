@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -12,14 +12,15 @@ option java_outer_classname = "ImageServiceProto";
 
 import "bosdyn/api/image.proto";
 
-/// An Image service provides access to one or more images, for example from cameras. It
-/// supports querying for the list of available images provided by the service and then
-/// supports requesting a latest given image by source name.
+// An Image service provides access to one or more images, for example from cameras. It
+// supports querying for the list of available images provided by the service and then
+// supports requesting a latest given image by source name.
 service ImageService {
-    /// Obtain the list of ImageSources.
-    /// The name field keys access to individual images when calling GetImage.
+    // Obtain the list of ImageSources.
+    // The name field keys access to individual images when calling GetImage.
     rpc ListImageSources(ListImageSourcesRequest) returns (ListImageSourcesResponse) {}
 
-    /// Request an image by name, with optional parameters for requesting image quality level.
+    // Request an image by name, with optional parameters for requesting image quality level.
     rpc GetImage(GetImageRequest) returns (GetImageResponse) {}
+
 }

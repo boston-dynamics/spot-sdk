@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -60,7 +60,6 @@ StopLevel = enum.IntEnum('StopLevel', estop_pb2.EstopStopLevel.items())
 class EstopClient(BaseClient):
     """Client to the estop service."""
 
-    default_authority = 'estop.spot.robot'
     default_service_name = 'estop'
     service_type = 'bosdyn.api.EstopService'
 
@@ -70,8 +69,10 @@ class EstopClient(BaseClient):
     def register(self, target_config_id, endpoint, **kwargs):
         """Register the endpoint in the target configuration.
 
-        Kwargs:
-            Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
+        Args:
+            target_config_id: The identification of the current configuration on the robot.
+            endpoint: Estop endpoint.
+            kwargs: Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
         Returns:
             estop_pb2.EstopEndpoint that has been registered.
         """
@@ -90,8 +91,10 @@ class EstopClient(BaseClient):
     def deregister(self, target_config_id, endpoint, **kwargs):
         """Deregister the endpoint in the target configuration.
 
-        Kwargs:
-            Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
+        Args:
+            target_config_id: The identification of the current configuration on the robot.
+            endpoint: Estop endpoint.
+            kwargs: Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
         """
         req = self._build_deregister_request(target_config_id, endpoint)
         self.call(self._stub.DeregisterEstopEndpoint, req, None,
@@ -106,8 +109,8 @@ class EstopClient(BaseClient):
     def get_config(self, **kwargs):
         """Return the estop configuration of the robot.
 
-        Kwargs:
-            Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
+        Args:
+            kwargs: Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
         Returns:
             estop_pb2.EstopConfig the robot is currently using.
         """
@@ -123,10 +126,9 @@ class EstopClient(BaseClient):
         """Change the estop configuration of the robot.
 
         Args:
-            config -- New configuration to set.
-            target_config_id -- The identification of the current configuration on the robot.
-        Kwargs:
-            Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
+            config: New configuration to set.
+            target_config_id: The identification of the current configuration on the robot.
+            kwargs: Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
         Returns:
             estop_pb2.EstopConfig the robot is currently using.
         """
@@ -143,8 +145,8 @@ class EstopClient(BaseClient):
     def get_status(self, **kwargs):
         """Return the estop status of the robot.
 
-        Kwargs:
-            Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
+        Args:
+            kwargs: Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
         Returns:
             estop_pb2.EstopSystemStatus from the server.
         """
@@ -162,15 +164,14 @@ class EstopClient(BaseClient):
         """Check in with the estop system.
 
         Args:
-            stop_level -- Integer / enum representing desired stop level. See StopLevel enum.
-            endpoint -- The endpoint asserting the stop level.
-            challenge -- A previously received challenge from the server.
-            response -- A response to the 'challenge' argument.
-            suppress_incorrect -- Set True to prevent an IncorrectChallengeResponseError from being
+            stop_level: Integer / enum representing desired stop level. See StopLevel enum.
+            endpoint: The endpoint asserting the stop level.
+            challenge: A previously received challenge from the server.
+            response: A response to the 'challenge' argument.
+            suppress_incorrect: Set True to prevent an IncorrectChallengeResponseError from being
                 raised when STATUS_INVALID is returned. Useful for the first check-in, before a
                 challenge has been sent by the server.
-        Kwargs:
-            Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
+            kwargs: Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
         Returns:
             A new challenge from the server.
         """
@@ -267,7 +268,7 @@ class EstopEndpoint(object):
         except (Error) as exc:
             # Otherwise, if it was a common ResponseError or an issue with the RPC itself,
             # we likely cannot.
-            self.logger.warn('Could not set challenge (error: %s)', exc.__class__.__name__)
+            self.logger.warning('Could not set challenge (error: %s)', exc.__class__.__name__)
 
         # If we got a new challenge, set it.
         if new_challenge is not None:
@@ -297,8 +298,8 @@ class EstopEndpoint(object):
     def stop(self, **kwargs):
         """Issue a CUT stop level command to the robot, cutting motor power immediately.
 
-        Kwargs:
-            Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
+        Args:
+            kwargs: Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
         Returns:
             None. Will raise an error if RPC failed.
         """
@@ -308,8 +309,8 @@ class EstopEndpoint(object):
     def settle_then_cut(self, **kwargs):
         """Issue a SETTLE_THEN_CUT stop level. The robot will attempt to sit before cutting motor power.
 
-        Kwargs:
-            Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
+        Args:
+            kwargs: Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
         Returns:
             None. Will raise an error if RPC failed.
         """
@@ -319,8 +320,8 @@ class EstopEndpoint(object):
     def allow(self, **kwargs):
         """Issue a NONE stop level command to the robot, allowing motor power.
 
-        Kwargs:
-            Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
+        Args:
+            kwargs: Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
         Returns:
             None. Will raise an error if RPC failed.
         """
@@ -563,7 +564,7 @@ class EstopKeepAlive(object):
                 self._error('RPC took longer than {:.2f} seconds'.format(self._rpc_timeout),
                             exception=exc)
             except RpcError as exc:
-                self._error('Transport exception during check-in:\n{s}\n'
+                self._error('Transport exception during check-in:\n{}\n'
                             '    (resuming check-in)'.format(exc), exception=exc)
             except EndpointUnknownError as exc:
                 # Disable ourself to show we cannot estop any longer.

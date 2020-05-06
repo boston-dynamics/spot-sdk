@@ -1,0 +1,73 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.mission;
+
+option java_outer_classname = "UtilProto";
+
+import "google/protobuf/any.proto";
+
+// Key/Value pair, used in other messages.
+message KeyValue {
+    string key = 1;
+    Value value = 2;
+}
+
+// A value of a run-time or compile-time variable.
+message Value {
+    oneof source {
+        ConstantValue constant = 2;   // A constant value.
+        VariableDeclaration runtime_var = 3;  // Look up a variable provided at run-time.
+        VariableDeclaration parameter = 4; // Look up a Node Parameter.
+    }
+}
+
+
+// Declaration of a run-time or compile-time variable.
+message VariableDeclaration {
+    string name = 1;
+    enum Type {
+        TYPE_UNKNOWN = 0;
+        TYPE_FLOAT = 1;
+        TYPE_STRING = 2;
+        TYPE_INT = 3;
+        TYPE_BOOL = 4;
+        TYPE_MESSAGE = 5;
+    }
+    Type type = 2;
+}
+
+
+// A constant value. Corresponds to the VariableDeclaration Type enum.
+message ConstantValue {
+    oneof value {
+        double float_value = 1;
+        string string_value = 2;
+        int64 int_value = 3;
+        bool bool_value = 4;
+        google.protobuf.Any msg_value = 5;
+    }
+}
+
+// Data a user can associate with a node.
+message UserData {
+    // Identifier. Enables matching the Node uploaded to the MissionService with the NodeInfo
+    // downloaded from the MissionService.
+    string id = 1;
+    // Arbitrary data. We recommend keeping it small, to avoid bloating the size of the mission.
+    bytes bytestring = 3;
+}
+
+// Results from executing / ticking / running a single node.
+enum Result {
+    RESULT_UNKNOWN = 0;
+    RESULT_FAILURE = 1;
+    RESULT_RUNNING = 2;
+    RESULT_SUCCESS = 3;
+    RESULT_ERROR = 4;
+}

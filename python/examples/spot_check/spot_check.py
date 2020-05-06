@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -63,16 +63,16 @@ def run_spot_check_routine(robot):
     error = False
     for key in resp.camera_results:
         if resp.camera_results[key].status != spot_check_pb2.DepthPlaneSpotCheckResult.STATUS_OK:
-            robot.logger.warn("SpotCheck camera check error: {}".format(key))
+            robot.logger.warning("SpotCheck camera check error: {}".format(key))
             error = True
     for key in resp.load_cell_results:
         if resp.load_cell_results[key].error != spot_check_pb2.LoadCellSpotCheckResult.ERROR_NONE:
-            robot.logger.warn("SpotCheck loadcell error: {}".format(key))
+            robot.logger.warning("SpotCheck loadcell error: {}".format(key))
             error = True
     for key in resp.kinematic_cal_results:
         if (resp.kinematic_cal_results[key].error !=
                 spot_check_pb2.JointKinematicCheckResult.ERROR_NONE):
-            robot.logger.warn("SpotCheck endstop error: {}".format(key))
+            robot.logger.warning("SpotCheck endstop error: {}".format(key))
             error = True
 
     if not error:

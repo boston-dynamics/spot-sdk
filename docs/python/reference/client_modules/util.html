@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Util &mdash; Spot 1.1.0 documentation</title>
+  <title>Util &mdash; Spot 2.0.0 documentation</title>
   
 
   
@@ -17,36 +17,35 @@
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Core API" href="../core_index.html" />
+    <link rel="next" title="World Object" href="world_object.html" />
     <link rel="prev" title="Token Manager" href="token_manager.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -60,7 +59,7 @@
             
             
               <div class="version">
-                1.1.0
+                2.0.0
               </div>
             
           
@@ -84,24 +83,29 @@
               
             
             
-              <p class="caption"><span class="caption-text">Services:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../client_index.html">Client API</a><ul class="current">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="client_index.html">Client SDK</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="auth.html">Auth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="channel.html">Channel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="command_line.html">Command Line</a></li>
 <li class="toctree-l2"><a class="reference internal" href="common.html">Common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="directory.html">Directory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="estop.html">E-Stop</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graph_nav.html">Graph Nav</a></li>
 <li class="toctree-l2"><a class="reference internal" href="image.html">Image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lease.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="local_grid.html">Local Grid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="payload.html">Payload</a></li>
+<li class="toctree-l2"><a class="reference internal" href="payload_registration.html">Payload Registration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="power.html">Power</a></li>
 <li class="toctree-l2"><a class="reference internal" href="processors.html">Processors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recording.html">Recording</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot_command.html">Robot Command</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot_id.html">Robot ID</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot_state.html">Robot State</a></li>
@@ -112,9 +116,12 @@
 <li class="toctree-l2"><a class="reference internal" href="token_cache.html">Token Cache</a></li>
 <li class="toctree-l2"><a class="reference internal" href="token_manager.html">Token Manager</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Util</a></li>
+<li class="toctree-l2"><a class="reference internal" href="world_object.html">World Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spot_cam_modules/spot_cam_index.html">Spot CAM SDK</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../core_index.html">Core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core_modules/core_index.html">Core SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mission_modules/mission_index.html">Mission SDK</a></li>
 </ul>
 
             
@@ -160,7 +167,7 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../client_index.html">Client API</a> &raquo;</li>
+          <li><a href="client_index.html">Client SDK</a> &raquo;</li>
         
       <li>Util</li>
     
@@ -183,50 +190,50 @@
             
   <div class="section" id="module-bosdyn.client.util">
 <span id="util"></span><h1>Util<a class="headerlink" href="#module-bosdyn.client.util" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="bosdyn.client.util.add_common_arguments">
-<code class="descclassname">bosdyn.client.util.</code><code class="descname">add_common_arguments</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/util.html#add_common_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.util.add_common_arguments" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add arguments common to most applications.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>-- argument parser object.</strong> (<em>parser</em>) – </td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="bosdyn.client.util.cli_auth">
-<code class="descclassname">bosdyn.client.util.</code><code class="descname">cli_auth</code><span class="sig-paren">(</span><em>robot</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/util.html#cli_auth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.util.cli_auth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Interactive CLI for authenticating with the robot.</p>
-</dd></dl>
-
-<dl class="function">
+<dl class="py function">
 <dt id="bosdyn.client.util.cli_login_prompt">
-<code class="descclassname">bosdyn.client.util.</code><code class="descname">cli_login_prompt</code><span class="sig-paren">(</span><em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/util.html#cli_login_prompt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.util.cli_login_prompt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">bosdyn.client.util.</code><code class="sig-name descname">cli_login_prompt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/util.html#cli_login_prompt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.util.cli_login_prompt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interactive CLI for scripting conveniences.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
+<dt id="bosdyn.client.util.cli_auth">
+<code class="sig-prename descclassname">bosdyn.client.util.</code><code class="sig-name descname">cli_auth</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">robot</span></em>, <em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/util.html#cli_auth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.util.cli_auth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interactive CLI for authenticating with the robot.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.client.util.setup_logging">
+<code class="sig-prename descclassname">bosdyn.client.util.</code><code class="sig-name descname">setup_logging</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/util.html#setup_logging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.util.setup_logging" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup a basic streaming console handler at the root logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>verbose</strong> – if False (default) show messages at INFO level and above,
+if True show messages at DEBUG level and above.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="bosdyn.client.util.get_logger">
-<code class="descclassname">bosdyn.client.util.</code><code class="descname">get_logger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/util.html#get_logger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.util.get_logger" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">bosdyn.client.util.</code><code class="sig-name descname">get_logger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/util.html#get_logger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.util.get_logger" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="bosdyn.client.util.setup_logging">
-<code class="descclassname">bosdyn.client.util.</code><code class="descname">setup_logging</code><span class="sig-paren">(</span><em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/util.html#setup_logging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.util.setup_logging" title="Permalink to this definition">¶</a></dt>
-<dd><p>Setup a basic streaming console handler at the root logger.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>verbose</strong> – if False (default) show messages at INFO level and above,
-if True show messages at DEBUG level and above.</td>
-</tr>
-</tbody>
-</table>
+<dl class="py function">
+<dt id="bosdyn.client.util.default_app_token_path">
+<code class="sig-prename descclassname">bosdyn.client.util.</code><code class="sig-name descname">default_app_token_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/util.html#default_app_token_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.util.default_app_token_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a default app-token path, if a sensible option exists.  Otherwise, returns None.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.client.util.add_common_arguments">
+<code class="sig-prename descclassname">bosdyn.client.util.</code><code class="sig-name descname">add_common_arguments</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parser</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/util.html#add_common_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.util.add_common_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add arguments common to most applications.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parser</strong> – argument parser object.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -239,10 +246,10 @@ if True show messages at DEBUG level and above.</td>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../core_index.html" class="btn btn-neutral float-right" title="Core API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="world_object.html" class="btn btn-neutral float-right" title="World Object" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="token_manager.html" class="btn btn-neutral float-left" title="Token Manager" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="token_manager.html" class="btn btn-neutral" title="Token Manager" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -251,7 +258,7 @@ if True show messages at DEBUG level and above.</td>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Boston Dynamics
+        &copy; Copyright 2019, Boston Dynamics.
 
     </p>
   </div>
@@ -268,16 +275,36 @@ if True show messages at DEBUG level and above.</td>
   
 
 
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

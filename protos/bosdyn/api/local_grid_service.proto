@@ -1,0 +1,25 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "LocalGridServiceProto";
+
+import "bosdyn/api/local_grid.proto";
+
+// The map service provides access multiple kinds of cell-based map data.
+// It supports querying for the list of available types of local grids provided by the service,
+//  and supports requesting a set of the latest local grids by map type name.
+service LocalGridService {
+    // Obtain the list of available map types.
+    // The name field keys access to individual local grids when calling GetLocalGrids.
+    rpc GetLocalGridTypes(GetLocalGridTypesRequest) returns (GetLocalGridTypesResponse) {}
+
+    // Request a set of local grids by type name.
+    rpc GetLocalGrids(GetLocalGridsRequest) returns (GetLocalGridsResponse) {}
+}

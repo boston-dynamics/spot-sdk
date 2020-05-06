@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -71,27 +71,30 @@ def get_logger():
     return logging.getLogger()
 
 
+def default_app_token_path():
+    """Returns a default app-token path, if a sensible option exists.  Otherwise, returns None."""
+    glob_expr = os.path.join(bosdyn.client.sdk.BOSDYN_RESOURCE_ROOT, '*.app_token')
+    candidates = sorted(f for f in glob.glob(glob_expr) if os.path.isfile(f))
+    return candidates[0] if candidates else None
+
+
 def add_common_arguments(parser):
     """Add arguments common to most applications.
 
     Args:
-        parser -- argument parser object.
+        parser: argument parser object.
     """
-    default_app_token_path = None
+    default_app_token = None
     try:
-        glob_expr = os.path.join(bosdyn.client.sdk.BOSDYN_RESOURCE_ROOT, '*.app_token')
-        app_token_candidates = [f for f in glob.glob(glob_expr) if os.path.isfile(f)]
-        app_token_candidates.sort()
-        if app_token_candidates:
-            default_app_token_path = app_token_candidates[0]
+        default_app_token = default_app_token_path()
     # In the unlikely case that anything here raises an exception, we'd like to know about it.
     except Exception:  # pylint: disable=broad-except
         setup_logging()
         _LOGGER.exception('Exception occurred while determining default application token!')
         _LOGGER.warning('Continuing to add parser arguments.')
     parser.add_argument('-v', '--verbose', action='store_true', help='Print debug-level messages')
-    parser.add_argument('--username', default="user")
-    parser.add_argument('--password', default="client_user")
-    parser.add_argument('--app-token', default=default_app_token_path, help='Application token')
+    parser.add_argument('--username', help='User name of account to get credentials for.')
+    parser.add_argument('--password', help='Password to get credentials for.')
+    parser.add_argument('--app-token', default=default_app_token, help='Application token')
     parser.add_argument('hostname', help='Hostname or address of robot,'
                         ' e.g. "beta25-p" or "192.168.80.3"')

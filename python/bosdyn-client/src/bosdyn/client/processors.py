@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -24,6 +24,12 @@ class AddRequestHeader(object):
         return header
 
     def mutate(self, request):
-        """Mutate request such that its header contains a client name and a timestamp."""
+        """Mutate request such that its header contains a client name and a timestamp.
+        
+        Headers are not required for third party proto requests/responses.
+        """
         header = self._create_header()
-        request.header.CopyFrom(header)
+        try:
+            request.header.CopyFrom(header)
+        except AttributeError:
+            pass

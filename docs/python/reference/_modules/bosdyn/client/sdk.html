@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.sdk &mdash; Spot 1.1.0 documentation</title>
+  <title>bosdyn.client.sdk &mdash; Spot 2.0.0 documentation</title>
   
 
   
@@ -17,34 +17,33 @@
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -58,7 +57,7 @@
             
             
               <div class="version">
-                1.1.0
+                2.0.0
               </div>
             
           
@@ -82,10 +81,10 @@
               
             
             
-              <p class="caption"><span class="caption-text">Services:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../client_index.html">Client API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../core_index.html">Core API</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../client_modules/client_index.html">Client SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core_modules/core_index.html">Core SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mission_modules/mission_index.html">Mission SDK</a></li>
 </ul>
 
             
@@ -149,7 +148,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.sdk</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
@@ -163,29 +162,35 @@
 <span class="kn">import</span> <span class="nn">platform</span>
 
 <span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">import</span> <span class="nn">jwt</span>
 <span class="kn">import</span> <span class="nn">pkg_resources</span>
 
 <span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">AuthClient</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">Error</span>
 <span class="kn">from</span> <span class="nn">.directory</span> <span class="kn">import</span> <span class="n">DirectoryClient</span>
+<span class="kn">from</span> <span class="nn">.directory_registration</span> <span class="kn">import</span> <span class="n">DirectoryRegistrationClient</span>
 <span class="kn">from</span> <span class="nn">.estop</span> <span class="kn">import</span> <span class="n">EstopClient</span>
+<span class="kn">from</span> <span class="nn">.graph_nav</span> <span class="kn">import</span> <span class="n">GraphNavClient</span>
 <span class="kn">from</span> <span class="nn">.image</span> <span class="kn">import</span> <span class="n">ImageClient</span>
 <span class="kn">from</span> <span class="nn">.lease</span> <span class="kn">import</span> <span class="n">LeaseClient</span>
 <span class="kn">from</span> <span class="nn">.log_annotation</span> <span class="kn">import</span> <span class="n">LogAnnotationClient</span>
+<span class="kn">from</span> <span class="nn">.local_grid</span> <span class="kn">import</span> <span class="n">LocalGridClient</span>
 <span class="kn">from</span> <span class="nn">.payload</span> <span class="kn">import</span> <span class="n">PayloadClient</span>
+<span class="kn">from</span> <span class="nn">.payload_registration</span> <span class="kn">import</span> <span class="n">PayloadRegistrationClient</span>
 <span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">PowerClient</span>
 <span class="kn">from</span> <span class="nn">.processors</span> <span class="kn">import</span> <span class="n">AddRequestHeader</span>
+<span class="kn">from</span> <span class="nn">.recording</span> <span class="kn">import</span> <span class="n">GraphNavRecordingServiceClient</span>
 <span class="kn">from</span> <span class="nn">.robot</span> <span class="kn">import</span> <span class="n">Robot</span>
 <span class="kn">from</span> <span class="nn">.robot_command</span> <span class="kn">import</span> <span class="n">RobotCommandClient</span>
 <span class="kn">from</span> <span class="nn">.robot_id</span> <span class="kn">import</span> <span class="n">RobotIdClient</span>
 <span class="kn">from</span> <span class="nn">.robot_state</span> <span class="kn">import</span> <span class="n">RobotStateClient</span>
 <span class="kn">from</span> <span class="nn">.spot_check</span> <span class="kn">import</span> <span class="n">SpotCheckClient</span>
 <span class="kn">from</span> <span class="nn">.time_sync</span> <span class="kn">import</span> <span class="n">TimeSyncClient</span>
-
+<span class="kn">from</span> <span class="nn">.world_object</span> <span class="kn">import</span> <span class="n">WorldObjectClient</span>
 
 <div class="viewcode-block" id="SdkError"><a class="viewcode-back" href="../../../client_modules/sdk.html#bosdyn.client.sdk.SdkError">[docs]</a><span class="k">class</span> <span class="nc">SdkError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;General class of errors to handle non-response non-grpc errors.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;General class of errors to handle non-response non-rpc errors.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="UnsetAppTokenError"><a class="viewcode-back" href="../../../client_modules/sdk.html#bosdyn.client.sdk.UnsetAppTokenError">[docs]</a><span class="k">class</span> <span class="nc">UnsetAppTokenError</span><span class="p">(</span><span class="n">SdkError</span><span class="p">):</span>
@@ -216,7 +221,7 @@
             <span class="n">user_name</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getuser</span><span class="p">()</span>
         <span class="c1"># pylint: disable=broad-except</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Could not get username&#39;</span><span class="p">)</span>
+            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Could not get username&#39;</span><span class="p">)</span>
             <span class="n">user_name</span> <span class="o">=</span> <span class="s1">&#39;&lt;unknown host&gt;&#39;</span>
     <span class="c1"># Use the name of the host if available, username otherwise.</span>
     <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">machine_name</span> <span class="ow">or</span> <span class="n">user_name</span><span class="p">,</span> <span class="n">process_info</span><span class="p">)</span></div>
@@ -225,17 +230,23 @@
 <span class="n">_DEFAULT_SERVICE_CLIENTS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">AuthClient</span><span class="p">,</span>
     <span class="n">DirectoryClient</span><span class="p">,</span>
+    <span class="n">DirectoryRegistrationClient</span><span class="p">,</span>
     <span class="n">EstopClient</span><span class="p">,</span>
+    <span class="n">GraphNavClient</span><span class="p">,</span>
+    <span class="n">GraphNavRecordingServiceClient</span><span class="p">,</span>
     <span class="n">ImageClient</span><span class="p">,</span>
     <span class="n">LeaseClient</span><span class="p">,</span>
     <span class="n">LogAnnotationClient</span><span class="p">,</span>
+    <span class="n">LocalGridClient</span><span class="p">,</span>
     <span class="n">PayloadClient</span><span class="p">,</span>
+    <span class="n">PayloadRegistrationClient</span><span class="p">,</span>
     <span class="n">PowerClient</span><span class="p">,</span>
     <span class="n">RobotCommandClient</span><span class="p">,</span>
     <span class="n">RobotIdClient</span><span class="p">,</span>
     <span class="n">RobotStateClient</span><span class="p">,</span>
     <span class="n">SpotCheckClient</span><span class="p">,</span>
     <span class="n">TimeSyncClient</span><span class="p">,</span>
+    <span class="n">WorldObjectClient</span><span class="p">,</span>
 <span class="p">]</span>
 
 
@@ -243,10 +254,13 @@
     <span class="sd">&quot;&quot;&quot;Return an Sdk with the most common configuration.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        client_name_prefix -- prefix to pass to generate_client_name()</span>
-<span class="sd">        service_clients -- List of service client classes to register in addition to the defaults.</span>
-<span class="sd">        cert_resource_glob -- Glob expression matching robot certificate(s).</span>
+<span class="sd">        client_name_prefix: prefix to pass to generate_client_name()</span>
+<span class="sd">        service_clients: List of service client classes to register in addition to the defaults.</span>
+<span class="sd">        cert_resource_glob: Glob expression matching robot certificate(s).</span>
 <span class="sd">                              Default None to use distributed certificate.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        IOError: Robot cert could not be loaded.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Creating standard Sdk, cert glob: &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span><span class="p">,</span> <span class="n">cert_resource_glob</span><span class="p">)</span>
     <span class="n">sdk</span> <span class="o">=</span> <span class="n">Sdk</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">client_name_prefix</span><span class="p">)</span>
@@ -262,9 +276,14 @@
     <span class="k">return</span> <span class="n">sdk</span></div>
 
 
+
+
 <div class="viewcode-block" id="Sdk"><a class="viewcode-back" href="../../../client_modules/sdk.html#bosdyn.client.sdk.Sdk">[docs]</a><span class="k">class</span> <span class="nc">Sdk</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Repository for settings typically common to a single developer and/or robot fleet.</span>
 <span class="sd">    See also Robot for robot-specific settings.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: Name to identify the client when communicating with the robot.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -273,30 +292,37 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span> <span class="ow">or</span> <span class="s1">&#39;bosdyn.Sdk&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request_processors</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">response_processors</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">request_processors</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">service_client_factories_by_type</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">service_type_by_name</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c1"># Robots created by this Sdk, keyed by address.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">robots</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="c1">#self.app_token_processor = None</span>
 
 
-<div class="viewcode-block" id="Sdk.create_robot"><a class="viewcode-back" href="../../../client_modules/sdk.html#bosdyn.client.sdk.Sdk.create_robot">[docs]</a>    <span class="k">def</span> <span class="nf">create_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Sdk.create_robot"><a class="viewcode-back" href="../../../client_modules/sdk.html#bosdyn.client.sdk.Sdk.create_robot">[docs]</a>    <span class="k">def</span> <span class="nf">create_robot</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">address</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a Robot initialized with this Sdk, creating it if it does not yet exist.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            address -- Network-resolvable address of the robot, e.g. &#39;192.168.80.3&#39;</span>
-<span class="sd">            name -- A unique identifier for the robot, e.g. &#39;My First Robot&#39;. Default None to</span>
+<span class="sd">            address: Network-resolvable address of the robot, e.g. &#39;192.168.80.3&#39;</span>
+<span class="sd">            name: A unique identifier for the robot, e.g. &#39;My First Robot&#39;. Default None to</span>
 <span class="sd">                        use the address as the name.</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            A Robot initialized with the current Sdk settings.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">app_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">UnsetAppTokenError</span>
+                <span class="n">_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Warning: App token unset at robot creation time. API access may &#39;</span>
+                             <span class="s1">&#39;be limited.&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">address</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">robots</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">robots</span><span class="p">[</span><span class="n">address</span><span class="p">]</span>
-        <span class="n">robot</span> <span class="o">=</span> <span class="n">Robot</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="n">address</span><span class="p">)</span>
+        <span class="n">robot</span> <span class="o">=</span> <span class="n">Robot</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="n">address</span>
+        <span class="p">)</span>
         <span class="n">robot</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">address</span>
         <span class="n">robot</span><span class="o">.</span><span class="n">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">robots</span><span class="p">[</span><span class="n">address</span><span class="p">]</span> <span class="o">=</span> <span class="n">robot</span>
@@ -306,27 +332,32 @@
         <span class="sd">&quot;&quot;&quot;Tell the Sdk how to create a specific type of service client.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            creation_func -- Callable that returns a client. Typically just the class.</span>
-<span class="sd">            service_type -- Type of the service. If None (default), will try to get the name from</span>
+<span class="sd">            creation_func: Callable that returns a client. Typically just the class.</span>
+<span class="sd">            service_type: Type of the service. If None (default), will try to get the name from</span>
 <span class="sd">                creation_func.</span>
-<span class="sd">            service_name -- Name of the service. If None (default), will try to get the name from</span>
+<span class="sd">            service_name: Name of the service. If None (default), will try to get the name from</span>
 <span class="sd">                creation_func.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">service_name</span> <span class="o">=</span> <span class="n">service_name</span> <span class="ow">or</span> <span class="n">creation_func</span><span class="o">.</span><span class="n">default_service_name</span>
         <span class="n">service_type</span> <span class="o">=</span> <span class="n">service_type</span> <span class="ow">or</span> <span class="n">creation_func</span><span class="o">.</span><span class="n">service_type</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">service_type_by_name</span><span class="p">[</span><span class="n">service_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">service_type</span>
+        <span class="c1"># Some services won&#39;t have a default service name at all.</span>
+        <span class="c1"># They will have to get information from the directory.</span>
+        <span class="k">if</span> <span class="n">service_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">service_type_by_name</span><span class="p">[</span><span class="n">service_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">service_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">service_client_factories_by_type</span><span class="p">[</span><span class="n">service_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">creation_func</span></div>
 
 <div class="viewcode-block" id="Sdk.load_robot_cert"><a class="viewcode-back" href="../../../client_modules/sdk.html#bosdyn.client.sdk.Sdk.load_robot_cert">[docs]</a>    <span class="k">def</span> <span class="nf">load_robot_cert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_path_glob</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load the SSL certificate for the robot.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            resource_path_glob -- Optional path to certificate resource(s).</span>
+<span class="sd">            resource_path_glob: Optional path to certificate resource(s).</span>
 <span class="sd">                If None, will load the certificate in the &#39;resources&#39; package.</span>
 <span class="sd">                Otherwise, should be a glob expression to match certificates.</span>
 <span class="sd">                Defaults to None.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            IOError: Robot cert could not be loaded.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cert</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">resource_path_glob</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -356,12 +387,12 @@
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">resource_path</span><span class="p">),</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">token_file</span><span class="p">:</span>
                 <span class="n">token</span> <span class="o">=</span> <span class="n">token_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                 <span class="n">log_token_time_remaining</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">UnableToLoadAppTokenError</span><span class="p">(</span>
                 <span class="s1">&#39;Unable to retrieve app token from &quot;</span><span class="si">{}</span><span class="s1">&quot;.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resource_path</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">UnsetAppTokenError</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">app_token</span> <span class="o">=</span> <span class="n">token</span></div></div>
@@ -383,10 +414,10 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">values</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">values</span>
-    <span class="k">except</span> <span class="n">jwt</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">DecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">UnableToLoadAppTokenError</span><span class="p">(</span><span class="s1">&#39;Incorrectly formatted token </span><span class="si">{}</span><span class="s1"> --- </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">UnableToLoadAppTokenError</span><span class="p">(</span><span class="s1">&#39;Problem decoding token </span><span class="si">{}</span><span class="s1"> --- </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span></div>
+    <span class="k">except</span> <span class="n">jwt</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">DecodeError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">UnableToLoadAppTokenError</span><span class="p">(</span><span class="s1">&#39;Incorrectly formatted token </span><span class="si">{}</span><span class="s1"> --- </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">err</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">UnableToLoadAppTokenError</span><span class="p">(</span><span class="s1">&#39;Problem decoding token </span><span class="si">{}</span><span class="s1"> --- </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">err</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="log_token_time_remaining"><a class="viewcode-back" href="../../../client_modules/sdk.html#bosdyn.client.sdk.log_token_time_remaining">[docs]</a><span class="k">def</span> <span class="nf">log_token_time_remaining</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
@@ -394,7 +425,7 @@
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        token: A jwt token</span>
-<span class="sd">    </span>
+
 <span class="sd">    Raises:</span>
 <span class="sd">        UnableToLoadAppTokenError: If the token expiration information cannot be retrieved.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -409,14 +440,13 @@
         <span class="n">_LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Your application token has expired. Please contact &#39;</span>
                       <span class="s1">&#39;support@bostondynamics.com to request a new token.&#39;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">time_to_expiration</span> <span class="o">&lt;=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
-        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Application token expires in </span><span class="si">{}</span><span class="s1"> days on </span><span class="si">{}</span><span class="s1">. Please contact &#39;</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Application token expires in </span><span class="si">%s</span><span class="s1"> days on </span><span class="si">%s</span><span class="s1">. Please contact &#39;</span>
                         <span class="s1">&#39;support@bostondynamics.com to request a new token before the &#39;</span>
-                        <span class="s1">&#39;current token expires.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                            <span class="n">time_to_expiration</span><span class="o">.</span><span class="n">days</span><span class="p">,</span>
-                            <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">expire_time</span><span class="p">,</span> <span class="s1">&#39;%Y/%m/</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)))</span>
+                        <span class="s1">&#39;current token expires.&#39;</span><span class="p">,</span> <span class="n">time_to_expiration</span><span class="o">.</span><span class="n">days</span><span class="p">,</span>
+                        <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">expire_time</span><span class="p">,</span> <span class="s1">&#39;%Y/%m/</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Application token expires on </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">expire_time</span><span class="p">,</span> <span class="s1">&#39;%Y/%m/</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)))</span></div>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Application token expires on </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
+                      <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">expire_time</span><span class="p">,</span> <span class="s1">&#39;%Y/%m/</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">))</span></div>
 </pre></div>
 
            </div>
@@ -429,7 +459,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Boston Dynamics
+        &copy; Copyright 2019, Boston Dynamics.
 
     </p>
   </div>
@@ -446,16 +476,36 @@
   
 
 
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

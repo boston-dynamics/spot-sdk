@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -104,6 +104,7 @@ class StateMachine(object):
         @return  True if area found, Image with blob marked, centroid of the blob found
         """
 
+        # Note:  Did not use SimpleBlobDetector because it didn't seem to like irregular shapes
 
         # Binarize the image
         grey_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)

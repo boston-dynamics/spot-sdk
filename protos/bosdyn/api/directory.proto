@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -8,16 +8,16 @@ syntax = "proto3";
 
 option java_outer_classname = "DirectoryProto";
 
-import "google/protobuf/timestamp.proto";
 import "bosdyn/api/header.proto";
+import "google/protobuf/timestamp.proto";
 
 package bosdyn.api;
 
-// A record representing a discoverable service.  By definition, all services
+// A message representing a discoverable service.  By definition, all services
 // discoverable by this system are expected to be grpc "services" provided by
 // some server.
-
 message ServiceEntry {
+
     // The unique user-friendly name of this service.
     string name = 1;
 
@@ -25,7 +25,9 @@ message ServiceEntry {
 	// Does not have to be unique among all ServiceEntry objects.
     string type = 2;
 
-    // Information used to route to the desired Service.
+    // Information used to route to the desired Service. Can either be a full address
+    // (aService.spot.robot) or just a DNS label that will be automatically converted to an
+    // address (aService).
     string authority = 3;
 
     // Last update time in robot timebase for this service record.
@@ -37,17 +39,24 @@ message ServiceEntry {
     // do not.
     bool user_token_required = 5;
 
-    // If |application_token_required| is true, any requests to this service must
-    // contain an application token signed by Boston Dynamics. Requests without
-    // an application token or without a valid application token will result in
-    // a 403.
-    bool application_token_required = 6;
+    // Authorization checks were updated in 1.2.
+    // The application_token_required field has been deprecated.
+    reserved "application_token_required";
+    reserved 6;
 
     // If |permission_required| is non-empty, any requests to this service must
-    // have the same string in the "per" claim of the user token. If
-    // |application_token_required| is also true, the |permission_required| string
-    // must also be present in the "per" claim of the application token.
+    // have the same string in the "per" claim of the user token.
     string permission_required = 7;
+}
+
+// A message containing information that allows a client to identify a
+// given endpoint host using an ip and a port.
+message Endpoint {
+    // The IP address of the computer hosting this endpoint.
+    string host_ip = 1;
+
+    // The port number on which the endpoint is provided.
+    int32 port = 2;
 }
 
 message GetServiceEntryRequest {
@@ -95,3 +104,4 @@ message ListServiceEntriesResponse {
     // The resources managed by the LeaseService.
     repeated ServiceEntry service_entries = 2;
 }
+

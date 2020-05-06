@@ -1,0 +1,21 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "DataChunkProto";
+
+// Represents a chunk of (possibly serialized) data.
+// Chunks will be concatenated together to produce a datagram.
+// This is to avoid size limit restrictions in grpc implementations.
+message DataChunk {
+    // The total size in bytes of the datagram that this chunk is a part of.
+    uint64 total_size = 1;
+    // Bytes in this data chunk. Bytes are sent sequentially.
+    bytes data = 2;
+}

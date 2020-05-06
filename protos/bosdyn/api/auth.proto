@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -22,6 +22,8 @@ message GetAuthTokenRequest {
     string password = 3;
     // Token to authenticate with. Can be used in place of the password, to re-mint a token.
     string token = 4;
+    // Application Token accompanying authentication. This must be present.
+    string application_token = 5;
 }
 
 // ... and get a token.
@@ -30,23 +32,35 @@ message GetAuthTokenResponse {
     enum Status{
         // STATUS_UNKNOWN should never be used. If used, an internal error has happend.
         STATUS_UNKNOWN = 0;
+
         // STATUS_OK indicates that authentication has succeeded. The |token| field will
         // be populated with a session token that can be used to authenticate the user.
         STATUS_OK = 1;
+
         // STATUS_INVALID_LOGIN indicates that authentication has failed since an invalid
         // username and/or password were provided.
         STATUS_INVALID_LOGIN = 2;
+
         // STATUS_INVALID_TOKEN indicates that authentication has failed since the |token|
         // provided in the request is invalid. Reasons for the token being invalid could be
         // because it has expired, because it is improperly formed, for the wrong robot, the
         // user that the token is for has changed a password, or many other reasons. Clients
         // should use username/password-based authentication when refreshing the token fails.
         STATUS_INVALID_TOKEN = 3;
+
         // STATUS_TEMPORARILY_LOCKED_OUT indicates that authentication has failed since
         // authentication for the user is temporarily locked out due to too many unsuccessful
         // attempts. Any new authentication attempts should be delayed so they may happen after
         // the lock out period ends.
         STATUS_TEMPORARILY_LOCKED_OUT = 4;
+
+        // STATUS_INVALID_APPLICATION_TOKEN indicates that the |application_token| in the
+        // request was invalid.
+        STATUS_INVALID_APPLICATION_TOKEN = 5;
+
+        // STATUS_EXPIRED_APPLICATION_TOKEN indicates that the |application_token| in the
+        // request was valid, but has expired.
+        STATUS_EXPIRED_APPLICATION_TOKEN = 6;
     }
     Status status = 2;
 

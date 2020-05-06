@@ -1,0 +1,30 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.spot_cam;
+
+option java_outer_classname = "FactoryServiceProto";
+
+import "bosdyn/api/spot_cam/factorysetup.proto";
+
+//These services contains RPCs meant for factory configuration, and should not
+//be called by a normal client
+
+service PtzConfigurationService {
+    rpc PtzOffset (PtzOffsetRequest) returns (PtzOffsetResponse);
+}
+
+service CameraConfigurationService {
+    //load a camera calibration on
+    rpc CameraCalibrate (CameraCalibrateRequest) returns (CameraCalibrateResponse);
+}
+
+service FactoryResetService {
+    //clear all configuration data and return the device to a pre-configured factory state.
+    rpc Reset (ResetRequest) returns (ResetResponse);
+}

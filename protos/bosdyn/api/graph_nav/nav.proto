@@ -1,0 +1,38 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.graph_nav;
+option java_outer_classname = "NavProto";
+
+import "bosdyn/api/graph_nav/map.proto";
+
+import "bosdyn/api/geometry.proto";
+
+import "google/protobuf/timestamp.proto";
+
+
+// Route that the robot should follow or is currently following.
+message Route {
+
+    // Ordered list of waypoints to traverse, starting from index 0.
+    repeated string waypoint_id = 2;
+
+    // Ordered list of edges to traverse between those waypoints.
+    repeated Edge.Id edge_id = 3;
+}
+
+
+message Localization {
+    // Waypoint we're localized to.
+    string waypoint_id = 1;
+    // Pose of body in waypoint frame.
+    SE3Pose waypoint_tform_body = 2;
+    // Time (in robot time basis) that this localization was valid.
+    google.protobuf.Timestamp timestamp = 3;
+    
+}

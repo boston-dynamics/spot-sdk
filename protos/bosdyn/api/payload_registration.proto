@@ -1,0 +1,117 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option java_outer_classname = "PayloadRegistrationProto";
+
+import "bosdyn/api/payload.proto";
+import "bosdyn/api/header.proto";
+import "bosdyn/api/robot_id.proto";
+
+message RegisterPayloadRequest {
+    RequestHeader header = 1;
+
+    // The payload to register, which must have, at minimum, GUID specified correctly.
+    // The admin console can be used to verify that the payload definition is valid
+    // after registration.
+    Payload payload = 2;
+
+    // A private string provided by the payload to verify identity for auth.
+    string payload_secret = 3;
+}
+
+message RegisterPayloadResponse {
+    ResponseHeader header = 1;
+
+    // Return status.
+    enum Status {
+        // UNKNOWN should never be used.
+        //
+        // An internal PayloadRegistrationService issue has happened if UNKNOWN is set.
+        STATUS_UNKNOWN = 0;
+
+        // Success.  The new service record is available.
+        STATUS_OK = 1;
+
+        // RegisterPayload failed because a payload with this GUID already exists.
+        STATUS_ALREADY_EXISTS = 2;
+    }
+    Status status = 2;
+}
+
+// Update the payload definition of the payload with matching GUID. The existing payload must
+// have a secret set and the request must provide the secret for access.
+// GUID, is_authorized, and is_enabled fields are immutable and cannot be updated.
+message UpdatePayloadVersionRequest {
+    RequestHeader header = 1;
+
+    string payload_guid = 2;
+
+    string payload_secret = 3;
+    
+    SoftwareVersion updated_version = 4;
+}
+
+message UpdatePayloadVersionResponse {
+    ResponseHeader header = 1;
+
+    // Return status.
+    enum Status {
+        // UNKNOWN should never be used.
+        //
+        // An internal PayloadRegistrationService issue has happened if UNKNOWN is set.
+        STATUS_UNKNOWN = 0;
+
+        // Success.  The payload version has been updated.
+        STATUS_OK = 1;
+
+        // UpdatePayload failed because a payload with this GUID does not yet exist.
+        STATUS_DOES_NOT_EXIST = 2;
+
+        // UpdatePayload failed because the paylod guid & secret do not match any registered payloads.
+        STATUS_INVALID_CREDENTIALS = 3;
+    }
+    Status status = 2;
+}
+
+// Request a user token from the robot
+// A token will only be provided after the registered payload has been enabled by an admin
+// The returned user token will have limited access to the services necessary for a simple payload
+message GetPayloadAuthTokenRequest {
+    RequestHeader header = 1;
+
+    string payload_guid = 2;
+
+    string payload_secret = 3;
+}
+
+message GetPayloadAuthTokenResponse {
+    ResponseHeader header = 1;
+
+    // Return status.
+    enum Status {
+        // UNKNOWN should never be used.
+        //
+        // An internal PayloadRegistrationService issue has happened if UNKNOWN is set.
+        STATUS_UNKNOWN = 0;
+
+        // Success.  The token is available.
+        STATUS_OK = 1;
+
+        // GetPayloadAuthToken failed because the paylod guid & secret do not match any registered payloads.
+        STATUS_INVALID_CREDENTIALS = 2;
+
+        // GetPayloadAuthToken failed because the paylod has not been authorized by an admin.
+        STATUS_PAYLOAD_NOT_AUTHORIZED = 3;
+
+    }
+    Status status = 2;
+
+    // A limited-access user token provided on successful payload registration
+    string token = 3;
+}

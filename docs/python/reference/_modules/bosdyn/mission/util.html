@@ -1,0 +1,520 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bosdyn.mission.util &mdash; Spot 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Spot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../client_modules/client_index.html">Client SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core_modules/core_index.html">Core SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mission_modules/mission_index.html">Mission SDK</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bosdyn.mission.util</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bosdyn.mission.util</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">operator</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">import</span> <span class="nn">google.protobuf.message</span>
+<span class="kn">import</span> <span class="nn">google.protobuf.text_format</span>
+
+<span class="kn">from</span> <span class="nn">bosdyn.api.mission</span> <span class="kn">import</span> <span class="n">mission_pb2</span><span class="p">,</span> <span class="n">nodes_pb2</span><span class="p">,</span> <span class="n">util_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.graph_nav</span> <span class="kn">import</span> <span class="n">graph_nav_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.mission</span> <span class="kn">import</span> <span class="n">constants</span>
+
+<span class="c1"># This is a special dummy message we&#39;ll use for TYPE_MESSAGE parameters.</span>
+<span class="n">DUMMY_MESSAGE</span> <span class="o">=</span> <span class="n">nodes_pb2</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;dummy-message-for-parameterization&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Error"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.Error">[docs]</a><span class="k">class</span> <span class="nc">Error</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="InvalidConversion"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.InvalidConversion">[docs]</a><span class="k">class</span> <span class="nc">InvalidConversion</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Could not convert the provided value to the destination type.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original_value</span><span class="p">,</span> <span class="n">destination_typename</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_value</span> <span class="o">=</span> <span class="n">original_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination_typename</span> <span class="o">=</span> <span class="n">destination_typename</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;Could not convert &quot;</span><span class="si">{}</span><span class="s1">&quot; to type &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">destination_typename</span><span class="p">)</span></div>
+
+
+<span class="n">_python_identifier_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;[A-Za-z_]\w*$&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="tree_to_string"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.tree_to_string">[docs]</a><span class="k">def</span> <span class="nf">tree_to_string</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">start_level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">include_status</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a string representation of a Node, interpreted as a tree.&quot;&quot;&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">start_level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;|&#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="n">start_level</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">root</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39; &#39;</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">root</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">root</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span>
+    <span class="k">if</span> <span class="n">include_status</span><span class="p">:</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;Status code: [</span><span class="si">{}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">last_result</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">tree_to_string</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">start_level</span><span class="o">=</span><span class="n">start_level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                                        <span class="n">include_status</span><span class="o">=</span><span class="n">include_status</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">string</span></div>
+
+
+<div class="viewcode-block" id="proto_from_tuple"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.proto_from_tuple">[docs]</a><span class="k">def</span> <span class="nf">proto_from_tuple</span><span class="p">(</span><span class="n">tup</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a bosdyn.api.mission Node from a tuple. EXPERIMENTAL.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">    ::</span>
+<span class="sd">    (&#39;do-A-then-B&#39;, bosdyn.api.mission.nodes_pb2.Sequence(always_restart=True),</span>
+<span class="sd">    [</span>
+<span class="sd">    (&#39;A&#39;, foo.bar.Command(...), []),</span>
+<span class="sd">    (&#39;B&#39;, foo.bar.Command(...), []),</span>
+<span class="sd">    ]</span>
+<span class="sd">    )</span>
+<span class="sd">    would make a Sequence named &#39;do-A-then-B&#39; that always restarted, executing some Command</span>
+<span class="sd">    named &#39;A&#39; followed by the Command named &#39;B&#39;. NOTE: The &quot;List of children tuples&quot; will only</span>
+<span class="sd">    work if the parent node has &#39;child&#39; or &#39;children&#39; attributes. See tests/test_util.py for a</span>
+<span class="sd">    longer example.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tup: (Name of node, Instantiated implementation of node protobuf, List of children tuples)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">nodes_pb2</span><span class="o">.</span><span class="n">Node</span><span class="p">()</span>
+
+    <span class="n">name_or_dict</span><span class="p">,</span> <span class="n">inner_proto</span><span class="p">,</span> <span class="n">children</span> <span class="o">=</span> <span class="n">tup</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name_or_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name_or_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">reference_id</span> <span class="o">=</span> <span class="n">name_or_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;reference_id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">node_reference</span> <span class="o">=</span> <span class="n">name_or_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;node_reference&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;user_data&#39;</span> <span class="ow">in</span> <span class="n">name_or_dict</span><span class="p">:</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">name_or_dict</span><span class="p">[</span><span class="s1">&#39;user_data&#39;</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">pb_type</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">name_or_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parameters&#39;</span><span class="p">,</span> <span class="p">{})):</span>
+            <span class="n">parameter</span> <span class="o">=</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">pb_type</span><span class="p">)</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">name_or_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parameter_values&#39;</span><span class="p">,</span> <span class="p">{})):</span>
+            <span class="n">parameter_value</span> <span class="o">=</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">KeyValue</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;$&#39;</span><span class="p">:</span>
+                <span class="n">parameter_value</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="c1"># Leave type unspecified, since we can&#39;t look it up easily yet.</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">parameter_value</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">constant</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">python_var_to_value</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">parameter_values</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">parameter_value</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">name_or_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;overrides&#39;</span><span class="p">,</span> <span class="p">{})):</span>
+            <span class="c1"># Rather than keep this matching the compiler functionality, just omit the check.</span>
+            <span class="c1"># It&#39;s not even a CompileError anyway.</span>
+            <span class="c1">#if key not in inner_proto.DESCRIPTOR.fields_by_name:</span>
+            <span class="c1">#    raise CompileError(&#39;Override specified for &quot;{}&quot; but no such field in &quot;{}&quot;&#39;.format(</span>
+            <span class="c1">#        key, inner_proto.DESCRIPTOR.full_name))</span>
+            <span class="n">override</span> <span class="o">=</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">KeyValue</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">override</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="c1"># We do need the final field for setting the type accurately...</span>
+            <span class="c1">#override.value.parameter.type = field_desc_to_pb_type(inner_proto.DESCRIPTOR.fields_by_name[key])</span>
+
+            <span class="n">node</span><span class="o">.</span><span class="n">overrides</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">override</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name_or_dict</span>
+
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">node_reference</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">node</span>
+
+    <span class="n">num_children</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">children</span><span class="p">)</span>
+    <span class="n">inner_type</span> <span class="o">=</span> <span class="n">inner_proto</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="c1"># Do some sanity checking on the children.</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">inner_proto</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">num_children</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s1">&#39;Proto &quot;</span><span class="si">{}</span><span class="s1">&quot; of type &quot;</span><span class="si">{}</span><span class="s1">&quot; has no children!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">inner_type</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">inner_proto</span><span class="p">,</span> <span class="s1">&#39;child&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">num_children</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s1">&#39;Proto &quot;</span><span class="si">{}</span><span class="s1">&quot; of type &quot;</span><span class="si">{}</span><span class="s1">&quot; has </span><span class="si">{}</span><span class="s1"> children!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">inner_type</span><span class="p">,</span> <span class="n">num_children</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">num_children</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s1">&#39;Proto &quot;</span><span class="si">{}</span><span class="s1">&quot; of type &quot;</span><span class="si">{}</span><span class="s1">&quot; was given </span><span class="si">{}</span><span class="s1"> children, but I do not know how to add&#39;</span>
+                    <span class="s1">&#39; them!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">inner_type</span><span class="p">,</span> <span class="n">num_children</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">child_tup</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+        <span class="n">child_node</span> <span class="o">=</span> <span class="n">proto_from_tuple</span><span class="p">(</span><span class="n">child_tup</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">inner_proto</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">):</span>
+            <span class="n">inner_proto</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">child_node</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">inner_proto</span><span class="p">,</span> <span class="s1">&#39;child&#39;</span><span class="p">):</span>
+            <span class="n">inner_proto</span><span class="o">.</span><span class="n">child</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">child_node</span><span class="p">)</span>
+
+    <span class="n">node</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">Pack</span><span class="p">(</span><span class="n">inner_proto</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">node</span></div>
+
+
+<div class="viewcode-block" id="python_var_to_value"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.python_var_to_value">[docs]</a><span class="k">def</span> <span class="nf">python_var_to_value</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a ConstantValue with the appropriate oneof set.&quot;&quot;&quot;</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">ConstantValue</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="n">value</span><span class="o">.</span><span class="n">bool_value</span> <span class="o">=</span> <span class="n">var</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">integer_types</span><span class="p">):</span>
+        <span class="n">value</span><span class="o">.</span><span class="n">int_value</span> <span class="o">=</span> <span class="n">var</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="n">value</span><span class="o">.</span><span class="n">float_value</span> <span class="o">=</span> <span class="n">var</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="n">value</span><span class="o">.</span><span class="n">string_value</span> <span class="o">=</span> <span class="n">var</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">google</span><span class="o">.</span><span class="n">protobuf</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
+        <span class="n">value</span><span class="o">.</span><span class="n">msg_value</span><span class="o">.</span><span class="n">Pack</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s1">&#39;Invalid type &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">var</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="python_type_to_pb_type"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.python_type_to_pb_type">[docs]</a><span class="k">def</span> <span class="nf">python_type_to_pb_type</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the protobuf-schema variable type that corresponds to the given variable.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">TYPE_BOOL</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">integer_types</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">TYPE_INT</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="c1"># Python floating point is typically a C double.</span>
+        <span class="k">return</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">TYPE_FLOAT</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">TYPE_STRING</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">google</span><span class="o">.</span><span class="n">protobuf</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">Message</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">TYPE_MESSAGE</span>
+    <span class="k">raise</span> <span class="n">InvalidConversion</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">full_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_string_identifier"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.is_string_identifier">[docs]</a><span class="k">def</span> <span class="nf">is_string_identifier</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="s1">&#39;isidentifier&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">string</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">_python_identifier_regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="field_desc_to_pb_type"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.field_desc_to_pb_type">[docs]</a><span class="k">def</span> <span class="nf">field_desc_to_pb_type</span><span class="p">(</span><span class="n">field_desc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the protobuf-schema variable type that corresponds to the given descriptor.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">(</span><span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_UINT32</span><span class="p">,</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_UINT64</span><span class="p">,</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_FIXED32</span><span class="p">,</span>
+                           <span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_FIXED64</span><span class="p">,</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_INT32</span><span class="p">,</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_INT64</span><span class="p">,</span>
+                           <span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_SFIXED64</span><span class="p">,</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_SINT32</span><span class="p">,</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_SINT64</span><span class="p">,</span>
+                           <span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_SFIXED32</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">TYPE_INT</span>
+    <span class="k">elif</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">(</span><span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_DOUBLE</span><span class="p">,</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_FLOAT</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">TYPE_FLOAT</span>
+    <span class="k">elif</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_BOOL</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">TYPE_BOOL</span>
+    <span class="k">elif</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_STRING</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">TYPE_STRING</span>
+    <span class="k">elif</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_MESSAGE</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">TYPE_MESSAGE</span>
+    <span class="k">raise</span> <span class="n">InvalidConversion</span><span class="p">(</span><span class="n">field_desc</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">full_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="safe_pb_type_to_string"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.safe_pb_type_to_string">[docs]</a><span class="k">def</span> <span class="nf">safe_pb_type_to_string</span><span class="p">(</span><span class="n">pb_type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the stringified VariableDeclaration.Type, or &quot;&lt;unknown&gt;&quot; if the type is invalid.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">pb_type</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;unknown&gt;&#39;</span></div>
+
+
+<div class="viewcode-block" id="one_line_str"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.one_line_str">[docs]</a><span class="k">def</span> <span class="nf">one_line_str</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">google</span><span class="o">.</span><span class="n">protobuf</span><span class="o">.</span><span class="n">text_format</span><span class="o">.</span><span class="n">MessageToString</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">as_one_line</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="node_spec_to_short_string"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.node_spec_to_short_string">[docs]</a><span class="k">def</span> <span class="nf">node_spec_to_short_string</span><span class="p">(</span><span class="n">node_spec</span><span class="p">,</span> <span class="n">maxlen</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">node_spec</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="n">node_spec</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="n">one_line_str</span><span class="p">(</span><span class="n">node_spec</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">maxlen</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">string</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">maxlen</span> <span class="o">-</span> <span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;...&#39;</span>
+    <span class="k">return</span> <span class="n">string</span></div>
+
+
+<div class="viewcode-block" id="ResultFromProto"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.ResultFromProto">[docs]</a><span class="k">class</span> <span class="nc">ResultFromProto</span><span class="p">:</span>
+    <span class="n">results_from_proto</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">util_pb2</span><span class="o">.</span><span class="n">RESULT_FAILURE</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">Result</span><span class="o">.</span><span class="n">FAILURE</span><span class="p">,</span>
+        <span class="n">util_pb2</span><span class="o">.</span><span class="n">RESULT_RUNNING</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">Result</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">,</span>
+        <span class="n">util_pb2</span><span class="o">.</span><span class="n">RESULT_SUCCESS</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">Result</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span>
+        <span class="n">util_pb2</span><span class="o">.</span><span class="n">RESULT_ERROR</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">Result</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">proto_from_results</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">results_from_proto</span><span class="p">)}</span></div>
+
+
+<div class="viewcode-block" id="proto_enum_to_result_constant"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.proto_enum_to_result_constant">[docs]</a><span class="k">def</span> <span class="nf">proto_enum_to_result_constant</span><span class="p">(</span><span class="n">proto_msg</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a Result enum from a util_pb2.Result, or throws InvalidConversion error.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ResultFromProto</span><span class="o">.</span><span class="n">results_from_proto</span><span class="p">[</span><span class="n">proto_msg</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidConversion</span><span class="p">(</span><span class="n">proto_msg</span><span class="p">,</span> <span class="s1">&#39;constants.Result&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="result_constant_to_proto_enum"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.result_constant_to_proto_enum">[docs]</a><span class="k">def</span> <span class="nf">result_constant_to_proto_enum</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a protobuf version of the Result enum, RESULT_UNKNOWN on error.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">Result</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">InvalidConversion</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">Result</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">full_name</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ResultFromProto</span><span class="o">.</span><span class="n">proto_from_results</span><span class="p">[</span><span class="n">result</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidConversion</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">Result</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">full_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="most_restrictive_travel_params"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.most_restrictive_travel_params">[docs]</a><span class="k">def</span> <span class="nf">most_restrictive_travel_params</span><span class="p">(</span><span class="n">travel_params</span><span class="p">,</span> <span class="n">vel_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">travel_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">travel_params</span> <span class="o">=</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">TravelParams</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">travel_params</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">travel_params</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">take_limiting</span><span class="p">(</span><span class="n">mine</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">compare</span><span class="p">):</span>
+        <span class="c1"># This is basically a hack to deal with proto3&#39;s handling of unset POD.</span>
+        <span class="c1"># All float and integer fields that are unset in a message will have a value of 0.</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">mine</span>
+        <span class="k">if</span> <span class="n">mine</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">other</span>
+        <span class="k">if</span> <span class="n">compare</span><span class="p">(</span><span class="n">mine</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="n">mine</span>
+
+    <span class="k">def</span> <span class="nf">take_velocity_limit</span><span class="p">(</span><span class="n">returned</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="c1"># Look at max_vel using &gt;=, then min_vel using &lt;=.</span>
+        <span class="k">for</span> <span class="n">min_max</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="p">((</span><span class="s1">&#39;max_vel&#39;</span><span class="p">,</span> <span class="n">operator</span><span class="o">.</span><span class="n">ge</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;min_vel&#39;</span><span class="p">,</span> <span class="n">operator</span><span class="o">.</span><span class="n">le</span><span class="p">)):</span>
+            <span class="c1"># If the other doesn&#39;t even have this field, skip to the next one.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">other</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="n">min_max</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">lim_returned</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">returned</span><span class="p">,</span> <span class="n">min_max</span><span class="p">)</span>
+            <span class="n">lim_other</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">min_max</span><span class="p">)</span>
+            <span class="n">lim_returned</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">take_limiting</span><span class="p">(</span><span class="n">lim_returned</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">lim_other</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
+            <span class="n">lim_returned</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">take_limiting</span><span class="p">(</span><span class="n">lim_returned</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">lim_other</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
+            <span class="n">lim_returned</span><span class="o">.</span><span class="n">angular</span> <span class="o">=</span> <span class="n">take_limiting</span><span class="p">(</span><span class="n">lim_returned</span><span class="o">.</span><span class="n">angular</span><span class="p">,</span> <span class="n">lim_other</span><span class="o">.</span><span class="n">angular</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">vel_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">take_velocity_limit</span><span class="p">(</span><span class="n">travel_params</span><span class="o">.</span><span class="n">velocity_limit</span><span class="p">,</span> <span class="n">vel_limit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">travel_params</span></div>
+
+
+<div class="viewcode-block" id="get_value_from_constant_value_message"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.get_value_from_constant_value_message">[docs]</a><span class="k">def</span> <span class="nf">get_value_from_constant_value_message</span><span class="p">(</span><span class="n">const_proto</span><span class="p">):</span>
+    <span class="n">field</span> <span class="o">=</span> <span class="n">const_proto</span><span class="o">.</span><span class="n">WhichOneof</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">field</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Did not have a value set!&#39;</span><span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">const_proto</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="get_value_from_value_message"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.get_value_from_value_message">[docs]</a><span class="k">def</span> <span class="nf">get_value_from_value_message</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">blackboard</span><span class="p">,</span> <span class="n">value_msg</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">value_msg</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;constant&quot;</span><span class="p">):</span>
+        <span class="n">constant</span> <span class="o">=</span> <span class="n">value_msg</span><span class="o">.</span><span class="n">constant</span>
+        <span class="k">return</span> <span class="n">get_value_from_constant_value_message</span><span class="p">(</span><span class="n">constant</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">value_msg</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;runtime_var&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">blackboard</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">value_msg</span><span class="o">.</span><span class="n">runtime_var</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Value must be a runtime variable or constant.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="safe_pb_enum_to_string"><a class="viewcode-back" href="../../../mission_modules/util.html#bosdyn.mission.util.safe_pb_enum_to_string">[docs]</a><span class="k">def</span> <span class="nf">safe_pb_enum_to_string</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">pb_enum_obj</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pb_enum_obj</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="s1">&#39;&lt;unknown&gt; (value: </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Boston Dynamics.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

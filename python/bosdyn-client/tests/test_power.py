@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -32,10 +32,8 @@ def test_power_command_error():
     # Test header invalid request error
     response.header.error.code = response.header.error.CODE_INVALID_REQUEST
     assert isinstance(_power_command_error_from_response(response), InvalidRequestError)
-    # Test no lease error
-    response.header.error.code = response.header.error.CODE_OK
-    assert isinstance(_power_command_error_from_response(response), LeaseUseError)
     # Test lease use error
+    response.header.error.code = response.header.error.CODE_OK
     response.lease_use_result.status = response.lease_use_result.STATUS_INVALID_LEASE
     assert isinstance(_power_command_error_from_response(response), LeaseUseError)
     # Test unset status
@@ -53,6 +51,9 @@ def test_power_command_error():
     # Test status OK
     response.status = power_pb2.STATUS_SUCCESS
     assert not _power_command_error_from_response(response)
+    # Test lease error even when response status is OK.
+    response.lease_use_result.status = response.lease_use_result.STATUS_INVALID_LEASE
+    assert isinstance(_power_command_error_from_response(response), LeaseUseError)
 
 
 def test_power_feedback_error():
@@ -70,10 +71,10 @@ def test_power_feedback_error():
     assert isinstance(_power_feedback_error_from_response(response), UnsetStatusError)
     # Test status error
     response.status = power_pb2.STATUS_SHORE_POWER_CONNECTED
-    assert isinstance(_power_feedback_error_from_response(response), ResponseError)
-    # Test unknown status
+    assert not _power_feedback_error_from_response(response)
+    # Test unknown status. This is NOT an error -- user will decide what to do in this case.
     response.status = 1337
-    assert isinstance(_power_feedback_error_from_response(response), ResponseError)
+    assert _power_feedback_error_from_response(response) is None
     # Test status processing
     response.status = power_pb2.STATUS_IN_PROGRESS
     assert not _power_feedback_error_from_response(response)

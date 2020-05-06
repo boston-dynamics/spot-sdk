@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -51,7 +51,7 @@ class EstopGui(QtWidgets.QMainWindow):
     checkin_status_signal = QtCore.pyqtSignal('QString')
     got_status_signal = QtCore.pyqtSignal('QString')
 
-    def __init__(self, client, timeout_sec, name=None, unique_id=None):
+    def __init__(self, hostname, client, timeout_sec, name=None, unique_id=None):
         QtWidgets.QMainWindow.__init__(self)
 
         self.logger = logging.getLogger("Estop GUI")
@@ -95,11 +95,7 @@ class EstopGui(QtWidgets.QMainWindow):
         self.release_button.setStyleSheet(RELEASE_BUTTON_STYLESHEET)
         self.center_layout.addWidget(self.release_button)
 
-        self.status_button = QtWidgets.QPushButton(self)
-        self.status_button.setText('Status')
-        self.status_button.clicked.connect(self.status)
-        self.center_layout.addWidget(self.status_button)
-        self.setWindowTitle("E-Stop ({} {}sec)".format("TEST ADDRESS", timeout_sec))
+        self.setWindowTitle("E-Stop ({} {}sec)".format(hostname, timeout_sec))
 
         # Begin monitoring the keep-alive status
         thread = threading.Thread(target=self._check_keep_alive_status)
@@ -172,7 +168,7 @@ class EstopGui(QtWidgets.QMainWindow):
 def status_response_to_markup(status, my_id=None):
     """Convert an estop_protos.EstopSystemStatus to some HTML text.
 
-    Params:
+    Args:
     status (string): The EstopSystemStatus to parse.
     my_id (string): Optionally specify an endpoint unique ID. If that ID is in the active estop system,
         additional text is inserted into the markup.
@@ -195,9 +191,9 @@ def status_response_to_markup(status, my_id=None):
     return markup
 
 
-def build_app(estop_client, timeout_sec):
+def build_app(hostname, estop_client, timeout_sec):
     """Build the application window and configure the estop.
-    Params:
+    Args:
       timeout: Timeout of this estop endoint (seconds)
     """
     qt_app = QtWidgets.QApplication(sys.argv)
@@ -212,7 +208,7 @@ def build_app(estop_client, timeout_sec):
         myappid = 'bostondynamics.estop_button.1'  # arbitrary string
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-    gui = EstopGui(estop_client, timeout_sec, name="EStop")
+    gui = EstopGui(hostname, estop_client, timeout_sec, name="EStop")
     return (qt_app, gui)
 
 
@@ -225,8 +221,8 @@ def run_app(qt_app, button_window):
     return retcode
 
 
-def build_and_run_app(estop_client, options):
-    qt_app, button_window = build_app(estop_client, options.timeout)
+def build_and_run_app(hostname, estop_client, options):
+    qt_app, button_window = build_app(hostname, estop_client, options.timeout)
     if qt_app is None or button_window is None:
         exit(1)
 
@@ -274,7 +270,7 @@ def main(argv):
     # Create estop client for the robot
     estop_client = robot.ensure_client(EstopClient.default_service_name)
 
-    exit(build_and_run_app(estop_client, options))
+    exit(build_and_run_app(options.hostname, estop_client, options))
 
 
 if __name__ == '__main__':

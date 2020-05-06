@@ -1,0 +1,106 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "DirectoryRegistrationProto";
+
+import "bosdyn/api/directory.proto";
+import "bosdyn/api/header.proto";
+
+message RegisterServiceRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The endpoint at which this service may be contacted.
+    Endpoint endpoint = 2;
+
+    // The service to create. The name must not match any existing service.
+    ServiceEntry service_entry = 3;
+}
+
+message RegisterServiceResponse {
+    // Common response Header.
+    ResponseHeader header = 1;
+
+    // Return status.
+    enum Status {
+        // UNKNOWN should never be used.
+        //
+        // An internal DirectoryRegistrationService issue has happened if UNKNOWN is set.
+        STATUS_UNKNOWN = 0;
+
+        // Success.  The new service record is available.
+        STATUS_OK = 1;
+
+        // RegisterService failed because a service with this name already exists.
+        STATUS_ALREADY_EXISTS = 2;
+    }
+    Status status = 2;
+}
+
+// Unregister service based on name
+message UnregisterServiceRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The unique user-friendly name of the service.
+    string service_name = 2;
+}
+
+message UnregisterServiceResponse {
+    // Common response Header.
+    ResponseHeader header = 1;
+
+    // Return status.
+    enum Status {
+        // UNKNOWN should never be used.
+        //
+        // An internal DirectoryRegistrationService issue has happened if UNKNOWN is set.
+        STATUS_UNKNOWN = 0;
+
+        // Success.  The service record was deleted.
+        STATUS_OK = 1;
+
+        // The provided service name was not found.
+        STATUS_NONEXISTENT_SERVICE = 2;
+    }
+    Status status = 2;
+}
+
+message UpdateServiceRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The endpoint at which this service may be contacted.
+    Endpoint endpoint = 2;
+
+    // New record for service.  The name field is used as lookup key.
+    ServiceEntry service_entry = 3;
+}
+
+// Update service based on name
+message UpdateServiceResponse {
+    // Common response Header.
+    ResponseHeader header = 1;
+
+    // Return status.
+    enum Status {
+        // UNKNOWN should never be used.
+        //
+        // An internal DirectoryRegistrationService issue has happened if UNKNOWN is set.
+        STATUS_UNKNOWN = 0;
+
+        // Success.  The new service record is available.
+        STATUS_OK = 1;
+
+        // The provided service name was not found.
+        STATUS_NONEXISTENT_SERVICE = 2;
+    }
+    Status status = 2;
+}

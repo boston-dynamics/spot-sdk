@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.util &mdash; Spot 1.1.0 documentation</title>
+  <title>bosdyn.util &mdash; Spot 2.0.0 documentation</title>
   
 
   
@@ -17,34 +17,33 @@
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -58,7 +57,7 @@
             
             
               <div class="version">
-                1.1.0
+                2.0.0
               </div>
             
           
@@ -82,10 +81,10 @@
               
             
             
-              <p class="caption"><span class="caption-text">Services:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../client_index.html">Client API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../core_index.html">Core API</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../client_modules/client_index.html">Client SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../core_modules/core_index.html">Core SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mission_modules/mission_index.html">Mission SDK</a></li>
 </ul>
 
             
@@ -149,7 +148,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.util</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
@@ -179,10 +178,10 @@
     <span class="sd">&quot;&quot;&quot;Return a formatted string for a duration proto.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">      duration    A google.protobuf.Duration proto.</span>
+<span class="sd">      duration (google.protobuf.Duration): input duration</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">      A string with format &#39;{seconds}.{nanoseconds}&#39;.</span>
+<span class="sd">      string: format &#39;{seconds}.{nanoseconds}&#39;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">sign</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span> <span class="k">if</span> <span class="n">duration</span><span class="o">.</span><span class="n">seconds</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">duration</span><span class="o">.</span><span class="n">nanos</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
     <span class="n">seconds</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">duration</span><span class="o">.</span><span class="n">seconds</span><span class="p">)</span>
@@ -196,11 +195,22 @@
     <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}{:d}</span><span class="s1">.</span><span class="si">{:03d}</span><span class="s1"> sec&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">nanos</span> <span class="o">//</span> <span class="n">MILLION</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="duration_to_seconds"><a class="viewcode-back" href="../../core_modules/util.html#bosdyn.util.duration_to_seconds">[docs]</a><span class="k">def</span> <span class="nf">duration_to_seconds</span><span class="p">(</span><span class="n">duration</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a number of seconds, as a float, based on Duration protobuf fields.</span>
+
+<span class="sd">    If you want a precise duration, use the Duration class&#39;s ToTimedelta function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      duration (google.protobuf.Duration): input duration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">duration</span><span class="o">.</span><span class="n">seconds</span> <span class="o">+</span> <span class="n">duration</span><span class="o">.</span><span class="n">nanos</span> <span class="o">/</span> <span class="n">NSEC_PER_SEC</span></div>
+
+
 <div class="viewcode-block" id="timestamp_str"><a class="viewcode-back" href="../../core_modules/util.html#bosdyn.util.timestamp_str">[docs]</a><span class="k">def</span> <span class="nf">timestamp_str</span><span class="p">(</span><span class="n">timestamp</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a formatted string for a timestamp or a duration proto.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">      timestamp    A google.protobuf.Timestamp or google.protobuf.Durtation proto.</span>
+<span class="sd">      timestamp (google.protobuf.Timestamp or google.protobuf.Duration): input duration</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">      A string with format &#39;{seconds}.{nanoseconds}&#39;.</span>
@@ -229,7 +239,7 @@
     <span class="sd">&quot;&quot;&quot;Sets google.protobuf.Timestamp to point to the current time on the system clock.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">     timestamp_proto[out]:  a google.protobuf.Timestamp into which the time will be written</span>
+<span class="sd">     timestamp_proto[out] (google.protobuf.Timestamp): The proto into which the time will be written</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">set_timestamp_from_nsec</span><span class="p">(</span><span class="n">timestamp_proto</span><span class="p">,</span> <span class="n">now_nsec</span><span class="p">())</span></div>
 
@@ -246,7 +256,7 @@
     <span class="sd">&quot;&quot;&quot;Writes a timestamp as an integer of nanoseconds from the unix epoch into a Timestamp proto</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">     timestamp_proto[out]:  a google.protobuf.Timestamp into which the time will be written</span>
+<span class="sd">     timestamp_proto[out] (google.protobuf.Timestamp):  timestamp into which the time will be written</span>
 <span class="sd">     time_nsec[in]:         the time, as an integer of nanoseconds from the unix epoch</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">timestamp_proto</span><span class="o">.</span><span class="n">seconds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time_nsec</span> <span class="o">/</span> <span class="n">NSEC_PER_SEC</span><span class="p">)</span>
@@ -257,18 +267,27 @@
     <span class="sd">&quot;&quot;&quot;Returns a google.protobuf.Timestamp for a time from nanoseconds from the unix epoch.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">     time_nsec:         the time, as an integer of nanoseconds from the unix epoch</span>
+<span class="sd">     time_nsec (int): the time, as an integer of nanoseconds from the unix epoch</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">timestamp_proto</span> <span class="o">=</span> <span class="n">Timestamp</span><span class="p">()</span>
     <span class="n">set_timestamp_from_nsec</span><span class="p">(</span><span class="n">timestamp_proto</span><span class="p">,</span> <span class="n">time_nsec</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">timestamp_proto</span></div>
 
 
+<div class="viewcode-block" id="timestamp_to_sec"><a class="viewcode-back" href="../../core_modules/util.html#bosdyn.util.timestamp_to_sec">[docs]</a><span class="k">def</span> <span class="nf">timestamp_to_sec</span><span class="p">(</span><span class="n">timestamp_proto</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns floating point of seconds from the unix epoch from a Timestamp proto.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">     timestamp_proto (google.protobuf.Timestamp): input time</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">timestamp_proto</span><span class="o">.</span><span class="n">seconds</span> <span class="o">+</span> <span class="n">timestamp_proto</span><span class="o">.</span><span class="n">nanos</span> <span class="o">/</span> <span class="mf">1e9</span></div>
+
+
 <div class="viewcode-block" id="timestamp_to_nsec"><a class="viewcode-back" href="../../core_modules/util.html#bosdyn.util.timestamp_to_nsec">[docs]</a><span class="k">def</span> <span class="nf">timestamp_to_nsec</span><span class="p">(</span><span class="n">timestamp_proto</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns integer of nanoseconds from the unix epoch from a Timestamp proto.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">     timestamp_proto:  a google.protobuf.Timestamp proto</span>
+<span class="sd">     timestamp_proto (google.protobuf.Timestamp):  input time</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">timestamp_proto</span><span class="o">.</span><span class="n">seconds</span> <span class="o">*</span> <span class="n">BILLION</span> <span class="o">+</span> <span class="n">timestamp_proto</span><span class="o">.</span><span class="n">nanos</span></div>
 
@@ -277,8 +296,8 @@
     <span class="sd">&quot;&quot;&quot;Convert a google.protobuf.Timestamp to a Python datetime.datetime object.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">     timestamp_proto:  a google.protobuf.Timestamp</span>
-<span class="sd">     use_nanos:        use fractional seconds in proto (default=True)</span>
+<span class="sd">     timestamp_proto (google.protobuf.Timestamp): input time</span>
+<span class="sd">     use_nanos (bool):        use fractional seconds in proto (default=True)</span>
 <span class="sd">    Returns:</span>
 <span class="sd">     a datetime.datetime proto</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -291,7 +310,7 @@
     <span class="sd">&quot;&quot;&quot;Format a time in seconds as &#39;H:MM:SS&#39;</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">     seconds   number of seconds (will be truncted to integer value)</span>
+<span class="sd">     seconds:   number of seconds (will be truncted to integer value)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">isecs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
     <span class="n">seconds</span> <span class="o">=</span> <span class="n">isecs</span> <span class="o">%</span> <span class="mi">60</span>
@@ -304,7 +323,7 @@
     <span class="sd">&quot;&quot;&quot;Convert a distance in meters to a either xxx.xx m or xxx.xx km</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">      meters   distance in meters (float/int)</span>
+<span class="sd">      meters (float/int):   distance in meters</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">meters</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">:</span>
         <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1"> m&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meters</span><span class="p">)</span>
@@ -315,7 +334,7 @@
     <span class="sd">&quot;&quot;&quot;Returns a string representing a metric.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">     metric   bosdyn.api.Parameter proto</span>
+<span class="sd">     metric (bosdyn.api.Parameter):   metric description</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">metric</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s1">&#39;float_value&#39;</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">metric</span><span class="o">.</span><span class="n">units</span> <span class="o">==</span> <span class="s1">&#39;m&#39;</span><span class="p">:</span>
@@ -362,7 +381,7 @@
         <span class="sd">&quot;&quot;&quot;Edits timestamp_proto in place to convert it from the local clock to the robot_clock.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">          timestamp_proto[in/out]:  google.protobuf.Timestamp local system time time</span>
+<span class="sd">          timestamp_proto[in/out] (google.protobuf.Timestamp): local system time time</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">local_nsecs</span> <span class="o">=</span> <span class="n">timestamp_to_nsec</span><span class="p">(</span><span class="n">timestamp_proto</span><span class="p">)</span>
         <span class="n">timestamp_proto</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">robot_timestamp_from_local_nsecs</span><span class="p">(</span><span class="n">local_nsecs</span><span class="p">))</span></div></div>
@@ -378,7 +397,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Boston Dynamics
+        &copy; Copyright 2019, Boston Dynamics.
 
     </p>
   </div>
@@ -395,16 +414,36 @@
   
 
 
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

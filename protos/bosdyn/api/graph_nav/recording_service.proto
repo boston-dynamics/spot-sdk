@@ -1,0 +1,51 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.graph_nav;
+
+import "bosdyn/api/graph_nav/recording.proto";
+
+option java_outer_classname = "RecordingServiceProto";
+
+// Terminology:
+//  Chain -- a topological arrangement of waypoints/edges where every waypoint has
+//   at least 1 but at most 2 edges attached to it.
+//  Branch -- separate Chains can be joined together into a Branch at exactly one waypoint.
+//  Loop -- a single Chain may be connected back to itself, creating a Loop.
+// Recording should generally follow this pattern:
+// * Call StartRecording to begin recording a chain of waypoints.
+// * Call SetRecordingEnvironment to define persistent annotations for the edges and waypoints.
+// * While recording, call GetRecordStatus to get feedback on the state of the recording service.
+// * While recording, call GetMapStatus to determine what waypoints have been created.
+// * Optionally call CreateWaypoint to create waypoints in specific locations.
+// * Call StopRecording to pause the recording service and create branches.
+// * While recording (or after completing recording), call DownloadWaypoint/Edge Snapshot
+//   to download the large sensor data associated with the map.
+service GraphNavRecordingService {
+    // Start recording the map from the current localization.
+    // Creates a waypoint if you are starting to record. Otherwise, waits until you are
+    // sufficiently far away from the previous waypoint.
+    rpc StartRecording (StartRecordingRequest) returns (StartRecordingResponse) {}
+
+    // Stop recording the map from the current localization.
+    rpc StopRecording (StopRecordingRequest) returns (StopRecordingResponse) {}
+
+    // Create a new waypoint at the current localization.
+    rpc CreateWaypoint (CreateWaypointRequest) returns (CreateWaypointResponse) {}
+
+    // Set the environmnent and name prefix to use for the recording.
+    rpc SetRecordingEnvironment (SetRecordingEnvironmentRequest) returns (SetRecordingEnvironmentResponse) {}
+
+
+    // Create an arbitrary edge between two waypoints.
+    rpc CreateEdge (CreateEdgeRequest) returns (CreateEdgeResponse) {}
+
+    // Tells the client the internal state of the record service, and the structure of the map that has been recorded
+    // so far.
+    rpc GetRecordStatus (GetRecordStatusRequest) returns (GetRecordStatusResponse) {}
+}

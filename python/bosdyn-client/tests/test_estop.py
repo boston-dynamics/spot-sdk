@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -30,6 +30,9 @@ class MockEstopServicer(bosdyn.api.estop_service_pb2_grpc.EstopServiceServicer):
         super(MockEstopServicer, self).__init__()
         self._rpc_delay = rpc_delay
         self._challenge = 0
+
+    def RegisterEstopEndpoint(self, request, context):
+        """Create mock."""
 
     def EstopCheckIn(self, request, context):
         """Implement the EstopCheckIn function of the service.
@@ -162,6 +165,5 @@ def test_challenge_exc_async():
     fut = endpoint.allow_async()
     with pytest.raises(bosdyn.client.estop.EndpointUnknownError):
         fut.result()
-    # executed by the time result() returns. So to make this test less flaky, we insert a sleep.
     time.sleep(0.1)
     assert old_challenge + 1 == endpoint.get_challenge()

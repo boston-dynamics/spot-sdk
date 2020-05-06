@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -35,9 +35,6 @@ def main():
     robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
 
     # Make a robot state request
-    # -- Save OBJ and URDF to disk.
-    # -- Visualize the robot / joint angles in real time.
-    # -- Print specific pieces of state, rather than the whole thing
     request_fn = getattr(robot_state_client, commands[options.command])
     response = request_fn()
     print(response)

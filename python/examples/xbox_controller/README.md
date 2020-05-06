@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -36,8 +36,7 @@ Xbox Controller example allows users to control a Spot robot through an Xbox con
 | - Right Stick      | Turn                     |
 |                    |                          |
 | LB + RB + B        | E-stop                   |
-| Start              | Motor power              |
-| Guide              | Control                  |
+| Start              | Motor power & Control    |
 | Back               | Exit                     |
 
 
@@ -51,20 +50,20 @@ Currently, the Xbox Controller supports only Ubuntu OS. To install this example 
 - Change into example directory: `cd xbox_controller`
 - Create virtual environment (one time operation): `virtualenv -p {PATH_TO_PYTHON3_EXECUTABLE} venv`. The path to the executable is the output of `which python3` command, usually set to `/usr/bin/python3`.
 - Start virtual environment: `source venv/bin/activate`
-- Install dependencies: `pip install -r requirements.txt`
+- Install dependencies: `python -m pip install -r requirements.txtpip install -r requirements.txt`
 - Run the example using instructions in the next section
 - To exit the virtual environment, run `deactivate`
 
 ### Execution
 This example follows the common pattern for expected arguments. It needs the common arguments used to configure the SDK and connect to a Spot:
 - --username 
-- --password 
+- --password
 - --app-token 
 - hostname passed as the last argument
 
 **1)** The example needs to be run as sudo. To run a python program as sudo within a virtual environment, you need to specify the python executable in the virtualenv folder:
 
-`sudo venv/bin/python xbox_controller.py --user user --password password 192.168.80.3`
+`sudo venv/bin/python xbox_controller.py --user USER --password PASSWORD ROBOT_IP`
 
 **2)** After the controller is connected, the example prints a status window:
 ```
@@ -91,4 +90,6 @@ X       X       X
 
 **6)** The robot is now ready to be controlled.
 
-**7)** To exit and power off the robot, press the `Back` button.
+**7)** To E-stop the robot at any time, press the E-stop button combination (LB + RB + B)
+
+**8)** To exit and power off the robot, press the `Back` button.

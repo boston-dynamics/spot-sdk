@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -15,7 +15,6 @@ class XboxJoystick:
     def __init__(self):
         self.connect_status = False  #will be set to True once controller is detected and stays on
 
-
     def connected(self) -> bool:
         """Return a status of True, when the controller is actively connected.
 
@@ -30,7 +29,6 @@ class XboxJoystick:
         """
         return False
 
-
     def left_x(self, deadzone=4000) -> float:
         """Returns left stick X axis value scaled between -1.0 (left) and 1.0 (right) with deadzone
         tolerance correction.
@@ -43,7 +41,6 @@ class XboxJoystick:
 
         return None
 
-
     def left_y(self, deadzone=4000) -> float:
         """Returns left stick Y axis value scaled between -1.0 (down) and 1.0 (up).
 
@@ -54,7 +51,6 @@ class XboxJoystick:
         """
 
         return None
-
 
     def right_x(self, deadzone=4000) -> float:
         """Returns right stick X axis value scaled between -1.0 (left) and 1.0 (right).
@@ -67,7 +63,6 @@ class XboxJoystick:
 
         return None
 
-
     def right_y(self, deadzone=4000) -> float:
         """Returns right stick Y axis value scaled between -1.0 (down) and 1.0 (up).
 
@@ -79,14 +74,12 @@ class XboxJoystick:
 
         return None
 
-
     def axis_scale(self, raw, deadzone) -> float:
         """Returns scaled raw (-32768 to +32767) axis value with deadzone correcion. Deadzone
          is +/- range of values to consider to be center stick (ie. 0.0).
         """
 
         return None
-
 
     def dpad_up(self) -> bool:
         """Returns Dpad Up button status.
@@ -97,7 +90,6 @@ class XboxJoystick:
 
         return None
 
-
     def dpad_down(self) -> bool:
         """Returns Dpad Down button status.
 
@@ -106,7 +98,6 @@ class XboxJoystick:
         """
 
         return None
-
 
     def dpad_left(self) -> bool:
         """Returns Dpad Left button status.
@@ -117,7 +108,6 @@ class XboxJoystick:
 
         return None
 
-
     def dpad_right(self) -> bool:
         """Returns Dpad Right button status.
 
@@ -126,7 +116,6 @@ class XboxJoystick:
         """
 
         return None
-
 
     def back(self) -> bool:
         """Returns Back button status.
@@ -137,17 +126,6 @@ class XboxJoystick:
 
         return None
 
-
-    def guide(self) -> bool:
-        """Returns Guide button status.
-
-        Returns:
-            True (pressed) or False (not pressed).
-        """
-
-        return None
-
-
     def start(self) -> bool:
         """Returns Start button status.
 
@@ -156,7 +134,6 @@ class XboxJoystick:
         """
 
         return None
-
 
     def left_thumbstick(self) -> bool:
         """Returns Left Thumbstick button status.
@@ -167,7 +144,6 @@ class XboxJoystick:
 
         return None
 
-
     def right_thumbstick(self) -> bool:
         """Returns Right Thumbstick button status.
 
@@ -176,7 +152,6 @@ class XboxJoystick:
         """
 
         return None
-
 
     def A(self) -> bool:
         """Returns A button status.
@@ -187,7 +162,6 @@ class XboxJoystick:
 
         return None
 
-
     def B(self) -> bool:
         """Returns B button status.
 
@@ -196,7 +170,6 @@ class XboxJoystick:
         """
 
         return None
-
 
     def X(self) -> bool:
         """Returns X button status.
@@ -207,7 +180,6 @@ class XboxJoystick:
 
         return None
 
-
     def Y(self) -> bool:
         """Returns Y button status.
 
@@ -216,7 +188,6 @@ class XboxJoystick:
         """
 
         return None
-
 
     def left_bumper(self) -> bool:
         """Returns Left Bumper button status.
@@ -227,7 +198,6 @@ class XboxJoystick:
 
         return None
 
-
     def right_bumper(self) -> bool:
         """Returns Right Bumper button status.
 
@@ -236,7 +206,6 @@ class XboxJoystick:
         """
 
         return None
-
 
     def left_trigger(self) -> bool:
         """Returns Left Trigger button status.
@@ -247,7 +216,6 @@ class XboxJoystick:
 
         return None
 
-
     def right_trigger(self) -> bool:
         """Returns Right Trigger button status.
 
@@ -256,7 +224,6 @@ class XboxJoystick:
         """
 
         return None
-
 
     def close(self):
         """Cleans up by ending any subprocesses.

@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,9 +13,11 @@ import bosdyn.client.channel
 
 from .auth import AuthClient
 from .directory import DirectoryClient
-from .exceptions import NonexistentAuthorityError
+from .directory_registration import DirectoryRegistrationClient
+from .exceptions import Error
 from .lease import LeaseWallet
 from .log_annotation import LogAnnotationClient
+from .payload_registration import PayloadRegistrationClient
 from .power import PowerClient
 from .power import power_on as pkg_power_on
 from .power import power_off as pkg_power_off
@@ -32,13 +34,65 @@ _LOGGER = logging.getLogger(__name__)
 _DEFAULT_SECURE_CHANNEL_PORT = 443
 
 
+class RobotError(Error):
+    """General class of errors to handle non-response non-grpc errors."""
+
+
+
+
+class UnregisteredServiceError(RobotError):
+    """Full service definition has not been registered in the robot instance."""
+
+
+class UnregisteredServiceNameError(UnregisteredServiceError):
+    """Service name has not been registered in the robot instance."""
+
+    def __init__(self, service_name):
+        self.service_name = service_name
+
+    def __str__(self):
+        return 'Service name "{}" has not been registered'.format(self.service_name)
+
+
+class UnregisteredServiceTypeError(UnregisteredServiceError):
+    """Service type has not been registered in the robot instance."""
+
+    def __init__(self, service_type):
+        self.service_type = service_type
+
+    def __str__(self):
+        return 'Service type "{}" has not been registered'.format(self.service_type)
+
+
 class Robot(object):
     """Settings common to one user's access to one robot.
+
+    This is the main point of access to all client functionality.  The ensure_client member is used
+    to get any client to a service exposed on the robot.  Additionally, many helpers are exposed to
+    provide commonly used functionality without explicitly accessing a particular client object.
+
+    Note that any rpc call made to the robot can raise an RpcError subclass if there are errors
+    communicating with the robot.  Additionally, ResponseErrors will be raised if there was an error
+    acting on the request itself.  An InvalidRequestError indicates a programming error, where the
+    request was malformed in some way.  InvalidRequestErrors will never be thrown except in the
+    case of client bugs.
 
     See also Sdk and BaseClient
     """
 
-    def __init__(self, name=None):
+    _bootstrap_service_authorities = {
+        AuthClient.default_service_name: 'auth.spot.robot',
+        DirectoryClient.default_service_name: 'api.spot.robot',
+        DirectoryRegistrationClient.default_service_name: 'api.spot.robot',
+        PayloadRegistrationClient.default_service_name: 'payload-registration.spot.robot',
+        RobotIdClient.default_service_name: 'id.spot.robot',
+    }
+
+
+    def __init__(
+            self,
+            name=None
+    ):
         self._name = name
         self.address = None
         self.serial_number = None
@@ -50,6 +104,7 @@ class Robot(object):
         self.service_clients_by_name = {}
         self.channels_by_authority = {}
         self.authorities_by_name = {}
+        self._robot_id = None
 
         # Things usually updated from an Sdk object.
         self.service_client_factories_by_type = {}
@@ -64,9 +119,14 @@ class Robot(object):
     def __del__(self):
         if self._time_sync_thread:
             self._time_sync_thread.stop()
-
         if self._token_manager:
             self._token_manager.stop()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.__del__()
+
+    def __enter__(self):
+        return self
 
     def _get_token_id(self, username):
         return '{}.{}'.format(self.serial_number, username)
@@ -76,7 +136,11 @@ class Robot(object):
 
            This method also instantiates a token manager to refresh the
            user token.  Furthermore, it should only be called after the
-           token has been retrieved."""
+           token has been retrieved.
+
+            Raises:
+                  token_cache.WriteFailedError: Error saving to the cache.
+        """
         self._token_manager = self._token_manager or TokenManager(self)
 
         self._current_user = username or self._current_user
@@ -105,82 +169,186 @@ class Robot(object):
 
     def ensure_client(self, service_name, channel=None):
         """Ensure a Client for a given service.
+        Note: If a new service has been registered with the directory service, this may raise
+        UnregisteredServiceNameError when trying to connect to it until sync_with_directory() is
+        called.
 
         Args:
-            service_name -- The name of the service.
-        Keyword args:
-            channel -- gRPC channel object to use. Default None, in which case the Sdk data is used
-                to generate a channel
-        Throws NonexistentServiceError if the service is not found.
+            service_name: The name of the service.
+            channel: gRPC channel object to use. Default None, in which case the Sdk data
+                       is used to generate a channel. The channel will become associated with
+                       the client.
+
+        Raises:
+            UnregisteredServiceNameError: The service is not known.
+            UnregisteredServiceTypeError: The client type for this service was never registered.
+            RpcError:                There was an error communicating with the robot.
         """
+        # Check if a client with this name is already running
         if service_name in self.service_clients_by_name:
             return self.service_clients_by_name[service_name]
 
-        service_type = self.service_type_by_name[service_name]
-        creation_function = self.service_client_factories_by_type[service_type]
+        # Create an instance of the class
+        try:
+            service_type = self.service_type_by_name[service_name]
+        except KeyError:
+            raise UnregisteredServiceNameError(service_name)
+        try:
+            creation_function = self.service_client_factories_by_type[service_type]
+        except KeyError:
+            raise UnregisteredServiceTypeError(service_type)
+
         client = creation_function()
-        self.logger.debug('Created client for %s with %s', service_name, creation_function)
+        self.logger.debug('Created client for %s', service_name)
+
         if channel is None:
-            try:
-                authority = self.authorities_by_name.get(service_name, client.default_authority)
-            except AttributeError:
-                raise NonexistentAuthorityError(
-                    'Cannot determine authority from service name "{}" or client "{}"'.format(
-                        service_type, client))
-            channel = self.ensure_channel(authority)
+            channel = self.ensure_channel(service_name)
+
         client.channel = channel
         client.update_from(self)
+        # Track service clients that have been created to avoid duplicate clients
         self.service_clients_by_name[service_name] = client
         return client
 
-    def ensure_channel(self, authority):
+    def get_cached_robot_id(self):
+        """Return the RobotId proto for this robot, querying it from the robot if not yet cached.
+
+        Raises:
+            RpcError: There as a problem communicating with the robot.
+        """
+        if not self._robot_id:
+            robot_id_client = self.ensure_client('robot-id')
+            self._robot_id = robot_id_client.get_id()
+        return self._robot_id
+
+    def _should_send_app_token_on_each_request(self):
+        robot_id = self.get_cached_robot_id()
+        robot_software_version = robot_id.software_release.version
+        # Send app tokens on 1.1.x and below versions of robot software to be backwards
+        # compatible
+        if robot_software_version.major_version <= 1 and robot_software_version.minor_version <= 1:
+            return True
+        # Otherwise, the robot software is recent enough to not require app tokens on every
+        # request. Don't add them to help save data usage.
+        return False
+
+
+    def ensure_channel(self, service_name):
+        """Verify the right information exists before calling the ensure_secure_channel
+        method.
+
+        Args:
+            service_name: Name of the service in the directory.
+        Returns:
+            Existing channel if found, or newly created channel if not found.
+        Raises:
+            RpcError: There was a problem communicating with the robot.
+            UnregisteredServiceNameError: service_name is unknown.
+        """
+
+
+        # If a specific channel was not set, look up the authority so we can get a channel.
+        # Get the authority from either
+        #   1. The bootstrap authority for this client_class, if available
+        #   2. The authority of a registered service with matching service_name in DirectoryService
+        authority = Robot._bootstrap_service_authorities.get(service_name)
+
+        # Attempt to get authority from the robot Directory Service by name
+        if not authority:
+            authority = self.authorities_by_name.get(service_name)
+            if not authority:
+                self.sync_with_directory()
+                authority = self.authorities_by_name.get(service_name)
+
+        # If authority still not known, then the service name has not been registered.
+        if not authority:
+            raise UnregisteredServiceNameError(service_name)
+
+        skip_app_token_check = service_name == 'robot-id'
+        return self.ensure_secure_channel(authority, skip_app_token_check)
+
+    def ensure_secure_channel(self, authority, skip_app_token_check=False):
         """Get the channel to access the given authority, creating it if it doesn't exist."""
         if authority in self.channels_by_authority:
             return self.channels_by_authority[authority]
 
+        if skip_app_token_check:
+            should_send_app_token = False
+        else:
+            should_send_app_token = self._should_send_app_token_on_each_request()
+
         # Channel doesn't exist, so create it.
         port = _DEFAULT_SECURE_CHANNEL_PORT
         creds = bosdyn.client.channel.create_secure_channel_creds(
-            self.cert, lambda: (self.app_token, self.user_token))
+            self.cert, lambda: (self.app_token, self.user_token), should_send_app_token)
         channel = bosdyn.client.channel.create_secure_channel(self.address, port, creds, authority)
-        self.logger.debug('Created channel to %s at port %i', self.address, port)
+        self.logger.debug('Created channel to %s at port %i with authority %s', self.address, port,
+                          authority)
         self.channels_by_authority[authority] = channel
         return channel
 
-    def authenticate(self, username, password, timeout=None):
+
+    def authenticate(
+            self,
+            username,
+            password,
+            timeout=None
+    ):
         """Authenticate to this Robot with the username/password at the given service.
 
-           This method may throw TokenCache.WriteFailedError."""
+            Raises:
+                InvalidLoginError: The username and/or password are not valid.
+                token_cache.WriteFailedError: Authentication succeeded, but failed to update the
+                    local token_cache.
+                RpcError: There was a problem communicating with the robot.
+        """
         # We cannot use the directory for the auth service until we are authenticated, so hard-code
         # the authority name.
-        auth_client = self.ensure_client(AuthClient.default_service_name)
-        self.user_token = auth_client.auth(username, password, timeout=timeout)
+        auth_channel = self.ensure_secure_channel(
+            Robot._bootstrap_service_authorities[AuthClient.default_service_name])
+        auth_client = self.ensure_client(AuthClient.default_service_name, auth_channel)
+        self.user_token = auth_client.auth(username, password, self.app_token, timeout=timeout)
 
         self._update_token_cache(username)
 
     def authenticate_with_token(self, token, timeout=None):
         """Authenticate to this Robot with the token at the given service.
 
-           This method may throw TokenCache.WriteFailedError."""
+            Raises:
+                InvalidTokenError: The token was incorrectly formed, for the wrong robot, or expired.
+                token_cache.WriteFailedError: Authentication succeeded, but failed to update the
+                    local token_cache.
+                RpcError: There was a problem communicating with the robot.
+        """
         # We cannot use the directory for the auth service until we are authenticated, so hard-code
         # the authority name.
         auth_client = self.ensure_client(AuthClient.default_service_name)
-        self.user_token = auth_client.auth_with_token(token, timeout=timeout)
+        self.user_token = auth_client.auth_with_token(token, self.app_token, timeout=timeout)
 
         self._update_token_cache()
 
     def authenticate_from_cache(self, username, timeout=None):
         """Authenticate to this Robot with a cached token at the given service.
 
-           This method may throw TokenCache.NotInCacheError or TokenCache.WriteFailedError."""
+            Raises:
+                token_cache.NotInCacheError: No token found for this robot/username.
+                token_cache.WriteFailedError: Authentication succeeded, but failed to update the
+                    local token_cache.
+        """
         token = self.token_cache.read(self._get_token_id(username))
 
         # We cannot use the directory for the auth service until we are authenticated, so hard-code
         # the authority name.
         auth_client = self.ensure_client(AuthClient.default_service_name)
-        self.user_token = auth_client.auth_with_token(token, timeout=timeout)
+        self.user_token = auth_client.auth_with_token(token, self.app_token, timeout=timeout)
 
         self._update_token_cache(username)
+
+    def update_user_token(self, user_token):
+        """Update this Robot with an outside user token."""
+        self.user_token = user_token
+
+        self._update_token_cache()
 
     def get_cached_usernames(self):
         """Return an ordered list of usernames queryable from the cache."""
@@ -197,16 +365,25 @@ class Robot(object):
         id_client = self.ensure_client(id_service_name)
         return id_client.get_id()
 
-    def list_services(self, directory_service_name=DirectoryClient.default_service_name):
+    def list_services(self, directory_service_name=DirectoryClient.default_service_name,
+                      directory_service_authority=_bootstrap_service_authorities[
+                          DirectoryClient.default_service_name]):
         """Get all the available services on the robot."""
-        dir_client = self.ensure_client(directory_service_name)
+        directory_channel = self.ensure_secure_channel(directory_service_authority)
+        dir_client = self.ensure_client(directory_service_name, directory_channel)
         return dir_client.list()
 
-    def sync_with_directory(self):
-        remote_services = self.list_services()
+    def sync_with_directory(self, directory_service_name=DirectoryClient.default_service_name,
+                            directory_service_authority=_bootstrap_service_authorities[
+                                DirectoryClient.default_service_name]):
+        """Update local state with all available services on the robot."""
+        remote_services = self.list_services(
+            directory_service_name=directory_service_name,
+            directory_service_authority=directory_service_authority)
         for service in remote_services:
             self.authorities_by_name[service.name] = service.authority
             self.service_type_by_name[service.name] = service.type
+
 
     def start_time_sync(self):
         """Start time sync thread if needed."""
@@ -215,6 +392,11 @@ class Robot(object):
                 self.ensure_client(TimeSyncClient.default_service_name))
         if self._time_sync_thread.stopped:
             self._time_sync_thread.start()
+
+    def stop_time_sync(self):
+        """Stop the time sync thread if needed."""
+        if not self._time_sync_thread.stopped:
+            self._time_sync_thread.stop()
 
     @property
     def time_sync(self):
@@ -226,18 +408,18 @@ class Robot(object):
         """Send an operator comment to the robot for the robot's log files.
 
         Args:
-           comment (string):      Operator comment text to be added to the log.
-           timestamp_secs:        Comment time in seconds since the unix epoch (client clock).
-                                  If set, this is converted to robot time when sent to the robot.
-                                  If None and time sync is available, the current time is converted
-                                   to robot time and sent as the comment timestamp.
-                                  If None and time sync is unavailable, the logged timestamp will
-                                   be the time the robot receives this message.
-           timeout:               Number of seconds to wait for RPC response.
+           comment (string):        Operator comment text to be added to the log.
+           timestamp_secs (float):  Comment time in seconds since the unix epoch (client clock).
+                                    If set, this is converted to robot time when sent to the robot.
+                                    If None and time sync is available, the current time is converted
+                                    to robot time and sent as the comment timestamp.
+                                    If None and time sync is unavailable, the logged timestamp will
+                                    be the time the robot receives this message.
+           timeout (float):         Number of seconds to wait for RPC response.
 
         Raises:
-          NotReadyError   |timestamp_secs| given, but time-sync thread is not ready.
-          Timeout         |timestamp_secs| given, but time-sync has not been achieved.
+          NotEstablishedError: timestamp_secs given, but time-sync has not been achieved.
+          RpcError:            A problem occurred sending the comment to the robot.
         """
         client = self.ensure_client(LogAnnotationClient.default_service_name)
         if timestamp_secs is None:
@@ -259,7 +441,9 @@ class Robot(object):
             timeout: Number of seconds to wait for RPC response.
 
         Raises:
-            Error: On any failure --> Lots to list here.
+            PowerResponseError: Problem with the power on sequence.
+            RpcError:           Problem communicating with the robot.
+            power_client.CommandTimedOutError: The robot did not power on within timeout_sec
         """
         service_name = PowerClient.default_service_name
         client = self.ensure_client(service_name)
@@ -277,7 +461,12 @@ class Robot(object):
             timeout: Number of seconds to wait for RPC response.
 
         Raises:
-            Error: On any failure --> Lots to list here.
+            RpcError:                          Problem communicating with the robot.
+            power_client.CommandTimedOutError: The robot did not power off within timeout_sec
+            PowerResponseError:        If cut_immediately, raised on problems with the power on
+                sequence.
+            RobotCommandResponseError: If not cut_immediately, raised on problems with the safe
+                power off.
         """
         if cut_immediately:
             power_client = self.ensure_client(PowerClient.default_service_name)
@@ -301,7 +490,9 @@ class Robot(object):
             bool: Returns True if robot is powered on, False otherwise.
 
         Raises:
-            Error: On any failure --> Lots to list here.
+            RpcError: A problem occurred trying to communicate with the robot.
         """
         state_client = self.ensure_client(RobotStateClient.default_service_name)
         return pkg_is_powered_on(state_client, timeout=timeout)
+
+

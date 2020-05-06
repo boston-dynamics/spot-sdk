@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -28,10 +28,10 @@ def duration_str(duration):
     """Return a formatted string for a duration proto.
 
     Args:
-      duration    A google.protobuf.Duration proto.
+      duration (google.protobuf.Duration): input duration
 
     Returns:
-      A string with format '{seconds}.{nanoseconds}'.
+      string: format '{seconds}.{nanoseconds}'.
     """
     sign = '-' if duration.seconds < 0 or duration.nanos < 0 else ""
     seconds = abs(duration.seconds)
@@ -45,11 +45,22 @@ def duration_str(duration):
     return '{}{:d}.{:03d} sec'.format(sign, seconds, nanos // MILLION)
 
 
+def duration_to_seconds(duration):
+    """Return a number of seconds, as a float, based on Duration protobuf fields.
+
+    If you want a precise duration, use the Duration class's ToTimedelta function.
+
+    Args:
+      duration (google.protobuf.Duration): input duration
+    """
+    return duration.seconds + duration.nanos / NSEC_PER_SEC
+
+
 def timestamp_str(timestamp):
     """Return a formatted string for a timestamp or a duration proto.
 
     Args:
-      timestamp    A google.protobuf.Timestamp or google.protobuf.Durtation proto.
+      timestamp (google.protobuf.Timestamp or google.protobuf.Duration): input duration
 
     Returns:
       A string with format '{seconds}.{nanoseconds}'.
@@ -78,7 +89,7 @@ def set_timestamp_from_now(timestamp_proto):
     """Sets google.protobuf.Timestamp to point to the current time on the system clock.
 
     Args:
-     timestamp_proto[out]:  a google.protobuf.Timestamp into which the time will be written
+     timestamp_proto[out] (google.protobuf.Timestamp): The proto into which the time will be written
     """
     set_timestamp_from_nsec(timestamp_proto, now_nsec())
 
@@ -95,7 +106,7 @@ def set_timestamp_from_nsec(timestamp_proto, time_nsec):
     """Writes a timestamp as an integer of nanoseconds from the unix epoch into a Timestamp proto
 
     Args:
-     timestamp_proto[out]:  a google.protobuf.Timestamp into which the time will be written
+     timestamp_proto[out] (google.protobuf.Timestamp):  timestamp into which the time will be written
      time_nsec[in]:         the time, as an integer of nanoseconds from the unix epoch
     """
     timestamp_proto.seconds = int(time_nsec / NSEC_PER_SEC)
@@ -106,18 +117,27 @@ def nsec_to_timestamp(time_nsec):
     """Returns a google.protobuf.Timestamp for a time from nanoseconds from the unix epoch.
 
     Args:
-     time_nsec:         the time, as an integer of nanoseconds from the unix epoch
+     time_nsec (int): the time, as an integer of nanoseconds from the unix epoch
     """
     timestamp_proto = Timestamp()
     set_timestamp_from_nsec(timestamp_proto, time_nsec)
     return timestamp_proto
 
 
+def timestamp_to_sec(timestamp_proto):
+    """Returns floating point of seconds from the unix epoch from a Timestamp proto.
+
+    Args:
+     timestamp_proto (google.protobuf.Timestamp): input time
+    """
+    return timestamp_proto.seconds + timestamp_proto.nanos / 1e9
+
+
 def timestamp_to_nsec(timestamp_proto):
     """Returns integer of nanoseconds from the unix epoch from a Timestamp proto.
 
     Args:
-     timestamp_proto:  a google.protobuf.Timestamp proto
+     timestamp_proto (google.protobuf.Timestamp):  input time
     """
     return timestamp_proto.seconds * BILLION + timestamp_proto.nanos
 
@@ -126,8 +146,8 @@ def timestamp_to_datetime(timestamp_proto, use_nanos=True):
     """Convert a google.protobuf.Timestamp to a Python datetime.datetime object.
 
     Args:
-     timestamp_proto:  a google.protobuf.Timestamp
-     use_nanos:        use fractional seconds in proto (default=True)
+     timestamp_proto (google.protobuf.Timestamp): input time
+     use_nanos (bool):        use fractional seconds in proto (default=True)
     Returns:
      a datetime.datetime proto
     """
@@ -140,7 +160,7 @@ def secs_to_hms(seconds):
     """Format a time in seconds as 'H:MM:SS'
 
     Args:
-     seconds   number of seconds (will be truncted to integer value)
+     seconds:   number of seconds (will be truncted to integer value)
     """
     isecs = int(seconds)
     seconds = isecs % 60
@@ -153,7 +173,7 @@ def distance_str(meters):
     """Convert a distance in meters to a either xxx.xx m or xxx.xx km
 
     Args:
-      meters   distance in meters (float/int)
+      meters (float/int):   distance in meters
     """
     if meters < 1000:
         return '{:.2f} m'.format(meters)
@@ -164,7 +184,7 @@ def format_metric(metric):
     """Returns a string representing a metric.
 
     Args:
-     metric   bosdyn.api.Parameter proto
+     metric (bosdyn.api.Parameter):   metric description
     """
     if metric.HasField('float_value'):
         if metric.units == 'm':
@@ -211,7 +231,7 @@ class RobotTimeConverter(object):
         """Edits timestamp_proto in place to convert it from the local clock to the robot_clock.
 
         Args:
-          timestamp_proto[in/out]:  google.protobuf.Timestamp local system time time
+          timestamp_proto[in/out] (google.protobuf.Timestamp): local system time time
         """
         local_nsecs = timestamp_to_nsec(timestamp_proto)
         timestamp_proto.CopyFrom(self.robot_timestamp_from_local_nsecs(local_nsecs))

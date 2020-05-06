@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,9 +13,10 @@ from bosdyn.api import image_pb2
 import bosdyn.client
 import bosdyn.client.util
 from bosdyn.client.image import ImageClient
-
+from bosdyn.api import image_pb2
 import cv2
 import numpy as np
+
 
 def main(argv):
     # Parse args
@@ -43,6 +44,7 @@ def main(argv):
     if options.image_sources:
         # Capture and save images to disk
         image_responses = image_client.get_image_from_sources(options.image_sources)
+
         for image in image_responses:
             if image.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_DEPTH_U16:
                 dtype = np.uint16

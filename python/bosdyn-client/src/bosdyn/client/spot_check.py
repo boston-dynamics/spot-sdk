@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -98,7 +98,6 @@ class CameraCalibrationTimedOutError(Exception):
 
 class SpotCheckClient(BaseClient):
     """A client for verifying robot health and running calibration routines."""
-    default_authority = 'check.spot.robot'
     default_service_name = 'spot-check'
     service_type = 'bosdyn.api.spot.SpotCheckService'
 
@@ -177,7 +176,7 @@ def run_spot_check(spot_check_client, lease, timeout_sec=120, update_frequency=0
         SpotCheckFeedbackResponse: Joint and camera check and cal results.
 
     Raises:
-        Error: Throws on any error failure.
+        bosdyn.client.exceptions.Error: Throws on any error failure.
     """
     start_time = time.time()
     end_time = start_time + timeout_sec
@@ -218,7 +217,7 @@ def run_camera_calibration(spot_check_client, lease, timeout_sec=1200, update_fr
         verbose (bool): Periodically print status.
 
     Raises:
-        Error: Throws on any calibration failure.
+        bosdyn.client.exceptions.Error: Throws on any calibration failure.
     """
     start_time = time.time()
     end_time = start_time + timeout_sec

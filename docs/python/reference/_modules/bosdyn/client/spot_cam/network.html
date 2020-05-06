@@ -1,0 +1,321 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bosdyn.client.spot_cam.network &mdash; Spot 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Spot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../client_modules/client_index.html">Client SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../core_modules/core_index.html">Core SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../mission_modules/mission_index.html">Mission SDK</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bosdyn.client.spot_cam.network</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bosdyn.client.spot_cam.network</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;For clients to the Spot CAM Network service.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">struct</span> 
+
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">handle_common_header_errors</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.spot_cam</span> <span class="kn">import</span> <span class="n">service_pb2_grpc</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.spot_cam</span> <span class="kn">import</span> <span class="n">network_pb2</span>
+
+<div class="viewcode-block" id="NetworkClient"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/network.html#bosdyn.client.spot_cam.network.NetworkClient">[docs]</a><span class="k">class</span> <span class="nc">NetworkClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A client calling Spot CAM Network services such as ICE Candidates, SSL certs / Keys etc.</span>
+
+<span class="sd">    Note: Interactive Connectivity Establishment (ICE) is a protocol which lets two devices use</span>
+<span class="sd">    an intermediary to exchange offers and answers even if the two devices are separated</span>
+<span class="sd">    by Network Address Translation (NAT).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;spot-cam-network&#39;</span>
+    <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.spot_cam.NetworkService&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">NetworkClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_pb2_grpc</span><span class="o">.</span><span class="n">NetworkServiceStub</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NetworkClient.get_ice_configuration"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/network.html#bosdyn.client.spot_cam.network.NetworkClient.get_ice_configuration">[docs]</a>    <span class="k">def</span> <span class="nf">get_ice_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set ICE configuration on Spot CAM. This overrides all existing configured servers&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">network_pb2</span><span class="o">.</span><span class="n">GetICEConfigurationRequest</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetICEConfiguration</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ice_servers_from_response</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">_ice_network_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NetworkClient.get_ice_configuration_async"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/network.html#bosdyn.client.spot_cam.network.NetworkClient.get_ice_configuration_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_ice_configuration_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_ice_configuration()&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">network_pb2</span><span class="o">.</span><span class="n">GetICEConfigurationRequest</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetICEConfiguration</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">_ice_servers_from_response</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">_ice_network_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NetworkClient.get_network_settings"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/network.html#bosdyn.client.spot_cam.network.NetworkClient.get_network_settings">[docs]</a>    <span class="k">def</span> <span class="nf">get_network_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get Network configuration from Spot CAM&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">network_pb2</span><span class="o">.</span><span class="n">GetNetworkSettingsRequest</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetNetworkSettings</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_network_settings_from_response</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">_ice_network_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NetworkClient.get_network_settings_async"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/network.html#bosdyn.client.spot_cam.network.NetworkClient.get_network_settings_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_network_settings_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_network_settings()&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">network_pb2</span><span class="o">.</span><span class="n">GetNetworkSettingsRequest</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetNetworkSettings</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_network_settings_from_response</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">_ice_network_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NetworkClient.set_ice_configuration"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/network.html#bosdyn.client.spot_cam.network.NetworkClient.set_ice_configuration">[docs]</a>    <span class="k">def</span> <span class="nf">set_ice_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ice_servers</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get ICE configuration from Spot CAM&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_ice_configuration_request</span><span class="p">(</span><span class="n">ice_servers</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetICEConfiguration</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">_ice_network_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NetworkClient.set_ice_configuration_async"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/network.html#bosdyn.client.spot_cam.network.NetworkClient.set_ice_configuration_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_ice_configuration_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ice_servers</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of set_ice_configuration()&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_ice_configuration_request</span><span class="p">(</span><span class="n">ice_servers</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetICEConfiguration</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">_ice_network_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NetworkClient.set_network_settings"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/network.html#bosdyn.client.spot_cam.network.NetworkClient.set_network_settings">[docs]</a>    <span class="k">def</span> <span class="nf">set_network_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_address</span><span class="p">,</span> <span class="n">netmask</span><span class="p">,</span> <span class="n">gateway</span><span class="p">,</span> <span class="n">mtu</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set Network configuration on Spot CAM&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_SetNetworkSettingsRequest</span><span class="p">(</span><span class="n">ip_address</span><span class="p">,</span> <span class="n">netmask</span><span class="p">,</span> <span class="n">gateway</span><span class="p">,</span> <span class="n">mtu</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetNetworkSettings</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_network_settings_from_response</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">_ice_network_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NetworkClient.set_network_settings_async"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/network.html#bosdyn.client.spot_cam.network.NetworkClient.set_network_settings_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_network_settings_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_address</span><span class="p">,</span> <span class="n">netmask</span><span class="p">,</span> <span class="n">gateway</span><span class="p">,</span> <span class="n">mtu</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of set_network_settings()&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_SetNetworkSettingsRequest</span><span class="p">(</span><span class="n">ip_address</span><span class="p">,</span> <span class="n">netmask</span><span class="p">,</span> <span class="n">gateway</span><span class="p">,</span> <span class="n">mtu</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetNetworkSettings</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_network_settings_from_response</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">_ice_network_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_build_SetNetworkSettingsRequest</span><span class="p">(</span><span class="n">ip_address</span><span class="p">,</span> <span class="n">netmask</span><span class="p">,</span> <span class="n">gateway</span><span class="p">,</span> <span class="n">mtu</span><span class="p">):</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">network_pb2</span><span class="o">.</span><span class="n">SetNetworkSettingsRequest</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;!I&quot;</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">inet_aton</span><span class="p">(</span><span class="n">ip_address</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">netmask</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;!I&quot;</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">inet_aton</span><span class="p">(</span><span class="n">netmask</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;!I&quot;</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">inet_aton</span><span class="p">(</span><span class="n">gateway</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">mtu</span><span class="p">:</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">mtu</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">mtu</span>
+
+        <span class="k">return</span> <span class="n">request</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_set_ice_configuration_request</span><span class="p">(</span><span class="n">ice_servers</span><span class="p">):</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">network_pb2</span><span class="o">.</span><span class="n">SetICEConfigurationRequest</span><span class="p">()</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">servers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">ice_servers</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">request</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_ice_servers_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">servers</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_network_settings_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">settings</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="nd">@handle_common_header_errors</span>
+    <span class="k">def</span> <span class="nf">_ice_network_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>  <span class="c1"># pylint: disable=unused-argument</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Boston Dynamics.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

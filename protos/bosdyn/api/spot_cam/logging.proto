@@ -1,0 +1,193 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.spot_cam;
+
+option java_outer_classname = "LoggingProto";
+
+import "bosdyn/api/spot_cam/camera.proto";
+import "bosdyn/api/header.proto";
+import "bosdyn/api/data_chunk.proto";
+import "bosdyn/api/image.proto";
+import "bosdyn/api/geometry.proto";
+import "google/protobuf/timestamp.proto";
+
+message Logpoint {
+    enum RecordType {
+        STILLIMAGE = 0;
+    }
+    enum LogStatus {
+        FAILED = 0;
+        QUEUED = 1;
+        COMPLETE = 2;
+        UNKNOWN = -1;
+    }
+    string name = 1;
+    RecordType type = 2;
+    LogStatus status = 3;
+    //an arbitrary string to be stored with the log data
+    string tag = 4;
+    google.protobuf.Timestamp timestamp=5;
+    message ImageParams {
+        int32 width = 1;
+        int32 height = 2;
+        bosdyn.api.Image.PixelFormat format = 3;
+    }
+    ImageParams image_params=6;
+    message Calibration {
+        int32 xoffset=1;
+        int32 yoffset=2;
+        int32 width=3;
+        int32 height=4;
+        string base_frame_name = 7;
+        SE3Pose base_tfrom_sensor = 5;
+        bosdyn.api.spot_cam.Camera.PinholeIntrinsics intrinsics=6;
+    }
+    repeated Calibration calibration=7;
+}
+
+message DeleteRequest {
+    bosdyn.api.RequestHeader header = 1;
+    Logpoint point = 2;
+}
+
+message DeleteResponse {
+    bosdyn.api.ResponseHeader header = 1;
+}
+
+message GetStatusRequest {
+    bosdyn.api.RequestHeader header = 1;
+    Logpoint point = 2;
+}
+
+message GetStatusResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    //the logpoint returned here can be used to add a tag to the Logpoint later
+    Logpoint point = 2;
+}
+
+message RetrieveRequest {
+    bosdyn.api.RequestHeader header = 1;
+    Logpoint point = 2;
+}
+
+message RetrieveResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    // Store() dictates what processing happens in this response.
+    // c0 -> c4 will return the raw (rgb24) fisheye image of the camera at that index.
+    Logpoint logpoint = 2;
+    DataChunk data = 3;
+}
+
+message RetrieveRawDataRequest {
+    bosdyn.api.RequestHeader header = 1;
+    Logpoint point = 2;
+}
+
+message RetrieveRawDataResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    Logpoint logpoint = 2;
+    DataChunk data = 3;
+}
+
+message StoreRequest {
+    bosdyn.api.RequestHeader header = 1;
+    Camera camera = 2;
+    Logpoint.RecordType type = 3;
+    string tag = 4;
+}
+
+message StoreResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    //the logpoint returned here can be used to add a tag to the Logpoint later
+    //it will very likely be in th 'QUEUED' state
+    Logpoint point = 2;
+}
+
+message TagRequest {
+    bosdyn.api.RequestHeader header = 1;
+    Logpoint point = 2;
+}
+
+message TagResponse {
+    bosdyn.api.ResponseHeader header = 1;
+}
+
+message ListCamerasRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message ListCamerasResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    repeated Camera cameras = 2;
+}
+
+message ListLogpointsRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message ListLogpointsResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    repeated Logpoint logpoints = 2;
+}
+
+message SetPassphraseRequest {
+    bosdyn.api.RequestHeader header = 1;
+
+    //a passphrase is a human-readable string used to generate
+    //an encryption key. an empty passphrase disables encryption.
+
+
+    // if the encryption key is set, everything new written to the drive gets encrypted. this includes
+
+    // 1) the sql database
+    // 2) logged data
+    // 3) audio files uploaded with the Audio service
+    // 4) probably other stuff that I haven't thought of
+
+    // If it's called repeatedly (with different keys), old data will
+    // still be on the disk, but unreadable, so new data will be
+    // written with the new key. the only exception is this; when
+    // encryption is off and a key is written, the sql database gets
+    // encrypted with the new key; old log and audio data remains
+    // unencrypted however.
+
+    //after setting the passphrase, please reboot the system to
+    //remount the encrypted filesystem layer.
+    string passphrase = 2;
+}
+
+message SetPassphraseResponse {
+    bosdyn.api.ResponseHeader header = 1;
+}
+
+message DebugRequest {
+    bosdyn.api.RequestHeader header = 1;
+    //set true to enable logging of temperature data;
+    bool enable_temperature = 2;
+    //set true to enable logging of humidity data;
+    bool enable_humidity = 3;
+    //set true to enable logging of BIT events;
+    //BIT events are always recorded to volatile memory
+    //and can be viewed (and cleared) with the Health service,
+    //but this enables writing them to disk.
+    bool enable_BIT = 4;
+    //set true to enable logging of Shock data;
+    //this is on by default.
+    bool enable_shock = 5;
+    //set to true to enable logging of system load stats
+    // cpu, gpu, memory, and network utilization
+    bool enable_system_stat = 6;
+    //now a BIT
+    //set true to enable logging of led driver status
+    //bool enable_led_stat = 7;
+}
+
+message DebugResponse {
+    bosdyn.api.ResponseHeader header = 1;
+}

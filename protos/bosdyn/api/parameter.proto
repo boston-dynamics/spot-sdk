@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -12,34 +12,34 @@ option java_outer_classname = "ParameterProto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
 
-/// Generic parameter
+// Generic parameter
 message Parameter {
-    /// Name of parameter.
+    // Name of parameter.
     string label = 1;
 
-    /// Units of parameter value.
+    // Units of parameter value.
     string units = 2;
 
     oneof values {
-        /// Value of a countable measure.
+        // Value of a countable measure.
         int64 int_value = 3;
 
-        /// Value of a continuous measure.
+        // Value of a continuous measure.
         double float_value = 4;
 
-        /// A point in time.
+        // A point in time.
         google.protobuf.Timestamp timestamp = 5;
 
-        /// A time duration.
+        // A time duration.
         google.protobuf.Duration duration = 6;
 
-        /// Value as a string.
+        // Value as a string.
         string string_value = 7;
 
-        /// Value as true/false.
+        // Value as true/false.
         bool bool_value = 8;
     }
 
-    /// Description of the parameter or its value.
+    // Description of the parameter or its value.
     string notes = 9;
 }

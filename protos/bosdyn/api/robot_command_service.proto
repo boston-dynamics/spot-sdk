@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -12,16 +12,16 @@ option java_outer_classname = "RobotCommandServiceProto";
 import "bosdyn/api/robot_command.proto";
 
 service RobotCommandService {
-    /// Starts a behavior command on the robot. Issuing a new command overrides the active command.
-    /// Each command is issued a UID for feedback retrieval.
+    // Starts a behavior command on the robot. Issuing a new command overrides the active command.
+    // Each command is issued a UID for feedback retrieval.
     rpc RobotCommand(RobotCommandRequest) returns (RobotCommandResponse) {}
 
-    /// A client queries this RPC to determine a robot's progress towards completion of a command.
-    /// This updates the client with metrics like "distance to goal."
-    /// The client should use this feedback to determine whether the current command has
-    /// succeeeded or failed, and thus send the next command.
+    // A client queries this RPC to determine a robot's progress towards completion of a command.
+    // This updates the client with metrics like "distance to goal."
+    // The client should use this feedback to determine whether the current command has
+    // succeeeded or failed, and thus send the next command.
     rpc RobotCommandFeedback(RobotCommandFeedbackRequest) returns (RobotCommandFeedbackResponse) {}
 
-    /// Clear robot behavior fault
+    // Clear robot behavior fault
     rpc ClearBehaviorFault(ClearBehaviorFaultRequest) returns (ClearBehaviorFaultResponse) {}
 }

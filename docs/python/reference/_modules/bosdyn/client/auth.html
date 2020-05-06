@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.auth &mdash; Spot 1.1.0 documentation</title>
+  <title>bosdyn.client.auth &mdash; Spot 2.0.0 documentation</title>
   
 
   
@@ -17,34 +17,33 @@
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -58,7 +57,7 @@
             
             
               <div class="version">
-                1.1.0
+                2.0.0
               </div>
             
           
@@ -82,10 +81,10 @@
               
             
             
-              <p class="caption"><span class="caption-text">Services:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../client_index.html">Client API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../core_index.html">Core API</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../client_modules/client_index.html">Client SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core_modules/core_index.html">Core SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mission_modules/mission_index.html">Mission SDK</a></li>
 </ul>
 
             
@@ -149,7 +148,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.auth</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
@@ -191,6 +190,14 @@
     <span class="sd">&quot;&quot;&quot;User is temporarily locked out of authentication.&quot;&quot;&quot;</span></div>
 
 
+<div class="viewcode-block" id="ExpiredApplicationTokenError"><a class="viewcode-back" href="../../../client_modules/auth.html#bosdyn.client.auth.ExpiredApplicationTokenError">[docs]</a><span class="k">class</span> <span class="nc">ExpiredApplicationTokenError</span><span class="p">(</span><span class="n">AuthResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Application token has expired. Please contact support@bostondynamics.com to receive a new one.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="InvalidApplicationTokenError"><a class="viewcode-back" href="../../../client_modules/auth.html#bosdyn.client.auth.InvalidApplicationTokenError">[docs]</a><span class="k">class</span> <span class="nc">InvalidApplicationTokenError</span><span class="p">(</span><span class="n">AuthResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The Application Token is invalid.&quot;&quot;&quot;</span></div>
+
+
 <span class="n">_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 <span class="n">_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
     <span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
@@ -198,8 +205,12 @@
                                                          <span class="n">InvalidLoginError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
     <span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenResponse</span><span class="o">.</span><span class="n">STATUS_INVALID_TOKEN</span><span class="p">:</span> <span class="p">(</span><span class="n">InvalidTokenError</span><span class="p">,</span>
                                                          <span class="n">InvalidTokenError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
-    <span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenResponse</span><span class="o">.</span><span class="n">STATUS_TEMPORARILY_LOCKED_OUT</span><span class="p">:</span> <span class="p">(</span><span class="n">TemporarilyLockedOutError</span><span class="p">,</span>
-                                                                  <span class="n">TemporarilyLockedOutError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+    <span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenResponse</span><span class="o">.</span><span class="n">STATUS_TEMPORARILY_LOCKED_OUT</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">TemporarilyLockedOutError</span><span class="p">,</span> <span class="n">TemporarilyLockedOutError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenResponse</span><span class="o">.</span><span class="n">STATUS_INVALID_APPLICATION_TOKEN</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">InvalidApplicationTokenError</span><span class="p">,</span> <span class="n">InvalidApplicationTokenError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenResponse</span><span class="o">.</span><span class="n">STATUS_EXPIRED_APPLICATION_TOKEN</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">ExpiredApplicationTokenError</span><span class="p">,</span> <span class="n">ExpiredApplicationTokenError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
 <span class="p">})</span>
 
 
@@ -216,34 +227,34 @@
     <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">token</span>
 
 
-<span class="k">def</span> <span class="nf">_build_auth_request</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenRequest</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_build_auth_request</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">app_token</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenRequest</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span>
+                                        <span class="n">application_token</span><span class="o">=</span><span class="n">app_token</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_build_auth_token_request</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenRequest</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_build_auth_token_request</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">app_token</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenRequest</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">,</span> <span class="n">application_token</span><span class="o">=</span><span class="n">app_token</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="AuthClient"><a class="viewcode-back" href="../../../client_modules/auth.html#bosdyn.client.auth.AuthClient">[docs]</a><span class="k">class</span> <span class="nc">AuthClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Client to authenticate to the robot.&quot;&quot;&quot;</span>
 
-    <span class="c1"># Typical authority of the service on the robot we want to talk to.</span>
-    <span class="n">default_authority</span> <span class="o">=</span> <span class="s1">&#39;auth.spot.robot&#39;</span>
     <span class="c1"># Typical name of the service in the robot&#39;s directory listing.</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;auth&#39;</span>
-    <span class="c1"># Full service name in the robot&#39;s directory listing.</span>
+    <span class="c1"># gRPC service proto definition implemented by this service</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.AuthService&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">AuthClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">auth_service_pb2_grpc</span><span class="o">.</span><span class="n">AuthServiceStub</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
-<div class="viewcode-block" id="AuthClient.auth"><a class="viewcode-back" href="../../../client_modules/auth.html#bosdyn.client.auth.AuthClient.auth">[docs]</a>    <span class="k">def</span> <span class="nf">auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="AuthClient.auth"><a class="viewcode-back" href="../../../client_modules/auth.html#bosdyn.client.auth.AuthClient.auth">[docs]</a>    <span class="k">def</span> <span class="nf">auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">app_token</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Authenticate to the robot with a username/password combo.</span>
 
-<span class="sd">        Params:</span>
-<span class="sd">            username -- username on the robot.</span>
-<span class="sd">            password -- password for the username on the robot.</span>
-<span class="sd">            kwargs -- extra arguments for controlling RPC details.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            username: username on the robot.</span>
+<span class="sd">            password: password for the username on the robot.</span>
+<span class="sd">            app_token: the application token needed for auth. Note that this is extraneous for robots with old software.</span>
+<span class="sd">            kwargs: extra arguments for controlling RPC details.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            User token from the server as a string.</span>
@@ -251,25 +262,26 @@
 <span class="sd">        Raises:</span>
 <span class="sd">            InvalidLoginError: If username and/or password are not valid.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">req</span> <span class="o">=</span> <span class="n">_build_auth_request</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">_build_auth_request</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">app_token</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetAuthToken</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_token_from_response</span><span class="p">,</span> <span class="n">_error_from_response</span><span class="p">,</span>
                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AuthClient.auth_async"><a class="viewcode-back" href="../../../client_modules/auth.html#bosdyn.client.auth.AuthClient.auth_async">[docs]</a>    <span class="k">def</span> <span class="nf">auth_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="AuthClient.auth_async"><a class="viewcode-back" href="../../../client_modules/auth.html#bosdyn.client.auth.AuthClient.auth_async">[docs]</a>    <span class="k">def</span> <span class="nf">auth_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">app_token</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Asynchronously authenticate to the robot with a username/password combo.</span>
 
 <span class="sd">        See auth documentation for more details.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">req</span> <span class="o">=</span> <span class="n">_build_auth_request</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">_build_auth_request</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">app_token</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetAuthToken</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_token_from_response</span><span class="p">,</span>
                                <span class="n">_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AuthClient.auth_with_token"><a class="viewcode-back" href="../../../client_modules/auth.html#bosdyn.client.auth.AuthClient.auth_with_token">[docs]</a>    <span class="k">def</span> <span class="nf">auth_with_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="AuthClient.auth_with_token"><a class="viewcode-back" href="../../../client_modules/auth.html#bosdyn.client.auth.AuthClient.auth_with_token">[docs]</a>    <span class="k">def</span> <span class="nf">auth_with_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">app_token</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Authenticate to the robot using a previously created user token.</span>
 
-<span class="sd">        Params:</span>
-<span class="sd">            token -- a user token previously issued by the robot.</span>
-<span class="sd">            kwargs -- extra arguments for controlling RPC details.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            token: a user token previously issued by the robot.</span>
+<span class="sd">            app_token: the application token needed for auth. Note that this is extraneous for robots with old software.</span>
+<span class="sd">            kwargs: extra arguments for controlling RPC details.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A new user token from the server. The new token will generally be valid further in</span>
@@ -279,16 +291,16 @@
 <span class="sd">        Raises:</span>
 <span class="sd">            InvalidTokenError: If the token was incorrectly formed, for the wrong robot, or expired.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">req</span> <span class="o">=</span> <span class="n">_build_auth_token_request</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">_build_auth_token_request</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">app_token</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetAuthToken</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_token_from_response</span><span class="p">,</span> <span class="n">_error_from_response</span><span class="p">,</span>
                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AuthClient.auth_with_token_async"><a class="viewcode-back" href="../../../client_modules/auth.html#bosdyn.client.auth.AuthClient.auth_with_token_async">[docs]</a>    <span class="k">def</span> <span class="nf">auth_with_token_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="AuthClient.auth_with_token_async"><a class="viewcode-back" href="../../../client_modules/auth.html#bosdyn.client.auth.AuthClient.auth_with_token_async">[docs]</a>    <span class="k">def</span> <span class="nf">auth_with_token_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">app_token</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Authenticate to the robot using a previously created user token.</span>
 
 <span class="sd">        See auth_with_token documentation for more details.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">req</span> <span class="o">=</span> <span class="n">_build_auth_token_request</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">_build_auth_token_request</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">app_token</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetAuthToken</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_token_from_response</span><span class="p">,</span>
                                <span class="n">_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 </pre></div>
@@ -303,7 +315,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Boston Dynamics
+        &copy; Copyright 2019, Boston Dynamics.
 
     </p>
   </div>
@@ -320,16 +332,36 @@
   
 
 
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

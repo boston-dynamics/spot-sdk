@@ -1,0 +1,182 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.graph_nav;
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/lease.proto";
+import "bosdyn/api/graph_nav/map.proto";
+
+option java_outer_classname = "RecordingProto";
+
+message RecordingEnvironment {
+    // This will be prepended to the start of every waypoint name.
+    string name_prefix = 1;
+    // Persistent waypoint annotation that will be merged in
+    // to all waypoints in this recording.
+    Waypoint.Annotations waypoint_environment = 2;
+    // Persistent edge annotation that will be merged in to all
+    // waypoints in this recording.
+    Edge.Annotations edge_environment = 3;
+}
+
+message SetRecordingEnvironmentRequest {
+    // Common request header.
+    RequestHeader header = 1;
+    // Persistent environment to use while recording. This allows the
+    // user to specify annotations and naming prefixes for new waypoints
+    // and edges.
+    RecordingEnvironment environment = 2;
+    // The recording service is protected by a lease. The client must have a
+    // lease to the recording service to modify its internal state.
+    Lease lease = 3;
+}
+
+message SetRecordingEnvironmentResponse{
+    // Common response header.
+    ResponseHeader header = 1;
+    LeaseUseResult lease_use_result = 2;
+}
+
+message StartRecordingRequest {
+    // Common request header.
+    RequestHeader header = 1;
+    // The recording service is protected by a lease. The client must have a
+    // lease to the recording service to modify its internal state.
+    Lease lease = 2;
+    // This will be merged into a copy of the existing persistent recording
+    // environment and used as the environment for the created waypoint
+    // and the edge from the previous waypoint to the new one.
+    // It will not affect the persistent environment.
+    RecordingEnvironment recording_environment = 3;
+}
+
+message StartRecordingResponse {
+    ResponseHeader header = 1;
+    // The waypoint that was just created.
+    Waypoint created_waypoint = 2;
+    LeaseUseResult lease_use_result = 3;
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        // In this case we tried to start recording, but GraphNav was internally still waiting for
+        // some data from the robot.
+        STATUS_COULD_NOT_CREATE_WAYPOINT = 2;
+        // Can't start recording because the robot is following a route.
+        STATUS_FOLLOWING_ROUTE = 3;
+        // When recording branches, the robot is not localized to the existing map before starting
+        // to record a new branch.
+        STATUS_NOT_LOCALIZED_TO_EXISTING_MAP = 4;
+    }
+    Status status = 4;
+}
+
+message StopRecordingRequest {
+    // Common request header.
+    RequestHeader header = 1;
+    Lease lease = 2;
+}
+
+message StopRecordingResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        // In this case we tried to stop recording, but had an incorrect localization.
+        // graph_nav is expected to be localized to the final waypoint in the chain before
+        // we stop recording.
+        STATUS_NOT_LOCALIZED_TO_END = 2;
+        // The robot is still processing the map it created to where the robot is currently located.
+        // You can't stop recording until that processing is finished.  You should not move
+        // the robot, then try to stop recording again after 1-2 seconds.
+        STATUS_NOT_READY_YET = 3;
+    }
+    Status status = 2;
+    // If not localized to end, specifies which waypoint we are localized to.
+    string error_waypoint_localized_id = 3;
+    LeaseUseResult lease_use_result = 4;
+}
+
+
+message CreateWaypointRequest {
+    // Common request header.
+    RequestHeader header = 1;
+    // Name of the waypoint to create. Overrides any naming prefix.
+    string waypoint_name = 2;
+    // This will be merged into a copy of the existing persistent recording
+    // environment and used as the environment for the created waypoint
+    // and the edge from the previous waypoint to the new one.
+    // It will not affect the persistent environment.
+    RecordingEnvironment recording_environment = 3;
+    // The recording service is protected by a lease. The client must have a
+    // lease to the recording service to modify its internal state.
+    Lease lease = 4;
+}
+
+message CreateWaypointResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+    // The waypoint that was just created.
+    Waypoint created_waypoint = 2;
+    Edge created_edge = 3;
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        // Clients can only create waypoints when recording.
+        STATUS_NOT_RECORDING = 2;
+        STATUS_COULD_NOT_CREATE_WAYPOINT = 3;
+    }
+    Status status = 5;
+    LeaseUseResult lease_use_result = 4;
+}
+
+message CreateEdgeRequest {
+    RequestHeader header = 1;
+    // Create an edge between two existing waypoints in the map with
+    // the given parameters.
+    Edge edge = 2;
+    // The recording service is protected by a lease. The client must have a
+    // lease to the recording service to modify its internal state.
+    Lease lease = 3;
+}
+
+message CreateEdgeResponse {
+    ResponseHeader header = 1;
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        // Edge already exists with the given ID.
+        STATUS_EXISTS = 2;
+        // Clients can only create edges when recording.
+        STATUS_NOT_RECORDING = 3;
+        // One or more of the specified waypoints aren't in the map.
+        STATUS_UNKNOWN_WAYPOINT = 4;
+        // Specified edge did not include a transform.
+        STATUS_MISSING_TRANSFORM = 5;
+    }
+    Status status = 2;
+    // If set, the existing edge that caused the STATUS_EXISTS error.
+    Edge error_existing_edge = 3;
+    LeaseUseResult lease_use_result = 4;
+}
+
+message GetRecordStatusRequest {
+    // Common request header.
+    RequestHeader header = 1;
+}
+
+message GetRecordStatusResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+    // If true, the record service is actively recording
+    // a chain.
+    bool is_recording = 2;
+    // The current persistent recording environment.
+    RecordingEnvironment recording_environment = 3;
+}

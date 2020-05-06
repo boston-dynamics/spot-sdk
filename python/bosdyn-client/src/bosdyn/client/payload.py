@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -6,13 +6,12 @@
 
 """Client for the payload service.
 
-This allows client code to register a payload.
+This allows client code to read from the robot payload registry.
 """
 
 from __future__ import print_function
 import logging
 
-# Get LogAnnotationTextMessage so it can be imported from this package.
 import bosdyn.api.payload_pb2 as payload_protos
 import bosdyn.api.payload_pb2 as payload_service_protos
 import bosdyn.api.payload_service_pb2_grpc as payload_service
@@ -29,7 +28,6 @@ def _get_entry_value(response):
 class PayloadClient(BaseClient):
     """A client handling payload configs."""
 
-    default_authority = "payload.spot.robot"
     default_service_name = 'payload'
     service_type = 'bosdyn.api.PayloadService'
 
@@ -42,7 +40,11 @@ class PayloadClient(BaseClient):
         Args:
           kw_args:              Extra arguments to pass to grpc call invocation.
         
-        Returns: a list of payload protobufs
+        Returns:
+          A list of the proto message definitions of all registered payloads
+
+        Raises:
+          RpcError: Problem communicating with the robot.
         """
         request = payload_service_protos.ListPayloadsRequest()
         return self.call(self._stub.ListPayloads, request, value_from_response=_get_entry_value,
@@ -54,7 +56,11 @@ class PayloadClient(BaseClient):
         Args:
           kw_args:              Extra arguments to pass to grpc call invocation.
         
-        Returns: a list of payload protobufs
+        Returns:
+          A list of the proto message definitions of all registered payloads
+
+        Raises:
+          RpcError: Problem communicating with the robot.
         """
         request = payload_service_protos.ListPayloadsRequest()
         return self.call_async(self._stub.ListPayloads, request,

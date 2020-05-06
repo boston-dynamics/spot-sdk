@@ -1,0 +1,153 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.mission;
+
+option java_outer_classname = "RemoteProto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/lease.proto";
+import "bosdyn/api/mission/util.proto";
+
+message EstablishSessionRequest {
+    RequestHeader header = 1;
+
+    // All leases that the remote service may need.
+    repeated Lease leases = 2;
+
+    // Use this to provide other data (e.g. from the blackboard).
+    // The RemoteGrpc node will provide the name of the node automatically.
+    repeated VariableDeclaration inputs = 3;
+
+}
+
+message EstablishSessionResponse {
+    ResponseHeader header = 1;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        // Provided inputs / outputs are compatible.
+        STATUS_OK = 1;
+        // Remote service needs leases on additional resources.
+        // If set, the missing_lease_resources field should contain the resources needed but not
+        // provided.
+        STATUS_MISSING_LEASES = 2;
+        // Remote service needs additional inputs.
+        STATUS_MISSING_INPUTS = 3;
+
+        // Note there is no status for an error condition in the LeaseUseResult field.
+        // Even if STATUS_OK is returned, an error may be indicated in lease_use_results.
+    }
+    Status status = 2;
+
+    // On success, contains an ID for this session.
+    string session_id = 3;
+
+    // Need to provide leases on these resources.
+    repeated string missing_lease_resources = 4;
+
+    // Details about how any leases were used.
+    // Allowed to be empty, if leases were not actually used.
+    repeated LeaseUseResult lease_use_results = 5;
+
+    // The inputs required by the contacted node that were not mentioned in the request.
+    repeated VariableDeclaration missing_inputs = 6;
+
+}
+
+message TickRequest {
+    RequestHeader header = 1;
+    // Session ID as returned by the EstablishSessionResponse.
+    // Used to guarantee coherence between a single client and a servicer.
+    string session_id = 2;
+
+    // All leases that the remote service may need.
+    repeated Lease leases = 3;
+
+    // Inputs provided to the servicer.
+    repeated KeyValue inputs = 4;
+}
+
+message TickResponse {
+    ResponseHeader header = 1;
+
+    // Status from the node. The FAILURE, RUNNING, and SUCCESS statuses map to the
+    // behavior tree terms, all others indicate an error in the TickRequest.
+    enum Status {
+        // Invalid; do not use.
+        STATUS_UNKNOWN = 0;
+        // Node failed.
+        STATUS_FAILURE = 1;
+        // Node is processing, check in again later.
+        STATUS_RUNNING = 2;
+        // Node succeeded.
+        STATUS_SUCCESS = 3;
+        // The request provided an invalid session ID.
+        STATUS_INVALID_SESSION_ID = 4;
+        // The request was missing required leases.
+        STATUS_MISSING_LEASES = 5;
+        // The request was missing required inputs.
+        STATUS_MISSING_INPUTS = 6;
+    }
+
+    Status status = 3;
+
+    // Need to provide leases on these resources.
+    repeated string missing_lease_resources = 4;
+
+    // Details about how any leases were used.
+    // Allowed to be empty, if leases were not actually used.
+    repeated LeaseUseResult lease_use_results = 5;
+
+    // Filled out when status is STATUS_MISSING_INPUTS, indicating what inputs were not in the
+    // request.
+    repeated VariableDeclaration missing_inputs = 7;
+
+    // If you need to report other error details, you can use this field.
+    string error_message = 8;
+}
+
+message StopRequest {
+    RequestHeader header = 1;
+    // Session ID as returned by the EstablishSessionResponse.
+    // Used to guarantee coherence between a single client and a servicer.
+    string session_id = 2;
+}
+
+message StopResponse {
+    ResponseHeader header = 1;
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        // Service stopped.
+        STATUS_OK = 1;
+        // The request provided an invalid session ID.
+        STATUS_INVALID_SESSION_ID = 2;
+    }
+    Status status = 2;
+}
+
+message TeardownSessionRequest {
+    RequestHeader header = 1;
+    // Session ID as returned by the EstablishSessionResponse.
+    // Used to guarantee coherence between a single client and a servicer.
+    string session_id = 2;
+}
+
+message TeardownSessionResponse {
+    ResponseHeader header = 1;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        // Session was torn down -- servicer has probably wiped all associated data / state.
+        STATUS_OK = 1;
+        // The request provided an invalid session ID.
+        // This may mean the session was already torn down.
+        STATUS_INVALID_SESSION_ID = 2;
+    }
+    Status status = 2;
+}

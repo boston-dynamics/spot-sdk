@@ -1,0 +1,56 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.spot_cam;
+
+option java_outer_classname = "FactorySetupProto";
+
+import "bosdyn/api/spot_cam/camera.proto";
+import "bosdyn/api/header.proto";
+
+//these objects are for factory setup, and are seperated from the rest of the definition.
+//They are integral values that are specific to the VE ptz unit; best not to pollute the
+//PTZ message set with them.
+message PtzOffsetValue {
+    int32 pan = 1;
+    int32 tilt = 2;
+}
+
+message CalibrationData {
+    //This is an array of the 5 ring cameras, which must be named 'c0', 'c1', 'c2', 'c3', 'c4'.
+    //and each must contain a pinhole intrinsics structure, and a pose.
+    repeated Camera cameras = 1;
+}
+
+message CameraCalibrateRequest {
+    bosdyn.api.RequestHeader header = 1;
+    CalibrationData data = 2;
+}
+
+message CameraCalibrateResponse {
+    bosdyn.api.ResponseHeader header = 1;
+}
+
+message PtzOffsetRequest {
+    bosdyn.api.RequestHeader header = 1;
+    PtzOffsetValue value = 2;
+}
+
+message PtzOffsetResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    PtzOffsetValue value = 2;
+}
+
+
+message ResetResponse {
+    bosdyn.api.ResponseHeader header = 1;
+}
+
+message ResetRequest {
+    bosdyn.api.RequestHeader header = 1;
+}

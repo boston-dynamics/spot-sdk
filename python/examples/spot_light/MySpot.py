@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,6 +13,8 @@ import bosdyn.client.util
 import bosdyn.client.estop
 import bosdyn.client.lease
 
+from bosdyn.api import estop_pb2
+from bosdyn.client.estop import EstopClient
 from bosdyn.client.image import ImageClient
 from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder, blocking_stand
 from bosdyn import geometry
@@ -31,9 +33,7 @@ class MySpot(object):
         self._sdk = None
         # A handle to the spot robot
         self._robot = None
-        # A handle to the estop endpoint
-        self._estop_endpoint = None
-        self._estop_keep_alive = None
+
         # A handle to the lease for the robot connected
         self._lease_client = None
         self._lease_keep_alive = None
@@ -123,6 +123,16 @@ class MySpot(object):
             cmd = RobotCommandBuilder.stand_command(footprint_R_body=rotation)
             command_client.robot_command(cmd)
 
+    def _verify_estop(self):
+        """Verify the robot is not estopped"""
+
+        client = self._robot.ensure_client(EstopClient.default_service_name)
+        if client.get_status().stop_level != estop_pb2.ESTOP_LEVEL_NONE:
+            error_message = "Robot is estopped. Please use an external E-Stop client, such as " \
+            "the estop SDK example, to configure E-Stop."
+            self._robot.logger.error(error_message)
+            raise Exception(error_message)
+
     def _prep_for_motion(self):
         """
         Prepare the robot for motion
@@ -135,16 +145,8 @@ class MySpot(object):
         # Establish time sync with the robot
         self._robot.time_sync.wait_for_sync()
 
-        # Spot requires a software estop to be activated
-        if self._estop_endpoint is None:
-            estop_name = 'MySpot_estop'
-            estop_client = self._robot.ensure_client(
-                bosdyn.client.estop.EstopClient.default_service_name)
-            self._estop_endpoint = bosdyn.client.estop.EstopEndpoint(client=estop_client,
-                                                                     name=estop_name,
-                                                                     estop_timeout=9.0)
-            self._estop_endpoint.force_simple_setup()
-            self._estop_keep_alive = bosdyn.client.estop.EstopKeepAlive(self._estop_endpoint)
+        # Verify the robot is not estopped
+        self._verify_estop()
 
         # Acquire a lease to indicate that we want to control the robot
         if self._lease_client is None:

@@ -1,0 +1,40 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "FullBodyCommandProto";
+
+import "bosdyn/api/basic_command.proto";
+import "google/protobuf/any.proto";
+
+
+message FullBodyCommand {
+    message Request {
+        oneof command {
+            StopCommand.Request stop_request = 1;
+            FreezeCommand.Request freeze_request = 2;
+            SelfRightCommand.Request selfright_request = 3;
+            SafePowerOffCommand.Request safe_power_off_request = 4;
+
+        }
+
+        // Robot specific command parameters.
+        google.protobuf.Any params = 100;
+    }
+
+    message Feedback {
+        oneof feedback {
+            StopCommand.Feedback stop_feedback = 1;
+            FreezeCommand.Feedback freeze_feedback = 2;
+            SelfRightCommand.Feedback selfright_feedback = 3;
+            SafePowerOffCommand.Feedback safe_power_off_feedback = 4;
+
+        }
+    }
+}

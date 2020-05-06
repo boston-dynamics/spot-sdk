@@ -1,0 +1,140 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option java_outer_classname = "PointCloudProto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/geometry.proto";
+import "google/protobuf/timestamp.proto";
+
+// Information about a sensor or process that produces point clouds.
+message PointCloudSource {
+    // The name of the point cloud source. This is intended to be unique accross all point cloud sources,
+    // and should be human readable.
+    string name = 1;
+
+    // The frame name of the sensor. The transformation from vision_tform_sensor can be computed
+    // by traversing the tree in the FrameTreeSnapshot.
+    string frame_name_sensor = 3;
+
+    // Time that the data was produced on the sensor in the robot's clock.
+    google.protobuf.Timestamp acquisition_time = 30;
+
+    // A tree-based collection of transformations, which will include the transformations
+    // to the point cloud data frame and the point cloud sensor frame.
+    FrameTreeSnapshot transforms_snapshot = 31;
+
+    reserved 2;
+}
+
+// Data from a point-cloud producing sensor or process.
+message PointCloud {
+    // The sensor or process that produced the point cloud.
+    PointCloudSource source = 1;
+    // The number of points in the point cloud.
+    int32 num_points = 2;
+
+    // Point clouds may be encoded in different ways to preserve bandwidth or disk space.
+    enum Encoding {
+        // The point cloud has an unknown encoding.
+        ENCODING_UNKNOWN = 0;
+        // Each point is x,y,z float32 value (12 bytes, little-endian) stored sequentially. This allows
+        // the point cloud to be expressed in any range and resolution represented by floating point
+        // numbers, but the point cloud will be larger than if one of the other encodings is used.
+        ENCODING_XYZ_32F = 1;
+        // Each point is 3 signed int8s plus an extra shared signed int8s (4 byte).
+        // byte layout: [..., p1_x, p1_y, p1_z, x, ...]
+        // Each coordinate is mapped to a value between -1 and +1 (corresponding to a
+        // minimum and maximum range).
+        // The resulting point is:
+        //   P = remap(p1 * f + p2, c * f, m)
+        // Where:
+        //   p1 = the highest byte in each dimension of the point.
+        //   p2 = a vector of "extra" bytes converted to metric units.
+        //     = [mod (x, f), mod(x/f, f), mod(x/(f^2), f)] - f/2
+        //   x = the "extra" byte for each point.
+        //   f = An integer scale factor.
+        //   m = [max_x, max_y, max_z], the point cloud max bounds in meters.
+        //   c = a remapping constant.
+        // And:
+        //  remap(a, b, c) = (a + b)/(2 * b) - c
+        // Point clouds use 1/3 the memory of XYZ_32F, but have limits on resolution
+        // and range. Points must not lie outside of the box of size [-m, m]. Within that box,
+        // the resolution of the point cloud will depend on the encoding parameters.
+        // For example if m = [10, 10, 10], and f = 5 with c = 127 the resolution is
+        // approximately 1.5 cm per point.
+        ENCODING_XYZ_4SC = 2;
+        // Each point is 3 signed int8s plus two extra shared signed int8s (5 byte).
+        // The encoding is the same as XYZ_4SC, except the "extra" value x is a 16 bit integer.
+        // This encoding has roughly double the resolution of XYZ_4SC, but takes up
+        // an additional byte for each point.
+        ENCODING_XYZ_5SC = 3;
+    };
+
+    // Parameters needed to decode the point cloud.
+    message EncodingParameters {
+        // Used in the remapping process from bytes to metric units. (unitless)
+        int32 scale_factor = 1;
+        // In XYZ_4SC and XYZ_5SC, the point cloud is assumed to lie inside a box
+        // centered in the data frame. max_x, max_y, max_z are half the dimensions
+        // of that box. These dimensions should be assumed to be meters.
+        double max_x = 2;
+        double max_y = 3;
+        double max_z = 4;
+        // Used in the remapping process from bytes to metric units. (unitless)
+        // For XYZ_4SC and XYZ_5C, this should equal 127.
+        double remapping_constant = 5;
+        // Number of bytes in each point in this encoding.
+        int32 bytes_per_point = 6;
+    }
+
+    // Representation of the underlying point cloud data.
+    Encoding encoding = 3;
+
+    // Constants needed to decode the point cloud.
+    EncodingParameters encoding_parameters = 4;
+
+    // Raw byte data representing the points.
+    bytes data = 5;
+
+    /*
+    */
+    reserved 8, 9;
+}
+
+message GetPointCloudRequest {
+    // Common request header.
+    RequestHeader header = 1;
+}
+
+message GetPointCloudResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Return status.
+    enum Status {
+        // UNKNOWN should never be used.
+        //
+        // An internal PointCloudService issue has happened if UNKNOWN is set.
+        // None of the other fields are filled out.
+        STATUS_UNKNOWN = 0;
+
+        // Call succeeded at filling out all the fields.
+        STATUS_OK = 1;
+
+        // Failed to fill out PointCloudSource.  All the other fields are not filled out.
+        STATUS_SOURCE_DATA_ERROR = 2;
+
+        // There was a problem with the point cloud data.  Only the PointCloudSource is filled out.
+        STATUS_POINT_CLOUD_DATA_ERROR = 3;
+    }
+    Status status = 2;
+
+    PointCloud point_cloud = 3;
+}

@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -24,7 +24,7 @@ To install this example on Ubunty 18.04, follow these instructions:
 - Change into example directory: `cd spot_tensorflow_detector`
 - Create virtual environment (one time operation): `virtualenv -p {PATH_TO_PYTHON3_EXECUTABLE} venv`. The path to the executable is the output of `which python3` command, usually set to `/usr/bin/python3`.
 - Start virtual environment: `source venv/bin/activate`
-- Install dependencies: `pip install -r requirements.txt`
+- Install dependencies: `python -m pip install -r requirements.txt`
 - Run the example using instructions in the next section
 - To exit the virtual environment, run `deactivate`
 
@@ -43,6 +43,10 @@ On top of those arguments, it also needs the following arguments:
 - --sleep-between-capture (optional) argument that specifies the amount to sleep in seconds between each image capture iteration; defaults to 0.0
 - --max-processing-delay (optional) argument that specifies max delay in seconds allowed for each image before being processed; images with greater latency will not be processed
 - --max-display-delay (optional) argument that specifies max delay in seconds allowed for each image before being displayed; images with greater latency will not be displayed
+
+```
+python spot_tenserflow_detector.py --username USER --password PASSWORD --model-path <path_to_pb> ROBOT_IP
+```
 
 
 The program generates two sets of output:

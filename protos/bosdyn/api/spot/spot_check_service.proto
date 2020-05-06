@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -12,22 +12,22 @@ option java_outer_classname = "SpotCheckServiceProto";
 
 import "bosdyn/api/spot/spot_check.proto";
 
-/// RPCs for monitoring robot health and recalibration various sensors. These procedures should be
-/// run periodically in order to keep the system running in the best possible condition.
+// RPCs for monitoring robot health and recalibration various sensors. These procedures should be
+// run periodically in order to keep the system running in the best possible condition.
 service SpotCheckService {
-    /// Send a command to the SpotCheck service. The spotcheck service is responsible to both
-    /// recalibrating actuation sensors and checking camera health.
+    // Send a command to the SpotCheck service. The spotcheck service is responsible to both
+    // recalibrating actuation sensors and checking camera health.
     rpc SpotCheckCommand(SpotCheckCommandRequest) returns (SpotCheckCommandResponse) {}
 
-    /// Check the status of the spot check procedure. After procedure completes, this reports back
-    /// results for specific joints and cameras.
+    // Check the status of the spot check procedure. After procedure completes, this reports back
+    // results for specific joints and cameras.
     rpc SpotCheckFeedback(SpotCheckFeedbackRequest) returns (SpotCheckFeedbackResponse) {}
 
     // Send a camera calibration command to the robot. Used to start or abort a calibration routine.
     rpc CameraCalibrationCommand(CameraCalibrationCommandRequest)
         returns (CameraCalibrationCommandResponse) {}
 
-    /// Check the status of the camera calibration procedure.
+    // Check the status of the camera calibration procedure.
     rpc CameraCalibrationFeedback(CameraCalibrationFeedbackRequest)
         returns (CameraCalibrationFeedbackResponse) {}
 }

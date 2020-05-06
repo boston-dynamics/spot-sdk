@@ -1,0 +1,155 @@
+
+<html>
+  <head>
+    <title>Spot SDK</title>
+    <link rel="stylesheet" type="text/css" href="./../../css/markdown.css"/>
+  </head>
+  <body class="markdown-body">
+  
+<h1><a href="../../../index.html">Spot SDK</a> &gt; <a href="../index.html">Concepts</a> &gt; <a href="index.html">Autonomy</a> &gt; <br> GraphNav Service</h1>
+<p>The GraphNav service is a place-based localization and locomotion service. You access the GraphNavService on the robot by making RPC calls to localize the robot, navigate a route, or download snapshot data.</p>
+<p>Maps are recorded using the GraphNavRecording service or by operating the robot using the tablet controller and using the Autowalk feature to record a map.</p>
+<p>Maps contain waypoints and edges. Together, these are known as graphs. The recorded map is used by the robot to follow a sequence of waypoints and edges. During playback, the robot compares its real-time sensor data with sensor data stored during the recording process. This helps the robot determine its location or pose during playback so it can make adjustments.</p>
+<h2>Navigation</h2>
+<p>The GraphNav service is used to navigate between waypoints that are connected by edges in a recorded map. In general, the service tries to stay as close as possible to the recorded routes. The robot has the ability to adapt its route if obstacles are encountered along the way, unless the deviation takes the robot too far away from the recorded route, in which case the robot declares itself stuck.</p>
+<p>This place-based navigation scheme allows the robot to traverse building scale maps. Practical limits are dictated by site conditions. Successful map navigation relies on the ability to avoid drastic changes in the environment between recording and replay operations.</p>
+<p>Implementing the GraphNav service APIs requires four phases:</p>
+<ol>
+<li>Record a map, which can be done by an operator using the Autowalk feature on the controller tablet, by writing a client application that uses the GraphNavRecordingService RPC to record a map, or by using the <a href="../../../python/examples/graph_nav_command_line/recording_command_line.py">recording_command_line example</a>.</li>
+<li>Upload the recorded map to the robot.</li>
+<li>Initialize the robot's location to the map.</li>
+<li>Command the robot to navigate to another waypoint in the map.</li>
+</ol>
+<h2>GraphNavService RPCs</h2>
+<table>
+  <tbody><tr>
+   <td><strong>RPC</strong>
+   </td>
+   <td><strong>Description</strong>
+   </td>
+  </tr>
+  <tr>
+   <td>SetLocalization
+   </td>
+   <td>Trigger a manual localization. Typically done to provide the initial localization.
+   </td>
+  </tr>
+  <tr>
+   <td>NavigateRoute
+   </td>
+   <td>Tell GraphNav to navigate/traverse a given route.
+   </td>
+  </tr>
+  <tr>
+   <td>NavigateTo
+   </td>
+   <td>Tell GraphNav to navigate to a waypoint along a route it chooses.
+   </td>
+  </tr>
+  <tr>
+   <td>NavigationFeedback
+   </td>
+   <td>Get feedback on the active navigation command.
+   </td>
+  </tr>
+  <tr>
+   <td>GetLocalizationState
+   </td>
+   <td>Get the localization status, pose, and optionally, current sensor data.
+   </td>
+  </tr>
+  <tr>
+   <td>ClearGraph
+   </td>
+   <td>Clears the graph structure. Also the localization.
+   </td>
+  </tr>
+  <tr>
+   <td>DownloadGraph
+   </td>
+   <td>Download the full list of waypoint IDs, graph topology and other small info.
+   </td>
+  </tr>
+  <tr>
+   <td>UploadGraph
+   </td>
+   <td>Upload the full list of waypoint IDs, graph topology and other small info.
+   </td>
+  </tr>
+  <tr>
+   <td>UploadWaypointSnapshot
+   </td>
+   <td>Uploads sensor data taken at a particular waypoint. Uses a streaming RPC because of the amount of data in the snapshot.
+   </td>
+  </tr>
+  <tr>
+   <td>UploadEdgeSnapshot
+   </td>
+   <td>Uploads large edge snapshot as a stream for a particular edge.
+   </td>
+  </tr>
+  <tr>
+   <td>DownloadWaypointSnapshot
+   </td>
+   <td>Download waypoint data from the server.
+   </td>
+  </tr>
+  <tr>
+   <td>DownloadEdgeSnapshot
+   </td>
+   <td>Download edge data from the server.
+   </td>
+  </tr>
+</tbody></table>
+<h2>GraphNavRecordingService RPCs</h2>
+<p>Map recording is provided by the GraphNavRecordingService RPC.</p>
+<table>
+  <tbody><tr>
+   <td><strong>RPC</strong>
+   </td>
+   <td><strong>Description</strong>
+   </td>
+  </tr>
+  <tr>
+   <td>StartRecording
+   </td>
+   <td>Begin recording a chain of waypoints.
+   </td>
+  </tr>
+  <tr>
+   <td>SetRecordingEnvironment
+   </td>
+   <td>Define persistent annotations for edges and waypoints.
+   </td>
+  </tr>
+  <tr>
+   <td>GetRecordStatus
+   </td>
+   <td>Get feedback on the state of the recording service.
+   </td>
+  </tr>
+  <tr>
+   <td>CreateWaypoint
+   </td>
+   <td>Create a waypoint at the current location.
+   </td>
+  </tr>
+  <tr>
+   <td>CreateEdge
+   </td>
+   <td>Create an edge between two waypoints.
+   </td>
+  </tr>
+  <tr>
+   <td>StopRecording
+   </td>
+   <td>Pause the recording service.
+   </td>
+  </tr>
+</tbody></table>
+<p>Once StartRecording is called, the recording service starts creating waypoints, edges, and associated snapshots.</p>
+<br>
+<p><a href="autonomous_navigation_services.html">« Previous</a>  |  <a href="graphnav_map_structure.html">Next »</a></p>
+
+  </body>
+</html>

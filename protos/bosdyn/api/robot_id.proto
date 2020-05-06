@@ -1,11 +1,11 @@
-// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
 // Development Kit License (20191101-BDSDK-SL).
 
-/// Id contains basic information about a robot which is made available over the network as part of
-///  robot discovery without requiring user authentication.
+// Id contains basic information about a robot which is made available over the network as part of
+//  robot discovery without requiring user authentication.
 syntax = "proto3";
 
 package bosdyn.api;
@@ -16,74 +16,74 @@ import "bosdyn/api/header.proto";
 import "bosdyn/api/parameter.proto";
 import "google/protobuf/timestamp.proto";
 
-/// Robot identity information, which should be static while robot is powered-on.
+// Robot identity information, which should be static while robot is powered-on.
 message RobotId {
-    /// A unique string identifier for the particular robot.
+    // A unique string identifier for the particular robot.
     string serial_number = 1;
 
-    /// Type of robot.  E.g., 'spot'.
+    // Type of robot.  E.g., 'spot'.
     string species = 2;
 
-    /// Robot version/platform.
+    // Robot version/platform.
     string version = 3;
 
-    /// Version information about software running on the robot.
+    // Version information about software running on the robot.
     RobotSoftwareRelease software_release = 4;
 
-    /// Optional, customer-supplied nickname.
+    // Optional, customer-supplied nickname.
     string nickname = 5;
 
-    /// Computer Serial Number. Unlike serial_number, which identifies a complete robot,
-    ///  the computer_serial_number identifies the computer hardware used in the robot.
+    // Computer Serial Number. Unlike serial_number, which identifies a complete robot,
+    //  the computer_serial_number identifies the computer hardware used in the robot.
     string computer_serial_number = 6;
 }
 
 message SoftwareVersion {
-   /// Signficant changes to software.
+   // Signficant changes to software.
    int32 major_version = 1;
 
-   /// Normal changes to software.
+   // Normal changes to software.
    int32 minor_version = 2;
 
-   /// Fixes which should not change intended capabilities or affect compatibility.
+   // Fixes which should not change intended capabilities or affect compatibility.
    int32 patch_level = 3;
 }
 
-/// Description of the software release currently running on the robot.
+// Description of the software release currently running on the robot.
 message RobotSoftwareRelease {
-    /// E.g., 2.0.1
+    // E.g., 2.0.1
     SoftwareVersion version = 1;
 
-    /// e.g., '20190601'
+    // e.g., '20190601'
     string name = 2;
 
-    /// Kind of software release.
+    // Kind of software release.
     string type = 3;
 
-    /// Timestamp of the changeset.
+    // Timestamp of the changeset.
     google.protobuf.Timestamp changeset_date = 4;
 
-    /// Changeset hash.
+    // Changeset hash.
     string changeset = 5;
 
-    /// API version.  E.g., 2.14.5.
+    // API version.  E.g., 2.14.5.
     string api_version = 6;
 
-    /// Extra information associated with the build.
+    // Extra information associated with the build.
     string build_information = 7;
 
-    /// Date/time when release was installed.
+    // Date/time when release was installed.
     google.protobuf.Timestamp install_date = 8;
 
-    /// Other information about the build.
+    // Other information about the build.
     repeated Parameter parameters = 9;
 }
 
 message RobotIdRequest {
-    RequestHeader header = 1;  ///< Common request/response header.
+    RequestHeader header = 1;  // Common request/response header.
 }
 
 message RobotIdResponse {
-    ResponseHeader header = 1;  ///< Common request/response header.
-    RobotId robot_id = 2;       ///< The requested RobotId information.
+    ResponseHeader header = 1;  // Common request/response header.
+    RobotId robot_id = 2;       // The requested RobotId information.
 }

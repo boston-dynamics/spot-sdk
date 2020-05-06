@@ -1,0 +1,60 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.spot_cam;
+
+option java_outer_classname = "HealthProto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/robot_state.proto";
+
+message Temperature {
+    string channel_name = 1;
+    //temperature is expressed in millidegrees C
+    int64 temperature = 2;
+}
+
+message ClearBITEventsRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message ClearBITEventsResponse {
+    bosdyn.api.ResponseHeader header = 1;
+}
+
+message GetBITStatusRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message GetBITStatusResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    repeated bosdyn.api.SystemFault events = 2;
+    message Degradation {
+        enum DegradationType {
+            STORAGE = 0;
+            PTZ = 1;
+            LED = 2;
+        }
+        DegradationType type = 1;
+        string description = 2;
+    }
+    //degredations are not necessesarily faults; a unit
+    //with no installed mechanical PTZ will behave differently,
+    //but nothing's actually wrong. This lists system
+    //states that may effect performance.
+    repeated Degradation degradations = 3;
+}
+
+message GetTemperatureRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message GetTemperatureResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    repeated Temperature temps = 2;
+}

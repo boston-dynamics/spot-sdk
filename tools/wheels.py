@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -550,24 +550,29 @@ class DeveloperSetupCommand(Command):
                 install_wheels_editable([], dry_run=options.dry_run, verbose=options.verbose))
 
 
-def dev_setup_main():
-    """Command-line interface for developer setup. """
+def set_version_number(version_number=None):
+    """Sets the version number environment variable.
 
-    dev_setup_command = DeveloperSetupCommand()
-    dev_setup_command.parser.add_argument('-n', '--dry-run', action='store_true', help='Dry run')
-
-    options = dev_setup_command.parser.parse_args()
-
-    return dev_setup_command.run(options)
+    If version_number is None, reads the value out of VERSION from
+    the root of the SDK directory.
+    """
+    if not version_number:
+        module_path = os.path.abspath(__file__)
+        version_path = os.path.abspath(os.path.join(module_path, '..', '..', 'VERSION'))
+        f = open(version_path, 'r')
+        version_number = f.readline().strip()
+        f.close()
+    os.environ['BOSDYN_SDK_VERSION'] = version_number
 
 
 def main():
     """Commmand line interface."""
-
     # -- Setup command-line argument parser.
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-n', '--dry-run', action='store_true', help='Dry run')
     parser.add_argument('-v', '--verbose', action='store_true', help='Verbose output')
+    parser.add_argument('--version',
+                        help='Version number to use. If not specified, uses VERSION at root.')
     subparsers = parser.add_subparsers(title='commands', dest='command')
 
     command_dict = {}  # command name to fn which takes parsed options
@@ -578,6 +583,7 @@ def main():
 
     options = parser.parse_args()
     setup_logging_from_options(options)
+    set_version_number(options.version)
 
     return command_dict[options.command].run(options)
 

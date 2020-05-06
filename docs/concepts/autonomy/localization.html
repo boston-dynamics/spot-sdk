@@ -1,0 +1,44 @@
+
+<html>
+  <head>
+    <title>Spot SDK</title>
+    <link rel="stylesheet" type="text/css" href="./../../css/markdown.css"/>
+  </head>
+  <body class="markdown-body">
+  
+<h1><a href="../../../index.html">Spot SDK</a> &gt; <a href="../index.html">Concepts</a> &gt; <a href="index.html">Autonomy</a> &gt; <br> GraphNav Localization</h1>
+<p>Once the robot’s location has been initialized in GraphNav, clients can use the GetLocalizationState RPC. The response message will contain a localization object which reports the pose of the robot relative to a particular waypoint on the map.</p>
+<p>Note that this localization is NOT relative to any global frame. Though you can use the structure of the map to compute the pose of the robot relative to any other connected waypoint in the graph, the pose is not guaranteed to be metrically accurate.</p>
+<p>A map's waypoints are combined with the cumulative point cloud data captured at each waypoint. It's important to understand that this point cloud data does not result in global consistency.</p>
+<h2>Localization update interval</h2>
+<p>GraphNav updates localization at least twice a second. Internally, GraphNav uses the localization estimate to decide whether or not to switch the localization frame to a different waypoint on the map.</p>
+<p>Localization is computed by combining prior information from the map, the robot’s odometry, and visual and geometric features in the world around the robot. The quality of the pose estimate varies depending on the environment, the sensor payload on Spot, how far away the robot is from a waypoint and how the robot got to its current position.</p>
+<p>Situations that can have a negative effect on localization:</p>
+<ul>
+<li>The robot is far enough away from the recorded map that it cannot see any features recorded in the map for a long period of time</li>
+<li>The robot slips and falls or is carried to a new location while unpowered</li>
+<li>The environment has changed dramatically since the map was recorded</li>
+<li>The environment has few features</li>
+<li>The environment is too dark</li>
+</ul>
+<p>A robot equipped with a LIDAR payload can operate in darker environments than a robot without such a payload.</p>
+<h2>Feature Deserts</h2>
+<p>GraphNav depends on features in the environment to localize. Where features are lacking, localization is more difficult or impossible.</p>
+<p>For example, every position on a snow-covered field looks the same — there isn't enough detail for localization to succeed. Internally GraphNav estimates whether the robot's location provides sufficient data for localization. If not, any waypoints created are annotated as feature deserts.</p>
+<p>GraphNav will not attempt to localize in feature deserts. Instead, it will rely on odometry to allow the robot to cross small feature deserts.</p>
+<h2>Lost robots</h2>
+<p>The GraphNav service maintains an internal assessment of whether or not it believes the robot is lost or stuck. When lost, the service will refuse to navigate autonomously.</p>
+<p>This determination is correlated with the amount of change in the environment where the map was recorded. A site that has changed significantly since recording will look very different to the robot. For example, a map of an empty parking lot will look different when cars are parked there.</p>
+<p>When site changes cause the localization status to be LOST, a new map of the site should be recorded.</p>
+<h2>Stuck robots</h2>
+<p>The GraphNav service uses a system of constraints to keep the robot relatively close to the recorded route (roughly within a 3m corridor).</p>
+<p>If a large object is placed in the robot’s path, the robot may not be able to get around it. If the robot takes longer than expected to get to its next destination, GraphNav will declare the robot stuck. This does NOT stop the robot, which will keep trying to return to the route. However, the API client may wish to intervene or prompt the operator.</p>
+<h2>Stairs and other edge constraints</h2>
+<p>When recording a map that includes stairs, annotations will be added to the relevant edges in the map. The system will orient the robot to face up the stairs (both when ascending and descending) and reduce the maximum speed. Typically this results in the robot turning in place at the top of a stairwell and carefully descending.</p>
+<p>Edges may also be annotated with related constraints to maintain direction. For example, this allows the robot to safely traverse stairs connected to a narrow hallway by turning around before entering the narrow region.</p>
+<p>The robot must have enough space to turn around in between up- and down- stairs, otherwise the robot will report a navigation CONSTRAINT_FAULT.</p>
+<br>
+<p><a href="initialization.html">« Previous</a>  |  <a href="graphnav_and_robot_locomotion.html">Next »</a></p>
+
+  </body>
+</html>

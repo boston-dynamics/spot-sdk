@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -48,8 +48,7 @@ class InactiveThreadError(TimeSyncError):
 
 class TimeSyncClient(BaseClient):
     """A client for establishing time-sync with a server/robot."""
-    default_authority = 'api.spot.robot'
-    default_service_name = 'time_sync'
+    default_service_name = 'time-sync'
     service_type = 'bosdyn.api.TimeSyncService'
 
     def __init__(self):
@@ -58,11 +57,14 @@ class TimeSyncClient(BaseClient):
     def get_time_sync_update(self, previous_round_trip, clock_identifier, **kwargs):
         """Obtain an initial or updated timesync estimate with server.
 
-        Params:
-            previous_round_trip : bosdyn.api.TimeSyncRoundTrip or None
-                None on first call, then fill out with previous response from server.
-            clock_identifier : str
-                Empty on first call, assigned by server in first response.
+        Args:
+            previous_round_trip (bosdyn.api.TimeSyncRoundTrip): None on first rpc call, then
+                                                                fill out with previous response
+                                                                from server.
+            clock_identifier (string): Empty on first call, assigned by server in first response.
+
+        Raises:
+            RpcError: Problem communicating with the robot.
         """
         req = self._get_time_sync_update_request(previous_round_trip, clock_identifier)
         return self.call(self._stub.TimeSyncUpdate, req, None, common_header_errors, **kwargs)
@@ -119,7 +121,8 @@ class TimeSyncEndpoint(object):
 
     @property
     def has_established_time_sync(self):
-        """
+        """Checks if the client has successfully established time-sync with the robot.
+
         Returns:
             Boolean true if the previous time-sync update returned that time sync is OK.
         """
@@ -140,7 +143,8 @@ class TimeSyncEndpoint(object):
 
     @property
     def clock_identifier(self):
-        """
+        """The clock identifier for the instance of the time-sync client.
+
         Returns:
           A unique identifier for this client. Empty if get_new_estimate has not been called.
         """
@@ -152,10 +156,10 @@ class TimeSyncEndpoint(object):
         """The best current estimate of clock skew from the time-sync service.
 
         Returns:
-          google.protobuf.Duration
+            The google.protobuf.Duration representing the clock skew.
 
         Raises:
-          NotEstablishedError if time sync has not yet been established.
+            NotEstablishedError: Time sync has not yet been established.
         """
         response = self.response
         if not response or response.state.status != time_sync_pb2.TimeSyncState.STATUS_OK:
@@ -164,6 +168,12 @@ class TimeSyncEndpoint(object):
 
     def establish_timesync(self, max_samples=25, break_on_success=False):
         """Perform time-synchronization until time sync established.
+
+        Args:
+            max_samples (int): The maximum number of times to attempt to establish time-sync
+                               through time-synchronization.
+            break_on_success (bool): If true, stop performing the time-synchronization after
+                                     time-sync is established.
 
         Return:
             Boolean true if valid timesync has been established.
@@ -180,8 +190,14 @@ class TimeSyncEndpoint(object):
         round_trip = None
         clock_identifier = None
         with self._lock:
-            round_trip = self._locked_previous_round_trip
-            clock_identifier = self._locked_clock_identifier
+            # Only add a round trip to the request along with a clock identifier, otherwise
+            #  the sever will respond with an invalid request error.
+            # Responses with errors may not contain a clock identifier.
+            # This may happen, for example, if the service was not yet ready at the time of
+            #  the request.
+            if self._locked_clock_identifier:
+                round_trip = self._locked_previous_round_trip
+                clock_identifier = self._locked_clock_identifier
         return self._client.get_time_sync_update(previous_round_trip=round_trip,
                                                  clock_identifier=clock_identifier)
 
@@ -212,8 +228,11 @@ class TimeSyncEndpoint(object):
     def get_robot_time_converter(self):
         """Get a RobotTimeConverter for current estimate for robot clock skew from local time.
 
+        Returns:
+          An instance of RobotTimeConvertor for the time-sync client.
+
         Raises:
-          TimeSyncFailure   If time sync has not yet been established.
+          NotEstablishedError: If time sync has not yet been established.
         """
         return RobotTimeConverter(timestamp_to_nsec(self.clock_skew))
 
@@ -221,14 +240,15 @@ class TimeSyncEndpoint(object):
         """Convert a local time in seconds to a timestamp proto in robot time.
 
         Args:
-          local_time_secs       Timestamp in seconds since the unix epoch (e.g., from time.time()).
+            local_time_secs (float): Timestamp in seconds since the unix epoch (e.g.,
+                                     from time.time()).
 
         Returns:
-          google.protobuf.Timestamp  Representing |local_time_secs| in robot clock.
-          None                       If |local_time_secs| is None.
+            google.protobuf.Timestamp representing local_time_secs in robot clock, or None if
+                local_time_secs is None.
 
         Raises:
-          TimeSyncFailure   If time sync has not yet been established.
+            NotEstablishedError:  Time sync has not yet been established.
         """
         if not local_time_secs:
             return None
@@ -236,7 +256,6 @@ class TimeSyncEndpoint(object):
         return converter.robot_timestamp_from_local_secs(local_time_secs)
 
 
-#  (e.g., temporary loss of comms)?
 class TimeSyncThread(object):
     """Background thread for achieving and maintaining time-sync to the robot."""
 
@@ -288,7 +307,11 @@ class TimeSyncThread(object):
 
     @time_sync_interval_sec.setter
     def time_sync_interval_sec(self, val):
-        """Set interval at which time-sync is updated in the thread after sync is established."""
+        """Set interval at which time-sync is updated in the thread after sync is established.
+
+        Args:
+            val (float): The interval (in seconds) that the time-sync estimate should be updated.
+        """
         with self._lock:
             self._locked_time_sync_interval_sec = val
             self._event.set()
@@ -303,11 +326,12 @@ class TimeSyncThread(object):
         """Wait for up to the given timeout for time-sync to be achieved
 
         Args:
-          timeout_sec:  maximum time to wait for time-sync to be achieved.
+          timeout_sec (float): Maximum time (seconds) to wait for time-sync to be achieved.
 
         Raises:
-          InactiveThreadError  If thread is not running.
-          TimedOutError  If deadline to achieve time-sync is exceeded.
+          InactiveThreadError:  Thread is not running.
+          time_sync.TimedOutError:  Deadline to achieve time-sync is exceeded.
+          Threading Exceptions: Errors from threading the processes.
         """
         if self.has_established_time_sync:
             return
@@ -325,7 +349,8 @@ class TimeSyncThread(object):
 
     @property
     def has_established_time_sync(self):
-        """
+        """Checks if the client has successfully established time-sync with the robot.
+
         Returns:
             Boolean true if the previous time-sync update returned that time sync is OK.
         """
@@ -352,14 +377,15 @@ class TimeSyncThread(object):
         """Get current estimate for robot clock skew from local time.
 
         Args:
-          timesync_timeout_sec  Time to wait for timesync before doing conversion.
-
-        Raises:
-          InactiveThreadError If time-sync thread exits before time-sync.
-          TimedOutError If deadline to achieve time-sync is exceeded.
+          timesync_timeout_sec (float):  Time to wait for timesync before doing conversion.
 
         Returns:
           Clock skew as a google.protobuf.Duration object
+
+        Raises:
+          InactiveThreadError: Time-sync thread exits before time-sync.
+          time_sync.TimedOutError: Deadline to achieve time-sync is exceeded.
+          Threading Exceptions: Errors from threading the processes.
         """
         self.wait_for_sync(timeout_sec=timesync_timeout_sec)
         return self.endpoint.clock_skew
@@ -367,9 +393,13 @@ class TimeSyncThread(object):
     def get_robot_time_converter(self, timesync_timeout_sec=0):
         """Get a RobotTimeConverter for current estimate for robot clock skew from local time.
 
+        Args:
+            timesync_timeout_sec (float):  Time to wait for timesync before doing conversion.
+
         Raises:
-          InactiveThreadError  If time-sync thread exits before time-sync.
-          TimedOutError  If deadline to achieve time-sync is exceeded.
+          InactiveThreadError: Time-sync thread exits before time-sync.
+          time_sync.TimedOutError: Deadline to achieve time-sync is exceeded.
+          Threading Exceptions: Errors from threading the processes.
         """
         self.wait_for_sync(timeout_sec=timesync_timeout_sec)
         return self.endpoint.get_robot_time_converter()
@@ -378,16 +408,18 @@ class TimeSyncThread(object):
         """Convert a local time in seconds to a timestamp proto in robot time.
 
         Args:
-          local_time_secs       Timestamp in seconds since the unix epoch (e.g., from time.time()).
-          timesync_timeout_sec  Time to wait for timesync before doing conversion.
+            local_time_secs (float): Timestamp in seconds since the unix epoch (e.g.,
+                from time.time()).
+            timesync_timeout_sec (float): Time to wait for timesync before doing conversion.
 
         Returns:
-          google.protobuf.Timestamp  Representing |local_time_secs| in robot clock.
-          None                       If |local_time_secs| is None.
+            google.protobuf.Timestamp representing local_time_secs in robot clock, or None if
+            local_time_secs is None.
 
         Raises:
-          InactiveThreadError    If time-sync thread exits before time-sync.
-          TimedOutError    If deadline to achieve time-sync is exceeded.
+            InactiveThreadError: Time-sync thread exits before time-sync.
+            time_sync.TimedOutError: Deadline to achieve time-sync is exceeded.
+            Threading Exceptions: Errors from threading the processes.
         """
         if not local_time_secs:
             return None

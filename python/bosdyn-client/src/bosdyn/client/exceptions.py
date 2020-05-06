@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -14,10 +14,18 @@ class ResponseError(Error):
     def __init__(self, response, error_message=None):
         super(ResponseError, self).__init__()
         self.response = response
-        self.error_message = error_message or response.header.error.message
+        if error_message is not None:
+            self.error_message = error_message
+        elif response is not None:
+            self.error_message = response.header.error.message
+        else:
+            self.error_message = ""
 
     def __str__(self):
-        full_classname = self.response.DESCRIPTOR.full_name
+        if self.response is not None:
+            full_classname = self.response.DESCRIPTOR.full_name
+        else:
+            full_classname = "Error"
         return '{}: {}'.format(full_classname, self.error_message)
 
 
@@ -47,7 +55,7 @@ class UnsetStatusError(ServerError):
 
 
 class RpcError(Error):
-    """The system does not know how to handle this error."""
+    """An error occurred trying to reach a service on the robot."""
 
     def __init__(self, original_error, error_message=None):
         super(RpcError, self).__init__()
@@ -75,8 +83,16 @@ class NonexistentAuthorityError(RpcError):
     """The app token's authority field names a nonexistent service."""
 
 
+class PermissionDeniedError(RpcError):
+    """The rpc request was denied access."""
+
+
 class ProxyConnectionError(RpcError):
     """The proxy on the robot could not be reached."""
+
+
+class ResponseTooLargeError(RpcError):
+    """The rpc response was larger than allowed max size."""
 
 
 class ServiceUnavailableError(RpcError):
@@ -92,7 +108,7 @@ class TimedOutError(RpcError):
 
 
 class UnableToConnectToRobotError(RpcError):
-    """The robot may be offline."""
+    """The robot may be offline or otherwise unreachable."""
 
 
 class UnauthenticatedError(RpcError):
@@ -103,5 +119,17 @@ class UnknownDnsNameError(RpcError):
     """The system is unable to translate the domain name."""
 
 
+class NotFoundError(RpcError):
+    """The backend system could not be found."""
+
+
 class UnimplementedError(RpcError):
     """The API does not recognize the request and is unable to complete the request."""
+
+
+class TransientFailureError(RpcError):
+    """The channel is in state TRANSIENT_FAILURE, often caused by a connection failure."""
+
+
+class TimeSyncRequired(Error):
+    """Time synchronization is required but none seems to be established."""

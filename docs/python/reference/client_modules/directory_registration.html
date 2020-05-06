@@ -1,0 +1,448 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Directory Registration &mdash; Spot 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="E-Stop" href="estop.html" />
+    <link rel="prev" title="Directory" href="directory.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Spot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="client_index.html">Client SDK</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auth.html">Auth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="channel.html">Channel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command_line.html">Command Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html">Common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="directory.html">Directory</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Directory Registration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="estop.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image.html">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lease.html">Lease</a></li>
+<li class="toctree-l2"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="local_grid.html">Local Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="payload.html">Payload</a></li>
+<li class="toctree-l2"><a class="reference internal" href="payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="power.html">Power</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processors.html">Processors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recording.html">Recording</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot_command.html">Robot Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot_id.html">Robot ID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot_state.html">Robot State</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot.html">Robot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdk.html">SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spot_check.html">Spot Check</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time_sync.html">Time Sync</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_cache.html">Token Cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_manager.html">Token Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.html">Util</a></li>
+<li class="toctree-l2"><a class="reference internal" href="world_object.html">World Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spot_cam_modules/spot_cam_index.html">Spot CAM SDK</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../core_modules/core_index.html">Core SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mission_modules/mission_index.html">Mission SDK</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="client_index.html">Client SDK</a> &raquo;</li>
+        
+      <li>Directory Registration</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/client_modules/directory_registration.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-bosdyn.client.directory_registration">
+<span id="directory-registration"></span><h1>Directory Registration<a class="headerlink" href="#module-bosdyn.client.directory_registration" title="Permalink to this headline">¶</a></h1>
+<p>Client for the directory registration service.</p>
+<p>A DirectoryRegistrationClient allows a client to modify information about other API services
+available on a robot.</p>
+<dl class="py exception">
+<dt id="bosdyn.client.directory_registration.DirectoryRegistrationResponseError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.directory_registration.</code><code class="sig-name descname">DirectoryRegistrationResponseError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/directory_registration.html#DirectoryRegistrationResponseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.directory_registration.DirectoryRegistrationResponseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.ResponseError</span></code></a></p>
+<p>General class of errors for directory registration responses.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.directory_registration.ServiceAlreadyExistsError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.directory_registration.</code><code class="sig-name descname">ServiceAlreadyExistsError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/directory_registration.html#ServiceAlreadyExistsError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.directory_registration.ServiceAlreadyExistsError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.directory_registration.DirectoryRegistrationResponseError" title="bosdyn.client.directory_registration.DirectoryRegistrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.directory_registration.DirectoryRegistrationResponseError</span></code></a></p>
+<p>The service already exists on the robot.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.directory_registration.ServiceDoesNotExistError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.directory_registration.</code><code class="sig-name descname">ServiceDoesNotExistError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/directory_registration.html#ServiceDoesNotExistError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.directory_registration.ServiceDoesNotExistError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.directory_registration.DirectoryRegistrationResponseError" title="bosdyn.client.directory_registration.DirectoryRegistrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.directory_registration.DirectoryRegistrationResponseError</span></code></a></p>
+<p>The specified service does not exist on the robot.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.directory_registration.DirectoryRegistrationClient">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.directory_registration.</code><code class="sig-name descname">DirectoryRegistrationClient</code><a class="reference internal" href="../_modules/bosdyn/client/directory_registration.html#DirectoryRegistrationClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.directory_registration.DirectoryRegistrationClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="common.html#bosdyn.client.common.BaseClient" title="bosdyn.client.common.BaseClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.common.BaseClient</span></code></a></p>
+<p>Write off-robot services and modify their information.</p>
+<dl class="py attribute">
+<dt id="bosdyn.client.directory_registration.DirectoryRegistrationClient.default_service_name">
+<code class="sig-name descname">default_service_name</code><em class="property"> = 'directory-registration'</em><a class="headerlink" href="#bosdyn.client.directory_registration.DirectoryRegistrationClient.default_service_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="bosdyn.client.directory_registration.DirectoryRegistrationClient.service_type">
+<code class="sig-name descname">service_type</code><em class="property"> = 'bosdyn.api.DirectoryRegistrationService'</em><a class="headerlink" href="#bosdyn.client.directory_registration.DirectoryRegistrationClient.service_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.directory_registration.DirectoryRegistrationClient.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">service_type</span></em>, <em class="sig-param"><span class="n">authority</span></em>, <em class="sig-param"><span class="n">host_ip</span></em>, <em class="sig-param"><span class="n">port</span></em>, <em class="sig-param"><span class="n">user_token_required</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">application_token_required</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/directory_registration.html#DirectoryRegistrationClient.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.directory_registration.DirectoryRegistrationClient.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a service routing with the robot.</p>
+<p>If service name already registered, no change will be applied and will raise ServiceAlreadyExistsError.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The name of the service. Must be unique.</p></li>
+<li><p><strong>service_type</strong> – The GRPC service definition defining the calls to/from this service.
+(authority, service_type) must be unique in the directory.</p></li>
+<li><p><strong>authority</strong> – The authority used to direct calls to this service.
+(authority, service_type) must be unique in the directory.</p></li>
+<li><p><strong>host_ip</strong> – The ip address of the system that the service is being hosted on.</p></li>
+<li><p><strong>port</strong> – The port number the service can be accessed through on the host system.</p></li>
+<li><p><strong>user_token_required</strong> – If a user token should be verified to access the service.</p></li>
+<li><p><strong>application_token_required</strong> – Deprecated - Do not use.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.directory_registration.ServiceAlreadyExistsError" title="bosdyn.client.directory_registration.ServiceAlreadyExistsError"><strong>ServiceAlreadyExistsError</strong></a> – The service already exists.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.directory_registration.DirectoryRegistrationResponseError" title="bosdyn.client.directory_registration.DirectoryRegistrationResponseError"><strong>DirectoryRegistrationResponseError</strong></a> – Something went wrong during the directory registration.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.directory_registration.DirectoryRegistrationClient.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">service_type</span></em>, <em class="sig-param"><span class="n">authority</span></em>, <em class="sig-param"><span class="n">host_ip</span></em>, <em class="sig-param"><span class="n">port</span></em>, <em class="sig-param"><span class="n">user_token_required</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">application_token_required</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/directory_registration.html#DirectoryRegistrationClient.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.directory_registration.DirectoryRegistrationClient.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update a service definition of an existing service that matches the service name.</p>
+<p>If service name is not registered, will raise ServiceDoesNotExistError.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The name of the service to be updated.</p></li>
+<li><p><strong>service_type</strong> – The GRPC service definition defining the calls to/from this service.
+(authority, service_type) must be unique in the directory.</p></li>
+<li><p><strong>authority</strong> – The authority used to direct calls to this service.
+(authority, service_type) must be unique in the directory.</p></li>
+<li><p><strong>host_ip</strong> – The ip address of the system that the service is being hosted on.</p></li>
+<li><p><strong>port</strong> – The port number the service can be accessed through on the host system.</p></li>
+<li><p><strong>user_token_required</strong> – If a user token should be verified to access the service.</p></li>
+<li><p><strong>Deprecated - Do not use.</strong> (<em>application_token_required</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.directory_registration.ServiceDoesNotExistError" title="bosdyn.client.directory_registration.ServiceDoesNotExistError"><strong>ServiceDoesNotExistError</strong></a> – The service does not exist.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.directory_registration.DirectoryRegistrationResponseError" title="bosdyn.client.directory_registration.DirectoryRegistrationResponseError"><strong>DirectoryRegistrationResponseError</strong></a> – Something went wrong during the directory registration.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.directory_registration.DirectoryRegistrationClient.unregister">
+<code class="sig-name descname">unregister</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/directory_registration.html#DirectoryRegistrationClient.unregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.directory_registration.DirectoryRegistrationClient.unregister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a service routing with the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> – The name of the service to be removed.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.directory_registration.ServiceDoesNotExistError" title="bosdyn.client.directory_registration.ServiceDoesNotExistError"><strong>ServiceDoesNotExistError</strong></a> – The service does not exist.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.directory_registration.DirectoryRegistrationResponseError" title="bosdyn.client.directory_registration.DirectoryRegistrationResponseError"><strong>DirectoryRegistrationResponseError</strong></a> – Something went wrong during the directory registration.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.directory_registration.DirectoryRegistrationKeepAlive">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.directory_registration.</code><code class="sig-name descname">DirectoryRegistrationKeepAlive</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dir_reg_client</span></em>, <em class="sig-param"><span class="n">logger</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">rpc_timeout_seconds</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">rpc_interval_seconds</span><span class="o">=</span><span class="default_value">30</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/directory_registration.html#DirectoryRegistrationKeepAlive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.directory_registration.DirectoryRegistrationKeepAlive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Helper class to keep a directory entry updated.</p>
+<p>Assuming the directory itself is hosted on the robot, and the service being registered in the
+directory is on a payload, use of this class streamlines the following cases:</p>
+<ol class="arabic simple">
+<li><p>The payload, or the payload-hosted service, is restarted.</p></li>
+<li><p>The robot is restarted.</p></li>
+<li><p>On-robot processes clear out the directory. This can happen in rare cases.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dir_reg_client</strong> – Client to the directory registration service.</p></li>
+<li><p><strong>logger</strong> – logging.Logger object to log with. Defaults to None, in which case one with the
+class name is acquired.</p></li>
+<li><p><strong>rpc_timeout_seconds</strong> – Number of seconds to wait for a dir_reg_client RPC. Defaults to None,
+for no timeout.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="bosdyn.client.directory_registration.DirectoryRegistrationKeepAlive.start">
+<code class="sig-name descname">start</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory_name</span></em>, <em class="sig-param"><span class="n">service_type</span></em>, <em class="sig-param"><span class="n">authority</span></em>, <em class="sig-param"><span class="n">host</span></em>, <em class="sig-param"><span class="n">port</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/directory_registration.html#DirectoryRegistrationKeepAlive.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.directory_registration.DirectoryRegistrationKeepAlive.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register, optionally update, and then kick off thread.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.directory_registration.DirectoryRegistrationKeepAlive.is_alive">
+<code class="sig-name descname">is_alive</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/directory_registration.html#DirectoryRegistrationKeepAlive.is_alive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.directory_registration.DirectoryRegistrationKeepAlive.is_alive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Are we still periodically re-registering?</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A bool stating if still alive</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.directory_registration.DirectoryRegistrationKeepAlive.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/directory_registration.html#DirectoryRegistrationKeepAlive.shutdown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.directory_registration.DirectoryRegistrationKeepAlive.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop the background thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.directory_registration.DirectoryRegistrationKeepAlive.unregister">
+<code class="sig-name descname">unregister</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bosdyn/client/directory_registration.html#DirectoryRegistrationKeepAlive.unregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.directory_registration.DirectoryRegistrationKeepAlive.unregister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove service from the directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.directory_registration.ServiceDoesNotExistError" title="bosdyn.client.directory_registration.ServiceDoesNotExistError"><strong>ServiceDoesNotExistError</strong></a> – The service does not exist.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="estop.html" class="btn btn-neutral float-right" title="E-Stop" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="directory.html" class="btn btn-neutral" title="Directory" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Boston Dynamics.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

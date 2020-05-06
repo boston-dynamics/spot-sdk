@@ -1,0 +1,344 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bosdyn.client.spot_cam.ptz &mdash; Spot 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Spot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../client_modules/client_index.html">Client SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../core_modules/core_index.html">Core SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../mission_modules/mission_index.html">Mission SDK</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bosdyn.client.spot_cam.ptz</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bosdyn.client.spot_cam.ptz</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;For clients to the Spot CAM Ptz service.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">handle_common_header_errors</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.spot_cam</span> <span class="kn">import</span> <span class="n">service_pb2_grpc</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.spot_cam</span> <span class="kn">import</span> <span class="n">ptz_pb2</span>
+
+<span class="kn">from</span> <span class="nn">google.protobuf.wrappers_pb2</span> <span class="kn">import</span> <span class="n">FloatValue</span>
+
+
+<div class="viewcode-block" id="PtzClient"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient">[docs]</a><span class="k">class</span> <span class="nc">PtzClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A client calling Spot CAM Ptz service.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;spot-cam-ptz&#39;</span>
+    <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.spot_cam.PtzService&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PtzClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_pb2_grpc</span><span class="o">.</span><span class="n">PtzServiceStub</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PtzClient.list_ptz"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.list_ptz">[docs]</a>    <span class="k">def</span> <span class="nf">list_ptz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List all the available ptzs&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">ListPtzRequest</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListPtz</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_ptz_from_response</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">_ptz_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PtzClient.list_ptz_async"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.list_ptz_async">[docs]</a>    <span class="k">def</span> <span class="nf">list_ptz_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of list_ptz()&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">ListPtzRequest</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListPtz</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_ptz_from_response</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">_ptz_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PtzClient.get_ptz_position"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.get_ptz_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_ptz_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz_desc</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Position of the specified ptz&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">GetPtzPositionRequest</span><span class="p">(</span><span class="n">ptz</span><span class="o">=</span><span class="n">ptz_desc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetPtzPosition</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ptz_position_from_response</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">_ptz_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PtzClient.get_ptz_position_async"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.get_ptz_position_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_ptz_position_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz_desc</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_ptz_position()&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">GetPtzPositionRequest</span><span class="p">(</span><span class="n">ptz</span><span class="o">=</span><span class="n">ptz_desc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetPtzPosition</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">_get_ptz_position_from_response</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ptz_error_from_response</span><span class="p">,</span>
+                               <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PtzClient.get_ptz_velocity"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.get_ptz_velocity">[docs]</a>    <span class="k">def</span> <span class="nf">get_ptz_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz_desc</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Velocity of the specified ptz&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">GetPtzVelocityRequest</span><span class="p">(</span><span class="n">ptz</span><span class="o">=</span><span class="n">ptz_desc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetPtzVelocity</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ptz_velocity_from_response</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">_ptz_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PtzClient.get_ptz_velocity_async"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.get_ptz_velocity_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_ptz_velocity_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz_desc</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_ptz_velocity()&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">GetPtzVelocityRequest</span><span class="p">(</span><span class="n">ptz</span><span class="o">=</span><span class="n">ptz_desc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetPtzVelocity</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">_get_ptz_velocity_from_response</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ptz_error_from_response</span><span class="p">,</span>
+                               <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PtzClient.set_ptz_position"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.set_ptz_position">[docs]</a>    <span class="k">def</span> <span class="nf">set_ptz_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz_desc</span><span class="p">,</span> <span class="n">pan</span><span class="p">,</span> <span class="n">tilt</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set position of the specified ptz in PTZ-space&quot;&quot;&quot;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">pan</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">tilt</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">zoom</span><span class="p">)</span>
+        <span class="n">ptz_position</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">PtzPosition</span><span class="p">(</span><span class="n">ptz</span><span class="o">=</span><span class="n">ptz_desc</span><span class="p">,</span> <span class="n">pan</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">tilt</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">SetPtzPositionRequest</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">ptz_position</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetPtzPosition</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_ptz_position_from_response</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">_ptz_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PtzClient.set_ptz_position_async"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.set_ptz_position_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_ptz_position_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz_desc</span><span class="p">,</span> <span class="n">pan</span><span class="p">,</span> <span class="n">tilt</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of set_ptz_position()&quot;&quot;&quot;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">pan</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">tilt</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">zoom</span><span class="p">)</span>
+        <span class="n">ptz_position</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">PtzPosition</span><span class="p">(</span><span class="n">ptz</span><span class="o">=</span><span class="n">ptz_desc</span><span class="p">,</span> <span class="n">pan</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">tilt</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">SetPtzPositionRequest</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">ptz_position</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetPtzPosition</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">_set_ptz_position_from_response</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ptz_error_from_response</span><span class="p">,</span>
+                               <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PtzClient.set_ptz_velocity"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.set_ptz_velocity">[docs]</a>    <span class="k">def</span> <span class="nf">set_ptz_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz_desc</span><span class="p">,</span> <span class="n">pan</span><span class="p">,</span> <span class="n">tilt</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set velocity of the specified ptz in PTZ-space&quot;&quot;&quot;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">pan</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">tilt</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">zoom</span><span class="p">)</span>
+        <span class="n">ptz_velocity</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">PtzVelocity</span><span class="p">(</span><span class="n">ptz</span><span class="o">=</span><span class="n">ptz_desc</span><span class="p">,</span> <span class="n">pan</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">tilt</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">SetPtzVelocityRequest</span><span class="p">(</span><span class="n">velocity</span><span class="o">=</span><span class="n">ptz_velocity</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetPtzVelocity</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_ptz_velocity_from_response</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">_ptz_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PtzClient.set_ptz_velocity_async"><a class="viewcode-back" href="../../../../client_modules/spot_cam_modules/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.set_ptz_velocity_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_ptz_velocity_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz_desc</span><span class="p">,</span> <span class="n">pan</span><span class="p">,</span> <span class="n">tilt</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of set_ptz_velocity()&quot;&quot;&quot;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">pan</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">tilt</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">zoom</span><span class="p">)</span>
+        <span class="n">ptz_velocity</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">PtzVelocity</span><span class="p">(</span><span class="n">ptz</span><span class="o">=</span><span class="n">ptz_desc</span><span class="p">,</span> <span class="n">pan</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">tilt</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">SetPtzVelocityRequest</span><span class="p">(</span><span class="n">velocity</span><span class="o">=</span><span class="n">ptz_velocity</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetPtzVelocity</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">_set_ptz_velocity_from_response</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ptz_error_from_response</span><span class="p">,</span>
+                               <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_list_ptz_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">ptzs</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_ptz_position_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">position</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_ptz_velocity_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">velocity</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_set_ptz_position_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">position</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_set_ptz_velocity_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">velocity</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="nd">@handle_common_header_errors</span>
+    <span class="k">def</span> <span class="nf">_ptz_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>  <span class="c1"># pylint: disable=unused-argument</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Boston Dynamics.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.image &mdash; Spot 1.1.0 documentation</title>
+  <title>bosdyn.client.image &mdash; Spot 2.0.0 documentation</title>
   
 
   
@@ -17,34 +17,33 @@
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -58,7 +57,7 @@
             
             
               <div class="version">
-                1.1.0
+                2.0.0
               </div>
             
           
@@ -82,10 +81,10 @@
               
             
             
-              <p class="caption"><span class="caption-text">Services:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../client_index.html">Client API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../core_index.html">Core API</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../client_modules/client_index.html">Client SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core_modules/core_index.html">Core SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mission_modules/mission_index.html">Mission SDK</a></li>
 </ul>
 
             
@@ -149,13 +148,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.image</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
 <span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
 
-<span class="sd">&quot;&quot;&quot;For clients to the image service.&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;For clients to use the image service.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="n">BaseClient</span>
@@ -208,16 +207,22 @@
 
 
 <div class="viewcode-block" id="ImageClient"><a class="viewcode-back" href="../../../client_modules/image.html#bosdyn.client.image.ImageClient">[docs]</a><span class="k">class</span> <span class="nc">ImageClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Client to the image service.&quot;&quot;&quot;</span>
-    <span class="n">default_authority</span> <span class="o">=</span> <span class="s1">&#39;api.spot.robot&#39;</span>
-    <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;robot_image_service&#39;</span>
+    <span class="sd">&quot;&quot;&quot;Client for the image service.&quot;&quot;&quot;</span>
+    <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;image&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.ImageService&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ImageClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">image_service_pb2_grpc</span><span class="o">.</span><span class="n">ImageServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ImageClient.list_image_sources"><a class="viewcode-back" href="../../../client_modules/image.html#bosdyn.client.image.ImageClient.list_image_sources">[docs]</a>    <span class="k">def</span> <span class="nf">list_image_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Obtain the list of ImageSources.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Obtain the list of ImageSources.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of the different image sources as strings.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_list_image_source_request</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListImageSources</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_list_image_sources_value</span><span class="p">,</span>
                          <span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -229,7 +234,17 @@
                                <span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ImageClient.get_image_from_sources"><a class="viewcode-back" href="../../../client_modules/image.html#bosdyn.client.image.ImageClient.get_image_from_sources">[docs]</a>    <span class="k">def</span> <span class="nf">get_image_from_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_sources</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Obtain images from sources using default parameters.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Obtain images from sources using default parameters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            image_sources (list of strings): The different image sources to request images from.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of image responses for each of the requested sources.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_image</span><span class="p">([</span><span class="n">build_image_request</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">image_sources</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ImageClient.get_image_from_sources_async"><a class="viewcode-back" href="../../../client_modules/image.html#bosdyn.client.image.ImageClient.get_image_from_sources_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_image_from_sources_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_sources</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -238,7 +253,18 @@
                                     <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ImageClient.get_image"><a class="viewcode-back" href="../../../client_modules/image.html#bosdyn.client.image.ImageClient.get_image">[docs]</a>    <span class="k">def</span> <span class="nf">get_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_requests</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Obtain the set of images from the robot.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Obtain the set of images from the robot.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            image_requests (list of ImageRequest): A list of the ImageRequest protobuf messages which</span>
+<span class="sd">                                                   specify which images to collect.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of image responses for each of the requested sources.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_image_request</span><span class="p">(</span><span class="n">image_requests</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetImage</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_get_image_value</span><span class="p">,</span> <span class="n">_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -264,6 +290,15 @@
 <span class="sd">    By default the robot will choose an appropriate format - such as JPEG for</span>
 <span class="sd">    visual images, or RAW for depth images. Clients can override image_format</span>
 <span class="sd">    in those cases.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        image_source_name (string): The image source to query.</span>
+<span class="sd">        quality_percent (int): The image quality from [0,100] (percent-value).</span>
+<span class="sd">        image_format (image_pb2.Image.Format): The type of format for the image</span>
+<span class="sd">                                               data, such as JPEG, RAW, or RLE.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The ImageRequest protobuf message for the given parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageRequest</span><span class="p">(</span><span class="n">image_source_name</span><span class="o">=</span><span class="n">image_source_name</span><span class="p">,</span>
                                   <span class="n">quality_percent</span><span class="o">=</span><span class="n">quality_percent</span><span class="p">,</span> <span class="n">image_format</span><span class="o">=</span><span class="n">image_format</span><span class="p">)</span></div>
@@ -287,7 +322,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Boston Dynamics
+        &copy; Copyright 2019, Boston Dynamics.
 
     </p>
   </div>
@@ -304,16 +339,36 @@
   
 
 
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -1,0 +1,46 @@
+
+<html>
+  <head>
+    <title>Spot SDK</title>
+    <link rel="stylesheet" type="text/css" href="./../../../docs/css/markdown.css"/>
+  </head>
+  <body class="markdown-body">
+  
+<h1>API Example - GraphNav Map Viewer</h1>
+<p>This is an example program for opening, parsing, and viewing a GraphNav map. This example may be used with GraphNav maps generated using Autowalk or the command line interface to GraphNav.</p>
+<h2>Prerequisites</h2>
+<p>This example requires VTK (visualization toolkit) and Numpy, and requires python 3. Using pip, these dependencies can be installed using:</p>
+<pre><code>python -m pip install -r requirements.txt
+</code></pre>
+<h2>Running the Example</h2>
+<ol>
+<li>Record a map using AutoWalk or the Command Line interface. (If using Autowalk, transfer the map from Documents/bosdyn/autowalk/your_map.walk to your local machine using a USB cable). The map should be a directory of the form:</li>
+</ol>
+<pre><code>- /your_map.walk
+    + graph
+    - waypoint_snapshots
+    - edge_snapshots
+</code></pre>
+<ol start="2">
+<li>Run the map viewer</li>
+</ol>
+<pre><code>python -m view_map &lt;path_to_your_map_directory&gt;
+</code></pre>
+<h2>Camera Controls</h2>
+<ul>
+<li>R : reset the camera</li>
+<li>Left Mouse: rotate the camera</li>
+<li>Right Mouse: zoom in/out.</li>
+<li>Middle Mouse: pan the camera.</li>
+</ul>
+<h2>GraphNav Map Structure</h2>
+<p>GraphNav maps consist of waypoints, and edges between the waypoints. A waypoint consists of a reference frame, a name, a unique ID, and associated raw data. The raw data for a waypoint is stored in what is called a "Snapshot". Multiple waypoints may share the same snapshot.</p>
+<p>Raw data includes feature clouds, April tag detections, imagery, terrain maps, etc.</p>
+<p>Edges consist of a directed edge from one waypoint to another and a transform that estimates the relationship in 3D space between the two waypoints.</p>
+<p>Maps do not have a global coordinate system (like GPS coordinates, for example). Only the relative transformations between waypoints are known.</p>
+<h2>Understanding the Map Viewer</h2>
+<p>The map viewer displays waypoints as axes (red, green and blue arrows) where the "z" axis is blue, the "x" is red, and the "y" is green.  They are connected by white lines representing edges.</p>
+<p>Around the waypoints, the map viewer displays feature clouds. Feature clouds are collections of points that correspond to detected edge features in the robot's cameras. The feature clouds are colored by height, where blue is higher and red is lower.</p>
+<p>The viewer also shows april tag detections as blue squares labeled with the fiducial ID. If multiple fiducials with the same ID are displayed near each other, this represents multiple detections taken at different times.</p>
+  </body>
+</html>

@@ -1,8 +1,10 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
+
+from __future__ import print_function
 
 import distutils.command.build_py
 import distutils.cmd
@@ -10,6 +12,12 @@ import os
 import pkg_resources
 import setuptools
 import sys
+
+try:
+    SDK_VERSION = os.environ['BOSDYN_SDK_VERSION']
+except KeyError:
+    print('Do not run setup.py directly - use wheels.py to build API wheels')
+    raise
 
 
 
@@ -103,14 +111,14 @@ def add_pathlib_version(requirements_list):
 
 setuptools.setup(
     name="bosdyn-api",
-    version="1.1.2",
+    version=SDK_VERSION,
     author="Boston Dynamics",
     author_email="support@bostondynamics.com",
     description="Boston Dynamics API protobufs",
     install_requires=["protobuf>=3.3.0"],
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://api.bostondynamics.com/",
+    url="https://www.bostondynamics.com/",
     # Walk the immediate subdir 'bosdyn' and build python package names out of the result.
     packages=[subdir[0].replace(os.path.sep, '.') for subdir in os.walk('bosdyn')],
     # Gets populated in our BuildPy.
@@ -120,7 +128,6 @@ setuptools.setup(
         "Programming Language :: Python :: 3.6",
         "License :: Other/Proprietary License",
         "Operating System :: OS Independent",
-        "Private :: Do Not Upload",
     ],
     cmdclass={
         'build_protos': proto_build,

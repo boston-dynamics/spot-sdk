@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.lease &mdash; Spot 1.1.0 documentation</title>
+  <title>bosdyn.client.lease &mdash; Spot 2.0.0 documentation</title>
   
 
   
@@ -17,34 +17,33 @@
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -58,7 +57,7 @@
             
             
               <div class="version">
-                1.1.0
+                2.0.0
               </div>
             
           
@@ -82,10 +81,10 @@
               
             
             
-              <p class="caption"><span class="caption-text">Services:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../client_index.html">Client API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../core_index.html">Core API</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../client_modules/client_index.html">Client SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core_modules/core_index.html">Core SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mission_modules/mission_index.html">Mission SDK</a></li>
 </ul>
 
             
@@ -149,7 +148,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.lease</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
@@ -218,6 +217,33 @@
     <span class="sd">&quot;&quot;&quot;Lease is not the active lease.&quot;&quot;&quot;</span></div>
 
 
+<div class="viewcode-block" id="Error"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.Error">[docs]</a><span class="k">class</span> <span class="nc">Error</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base non-response error for lease module.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="NoSuchLease"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.NoSuchLease">[docs]</a><span class="k">class</span> <span class="nc">NoSuchLease</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The requested lease does not exist.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resource</span> <span class="o">=</span> <span class="n">resource</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;No lease for resource &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LeaseNotOwnedByWallet"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseNotOwnedByWallet">[docs]</a><span class="k">class</span> <span class="nc">LeaseNotOwnedByWallet</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The lease is not owned by the wallet.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">lease_state</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resource</span> <span class="o">=</span> <span class="n">resource</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lease_state</span> <span class="o">=</span> <span class="n">lease_state</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_state</span><span class="o">.</span><span class="n">lease_status</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="s1">&#39;&lt;unknown&gt;&#39;</span>
+        <span class="k">return</span> <span class="s1">&#39;Lease on &quot;</span><span class="si">{}</span><span class="s1">&quot; has state (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span></div>
+
+
 <span class="n">_ACQUIRE_LEASE_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 <span class="n">_ACQUIRE_LEASE_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
     <span class="n">AcquireLeaseResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
@@ -254,13 +280,13 @@
 <span class="sd">    A service will grant access to the shared resource if the lease which accompanies a request is</span>
 <span class="sd">    &quot;more recent&quot; than any previously seen leases. Recency is determined using a sequence of</span>
 <span class="sd">    monotonically increasing numbers, similar to a Lamport logical clock.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lease_proto: bosdyn.api.Lease protobuf object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_proto</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initializes a Lease object.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            lease_proto: bosdyn.api.Lease protobuf object.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError if lease_proto is not present or valid.</span>
@@ -365,6 +391,7 @@
 
 
 <div class="viewcode-block" id="LeaseState"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseState">[docs]</a><span class="k">class</span> <span class="nc">LeaseState</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
     <span class="n">STATUS_UNOWNED</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">STATUS_REVOKED</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">STATUS_SELF_OWNER</span> <span class="o">=</span> <span class="mi">2</span>
@@ -383,12 +410,25 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">lease_current</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="LeaseState.create_newer"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseState.create_newer">[docs]</a>    <span class="k">def</span> <span class="nf">create_newer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create newer version of the Lease.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Instance of itself if lease_current was not passed, or a new LeaseState.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_current</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
         <span class="k">return</span> <span class="n">LeaseState</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lease_status</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_owner</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_original</span><span class="p">,</span>
                           <span class="bp">self</span><span class="o">.</span><span class="n">lease_current</span><span class="o">.</span><span class="n">create_newer</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="LeaseState.update_from_lease_use_result"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseState.update_from_lease_use_result">[docs]</a>    <span class="k">def</span> <span class="nf">update_from_lease_use_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_use_result</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update internal instance of LeaseState from given lease.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lease_use_result: LeaseUseResult from the server.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Updated internal instance of LeaseState.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">lease_use_result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">lease_use_result</span><span class="o">.</span><span class="n">STATUS_OLDER</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_current</span><span class="p">:</span>
                 <span class="n">attempted_lease</span> <span class="o">=</span> <span class="n">Lease</span><span class="p">(</span><span class="n">lease_use_result</span><span class="o">.</span><span class="n">attempted_lease</span><span class="p">)</span>
@@ -420,41 +460,107 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
 
 <div class="viewcode-block" id="LeaseWallet.add"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseWallet.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add lease in the wallet.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lease: Lease to add in the wallet.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_lease_state_map</span><span class="p">[</span><span class="n">lease</span><span class="o">.</span><span class="n">lease_proto</span><span class="o">.</span><span class="n">resource</span><span class="p">]</span> <span class="o">=</span> <span class="n">LeaseState</span><span class="p">(</span>
                 <span class="n">LeaseState</span><span class="o">.</span><span class="n">STATUS_SELF_OWNER</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="n">lease</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LeaseWallet.remove"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseWallet.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove lease from the wallet.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lease: Lease to remove from the wallet.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_lease_state_map</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">lease</span><span class="o">.</span><span class="n">lease_proto</span><span class="o">.</span><span class="n">resource</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LeaseWallet.advance"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseWallet.advance">[docs]</a>    <span class="k">def</span> <span class="nf">advance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="o">=</span><span class="n">_RESOURCE_BODY</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Advance the lease for a specific resource.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            resource: The resource that the Lease is for.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Advanced lease for the resource.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            LeaseNotOwnedByWallet: The lease is not owned by the wallet.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-            <span class="n">lease_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lease_state_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">lease_state</span> <span class="ow">or</span> <span class="n">lease_state</span><span class="o">.</span><span class="n">lease_status</span> <span class="o">!=</span> <span class="n">LeaseState</span><span class="o">.</span><span class="n">STATUS_SELF_OWNER</span><span class="p">:</span>
-                <span class="c1"># Throw an exception?</span>
-                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">lease_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_owned_lease_state_locked</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
             <span class="n">new_lease</span> <span class="o">=</span> <span class="n">lease_state</span><span class="o">.</span><span class="n">create_newer</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_lease_state_map</span><span class="p">[</span><span class="n">resource</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_lease</span>
             <span class="k">return</span> <span class="n">new_lease</span><span class="o">.</span><span class="n">lease_current</span></div>
 
 <div class="viewcode-block" id="LeaseWallet.get_lease"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseWallet.get_lease">[docs]</a>    <span class="k">def</span> <span class="nf">get_lease</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="o">=</span><span class="n">_RESOURCE_BODY</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the lease for a specific resource.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            resource: The resource that the Lease is for.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Lease for the resource.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            LeaseNotOwnedByWallet: The lease is not owned by the wallet.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-            <span class="n">lease_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lease_state_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">lease_state</span> <span class="ow">or</span> <span class="n">lease_state</span><span class="o">.</span><span class="n">lease_status</span> <span class="o">!=</span> <span class="n">LeaseState</span><span class="o">.</span><span class="n">STATUS_SELF_OWNER</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">None</span>
-            <span class="k">return</span> <span class="n">lease_state</span><span class="o">.</span><span class="n">lease_current</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_owned_lease_state_locked</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span><span class="o">.</span><span class="n">lease_current</span></div>
 
 <div class="viewcode-block" id="LeaseWallet.get_lease_state"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseWallet.get_lease_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_lease_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="o">=</span><span class="n">_RESOURCE_BODY</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the lease state for a specific resource.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            resource: The resource that the Lease is for.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Lease state for the resource.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            NoSuchLease: The requested lease does not exist.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lease_state_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_lease_state_locked</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_lease_state_locked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the lease state for a specific resource or raise an NoSuchLease exception if lease</span>
+<span class="sd">        is not found.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            resource: The resource that the Lease is for.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Lease state for the resource.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            NoSuchLease: The requested lease does not exist.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lease_state_map</span><span class="p">[</span><span class="n">resource</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSuchLease</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_owned_lease_state_locked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the lease for a specific resource or raise an LeaseNotOwnedByWallet exception if</span>
+<span class="sd">        lease is not found.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            resource: The resource that the Lease is for.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Lease state for the resource.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            LeaseNotOwnedByWallet: The lease is not owned by the wallet.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lease_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_lease_state_locked</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lease_state</span><span class="o">.</span><span class="n">lease_status</span> <span class="o">!=</span> <span class="n">LeaseState</span><span class="o">.</span><span class="n">STATUS_SELF_OWNER</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LeaseNotOwnedByWallet</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span> <span class="n">lease_state</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">lease_state</span>
 
 <div class="viewcode-block" id="LeaseWallet.on_lease_use_result"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseWallet.on_lease_use_result">[docs]</a>    <span class="k">def</span> <span class="nf">on_lease_use_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_use_result</span><span class="p">,</span> <span class="n">resource</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the lease state based on result of using the lease.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">          lease_use_result -- LeaseUseResult from the server.</span>
-<span class="sd">          resource -- Resource to update, e.g. &#39;body&#39;. Default to None to use the resource specified</span>
+<span class="sd">          lease_use_result: LeaseUseResult from the server.</span>
+<span class="sd">          resource: Resource to update, e.g. &#39;body&#39;. Default to None to use the resource specified</span>
 <span class="sd">                          by the lease_use_result.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">resource</span> <span class="o">=</span> <span class="n">resource</span> <span class="ow">or</span> <span class="n">lease_use_result</span><span class="o">.</span><span class="n">attempted_lease</span><span class="o">.</span><span class="n">resource</span>
@@ -467,8 +573,11 @@
 
 
 <div class="viewcode-block" id="LeaseClient"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseClient">[docs]</a><span class="k">class</span> <span class="nc">LeaseClient</span><span class="p">(</span><span class="n">common</span><span class="o">.</span><span class="n">BaseClient</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Client to the lease service.&quot;&quot;&quot;</span>
-    <span class="n">default_authority</span> <span class="o">=</span> <span class="s1">&#39;api.spot.robot&#39;</span>
+    <span class="sd">&quot;&quot;&quot;Client to the lease service.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lease_wallet: Lease wallet to use.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;lease&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.LeaseService&#39;</span>
 
@@ -477,61 +586,124 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span> <span class="o">=</span> <span class="n">lease_wallet</span>
 
 <div class="viewcode-block" id="LeaseClient.acquire"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseClient.acquire">[docs]</a>    <span class="k">def</span> <span class="nf">acquire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="o">=</span><span class="n">_RESOURCE_BODY</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Acquire a lease for the given resource.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            resorce: Resource for the lease.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Acquired Lease object.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ResourceAlreadyClaimedError: Use TakeLease method to forcefully grab the already</span>
+<span class="sd">                                         claimed lease.</span>
+<span class="sd">            InvalidResourceError: Resource is not known to the LeaseService.</span>
+<span class="sd">            NotAuthoritativeServiceError: LeaseService is not authoritative so Acquire should not work.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_acquire_request</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">AcquireLease</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_acquire_success</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">_handle_acquire_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LeaseClient.acquire_async"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseClient.acquire_async">[docs]</a>    <span class="k">def</span> <span class="nf">acquire_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="o">=</span><span class="n">_RESOURCE_BODY</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of acquire() function.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_acquire_request</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">AcquireLease</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_acquire_success</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_handle_acquire_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LeaseClient.take"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseClient.take">[docs]</a>    <span class="k">def</span> <span class="nf">take</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="o">=</span><span class="n">_RESOURCE_BODY</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Take the lease for the given resource.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            resorce: Resource for the lease.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Taken Lease object.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            InvalidResourceError: Resource is not known to the LeaseService.</span>
+<span class="sd">            NotAuthoritativeServiceError: LeaseService is not authoritative so Acquire should not</span>
+<span class="sd">                                          work.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_take_request</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">TakeLease</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_acquire_success</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">_handle_take_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LeaseClient.take_async"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseClient.take_async">[docs]</a>    <span class="k">def</span> <span class="nf">take_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="o">=</span><span class="n">_RESOURCE_BODY</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of the take() function.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_take_request</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">TakeLease</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_acquire_success</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_handle_take_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LeaseClient.return_lease"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseClient.return_lease">[docs]</a>    <span class="k">def</span> <span class="nf">return_lease</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return an acquired lease.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lease: Lease to return.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            InvalidResourceError: Resource is not known to the LeaseService.</span>
+<span class="sd">            NotActiveLeaseError: Lease is not the active lease.</span>
+<span class="sd">            NotAuthoritativeServiceError: LeaseService is not authoritative so Acquire should not</span>
+<span class="sd">                                          work.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">lease</span><span class="p">)</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_return_request</span><span class="p">(</span><span class="n">lease</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ReturnLease</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_return_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LeaseClient.return_lease_async"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseClient.return_lease_async">[docs]</a>    <span class="k">def</span> <span class="nf">return_lease_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of the return_lease() function.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">lease</span><span class="p">)</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_return_request</span><span class="p">(</span><span class="n">lease</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ReturnLease</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_return_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LeaseClient.retain_lease"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseClient.retain_lease">[docs]</a>    <span class="k">def</span> <span class="nf">retain_lease</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retain the lease.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lease: Lease to retain.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            InternalServerError: Service experienced an unexpected error state.</span>
+<span class="sd">            LeaseUseError: Request was rejected due to using an invalid lease.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_retain_request</span><span class="p">(</span><span class="n">lease</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RetainLease</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">common</span><span class="o">.</span><span class="n">common_lease_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LeaseClient.retain_lease_async"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseClient.retain_lease_async">[docs]</a>    <span class="k">def</span> <span class="nf">retain_lease_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of the retain_lease() function.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_retain_request</span><span class="p">(</span><span class="n">lease</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RetainLease</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">common</span><span class="o">.</span><span class="n">common_lease_errors</span><span class="p">,</span>
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LeaseClient.list_leases"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseClient.list_leases">[docs]</a>    <span class="k">def</span> <span class="nf">list_leases</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of the leases.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List of lease resources.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            InternalServerError: Service experienced an unexpected error state.</span>
+<span class="sd">            LeaseUseError: Request was rejected due to using an invalid lease.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_list_leases_request</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListLeases</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_leases_success</span><span class="p">,</span>
                          <span class="n">common</span><span class="o">.</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LeaseClient.list_leases_async"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseClient.list_leases_async">[docs]</a>    <span class="k">def</span> <span class="nf">list_leases_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of the list_leases() function.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_list_leases_request</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListLeases</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_leases_success</span><span class="p">,</span>
                                <span class="n">common</span><span class="o">.</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_make_acquire_request</span><span class="p">(</span><span class="n">resource</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return AcquireLeaseRequest message with the given resource.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">AcquireLeaseRequest</span><span class="p">(</span><span class="n">resource</span><span class="o">=</span><span class="n">resource</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_handle_acquire_success</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return lease in an AcquireLeaseResponse message.&quot;&quot;&quot;</span>
         <span class="n">lease</span> <span class="o">=</span> <span class="n">Lease</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">lease</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lease</span><span class="p">)</span>
@@ -547,6 +719,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_make_take_request</span><span class="p">(</span><span class="n">resource</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return TakeLeaseRequest message with the given resource.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">TakeLeaseRequest</span><span class="p">(</span><span class="n">resource</span><span class="o">=</span><span class="n">resource</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
@@ -584,16 +757,15 @@
 
 
 <div class="viewcode-block" id="LeaseWalletRequestProcessor"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseWalletRequestProcessor">[docs]</a><span class="k">class</span> <span class="nc">LeaseWalletRequestProcessor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;LeaseWalletRequestProcessor adds a lease from a wallet to a request.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;LeaseWalletRequestProcessor adds a lease from a wallet to a request.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lease_wallet: The LeaseWallet to read leases from.</span>
+<span class="sd">        resource_list: List of resources this processors should add to requests. Default None</span>
+<span class="sd">                        to use the default resource.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_wallet</span><span class="p">,</span> <span class="n">resource_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            lease_wallet: The LeaseWallet to read leases from.</span>
-<span class="sd">            resource_list: List of resources this processors should add to requests. Default None</span>
-<span class="sd">                               to use the default resource.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span> <span class="o">=</span> <span class="n">lease_wallet</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resource_list</span> <span class="o">=</span> <span class="n">resource_list</span> <span class="ow">or</span> <span class="p">[</span><span class="n">_RESOURCE_BODY</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
@@ -605,21 +777,19 @@
         <span class="k">if</span> <span class="n">skip_mutation</span><span class="p">:</span>
             <span class="k">return</span>
 
-        <span class="c1"># to be consistent, even if only a single resource is used.</span>
         <span class="k">if</span> <span class="n">multiple_leases</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;LeaseWalletRequestProcessor assigned single lease, &#39;</span>
-                              <span class="s1">&#39;but request wants more than one&#39;</span><span class="p">)</span>
+            <span class="k">pass</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">multiple_leases</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;LeaseWalletRequestProcessor assigned multiple leases, &#39;</span>
                               <span class="s1">&#39;but request only wants one&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">multiple_leases</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">resource</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resource_list</span><span class="p">:</span>
-                <span class="n">lease</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span><span class="o">.</span><span class="n">lease_proto</span>
-                <span class="n">request</span><span class="o">.</span><span class="n">leases</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">lease</span><span class="p">)</span>
+                <span class="n">lease</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">leases</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">lease</span><span class="o">.</span><span class="n">lease_proto</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">lease</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">lease_proto</span>
-            <span class="n">request</span><span class="o">.</span><span class="n">lease</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">lease</span><span class="p">)</span></div>
+            <span class="n">lease</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">lease</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">lease</span><span class="o">.</span><span class="n">lease_proto</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LeaseWalletRequestProcessor.get_lease_state"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseWalletRequestProcessor.get_lease_state">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_lease_state</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
@@ -647,7 +817,11 @@
 
 
 <div class="viewcode-block" id="LeaseWalletResponseProcessor"><a class="viewcode-back" href="../../../client_modules/lease.html#bosdyn.client.lease.LeaseWalletResponseProcessor">[docs]</a><span class="k">class</span> <span class="nc">LeaseWalletResponseProcessor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;LeaseWalletResponseProcessor updates the wallet with a LeaseUseResult.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;LeaseWalletResponseProcessor updates the wallet with a LeaseUseResult.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lease_wallet: Lease wallet to use.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_wallet</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span> <span class="o">=</span> <span class="n">lease_wallet</span>
@@ -699,20 +873,15 @@
 <span class="sd">    Using a LeaseKeepAlive object hides most of the details of issuing the</span>
 <span class="sd">    lease liveness check. Developers can also manage liveness checks directly</span>
 <span class="sd">    by using the retain_lease methods on the LeaseClient object.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_client</span><span class="p">,</span> <span class="n">lease_wallet</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resource</span><span class="o">=</span><span class="n">_RESOURCE_BODY</span><span class="p">,</span>
-                 <span class="n">rpc_interval_seconds</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">keep_running_cb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a new LeaseKeepAlive object.</span>
-
-<span class="sd">        Arguments:</span>
-<span class="sd">            * lease_client: The LeaseClient object to issue requests on.</span>
-<span class="sd">            * lease_wallet: The LeaseWallet to retrieve current leases from,</span>
+<span class="sd">    Args:</span>
+<span class="sd">        lease_client: The LeaseClient object to issue requests on.</span>
+<span class="sd">        lease_wallet: The LeaseWallet to retrieve current leases from,</span>
 <span class="sd">                and to handle any bad LeaseUseResults from. If not specified,</span>
 <span class="sd">                the lease_client&#39;s lease_wallet will be used.</span>
-<span class="sd">            * resource: The resource to do liveness checks for.</span>
-<span class="sd">            * rpc_interval_seconds: Duration in seconds between liveness checks.</span>
-<span class="sd">            * keep_running_cb: If specified, should be a callable object that</span>
+<span class="sd">        resource: The resource to do liveness checks for.</span>
+<span class="sd">        rpc_interval_seconds: Duration in seconds between liveness checks.</span>
+<span class="sd">        keep_running_cb: If specified, should be a callable object that</span>
 <span class="sd">                returns True if the liveness checks should proceed, False</span>
 <span class="sd">                otherwise. LeaseKeepAlive will invoke keep_running_cb on its</span>
 <span class="sd">                background thread. One example of where this could be used is</span>
@@ -720,7 +889,11 @@
 <span class="sd">                False if the UI thread is wedged, which prevents the</span>
 <span class="sd">                application from continuing to keep the Lease alive when it is</span>
 <span class="sd">                no longer in a good state.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_client</span><span class="p">,</span> <span class="n">lease_wallet</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resource</span><span class="o">=</span><span class="n">_RESOURCE_BODY</span><span class="p">,</span>
+                 <span class="n">rpc_interval_seconds</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">keep_running_cb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new LeaseKeepAlive object.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">lease_client</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;lease_client must be set&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lease_client</span> <span class="o">=</span> <span class="n">lease_client</span>
@@ -792,12 +965,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Check-in successful&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_check_in</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retain lease associated with the resourse in this class.&quot;&quot;&quot;</span>
         <span class="n">lease</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lease_wallet</span><span class="o">.</span><span class="n">get_lease</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_resource</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">lease</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lease_client</span><span class="o">.</span><span class="n">retain_lease</span><span class="p">(</span><span class="n">lease</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_periodic_check_in</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Periodically check in and retain the lease associated with the resource in this class.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Starting lease check-in&#39;</span><span class="p">)</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
             <span class="c1"># Include the time it takes to execute keep_running, in case it takes a significant</span>
@@ -841,7 +1016,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Boston Dynamics
+        &copy; Copyright 2019, Boston Dynamics.
 
     </p>
   </div>
@@ -858,16 +1033,36 @@
   
 
 
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -1,0 +1,318 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.mission;
+
+option java_outer_classname = "NodesProto";
+
+import "google/protobuf/any.proto";
+import "google/protobuf/duration.proto";
+
+import "bosdyn/api/spot_cam/camera.proto";
+import "bosdyn/api/spot_cam/logging.proto";
+import "bosdyn/api/robot_command.proto";
+import "bosdyn/api/power.proto";
+import "bosdyn/api/graph_nav/graph_nav.proto";
+import "bosdyn/api/mission/util.proto";
+
+
+// Wrapper for a mission node. Contains the basics common to all mission nodes.
+// Specifics of what the node does are contained in the "impl" field.
+message Node {
+    // Human-readable name of this node, e.g. "Goto waypoint 1", or "Power On".
+    string name = 1;
+    // Collection of user data associated with this node.
+    UserData user_data = 2;
+    // Reference identifier of this node.
+    // Set iff another node references this one.
+    string reference_id = 3;
+
+    oneof type {
+        // Implementation of this node. For example, this may be a Sequence.
+        google.protobuf.Any impl = 4;
+        // Unique identifier of another node. If this is filled out, rather than the "impl", then
+        // the referenced node will be used in place of this one.
+        string node_reference = 5;
+    }
+
+    // Defines parameters, used by this node or its children.
+    // The "key" in KeyValue is the name of the parameter being defined.
+    // The value can be a constant or another parameter value.
+    repeated KeyValue parameter_values = 6;
+
+    // Overwrites a protobuf field in this node's implementation.
+    // The "key" in KeyValue is the name of the field to override.
+    // The value to write can be sourced from a constant, or a parameter value.
+    repeated KeyValue overrides = 7;
+
+    // Declares parameters needed at compile time by this node, or children of this node.
+    // This is a way for a node to communicate what parameters its implementation and/or children
+    // require, without unpacking the entire subtree.
+    repeated VariableDeclaration parameters = 8;
+
+}
+
+// Run children until a child fails.
+message Sequence {
+    bool always_restart = 1;
+    repeated Node children = 2;
+}
+
+
+// Run children until a child succeeds.
+message Selector {
+    bool always_restart = 1;
+    repeated Node children = 2;
+}
+
+
+// Repeat a child node.
+message Repeat {
+    // Start the child node exactly this many times.
+    // Note that a value of 1 makes the Repeat node a no-op.
+    int32 max_starts = 1;
+    Node child = 4;
+}
+
+
+// Retry a child node until it succeeds, or exceeds a number of attempts.
+message Retry {
+    // Only allow this many attempts. Note that a value of 1 makes this Retry node a no-op.
+    int32 max_attempts = 1;
+    Node child = 2;
+}
+
+
+// Run this child for a maximum amount of mission execution time.
+// Will exit with child's status if the child finishes early,
+// FAILURE if the child remains in RUNNING state for too long.
+message ForDuration {
+    google.protobuf.Duration duration = 1;
+    Node child = 2;
+}
+
+
+// Run two child nodes together, returning the primary child's result when it completes. 
+message SimpleParallel {
+    Node primary = 1;
+    Node secondary = 2;
+}
+
+
+// Checks a simple comparison statement.
+message Condition {
+
+    message Operand {
+        oneof type {
+            VariableDeclaration var = 1;
+            ConstantValue const = 2;
+        }
+    }
+
+    // Left-hand side of the comparison.
+    Operand lhs = 1;
+    // Right-hand side of the comparison.
+    Operand rhs  = 2;
+
+    // Comparison operator.
+    enum Compare {
+        COMPARE_UNKNOWN = 0;
+        // Equal.
+        COMPARE_EQ = 1;
+        // Not equal.
+        COMPARE_NE = 2;
+        // Less than.
+        COMPARE_LT = 3;
+        // Greater than.
+        COMPARE_GT = 4;
+        // Less than or equal.
+        COMPARE_LE = 5;
+        // Greater than or equal.
+        COMPARE_GE = 6;
+    }
+    Compare operation = 5;
+}
+
+
+// Get state from the robot.
+message BosdynRobotState {
+    // Name of the service to use.
+    string service_name = 1;
+    // Host machine the service is running on.
+    string host = 2;
+    // Child node. Children will have access to the state gathered by this node.
+    Node child = 3;
+    // Name of the bosdyn.api.RobotState object in the blackboard. For example, if this is set to
+    // "robot", children can look up "robot.power_state.motor_power_state" in the blackboard.
+    string state_name = 4;
+}
+
+
+// Execute a RobotCommand.
+// These nodes will "succeed" once a feedback response is received indicating success. Any commands
+// that require an "end time" will have that information set based on the end time of the mission.
+message BosdynRobotCommand {
+    // Name of the service to use.
+    string service_name = 1;
+    // Host machine the directory is running on.
+    string host = 2;
+    // The command to execute. See the RobotCommand documentation for details.
+    RobotCommand command = 3;
+}
+
+
+// Make a robot power request
+message BosdynPowerRequest {
+    // Name of the service to use.
+    string service_name = 1;
+    // Host machine the service is running on.
+    string host = 2;
+    // The request to make. See the PowerCommandRequest documentation for details.
+    bosdyn.api.PowerCommandRequest.Request request = 4;
+}
+
+
+// Tell robot to navigate to a waypoint.
+message BosdynNavigateTo {
+    // Name of the service to use.
+    string service_name = 1;
+    // Host machine the service is running on.
+    string host = 2;
+
+    // ID of the waypoint to go to.
+    string destination_waypoint_id = 3;
+
+    // Preferences on how to pick the route.
+    bosdyn.api.graph_nav.RouteGenParams route_gen_params = 4;
+    // Parameters that define how to traverse and end the route.
+    bosdyn.api.graph_nav.TravelParams travel_params = 5;
+}
+
+// Get GraphNav state from the robot.
+message BosdynGraphNavState {
+    // Name of the service to use.
+    string service_name = 1;
+    // Host machine the service is running on.
+    string host = 2;
+    // Child node. Children will have access to the state gathered by this node.
+    Node child = 3;
+    // Name of the bosdyn.api.GetLocalizationStateResponse object in the blackboard. For example,
+    // if this is set to "nav", children can look up "nav.localization.waypoint_id" in the
+    // blackboard to get the waypoint the robot is localized to.
+    string state_name = 4;
+}
+
+// Tell GraphNav to localize robot.
+message BosdynGraphNavLocalize {
+    // Name of the service to use.
+    string service_name = 1;
+    // Host machine the service is running on.
+    string host = 2;
+}
+
+// Call out to another system using the RemoteMission service.
+message RemoteGrpc {
+    // Host that is running the directory server. Usually, this is just the robot.
+    string host = 1;
+    // Name of the service in the directory.
+    string service_name = 3;
+    // Timeout of the RPC. If the timeout is exceeded, the node will indicate FAILURE.
+    float timeout = 4;
+    // Resources that we will need leases on.
+    repeated string lease_resources = 5;
+    // The list of variables the remote host should receive.
+    // Variables given can be available at either run-time or compile-time.
+    // The "key" in KeyValue is the name of the variable as used by the remote system.
+    repeated KeyValue inputs = 6;
+}
+
+// When started, begins a sleep timer for X seconds. Returns "success" after the timer elapses,
+// "running" otherwise.
+message Sleep {
+    // Number of seconds to sleep for.
+    float seconds = 1;
+    // If this node is stopped, should it restart the timer?
+    bool restart_after_stop = 2;
+}
+
+// Prompt the world at large to answer a question.
+// This node represents a request for information from ANY listeners that may be out there.
+message Prompt {
+    // Should we always re-prompt when this node is started?
+    // If false, this node will only ever prompt if it is started and its question is unanswered.
+    // This may be used, for example, to ask the user to check the robot after any self-right.
+    // If true, this node will prompt whenever it is started.
+    // This may be used, for example, to tell the user to perform some one-time action, like open a
+    // door for the robot.
+    bool always_reprompt = 1;
+
+    // The text of the question itself.
+    string text = 2;
+
+    // Metadata describing the source of the question.
+    // The answer will be written into the state blackboard with this as the variable name.
+    string source = 3;
+
+    // Options to choose from.
+    message Option {
+        // Text associated with this option. Should be displayed to the user.
+        string text = 1;
+        // Numeric code corresponding to this option. Passed as part of the answer.
+        int64 answer_code = 2;
+    }
+    repeated Option options = 4;
+
+    // Child node, run after the prompt has been responded to.
+    // Children will have access to the answer code provided by the response.
+    Node child = 5;
+
+    // Hint that Question posed by this Prompt is meant to be answered by some automated system.
+    // See the Question message for details.
+    bool for_autonomous_processing = 6;
+}
+
+// Store media using the Spot CAM.
+message SpotCamStoreMedia {
+    // Name of the service to use.
+    string service_name = 1;
+    // Host machine of the directory server that the Spot CAM registered with.
+    string host = 2;
+
+    // The rest of the fields are from bosdyn.api.spot_cam.logging.StoreRequest, see that message for
+    // details.
+    bosdyn.api.spot_cam.Camera camera = 3;
+    bosdyn.api.spot_cam.Logpoint.RecordType type = 4;
+    string tag = 5;
+}
+
+// Defines new blackboard variables within the scope of the child. Shadows blackboard
+// variables in the parent scope.
+message DefineBlackboard {
+    repeated KeyValue blackboard_variables = 1;
+    // The blackboard variable will only persist in the subtree defined by this
+    // child node. The child's tick() will be called on the child until it
+    // returns either SUCCESS or FAILURE.
+    Node child = 2;
+}
+
+// Sets existing blackboard variables within this scope to specific values, returning SUCCESS.
+message SetBlackboard {
+    // The key of the KeyValue is the name of the blackboard variable.
+    // The value will be dereferenced and converted into a value type at runtime
+    // inside this node's tick function. For example, if the value is a runtime
+    // variable, that variable will be evaluated at tick time, and then stored into
+    // the blackboard. If the value is another blackboard variable, that blackboard
+    // variable's value will be copied into the variable specified by the key.
+    repeated KeyValue blackboard_variables = 1;
+}
+
+// Just returns a constant when calling tick().
+message ConstantResult {
+    // This result is always returned when calling tick().
+    Result result = 1;
+}

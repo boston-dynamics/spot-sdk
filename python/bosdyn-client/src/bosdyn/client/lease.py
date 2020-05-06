@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -67,6 +67,33 @@ class NotActiveLeaseError(LeaseResponseError):
     """Lease is not the active lease."""
 
 
+class Error(Exception):
+    """Base non-response error for lease module."""
+
+
+class NoSuchLease(Error):
+    """The requested lease does not exist."""
+    def __init__(self, resource):
+        self.resource = resource
+
+    def __str__(self):
+        return 'No lease for resource "{}"'.format(self.resource)
+
+
+class LeaseNotOwnedByWallet(Error):
+    """The lease is not owned by the wallet."""
+    def __init__(self, resource, lease_state):
+        self.resource = resource
+        self.lease_state = lease_state
+
+    def __str__(self):
+        try:
+            state = self.lease_state.lease_status
+        except AttributeError:
+            state = '<unknown>'
+        return 'Lease on "{}" has state ({})'.format(self.resource, state)
+
+
 _ACQUIRE_LEASE_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _ACQUIRE_LEASE_STATUS_TO_ERROR.update({
     AcquireLeaseResponse.STATUS_OK: (None, None),
@@ -103,13 +130,13 @@ class Lease(object):
     A service will grant access to the shared resource if the lease which accompanies a request is
     "more recent" than any previously seen leases. Recency is determined using a sequence of
     monotonically increasing numbers, similar to a Lamport logical clock.
+
+    Args:
+        lease_proto: bosdyn.api.Lease protobuf object.
     """
 
     def __init__(self, lease_proto):
         """Initializes a Lease object.
-
-        Args:
-            lease_proto: bosdyn.api.Lease protobuf object.
 
         Raises:
             ValueError if lease_proto is not present or valid.
@@ -214,6 +241,7 @@ class Lease(object):
 
 
 class LeaseState(object):
+
     STATUS_UNOWNED = 0
     STATUS_REVOKED = 1
     STATUS_SELF_OWNER = 2
@@ -232,12 +260,25 @@ class LeaseState(object):
             self.lease_current = None
 
     def create_newer(self):
+        """Create newer version of the Lease.
+
+        Returns:
+            Instance of itself if lease_current was not passed, or a new LeaseState.
+        """
         if not self.lease_current:
             return self
         return LeaseState(self.lease_status, self.lease_owner, self.lease_original,
                           self.lease_current.create_newer())
 
     def update_from_lease_use_result(self, lease_use_result):
+        """Update internal instance of LeaseState from given lease.
+
+        Args:
+            lease_use_result: LeaseUseResult from the server.
+
+        Returns:
+            Updated internal instance of LeaseState.
+        """
         if lease_use_result.status == lease_use_result.STATUS_OLDER:
             if self.lease_current:
                 attempted_lease = Lease(lease_use_result.attempted_lease)
@@ -269,41 +310,107 @@ class LeaseWallet(object):
         self._lock = threading.Lock()
 
     def add(self, lease):
+        """Add lease in the wallet.
+
+        Args:
+            lease: Lease to add in the wallet.
+        """
         with self._lock:
             self._lease_state_map[lease.lease_proto.resource] = LeaseState(
                 LeaseState.STATUS_SELF_OWNER, lease=lease)
 
     def remove(self, lease):
+        """Remove lease from the wallet.
+
+        Args:
+            lease: Lease to remove from the wallet.
+        """
         with self._lock:
             self._lease_state_map.pop(lease.lease_proto.resource, None)
 
     def advance(self, resource=_RESOURCE_BODY):
+        """Advance the lease for a specific resource.
+
+        Args:
+            resource: The resource that the Lease is for.
+        Returns:
+            Advanced lease for the resource.
+        Raises:
+            LeaseNotOwnedByWallet: The lease is not owned by the wallet.
+        """
+
         with self._lock:
-            lease_state = self._lease_state_map.get(resource, None)
-            if not lease_state or lease_state.lease_status != LeaseState.STATUS_SELF_OWNER:
-                # Throw an exception?
-                return None
+            lease_state = self._get_owned_lease_state_locked(resource)
             new_lease = lease_state.create_newer()
             self._lease_state_map[resource] = new_lease
             return new_lease.lease_current
 
     def get_lease(self, resource=_RESOURCE_BODY):
+        """Get the lease for a specific resource.
+
+        Args:
+            resource: The resource that the Lease is for.
+        Returns:
+            Lease for the resource.
+        Raises:
+            LeaseNotOwnedByWallet: The lease is not owned by the wallet.
+        """
+
         with self._lock:
-            lease_state = self._lease_state_map.get(resource, None)
-            if not lease_state or lease_state.lease_status != LeaseState.STATUS_SELF_OWNER:
-                return None
-            return lease_state.lease_current
+            return self._get_owned_lease_state_locked(resource).lease_current
 
     def get_lease_state(self, resource=_RESOURCE_BODY):
+        """Get the lease state for a specific resource.
+
+        Args:
+            resource: The resource that the Lease is for.
+        Returns:
+            Lease state for the resource.
+        Raises:
+            NoSuchLease: The requested lease does not exist.
+        """
+
         with self._lock:
-            return self._lease_state_map.get(resource, None)
+            return self._get_lease_state_locked(resource)
+
+    def _get_lease_state_locked(self, resource):
+        """Get the lease state for a specific resource or raise an NoSuchLease exception if lease
+        is not found.
+
+        Args:
+            resource: The resource that the Lease is for.
+        Returns:
+            Lease state for the resource.
+        Raises:
+            NoSuchLease: The requested lease does not exist.
+        """
+        try:
+            return self._lease_state_map[resource]
+        except KeyError:
+            raise NoSuchLease(resource)
+
+    def _get_owned_lease_state_locked(self, resource):
+        """Get the lease for a specific resource or raise an LeaseNotOwnedByWallet exception if
+        lease is not found.
+
+        Args:
+            resource: The resource that the Lease is for.
+        Returns:
+            Lease state for the resource.
+        Raises:
+            LeaseNotOwnedByWallet: The lease is not owned by the wallet.
+        """
+        lease_state = self._get_lease_state_locked(resource)
+        if lease_state.lease_status != LeaseState.STATUS_SELF_OWNER:
+            raise LeaseNotOwnedByWallet(resource, lease_state)
+        return lease_state
 
     def on_lease_use_result(self, lease_use_result, resource=None):
         """Update the lease state based on result of using the lease.
 
         Args:
-          lease_use_result -- LeaseUseResult from the server.
-          resource -- Resource to update, e.g. 'body'. Default to None to use the resource specified
+          lease_use_result: LeaseUseResult from the server.
+          resource: Resource to update, e.g. 'body'. Default to None to use the resource specified
                           by the lease_use_result.
         """
         resource = resource or lease_use_result.attempted_lease.resource
@@ -316,8 +423,11 @@ class LeaseWallet(object):
 
 
 class LeaseClient(common.BaseClient):
-    """Client to the lease service."""
-    default_authority = 'api.spot.robot'
+    """Client to the lease service.
+
+    Args:
+        lease_wallet: Lease wallet to use.
+    """
     default_service_name = 'lease'
     service_type = 'bosdyn.api.LeaseService'
 
@@ -326,61 +436,124 @@ class LeaseClient(common.BaseClient):
         self.lease_wallet = lease_wallet
 
     def acquire(self, resource=_RESOURCE_BODY, **kwargs):
+        """Acquire a lease for the given resource.
+
+        Args:
+            resorce: Resource for the lease.
+
+        Returns:
+            Acquired Lease object.
+
+        Raises:
+            ResourceAlreadyClaimedError: Use TakeLease method to forcefully grab the already
+                                         claimed lease.
+            InvalidResourceError: Resource is not known to the LeaseService.
+            NotAuthoritativeServiceError: LeaseService is not authoritative so Acquire should not work.
+        """
         req = self._make_acquire_request(resource)
         return self.call(self._stub.AcquireLease, req, self._handle_acquire_success,
                          self._handle_acquire_errors, **kwargs)
 
     def acquire_async(self, resource=_RESOURCE_BODY, **kwargs):
+        """Async version of acquire() function."""
         req = self._make_acquire_request(resource)
         return self.call_async(self._stub.AcquireLease, req, self._handle_acquire_success,
                                self._handle_acquire_errors, **kwargs)
 
     def take(self, resource=_RESOURCE_BODY, **kwargs):
+        """Take the lease for the given resource.
+
+        Args:
+            resorce: Resource for the lease.
+
+        Returns:
+            Taken Lease object.
+
+        Raises:
+            InvalidResourceError: Resource is not known to the LeaseService.
+            NotAuthoritativeServiceError: LeaseService is not authoritative so Acquire should not
+                                          work.
+        """
         req = self._make_take_request(resource)
         return self.call(self._stub.TakeLease, req, self._handle_acquire_success,
                          self._handle_take_errors, **kwargs)
 
     def take_async(self, resource=_RESOURCE_BODY, **kwargs):
+        """Async version of the take() function."""
         req = self._make_take_request(resource)
         return self.call_async(self._stub.TakeLease, req, self._handle_acquire_success,
                                self._handle_take_errors, **kwargs)
 
     def return_lease(self, lease, **kwargs):
+        """Return an acquired lease.
+
+        Args:
+            lease: Lease to return.
+
+        Raises:
+            InvalidResourceError: Resource is not known to the LeaseService.
+            NotActiveLeaseError: Lease is not the active lease.
+            NotAuthoritativeServiceError: LeaseService is not authoritative so Acquire should not
+                                          work.
+        """
         if self.lease_wallet:
             self.lease_wallet.remove(lease)
         req = self._make_return_request(lease)
         return self.call(self._stub.ReturnLease, req, None, self._handle_return_errors, **kwargs)
 
     def return_lease_async(self, lease, **kwargs):
+        """Async version of the return_lease() function."""
         if self.lease_wallet:
             self.lease_wallet.remove(lease)
         req = self._make_return_request(lease)
         return self.call(self._stub.ReturnLease, req, None, self._handle_return_errors, **kwargs)
 
     def retain_lease(self, lease, **kwargs):
+        """Retain the lease.
+
+        Args:
+            lease: Lease to retain.
+
+        Raises:
+            InternalServerError: Service experienced an unexpected error state.
+            LeaseUseError: Request was rejected due to using an invalid lease.
+        """
         req = self._make_retain_request(lease)
         return self.call(self._stub.RetainLease, req, None, common.common_lease_errors, **kwargs)
 
     def retain_lease_async(self, lease, **kwargs):
+        """Async version of the retain_lease() function."""
         req = self._make_retain_request(lease)
         return self.call_async(self._stub.RetainLease, req, None, common.common_lease_errors,
                                **kwargs)
 
     def list_leases(self, **kwargs):
+        """Get a list of the leases.
+
+        Returns:
+            List of lease resources.
+
+        Raises:
+            InternalServerError: Service experienced an unexpected error state.
+            LeaseUseError: Request was rejected due to using an invalid lease.
+        """
         req = self._make_list_leases_request()
         return self.call(self._stub.ListLeases, req, self._list_leases_success,
                          common.common_header_errors, **kwargs)
 
     def list_leases_async(self, **kwargs):
+        """Async version of the list_leases() function."""
         req = self._make_list_leases_request()
         return self.call_async(self._stub.ListLeases, req, self._list_leases_success,
                                common.common_header_errors, **kwargs)
 
     @staticmethod
     def _make_acquire_request(resource):
+        """Return AcquireLeaseRequest message with the given resource."""
         return AcquireLeaseRequest(resource=resource)
 
     def _handle_acquire_success(self, response):
+        """Return lease in an AcquireLeaseResponse message."""
         lease = Lease(response.lease)
         if self.lease_wallet:
             self.lease_wallet.add(lease)
@@ -396,6 +569,7 @@ class LeaseClient(common.BaseClient):
 
     @staticmethod
     def _make_take_request(resource):
+        """Return TakeLeaseRequest message with the given resource."""
         return TakeLeaseRequest(resource=resource)
 
     @staticmethod
@@ -433,16 +607,15 @@ class LeaseClient(common.BaseClient):
 
 
 class LeaseWalletRequestProcessor(object):
-    """LeaseWalletRequestProcessor adds a lease from a wallet to a request."""
+    """LeaseWalletRequestProcessor adds a lease from a wallet to a request.
+
+    Args:
+        lease_wallet: The LeaseWallet to read leases from.
+        resource_list: List of resources this processors should add to requests. Default None
+                        to use the default resource.
+    """
 
     def __init__(self, lease_wallet, resource_list=None):
-        """Constructor.
-
-        Args:
-            lease_wallet: The LeaseWallet to read leases from.
-            resource_list: List of resources this processors should add to requests. Default None
-                               to use the default resource.
-        """
         self.lease_wallet = lease_wallet
         self.resource_list = resource_list or [_RESOURCE_BODY]
         self.logger = logging.getLogger()
@@ -454,21 +627,19 @@ class LeaseWalletRequestProcessor(object):
         if skip_mutation:
             return
 
-        # to be consistent, even if only a single resource is used.
         if multiple_leases and len(self.resource_list) <= 1:
-            self.logger.error('LeaseWalletRequestProcessor assigned single lease, '
-                              'but request wants more than one')
+            pass
         elif not multiple_leases and len(self.resource_list) > 1:
             self.logger.error('LeaseWalletRequestProcessor assigned multiple leases, '
                               'but request only wants one')
 
         if multiple_leases:
             for resource in self.resource_list:
-                lease = self.lease_wallet.advance(resource).lease_proto
-                request.leases.add().CopyFrom(lease)
+                lease = self.lease_wallet.advance(resource)
+                request.leases.add().CopyFrom(lease.lease_proto)
         else:
-            lease = self.lease_wallet.advance(self.resource_list[0]).lease_proto
-            request.lease.CopyFrom(lease)
+            lease = self.lease_wallet.advance(self.resource_list[0])
+            request.lease.CopyFrom(lease.lease_proto)
 
     @staticmethod
     def get_lease_state(request):
@@ -496,7 +667,11 @@ class LeaseWalletRequestProcessor(object):
 
 
 class LeaseWalletResponseProcessor(object):
-    """LeaseWalletResponseProcessor updates the wallet with a LeaseUseResult."""
+    """LeaseWalletResponseProcessor updates the wallet with a LeaseUseResult.
+
+    Args:
+        lease_wallet: Lease wallet to use.
+    """
 
     def __init__(self, lease_wallet):
         self.lease_wallet = lease_wallet
@@ -548,20 +723,15 @@ class LeaseKeepAlive(object):
     Using a LeaseKeepAlive object hides most of the details of issuing the
     lease liveness check. Developers can also manage liveness checks directly
     by using the retain_lease methods on the LeaseClient object.
-    """
 
-    def __init__(self, lease_client, lease_wallet=None, resource=_RESOURCE_BODY,
-                 rpc_interval_seconds=2, keep_running_cb=None):
-        """Create a new LeaseKeepAlive object.
-
-        Arguments:
-            * lease_client: The LeaseClient object to issue requests on.
-            * lease_wallet: The LeaseWallet to retrieve current leases from,
+    Args:
+        lease_client: The LeaseClient object to issue requests on.
+        lease_wallet: The LeaseWallet to retrieve current leases from,
                 and to handle any bad LeaseUseResults from. If not specified,
                 the lease_client's lease_wallet will be used.
-            * resource: The resource to do liveness checks for.
-            * rpc_interval_seconds: Duration in seconds between liveness checks.
-            * keep_running_cb: If specified, should be a callable object that
+        resource: The resource to do liveness checks for.
+        rpc_interval_seconds: Duration in seconds between liveness checks.
+        keep_running_cb: If specified, should be a callable object that
                 returns True if the liveness checks should proceed, False
                 otherwise. LeaseKeepAlive will invoke keep_running_cb on its
                 background thread. One example of where this could be used is
@@ -569,7 +739,11 @@ class LeaseKeepAlive(object):
                 False if the UI thread is wedged, which prevents the
                 application from continuing to keep the Lease alive when it is
                 no longer in a good state.
-        """
+    """
+
+    def __init__(self, lease_client, lease_wallet=None, resource=_RESOURCE_BODY,
+                 rpc_interval_seconds=2, keep_running_cb=None):
+        """Create a new LeaseKeepAlive object."""
         if not lease_client:
             raise ValueError("lease_client must be set")
         self._lease_client = lease_client
@@ -641,12 +815,14 @@ class LeaseKeepAlive(object):
         self.logger.debug('Check-in successful')
 
     def _check_in(self):
+        """Retain lease associated with the resourse in this class."""
         lease = self._lease_wallet.get_lease(self._resource)
         if not lease:
             return None
         return self._lease_client.retain_lease(lease)
 
     def _periodic_check_in(self):
+        """Periodically check in and retain the lease associated with the resource in this class."""
         self.logger.info('Starting lease check-in')
         while True:
             # Include the time it takes to execute keep_running, in case it takes a significant

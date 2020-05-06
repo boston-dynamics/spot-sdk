@@ -1,0 +1,220 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "WorldObjectProto";
+
+import "bosdyn/api/geometry.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+import "bosdyn/api/header.proto";
+
+message WorldObject {
+    // Unique integer identifier that will be consistent for the duration of a robot's battery life
+    // The id is set internally by the world object service.
+    int32 id = 1;
+
+    // A human readable name for the world object. Note that this differs from any frame_name's associated
+    // with the object (since there can be multiple frames describing a single object).
+    string name = 2;
+
+    // Time in robot time clock at which this object was most recently detected and valid.
+    google.protobuf.Timestamp acquisition_time = 30;
+
+    // A tree-based collection of transformations, which will include the transformations to each
+    // of the returned world objects in addition to transformations to the common frames ("vision",
+    // "body", "odom"). All transforms within the snapshot are at the acquistion time of the world object.
+    //
+    // Note that each object's frame names are defined within the properties submessage. For example,
+    // the apriltag frame name is defined in the AprilTagProperties message as "frame_name_fiducial"
+    FrameTreeSnapshot transforms_snapshot = 31;
+
+    // Potential fields for the given object
+    repeated DrawableProperties drawable_properties = 5;
+    AprilTagProperties apriltag_properties = 6;
+    ImageProperties image_properties = 9;
+
+    google.protobuf.Any additional_properties = 100;
+}
+
+enum WorldObjectType {
+  WORLD_OBJECT_UNKNOWN = 0;
+  WORLD_OBJECT_DRAWABLE = 1;
+  WORLD_OBJECT_APRILTAG = 2;
+  WORLD_OBJECT_IMAGE_COORDINATES = 5;
+}
+
+message ListWorldObjectRequest {
+  // Common request header
+  RequestHeader header = 1;
+
+  // Optional filters to apply to the world object request
+  // Specific type of object; can request multiple different properties
+  repeated WorldObjectType object_type = 2;
+
+  // Timestamp to filter objects based on. The time should be in robot time
+  // All objects with header timestamps after (>) timestamp_filter will be returned
+  google.protobuf.Timestamp timestamp_filter = 3;
+}
+
+message ListWorldObjectResponse {
+  // Common response header
+  ResponseHeader header = 1;
+
+  repeated WorldObject world_objects = 2;
+}
+
+message MutateWorldObjectRequest {
+  // Common request header
+  RequestHeader header = 1;
+
+  enum Action {
+      ACTION_UNKNOWN = 0;   // Invalid action.
+      ACTION_ADD = 1;       // Add a new object.
+      ACTION_CHANGE = 2;    // Change an existing objected (ID'd by integer ID number). This is
+                            // only allowed to change objects added by the API-user, and not
+                            // objects detected by Spot's perception system.
+      ACTION_DELETE = 3;    // Delete the object, ID'd by integer ID number. This is
+                            // only allowed to change objects added by the API-user, and not
+                            // objects detected by Spot's perception system.
+  }
+
+  message Mutation {
+      Action action = 1;
+
+      // World object to be mutated
+      WorldObject object = 2;
+  }
+  Mutation mutation = 2;
+}
+
+message MutateWorldObjectResponse {
+  // Common response header
+  ResponseHeader header = 1;
+
+  enum Status {
+      // Status of request is unknown. Check the status code of the response header.
+      STATUS_UNKNOWN = 0;
+
+      // Request was accepted; GetObjectListResponse must still be checked to verify the changes.
+      STATUS_OK = 1;
+
+      // The mutation object's ID is unknown such that the service could not recognize this object.
+      // This error applies to the CHANGE and DELETE actions, since it must identify the object by
+      // it's id number given by the service.
+      STATUS_INVALID_MUTATION_ID = 2;
+
+      // The mutation request is not allowed because it is attempting to change or delete an object
+      // detected by Spot's perception system.
+      STATUS_NO_PERMISSION = 3;
+  }
+  Status status = 2;
+
+  // ID set by the world object service for the mutated object
+  int32 mutated_object_id = 4;
+}
+
+message ImageProperties {
+    // Camera Source of such as "back", "frontleft", etc.
+    string camera_source = 1;
+
+    // Image Coordinates (Pixels of x[row], y[col]) in either clockwise/counter clockwise order
+    Polygon coordinates = 2;
+
+    // Frame name for the object described by image coordinates.
+    string frame_name_image_coordinates = 3;
+}
+
+message AprilTagProperties {
+    // April Tag detections from the tag family 36h11
+
+    // Consistent integer id associated with a given apriltag
+    int32 tag_id = 1;
+
+    // Apriltag size in meters, where x is the row/width length and y is the
+    // height/col length of the tag
+    Vec2 dimensions = 2;
+
+    // The frame name for the raw version of this fiducial. This will be included in the transform snapshot.
+    string frame_name_fiducial = 3;
+
+    // The frame name for the filtered version of this fiducial. This will be included in the transform snapshot.
+    string frame_name_fiducial_filtered = 4;
+}
+
+
+message DrawableProperties {
+    // Color of the object
+    message Color {
+        // RGBA values for color ranging from [0,255] for R/G/B, and [0,1] for A
+        int32 r = 1;
+        int32 g = 2;
+        int32 b = 3;
+        double a = 4;
+    }
+    Color color = 1;
+
+    // Label to be drawn at the origin of the object
+    string label = 2;
+
+    // Drawn objects in wireframe
+    bool wireframe = 3;
+
+    // The object to draw -- e.g. Sphere, cube, ...
+    oneof drawable {
+        DrawableFrame frame = 4;
+        DrawableSphere sphere = 5;
+        DrawableBox box = 6;
+        DrawableArrow arrow = 7;
+        DrawableCapsule capsule = 8;
+        DrawableCylinder cylinder = 9;
+        DrawableLineStrip linestrip = 10;
+        DrawablePoints points = 11;
+    }
+
+    // The frame name for the drawable object. This will optionally be
+    // included in the frame tree snapshot.
+    string frame_name_drawable = 12;
+}
+
+message DrawableFrame {
+  double arrow_length = 1;
+  double arrow_radius = 2;
+}
+
+message DrawableSphere {
+  double radius = 1;
+}
+
+message DrawableBox {
+  Vec3 size = 1;
+}
+
+message DrawableArrow {
+  Vec3 direction = 1;
+  double radius = 2;
+}
+
+message DrawableCapsule {
+  Vec3 direction = 1;
+  double radius = 2;
+}
+
+message DrawableCylinder {
+  Vec3 direction = 1;
+  double radius = 2;
+}
+
+message DrawableLineStrip {
+  Vec3 points = 1;
+}
+
+message DrawablePoints {
+  repeated Vec3 points = 1;
+}

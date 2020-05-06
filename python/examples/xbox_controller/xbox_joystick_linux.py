@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -49,12 +49,16 @@ class XboxJoystickLinux(XboxJoystick):
         """
 
         super()
-        self.proc = subprocess.Popen(
-            ['xboxdrv', '--no-uinput', '--detach-kernel-driver'],
-            stdout=subprocess.PIPE,
-            bufsize=0)
+        try:
+            self.proc = subprocess.Popen(['xboxdrv', '--no-uinput', '--detach-kernel-driver'],
+                                         stdout=subprocess.PIPE, bufsize=0)
+        except FileNotFoundError as e:
+            raise Exception(
+                'Error opening Xbox controller.  Have you installed the xbox driver with "sudo apt-get install xboxdrv" ?'
+            ) from e
+
         self.pipe = self.proc.stdout
-        self.reading = '0' * 140    #initialize stick readings to all zeros
+        self.reading = '0' * 140  #initialize stick readings to all zeros
         self.refresh_time = 0
         self.refresh_delay = 1.0 / refresh_rate
 
@@ -80,7 +84,6 @@ class XboxJoystickLinux(XboxJoystick):
         if not found:
             self.close()
             raise IOError('Unable to detect Xbox controller/receiver - Run python as sudo')
-
 
     def refresh(self):
         """Used by all Joystick methods to read the most recent events from xboxdrv.
@@ -108,35 +111,29 @@ class XboxJoystickLinux(XboxJoystick):
                 else:  #Any other response means we have lost wireless or controller battery
                     self.connect_status = False
 
-
     def connected(self):
         self.refresh()
         return self.connect_status
-
 
     def left_x(self, deadzone=4000):
         self.refresh()
         raw = int(self.reading[3:9])
         return self.axis_scale(raw, deadzone)
 
-
     def left_y(self, deadzone=4000):
         self.refresh()
         raw = int(self.reading[13:19])
         return self.axis_scale(raw, deadzone)
-
 
     def right_x(self, deadzone=4000):
         self.refresh()
         raw = int(self.reading[24:30])
         return self.axis_scale(raw, deadzone)
 
-
     def right_y(self, deadzone=4000):
         self.refresh()
         raw = int(self.reading[34:40])
         return self.axis_scale(raw, deadzone)
-
 
     def axis_scale(self, raw, deadzone):
         if abs(raw) < deadzone:
@@ -147,91 +144,69 @@ class XboxJoystickLinux(XboxJoystick):
         else:
             return (raw - deadzone) / (32767.0 - deadzone)
 
-
     def dpad_up(self):
         self.refresh()
         return int(self.reading[45:46])
-
 
     def dpad_down(self):
         self.refresh()
         return int(self.reading[50:51])
 
-
     def dpad_left(self):
         self.refresh()
         return int(self.reading[55:56])
-
 
     def dpad_right(self):
         self.refresh()
         return int(self.reading[60:61])
 
-
     def back(self):
         self.refresh()
         return int(self.reading[68:69])
-
-
-    def guide(self):
-        self.refresh()
-        return int(self.reading[76:77])
-
 
     def start(self):
         self.refresh()
         return int(self.reading[84:85])
 
-
     def left_thumbstick(self):
         self.refresh()
         return int(self.reading[90:91])
-
 
     def right_thumbstick(self):
         self.refresh()
         return int(self.reading[95:96])
 
-
     def A(self):
         self.refresh()
         return int(self.reading[100:101])
-
 
     def B(self):
         self.refresh()
         return int(self.reading[104:105])
 
-
     def X(self):
         self.refresh()
         return int(self.reading[108:109])
-
 
     def Y(self):
         self.refresh()
         return int(self.reading[112:113])
 
-
     def left_bumper(self):
         self.refresh()
         return int(self.reading[118:119])
-
 
     def right_bumper(self):
         self.refresh()
         return int(self.reading[123:124])
 
-
     def left_trigger(self):
         self.refresh()
         return int(self.reading[129:132]) / 255.0
 
-
     def right_trigger(self):
         self.refresh()
         return int(self.reading[136:139]) / 255.0
-
 
     def close(self):
         self.proc.kill()

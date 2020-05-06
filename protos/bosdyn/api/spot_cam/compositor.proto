@@ -1,0 +1,72 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.spot_cam;
+
+option java_outer_classname = "CompositorProto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/spot_cam/camera.proto";
+
+message ScreenDescription {
+    string name = 1;
+}
+
+message GetScreenRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message GetScreenResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    string name = 2;
+}
+
+message GetVisibleCamerasRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message GetVisibleCamerasResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    message Stream { 
+        message Window {
+            int32 xoffset=1;
+            int32 yoffset=2;
+            //the image should be cropped out of the stream at this
+            //resolution, and then scaled to the resolution described
+            //in the 'camera' member, below.  once that scaling takes
+            //place, the intrinsics will be valid.
+            int32 width=3;
+            int32 height=4;
+        }
+        Window window=1;
+        //the name field in this camera member is of the form 'c:w',
+        //where c is the name of the camera and w is the name of the
+        //window that's projecting it.
+        bosdyn.api.spot_cam.Camera camera=2;
+    }
+    repeated Stream streams=2;
+}
+
+message ListScreensRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message ListScreensResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    repeated ScreenDescription screens = 2;
+}
+
+message SetScreenRequest {
+    bosdyn.api.RequestHeader header = 1;
+    string name = 2;
+}
+
+message SetScreenResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    string name = 2;
+}

@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,7 +13,6 @@ import bosdyn.client.common
 
 
 class ServiceClientMock(bosdyn.client.common.BaseClient):
-    default_authority = 'the-knights-of-ni'
     default_service_name = 'mock'
     service_type = 'bosdyn.api.Mock'
 
@@ -75,18 +74,6 @@ Spam, Spam, Spam, Spam!
         self.assertNotIn(response_p, robot.request_processors)
         self.assertEqual(sdk.robots[kAddress], sdk.create_robot(kAddress))
 
-    def test_robot_creation_without_app_token(self):
-        sdk = self._create_sdk(app_token=None)
-
-        # Takes the place of a processor.
-        request_p = object()
-        response_p = object()
-        sdk.request_processors.append(request_p)
-        sdk.response_processors.append(response_p)
-
-        with self.assertRaises(bosdyn.client.sdk.UnsetAppTokenError):
-            robot = self._create_robot(sdk, 'test-robot')
-
     def test_client_name_propogation(self):
         sdk = self._create_sdk()
         sdk.request_processors.append(
@@ -106,14 +93,17 @@ Spam, Spam, Spam, Spam!
         service_type = ServiceClientMock.default_service_name
         sdk = self._create_sdk()
         robot = self._create_robot(sdk, 'test-robot')
+        # Hacking in a cached version of "should_send_app_token" to avoid need to prop
+        # up a RobotId client and service.
+        robot._should_send_app_token_on_each_request = lambda: True
         # This should raise an exception -- we haven't installed a factory for the service.
-        with self.assertRaises(KeyError):
+        with self.assertRaises(bosdyn.client.robot.UnregisteredServiceNameError):
             client = robot.ensure_client(service_name)
         # Register the ServiceClientMock constructor as the function to call for the service.
         robot.service_type_by_name[service_name] = service_type
         robot.service_client_factories_by_type[service_type] = ServiceClientMock
-        client = robot.ensure_client(service_name, channel=robot.ensure_channel(
-            ServiceClientMock.default_authority))
+        client = robot.ensure_client(service_name,
+                                     channel=robot.ensure_secure_channel('the-knights-of-ni'))
 
     def test_load_robot_cert(self):
         sdk = bosdyn.client.Sdk()

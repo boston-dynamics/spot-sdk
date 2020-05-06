@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,75 +13,74 @@ import "bosdyn/api/header.proto";
 import "bosdyn/api/geometry.proto";
 import "google/protobuf/timestamp.proto";
 
-/// Fields potentially common to different kind of images.
-message SampleCommon {
-    /// This transform tells you how to get from the sensor frame to the canonical frame.
-    Frame frame = 2;
-
-    /// Time this data was acquired in the robot's time basis.
-    /// If specifying this as part of a client-originated command, the client should use the client
-    /// time basis.
-    /// Zero if not set.
-    google.protobuf.Timestamp acquisition_time = 3;
-}
-
-/// Rectangular color/greyscale/depth images.
+// Rectangular color/greyscale/depth images.
 message Image {
     enum Format {
         FORMAT_UNKNOWN = 0;
 
         // Color/greyscale formats.
-        /// JPEG format
+        // JPEG format
         FORMAT_JPEG = 1;
 
-        /// Uncompressed.  Requires pixel_format.
+        // Uncompressed.  Requires pixel_format.
         FORMAT_RAW = 2;
 
-        /// 1 byte run-length before each pixel value.
+        // 1 byte run-length before each pixel value.
         FORMAT_RLE = 3;
     }
 
     enum PixelFormat {
-        /// Unspecified value -- should not be used.
+        // Unspecified value -- should not be used.
         PIXEL_FORMAT_UNKNOWN = 0;
 
-        /// One byte per pixel.
+        // One byte per pixel.
         PIXEL_FORMAT_GREYSCALE_U8 = 1;
 
-        /// Three bytes per pixel.
+        // Three bytes per pixel.
         PIXEL_FORMAT_RGB_U8 = 3;
 
-        /// Four bytes per pixel.
+        // Four bytes per pixel.
         PIXEL_FORMAT_RGBA_U8 = 4;
 
-        /// Little-endian uint16 z-distance from camera (mm).
+        // Little-endian uint16 z-distance from camera (mm).
         PIXEL_FORMAT_DEPTH_U16 = 5;
     }
 
-    /// Image dimensions in pixels.
+    // Image dimensions in pixels.
     int32 cols = 2;
     int32 rows = 3;
 
-    /// Raw image data.
+    // Raw image data.
     bytes data = 4;
 
-    /// How the image is encoded.
+    // How the image is encoded.
     Format format = 5;
 
-    /// If Format does not imply PixelFormat, this will be set.
+    // If Format does not imply PixelFormat, this will be set.
     PixelFormat pixel_format = 6;
 }
 
-/// Rectangular color/greyscale images.
+// Rectangular color/greyscale images.
 message ImageCapture {
-    /// Time/location of image.
-    SampleCommon sample = 2;
+    // The time at which the image data was acquired in the robot's time basis.
+    google.protobuf.Timestamp acquisition_time = 30;
 
-    /// Image data.
+    // A tree-based collection of transformations, which will include the transformations to each image's
+    // sensor in addition to transformations to the common frames ("vision", "body", "odom").
+    // All transforms within the snapshot are at the acquistion time of the image.
+    FrameTreeSnapshot transforms_snapshot = 31;
+
+    // The frame name for the image's sensor source. This will be included in the transform snapshot.
+    string frame_name_image_sensor = 5;
+
+    // Image data.
     Image image = 3;
+
+    // Previous fields in the protobuf that are now reserved.
+    reserved 1, 2;
 }
 
-/// Proto for a description of an image source on the robot
+// Proto for a description of an image source on the robot
 message ImageSource {
     message PinholeModel {
         // Camera Matrix is
@@ -98,34 +97,34 @@ message ImageSource {
         CameraIntrinsics intrinsics = 1;
     }
 
-    /// The name of this image source used to get images.
+    // The name of this image source used to get images.
     string name = 2;
 
     reserved 3;
 
-    /// image dimensions in pixels
+    // image dimensions in pixels
     int32 cols = 4;
     int32 rows = 5;
 
-    /// typically 1000 (converting mm to m).
+    // typically 1000 (converting mm to m).
     double depth_scale = 6;
 
     reserved 7;
 
     oneof camera_models {
-        /// Rectilinear camera model.
+        // Rectilinear camera model.
         PinholeModel pinhole = 8;
     }
 
-    /// The kind of images returned by this image source.
+    // The kind of images returned by this image source.
     enum ImageType {
-        /// Unspecified -- do not use.
+        // Unspecified -- do not use.
         IMAGE_TYPE_UNKNOWN = 0;
 
-        /// Color or greyscale intensity image.
+        // Color or greyscale intensity image.
         IMAGE_TYPE_VISUAL = 1;
 
-        /// Pixel values represent distances to objects/surfaces.
+        // Pixel values represent distances to objects/surfaces.
         IMAGE_TYPE_DEPTH = 2;
     };
     ImageType image_type = 9;
@@ -133,24 +132,24 @@ message ImageSource {
 
 
 message ListImageSourcesRequest {
-    /// Common request header.
+    // Common request header.
     RequestHeader header = 1;
 }
 
 message ListImageSourcesResponse {
-    /// Common response Header.
+    // Common response Header.
     ResponseHeader header = 1;
 
-    /// The set of ImageSources available from this service.
-    /// May be empty if the service serves no images (e.g., if no cameras were found on startup).
+    // The set of ImageSources available from this service.
+    // May be empty if the service serves no images (e.g., if no cameras were found on startup).
     repeated ImageSource image_sources = 2;
 }
 
 message ImageRequest {
     string image_source_name = 1;
 
-    /// Image quality: a number from 0 (worst) to 100 (highest).
-    /// Note that jpeg quality 100 is still lossy.
+    // Image quality: a number from 0 (worst) to 100 (highest).
+    // Note that jpeg quality 100 is still lossy.
     double quality_percent = 2;
 
     // Specify the desired image encoding (e.g. JPEG, RAW).
@@ -158,7 +157,7 @@ message ImageRequest {
 }
 
 message GetImageRequest {
-    /// Common request header.
+    // Common request header.
     RequestHeader header = 1;
 
     repeated ImageRequest image_requests = 2;
@@ -168,11 +167,7 @@ message ImageResponse {
     ImageCapture shot = 1;
     ImageSource source = 2;
 
-    /// This transform tells you where the robot body was at the time of sensor acquisition,
-    /// for use in determining camera location when the image was taken.
-    SE3Pose ko_tform_body = 3;
-
-    /// Return status.
+    // Return status.
     enum Status {
         // UNKNOWN should never be used.
         //
@@ -193,6 +188,9 @@ message ImageResponse {
         STATUS_IMAGE_DATA_ERROR = 4;
     }
     Status status = 4;
+
+    // Previous fields in the protobuf that are now reserved.
+    reserved 3, 5;
 }
 
 message GetImageResponse {
@@ -202,3 +200,4 @@ message GetImageResponse {
     // The ordering of these image responses is defined by the order of the ImageRequests.
     repeated ImageResponse image_responses = 2;
 }
+

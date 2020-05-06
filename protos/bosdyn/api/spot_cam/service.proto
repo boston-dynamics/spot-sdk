@@ -1,0 +1,125 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.spot_cam;
+
+option java_outer_classname = "ServiceProto";
+
+import "bosdyn/api/spot_cam/compositor.proto";
+import "bosdyn/api/spot_cam/streamquality.proto";
+import "bosdyn/api/spot_cam/power.proto";
+import "bosdyn/api/spot_cam/LED.proto";
+import "bosdyn/api/spot_cam/logging.proto";
+import "bosdyn/api/spot_cam/ptz.proto";
+import "bosdyn/api/spot_cam/audio.proto";
+import "bosdyn/api/spot_cam/health.proto";
+import "bosdyn/api/spot_cam/network.proto";
+import "bosdyn/api/spot_cam/version.proto";
+
+service CompositorService {
+    //SetScreen changes the current view that is streamed over the network
+    rpc SetScreen (SetScreenRequest) returns (SetScreenResponse);
+    //GetScreen returns the currently-selected screen
+    rpc GetScreen (GetScreenRequest) returns (GetScreenResponse);
+    //ListScreens returns a list of available screens
+    rpc ListScreens (ListScreensRequest) returns (ListScreensResponse);
+    //GetVisibleCameras returns a list of currently visible windows, with any available metadata
+    rpc GetVisibleCameras (GetVisibleCamerasRequest) returns (GetVisibleCamerasResponse);
+}
+
+//this service sets up quality parameters for the stream, such as compression and image postprocessing settings.
+service StreamQualityService {
+    rpc SetStreamParams (SetStreamParamsRequest) returns (SetStreamParamsResponse);
+    rpc GetStreamParams (GetStreamParamsRequest) returns (GetStreamParamsResponse);
+}
+
+service PowerService {
+    rpc SetPowerStatus (SetPowerStatusRequest) returns (SetPowerStatusResponse);
+    rpc GetPowerStatus (GetPowerStatusRequest) returns (GetPowerStatusResponse);
+}
+
+service LightingService {
+    rpc SetLEDBrightness (SetLEDBrightnessRequest) returns (SetLEDBrightnessResponse);
+    rpc GetLEDBrightness (GetLEDBrightnessRequest) returns (GetLEDBrightnessResponse);
+}
+
+service MediaLogService {
+    //Store queues up a Logpoint, which is a bit of media that the user wishes to store to disk
+    //(still images are supported for now, more media types will be supported in the future)
+    rpc Store (StoreRequest) returns (StoreResponse);
+    //GetStatus reads the 'name' field of the Logpoint contained in GetStatusRequest, and fills in
+    //the rest of the fields. Mainly useful for getting the 'state' of the logpoint.
+    rpc GetStatus (GetStatusRequest) returns (GetStatusResponse);
+    //Tag updates the 'tag' field of the Logpoint that's passed, which must exist.
+    rpc Tag (TagRequest) returns (TagResponse);
+    //EnableDebug starts the periodic logging of health data to the database; this increases disk utilization, but will record data that is useful post-mortum
+    rpc EnableDebug (DebugRequest) returns (DebugResponse);
+    //ListCameras returns a list of strings that identify valid cameras for logging
+    rpc ListCameras (ListCamerasRequest) returns (ListCamerasResponse);
+    //Retrieve returns all data associated with a given logpoint
+    rpc Retrieve (RetrieveRequest) returns (stream RetrieveResponse);
+    //Delete removes a Logpoint from the system
+    rpc Delete (DeleteRequest) returns (DeleteResponse);
+    //ListLogpoints returns a list of all logpoints in the database.
+    //Warning: this may be a lot of data.
+    rpc ListLogpoints (ListLogpointsRequest) returns (stream ListLogpointsResponse);
+    //SetPassphrase sets the eCryptFS passphrase used by the filesystem.
+    //there is no symmetry here, because key material is write-only
+    rpc SetPassphrase (SetPassphraseRequest) returns (SetPassphraseResponse);
+}
+
+service PtzService {
+    //SetPosition points the referenced camera to a given vector (in PTZ-space)
+    rpc SetPtzPosition (SetPtzPositionRequest) returns (SetPtzPositionResponse);
+    //GetPosition returns the current settings of the referenced camera
+    rpc GetPtzPosition (GetPtzPositionRequest) returns (GetPtzPositionResponse);
+    rpc SetPtzVelocity (SetPtzVelocityRequest) returns (SetPtzVelocityResponse);
+    rpc GetPtzVelocity (GetPtzVelocityRequest) returns (GetPtzVelocityResponse);
+    rpc ListPtz (ListPtzRequest) returns (ListPtzResponse);
+}
+
+service AudioService {
+    //Given a soundRequest that identifies a single sound present in the system's sound effects table, PlaySound executes the sound effect.
+    rpc PlaySound (PlaySoundRequest) returns (PlaySoundResponse);
+    //LoadSound loads a sound effect into the system's sound table. The stream must contain a wav file, with a RIFF header describing it.
+    //The arguement is a stream, to allow for sounds that are bigger then the MTU of the network; in this case, the complete stream must
+    //contain the entire sound. If the stream ends early, an error will be returned. The header and sound fields of the entire stream must
+    //be the same.
+    rpc LoadSound (stream LoadSoundRequest) returns (LoadSoundResponse);
+    //Delete the sound identified in the argument from the system's sound table.
+    rpc DeleteSound (DeleteSoundRequest) returns (DeleteSoundResponse);
+    //ListSounds returns a list of all of the sound effects that the system knows about.
+    rpc ListSounds (ListSoundsRequest) returns (ListSoundsResponse);
+    rpc SetVolume (SetVolumeRequest) returns (SetVolumeResponse);
+    rpc GetVolume (GetVolumeRequest) returns (GetVolumeResponse);
+}
+
+service HealthService {
+    //GetTemperature returns a list of thermometers in the system, and the temperature that they measure.
+    rpc GetTemperature (GetTemperatureRequest) returns (GetTemperatureResponse);
+    //GetBitStatus returns two lists; a list of system events, and a list of ways that the system is degraded;
+    //for instance, a degredation may include a missing PTZ unit, or a missing USB storage device.
+    rpc GetBITStatus (GetBITStatusRequest) returns (GetBITStatusResponse);
+    //ClearBitEvents clears out the events list of the BITStatus structure.
+    rpc ClearBITEvents (ClearBITEventsRequest) returns (ClearBITEventsResponse);
+}
+
+
+service NetworkService {
+    rpc GetNetworkSettings (GetNetworkSettingsRequest) returns (GetNetworkSettingsResponse);
+    rpc SetNetworkSettings (SetNetworkSettingsRequest) returns (SetNetworkSettingsResponse);
+    //SetICEConfiguration sets up parameters for ICE, including addresses for STUN and TURN services
+    rpc SetICEConfiguration (SetICEConfigurationRequest) returns (SetICEConfigurationResponse);
+    //GetICEConfiguration retrieves currently set parameters for ICE, including addresses for STUN and TURN services
+    rpc GetICEConfiguration (GetICEConfigurationRequest) returns (GetICEConfigurationResponse);
+}
+
+service VersionService {
+    rpc GetSoftwareVersion (GetSoftwareVersionRequest) returns (
+    GetSoftwareVersionResponse);
+}

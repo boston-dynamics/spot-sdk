@@ -1,17 +1,26 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
+from __future__ import print_function
+
+import os
 import setuptools
+
+try:
+    SDK_VERSION = os.environ['BOSDYN_SDK_VERSION']
+except KeyError:
+    print('Do not run setup.py directly - use wheels.py to build API wheels')
+    raise
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="bosdyn-mission",
-    version="1.1.2",
+    version=SDK_VERSION,
     author="Boston Dynamics",
     author_email="support@bostondynamics.com",
     description="Boston Dynamics mission code",
@@ -20,11 +29,15 @@ setuptools.setup(
     url="https://www.bostondynamics.com/",
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
-    install_requires=['bosdyn-api>=1.1.2', 'six'],
+    install_requires=[
+        'bosdyn-client=={}'.format(SDK_VERSION),
+        'bosdyn-api=={}'.format(SDK_VERSION),
+        'six',
+        'enum34;python_version<"3.4"',
+    ],
     classifiers=[
         "Programming Language :: Python :: 3.6",
         "License :: Other/Proprietary License",
         "Operating System :: OS Independent",
-        "Private :: Do Not Upload",
     ],
 )

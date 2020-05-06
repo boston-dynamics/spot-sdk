@@ -1,0 +1,45 @@
+
+<html>
+  <head>
+    <title>Spot SDK</title>
+    <link rel="stylesheet" type="text/css" href="./../../css/markdown.css"/>
+  </head>
+  <body class="markdown-body">
+  
+<h1><a href="../../../index.html">Spot SDK</a> &gt; <a href="../index.html">Concepts</a> &gt; <a href="index.html">Autonomy</a> &gt; <br> World Object Service</h1>
+<p>The WorldObjectService allows clients to list all of the objects that the robot is tracking via the ListWorldObjects RPC. The service can also inform the robot of world objects that it might not be able to detect itself via the MutateWorldObjects RPC.</p>
+<p>World objects are higher-level items in the scene that have some amount of semantic information associated with them. For example, a WorldObject could be an AprilTag fiducial, a door handle, or a virtual object drawn for debugging purposes.</p>
+<p>Currently, the most common use case is to capture AprilTag fiducials detections from the robot’s cameras. Fiducials are commonly used as ground truth reference objects, notably to initialize the robot's localization. Any fiducials detected by the robot’s cameras will be returned as WorldObjects with a timestamp, an ID, a name, and a frame object describing the fiducial location.</p>
+<p>If a payload or other client can detect objects the robot can’t, for example, a payload camera that can spot fiducials on the ceiling, then the client can inform the robot of that object which might be referenced by other behaviors.</p>
+<table>
+  <tbody><tr>
+   <td><strong>RPC</strong>
+   </td>
+   <td><strong>Description</strong>
+   </td>
+  </tr>
+  <tr>
+   <td>ListWorldObjects
+   </td>
+   <td>List all world objects
+   </td>
+  </tr>
+  <tr>
+   <td>MutateWorldObjects
+   </td>
+   <td>Mutate the world objects
+   </td>
+  </tr>
+</tbody></table>
+<p>Refer to these Python code examples for details.</p>
+<ul>
+<li><a href="../../../python/examples/world_object_mutations/mutate_world_objects.py">mutate_world_objects</a></li>
+<li><a href="../../../python/examples/add_image_coordinates_to_scene/add_image_coordinates.py">add_image_coordinates</a></li>
+<li><a href="../../../python/examples/fiducial_follow/fiducial_follow.py">fiducial_follow</a></li>
+<li><a href="../../../python/examples/get_world_objects/get_world_objects.py">get_world_objects</a></li>
+</ul>
+<br>
+<p><a href="missions_service.html">« Previous</a></p>
+
+  </body>
+</html>

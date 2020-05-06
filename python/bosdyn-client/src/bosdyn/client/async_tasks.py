@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -16,13 +16,21 @@ from .exceptions import ResponseError
 
 
 class AsyncTasks(object):
-    """Manages a set of tasks which work by periodically calling an update() method."""
+    """Manages a set of tasks which work by periodically calling an update() method.
+
+    Args:
+        tasks: List of tasks to manage.
+    """
 
     def __init__(self, tasks=None):
         self._tasks = tasks if tasks else []
 
     def add_task(self, task):
-        """Add a task to be managed by this object."""
+        """Add a task to be managed by this object.
+
+        Args:
+            task: Task to add.
+        """
         self._tasks.append(task)
 
     def update(self):
@@ -51,16 +59,27 @@ class AsyncGRPCTask(object):
     def _should_query(self, now_sec):
         """Called on update() when no query is running to determine whether to start a new query.
 
+        Args:
+            now_sec: Time now in seconds.
+
         Overrride to return True when a new query should be started.
         """
 
     @abc.abstractmethod
     def _handle_result(self, result):
-        """Override to handle result of grcp query when it is available."""
+        """Override to handle result of grcp query when it is available.
+
+        Args:
+            result: Result to handle.
+        """
 
     @abc.abstractmethod
     def _handle_error(self, exception):
-        """Override to handle any exception raised in handling GRPC result."""
+        """Override to handle any exception raised in handling GRPC result.
+
+        Args:
+            exception: Error exception to handle.
+        """
 
     def update(self):
         """Call this periodically to manage execution of task represented by this object."""
@@ -84,6 +103,9 @@ class AsyncPeriodicGRPCTask(AsyncGRPCTask):
 
     When it is time to run the task, an async GRPC call is run resulting in a FutureWrapper object.
     The FutureWrapper is monitored for completion, and then an action is taken in response.
+
+    Args:
+        periodic_sec: Time to wait in seconds between queries.
     """
 
     def __init__(self, period_sec):
@@ -91,6 +113,14 @@ class AsyncPeriodicGRPCTask(AsyncGRPCTask):
         self._period_sec = period_sec
 
     def _should_query(self, now_sec):
+        """Check if it is time to query again.
+
+        Args:
+            now_sec: Time now in seconds.
+
+        Returns:
+            True if it is time to query again based on now_sec, False otherwise.
+        """
         return (now_sec - self._last_call) > self._period_sec
 
     @abc.abstractmethod
@@ -99,15 +129,30 @@ class AsyncPeriodicGRPCTask(AsyncGRPCTask):
 
     @abc.abstractmethod
     def _handle_result(self, result):
-        """Override to handle result of grcp query when it is available."""
+        """Override to handle result of grcp query when it is available.
+
+        Args:
+            result: Result to handle.
+        """
 
     @abc.abstractmethod
     def _handle_error(self, exception):
-        """Override to handle any exception raised in handling GRPC result."""
+        """Override to handle any exception raised in handling GRPC result.
+
+        Args:
+            exception: Error exception to handle.
+        """
 
 
 class AsyncPeriodicQuery(AsyncPeriodicGRPCTask):
-    """Query for robot data at some regular interval."""
+    """Query for robot data at some regular interval.
+
+    Args:
+        query_name: Name of the query.
+        client: SDK client for the query.
+        logger: Logger to use for logging errors.
+        periodic_sec: Time in seconds between running the query.
+    """
 
     def __init__(self, query_name, client, logger, period_sec):
         super(AsyncPeriodicQuery, self).__init__(period_sec)
@@ -126,7 +171,17 @@ class AsyncPeriodicQuery(AsyncPeriodicGRPCTask):
         return self._proto
 
     def _handle_result(self, result):
+        """Handle result of grcp query when it is available.
+
+        Args:
+            result: Result to handle.
+        """
         self._proto = result
 
     def _handle_error(self, exception):
+        """Log exception.
+
+        Args:
+            exception: Error exception to log.
+        """
         self._logger.exception("Failure getting %s: %s", self._query_name, exception)

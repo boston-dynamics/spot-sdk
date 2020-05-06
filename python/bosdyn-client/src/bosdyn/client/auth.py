@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -40,6 +40,14 @@ class TemporarilyLockedOutError(AuthResponseError):
     """User is temporarily locked out of authentication."""
 
 
+class ExpiredApplicationTokenError(AuthResponseError):
+    """Application token has expired. Please contact support@bostondynamics.com to receive a new one."""
+
+
+class InvalidApplicationTokenError(AuthResponseError):
+    """The Application Token is invalid."""
+
+
 _STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _STATUS_TO_ERROR.update({
     auth_pb2.GetAuthTokenResponse.STATUS_OK: (None, None),
@@ -47,8 +55,12 @@ _STATUS_TO_ERROR.update({
                                                          InvalidLoginError.__doc__),
     auth_pb2.GetAuthTokenResponse.STATUS_INVALID_TOKEN: (InvalidTokenError,
                                                          InvalidTokenError.__doc__),
-    auth_pb2.GetAuthTokenResponse.STATUS_TEMPORARILY_LOCKED_OUT: (TemporarilyLockedOutError,
-                                                                  TemporarilyLockedOutError.__doc__)
+    auth_pb2.GetAuthTokenResponse.STATUS_TEMPORARILY_LOCKED_OUT:
+    (TemporarilyLockedOutError, TemporarilyLockedOutError.__doc__),
+    auth_pb2.GetAuthTokenResponse.STATUS_INVALID_APPLICATION_TOKEN:
+    (InvalidApplicationTokenError, InvalidApplicationTokenError.__doc__),
+    auth_pb2.GetAuthTokenResponse.STATUS_EXPIRED_APPLICATION_TOKEN:
+    (ExpiredApplicationTokenError, ExpiredApplicationTokenError.__doc__)
 })
 
 
@@ -65,34 +77,34 @@ def _token_from_response(response):
     return response.token
 
 
-def _build_auth_request(username, password):
-    return auth_pb2.GetAuthTokenRequest(username=username, password=password)
+def _build_auth_request(username, password, app_token):
+    return auth_pb2.GetAuthTokenRequest(username=username, password=password,
+                                        application_token=app_token)
 
 
-def _build_auth_token_request(token):
-    return auth_pb2.GetAuthTokenRequest(token=token)
+def _build_auth_token_request(token, app_token):
+    return auth_pb2.GetAuthTokenRequest(token=token, application_token=app_token)
 
 
 class AuthClient(BaseClient):
     """Client to authenticate to the robot."""
 
-    # Typical authority of the service on the robot we want to talk to.
-    default_authority = 'auth.spot.robot'
     # Typical name of the service in the robot's directory listing.
     default_service_name = 'auth'
-    # Full service name in the robot's directory listing.
+    # gRPC service proto definition implemented by this service
     service_type = 'bosdyn.api.AuthService'
 
     def __init__(self, name=None):
         super(AuthClient, self).__init__(auth_service_pb2_grpc.AuthServiceStub, name=name)
 
-    def auth(self, username, password, **kwargs):
+    def auth(self, username, password, app_token, **kwargs):
         """Authenticate to the robot with a username/password combo.
 
-        Params:
-            username -- username on the robot.
-            password -- password for the username on the robot.
-            kwargs -- extra arguments for controlling RPC details.
+        Args:
+            username: username on the robot.
+            password: password for the username on the robot.
+            app_token: the application token needed for auth. Note that this is extraneous for robots with old software.
+            kwargs: extra arguments for controlling RPC details.
 
         Returns:
             User token from the server as a string.
@@ -100,25 +112,26 @@ class AuthClient(BaseClient):
         Raises:
             InvalidLoginError: If username and/or password are not valid.
         """
-        req = _build_auth_request(username, password)
+        req = _build_auth_request(username, password, app_token)
         return self.call(self._stub.GetAuthToken, req, _token_from_response, _error_from_response,
                          **kwargs)
 
-    def auth_async(self, username, password, **kwargs):
+    def auth_async(self, username, password, app_token, **kwargs):
         """Asynchronously authenticate to the robot with a username/password combo.
 
         See auth documentation for more details.
         """
-        req = _build_auth_request(username, password)
+        req = _build_auth_request(username, password, app_token)
         return self.call_async(self._stub.GetAuthToken, req, _token_from_response,
                                _error_from_response, **kwargs)
 
-    def auth_with_token(self, token, **kwargs):
+    def auth_with_token(self, token, app_token, **kwargs):
         """Authenticate to the robot using a previously created user token.
 
-        Params:
-            token -- a user token previously issued by the robot.
-            kwargs -- extra arguments for controlling RPC details.
+        Args:
+            token: a user token previously issued by the robot.
+            app_token: the application token needed for auth. Note that this is extraneous for robots with old software.
+            kwargs: extra arguments for controlling RPC details.
 
         Returns:
             A new user token from the server. The new token will generally be valid further in
@@ -128,15 +141,15 @@ class AuthClient(BaseClient):
         Raises:
             InvalidTokenError: If the token was incorrectly formed, for the wrong robot, or expired.
         """
-        req = _build_auth_token_request(token)
+        req = _build_auth_token_request(token, app_token)
         return self.call(self._stub.GetAuthToken, req, _token_from_response, _error_from_response,
                          **kwargs)
 
-    def auth_with_token_async(self, token, **kwargs):
+    def auth_with_token_async(self, token, app_token, **kwargs):
         """Authenticate to the robot using a previously created user token.
 
         See auth_with_token documentation for more details.
         """
-        req = _build_auth_token_request(token)
+        req = _build_auth_token_request(token, app_token)
         return self.call_async(self._stub.GetAuthToken, req, _token_from_response,
                                _error_from_response, **kwargs)

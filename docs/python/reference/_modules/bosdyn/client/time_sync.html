@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.time_sync &mdash; Spot 1.1.0 documentation</title>
+  <title>bosdyn.client.time_sync &mdash; Spot 2.0.0 documentation</title>
   
 
   
@@ -17,34 +17,33 @@
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
+  
+  
     
 
   
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
+
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search">
           
 
           
@@ -58,7 +57,7 @@
             
             
               <div class="version">
-                1.1.0
+                2.0.0
               </div>
             
           
@@ -82,10 +81,10 @@
               
             
             
-              <p class="caption"><span class="caption-text">Services:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../client_index.html">Client API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../core_index.html">Core API</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../client_modules/client_index.html">Client SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core_modules/core_index.html">Core SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mission_modules/mission_index.html">Mission SDK</a></li>
 </ul>
 
             
@@ -149,7 +148,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.time_sync</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.</span>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
@@ -199,8 +198,7 @@
 
 <div class="viewcode-block" id="TimeSyncClient"><a class="viewcode-back" href="../../../client_modules/time_sync.html#bosdyn.client.time_sync.TimeSyncClient">[docs]</a><span class="k">class</span> <span class="nc">TimeSyncClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A client for establishing time-sync with a server/robot.&quot;&quot;&quot;</span>
-    <span class="n">default_authority</span> <span class="o">=</span> <span class="s1">&#39;api.spot.robot&#39;</span>
-    <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;time_sync&#39;</span>
+    <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;time-sync&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.TimeSyncService&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -209,11 +207,14 @@
 <div class="viewcode-block" id="TimeSyncClient.get_time_sync_update"><a class="viewcode-back" href="../../../client_modules/time_sync.html#bosdyn.client.time_sync.TimeSyncClient.get_time_sync_update">[docs]</a>    <span class="k">def</span> <span class="nf">get_time_sync_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_round_trip</span><span class="p">,</span> <span class="n">clock_identifier</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Obtain an initial or updated timesync estimate with server.</span>
 
-<span class="sd">        Params:</span>
-<span class="sd">            previous_round_trip : bosdyn.api.TimeSyncRoundTrip or None</span>
-<span class="sd">                None on first call, then fill out with previous response from server.</span>
-<span class="sd">            clock_identifier : str</span>
-<span class="sd">                Empty on first call, assigned by server in first response.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            previous_round_trip (bosdyn.api.TimeSyncRoundTrip): None on first rpc call, then</span>
+<span class="sd">                                                                fill out with previous response</span>
+<span class="sd">                                                                from server.</span>
+<span class="sd">            clock_identifier (string): Empty on first call, assigned by server in first response.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_time_sync_update_request</span><span class="p">(</span><span class="n">previous_round_trip</span><span class="p">,</span> <span class="n">clock_identifier</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">TimeSyncUpdate</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -270,7 +271,8 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">has_established_time_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Checks if the client has successfully established time-sync with the robot.</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            Boolean true if the previous time-sync update returned that time sync is OK.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -291,7 +293,8 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">clock_identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;The clock identifier for the instance of the time-sync client.</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">          A unique identifier for this client. Empty if get_new_estimate has not been called.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -303,10 +306,10 @@
         <span class="sd">&quot;&quot;&quot;The best current estimate of clock skew from the time-sync service.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          google.protobuf.Duration</span>
+<span class="sd">            The google.protobuf.Duration representing the clock skew.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">          NotEstablishedError if time sync has not yet been established.</span>
+<span class="sd">            NotEstablishedError: Time sync has not yet been established.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">response</span> <span class="ow">or</span> <span class="n">response</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">time_sync_pb2</span><span class="o">.</span><span class="n">TimeSyncState</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span>
@@ -315,6 +318,12 @@
 
 <div class="viewcode-block" id="TimeSyncEndpoint.establish_timesync"><a class="viewcode-back" href="../../../client_modules/time_sync.html#bosdyn.client.time_sync.TimeSyncEndpoint.establish_timesync">[docs]</a>    <span class="k">def</span> <span class="nf">establish_timesync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_samples</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">break_on_success</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Perform time-synchronization until time sync established.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            max_samples (int): The maximum number of times to attempt to establish time-sync</span>
+<span class="sd">                               through time-synchronization.</span>
+<span class="sd">            break_on_success (bool): If true, stop performing the time-synchronization after</span>
+<span class="sd">                                     time-sync is established.</span>
 
 <span class="sd">        Return:</span>
 <span class="sd">            Boolean true if valid timesync has been established.</span>
@@ -331,8 +340,14 @@
         <span class="n">round_trip</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">clock_identifier</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-            <span class="n">round_trip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locked_previous_round_trip</span>
-            <span class="n">clock_identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locked_clock_identifier</span>
+            <span class="c1"># Only add a round trip to the request along with a clock identifier, otherwise</span>
+            <span class="c1">#  the sever will respond with an invalid request error.</span>
+            <span class="c1"># Responses with errors may not contain a clock identifier.</span>
+            <span class="c1"># This may happen, for example, if the service was not yet ready at the time of</span>
+            <span class="c1">#  the request.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locked_clock_identifier</span><span class="p">:</span>
+                <span class="n">round_trip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locked_previous_round_trip</span>
+                <span class="n">clock_identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locked_clock_identifier</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">get_time_sync_update</span><span class="p">(</span><span class="n">previous_round_trip</span><span class="o">=</span><span class="n">round_trip</span><span class="p">,</span>
                                                  <span class="n">clock_identifier</span><span class="o">=</span><span class="n">clock_identifier</span><span class="p">)</span>
 
@@ -363,8 +378,11 @@
 <div class="viewcode-block" id="TimeSyncEndpoint.get_robot_time_converter"><a class="viewcode-back" href="../../../client_modules/time_sync.html#bosdyn.client.time_sync.TimeSyncEndpoint.get_robot_time_converter">[docs]</a>    <span class="k">def</span> <span class="nf">get_robot_time_converter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a RobotTimeConverter for current estimate for robot clock skew from local time.</span>
 
+<span class="sd">        Returns:</span>
+<span class="sd">          An instance of RobotTimeConvertor for the time-sync client.</span>
+
 <span class="sd">        Raises:</span>
-<span class="sd">          TimeSyncFailure   If time sync has not yet been established.</span>
+<span class="sd">          NotEstablishedError: If time sync has not yet been established.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">RobotTimeConverter</span><span class="p">(</span><span class="n">timestamp_to_nsec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clock_skew</span><span class="p">))</span></div>
 
@@ -372,14 +390,15 @@
         <span class="sd">&quot;&quot;&quot;Convert a local time in seconds to a timestamp proto in robot time.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">          local_time_secs       Timestamp in seconds since the unix epoch (e.g., from time.time()).</span>
+<span class="sd">            local_time_secs (float): Timestamp in seconds since the unix epoch (e.g.,</span>
+<span class="sd">                                     from time.time()).</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          google.protobuf.Timestamp  Representing |local_time_secs| in robot clock.</span>
-<span class="sd">          None                       If |local_time_secs| is None.</span>
+<span class="sd">            google.protobuf.Timestamp representing local_time_secs in robot clock, or None if</span>
+<span class="sd">                local_time_secs is None.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">          TimeSyncFailure   If time sync has not yet been established.</span>
+<span class="sd">            NotEstablishedError:  Time sync has not yet been established.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">local_time_secs</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -387,7 +406,6 @@
         <span class="k">return</span> <span class="n">converter</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="n">local_time_secs</span><span class="p">)</span></div></div>
 
 
-<span class="c1">#  (e.g., temporary loss of comms)?</span>
 <div class="viewcode-block" id="TimeSyncThread"><a class="viewcode-back" href="../../../client_modules/time_sync.html#bosdyn.client.time_sync.TimeSyncThread">[docs]</a><span class="k">class</span> <span class="nc">TimeSyncThread</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Background thread for achieving and maintaining time-sync to the robot.&quot;&quot;&quot;</span>
 
@@ -439,7 +457,11 @@
 
     <span class="nd">@time_sync_interval_sec</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">time_sync_interval_sec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set interval at which time-sync is updated in the thread after sync is established.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Set interval at which time-sync is updated in the thread after sync is established.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            val (float): The interval (in seconds) that the time-sync estimate should be updated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_locked_time_sync_interval_sec</span> <span class="o">=</span> <span class="n">val</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
@@ -454,11 +476,12 @@
         <span class="sd">&quot;&quot;&quot;Wait for up to the given timeout for time-sync to be achieved</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">          timeout_sec:  maximum time to wait for time-sync to be achieved.</span>
+<span class="sd">          timeout_sec (float): Maximum time (seconds) to wait for time-sync to be achieved.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">          InactiveThreadError  If thread is not running.</span>
-<span class="sd">          TimedOutError  If deadline to achieve time-sync is exceeded.</span>
+<span class="sd">          InactiveThreadError:  Thread is not running.</span>
+<span class="sd">          time_sync.TimedOutError:  Deadline to achieve time-sync is exceeded.</span>
+<span class="sd">          Threading Exceptions: Errors from threading the processes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_established_time_sync</span><span class="p">:</span>
             <span class="k">return</span>
@@ -476,7 +499,8 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">has_established_time_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Checks if the client has successfully established time-sync with the robot.</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            Boolean true if the previous time-sync update returned that time sync is OK.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -503,14 +527,15 @@
         <span class="sd">&quot;&quot;&quot;Get current estimate for robot clock skew from local time.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">          timesync_timeout_sec  Time to wait for timesync before doing conversion.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">          InactiveThreadError If time-sync thread exits before time-sync.</span>
-<span class="sd">          TimedOutError If deadline to achieve time-sync is exceeded.</span>
+<span class="sd">          timesync_timeout_sec (float):  Time to wait for timesync before doing conversion.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">          Clock skew as a google.protobuf.Duration object</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">          InactiveThreadError: Time-sync thread exits before time-sync.</span>
+<span class="sd">          time_sync.TimedOutError: Deadline to achieve time-sync is exceeded.</span>
+<span class="sd">          Threading Exceptions: Errors from threading the processes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_sync</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="n">timesync_timeout_sec</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">clock_skew</span></div>
@@ -518,9 +543,13 @@
 <div class="viewcode-block" id="TimeSyncThread.get_robot_time_converter"><a class="viewcode-back" href="../../../client_modules/time_sync.html#bosdyn.client.time_sync.TimeSyncThread.get_robot_time_converter">[docs]</a>    <span class="k">def</span> <span class="nf">get_robot_time_converter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timesync_timeout_sec</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a RobotTimeConverter for current estimate for robot clock skew from local time.</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">            timesync_timeout_sec (float):  Time to wait for timesync before doing conversion.</span>
+
 <span class="sd">        Raises:</span>
-<span class="sd">          InactiveThreadError  If time-sync thread exits before time-sync.</span>
-<span class="sd">          TimedOutError  If deadline to achieve time-sync is exceeded.</span>
+<span class="sd">          InactiveThreadError: Time-sync thread exits before time-sync.</span>
+<span class="sd">          time_sync.TimedOutError: Deadline to achieve time-sync is exceeded.</span>
+<span class="sd">          Threading Exceptions: Errors from threading the processes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_sync</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="n">timesync_timeout_sec</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="o">.</span><span class="n">get_robot_time_converter</span><span class="p">()</span></div>
@@ -529,16 +558,18 @@
         <span class="sd">&quot;&quot;&quot;Convert a local time in seconds to a timestamp proto in robot time.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">          local_time_secs       Timestamp in seconds since the unix epoch (e.g., from time.time()).</span>
-<span class="sd">          timesync_timeout_sec  Time to wait for timesync before doing conversion.</span>
+<span class="sd">            local_time_secs (float): Timestamp in seconds since the unix epoch (e.g.,</span>
+<span class="sd">                from time.time()).</span>
+<span class="sd">            timesync_timeout_sec (float): Time to wait for timesync before doing conversion.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          google.protobuf.Timestamp  Representing |local_time_secs| in robot clock.</span>
-<span class="sd">          None                       If |local_time_secs| is None.</span>
+<span class="sd">            google.protobuf.Timestamp representing local_time_secs in robot clock, or None if</span>
+<span class="sd">            local_time_secs is None.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">          InactiveThreadError    If time-sync thread exits before time-sync.</span>
-<span class="sd">          TimedOutError    If deadline to achieve time-sync is exceeded.</span>
+<span class="sd">            InactiveThreadError: Time-sync thread exits before time-sync.</span>
+<span class="sd">            time_sync.TimedOutError: Deadline to achieve time-sync is exceeded.</span>
+<span class="sd">            Threading Exceptions: Errors from threading the processes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">local_time_secs</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -586,7 +617,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Boston Dynamics
+        &copy; Copyright 2019, Boston Dynamics.
 
     </p>
   </div>
@@ -603,16 +634,36 @@
   
 
 
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -25,10 +25,11 @@ from xbox_joystick_factory import XboxJoystickFactory
 VELOCITY_BASE_SPEED = 0.5  # m/s
 VELOCITY_BASE_ANGULAR = 0.8  # rad/sec
 VELOCITY_CMD_DURATION = 0.6  # seconds
-ORIENTATION_CHANGE = math.pi / 16 # rad
-ORIENTATION_ANGLE_MAX = math.pi / 4 # rad
-HEIGHT_MAX = 0.3 # m
-HEIGHT_CHANGE = 0.1 # m per command
+HEIGHT_MAX = 0.3  # m
+ROLL_OFFSET_MAX = 0.4  # rad
+YAW_OFFSET_MAX = 0.7805  # rad
+PITCH_OFFSET_MAX = 0.7805  # rad
+HEIGHT_CHANGE = 0.1  # m per command
 
 
 class RobotMode(Enum):
@@ -54,11 +55,13 @@ class XboxController:
         command_client: Client for all the robot commands.
         lease_client: Client for the lease management.
         estop_client: Client for the E-Stop functionality.
+        estop_keepalive: Estop keep-alive object.
+        estop_buttons_pressed: Boolean used to determine when Estop button combination is released
+                               in order to toggle the Estop
         mobility_params: Mobility parameters to use in each robot command.
         mode: Current robot movement type as RobotMode enum.
         has_robot_control: Boolean whether program has acquired robot control.
         motors_powered: Boolean whether the robot motors are powered.
-        has_estop: Boolean whether E-Stop has been registered.
         body_height: Current robot body height in meters from normal standing height.
         stand_yaw: Current robot body yaw in radians.
         stand_roll: Current robot body roll in radians.
@@ -75,13 +78,14 @@ class XboxController:
         self.command_client = None
         self.lease_client = None
         self.estop_client = None
+        self.estop_keepalive = None
+        self.estop_buttons_pressed = False
         self.mobility_params = None
 
         # Robot state
         self.mode = None
         self.has_robot_control = False
         self.motors_powered = False
-        self.has_estop = False
 
         self.body_height = 0.0
         self.stand_yaw = 0.0
@@ -92,7 +96,6 @@ class XboxController:
         self.stand_roll_change = False
         self.stand_pitch_change = False
         self.stand_yaw_change = False
-
 
     def initialize_robot_from_config(self, config):
         """Initializes SDK from command line arguments.
@@ -112,7 +115,6 @@ class XboxController:
         self.mobility_params = spot_command_pb2.MobilityParams(
             locomotion_hint=spot_command_pb2.HINT_AUTO)
 
-
     def _force_safe_power_off(self):
         """Safely powers off the robot.
         """
@@ -124,33 +126,33 @@ class XboxController:
                 self.command_client.robot_command(cmd)
             self.lease_client.return_lease(lease)
 
-
-    def _configure_estop(self):
-        """Configures E-Stop functionality in the robot.
+    def _toggle_estop(self):
+        """Toggles on/off E-Stop.
         """
 
-        if self.has_estop:
-            return
+        if not self.estop_keepalive:
+            if self.estop_client.get_status().stop_level == estop_pb2.ESTOP_LEVEL_NONE:
+                print("Taking EStop from another controller")
 
-        if self.estop_client.get_status().stop_level == estop_pb2.ESTOP_LEVEL_NONE:
-            print("Taking EStop from another controller")
+            #register endpoint with 9 second timeout
+            estop_endpoint = bosdyn.client.estop.EstopEndpoint(client=self.estop_client,
+                                                               name=self.client_name,
+                                                               estop_timeout=9.0)
+            estop_endpoint.force_simple_setup()
 
-        #register endpoint with 9 second timeout
-        estop_endpoint = bosdyn.client.estop.EstopEndpoint(
-            client=self.estop_client,
-            name=self.client_name,
-            estop_timeout=9.0)
-        estop_endpoint.force_simple_setup()
-
-        _ = bosdyn.client.estop.EstopKeepAlive(estop_endpoint)
-        self.has_estop = True
-
+            self.estop_keepalive = bosdyn.client.estop.EstopKeepAlive(estop_endpoint)
+        else:
+            self.estop_keepalive.stop()
+            self.estop_keepalive.shutdown()
+            self.estop_keepalive = None
+            self._force_safe_power_off()
+            sys.exit('Estop')
 
     def _gain_control(self):
         """Acquires lease of the robot to gain control.
         """
 
-        if self.has_robot_control or not self.has_estop:
+        if self.has_robot_control or not self.estop_keepalive:
             return
 
         leases = self.lease_client.list_leases()
@@ -164,21 +166,19 @@ class XboxController:
         _ = self.lease_client.acquire()
         self.has_robot_control = True
 
-
     def _power_motors(self):
         """Powers the motors on in the robot.
         """
 
         if self.motors_powered or \
         not self.has_robot_control or \
-        not self.has_estop or \
+        not self.estop_keepalive or \
         self.robot.is_powered_on():
             return
 
         self.robot.power_on(timeout_sec=20)
         self.robot.is_powered_on()
         self.motors_powered = True
-
 
     def _jog(self):
         """Sets robot in Jog mode.
@@ -191,11 +191,9 @@ class XboxController:
             self.mode = RobotMode.Jog
             self._reset_height()
             self.mobility_params = spot_command_pb2.MobilityParams(
-                locomotion_hint=spot_command_pb2.HINT_JOG,
-                stair_hint=0)
+                locomotion_hint=spot_command_pb2.HINT_JOG, stair_hint=0)
             cmd = RobotCommandBuilder.stand_command(params=self.mobility_params)
             self.command_client.robot_command_async(cmd)
-
 
     def _amble(self):
         """Sets robot in Amble mode.
@@ -207,11 +205,9 @@ class XboxController:
         if self.mode is not RobotMode.Amble:
             self.mode = RobotMode.Amble
             self.mobility_params = spot_command_pb2.MobilityParams(
-                locomotion_hint=spot_command_pb2.HINT_AMBLE,
-                stair_hint=0)
+                locomotion_hint=spot_command_pb2.HINT_AMBLE, stair_hint=0)
             cmd = RobotCommandBuilder.stand_command(params=self.mobility_params)
             self.command_client.robot_command_async(cmd)
-
 
     def _crawl(self):
         """Sets robot in Crawl mode.
@@ -223,11 +219,9 @@ class XboxController:
         if self.mode is not RobotMode.Crawl:
             self.mode = RobotMode.Crawl
             self.mobility_params = spot_command_pb2.MobilityParams(
-                locomotion_hint=spot_command_pb2.HINT_CRAWL,
-                stair_hint=0)
+                locomotion_hint=spot_command_pb2.HINT_CRAWL, stair_hint=0)
             cmd = RobotCommandBuilder.stand_command(params=self.mobility_params)
             self.command_client.robot_command_async(cmd)
-
 
     def _hop(self):
         """Sets robot in Hop mode.
@@ -240,11 +234,9 @@ class XboxController:
             self.mode = RobotMode.Hop
             self._reset_height()
             self.mobility_params = spot_command_pb2.MobilityParams(
-                locomotion_hint=spot_command_pb2.HINT_HOP,
-                stair_hint=0)
+                locomotion_hint=spot_command_pb2.HINT_HOP, stair_hint=0)
             cmd = RobotCommandBuilder.stand_command(params=self.mobility_params)
             self.command_client.robot_command_async(cmd)
-
 
     def _stairs(self):
         """Sets robot in Stairs mode.
@@ -256,11 +248,9 @@ class XboxController:
         if self.mode is not RobotMode.Stairs:
             self.mode = RobotMode.Stairs
             self.mobility_params = spot_command_pb2.MobilityParams(
-                locomotion_hint=spot_command_pb2.HINT_AUTO,
-                stair_hint=1)
+                locomotion_hint=spot_command_pb2.HINT_AUTO, stair_hint=1)
             cmd = RobotCommandBuilder.stand_command(params=self.mobility_params)
             self.command_client.robot_command_async(cmd)
-
 
     def _walk(self):
         """Sets robot in Walk mode.
@@ -272,11 +262,9 @@ class XboxController:
         if self.mode is not RobotMode.Walk:
             self.mode = RobotMode.Walk
             self.mobility_params = spot_command_pb2.MobilityParams(
-                locomotion_hint=spot_command_pb2.HINT_SPEED_SELECT_TROT,
-                stair_hint=0)
+                locomotion_hint=spot_command_pb2.HINT_SPEED_SELECT_TROT, stair_hint=0)
             cmd = RobotCommandBuilder.stand_command(params=self.mobility_params)
             self.command_client.robot_command_async(cmd)
-
 
     def _stand(self):
         """Sets robot in Stand mode.
@@ -288,11 +276,9 @@ class XboxController:
         if self.mode is not RobotMode.Stand:
             self.mode = RobotMode.Stand
             self.mobility_params = spot_command_pb2.MobilityParams(
-                locomotion_hint=spot_command_pb2.HINT_AUTO,
-                stair_hint=0)
+                locomotion_hint=spot_command_pb2.HINT_AUTO, stair_hint=0)
             cmd = RobotCommandBuilder.stand_command(params=self.mobility_params)
             self.command_client.robot_command_async(cmd)
-
 
     def _sit(self):
         """Sets robot in Sit mode.
@@ -304,11 +290,9 @@ class XboxController:
         if self.mode is not RobotMode.Sit:
             self.mode = RobotMode.Sit
             self.mobility_params = spot_command_pb2.MobilityParams(
-                locomotion_hint=spot_command_pb2.HINT_AUTO,
-                stair_hint=0)
+                locomotion_hint=spot_command_pb2.HINT_AUTO, stair_hint=0)
             cmd = RobotCommandBuilder.sit_command(params=self.mobility_params)
             self.command_client.robot_command_async(cmd)
-
 
     def _selfright(self):
         """Executes selfright command, which causes the robot to automatically turn if
@@ -320,7 +304,6 @@ class XboxController:
 
         cmd = RobotCommandBuilder.selfright_command()
         self.command_client.robot_command_async(cmd)
-
 
     def _move(self, left_x, left_y, right_x):
         """Commands the robot with a velocity command based on left/right stick values.
@@ -342,19 +325,13 @@ class XboxController:
 
         # Recreate mobility_params with the latest information
         self.mobility_params = RobotCommandBuilder.mobility_params(
-            body_height=self.body_height,
-            locomotion_hint=self.mobility_params.locomotion_hint,
+            body_height=self.body_height, locomotion_hint=self.mobility_params.locomotion_hint,
             stair_hint=self.mobility_params.stair_hint)
 
-        cmd = RobotCommandBuilder.velocity_command(
-            v_x=v_x,
-            v_y=v_y,
-            v_rot=v_rot,
-            params=self.mobility_params)
-        self.command_client.robot_command_async(
-            cmd,
-            end_time_secs=time.time() + VELOCITY_CMD_DURATION)
-
+        cmd = RobotCommandBuilder.velocity_command(v_x=v_x, v_y=v_y, v_rot=v_rot,
+                                                   params=self.mobility_params)
+        self.command_client.robot_command_async(cmd,
+                                                end_time_secs=time.time() + VELOCITY_CMD_DURATION)
 
     def _orientation_cmd_helper(self, yaw=0.0, roll=0.0, pitch=0.0, height=0.0):
         """Helper function that commands the robot with an orientation command;
@@ -372,10 +349,8 @@ class XboxController:
 
         orientation = EulerZXY(yaw, roll, pitch)
         cmd = RobotCommandBuilder.stand_command(body_height=height, footprint_R_body=orientation)
-        self.command_client.robot_command_async(
-            cmd,
-            end_time_secs=time.time() + VELOCITY_CMD_DURATION)
-
+        self.command_client.robot_command_async(cmd,
+                                                end_time_secs=time.time() + VELOCITY_CMD_DURATION)
 
     def _change_height(self, direction):
         """Changes robot body height.
@@ -389,6 +364,20 @@ class XboxController:
         self.body_height = max(-HEIGHT_MAX, self.body_height)
         self._orientation_cmd_helper(height=self.body_height)
 
+    def _interp_joy_saturated(self, x, y1, y2):
+        """
+        Interpolate a value between y1 and y2 based on the position of x between -1 and
+        1 (the normalized values the xbox controller classes return.).
+        If x is outside [-1, 1], saturate the output correctly to y1 or y2.
+        """
+        if (x <= -1):
+            return y1
+        elif (x >= 1):
+            return y2
+
+        # Range of x is [-1, 1], so dx is 2.
+        slope = (y2 - y1) / 2.0
+        return slope * (x + 1) + y1
 
     def _update_orientation(self, left_x, left_y, right_x, right_y):
         """Updates body orientation in Stand mode.
@@ -403,38 +392,26 @@ class XboxController:
         if left_x != 0.0:
             # Update roll
             self.stand_roll_change = True
-            self.stand_roll = self.stand_roll + left_x * ORIENTATION_CHANGE
-            self.stand_roll = min(ORIENTATION_ANGLE_MAX, self.stand_roll)
-            self.stand_roll = max(-ORIENTATION_ANGLE_MAX, self.stand_roll)
+            self.stand_roll = self._interp_joy_saturated(left_x, -ROLL_OFFSET_MAX, ROLL_OFFSET_MAX)
 
         if left_y != 0.0:
             # Update height
-            self.body_height = self.body_height + left_y * HEIGHT_CHANGE
-            self.body_height = min(HEIGHT_MAX, self.body_height)
-            self.body_height = max(-HEIGHT_MAX, self.body_height)
-            self.stand_height_change = True # record this change so we reset correctly
+            self.stand_height_change = True  # record this change so we reset correctly
+            self.body_height = self._interp_joy_saturated(left_y, -HEIGHT_MAX, HEIGHT_MAX)
 
         if right_x != 0.0:
             # Update yaw
             self.stand_yaw_change = True
-            self.stand_yaw = self.stand_yaw + right_x * ORIENTATION_CHANGE
-            self.stand_yaw = min(ORIENTATION_ANGLE_MAX, self.stand_yaw)
-            self.stand_yaw = max(-ORIENTATION_ANGLE_MAX, self.stand_yaw)
+            self.stand_yaw = self._interp_joy_saturated(right_x, YAW_OFFSET_MAX, -YAW_OFFSET_MAX)
 
         if right_y != 0.0:
             # Update pitch
             self.stand_pitch_change = True
-            self.stand_pitch = self.stand_pitch + right_y * ORIENTATION_CHANGE
-            self.stand_pitch = min(ORIENTATION_ANGLE_MAX, self.stand_pitch)
-            self.stand_pitch = max(-ORIENTATION_ANGLE_MAX, self.stand_pitch)
+            self.stand_pitch = self._interp_joy_saturated(right_y, -PITCH_OFFSET_MAX,
+                                                          PITCH_OFFSET_MAX)
 
-
-        self._orientation_cmd_helper(
-            yaw=self.stand_yaw,
-            roll=self.stand_roll,
-            pitch=self.stand_pitch,
-            height=self.body_height)
-
+        self._orientation_cmd_helper(yaw=self.stand_yaw, roll=self.stand_roll,
+                                     pitch=self.stand_pitch, height=self.body_height)
 
     def _reset_height(self):
         """Resets robot body height to normal stand height.
@@ -443,7 +420,6 @@ class XboxController:
         self.body_height = 0.0
         self._orientation_cmd_helper(height=self.body_height)
         self.stand_height_change = False
-
 
     def _reset_pitch(self):
         """Commands the robot to reset body orientation if tilted up/down.
@@ -454,7 +430,6 @@ class XboxController:
         self._orientation_cmd_helper(pitch=self.stand_pitch)
         self.stand_pitch_change = False
 
-
     def _reset_yaw(self):
         """Commands the robot to reset body orientation if tilted left/right.
         Only called in Stand mode.
@@ -463,7 +438,6 @@ class XboxController:
         self.stand_yaw = 0.0
         self._orientation_cmd_helper(yaw=self.stand_yaw)
         self.stand_yaw_change = False
-
 
     def _reset_roll(self):
         """Commands the robot to reset body orientation if rotated left/right.
@@ -474,14 +448,13 @@ class XboxController:
         self._orientation_cmd_helper(roll=self.stand_roll)
         self.stand_roll_change = False
 
-
     def _print_status(self):
         """Prints the current status of the robot: E-Stop, Control, Powered-on, Current Mode.
         """
 
         # Move cursor back to the start of the line
         print(chr(13), end="")
-        if self.has_estop:
+        if self.estop_keepalive:
             print("X", end="")
         if self.has_robot_control:
             print("\tX", end="")
@@ -490,9 +463,8 @@ class XboxController:
         if self.mode:
             print("\t\t" + self.mode.name, end="")
             num_chars = len(self.mode.name)
-            if num_chars < 6: # 6 is the length of Stairs enum
+            if num_chars < 6:  # 6 is the length of Stairs enum
                 print(" " * (6 - num_chars), end="")
-
 
     def control_robot(self, frequency):
         """Controls robot from an Xbox controller.
@@ -524,8 +496,7 @@ class XboxController:
         else
           Left Stick          -> Move
           Right Stick         -> Turn
-        Start                 -> Motor power
-        Guide                 -> Control
+        Start                 -> Motor power and Control
 
         Args:
             frequency: Max frequency to send commands to robot
@@ -555,8 +526,14 @@ class XboxController:
                         self._reset_yaw()
 
                 # Handle button combinations first
+                # If E-stop button combination is pressed, toggle E-stop functionality only when
+                # buttons are released.
                 if joy.left_bumper() and joy.right_bumper() and joy.B():
-                    self._configure_estop()
+                    self.estop_buttons_pressed = True
+                else:
+                    if self.estop_buttons_pressed:
+                        self._toggle_estop()
+                        self.estop_buttons_pressed = False
 
                 if joy.left_bumper() and joy.dpad_up():
                     self._change_height(1)
@@ -602,16 +579,15 @@ class XboxController:
                         self.mode == RobotMode.Hop:
                             self._move(0.0, 0.0, 0.0)
 
-                if joy.guide():
-                    self._gain_control()
                 if joy.start():
+                    self._gain_control()
                     self._power_motors()
 
                 self._print_status()
 
                 # Make sure we maintain a max frequency of sending commands to the robot
                 end_time = time.time()
-                delta = 1/frequency - (end_time - start_time)
+                delta = 1 / frequency - (end_time - start_time)
                 if delta > 0.0:
                     time.sleep(delta)
 
@@ -628,18 +604,14 @@ def main(argv):
         argv: List of command-line arguments.
     """
 
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawTextHelpFormatter, description=('''
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=('''
         Use this script to control the Spot robot from an Xbox controller. Press the Back
         controller button to safely power off the robot. Note that the example needs the estop
         to be released. The estop_gui script from the estop SDK example can be used to release
         the estop. Press ctrl-c at any time to safely power off the robot.
         '''))
-    parser.add_argument(
-        "--max-frequency",
-        default=10,
-        type=int,
-        help="Max frequency in Hz to send commands to robot")
+    parser.add_argument("--max-frequency", default=10, type=int,
+                        help="Max frequency in Hz to send commands to robot")
 
     bosdyn.client.util.add_common_arguments(parser)
     options = parser.parse_args(argv)

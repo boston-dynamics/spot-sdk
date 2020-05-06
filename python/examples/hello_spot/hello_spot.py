@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -16,8 +16,21 @@ import bosdyn.client.lease
 import bosdyn.client.util
 import bosdyn.geometry
 
+from bosdyn.api import estop_pb2
+from bosdyn.client.estop import EstopClient
 from bosdyn.client.image import ImageClient
 from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient, blocking_stand
+
+
+def verify_estop(robot):
+    """Verify the robot is not estopped"""
+
+    client = robot.ensure_client(EstopClient.default_service_name)
+    if client.get_status().stop_level != estop_pb2.ESTOP_LEVEL_NONE:
+        error_message = "Robot is estopped. Please use an external E-Stop client, such as the" \
+        " estop SDK example, to configure E-Stop."
+        robot.logger.error(error_message)
+        raise Exception(error_message)
 
 
 def hello_spot(config):
@@ -49,11 +62,9 @@ def hello_spot(config):
     # until sync is established.
     robot.time_sync.wait_for_sync()
 
-    # Spot requires a software estop to be activated.
-    estop_client = robot.ensure_client(bosdyn.client.estop.EstopClient.default_service_name)
-    estop_endpoint = bosdyn.client.estop.EstopEndpoint(client=estop_client, name='HelloSpot',
-                                                       estop_timeout=9.0)
-    estop_endpoint.force_simple_setup()
+    # Verify the robot is not estopped and that an external application has registered and holds
+    # an estop endpoint.
+    verify_estop(robot)
 
     # Only one client at a time can operate a robot. Clients acquire a lease to
     # indicate that they want to control a robot. Acquiring may fail if another
@@ -64,8 +75,7 @@ def hello_spot(config):
     lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
     lease = lease_client.acquire()
     try:
-        with bosdyn.client.lease.LeaseKeepAlive(lease_client), bosdyn.client.estop.EstopKeepAlive(
-                estop_endpoint):
+        with bosdyn.client.lease.LeaseKeepAlive(lease_client):
             # Now, we are ready to power on the robot. This call will block until the power
             # is on. Commands would fail if this did not happen. We can also check that the robot is
             # powered at any point.
@@ -144,7 +154,7 @@ def _maybe_display_image(image, display_time=3.0):
         import io
     except ImportError:
         logger = bosdyn.client.util.get_logger()
-        logger.warn("Missing dependencies. Can't display image.")
+        logger.warning("Missing dependencies. Can't display image.")
         return
     try:
         image = Image.open(io.BytesIO(image.data))
@@ -152,7 +162,7 @@ def _maybe_display_image(image, display_time=3.0):
         time.sleep(display_time)
     except Exception as exc:
         logger = bosdyn.client.util.get_logger()
-        logger.warn("Exception thrown displaying image. %s" % exc)
+        logger.warning("Exception thrown displaying image. %s" % exc)
 
 
 def main(argv):

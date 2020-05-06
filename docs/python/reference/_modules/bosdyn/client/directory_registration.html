@@ -1,0 +1,530 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bosdyn.client.directory_registration &mdash; Spot 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Spot
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../client_modules/client_index.html">Client SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core_modules/core_index.html">Core SDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mission_modules/mission_index.html">Mission SDK</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bosdyn.client.directory_registration</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bosdyn.client.directory_registration</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;Client for the directory registration service.</span>
+
+<span class="sd">A DirectoryRegistrationClient allows a client to modify information about other API services</span>
+<span class="sd">available on a robot.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="p">(</span><span class="n">directory_pb2</span><span class="p">,</span> <span class="n">directory_registration_pb2</span><span class="p">,</span>
+                        <span class="n">directory_registration_service_pb2_grpc</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span> <span class="n">handle_unset_status_error</span><span class="p">,</span>
+                                  <span class="n">handle_common_header_errors</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">TimedOutError</span>
+
+<span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="DirectoryRegistrationResponseError"><a class="viewcode-back" href="../../../client_modules/directory_registration.html#bosdyn.client.directory_registration.DirectoryRegistrationResponseError">[docs]</a><span class="k">class</span> <span class="nc">DirectoryRegistrationResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;General class of errors for directory registration responses.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="ServiceAlreadyExistsError"><a class="viewcode-back" href="../../../client_modules/directory_registration.html#bosdyn.client.directory_registration.ServiceAlreadyExistsError">[docs]</a><span class="k">class</span> <span class="nc">ServiceAlreadyExistsError</span><span class="p">(</span><span class="n">DirectoryRegistrationResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The service already exists on the robot.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="ServiceDoesNotExistError"><a class="viewcode-back" href="../../../client_modules/directory_registration.html#bosdyn.client.directory_registration.ServiceDoesNotExistError">[docs]</a><span class="k">class</span> <span class="nc">ServiceDoesNotExistError</span><span class="p">(</span><span class="n">DirectoryRegistrationResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The specified service does not exist on the robot.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="DirectoryRegistrationClient"><a class="viewcode-back" href="../../../client_modules/directory_registration.html#bosdyn.client.directory_registration.DirectoryRegistrationClient">[docs]</a><span class="k">class</span> <span class="nc">DirectoryRegistrationClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write off-robot services and modify their information.&quot;&quot;&quot;</span>
+
+    <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;directory-registration&#39;</span>
+    <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.DirectoryRegistrationService&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DirectoryRegistrationClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">directory_registration_service_pb2_grpc</span><span class="o">.</span><span class="n">DirectoryRegistrationServiceStub</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DirectoryRegistrationClient.register"><a class="viewcode-back" href="../../../client_modules/directory_registration.html#bosdyn.client.directory_registration.DirectoryRegistrationClient.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">service_type</span><span class="p">,</span> <span class="n">authority</span><span class="p">,</span> <span class="n">host_ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">user_token_required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">application_token_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Register a service routing with the robot. </span>
+<span class="sd">        </span>
+<span class="sd">        If service name already registered, no change will be applied and will raise ServiceAlreadyExistsError.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">          name: The name of the service. Must be unique.</span>
+<span class="sd">          service_type: The GRPC service definition defining the calls to/from this service.</span>
+<span class="sd">            (authority, service_type) must be unique in the directory.</span>
+<span class="sd">          authority: The authority used to direct calls to this service.</span>
+<span class="sd">            (authority, service_type) must be unique in the directory.</span>
+<span class="sd">          host_ip: The ip address of the system that the service is being hosted on.</span>
+<span class="sd">          port: The port number the service can be accessed through on the host system.</span>
+<span class="sd">          user_token_required: If a user token should be verified to access the service.</span>
+<span class="sd">          application_token_required: Deprecated - Do not use.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">          RpcError: Problem communicating with the robot.</span>
+<span class="sd">          ServiceAlreadyExistsError: The service already exists.</span>
+<span class="sd">          DirectoryRegistrationResponseError: Something went wrong during the directory registration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">application_token_required</span><span class="p">):</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s1">&#39;The application_token_required parameter has been deprecated and will have no effect.&#39;</span>
+            <span class="p">)</span>
+
+        <span class="n">service_entry</span> <span class="o">=</span> <span class="n">directory_pb2</span><span class="o">.</span><span class="n">ServiceEntry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">service_type</span><span class="p">,</span>
+                                                   <span class="n">authority</span><span class="o">=</span><span class="n">authority</span><span class="p">,</span>
+                                                   <span class="n">user_token_required</span><span class="o">=</span><span class="n">user_token_required</span><span class="p">)</span>
+        <span class="n">endpoint</span> <span class="o">=</span> <span class="n">directory_pb2</span><span class="o">.</span><span class="n">Endpoint</span><span class="p">(</span><span class="n">host_ip</span><span class="o">=</span><span class="n">host_ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span>
+
+        <span class="n">req</span> <span class="o">=</span> <span class="n">directory_registration_pb2</span><span class="o">.</span><span class="n">RegisterServiceRequest</span><span class="p">(</span><span class="n">service_entry</span><span class="o">=</span><span class="n">service_entry</span><span class="p">,</span>
+                                                                <span class="n">endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RegisterService</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">_directory_register_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DirectoryRegistrationClient.update"><a class="viewcode-back" href="../../../client_modules/directory_registration.html#bosdyn.client.directory_registration.DirectoryRegistrationClient.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">service_type</span><span class="p">,</span> <span class="n">authority</span><span class="p">,</span> <span class="n">host_ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">user_token_required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+               <span class="n">application_token_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update a service definition of an existing service that matches the service name.</span>
+
+<span class="sd">        If service name is not registered, will raise ServiceDoesNotExistError.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          name: The name of the service to be updated.</span>
+<span class="sd">          service_type: The GRPC service definition defining the calls to/from this service.</span>
+<span class="sd">            (authority, service_type) must be unique in the directory.</span>
+<span class="sd">          authority: The authority used to direct calls to this service.</span>
+<span class="sd">            (authority, service_type) must be unique in the directory.</span>
+<span class="sd">          host_ip: The ip address of the system that the service is being hosted on.</span>
+<span class="sd">          port: The port number the service can be accessed through on the host system.</span>
+<span class="sd">          user_token_required: If a user token should be verified to access the service.</span>
+<span class="sd">          application_token_required Deprecated - Do not use.</span>
+<span class="sd">          </span>
+<span class="sd">        Raises:</span>
+<span class="sd">          RpcError: Problem communicating with the robot.</span>
+<span class="sd">          ServiceDoesNotExistError: The service does not exist.</span>
+<span class="sd">          DirectoryRegistrationResponseError: Something went wrong during the directory registration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">application_token_required</span><span class="p">):</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s1">&#39;The application_token_required parameter has been deprecated and will have no effect.&#39;</span>
+            <span class="p">)</span>
+
+        <span class="n">service_entry</span> <span class="o">=</span> <span class="n">directory_pb2</span><span class="o">.</span><span class="n">ServiceEntry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">service_type</span><span class="p">,</span>
+                                                   <span class="n">authority</span><span class="o">=</span><span class="n">authority</span><span class="p">,</span>
+                                                   <span class="n">user_token_required</span><span class="o">=</span><span class="n">user_token_required</span><span class="p">)</span>
+        <span class="n">endpoint</span> <span class="o">=</span> <span class="n">directory_pb2</span><span class="o">.</span><span class="n">Endpoint</span><span class="p">(</span><span class="n">host_ip</span><span class="o">=</span><span class="n">host_ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span>
+
+        <span class="n">req</span> <span class="o">=</span> <span class="n">directory_registration_pb2</span><span class="o">.</span><span class="n">UpdateServiceRequest</span><span class="p">(</span><span class="n">service_entry</span><span class="o">=</span><span class="n">service_entry</span><span class="p">,</span>
+                                                              <span class="n">endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">UpdateService</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">error_from_response</span><span class="o">=</span><span class="n">_directory_update_error</span><span class="p">,</span>
+                         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DirectoryRegistrationClient.unregister"><a class="viewcode-back" href="../../../client_modules/directory_registration.html#bosdyn.client.directory_registration.DirectoryRegistrationClient.unregister">[docs]</a>    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove a service routing with the robot.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">          name: The name of the service to be removed.</span>
+<span class="sd">          </span>
+<span class="sd">        Raises:</span>
+<span class="sd">          RpcError: Problem communicating with the robot.</span>
+<span class="sd">          ServiceDoesNotExistError: The service does not exist.</span>
+<span class="sd">          DirectoryRegistrationResponseError: Something went wrong during the directory registration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">directory_registration_pb2</span><span class="o">.</span><span class="n">UnregisterServiceRequest</span><span class="p">(</span><span class="n">service_name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">UnregisterService</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">_directory_unregister_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<span class="n">_REGISTER_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span>
+    <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">DirectoryRegistrationResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+<span class="n">_REGISTER_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+    <span class="n">directory_registration_pb2</span><span class="o">.</span><span class="n">RegisterServiceResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">directory_registration_pb2</span><span class="o">.</span><span class="n">RegisterServiceResponse</span><span class="o">.</span><span class="n">STATUS_ALREADY_EXISTS</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">ServiceAlreadyExistsError</span><span class="p">,</span> <span class="n">ServiceAlreadyExistsError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+<span class="p">})</span>
+
+
+<span class="nd">@handle_common_header_errors</span>
+<span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_directory_register_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return an exception based on response from Register RPC, None if no error.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+        <span class="n">status_to_string</span><span class="o">=</span><span class="n">directory_registration_pb2</span><span class="o">.</span><span class="n">RegisterServiceResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+        <span class="n">status_to_error</span><span class="o">=</span><span class="n">_REGISTER_STATUS_TO_ERROR</span><span class="p">)</span>
+
+
+<span class="n">_UPDATE_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span>
+    <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">DirectoryRegistrationResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+<span class="n">_UPDATE_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+    <span class="n">directory_registration_pb2</span><span class="o">.</span><span class="n">UpdateServiceResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">directory_registration_pb2</span><span class="o">.</span><span class="n">UpdateServiceResponse</span><span class="o">.</span><span class="n">STATUS_NONEXISTENT_SERVICE</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">ServiceDoesNotExistError</span><span class="p">,</span> <span class="n">ServiceDoesNotExistError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+<span class="p">})</span>
+
+
+<span class="nd">@handle_common_header_errors</span>
+<span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_directory_update_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return an exception based on response from Update RPC, None if no error.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+        <span class="n">status_to_string</span><span class="o">=</span><span class="n">directory_registration_pb2</span><span class="o">.</span><span class="n">UpdateServiceResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+        <span class="n">status_to_error</span><span class="o">=</span><span class="n">_UPDATE_STATUS_TO_ERROR</span><span class="p">)</span>
+
+
+<span class="n">_UNREGISTER_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span>
+    <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">DirectoryRegistrationResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+<span class="n">_UNREGISTER_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+    <span class="n">directory_registration_pb2</span><span class="o">.</span><span class="n">UnregisterServiceResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">directory_registration_pb2</span><span class="o">.</span><span class="n">UnregisterServiceResponse</span><span class="o">.</span><span class="n">STATUS_NONEXISTENT_SERVICE</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">ServiceDoesNotExistError</span><span class="p">,</span> <span class="n">ServiceDoesNotExistError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+<span class="p">})</span>
+
+
+<span class="nd">@handle_common_header_errors</span>
+<span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_directory_unregister_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return an exception based on response from Unregister RPC, None if no error.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+        <span class="n">status_to_string</span><span class="o">=</span><span class="n">directory_registration_pb2</span><span class="o">.</span><span class="n">UnregisterServiceResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+        <span class="n">status_to_error</span><span class="o">=</span><span class="n">_UNREGISTER_STATUS_TO_ERROR</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="DirectoryRegistrationKeepAlive"><a class="viewcode-back" href="../../../client_modules/directory_registration.html#bosdyn.client.directory_registration.DirectoryRegistrationKeepAlive">[docs]</a><span class="k">class</span> <span class="nc">DirectoryRegistrationKeepAlive</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper class to keep a directory entry updated.</span>
+
+<span class="sd">    Assuming the directory itself is hosted on the robot, and the service being registered in the</span>
+<span class="sd">    directory is on a payload, use of this class streamlines the following cases:</span>
+
+<span class="sd">    1) The payload, or the payload-hosted service, is restarted.</span>
+<span class="sd">    2) The robot is restarted.</span>
+<span class="sd">    3) On-robot processes clear out the directory. This can happen in rare cases.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      dir_reg_client: Client to the directory registration service.</span>
+<span class="sd">      logger: logging.Logger object to log with. Defaults to None, in which case one with the</span>
+<span class="sd">          class name is acquired.</span>
+<span class="sd">      rpc_timeout_seconds: Number of seconds to wait for a dir_reg_client RPC. Defaults to None,</span>
+<span class="sd">          for no timeout.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dir_reg_client</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rpc_timeout_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">rpc_interval_seconds</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">authority</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">directory_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span> <span class="ow">or</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_type</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dir_reg_client</span> <span class="o">=</span> <span class="n">dir_reg_client</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_reregister_signal</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rpc_timeout</span> <span class="o">=</span> <span class="n">rpc_timeout_seconds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reregister_period</span> <span class="o">=</span> <span class="n">rpc_interval_seconds</span>
+
+        <span class="c1"># Configure the thread to do re-registration.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_periodic_reregister</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unregister</span><span class="p">()</span>
+
+<div class="viewcode-block" id="DirectoryRegistrationKeepAlive.start"><a class="viewcode-back" href="../../../client_modules/directory_registration.html#bosdyn.client.directory_registration.DirectoryRegistrationKeepAlive.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory_name</span><span class="p">,</span> <span class="n">service_type</span><span class="p">,</span> <span class="n">authority</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Register, optionally update, and then kick off thread.</span>
+<span class="sd">        </span>
+<span class="sd">        Raises:</span>
+<span class="sd">          RpcError: Problem communicating with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dir_reg_client</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">directory_name</span><span class="p">,</span> <span class="n">service_type</span><span class="p">,</span> <span class="n">authority</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ServiceAlreadyExistsError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="c1"># If the service exists, we may be handling a case where the client-side process is</span>
+            <span class="c1"># restarting. So let&#39;s try updating, instead, in the likely case we have a new port.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Got a &quot;service already exists&quot; error: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Attempting an update&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dir_reg_client</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">directory_name</span><span class="p">,</span> <span class="n">service_type</span><span class="p">,</span> <span class="n">authority</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Update succeeded.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Service registered.&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">authority</span> <span class="o">=</span> <span class="n">authority</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">directory_name</span> <span class="o">=</span> <span class="n">directory_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_type</span> <span class="o">=</span> <span class="n">service_type</span>
+
+        <span class="c1"># This will raise an exception if the thread has already started.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DirectoryRegistrationKeepAlive.is_alive"><a class="viewcode-back" href="../../../client_modules/directory_registration.html#bosdyn.client.directory_registration.DirectoryRegistrationKeepAlive.is_alive">[docs]</a>    <span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Are we still periodically re-registering?</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">          A bool stating if still alive</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DirectoryRegistrationKeepAlive.shutdown"><a class="viewcode-back" href="../../../client_modules/directory_registration.html#bosdyn.client.directory_registration.DirectoryRegistrationKeepAlive.shutdown">[docs]</a>    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Stop the background thread.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Shutting down&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_reregister_signal</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DirectoryRegistrationKeepAlive.unregister"><a class="viewcode-back" href="../../../client_modules/directory_registration.html#bosdyn.client.directory_registration.DirectoryRegistrationKeepAlive.unregister">[docs]</a>    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove service from the directory.</span>
+<span class="sd">        </span>
+<span class="sd">        Raises:</span>
+<span class="sd">          RpcError: Problem communicating with the robot.</span>
+<span class="sd">          ServiceDoesNotExistError: The service does not exist.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dir_reg_client</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory_name</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_rpc_timeout</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_periodic_reregister</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Handles an accidental removal of the service from the directory.</span>
+<span class="sd">        </span>
+<span class="sd">        Raises:</span>
+<span class="sd">          RpcError: Problem communicating with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Starting registration loop&#39;</span><span class="p">)</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">exec_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dir_reg_client</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">authority</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_rpc_timeout</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">ServiceAlreadyExistsError</span><span class="p">:</span>
+                <span class="c1"># Ignore &quot;already registered&quot; errors -- we expect those.</span>
+                <span class="c1"># We do not allow anyone to change the directory parameters with an &quot;update&quot; call,</span>
+                <span class="c1"># because we assume that the lifespan of this thread matches the lifespan of the</span>
+                <span class="c1"># service being registered.</span>
+                <span class="k">pass</span>
+            <span class="k">except</span> <span class="n">TimedOutError</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Timed out, timeout set to &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rpc_timeout</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Caught general exception&#39;</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="n">exec_sec</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">exec_start</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_reregister_signal</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reregister_period</span> <span class="o">-</span> <span class="n">exec_sec</span><span class="p">):</span>
+                <span class="k">break</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Re-registration stopped&#39;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Boston Dynamics.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
