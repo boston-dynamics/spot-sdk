@@ -14,36 +14,36 @@ import "bosdyn/api/geometry.proto";
 import "bosdyn/api/trajectory.proto";
 import "google/protobuf/timestamp.proto";
 
-// Get robot a "ready" position
+// Move the robot into a "ready" position from which it can sit or stand up.
 message SelfRightCommand {
     message Request {
-        // SelfRight command takes no args
+        // SelfRight command request takes no additional arguments.
     }
 
     message Feedback {
-        // SelfRight command provides no feedback
+        // SelfRight command request provides no feedback.
     }
 }
 
 // Stop the robot in place with minimal motion.
 message StopCommand {
     message Request {
-        // Stop command takes no args
+        // Stop command request takes no additional arguments.
     }
 
     message Feedback {
-        // Stop command provides no feedback
+        // Stop command provides no feedback.
     }
 }
 
-// Freeze all joints at their current positions (no balancing control)
+// Freeze all joints at their current positions (no balancing control).
 message FreezeCommand {
     message Request {
-        // Freeze command takes no args
+        // Freeze command request takes no additional arguments.
     }
 
     message Feedback {
-        // Freeze command provides no feedback
+        // Freeze command provides no feedback.
     }
 }
 
@@ -52,17 +52,22 @@ message FreezeCommand {
 // safe position before powering down. The robot will not power down until it is in a safe state.
 message SafePowerOffCommand {
     message Request {
-        // SafePowerOff command takes no args
+        // SafePowerOff command request takes no additional arguments.
     }
 
     message Feedback {
+        // The SafePowerOff will provide feedback on whether or not it has succeeded in powering off
+        // the robot yet.
+
         enum Status {
+            // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
             STATUS_UNKNOWN = 0;
             // Robot has powered off.
             STATUS_POWERED_OFF = 1;
             // Robot is trying to safely power off.
             STATUS_IN_PROGRESS = 2;
         }
+        // Current status of the command.
         Status status = 1;
     }
 }
@@ -86,7 +91,11 @@ message SE2TrajectoryCommand {
     }
 
     message Feedback {
+        // The SE2TrajectoryCommand will provide feedback on whether or not the robot has reached the
+        // final point of the trajectory.
+
         enum Status {
+            // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
             STATUS_UNKNOWN = 0;
 
             // The robot has arrived at the goal.
@@ -95,10 +104,12 @@ message SE2TrajectoryCommand {
             // The robot is attempting to go to a goal.
             STATUS_GOING_TO_GOAL = 2;
         }
+        // Current status of the command.
         Status status = 1;
     }
 }
 
+// Move the robot at a specific SE2 velocity for a fixed amount of time.
 message SE2VelocityCommand {
     message Request {
         // The timestamp (in robot time) by which a command must finish executing. This is a
@@ -124,33 +135,42 @@ message SE2VelocityCommand {
     }
 
     message Feedback {
-        // Planar velocity commands provide no feedback
+        // Planar velocity commands provide no feedback.
     }
 }
 
+// Sit the robot down in its current position.
 message SitCommand {
     message Request {
-        // Sit commands take no args
+        // Sit command request takes no additional arguments.
     }
 
     message Feedback {
         enum Status {
+            // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
             STATUS_UNKNOWN = 0;
             // Robot is currently sitting.
             STATUS_IS_SITTING = 1;
             // Robot is trying to sit.
             STATUS_IN_PROGRESS = 2;
         }
+        // Current status of the command.
         Status status = 2;
     }
 }
 
+// The stand the robot up in its current position.
 message StandCommand {
     message Request {
+        // Stand command request takes no additional arguments.
     }
 
     message Feedback {
+        // The StandCommand will provide feedback on whether or not the robot has finished
+        // standing up.
+
         enum Status {
+            // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
             STATUS_UNKNOWN = 0;
             // Robot has finished standing up and has completed desired body trajectory.
             // Robot is not attempting to move.
@@ -158,6 +178,7 @@ message StandCommand {
             // Robot is trying to come to a steady stand.
             STATUS_IN_PROGRESS = 2;
         }
+        // Current status of the command.
         Status status = 1;
     }
 }

@@ -18,27 +18,36 @@ message LocalGridType {
     string name = 1;
 }
 
-// LocalGrids are requested by LocalGridType name.
+// LocalGrids are requested by LocalGridType string name.
 message LocalGridRequest {
     string local_grid_type_name = 1;
 }
 
+// Information about the dimensions of the local grid, including the number of grid cells and
+// the size of each cell.
 message LocalGridExtent {
-    // Size of each side of the individual cells in the local grid (m).
+    // Size of each side of the individual cells in the local grid (in meters).
+    // The area of a grid cell will be (cell_size x cell_size).
     double cell_size = 2;
 
-    // Number of cells along x extent of local grid (number of columns in local grid).
+    // Number of cells along x extent of local grid (number of columns in local grid/ the local
+    // grid width). Note, that the (num_cells_x)x(num_cells_y) represents the total number of grid
+    // cells in the local grid.
     int32 num_cells_x = 3;
 
     // Number of cells along y extent of local grid (number of rows in local grid).
+    // Note, that the (num_cells_x)x(num_cells_y) represents the totla number of grid
+    // cells in the local grid.
     int32 num_cells_y = 4;
 
     // Previous fields in the protobuf that are now reserved.
     reserved 1;
 }
 
-// A cell-based local grid structure, which can represent different kinds of local grid data.
+// A grid-based local grid structure, which can represent different kinds of data, such as terrain
+// or obstacle data.
 message LocalGrid {
+    // The human readable string name that is used to identify the type of local grid data.
     string local_grid_type_name = 1;
 
     // The time at which the local grid data was computed and last valid at.
@@ -50,13 +59,19 @@ message LocalGrid {
     FrameTreeSnapshot transforms_snapshot = 31;
 
     // The frame name for the local grid object. The frame will describe the top, left corner of the topmost,
-    // leftmost cell of the local grid.  This will be included in the transform snapshot.
+    // leftmost cell of the local grid.  This will be included in the transform snapshot. The (x,y) position specified
+    // by the local grid frame's SE3Pose transform represents the (x,y)- offsets for the location of the grid's
+    // top left corner.
+    // The cell data is packed in x-y order, so the cell at:
+    //   cell[i + num_cells_x * j]
+    // has position:
+    //   {x_offset + i * extent.cell_size, y_offset + j * extent.cell_size}.
     string frame_name_local_grid_data = 11;
 
     // Location, size and resolution of the local grid.
     LocalGridExtent extent = 3;
 
-    // Data type of each individual cell.
+    // Describes the data type of a cell.
     enum CellFormat {
         // Not specified -- not a valid value.
         CELL_FORMAT_UNKNOWN = 0;
@@ -95,6 +110,7 @@ message LocalGrid {
 
         // Structure-based pixels would follow these.
     }
+    // The data type of all individual cells in the local grid.
     CellFormat cell_format = 4;
 
     // Encoding used for storing the local grid.
@@ -105,32 +121,35 @@ message LocalGrid {
         // Cells are stored packed uncompressed.
         ENCODING_RAW = 1;
 
-        // Run-length encoding: repeat counts stored in rle_repetitions.
+        // Run-length encoding: repeat counts stored in rle_counts.
         ENCODING_RLE = 2;
     }
+    // The encoding for the 'data' field of the local grid message.
     Encoding encoding = 5;
 
     // The encoded local grid representation.
-    // Cells are stored in in row-major order (x-major), and encoded according to the
-    //  the 'encoding' enum.
+    // Cells are encoded according to the encoding enum, and are stored in in row-major order (x-major).
+    // This means that the data field has data entered row by row. The grid cell located at (i, j) will be
+    // at the (index = i * num_cells_x + j) within the data array.
     bytes data = 6;
 
-    // RLE pixel repetition counts: use value[i] rle_counts[i] times.
+    // RLE pixel repetition counts: use data[i] repeated rle_counts[i] times when decoding the
+    // bytes data field.
     repeated int32 rle_counts = 7;
 
-    // Scale for POD cell values (only if non-zero).
+    // The scale for the cell value data; only valid if it is a non-zero number.
     double cell_value_scale = 8;
 
-    // Optional offset for POD cell values.
+    // A fixed value offset that is applied to each value of the cell data.
     // Actual values in local grid are: (({value from data} * cell_value_scale) + cell_value_offset).
     double cell_value_offset = 9;
 }
 
-// The reply to a given request for local grid data, containing either the local grid or an error status.
+// The local grid response message will contain either the local grid or an error status.
 message LocalGridResponse {
+    // The type name of the local grid included in this response.
     string local_grid_type_name = 1;
 
-    // Status of the request for the individual local grid.
     enum Status {
         // Not specified -- not a valid value.
         STATUS_UNKNOWN = 0;
@@ -147,6 +166,7 @@ message LocalGridResponse {
         // The local grid data was not valid for some reason.
         STATUS_DATA_INVALID = 4;
     }
+    // Status of the request for the individual local grid.
     Status status = 2;
 
     // The requested local grid data.
@@ -154,11 +174,13 @@ message LocalGridResponse {
 }
 
 
+// The GetLocalGridTypes request message asks to the local grid types.
 message GetLocalGridTypesRequest {
     // Common request header.
     RequestHeader header = 1;
 }
 
+// The GetLocalGridTypes response message returns to get all known string names for local grid types.
 message GetLocalGridTypesResponse {
     // Common response header.
     ResponseHeader header = 1;
@@ -167,6 +189,7 @@ message GetLocalGridTypesResponse {
     repeated LocalGridType local_grid_type = 2;
 }
 
+// The GetLocalGrid request message can request for multiple different types of local grids at one time.
 message GetLocalGridsRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -175,6 +198,8 @@ message GetLocalGridsRequest {
     repeated LocalGridRequest local_grid_requests = 2;
 }
 
+// The GetLocalGrid response message replies with all of the local grid data for the requested types, and
+// a numerical count representing the amount of status errors that occurred when getting this data.
 message GetLocalGridsResponse {
     // Common response header.
     ResponseHeader header = 1;

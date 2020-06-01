@@ -45,7 +45,7 @@ class Command(object, six.with_metaclass(abc.ABCMeta)):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     # The name of the command the user should enter on the command line to select this command.
@@ -95,7 +95,7 @@ class Subcommands(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
         subcommands: List of subcommands to run.
     """
 
@@ -129,7 +129,7 @@ class DirectoryCommands(Subcommands):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'dir'
@@ -168,7 +168,7 @@ def _token_req_str(entry):
         entry: Service entry being checked.
 
     Returns:
-        String with a comma-sepated list of required tokens.
+        String with a comma-separated list of required tokens.
     """
 
     required = []
@@ -243,7 +243,7 @@ class DirectoryListCommand(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'list'
@@ -272,7 +272,7 @@ class DirectoryGetCommand(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'get'
@@ -308,7 +308,7 @@ class DirectoryRegisterCommand(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'register'
@@ -362,7 +362,7 @@ class DirectoryUnregisterCommand(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'unregister'
@@ -402,7 +402,7 @@ class RobotIdCommand(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'id'
@@ -446,7 +446,7 @@ class LogAnnotationCommands(Subcommands):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'log'
@@ -461,7 +461,7 @@ class LogTextMsgCommand(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'textmsg'
@@ -526,7 +526,7 @@ class LogOperatorCommentCommand(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'comment'
@@ -564,7 +564,7 @@ class RobotStateCommands(Subcommands):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'state'
@@ -579,7 +579,7 @@ class FullStateCommand(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'full'
@@ -600,7 +600,7 @@ class RobotModel(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'model'
@@ -673,7 +673,7 @@ class MetricsCommand(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'metrics'
@@ -765,7 +765,7 @@ class TimeSyncCommand(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'time-sync'
@@ -787,7 +787,7 @@ class TimeSyncCommand(Command):
         """
         endpoint = TimeSyncEndpoint(robot.ensure_client(TimeSyncClient.default_service_name))
         if not endpoint.establish_timesync(break_on_success=True):
-            print("Failed to acheive time sync")
+            print("Failed to achieve time sync")
             return False
 
         if options.proto:
@@ -805,7 +805,7 @@ class LeaseCommands(Subcommands):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'lease'
@@ -819,7 +819,7 @@ class LeaseListCommand(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'list'
@@ -858,7 +858,7 @@ class BecomeEstopCommand(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'become-estop'
@@ -941,7 +941,7 @@ class ImageCommands(Subcommands):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'image'
@@ -977,7 +977,7 @@ class ListImageSourcesCommand(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'list-sources'
@@ -1039,7 +1039,7 @@ class GetImageCommand(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'get-image'
@@ -1049,7 +1049,7 @@ class GetImageCommand(Command):
         self._parser.add_argument('--outfile', default=None,
                                   help='filename into which to save the image')
         self._parser.add_argument('--quality-percent', type=int, default=75,
-                                  help='Percent image quaility (0-100)')
+                                  help='Percent image quality (0-100)')
         self._parser.add_argument('source_name', metavar='SRC', nargs='+', help='image source name')
 
     def _run(self, robot, options):
@@ -1102,7 +1102,7 @@ class LocalGridCommands(Subcommands):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'local_grid'
@@ -1137,7 +1137,7 @@ class ListLocalGridTypesCommand(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'types'
@@ -1165,7 +1165,7 @@ class GetLocalGridsCommand(Command):
 
     Args:
         subparsers: List of argument parsers.
-        command_dict: DIctionary of command names which take parsed options.
+        command_dict: Dictionary of command names which take parsed options.
     """
 
     NAME = 'get'

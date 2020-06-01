@@ -11,6 +11,7 @@ option java_outer_classname = "RobotCommandServiceProto";
 
 import "bosdyn/api/robot_command.proto";
 
+// The robot command service allows a client application to control and move the robot.
 service RobotCommandService {
     // Starts a behavior command on the robot. Issuing a new command overrides the active command.
     // Each command is issued a UID for feedback retrieval.
@@ -22,6 +23,6 @@ service RobotCommandService {
     // succeeeded or failed, and thus send the next command.
     rpc RobotCommandFeedback(RobotCommandFeedbackRequest) returns (RobotCommandFeedbackResponse) {}
 
-    // Clear robot behavior fault
+    // Clear robot behavior fault.
     rpc ClearBehaviorFault(ClearBehaviorFaultRequest) returns (ClearBehaviorFaultResponse) {}
 }

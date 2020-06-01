@@ -15,19 +15,20 @@ import "google/protobuf/timestamp.proto";
 
 // Parameters for how positional trajectories will be interpolated on robot.
 enum PositionalInterpolation {
-    POS_INTERP_UNKNOWN = 0;
-    POS_INTERP_LINEAR = 1;
-    POS_INTERP_CUBIC = 2;
+    POS_INTERP_UNKNOWN = 0; // Unknown interpolation, do not use.
+    POS_INTERP_LINEAR = 1;  // Linear interpolation for positional data.
+    POS_INTERP_CUBIC = 2;   // Cubic interpolation for positional data.
 }
 
 // Parameters for how angular trajectories will be interpolated on robot.
 enum AngularInterpolation {
-    ANG_INTERP_UNKNOWN = 0;
-    ANG_INTERP_LINEAR = 1;
-    ANG_INTERP_CUBIC_EULER = 2;
+    ANG_INTERP_UNKNOWN = 0;     // Unknown interpolation, do not use.
+    ANG_INTERP_LINEAR = 1;      // Linear interpolation for angular data.
+    ANG_INTERP_CUBIC_EULER = 2; // Cubic interpolation (using Euler method) for angular data.
 }
 
-// A 3D pose trajectory.
+// A 2D pose trajectory, which specified multiple points and the desired times the robot should
+// reach these points.
 message SE2Trajectory {
     // The points in trajectory
     repeated SE2TrajectoryPoint points = 1;
@@ -44,6 +45,7 @@ message SE2Trajectory {
     reserved 2;
 }
 
+// A SE2 pose that can be used as a point within a trajectory.
 message SE2TrajectoryPoint {
     // Required pose the robot will try and achieve.
     SE2Pose pose = 1;
@@ -52,7 +54,8 @@ message SE2TrajectoryPoint {
     google.protobuf.Duration time_since_reference = 3;
 }
 
-// A 3D pose trajectory.
+// A 3D pose trajectory, which specified multiple poses (and velocities for each pose)
+// and the desired times the robot should reach these points.
 message SE3Trajectory {
     // The points in trajectory
     repeated SE3TrajectoryPoint points = 1;
@@ -70,6 +73,7 @@ message SE3Trajectory {
     reserved 2;
 }
 
+// A SE3 pose and velocity that can be used as a point within a trajectory.
 message SE3TrajectoryPoint {
     // Required pose the robot will try and achieve.
     SE3Pose pose = 1;
@@ -79,12 +83,12 @@ message SE3TrajectoryPoint {
 
     // The duration to reach the point relative to the trajectory reference time.
     google.protobuf.Duration time_since_reference = 3;
-
 }
 
-// A 3D point trajectory.
+// A 3D point trajectory, described by 3D points, a starting and ending velocity, and
+// a reference time.
 message Vec3Trajectory {
-    // The points in trajectory
+    // The points in trajectory.
     repeated Vec3TrajectoryPoint points = 1;
 
     // All trajectories specify times relative to this reference time. The reference time should be
@@ -105,7 +109,9 @@ message Vec3Trajectory {
     reserved 2;
 }
 
+// A 3D point (and linear velocity) that can be used as a point within a trajectory.
 message Vec3TrajectoryPoint {
+    // The point 3D position.
     Vec3 point = 1;
 
     // These are all optional.  If nothing is specified, good defaults will be chosen

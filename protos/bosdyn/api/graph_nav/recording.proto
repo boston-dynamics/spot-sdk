@@ -14,6 +14,9 @@ import "bosdyn/api/graph_nav/map.proto";
 
 option java_outer_classname = "RecordingProto";
 
+// The RecordingEnvironment is a set of annotation information and a name for the
+// current environment that will persist for all edges and waypoints until it is
+// changed or updated
 message RecordingEnvironment {
     // This will be prepended to the start of every waypoint name.
     string name_prefix = 1;
@@ -25,6 +28,8 @@ message RecordingEnvironment {
     Edge.Annotations edge_environment = 3;
 }
 
+// The SetRecordingEnvironment request message sets a persistent recording environment
+// until changed with another SetRecordingEnvironment rpc.
 message SetRecordingEnvironmentRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -37,12 +42,16 @@ message SetRecordingEnvironmentRequest {
     Lease lease = 3;
 }
 
+// The SetRecordingEnvironment response message includes the result and status of the request.
 message SetRecordingEnvironmentResponse{
     // Common response header.
     ResponseHeader header = 1;
+    // The results/status of the lease provided.
     LeaseUseResult lease_use_result = 2;
 }
 
+// The StartRecording request tells the recording service to begin creating waypoints with the
+// specified recording_environment.
 message StartRecordingRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -56,13 +65,19 @@ message StartRecordingRequest {
     RecordingEnvironment recording_environment = 3;
 }
 
+// The StartRecording response messge returns the first created waypoint, which is made at the location
+// the robot was standing when the request was made, in addition to any status information.
 message StartRecordingResponse {
+    // Common response header.
     ResponseHeader header = 1;
     // The waypoint that was just created.
     Waypoint created_waypoint = 2;
+    // The results/status of the lease provided.
     LeaseUseResult lease_use_result = 3;
     enum Status {
+        // Status is unknown/unset.
         STATUS_UNKNOWN = 0;
+        // Recording has been started.
         STATUS_OK = 1;
         // In this case we tried to start recording, but GraphNav was internally still waiting for
         // some data from the robot.
@@ -73,20 +88,29 @@ message StartRecordingResponse {
         // to record a new branch.
         STATUS_NOT_LOCALIZED_TO_EXISTING_MAP = 4;
     }
+    // Return status for the request.
     Status status = 4;
 }
 
+// The StopRecording request message tells the robot to no longer continue adding waypoints and
+// edges to the graph.
 message StopRecordingRequest {
     // Common request header.
     RequestHeader header = 1;
+    // The recording service is protected by a lease. The client must have a
+    // lease to the recording service to modify its internal state.
     Lease lease = 2;
 }
 
+// The StopRecording response message contains the status of this request and any useful error
+// information if the request fails.
 message StopRecordingResponse {
     // Common response header.
     ResponseHeader header = 1;
     enum Status {
+        // Status is unknown/unset.
         STATUS_UNKNOWN = 0;
+        // Recording is stopped.
         STATUS_OK = 1;
         // In this case we tried to stop recording, but had an incorrect localization.
         // graph_nav is expected to be localized to the final waypoint in the chain before
@@ -97,13 +121,17 @@ message StopRecordingResponse {
         // the robot, then try to stop recording again after 1-2 seconds.
         STATUS_NOT_READY_YET = 3;
     }
+    // The return status for the request.
     Status status = 2;
     // If not localized to end, specifies which waypoint we are localized to.
     string error_waypoint_localized_id = 3;
+    // The results/status of the lease provided.
     LeaseUseResult lease_use_result = 4;
 }
 
 
+// The CreateWaypoint request message specifies a name and environment the robot should
+// use to generate a waypoint in the graph at it's current location.
 message CreateWaypointRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -119,24 +147,36 @@ message CreateWaypointRequest {
     Lease lease = 4;
 }
 
+// The CreateWaypoint response message contains the complete waypoint, and the associated
+// edge connecting this waypoint to the graph when the request succeeds.
 message CreateWaypointResponse {
     // Common response header.
     ResponseHeader header = 1;
     // The waypoint that was just created.
     Waypoint created_waypoint = 2;
+    // The edge connecting the waypoint just created with the last created waypoint in the map.
     Edge created_edge = 3;
     enum Status {
+        // Status is unknown/unset.
         STATUS_UNKNOWN = 0;
+        // The waypoint was successfully created.
         STATUS_OK = 1;
         // Clients can only create waypoints when recording.
         STATUS_NOT_RECORDING = 2;
+        // An internal server error prevented the creation of the waypoint.
         STATUS_COULD_NOT_CREATE_WAYPOINT = 3;
     }
+    // Return status for the request.
     Status status = 5;
+    // The results/status of the lease provided.
     LeaseUseResult lease_use_result = 4;
 }
 
+// The CreateEdge request message specifies an edge to create between two existing waypoints.
+// The edge must not already exist in the map. This can be used to close a loop or to add any
+// additional edges.
 message CreateEdgeRequest {
+    // Common request header.
     RequestHeader header = 1;
     // Create an edge between two existing waypoints in the map with
     // the given parameters.
@@ -146,10 +186,15 @@ message CreateEdgeRequest {
     Lease lease = 3;
 }
 
+// The CreateEdge response message contains the status of this request and any useful error
+// information if the request fails.
 message CreateEdgeResponse {
+    // Common response header.
     ResponseHeader header = 1;
     enum Status {
+        // Status is unknown/unset.
         STATUS_UNKNOWN = 0;
+        // The edge was successfully created.
         STATUS_OK = 1;
         // Edge already exists with the given ID.
         STATUS_EXISTS = 2;
@@ -160,17 +205,22 @@ message CreateEdgeResponse {
         // Specified edge did not include a transform.
         STATUS_MISSING_TRANSFORM = 5;
     }
+    // Return status for the request.
     Status status = 2;
     // If set, the existing edge that caused the STATUS_EXISTS error.
     Edge error_existing_edge = 3;
+    // The results/status of the lease provided.
     LeaseUseResult lease_use_result = 4;
 }
 
+// The GetRecordStatus request message asks for the current state of the recording service.
 message GetRecordStatusRequest {
     // Common request header.
     RequestHeader header = 1;
 }
 
+// The GetRecordStatus response message returns whether the service is currently recording and what the
+// persistent recording environment is at the time the request was recieved.
 message GetRecordStatusResponse {
     // Common response header.
     ResponseHeader header = 1;

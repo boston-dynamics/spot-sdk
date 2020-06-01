@@ -13,9 +13,9 @@ option java_outer_classname = "EstopProto";
 import "bosdyn/api/header.proto";
 import "google/protobuf/duration.proto";
 
-// An API client to the robot software-estop system.
+// An  to the robot software-E-Stop system.
 message EstopEndpoint {
-    // Role of this endpoint. Should be user-friendly, e.g. "OCU"
+    // Role of this endpoint. Should be a user-friendly string, e.g. "OCU".
     string role = 1;
 
     // Name of this endpoint. Specifies a thing to fill the given role, e.g. "patrol-ocu01"
@@ -38,7 +38,7 @@ message EstopEndpoint {
     google.protobuf.Duration cut_power_timeout = 5;
 }
 
-// The state of the estop system.
+// The state of the E-Stop system.
 enum EstopStopLevel {
     // Invalid stop level.
     ESTOP_LEVEL_UNKNOWN = 0;
@@ -90,7 +90,7 @@ message EstopSystemStatus {
 }
 
 
-// Client request for setting/maintaining an estop system level.
+// Client request for setting/maintaining an E-Stop system level.
 // After the first CheckIn, must include response to previous challenge.
 message EstopCheckInRequest {
     // Common request header.
@@ -189,7 +189,7 @@ message RegisterEstopEndpointResponse {
     Status status = 4;
 }
 
-// Deregister the specified estop endpoint registration.
+// Deregister the specified E-Stop endpoint registration.
 message DeregisterEstopEndpointRequest {
     // Common request header
     RequestHeader header = 1;
@@ -201,7 +201,7 @@ message DeregisterEstopEndpointRequest {
     string target_config_id = 3;
 }
 
-// Response to estop endpoint  deregistration request.
+// Response to E-Stop endpoint  deregistration request.
 message DeregisterEstopEndpointResponse {
     // Common resonse header.
     ResponseHeader header = 1;
@@ -231,7 +231,7 @@ message GetEstopConfigRequest {
     // Common request header.
     RequestHeader header = 1;
 
-    // unique_id of EstopConfig to get.
+    // The 'unique_id' of EstopConfig to get.
     string target_config_id = 4;
 }
 
@@ -255,7 +255,7 @@ message SetEstopConfigRequest {
     // New configuration to set.
     EstopConfig config = 3;
 
-    // unique_id of EstopConfig to replace, if replacing one.
+    // The 'unique_id' of EstopConfig to replace, if replacing one.
     string target_config_id = 4;
 }
 

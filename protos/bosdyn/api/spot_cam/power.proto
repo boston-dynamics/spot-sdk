@@ -13,6 +13,7 @@ option java_outer_classname = "PowerProto";
 import "google/protobuf/wrappers.proto";
 import "bosdyn/api/header.proto";
 
+// Power on or off of components of the SpotCam.
 message PowerStatus {
     //these switches are 'true' for power-on, 'false' for power-off
     google.protobuf.BoolValue ptz = 2;
@@ -20,21 +21,33 @@ message PowerStatus {
     google.protobuf.BoolValue aux2 = 4;
 }
 
+// Request component power status.
 message GetPowerStatusRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
 }
 
+// Provides the power status of all components.
 message GetPowerStatusResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+    // Current power on or off of each component.
     PowerStatus status = 2;
 }
 
+// Turn components on or off.
 message SetPowerStatusRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+    // Set the individual messages for the components that should be changed.
     PowerStatus status = 2;
 }
 
+// Result of turning components on or off.
 message SetPowerStatusResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+
+    // Resulting power status of components.
     PowerStatus status = 2;
 }

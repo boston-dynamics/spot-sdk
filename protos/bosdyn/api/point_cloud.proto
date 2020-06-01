@@ -85,7 +85,11 @@ message PointCloud {
         // centered in the data frame. max_x, max_y, max_z are half the dimensions
         // of that box. These dimensions should be assumed to be meters.
         double max_x = 2;
+        // max_y is half the dimensions of the assumed box (for XYZ_4SC and XYZ_5SC). These
+        // dimensions should be assumed to be meters.
         double max_y = 3;
+        // max_z is half the dimensions of the assumed box (for XYZ_4SC and XYZ_5SC). These
+        // dimensions should be assumed to be meters.
         double max_z = 4;
         // Used in the remapping process from bytes to metric units. (unitless)
         // For XYZ_4SC and XYZ_5C, this should equal 127.
@@ -108,19 +112,19 @@ message PointCloud {
     reserved 8, 9;
 }
 
+// The GetPointCloud request message to ask a specific point cloud service for data.
 message GetPointCloudRequest {
     // Common request header.
     RequestHeader header = 1;
 }
 
+// The GetPointCloud response message which returns any point cloud data associated with that service.
 message GetPointCloudResponse {
     // Common response header.
     ResponseHeader header = 1;
 
-    // Return status.
     enum Status {
         // UNKNOWN should never be used.
-        //
         // An internal PointCloudService issue has happened if UNKNOWN is set.
         // None of the other fields are filled out.
         STATUS_UNKNOWN = 0;
@@ -134,7 +138,9 @@ message GetPointCloudResponse {
         // There was a problem with the point cloud data.  Only the PointCloudSource is filled out.
         STATUS_POINT_CLOUD_DATA_ERROR = 3;
     }
+    // Return status for the request.
     Status status = 2;
 
+    // The current point cloud from the service.
     PointCloud point_cloud = 3;
 }

@@ -67,7 +67,7 @@ class AsyncGRPCTask(object):
 
     @abc.abstractmethod
     def _handle_result(self, result):
-        """Override to handle result of grcp query when it is available.
+        """Override to handle result of grpc query when it is available.
 
         Args:
             result: Result to handle.
@@ -129,7 +129,7 @@ class AsyncPeriodicGRPCTask(AsyncGRPCTask):
 
     @abc.abstractmethod
     def _handle_result(self, result):
-        """Override to handle result of grcp query when it is available.
+        """Override to handle result of grpc query when it is available.
 
         Args:
             result: Result to handle.
@@ -171,7 +171,7 @@ class AsyncPeriodicQuery(AsyncPeriodicGRPCTask):
         return self._proto
 
     def _handle_result(self, result):
-        """Handle result of grcp query when it is available.
+        """Handle result of grpc query when it is available.
 
         Args:
             result: Result to handle.

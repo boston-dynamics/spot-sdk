@@ -12,10 +12,11 @@ option java_outer_classname = "WorldObjectServiceProto";
 
 import "bosdyn/api/world_object.proto";
 
+// The world object service provides a way to track and store objects detected in the world around the robot.
 service WorldObjectService {
-    // Request a list of all the world objects
+    // Request a list of all the world objects in the robot's perception scene.
     rpc ListWorldObjects(ListWorldObjectRequest) returns (ListWorldObjectResponse) {}
 
-    // Mutate the world objects
-    rpc MutateWorldObjects(MutateWorldObjectRequest) returns (MutateWorldObjectResponse) {} 
+    // Mutate (add, change, or delete) the world objects.
+    rpc MutateWorldObjects(MutateWorldObjectRequest) returns (MutateWorldObjectResponse) {}
 }

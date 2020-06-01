@@ -18,26 +18,32 @@ import "google/protobuf/wrappers.proto";
 
 
 
-// Kinematic model of the robot.
+// Kinematic model of the robot skeleton.
 message Skeleton {
+    // Each link of the robot skeleton.
     message Link {
+        // The link name, which matches those used in the urdf.
         string name = 1;
 
         // Model to draw, expressed as an obj file.
-        // Note: To limit the size of responses, obj_file_contents might be omitted..
+        // Note: To limit the size of responses, obj_file_contents might be omitted.
         message ObjModel {
+            // Name of the file.
             string file_name = 1;
+            // The contents of the file.
             string file_contents = 2;
         }
+        // The OBJ file representing the model of this link.
         ObjModel obj_model = 2;
     }
+    // The list of links that make up the robot skeleton.
     repeated Link links = 2;
 
     // URDF description of the robot skeleton.
     string urdf = 3;
 }
 
-// Robot Hardware Configuration
+// Robot Hardware Configuration, described with the robot skeleton.
 message HardwareConfiguration {
     // Robot link and joint description.
     Skeleton skeleton = 1;
@@ -45,18 +51,20 @@ message HardwareConfiguration {
 
 // The current state of the robot.
 message RobotState {
+    // Power state (e.g. motor power).
     PowerState power_state = 1;
-
+    // Battery state (e.g. charge, temperature, current).
     repeated BatteryState battery_states = 2;
-
+    // Communication state (e.g. type of comms network).
     repeated CommsState comms_states = 3;
-
+    // Different system faults for the robot.
     SystemFaultState system_fault_state = 4;
 
-    // Because there may be multiple EStops, and because EStops may be supplied with payloads,
+    // Because there may be multiple E-Stops, and because E-Stops may be supplied with payloads,
     // this is a repeated field instead of a hardcoded list.
     repeated EStopState estop_states = 5;
 
+    // Kinematic state of the robot (e.g. positions, velocities, other frame information).
     KinematicState kinematic_state = 6;
 
     // Robot behavior fault state.
@@ -66,14 +74,15 @@ message RobotState {
 
 }
 
-// Proto defining the robots motor power state.
+// The power state for the robot.
 // If a robot is not in the POWER OFF state, if is not safe to approach.
-// The robot must not be estopped to enter the POWER_ON state.
+// The robot must not be E-Stopped to enter the POWER_ON state.
 message PowerState {
     // Robot clock timestamp corresponding to these readings.
     google.protobuf.Timestamp timestamp = 1;
 
     enum MotorPowerState {
+        // Unknown motor power state. Do not use this field.
         STATE_UNKNOWN = 0;
 
         // Motors are off, the robot is safe to approach.
@@ -91,11 +100,13 @@ message PowerState {
         // The robot is in an error state and must be powered off before attempting to re-power.
         STATE_ERROR = 5;
     }
+    // The motor power state of the robot.
     MotorPowerState motor_power_state = 2;
 
     // State describing if robot is connected to shore (wall) power. Robot can't be powered on
     // while on shore power
     enum ShorePowerState {
+        // Unknown shore power state. Do not use this field.
         STATE_UNKNOWN_SHORE_POWER = 0;
 
         // The robot is connected to shore power. The robot will not power on while connected to
@@ -105,6 +116,7 @@ message PowerState {
         // The robot is disconnected from shore power and motors can be powered up.
         STATE_OFF_SHORE_POWER = 2;
     }
+    // The shore power state of the robot.
     ShorePowerState shore_power_state = 3;
 
     // Number from 0 (empty) to 100 (full) indicating the estimated state of charge.
@@ -118,7 +130,7 @@ message PowerState {
     google.protobuf.Duration locomotion_estimated_runtime = 5;
 }
 
-// Proto defining the robot fault state.
+// The current state of each system fault the robot is experiencing.
 // An "active" fault indicates a hardware/software currently on the robot.
 // A "historical" faults indicates a, now cleared, hardware/software problem.
 // Historical faults are useful to diagnose robot behavior subject to intermittent failed states.
@@ -135,7 +147,7 @@ message SystemFaultState {
     map<string, SystemFault.Severity> aggregated = 3;
 }
 
-// Proto defining an instance of a robot fault.
+// The current system faults for a robot.
 // A fault is an indicator of a hardware or software problem on the robot. An
 // active fault may indicate the robot may fail to comply with a user request.
 // The exact response a fault may vary, but possible responses include: failure
@@ -198,40 +210,45 @@ message SystemFault {
     Severity severity = 7;
 }
 
-// Proto defining a robots estop state.
-// A typical robot has several different estops, all which must be "NOT_ESTOPPED"
+// The robot's current E-Stop states and endpoints.
+// A typical robot has several different E-Stops, all which must be "NOT_ESTOPPED"
 // in order to run the robot.
 message EStopState {
     // Robot clock timestamp corresponding to these readings.
     google.protobuf.Timestamp timestamp = 1;
 
-    // Name of the EStop
+    // Name of the E-Stop
     string name = 2;
     enum Type {
+        // Unknown type of E-Stop. Do not use this field.
         TYPE_UNKNOWN = 0;
 
-        // EStop is a physical button
+        // E-Stop is a physical button
         TYPE_HARDWARE = 1;
 
-        // Estop is a software process
+        // E-Stop is a software process
         TYPE_SOFTWARE = 2;
     }
+    // What kind of E-Stop this message describes.
     Type type = 3;
     enum State {
-        // No EStop information is present. Only happens in an error case.
+        // No E-Stop information is present. Only happens in an error case.
         STATE_UNKNOWN = 0;
 
-        // EStop is active -- robot cannot power its actuators.
+        // E-Stop is active -- robot cannot power its actuators.
         STATE_ESTOPPED = 1;
 
-        // EStop is released -- robot may be able to power its actuators.
+        // E-Stop is released -- robot may be able to power its actuators.
         STATE_NOT_ESTOPPED = 2;
     }
+    // The state of the E-Stop (is it E-Stopped or not?)
     State state = 4;
-    // Optional description of EStop status.
+    // Optional description of E-Stop status.
     string state_description = 5;
 }
 
+// The battery state for the robot. This includes information about the charge or the
+// battery temperature.
 message BatteryState {
     // Robot clock timestamp corresponding to these readings.
     google.protobuf.Timestamp timestamp = 1;
@@ -260,6 +277,7 @@ message BatteryState {
         // The battery is in an unknown / unexpected state.
         STATUS_UNKNOWN = 0;
 
+        // The battery is not plugged in or otherwise not talking.
         STATUS_MISSING = 1;
 
         // The battery is plugged in to shore power and charging.
@@ -271,10 +289,13 @@ message BatteryState {
         // The battery was just plugged in and is booting up= 3;
         STATUS_BOOTING = 4;
     }
+    // Current state of the battery.
     Status status = 8;
 
 }
 
+// The kinematic state of the robot describes the current estimated positions of the robot body and joints throughout the world.
+// It includes a transform snapshot of the robot’s current known frames as well as joint states and the velocity of the body.
 message KinematicState {
     // Joint state of all robot joints.
     repeated JointState joint_states = 2;
@@ -288,23 +309,28 @@ message KinematicState {
     // All transforms within the snapshot are at the acquisition time of kinematic state.
     FrameTreeSnapshot transforms_snapshot = 31;
 
-    // Velocity of the body frame with respect to {vision, odom} frame and expressed in {vision, odom} frame.
+    // Velocity of the body frame with respect to vision frame and expressed in vision frame.
     // The linear velocity is applied at the origin of the body frame.
     SE3Velocity velocity_of_body_in_vision = 8;
+    // Velocity of the body frame with respect to odom frame and expressed in odom frame.
+    // Again, the linear velocity is applied at the origin of the body frame.
     SE3Velocity velocity_of_body_in_odom = 12;
 
     // Previous fields in the protobuf that are now reserved.
     reserved 1, 3, 4, 5, 6, 9, 10, 11;
 }
 
-// Proto containing the state of a joint on the robot.
+// Proto containing the state of a joint on the robot. This can be used with the robot skeleton to
+// update the current view of the robot.
 message JointState {
     // This name maps directly to the joints in the URDF.
     string name = 1;
     // This is typically an angle in radians as joints are typically revolute. However, for
     // translational joints this could be a distance in meters.
     google.protobuf.DoubleValue position = 2;
+    // The joint velocity in [m/s].
     google.protobuf.DoubleValue velocity = 3;
+    // The joint acceleration in [m/s^2].
     google.protobuf.DoubleValue acceleration = 4;
 
     // This is typically a torque in Newton meters as joints are typically revolute. However, for
@@ -312,11 +338,16 @@ message JointState {
     google.protobuf.DoubleValue load = 5;
 }
 
+// This describes any current behaviror faults on the robot, which would block any robot commands
+// from going through. These can be cleared using the ClearBehaviorFault rpc in the robot command
+// service.
 message BehaviorFaultState {
     // Current errors potentially blocking commands on robot
     repeated BehaviorFault faults = 1;
 }
 
+// The details of what the behavior fault consistents of, and the id for the fault. The unique
+// behavior_fault_id can be used to clear the fault in robot command service ClearBehaviorFault rpc.
 message BehaviorFault {
     // Behavior fault unique id
     uint32 behavior_fault_id = 1;
@@ -334,6 +365,7 @@ message BehaviorFault {
         // Error caused by robot hardware malfunction
         CAUSE_HARDWARE = 2;
     }
+    // The potential cause of the fault.
     Cause cause = 3;
 
     enum Status {
@@ -346,6 +378,7 @@ message BehaviorFault {
         // Fault is currently not clearable
         STATUS_UNCLEARABLE = 2;
     }
+    // Information about the status/what can be done with the fault.
     Status status = 4;
 }
 
@@ -358,12 +391,14 @@ message RobotMetrics {
     repeated Parameter metrics = 2;
 }
 
-//----- robot/comms.proto
+// The current comms information, including what comms the robot is using and the current status
+// of the comms network.
 message CommsState {
     // Robot timestamp corresponding to these readings.
     google.protobuf.Timestamp timestamp = 1;
 
     oneof state {
+        // The communication state is WiFi.
         WiFiState wifi_state = 2;
     }
 
@@ -380,7 +415,7 @@ message WiFiState {
         // The robot is connected to a network.
         MODE_CLIENT = 2;
     }
-    // Current WiFi mode
+    // Current WiFi mode.
     Mode current_mode = 1;
 
     // Essid of robot (master mode) or connected network.
@@ -388,66 +423,84 @@ message WiFiState {
 
 }
 
-// Per-foot information.
+// Information about the foot positions and contact state, on a per-foot basis.
 message FootState {
+    // The foot position described relative to the body.
     Vec3 foot_position_rt_body = 1;
     enum Contact {
+        // Unknown contact. Do not use.
         CONTACT_UNKNOWN = 0;
+        // The foot is currently in contact with the ground.
         CONTACT_MADE = 1;
+        // The foot is not in contact with the ground.
         CONTACT_LOST = 2;
     }
+    // Is the foot in contact with the ground?
     Contact contact = 2;
 }
 
+// The RobotState request message to get the current state of the robot.
 message RobotStateRequest {
-    // Common request/response header.
+    // Common request header.
     RequestHeader header = 1;
 }
 
+// The RobotState response message, which returns the robot state information from the time
+// the request was received.
 message RobotStateResponse {
-    // Common request/response header.
+    // Common response header.
     ResponseHeader header = 1;
     // The requested RobotState.
     RobotState robot_state = 2;
 }
 
+// The RobotMetrics request message to get metrics and parameters from the robot.
 message RobotMetricsRequest {
-    // Common request/response header.
+    // Common request header.
     RequestHeader header = 1;
 }
 
+// The RobotMetrics response message, which returns the metrics information from the time
+// the request was received.
 message RobotMetricsResponse {
-    // Common request/response header.
+    // Common response header.
     ResponseHeader header = 1;
 
     // The requested robot metrics.
     RobotMetrics robot_metrics = 2;
 }
 
+// The RobotHardwareConfiguration request message to get hardware configuration, described
+// by the robot skeleton and urdf.
 message RobotHardwareConfigurationRequest {
-    // Common request/response header.
+    // Common request header.
     RequestHeader header = 1;
 }
 
+// The RobotHardwareConfiguration response message, which returns the hardware config from the time
+// the request was received.
 message RobotHardwareConfigurationResponse {
-    // Common request/response header.
+    // Common response header.
     ResponseHeader header = 1;
 
     // The requested RobotState.
     HardwareConfiguration hardware_configuration = 2;
 }
 
+// The RobotLinkModel request message uses a link name returned by the RobotHardwareConfiguration response to
+// get the associated OBJ file.
 message RobotLinkModelRequest {
-    // Common request/response header.
+    // Common request header.
     RequestHeader header = 1;
-
+    // The link name of which the OBJ file shoould represent.
     string link_name = 2;
 }
 
+// The RobotLinkModel response message returns the OBJ file for a specifc robot link.
 message RobotLinkModelResponse {
-    // Common request/response header.
+    // Common response header.
     ResponseHeader header = 1;
 
-    // The requested RobotState.
+    // The requested RobotState skeleton obj model.
     Skeleton.Link.ObjModel link_model = 2;
 }

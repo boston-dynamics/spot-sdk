@@ -12,14 +12,17 @@ option java_outer_classname = "RemoteServiceProto";
 
 import "bosdyn/api/mission/remote.proto";
 
+// Interface for mission callbacks.  Mission RemoteGrpc nodes will act as clients
+// to this service type, calling out to this service when loaded, ticked, or unloaded.
 service RemoteMissionService {
-    // Call this once at mission load time, per node.
+    // Call this once at mission load time, once for each node that references this remote service.
     rpc EstablishSession(EstablishSessionRequest) returns (EstablishSessionResponse) {}
     // Call this every time the RemoteGrpc node is ticked.
     rpc Tick(TickRequest) returns (TickResponse) {}
     // Call this every time the RemoteGrpc node WAS ticked in the previous cycle, but was NOT ticked
-    // in this cycle.
+    // in this cycle. Signals that the next tick will be a restart, rather than a continuation.
     rpc Stop(StopRequest) returns (StopResponse) {}
     // Tells the service it can forget any data associated with the given session ID.
+    // Should be called once for every EstablishSession call.
     rpc TeardownSession(TeardownSessionRequest) returns (TeardownSessionResponse) {}
 }

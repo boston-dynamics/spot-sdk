@@ -21,6 +21,7 @@ import "bosdyn/api/spot_cam/health.proto";
 import "bosdyn/api/spot_cam/network.proto";
 import "bosdyn/api/spot_cam/version.proto";
 
+// Change the layout of of the video stream between available presets.
 service CompositorService {
     //SetScreen changes the current view that is streamed over the network
     rpc SetScreen (SetScreenRequest) returns (SetScreenResponse);
@@ -32,22 +33,25 @@ service CompositorService {
     rpc GetVisibleCameras (GetVisibleCamerasRequest) returns (GetVisibleCamerasResponse);
 }
 
-//this service sets up quality parameters for the stream, such as compression and image postprocessing settings.
+// Set quality parameters for the stream, such as compression and image postprocessing settings.
 service StreamQualityService {
     rpc SetStreamParams (SetStreamParamsRequest) returns (SetStreamParamsResponse);
     rpc GetStreamParams (GetStreamParamsRequest) returns (GetStreamParamsResponse);
 }
 
+// Turn hardware components' power on or off.
 service PowerService {
     rpc SetPowerStatus (SetPowerStatusRequest) returns (SetPowerStatusResponse);
     rpc GetPowerStatus (GetPowerStatusRequest) returns (GetPowerStatusResponse);
 }
 
+// Change the brightness level of individual LEDs.
 service LightingService {
     rpc SetLEDBrightness (SetLEDBrightnessRequest) returns (SetLEDBrightnessResponse);
     rpc GetLEDBrightness (GetLEDBrightnessRequest) returns (GetLEDBrightnessResponse);
 }
 
+// Trigger data acquisitions, and retrieve resulting data.
 service MediaLogService {
     //Store queues up a Logpoint, which is a bit of media that the user wishes to store to disk
     //(still images are supported for now, more media types will be supported in the future)
@@ -73,6 +77,7 @@ service MediaLogService {
     rpc SetPassphrase (SetPassphraseRequest) returns (SetPassphraseResponse);
 }
 
+// Control real and virtual ptz mechanisms.
 service PtzService {
     //SetPosition points the referenced camera to a given vector (in PTZ-space)
     rpc SetPtzPosition (SetPtzPositionRequest) returns (SetPtzPositionResponse);
@@ -83,6 +88,7 @@ service PtzService {
     rpc ListPtz (ListPtzRequest) returns (ListPtzResponse);
 }
 
+// Upload and play sounds over the SpotCam's speakers.
 service AudioService {
     //Given a soundRequest that identifies a single sound present in the system's sound effects table, PlaySound executes the sound effect.
     rpc PlaySound (PlaySoundRequest) returns (PlaySoundResponse);
@@ -95,10 +101,13 @@ service AudioService {
     rpc DeleteSound (DeleteSoundRequest) returns (DeleteSoundResponse);
     //ListSounds returns a list of all of the sound effects that the system knows about.
     rpc ListSounds (ListSoundsRequest) returns (ListSoundsResponse);
+    // Set the overall volume level for playing sounds.
     rpc SetVolume (SetVolumeRequest) returns (SetVolumeResponse);
+    // Set the overall volume level for playing sounds.
     rpc GetVolume (GetVolumeRequest) returns (GetVolumeResponse);
 }
 
+// Query temperature and built-in test results.
 service HealthService {
     //GetTemperature returns a list of thermometers in the system, and the temperature that they measure.
     rpc GetTemperature (GetTemperatureRequest) returns (GetTemperatureResponse);
@@ -110,6 +119,7 @@ service HealthService {
 }
 
 
+// Modify or query network settings of the SpotCam and ICE resolution servers.
 service NetworkService {
     rpc GetNetworkSettings (GetNetworkSettingsRequest) returns (GetNetworkSettingsResponse);
     rpc SetNetworkSettings (SetNetworkSettingsRequest) returns (SetNetworkSettingsResponse);
@@ -119,7 +129,7 @@ service NetworkService {
     rpc GetICEConfiguration (GetICEConfigurationRequest) returns (GetICEConfigurationResponse);
 }
 
+// Query the version of the software release running on the SpotCam.
 service VersionService {
-    rpc GetSoftwareVersion (GetSoftwareVersionRequest) returns (
-    GetSoftwareVersionResponse);
+    rpc GetSoftwareVersion (GetSoftwareVersionRequest) returns (GetSoftwareVersionResponse);
 }

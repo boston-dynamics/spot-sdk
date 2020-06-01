@@ -1,0 +1,983 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Command Line &mdash; Spot 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../../../../_static/bd-favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https:://dev.bostondynamics.com/python/bosdyn-client/src/bosdyn/client/command_line.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="Common" href="common.html" />
+    <link rel="prev" title="Channel" href="channel.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../README.html">
+          
+
+          
+            
+            <img src="../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/concepts/README.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/base_services.html">Base services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/robot_services.html">Robot services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/localization.html">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../docs/python/README.html">Python</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/python/quickstart.html">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/python/understanding_spot_programming.html">Understanding Spot Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examples/README.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/add_image_coordinates_to_scene/README.html">Add Image Coordinates to Scene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/directory/README.html">Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/estop/README.html">E-Stop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_depth_plus_visual_image/README.html">Get Depth Plus Visual Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/logging/README.html">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/mission_question_answerer/README.html">Mission Question Anwerer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/payloads/README.html">Payloads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/replay_mission/README.html">Replay Mission</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/spot_check/README.html">Spot Check</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/wasd/README.html">WASD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/xbox_controller/README.html">Xbox Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../README.html">Python Reference Guide</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="README.html">Client</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="channel.html">Channel</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="directory_registration.html">Directory Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="image.html">Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="local_grid.html">Local Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="payload.html">Payload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="processors.html">Processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recording.html">Recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="robot_command.html">Robot Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="robot_id.html">Robot ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="robot_state.html">Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spot_cam/README.html">Spot CAM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/audio.html">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/compositor.html">Compositor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/health.html">Health</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/media_log.html">Media Log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/network.html">Network</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/power.html">Power</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/ptz.html">PTZ</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/streamquality.html">Stream Quality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/version.html">Version</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="spot_check.html">Spot Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="time_sync.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="token_cache.html">Token Cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="world_object.html">World Object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../bosdyn-core/src/bosdyn/README.html">Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-core/src/bosdyn/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/payload/README.html">Payloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/payload_configuration_requirements.html">Payload configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/mechanical_interfaces.html">Mechanical interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/robot_mounting_rails.html">Robot mounting rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/protos/README.html">API Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/protos/style_guide.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html">auth.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#data-chunk-proto">data_chunk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#directory-proto">directory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#directory-registration-proto">directory_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#directory-registration-service-proto">directory_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#directory-service-proto">directory_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#estop-proto">estop.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#estop-service-proto">estop_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#local-grid-proto">local_grid.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-mission-service-proto">mission/mission_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-nodes-proto">mission/nodes.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-remote-proto">mission/remote.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-remote-service-proto">mission/remote_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-util-proto">mission/util.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#payload-registration-proto">payload_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#payload-registration-service-proto">payload_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#payload-service-proto">payload_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#point-cloud-proto">point_cloud.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#power-proto">power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#power-service-proto">power_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-command-service-proto">robot_command_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-id-proto">robot_id.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-led-proto">spot_cam/LED.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-factoryservice-proto">spot_cam/factoryservice.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-factorysetup-proto">spot_cam/factorysetup.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-health-proto">spot_cam/health.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-network-proto">spot_cam/network.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-power-proto">spot_cam/power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-ptz-proto">spot_cam/ptz.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-service-proto">spot_cam/service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-streamquality-proto">spot_cam/streamquality.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-version-proto">spot_cam/version.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../README.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../README.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../../docs/python/README.html">Python Library</a> &raquo;</li>
+        
+          <li><a href="../../../../README.html">Boston Dynamics Python Reference Guide</a> &raquo;</li>
+        
+          <li><a href="README.html">Python Client</a> &raquo;</li>
+        
+      <li>Command Line</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-bosdyn.client.command_line">
+<span id="command-line"></span><h1>Command Line<a class="headerlink" href="#module-bosdyn.client.command_line" title="Permalink to this headline">¶</a></h1>
+<p>Command-line utility code for interacting with robot services.</p>
+<dl class="py class">
+<dt id="bosdyn.client.command_line.Command">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">Command</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#Command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.Command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Command-line command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.Command.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = None</em><a class="headerlink" href="#bosdyn.client.command_line.Command.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.Command.NEED_AUTHENTICATION">
+<code class="sig-name descname">NEED_AUTHENTICATION</code><em class="property"> = True</em><a class="headerlink" href="#bosdyn.client.command_line.Command.NEED_AUTHENTICATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.command_line.Command.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">robot</span></em>, <em class="sig-param"><span class="n">options</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#Command.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.Command.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke the command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>robot</strong> – Robot object on which to run the command.</p></li>
+<li><p><strong>options</strong> – Parsed command-line arguments.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.Subcommands">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">Subcommands</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em>, <em class="sig-param"><span class="n">subcommands</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#Subcommands"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.Subcommands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>Run subcommands.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+<li><p><strong>subcommands</strong> – List of subcommands to run.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.DirectoryCommands">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">DirectoryCommands</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#DirectoryCommands"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.DirectoryCommands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Subcommands" title="bosdyn.client.command_line.Subcommands"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Subcommands</span></code></a></p>
+<p>Commands related to the directory service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.DirectoryCommands.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'dir'</em><a class="headerlink" href="#bosdyn.client.command_line.DirectoryCommands.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.DirectoryListCommand">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">DirectoryListCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#DirectoryListCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.DirectoryListCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>List all services in the directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.DirectoryListCommand.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'list'</em><a class="headerlink" href="#bosdyn.client.command_line.DirectoryListCommand.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.DirectoryGetCommand">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">DirectoryGetCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#DirectoryGetCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.DirectoryGetCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>Get entry for a given service in the directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.DirectoryGetCommand.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'get'</em><a class="headerlink" href="#bosdyn.client.command_line.DirectoryGetCommand.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.DirectoryRegisterCommand">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">DirectoryRegisterCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#DirectoryRegisterCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.DirectoryRegisterCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>Register entry for a service in the directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.DirectoryRegisterCommand.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'register'</em><a class="headerlink" href="#bosdyn.client.command_line.DirectoryRegisterCommand.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.DirectoryUnregisterCommand">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">DirectoryUnregisterCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#DirectoryUnregisterCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.DirectoryUnregisterCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>Unregister entry for a service in the directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.DirectoryUnregisterCommand.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'unregister'</em><a class="headerlink" href="#bosdyn.client.command_line.DirectoryUnregisterCommand.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.RobotIdCommand">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">RobotIdCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#RobotIdCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.RobotIdCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>Show robot-id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.RobotIdCommand.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'id'</em><a class="headerlink" href="#bosdyn.client.command_line.RobotIdCommand.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.RobotIdCommand.NEED_AUTHENTICATION">
+<code class="sig-name descname">NEED_AUTHENTICATION</code><em class="property"> = False</em><a class="headerlink" href="#bosdyn.client.command_line.RobotIdCommand.NEED_AUTHENTICATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.LogAnnotationCommands">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">LogAnnotationCommands</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#LogAnnotationCommands"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.LogAnnotationCommands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Subcommands" title="bosdyn.client.command_line.Subcommands"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Subcommands</span></code></a></p>
+<p>Commands related to the log-annotation service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.LogAnnotationCommands.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'log'</em><a class="headerlink" href="#bosdyn.client.command_line.LogAnnotationCommands.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.LogTextMsgCommand">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">LogTextMsgCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#LogTextMsgCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.LogTextMsgCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>Send a text-message to the robot to be logged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.LogTextMsgCommand.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'textmsg'</em><a class="headerlink" href="#bosdyn.client.command_line.LogTextMsgCommand.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.LogOperatorCommentCommand">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">LogOperatorCommentCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#LogOperatorCommentCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.LogOperatorCommentCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>Send an operator comment to the robot to be logged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.LogOperatorCommentCommand.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'comment'</em><a class="headerlink" href="#bosdyn.client.command_line.LogOperatorCommentCommand.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.RobotStateCommands">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">RobotStateCommands</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#RobotStateCommands"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.RobotStateCommands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Subcommands" title="bosdyn.client.command_line.Subcommands"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Subcommands</span></code></a></p>
+<p>Commands for querying robot state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.RobotStateCommands.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'state'</em><a class="headerlink" href="#bosdyn.client.command_line.RobotStateCommands.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.FullStateCommand">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">FullStateCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#FullStateCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.FullStateCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>Show robot state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.FullStateCommand.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'full'</em><a class="headerlink" href="#bosdyn.client.command_line.FullStateCommand.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.RobotModel">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">RobotModel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#RobotModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.RobotModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>Write robot URDF and mesh to local files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.RobotModel.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'model'</em><a class="headerlink" href="#bosdyn.client.command_line.RobotModel.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.RobotModel.NEED_AUTHENTICATION">
+<code class="sig-name descname">NEED_AUTHENTICATION</code><em class="property"> = False</em><a class="headerlink" href="#bosdyn.client.command_line.RobotModel.NEED_AUTHENTICATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.MetricsCommand">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">MetricsCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#MetricsCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.MetricsCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>Show metrics (runtime, etc…).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.MetricsCommand.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'metrics'</em><a class="headerlink" href="#bosdyn.client.command_line.MetricsCommand.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.TimeSyncCommand">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">TimeSyncCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#TimeSyncCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.TimeSyncCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>Find clock difference between this and the robot clock.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.TimeSyncCommand.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'time-sync'</em><a class="headerlink" href="#bosdyn.client.command_line.TimeSyncCommand.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.LeaseCommands">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">LeaseCommands</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#LeaseCommands"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.LeaseCommands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Subcommands" title="bosdyn.client.command_line.Subcommands"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Subcommands</span></code></a></p>
+<p>Commands related to the lease service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.LeaseCommands.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'lease'</em><a class="headerlink" href="#bosdyn.client.command_line.LeaseCommands.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.LeaseListCommand">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">LeaseListCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#LeaseListCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.LeaseListCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>List all leases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.LeaseListCommand.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'list'</em><a class="headerlink" href="#bosdyn.client.command_line.LeaseListCommand.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.BecomeEstopCommand">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">BecomeEstopCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#BecomeEstopCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.BecomeEstopCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>Grab and hold estop until Ctl-C.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.BecomeEstopCommand.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'become-estop'</em><a class="headerlink" href="#bosdyn.client.command_line.BecomeEstopCommand.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.ImageCommands">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">ImageCommands</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#ImageCommands"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.ImageCommands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Subcommands" title="bosdyn.client.command_line.Subcommands"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Subcommands</span></code></a></p>
+<p>Commands for querying images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.ImageCommands.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'image'</em><a class="headerlink" href="#bosdyn.client.command_line.ImageCommands.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.ListImageSourcesCommand">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">ListImageSourcesCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#ListImageSourcesCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.ListImageSourcesCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>List image sources.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.ListImageSourcesCommand.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'list-sources'</em><a class="headerlink" href="#bosdyn.client.command_line.ListImageSourcesCommand.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.client.command_line.write_pgm">
+<code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">write_pgm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_response</span></em>, <em class="sig-param"><span class="n">outfile</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#write_pgm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.write_pgm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write raw data from image_response to a PGM file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_response</strong> – ImageResponse object to parse.</p></li>
+<li><p><strong>outfile</strong> – Name of the output file, if None is passed, then “image-{SOURCENAME}.pgm” is used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.GetImageCommand">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">GetImageCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#GetImageCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.GetImageCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>Get an image from the robot and write it to an image file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.GetImageCommand.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'get-image'</em><a class="headerlink" href="#bosdyn.client.command_line.GetImageCommand.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.LocalGridCommands">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">LocalGridCommands</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#LocalGridCommands"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.LocalGridCommands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Subcommands" title="bosdyn.client.command_line.Subcommands"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Subcommands</span></code></a></p>
+<p>Commands for querying local grid maps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.LocalGridCommands.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'local_grid'</em><a class="headerlink" href="#bosdyn.client.command_line.LocalGridCommands.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.ListLocalGridTypesCommand">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">ListLocalGridTypesCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#ListLocalGridTypesCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.ListLocalGridTypesCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>List local grid sources.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.ListLocalGridTypesCommand.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'types'</em><a class="headerlink" href="#bosdyn.client.command_line.ListLocalGridTypesCommand.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.command_line.GetLocalGridsCommand">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">GetLocalGridsCommand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">subparsers</span></em>, <em class="sig-param"><span class="n">command_dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#GetLocalGridsCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.GetLocalGridsCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.command_line.Command" title="bosdyn.client.command_line.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.command_line.Command</span></code></a></p>
+<p>Get local grids from the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subparsers</strong> – List of argument parsers.</p></li>
+<li><p><strong>command_dict</strong> – Dictionary of command names which take parsed options.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.command_line.GetLocalGridsCommand.NAME">
+<code class="sig-name descname">NAME</code><em class="property"> = 'get'</em><a class="headerlink" href="#bosdyn.client.command_line.GetLocalGridsCommand.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.client.command_line.main">
+<code class="sig-prename descclassname">bosdyn.client.command_line.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">args</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/command_line.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.command_line.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Command-line interface for interacting with robot services.</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      
+      &copy; Copyright 2020 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

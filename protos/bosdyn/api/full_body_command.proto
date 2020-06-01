@@ -14,12 +14,26 @@ import "bosdyn/api/basic_command.proto";
 import "google/protobuf/any.proto";
 
 
+// The robot command message to specify a basic command that requires full control of the entire
+// robot to be completed.
 message FullBodyCommand {
+
+    // The full body request must be one of the basic command primitives.
     message Request {
+
+        // Only one full body command can be requested at a time.
         oneof command {
+
+            // Command to stop the robot.
             StopCommand.Request stop_request = 1;
+
+            // Command to freeze all joints of the robot.
             FreezeCommand.Request freeze_request = 2;
+
+            // Command to self-right the robot to a ready position.
             SelfRightCommand.Request selfright_request = 3;
+
+            // Command to safely power off the robot.
             SafePowerOffCommand.Request safe_power_off_request = 4;
 
         }
@@ -28,11 +42,24 @@ message FullBodyCommand {
         google.protobuf.Any params = 100;
     }
 
+    // The feedback for the fully body command that will provide information on the progress
+    // of the robot command.
     message Feedback {
+
+        // The feedback message associated with the requested command. Some commands may have
+        // an empty feedback message if they do not provide any updates/progress.
         oneof feedback {
+
+            // Feedback for the stop command request.
             StopCommand.Feedback stop_feedback = 1;
+
+            // Feedback for the freeze command request.
             FreezeCommand.Feedback freeze_feedback = 2;
+
+            // Feedback for the self-right command request.
             SelfRightCommand.Feedback selfright_feedback = 3;
+
+            // Feedback for the safe power off command request.
             SafePowerOffCommand.Feedback safe_power_off_feedback = 4;
 
         }

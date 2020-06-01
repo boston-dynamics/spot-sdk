@@ -48,6 +48,7 @@ message Payload {
     repeated PayloadPreset preset_configurations = 11;
 }
 
+// The physical configurations for the payload.
 message PayloadPreset {
     // A human readable name describing this configuration. It is displayed in
     // the admin console, but will not overwrite the top level payload name.
@@ -72,11 +73,11 @@ message PayloadMassVolumeProperties {
     // Position of the center of mass of the payload in the payload frame. Meters.
     Vec3 com_pos_rt_payload = 3;
     // The moment of inertia of the payload, represented about the payload
-    // center of mass, in the payload frame. kg-m^2.
+    // center of mass, in the payload frame. Units in [kg*m^2].
     MomentOfIntertia moi_tensor = 4;
     // Zero or more bounding boxes indicating the occupied volume of the payload.
     // These boxes must be represented in the payload frame by specifying
-    // Box3WithFrame.frame_name == "payload".
+    // Must have Box3WithFrame.frame_name == "payload".
     repeated Box3WithFrame bounding_box = 5;
     // Joint limits defining limits to range of motion of the hips of the robot,
     // in order to prevent collisions with the payload.
@@ -111,12 +112,16 @@ message JointLimits {
     repeated float hx = 4;
 }
 
+// The ListPayloads request message sent to the robot to get all known payloads.
 message ListPayloadsRequest {
+    // Common request header.
     RequestHeader header = 1;
 }
 
+// The ListPayloads response message returns all payloads registered in the robot's directory.
 message ListPayloadsResponse {
+    // Common response header.
     ResponseHeader header = 1;
-
+    // The returned list of payloads registered in the directory.
     repeated Payload payloads = 2;
 }

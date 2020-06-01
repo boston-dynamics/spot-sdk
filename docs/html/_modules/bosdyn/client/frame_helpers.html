@@ -1,0 +1,714 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bosdyn.client.frame_helpers &mdash; Spot 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https:://dev.bostondynamics.com/_modules/bosdyn/client/frame_helpers.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../README.html">
+          
+
+          
+            
+            <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/robot_services.html">Robot services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/python/README.html">Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/quickstart.html">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/understanding_spot_programming.html">Understanding Spot Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../python/examples/README.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/add_image_coordinates_to_scene/README.html">Add Image Coordinates to Scene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/directory/README.html">Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/estop/README.html">E-Stop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Get Depth Plus Visual Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/logging/README.html">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/mission_question_answerer/README.html">Mission Question Anwerer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/payloads/README.html">Payloads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_check/README.html">Spot Check</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/wasd/README.html">WASD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/xbox_controller/README.html">Xbox Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html">Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/common.html">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/processors.html">Processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html">Recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html">Robot Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_id.html">Robot ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html">PTZ</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/streamquality.html">Stream Quality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html">Version</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html">Spot Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/time_sync.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/README.html">Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/payload_configuration_requirements.html">Payload configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/mechanical_interfaces.html">Mechanical interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_mounting_rails.html">Robot mounting rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/protos/style_guide.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html">auth.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-chunk-proto">data_chunk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-proto">directory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-registration-proto">directory_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-registration-service-proto">directory_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-service-proto">directory_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#estop-proto">estop.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#estop-service-proto">estop_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-proto">local_grid.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-service-proto">mission/mission_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-nodes-proto">mission/nodes.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-remote-proto">mission/remote.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-remote-service-proto">mission/remote_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-util-proto">mission/util.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-registration-proto">payload_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-registration-service-proto">payload_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-service-proto">payload_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#point-cloud-proto">point_cloud.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#power-proto">power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#power-service-proto">power_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-command-service-proto">robot_command_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-proto">robot_id.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-led-proto">spot_cam/LED.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-factoryservice-proto">spot_cam/factoryservice.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-factorysetup-proto">spot_cam/factorysetup.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-health-proto">spot_cam/health.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-network-proto">spot_cam/network.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-power-proto">spot_cam/power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-ptz-proto">spot_cam/ptz.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-service-proto">spot_cam/service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-streamquality-proto">spot_cam/streamquality.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-version-proto">spot_cam/version.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../README.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../README.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bosdyn.client.frame_helpers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bosdyn.client.frame_helpers</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">math_helpers</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">geometry_pb2</span>
+
+<span class="n">VISION_FRAME_NAME</span> <span class="o">=</span> <span class="s2">&quot;vision&quot;</span>
+<span class="n">BODY_FRAME_NAME</span> <span class="o">=</span> <span class="s2">&quot;body&quot;</span>
+<span class="c1"># Note that the frame name for a gravity aligned body frame is &quot;flat_body&quot; to create a shorter</span>
+<span class="c1"># string identifier.</span>
+<span class="n">GRAV_ALIGNED_BODY_FRAME_NAME</span> <span class="o">=</span> <span class="s2">&quot;flat_body&quot;</span>
+<span class="n">ODOM_FRAME_NAME</span> <span class="o">=</span> <span class="s2">&quot;odom&quot;</span>
+<span class="n">GROUND_PLANE_FRAME_NAME</span> <span class="o">=</span> <span class="s2">&quot;gpe&quot;</span>
+<span class="n">UNKNOWN_FRAME_NAME</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span>
+
+
+<div class="viewcode-block" id="Error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.Error">[docs]</a><span class="k">class</span> <span class="nc">Error</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="ValidateFrameTreeError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.ValidateFrameTreeError">[docs]</a><span class="k">class</span> <span class="nc">ValidateFrameTreeError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="ValidateFrameTreeUnknownFrameError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.ValidateFrameTreeUnknownFrameError">[docs]</a><span class="k">class</span> <span class="nc">ValidateFrameTreeUnknownFrameError</span><span class="p">(</span><span class="n">ValidateFrameTreeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="ValidateFrameTreeCycleError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.ValidateFrameTreeCycleError">[docs]</a><span class="k">class</span> <span class="nc">ValidateFrameTreeCycleError</span><span class="p">(</span><span class="n">ValidateFrameTreeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="ValidateFrameTreeDisjointError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.ValidateFrameTreeDisjointError">[docs]</a><span class="k">class</span> <span class="nc">ValidateFrameTreeDisjointError</span><span class="p">(</span><span class="n">ValidateFrameTreeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="validate_frame_tree_snapshot"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.validate_frame_tree_snapshot">[docs]</a><span class="k">def</span> <span class="nf">validate_frame_tree_snapshot</span><span class="p">(</span><span class="n">frame_tree_snapshot</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Validates that a FrameTreeSnapshot is well-formed.</span>
+
+<span class="sd">    A FrameTreeSnapshot is expected to be a single tree, but poorly written</span>
+<span class="sd">    services can misuse the syntax to construct other data structures. The</span>
+<span class="sd">    syntax prevents DAGs from forming, but the data structure could</span>
+
+<span class="sd">    Valid FrameTrees must be a single rooted tree. However, the general format of</span>
+<span class="sd">    repeated edges may not actually be valid - there could be cycles, disjoint</span>
+<span class="sd">    trees, or missing edges in the actual data structure.</span>
+
+<span class="sd">    Inputs:</span>
+<span class="sd">        frame_tree_snapshot: A snapshot of the data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if valid</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidateFrameTreeError in a number of cases: Empty tree, invalid frame names in the tree, missing transforms</span>
+<span class="sd">          relating the two nodes, cycles in the tree, the tree is actually a DAG, and disconnected trees.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">frame_tree_snapshot</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No frame_tree_snapshot&#39;</span><span class="p">)</span>
+
+    <span class="c1"># For every entry in the map, see if we can walk to the root without</span>
+    <span class="c1"># cycles. The root should also be identical for each node</span>
+
+    <span class="k">def</span> <span class="nf">_walk_up_tree</span><span class="p">(</span><span class="n">frame_name</span><span class="p">):</span>
+        <span class="n">cur_frame_name</span> <span class="o">=</span> <span class="n">frame_name</span>
+        <span class="n">visited_frames</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">visited_frames</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cur_frame_name</span><span class="p">)</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">edge</span> <span class="o">=</span> <span class="n">frame_tree_snapshot</span><span class="o">.</span><span class="n">child_to_parent_edge_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cur_frame_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">edge</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ValidateFrameTreeUnknownFrameError</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">edge</span><span class="o">.</span><span class="n">parent_frame_name</span><span class="p">:</span>
+                <span class="c1"># At the root of the tree</span>
+                <span class="k">break</span>
+            <span class="k">if</span> <span class="n">edge</span><span class="o">.</span><span class="n">parent_frame_name</span> <span class="ow">in</span> <span class="n">visited_frames</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ValidateFrameTreeCycleError</span><span class="p">()</span>
+            <span class="n">visited_frames</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">parent_frame_name</span><span class="p">)</span>
+            <span class="n">cur_frame_name</span> <span class="o">=</span> <span class="n">edge</span><span class="o">.</span><span class="n">parent_frame_name</span>
+        <span class="k">return</span> <span class="n">cur_frame_name</span>
+
+    <span class="n">root</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">frame_tree_snapshot</span><span class="o">.</span><span class="n">child_to_parent_edge_map</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ValidateFrameTreeError</span><span class="p">(</span><span class="s2">&quot;Empty edges in FrameTreeSnapshot&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">frame_name</span> <span class="ow">in</span> <span class="n">frame_tree_snapshot</span><span class="o">.</span><span class="n">child_to_parent_edge_map</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">frame_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ValidateFrameTreeError</span><span class="p">(</span><span class="s2">&quot;Empty child frame name&quot;</span><span class="p">)</span>
+        <span class="n">cur_root</span> <span class="o">=</span> <span class="n">_walk_up_tree</span><span class="p">(</span><span class="n">frame_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="p">:</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="n">cur_root</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">cur_root</span> <span class="o">==</span> <span class="n">root</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ValidateFrameTreeDisjointError</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="get_a_tform_b"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.get_a_tform_b">[docs]</a><span class="k">def</span> <span class="nf">get_a_tform_b</span><span class="p">(</span><span class="n">frame_tree_snapshot</span><span class="p">,</span> <span class="n">frame_a</span><span class="p">,</span> <span class="n">frame_b</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the SE(3) pose representing the transform between frame_a and frame_b.</span>
+
+<span class="sd">    Using frame_tree_snapshot, find the math_helpers.SE3Pose to transform geometry from</span>
+<span class="sd">    frame_a&#39;s representation to frame_b&#39;s.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        frame_tree_snapshot (dict) dictionary representing the child_to_parent_edge_map</span>
+<span class="sd">        frame_a (string)</span>
+<span class="sd">        frame_b (string)</span>
+<span class="sd">        validate (bool) if the FrameTreeSnapshot should be checked for a valid tree structure</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        math_helpers.SE3Pose between frame_a and frame_b if they exist in the tree. None otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">validate</span><span class="p">:</span>
+        <span class="n">validate_frame_tree_snapshot</span><span class="p">(</span><span class="n">frame_tree_snapshot</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">frame_a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">frame_tree_snapshot</span><span class="o">.</span><span class="n">child_to_parent_edge_map</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">frame_b</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">frame_tree_snapshot</span><span class="o">.</span><span class="n">child_to_parent_edge_map</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_list_parent_edges</span><span class="p">(</span><span class="n">leaf_frame</span><span class="p">):</span>
+        <span class="n">parent_edges</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">cur_frame</span> <span class="o">=</span> <span class="n">leaf_frame</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">parent_edge</span> <span class="o">=</span> <span class="n">frame_tree_snapshot</span><span class="o">.</span><span class="n">child_to_parent_edge_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cur_frame</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">parent_edge</span><span class="o">.</span><span class="n">parent_frame_name</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">parent_edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parent_edge</span><span class="p">)</span>
+            <span class="n">cur_frame</span> <span class="o">=</span> <span class="n">parent_edge</span><span class="o">.</span><span class="n">parent_frame_name</span>
+        <span class="k">return</span> <span class="n">parent_edges</span>
+
+    <span class="n">inverse_edges</span> <span class="o">=</span> <span class="n">_list_parent_edges</span><span class="p">(</span><span class="n">frame_a</span><span class="p">)</span>
+    <span class="n">forward_edges</span> <span class="o">=</span> <span class="n">_list_parent_edges</span><span class="p">(</span><span class="n">frame_b</span><span class="p">)</span>
+
+    <span class="c1"># Possible optimization: Nearest common ancestor pruning.</span>
+
+    <span class="k">def</span> <span class="nf">_accumulate_transforms</span><span class="p">(</span><span class="n">parent_edges</span><span class="p">):</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">math_helpers</span><span class="o">.</span><span class="n">SE3Pose</span><span class="o">.</span><span class="n">from_identity</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">parent_edge</span> <span class="ow">in</span> <span class="n">parent_edges</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">math_helpers</span><span class="o">.</span><span class="n">SE3Pose</span><span class="o">.</span><span class="n">from_obj</span><span class="p">(</span><span class="n">parent_edge</span><span class="o">.</span><span class="n">parent_tform_child</span><span class="p">)</span> <span class="o">*</span> <span class="n">ret</span>
+        <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="n">frame_a_tform_root_frame</span> <span class="o">=</span> <span class="n">_accumulate_transforms</span><span class="p">(</span><span class="n">inverse_edges</span><span class="p">)</span><span class="o">.</span><span class="n">inverse</span><span class="p">()</span>
+    <span class="n">root_frame_tform_frame_b</span> <span class="o">=</span> <span class="n">_accumulate_transforms</span><span class="p">(</span><span class="n">forward_edges</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">frame_a_tform_root_frame</span> <span class="o">*</span> <span class="n">root_frame_tform_frame_b</span></div>
+
+
+<div class="viewcode-block" id="get_se2_a_tform_b"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.get_se2_a_tform_b">[docs]</a><span class="k">def</span> <span class="nf">get_se2_a_tform_b</span><span class="p">(</span><span class="n">frame_tree_snapshot</span><span class="p">,</span> <span class="n">frame_a</span><span class="p">,</span> <span class="n">frame_b</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the SE(2) pose representing the transform between frame_a and frame_b.</span>
+
+<span class="sd">    Using frame_tree_snapshot, find the math_helpers.SE2Pose to transform geometry from</span>
+<span class="sd">    frame_a&#39;s representation to frame_b&#39;s.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        frame_tree_snapshot (dict) dictionary representing the child_to_parent_edge_map</span>
+<span class="sd">        frame_a (string)</span>
+<span class="sd">        frame_b (string)</span>
+<span class="sd">        validate (bool) if the FrameTreeSnapshot should be checked for a valid tree structure</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        math_helpers.SE2Pose between frame_a and frame_b if they exist in the tree and</span>
+<span class="sd">        frame a is a gravity aligned frame. None otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate that the transform is in a gravity aligned frame based on the string name.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_gravity_aligned_frame_name</span><span class="p">(</span><span class="n">frame_a</span><span class="p">):</span>
+        <span class="c1"># Frame A is not gravity aligned, and therefore a_tform_b cannot be converted into</span>
+        <span class="c1"># an SE(2) pose because it will lose height information.</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="c1"># Get the SE(3) pose from the frame tree snapshot representing the desired transform a_tform_b</span>
+    <span class="n">se3_a_tform_b</span> <span class="o">=</span> <span class="n">get_a_tform_b</span><span class="p">(</span><span class="n">frame_tree_snapshot</span><span class="p">,</span> <span class="n">frame_a</span><span class="p">,</span> <span class="n">frame_b</span><span class="p">,</span> <span class="n">validate</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">se3_a_tform_b</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Failed to find the transformation between frames a and b in the frame tree snapshot.</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">se3_a_tform_b</span><span class="o">.</span><span class="n">get_closest_se2_transform</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="express_se2_velocity_in_new_frame"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.express_se2_velocity_in_new_frame">[docs]</a><span class="k">def</span> <span class="nf">express_se2_velocity_in_new_frame</span><span class="p">(</span><span class="n">frame_tree_snapshot</span><span class="p">,</span> <span class="n">frame_b</span><span class="p">,</span> <span class="n">frame_c</span><span class="p">,</span> <span class="n">vel_of_a_in_b</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert the SE2 Velocity in frame b to a SE2 Velocity in frame c using</span>
+<span class="sd">       the frame tree snapshot.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        frame_tree_snapshot (dict) dictionary representing the child_to_parent_edge_map</span>
+<span class="sd">        frame_b (string)</span>
+<span class="sd">        frame_c (string)</span>
+<span class="sd">        vel_of_a_in_b (SE2Velocity proto) SE2 Velocity in frame_b</span>
+<span class="sd">        validate (bool) if the FrameTreeSnapshot should be checked for a valid tree structure</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        math_helpers.SE2Velocity velocity_of_a_in_c in frame_c if the frames exist in the tree. None otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Find the SE(3) pose in the frame tree snapshot that represents c_tform_b.</span>
+    <span class="n">se3_c_tform_b</span> <span class="o">=</span> <span class="n">get_a_tform_b</span><span class="p">(</span><span class="n">frame_tree_snapshot</span><span class="p">,</span> <span class="n">frame_c</span><span class="p">,</span> <span class="n">frame_b</span><span class="p">,</span> <span class="n">validate</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">se3_c_tform_b</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># If the SE3Pose for c_tform_b does not exist in the frame tree snapshot,</span>
+        <span class="c1"># then we cannot transform the velocity.</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="c1"># Check that the frame name of frame_c is considered to be a gravity aligned frame.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_gravity_aligned_frame_name</span><span class="p">(</span><span class="n">frame_c</span><span class="p">):</span>
+        <span class="c1"># Frame C is not gravity aligned, and therefore c_tform_b cannot be converted into</span>
+        <span class="c1"># an SE(2) pose because it will lose height information.</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="c1"># Find the closest SE(2) pose for the c_tform_b SE(3) pose found from the snapshot.</span>
+    <span class="n">se2_c_tform_b</span> <span class="o">=</span> <span class="n">se3_c_tform_b</span><span class="o">.</span><span class="n">get_closest_se2_transform</span><span class="p">()</span>
+    <span class="c1"># Transform the velocity into the new frame to get vel_of_a_in_c.</span>
+    <span class="n">c_adjoint_b</span> <span class="o">=</span> <span class="n">se2_c_tform_b</span><span class="o">.</span><span class="n">to_adjoint_matrix</span><span class="p">()</span>
+    <span class="n">vel_of_a_in_c</span> <span class="o">=</span> <span class="n">math_helpers</span><span class="o">.</span><span class="n">transform_se2velocity</span><span class="p">(</span><span class="n">c_adjoint_b</span><span class="p">,</span> <span class="n">vel_of_a_in_b</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">vel_of_a_in_c</span></div>
+
+<div class="viewcode-block" id="express_se3_velocity_in_new_frame"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.express_se3_velocity_in_new_frame">[docs]</a><span class="k">def</span> <span class="nf">express_se3_velocity_in_new_frame</span><span class="p">(</span><span class="n">frame_tree_snapshot</span><span class="p">,</span> <span class="n">frame_b</span><span class="p">,</span> <span class="n">frame_c</span><span class="p">,</span> <span class="n">vel_of_a_in_b</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert the SE(3) Velocity in frame b to an SE(3) Velocity in frame c using</span>
+<span class="sd">       the frame tree snapshot.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        frame_tree_snapshot (dict) dictionary representing the child_to_parent_edge_map</span>
+<span class="sd">        frame_b (string)</span>
+<span class="sd">        frame_c (string)</span>
+<span class="sd">        vel_of_a_in_b (SE3Velocity proto) SE(3) Velocity in frame_b</span>
+<span class="sd">        validate (bool) if the FrameTreeSnapshot should be checked for a valid tree structure</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        math_helpers.SE3Velocity velocity_of_a_in_c in frame_c if the frames exist in the tree. None otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Find the SE(3) pose in the frame tree snapshot that represents c_tform_b.</span>
+    <span class="n">se3_c_tform_b</span> <span class="o">=</span> <span class="n">get_a_tform_b</span><span class="p">(</span><span class="n">frame_tree_snapshot</span><span class="p">,</span> <span class="n">frame_c</span><span class="p">,</span> <span class="n">frame_b</span><span class="p">,</span> <span class="n">validate</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">se3_c_tform_b</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># If the SE3Pose for c_tform_b does not exist in the frame tree snapshot,</span>
+        <span class="c1"># then we cannot transform the velocity.</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="c1"># Transform the velocity into the new frame to get vel_of_a_in_c.</span>
+    <span class="n">c_adjoint_b</span> <span class="o">=</span> <span class="n">se3_c_tform_b</span><span class="o">.</span><span class="n">to_adjoint_matrix</span><span class="p">()</span>
+    <span class="n">vel_of_a_in_c</span> <span class="o">=</span> <span class="n">math_helpers</span><span class="o">.</span><span class="n">transform_se3velocity</span><span class="p">(</span><span class="n">c_adjoint_b</span><span class="p">,</span> <span class="n">vel_of_a_in_b</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">vel_of_a_in_c</span></div>
+
+<div class="viewcode-block" id="get_odom_tform_body"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.get_odom_tform_body">[docs]</a><span class="k">def</span> <span class="nf">get_odom_tform_body</span><span class="p">(</span><span class="n">frame_tree_snapshot</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the transformation between &quot;odom&quot; frame and &quot;body&quot; frame from the FrameTreeSnapshot.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">get_a_tform_b</span><span class="p">(</span><span class="n">frame_tree_snapshot</span><span class="p">,</span> <span class="n">ODOM_FRAME_NAME</span><span class="p">,</span> <span class="n">BODY_FRAME_NAME</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_vision_tform_body"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.get_vision_tform_body">[docs]</a><span class="k">def</span> <span class="nf">get_vision_tform_body</span><span class="p">(</span><span class="n">frame_tree_snapshot</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the transformation between &quot;vision&quot; frame and &quot;body&quot; frame from the FrameTreeSnapshot.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">get_a_tform_b</span><span class="p">(</span><span class="n">frame_tree_snapshot</span><span class="p">,</span> <span class="n">VISION_FRAME_NAME</span><span class="p">,</span> <span class="n">BODY_FRAME_NAME</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenerateTreeError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.GenerateTreeError">[docs]</a><span class="k">class</span> <span class="nc">GenerateTreeError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="ChildFrameInTree"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.ChildFrameInTree">[docs]</a><span class="k">class</span> <span class="nc">ChildFrameInTree</span><span class="p">(</span><span class="n">GenerateTreeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="add_edge_to_tree"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.add_edge_to_tree">[docs]</a><span class="k">def</span> <span class="nf">add_edge_to_tree</span><span class="p">(</span><span class="n">frame_tree_snapshot</span><span class="p">,</span> <span class="n">parent_tform_child</span><span class="p">,</span> <span class="n">parent_frame_name</span><span class="p">,</span> <span class="n">child_frame_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Appends a child/parent and the transform to the FrameTreeSnapshot.</span>
+<span class="sd">       Args:</span>
+<span class="sd">            frame_tree_snapshot (dict) dictionary representing the child_to_parent_edge_map</span>
+<span class="sd">            parent_tform_child (SE3Pose proto)</span>
+<span class="sd">            parent_frame_name (string)</span>
+<span class="sd">            child_frame_name (string)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">child_frame_name</span> <span class="ow">in</span> <span class="n">frame_tree_snapshot</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ChildFrameInTree</span>
+    <span class="c1"># Can add additional validation checks, such as if the parent frame will make a cycle,</span>
+    <span class="c1"># or if this will be completely disconnected</span>
+    <span class="n">frame_tree_snapshot</span><span class="p">[</span><span class="n">child_frame_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">FrameTreeSnapshot</span><span class="o">.</span><span class="n">ParentEdge</span><span class="p">(</span>
+        <span class="n">parent_frame_name</span><span class="o">=</span><span class="n">parent_frame_name</span><span class="p">,</span> <span class="n">parent_tform_child</span><span class="o">=</span><span class="n">parent_tform_child</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">frame_tree_snapshot</span></div>
+
+
+<div class="viewcode-block" id="get_frame_names"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.get_frame_names">[docs]</a><span class="k">def</span> <span class="nf">get_frame_names</span><span class="p">(</span><span class="n">frame_tree_snapshot</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a list of all known child or parent frames in the FrameTreeSnapshot.&quot;&quot;&quot;</span>
+    <span class="n">frame_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">child_frame</span> <span class="ow">in</span> <span class="n">frame_tree_snapshot</span><span class="o">.</span><span class="n">child_to_parent_edge_map</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">child_frame</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">frame_names</span><span class="p">:</span>
+            <span class="n">frame_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child_frame</span><span class="p">)</span>
+        <span class="n">parent_frame</span> <span class="o">=</span> <span class="n">frame_tree_snapshot</span><span class="o">.</span><span class="n">child_to_parent_edge_map</span><span class="p">[</span><span class="n">child_frame</span><span class="p">]</span><span class="o">.</span><span class="n">parent_frame_name</span>
+        <span class="k">if</span> <span class="n">parent_frame</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">frame_names</span><span class="p">:</span>
+            <span class="n">frame_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parent_frame</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">frame_name</span> <span class="k">for</span> <span class="n">frame_name</span> <span class="ow">in</span> <span class="n">frame_names</span> <span class="k">if</span> <span class="n">frame_name</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="is_gravity_aligned_frame_name"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html#bosdyn.client.frame_helpers.is_gravity_aligned_frame_name">[docs]</a><span class="k">def</span> <span class="nf">is_gravity_aligned_frame_name</span><span class="p">(</span><span class="n">frame_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Checks if the string frame name is a known gravity aligned frame.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">frame_name</span> <span class="o">==</span> <span class="n">VISION_FRAME_NAME</span> <span class="ow">or</span> <span class="n">frame_name</span> <span class="o">==</span> <span class="n">GRAV_ALIGNED_BODY_FRAME_NAME</span> <span class="ow">or</span> <span class="n">frame_name</span> <span class="o">==</span> <span class="n">ODOM_FRAME_NAME</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      
+      &copy; Copyright 2020 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

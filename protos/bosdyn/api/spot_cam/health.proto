@@ -13,48 +13,70 @@ option java_outer_classname = "HealthProto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/robot_state.proto";
 
+// The temperature of a particular component.
 message Temperature {
+    // Identifier of the hardware measured.
     string channel_name = 1;
-    //temperature is expressed in millidegrees C
+    // Temperature is expressed in millidegrees C.
     int64 temperature = 2;
 }
 
+// Clear Built-in Test events.
 message ClearBITEventsRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+
 }
 
+// Response to clearing built-in test events.
 message ClearBITEventsResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
 }
 
+// Request the status of all built-in tests.
 message GetBITStatusRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+
 }
 
+// Data on the current status of built-in tests.
 message GetBITStatusResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+
+    // Fault events that have been reported.
     repeated bosdyn.api.SystemFault events = 2;
+    // Degredations are not necessesarily faults; a unit
+    // with no installed mechanical PTZ will behave differently,
+    // but nothing's actually wrong.
     message Degradation {
+        // Systems that can experience performance degredations.
         enum DegradationType {
             STORAGE = 0;
             PTZ = 1;
             LED = 2;
         }
+        // System affected.
         DegradationType type = 1;
+        // Description of the kind of degradation being experienced.
         string description = 2;
     }
-    //degredations are not necessesarily faults; a unit
-    //with no installed mechanical PTZ will behave differently,
-    //but nothing's actually wrong. This lists system
-    //states that may effect performance.
+    // List of system states that may effect performance.
     repeated Degradation degradations = 3;
 }
 
 message GetTemperatureRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+
 }
 
 message GetTemperatureResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+
+    // List of all temperatures measured.
     repeated Temperature temps = 2;
 }

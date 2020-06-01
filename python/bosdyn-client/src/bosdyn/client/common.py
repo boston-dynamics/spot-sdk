@@ -366,7 +366,7 @@ class BaseClient(object):
 
         value_from_response and error_from_response should not raise their own exceptions!
 
-        Asynchronous calls cannot be done with streaming rpc's right now.
+        Asynchronous calls cannot be done with streaming rpcs right now.
         """
         request = self._apply_request_processors(copy.deepcopy(request))
         logger = self._get_logger(rpc_method)

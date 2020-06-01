@@ -6,62 +6,18 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# [Spot SDK](../../../README.md) > [Concepts](../README.md) > [Autonomy](README.md) > <br/> Examples
+# Autonomous navigation code examples
 
 GraphNav provides place-based localization and locomotion services. Developers can record and play back maps for the robot to follow, navigating between waypoints and traversing edges between waypoints on the map.
 
-The Spot SDK includes [python code examples](../../../python/examples) to help you get started with autonomous navigation. Refer to the following examples to learn about exercising the GraphNav API.
+The Spot SDK includes [python code examples](../../../python/examples/README.md) to help you get started with autonomous navigation. Refer to the following examples to learn about exercising the GraphNav API.
 
-
-<table>
-  <tr>
-   <td>
-   <a href="../../../python/examples/graph_nav_command_line/recording_command_line.py">recording_command_line.py</a>
-   </td>
-   <td>Demonstrates graphnav recording service requests to record, create, and download a map from the robot.
-   </td>
-  </tr>
-  <tr>
-   <td>
-   <a href="../../../python/examples/graph_nav_command_line/graph_nav_command_line.py">graph_nav_command_line.py</a>
-   </td>
-   <td>Demonstrates how to use GraphNav requests to:
-<ul>
-
-<li>Upload maps to the robot
-
-<li>Initialize the robot
-
-<li>Get the current localization of the robot on a map
-
-<li>Navigate the map (using either a specific route or a destination waypoint id)
-
-<li>Clear the existing map on the robot
-</li>
-</ul>
-   </td>
-  </tr>
-  <tr>
-   <td>
-   <a href="../../../python/examples/remote_mission_service/remote_mission_service.py">remote_mission_service.py</a>
-   </td>
-   <td>Demonstrates how to implement a RemoteMissionService and run it. This is how we support triggering off-robot code as part of Autowalk.
-   </td>
-  </tr>
-  <tr>
-   <td>
-   <a href="../../../python/examples/graph_nav_view_map/view_map.py">view_map.py</a>
-   </td>
-   <td>An example program for opening, parsing, and viewing a GraphNav map. This example can be used with GraphNav maps generated using Autowalk or using the GraphNav APIs.
-   </td>
-  </tr>
-</table>
-
-
-<br />
-
-<a href="README.md" class="previous">&laquo; Previous</a>  |  <a href="components_of_autonomous_navigation.md" class="next">Next &raquo;</a>
-
+| Code example | Description                                   |
+| ------------ | --------------------------------------------- |
+| [recording_command_line](../../../python/examples/graph_nav_command_line/README.md) |	Demonstrates graphnav recording service requests to record, create, and download a map from the robot. |
+| [graph_nav_command_line](../../../python/examples/graph_nav_command_line/README.md) |	Demonstrates how to use GraphNav requests to: <ul><li>Upload maps to the robot<li>Initialize the robot<li>Get the current localization of the robot on a map<li>Navigate the map (using either a specific route or a destination waypoint id)<li>Clear the existing map on the robot</ul> |
+| [remote_mission_service](../../../python/examples/remote_mission_service/README.md) |	Demonstrates how to implement a RemoteMissionService and run it. This is how we support triggering off-robot code as part of Autowalk. |
+| [view_map](../../../python/examples/graph_nav_view_map/README.md) |	An example program for opening, parsing, and viewing a GraphNav map. This example can be used with GraphNav maps generated using Autowalk or using the GraphNav APIs. |
 
 
 <!--- image and page reference link definitions --->
@@ -76,4 +32,3 @@ The Spot SDK includes [python code examples](../../../python/examples) to help y
 [localization]: localization.md "Localization"
 [locomotion]: graphnav_and_robot_locomotion.md "GraphNav and robot locomotion"
 [missions]: missions_service.md "Missions service"
-[worldobject]: worldobject_service.md "WorldObject service"

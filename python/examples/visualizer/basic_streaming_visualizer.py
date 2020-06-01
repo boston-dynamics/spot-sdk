@@ -633,7 +633,7 @@ def main(argv):
     renderer.ResetCamera()
     renderWindow.Render()
 
-    # Initilize the render windows and set the timed callbacks.
+    # Initialize the render windows and set the timed callbacks.
     renderWindowInteractor.Initialize()
     renderWindowInteractor.AddObserver(vtk.vtkCommand.TimerEvent,
                                        robot_state_timer.update_state_actor)

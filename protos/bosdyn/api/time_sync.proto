@@ -74,7 +74,7 @@ message TimeSyncUpdateRequest {
     // Common request header.
     RequestHeader header = 1;
 
-    // Round-trip timing information from the previous Update().
+    // Round-trip timing information from the previous Update request.
     TimeSyncRoundTrip previous_round_trip = 2;
 
     // Identifier to verify time sync between robot and client. If unset, server will assign
@@ -98,6 +98,8 @@ message TimeSyncUpdateResponse {
     string clock_identifier = 4;
 }
 
+// A TimeSyncStatus request message which passes the clock_identifier to get the status information
+// of the client associated with that identifier.
 message TimeSyncStatusRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -107,7 +109,8 @@ message TimeSyncStatusRequest {
     string clock_identifier = 2;
 }
 
-
+// A TimeSyncStatus response message that includes the time sync states for the clients using the
+// requested clock identifier.
 message TimeSyncStatusResponse {
     // Common response header.
     ResponseHeader header = 1;

@@ -66,7 +66,7 @@ def main():
     try:
         # Establish the session, telling the servicer to perform any one-time tasks.
         try:
-            session_id = client.establish_session(leases=leases, inputs=[])
+            session_id = client.establish_session(leases=leases, inputs=inputs)
         except bosdyn.client.UnimplementedError:
             # EstablishSession is optional, so we can ignore this error.
             print('EstablishSession is unimplemented.')

@@ -12,10 +12,12 @@ option java_outer_classname = "LogAnnotationProto";
 import "bosdyn/api/header.proto";
 import "google/protobuf/timestamp.proto";
 
+// The AddLogAnnotation request sends the information that should be added into the log.
 message AddLogAnnotationRequest {
      // Common request/response header.
     RequestHeader header = 1;
 
+    // The annotations to be aded into the log (can be text messages, blobs or robot operator messages).
     LogAnnotations annotations = 2;
 }
 
@@ -34,7 +36,7 @@ message LogAnnotations {
 
 // A text message to add to the robot's logs.
 // These could be internal text-log messages from a client for use in debugging, for
-//  example.
+// example.
 message LogAnnotationTextMessage {
     // String annotation message to add to the log.
     string message = 1;
@@ -61,7 +63,8 @@ message LogAnnotationTextMessage {
         // Information about an operation which did not succeed.
         LEVEL_ERROR = 4;
     }
-    Level level = 4;  // Significance of the message.
+    // Level of significance of the text message.
+    Level level = 4;
 
     // Optional tag to identify from what code/module this message originated from.
     string tag = 5;
@@ -75,7 +78,7 @@ message LogAnnotationTextMessage {
 
 // An operator message to be added to the robot's logs.
 // These are notes especially intended to mark when logs should be preserved and reviewed
-//  to ensure that robot hardware and/or software is working as intended.
+// to ensure that robot hardware and/or software is working as intended.
 message LogAnnotationOperatorMessage {
     // String annotation message to add to the log.
     string message = 1;
@@ -89,19 +92,23 @@ message LogAnnotationOperatorMessage {
 message LogAnnotationLogBlob {
     // Timestamp of data in robot clock time.
     google.protobuf.Timestamp timestamp = 1;
+
     // A general label for this blob.
     // This is distinct from type_id, which identifies how the blob is to be parsed.
     string channel = 2;
+
     // A description of the data's content and its encoding.
     // This should be sufficient for deciding how to deserialize the data.
     // For example, this could be the full name of a protobuf message type.
     string type_id = 3;
-    // Raw data.
+
+    // Raw data to be included as the blob log.
     bytes data = 4;
 }
 
 
 
+// The AddLogAnnotation response message, which is empty except for any potential header errors/warnings.
 message AddLogAnnotationResponse {
     // Common request/response header.
     ResponseHeader header = 1;

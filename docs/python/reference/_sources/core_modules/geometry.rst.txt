@@ -1,7 +1,0 @@
-Geometry
-===================================
-
-.. automodule:: bosdyn.geometry
-   :members:
-   :undoc-members:
-   :show-inheritance:

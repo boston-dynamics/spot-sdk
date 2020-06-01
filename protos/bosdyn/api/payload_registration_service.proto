@@ -14,9 +14,10 @@ import "bosdyn/api/payload_registration.proto";
 
 // This service provides a way to register new payloads.
 service PayloadRegistrationService {
+    // Register a payload with the directory.
     rpc RegisterPayload(RegisterPayloadRequest) returns (RegisterPayloadResponse);
-
+    // Update the version for the registered payload.
     rpc UpdatePayloadVersion(UpdatePayloadVersionRequest) returns (UpdatePayloadVersionResponse);
-
+    // Get the authentication token information associated with a given payload.
     rpc GetPayloadAuthToken(GetPayloadAuthTokenRequest) returns (GetPayloadAuthTokenResponse);
 }

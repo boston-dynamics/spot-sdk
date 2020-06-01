@@ -1,0 +1,1003 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Graph Nav &mdash; Spot 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../../../../_static/bd-favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https:://dev.bostondynamics.com/python/bosdyn-client/src/bosdyn/client/graph_nav.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="Image" href="image.html" />
+    <link rel="prev" title="Frame Helpers" href="frame_helpers.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../README.html">
+          
+
+          
+            
+            <img src="../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/concepts/README.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/base_services.html">Base services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/robot_services.html">Robot services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/localization.html">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../docs/python/README.html">Python</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/python/quickstart.html">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/python/understanding_spot_programming.html">Understanding Spot Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examples/README.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/add_image_coordinates_to_scene/README.html">Add Image Coordinates to Scene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/directory/README.html">Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/estop/README.html">E-Stop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_depth_plus_visual_image/README.html">Get Depth Plus Visual Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/logging/README.html">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/mission_question_answerer/README.html">Mission Question Anwerer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/payloads/README.html">Payloads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/replay_mission/README.html">Replay Mission</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/spot_check/README.html">Spot Check</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/wasd/README.html">WASD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/xbox_controller/README.html">Xbox Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../README.html">Python Reference Guide</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="README.html">Client</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="channel.html">Channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="command_line.html">Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="directory_registration.html">Directory Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="image.html">Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="local_grid.html">Local Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="payload.html">Payload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="processors.html">Processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recording.html">Recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="robot_command.html">Robot Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="robot_id.html">Robot ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="robot_state.html">Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spot_cam/README.html">Spot CAM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/audio.html">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/compositor.html">Compositor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/health.html">Health</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/media_log.html">Media Log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/network.html">Network</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/power.html">Power</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/ptz.html">PTZ</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/streamquality.html">Stream Quality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/version.html">Version</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="spot_check.html">Spot Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="time_sync.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="token_cache.html">Token Cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="world_object.html">World Object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../bosdyn-core/src/bosdyn/README.html">Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-core/src/bosdyn/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/payload/README.html">Payloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/payload_configuration_requirements.html">Payload configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/mechanical_interfaces.html">Mechanical interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/robot_mounting_rails.html">Robot mounting rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/protos/README.html">API Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/protos/style_guide.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html">auth.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#data-chunk-proto">data_chunk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#directory-proto">directory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#directory-registration-proto">directory_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#directory-registration-service-proto">directory_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#directory-service-proto">directory_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#estop-proto">estop.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#estop-service-proto">estop_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#local-grid-proto">local_grid.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-mission-service-proto">mission/mission_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-nodes-proto">mission/nodes.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-remote-proto">mission/remote.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-remote-service-proto">mission/remote_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-util-proto">mission/util.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#payload-registration-proto">payload_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#payload-registration-service-proto">payload_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#payload-service-proto">payload_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#point-cloud-proto">point_cloud.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#power-proto">power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#power-service-proto">power_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-command-service-proto">robot_command_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-id-proto">robot_id.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-led-proto">spot_cam/LED.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-factoryservice-proto">spot_cam/factoryservice.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-factorysetup-proto">spot_cam/factorysetup.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-health-proto">spot_cam/health.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-network-proto">spot_cam/network.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-power-proto">spot_cam/power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-ptz-proto">spot_cam/ptz.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-service-proto">spot_cam/service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-streamquality-proto">spot_cam/streamquality.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-version-proto">spot_cam/version.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../README.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../README.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../../docs/python/README.html">Python Library</a> &raquo;</li>
+        
+          <li><a href="../../../../README.html">Boston Dynamics Python Reference Guide</a> &raquo;</li>
+        
+          <li><a href="README.html">Python Client</a> &raquo;</li>
+        
+      <li>Graph Nav</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-bosdyn.client.graph_nav">
+<span id="graph-nav"></span><h1>Graph Nav<a class="headerlink" href="#module-bosdyn.client.graph_nav" title="Permalink to this headline">¶</a></h1>
+<p>For clients to the graphnav service.</p>
+<dl class="py class">
+<dt id="bosdyn.client.graph_nav.GraphNavClient">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">GraphNavClient</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="common.html#bosdyn.client.common.BaseClient" title="bosdyn.client.common.BaseClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.common.BaseClient</span></code></a></p>
+<p>Client to the GraphNav service.</p>
+<dl class="py attribute">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.default_service_name">
+<code class="sig-name descname">default_service_name</code><em class="property"> = 'graph-nav-service'</em><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.default_service_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.service_type">
+<code class="sig-name descname">service_type</code><em class="property"> = 'bosdyn.api.graph_nav.GraphNavService'</em><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.service_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.update_from">
+<code class="sig-name descname">update_from</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.update_from"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.update_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adopt key objects like processors, logger, and wallet from other.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.set_localization">
+<code class="sig-name descname">set_localization</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">initial_guess_localization</span></em>, <em class="sig-param"><span class="n">ko_tform_body</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_distance</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_yaw</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fiducial_init</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">use_fiducial_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">refine_fiducial_result_with_icp</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">do_ambiguity_check</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.set_localization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.set_localization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trigger a manual localization. Typically done to provide the initial localization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_guess_localization</strong> (<em>nav_pb2.Localization</em>) – Operator-supplied guess at localization.</p></li>
+<li><p><strong>ko_tform_body</strong> – Robot SE3Pose protobuf when the initial_guess was made.</p></li>
+<li><p><strong>max_distance</strong> – [optional] Margin of distance (meters) away from the initial guess.</p></li>
+<li><p><strong>max_yaw</strong> – [optional] Margin of angle (radians) away from the initial guess.</p></li>
+<li><p><strong>fiducial_init</strong> – Tells the initializer whether to use fiducials, and how to use them.</p></li>
+<li><p><strong>use_fiducial_id</strong> – If using FIDUCIAL_INIT_SPECIFIC, this is the specific fiducial ID to use for initialization.</p></li>
+<li><p><strong>refine_fiducial_result_with_icp</strong> – Boolean determining if ICP will run after a fiducial is used for an initial guess.</p></li>
+<li><p><strong>do_ambiguity_check</strong> – Boolean where if true, consider how nearby localizations appear.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The resulting localization after being triggered with a guess.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.RobotFaultedError" title="bosdyn.client.graph_nav.RobotFaultedError"><strong>RobotFaultedError</strong></a> – Robot is experiencing a fault condition that prevents localization.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.UnknownMapInformationError" title="bosdyn.client.graph_nav.UnknownMapInformationError"><strong>UnknownMapInformationError</strong></a> – Specified waypoint is unknown.</p></li>
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.InvalidRequestError" title="bosdyn.client.exceptions.InvalidRequestError"><strong>InvalidRequestError</strong></a> – The data provided is incomplete or invalid</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.GraphNavServiceResponseError" title="bosdyn.client.graph_nav.GraphNavServiceResponseError"><strong>GraphNavServiceResponseError</strong></a> – Localization was aborted or failed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.set_localization_async">
+<code class="sig-name descname">set_localization_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">initial_guess_localization</span></em>, <em class="sig-param"><span class="n">ko_tform_body</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_distance</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_yaw</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fiducial_init</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">use_fiducial_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">refine_fiducial_result_with_icp</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">do_ambiguity_check</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.set_localization_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.set_localization_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of set_localization()</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.get_localization_state">
+<code class="sig-name descname">get_localization_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request_live_point_cloud</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">request_live_images</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">request_live_terrain_maps</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">request_live_world_objects</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">request_live_robot_state</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.get_localization_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.get_localization_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain current localization state of the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The current localization protobuf for the robot.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.get_localization_state_async">
+<code class="sig-name descname">get_localization_state_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request_live_point_cloud</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">request_live_images</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">request_live_terrain_maps</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">request_live_world_objects</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">request_live_robot_state</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.get_localization_state_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.get_localization_state_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of get_localization_state().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.navigate_route">
+<code class="sig-name descname">navigate_route</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">route</span></em>, <em class="sig-param"><span class="n">cmd_duration</span></em>, <em class="sig-param"><span class="n">travel_params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">leases</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">timesync_endpoint</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.navigate_route"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.navigate_route" title="Permalink to this definition">¶</a></dt>
+<dd><p>Navigate the given route.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>route</strong> – Route protobuf of the route to follow.</p></li>
+<li><p><strong>travel_params</strong> – API TravelParams for the route.</p></li>
+<li><p><strong>cmd_duration</strong> – Number of seconds the command can run for.</p></li>
+<li><p><strong>leases</strong> – Leases to show ownership of necessary resources. Will use the client’s leases by default.</p></li>
+<li><p><strong>timesync_endpoint</strong> – Use this endpoint for timesync fields. Will use the client’s endpoint by default.</p></li>
+<li><p><strong>kwargs</strong> – Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Command ID to use in feedback lookup.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p></li>
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.LeaseUseError" title="bosdyn.client.exceptions.LeaseUseError"><strong>LeaseUseError</strong></a> – Error using provided leases.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.NoTimeSyncError" title="bosdyn.client.graph_nav.NoTimeSyncError"><strong>graph_nav.NoTimeSyncError</strong></a> – Missing clock identifier.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.CommandExpiredError" title="bosdyn.client.graph_nav.CommandExpiredError"><strong>graph_nav.CommandExpiredError</strong></a> – Command already expired.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.TooDistantError" title="bosdyn.client.graph_nav.TooDistantError"><strong>graph_nav.TooDistantError</strong></a> – Time too far in the future.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.RobotImpairedError" title="bosdyn.client.graph_nav.RobotImpairedError"><strong>graph_nav.RobotImpairedError</strong></a> – Robot cannot travel a route.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.IsRecordingError" title="bosdyn.client.graph_nav.IsRecordingError"><strong>graph_nav.IsRecordingError</strong></a> – Robot cannot navigate while recording.</p></li>
+<li><p><strong>graph_nav.UnknownRouteElementsError</strong> – Unknown edges or waypoints</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.InvalidEdgeError" title="bosdyn.client.graph_nav.InvalidEdgeError"><strong>graph_nav.InvalidEdgeError</strong></a> – Mismatch between edges and waypoints.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.RobotNotLocalizedToRouteError" title="bosdyn.client.graph_nav.RobotNotLocalizedToRouteError"><strong>graph_nav.RobotNotLocalizedToRouteError</strong></a> – The robot is localized somewhere else.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.ConstraintFaultError" title="bosdyn.client.graph_nav.ConstraintFaultError"><strong>graph_nav.ConstraintFaultError</strong></a> – The route involves invalid constraints.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.RouteNavigationError" title="bosdyn.client.graph_nav.RouteNavigationError"><strong>graph_nav.RouteNavigationError</strong></a> – A subclass detailing trouble navigating the route.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.navigate_route_async">
+<code class="sig-name descname">navigate_route_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">route</span></em>, <em class="sig-param"><span class="n">cmd_duration</span></em>, <em class="sig-param"><span class="n">travel_params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">leases</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">timesync_endpoint</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.navigate_route_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.navigate_route_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of navigate_route()</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.navigate_to">
+<code class="sig-name descname">navigate_to</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">destination_waypoint_id</span></em>, <em class="sig-param"><span class="n">cmd_duration</span></em>, <em class="sig-param"><span class="n">route_params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">travel_params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">leases</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">timesync_endpoint</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.navigate_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.navigate_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Navigate to a specific waypoint along a route chosen by the GraphNav service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>destination_waypoint_id</strong> – Waypoint id string for where to go to.</p></li>
+<li><p><strong>cmd_duration</strong> – Number of seconds the command can run for.</p></li>
+<li><p><strong>route_params</strong> – API RouteGenParams for the route.</p></li>
+<li><p><strong>travel_params</strong> – API TravelParams for the route.</p></li>
+<li><p><strong>leases</strong> – Leases to show ownership of necessary resources. Will use the client’s leases by default.</p></li>
+<li><p><strong>timesync_endpoint</strong> – Use this endpoint for timesync fields. Will use the client’s endpoint by default.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Command ID to use in feedback lookup.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p></li>
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.LeaseUseError" title="bosdyn.client.exceptions.LeaseUseError"><strong>LeaseUseError</strong></a> – Error using provided leases.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.NoTimeSyncError" title="bosdyn.client.graph_nav.NoTimeSyncError"><strong>graph_nav.NoTimeSyncError</strong></a> – Missing clock identifier.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.CommandExpiredError" title="bosdyn.client.graph_nav.CommandExpiredError"><strong>graph_nav.CommandExpiredError</strong></a> – Command already expired.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.TooDistantError" title="bosdyn.client.graph_nav.TooDistantError"><strong>graph_nav.TooDistantError</strong></a> – Time too far in the future.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.RobotImpairedError" title="bosdyn.client.graph_nav.RobotImpairedError"><strong>graph_nav.RobotImpairedError</strong></a> – Robot cannot travel a route.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.IsRecordingError" title="bosdyn.client.graph_nav.IsRecordingError"><strong>graph_nav.IsRecordingError</strong></a> – Robot cannot navigate while recording.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.UnknownWaypointError" title="bosdyn.client.graph_nav.UnknownWaypointError"><strong>graph_nav.UnknownWaypointError</strong></a> – Destination waypoint is unknown.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.NoPathError" title="bosdyn.client.graph_nav.NoPathError"><strong>graph_nav.NoPathError</strong></a> – No route to destination.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.RobotNotLocalizedToRouteError" title="bosdyn.client.graph_nav.RobotNotLocalizedToRouteError"><strong>graph_nav.RobotNotLocalizedToRouteError</strong></a> – The robot not correctly localized.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.RouteNavigationError" title="bosdyn.client.graph_nav.RouteNavigationError"><strong>graph_nav.RouteNavigationError</strong></a> – A subclass detailing trouble navigating the route.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.navigate_to_async">
+<code class="sig-name descname">navigate_to_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">destination_waypoint_id</span></em>, <em class="sig-param"><span class="n">cmd_duration</span></em>, <em class="sig-param"><span class="n">route_params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">travel_params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">leases</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">timesync_endpoint</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.navigate_to_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.navigate_to_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of navigate_to().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.navigation_feedback">
+<code class="sig-name descname">navigation_feedback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command_id</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.navigation_feedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.navigation_feedback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the feedback corresponding to the active route follow command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>command_id</strong> (<em>int</em>) – If blank, will return current command status.  If filled
+out, will attempt to return that command status</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>NavigationFeedbackResponse</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.navigation_feedback_async">
+<code class="sig-name descname">navigation_feedback_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command_id</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.navigation_feedback_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.navigation_feedback_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of navigation_feedback().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.clear_graph">
+<code class="sig-name descname">clear_graph</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.clear_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.clear_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the local graph structure. Also erases any snapshots currently in RAM.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>leases</strong> – Leases to show ownership of necessary resources. Will use the client’s leases by default.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p></li>
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.LeaseUseError" title="bosdyn.client.exceptions.LeaseUseError"><strong>LeaseUseError</strong></a> – Error using provided lease.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.clear_graph_async">
+<code class="sig-name descname">clear_graph_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.clear_graph_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.clear_graph_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of clear_graph().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.upload_graph">
+<code class="sig-name descname">upload_graph</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">graph</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.upload_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.upload_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uploads a graph to the server and appends to the existing graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>leases</strong> – Leases to show ownership of necessary resources. Will use the client’s leases by default.</p></li>
+<li><p><strong>graph</strong> – Graph protobuf that represents the map with waypoints and edges.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The response, which includes waypoint and edge id’s sorted by whether it was cached.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p></li>
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.LeaseUseError" title="bosdyn.client.exceptions.LeaseUseError"><strong>LeaseUseError</strong></a> – Error using provided lease.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.upload_graph_async">
+<code class="sig-name descname">upload_graph_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">graph</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.upload_graph_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.upload_graph_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of upload_graph().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.upload_waypoint_snapshot">
+<code class="sig-name descname">upload_waypoint_snapshot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">waypoint_snapshot</span></em>, <em class="sig-param"><span class="n">lease</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.upload_waypoint_snapshot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.upload_waypoint_snapshot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uploads large waypoint snapshot as a stream for a particular waypoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>leases</strong> – Leases to show ownership of necessary resources. Will use the client’s leases by default.</p></li>
+<li><p><strong>waypoint_snapshot</strong> – WaypointSnapshot protobuf that will be stream uploaded to the robot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The status of the upload request.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p></li>
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.LeaseUseError" title="bosdyn.client.exceptions.LeaseUseError"><strong>LeaseUseError</strong></a> – Error using provided lease.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.upload_edge_snapshot">
+<code class="sig-name descname">upload_edge_snapshot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">edge_snapshot</span></em>, <em class="sig-param"><span class="n">lease</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.upload_edge_snapshot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.upload_edge_snapshot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uploads large edge snapshot as a stream for a particular edge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>leases</strong> – Leases to show ownership of necessary resources. Will use the client’s leases by default.</p></li>
+<li><p><strong>edge_snapshot</strong> – EdgeSnapshot protobuf that will be stream uploaded to the robot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The status of the upload request.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p></li>
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.LeaseUseError" title="bosdyn.client.exceptions.LeaseUseError"><strong>LeaseUseError</strong></a> – Error using provided leases.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.download_graph">
+<code class="sig-name descname">download_graph</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.download_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.download_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downloads the graph from the server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The graph protobuf that represents the current map on the robot (with waypoints and edges).</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.download_graph_async">
+<code class="sig-name descname">download_graph_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.download_graph_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.download_graph_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of download_graph().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.download_waypoint_snapshot">
+<code class="sig-name descname">download_waypoint_snapshot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">waypoint_snapshot_id</span></em>, <em class="sig-param"><span class="n">download_images</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.download_waypoint_snapshot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.download_waypoint_snapshot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download a specific waypoint snapshot with streaming from the server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>waypoint_snapshot_id</strong> – WaypointSnapshot string ID for which snapshot to download from robot.</p></li>
+<li><p><strong>download_images</strong> – Boolean indicating whether or not to include images in the download.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The WaypointSnapshot protobuf from the robot’s current map.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.UnknownMapInformationError" title="bosdyn.client.graph_nav.UnknownMapInformationError"><strong>UnknownMapInformationError</strong></a> – Snapshot id not found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.download_edge_snapshot">
+<code class="sig-name descname">download_edge_snapshot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">edge_snapshot_id</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.download_edge_snapshot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.download_edge_snapshot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downloads a specific edge snapshot with streaming from the server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>edge_snapshot_id</strong> – EdgeSnapshot string ID for which snapshot to download from robot.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The EdgeSnapshot protobuf from the robot’s current map.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.graph_nav.UnknownMapInformationError" title="bosdyn.client.graph_nav.UnknownMapInformationError"><strong>UnknownMapInformationError</strong></a> – Snapshot id not found</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.generate_travel_params">
+<em class="property">static </em><code class="sig-name descname">generate_travel_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_distance</span></em>, <em class="sig-param"><span class="n">max_yaw</span></em>, <em class="sig-param"><span class="n">velocity_limit</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.generate_travel_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.generate_travel_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the API TravelParams for navigation requests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_distance</strong> – Distances (meters) threshold for when we’ve reached the final waypoint.</p></li>
+<li><p><strong>max_yaw</strong> – Angle (radians) threshold for when we’ve reached the final waypoint.</p></li>
+<li><p><strong>velocity_limit</strong> – SE2VelocityLimit protobuf message for the speed the robot should use.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The API TravelParams protobuf message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.generate_route_params">
+<em class="property">static </em><code class="sig-name descname">generate_route_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">waypoint_id_list</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.generate_route_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.generate_route_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the API RouteGenParams for navigation requests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>waypoint_id_list</strong> – List of waypoint id strings in which a route should pass through.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The API RouteGenParams protobuf message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.graph_nav.GraphNavClient.build_route">
+<em class="property">static </em><code class="sig-name descname">build_route</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">waypoint_id_list</span></em>, <em class="sig-param"><span class="n">edge_id_list</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavClient.build_route"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavClient.build_route" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the API RouteGenParams for navigation requests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>waypoint_id_list</strong> – List of waypoint id strings in which a route should pass through.
+The ids should be ordered from [start waypoint –&gt; destination waypoint].</p></li>
+<li><p><strong>edge_id_list</strong> – List of the edge_id’s which should be in the same ordering as the waypoint list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The API Route protobuf message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.GraphNavServiceResponseError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">GraphNavServiceResponseError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#GraphNavServiceResponseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.GraphNavServiceResponseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.ResponseError</span></code></a></p>
+<p>General class of errors for the GraphNav Recording Service.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.RequestAbortedError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">RequestAbortedError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#RequestAbortedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.RequestAbortedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.GraphNavServiceResponseError" title="bosdyn.client.graph_nav.GraphNavServiceResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.GraphNavServiceResponseError</span></code></a></p>
+<p>Request was aborted by the system.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.RequestFailedError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">RequestFailedError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#RequestFailedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.RequestFailedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.GraphNavServiceResponseError" title="bosdyn.client.graph_nav.GraphNavServiceResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.GraphNavServiceResponseError</span></code></a></p>
+<p>Request failed to complete by the system.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.RobotFaultedError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">RobotFaultedError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#RobotFaultedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.RobotFaultedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.GraphNavServiceResponseError" title="bosdyn.client.graph_nav.GraphNavServiceResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.GraphNavServiceResponseError</span></code></a></p>
+<p>Robot is experiencing a fault condition that prevents localization.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.UnknownMapInformationError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">UnknownMapInformationError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#UnknownMapInformationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.UnknownMapInformationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.GraphNavServiceResponseError" title="bosdyn.client.graph_nav.GraphNavServiceResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.GraphNavServiceResponseError</span></code></a></p>
+<p>The given map information (waypoints,edges,routes) is unknown by the system.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.TimeError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">TimeError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#TimeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.TimeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.GraphNavServiceResponseError" title="bosdyn.client.graph_nav.GraphNavServiceResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.GraphNavServiceResponseError</span></code></a></p>
+<p>Errors associated with timestamps and time sync.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.CommandExpiredError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">CommandExpiredError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#CommandExpiredError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.CommandExpiredError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.TimeError" title="bosdyn.client.graph_nav.TimeError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.TimeError</span></code></a></p>
+<p>The command was received after its end time had already passed.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.NoTimeSyncError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">NoTimeSyncError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#NoTimeSyncError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.NoTimeSyncError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.TimeError" title="bosdyn.client.graph_nav.TimeError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.TimeError</span></code></a></p>
+<p>Client has not performed timesync with robot.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.TooDistantError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">TooDistantError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#TooDistantError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.TooDistantError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.TimeError" title="bosdyn.client.graph_nav.TimeError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.TimeError</span></code></a></p>
+<p>The command was too far in the future.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.RobotStateError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">RobotStateError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#RobotStateError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.RobotStateError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.GraphNavServiceResponseError" title="bosdyn.client.graph_nav.GraphNavServiceResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.GraphNavServiceResponseError</span></code></a></p>
+<p>Errors associated with the current state of the robot.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.IsRecordingError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">IsRecordingError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#IsRecordingError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.IsRecordingError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.RobotStateError" title="bosdyn.client.graph_nav.RobotStateError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.RobotStateError</span></code></a></p>
+<p>Cannot navigate a route while recording a map.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.RobotImpairedError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">RobotImpairedError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#RobotImpairedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.RobotImpairedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.RobotStateError" title="bosdyn.client.graph_nav.RobotStateError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.RobotStateError</span></code></a></p>
+<p>Robot has a critical perception or behavior fault and cannot navigate.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.RouteError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">RouteError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#RouteError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.RouteError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.GraphNavServiceResponseError" title="bosdyn.client.graph_nav.GraphNavServiceResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.GraphNavServiceResponseError</span></code></a></p>
+<p>Errors associated with the specified route.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.ConstraintFaultError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">ConstraintFaultError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#ConstraintFaultError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.ConstraintFaultError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.RouteError" title="bosdyn.client.graph_nav.RouteError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.RouteError</span></code></a></p>
+<p>Route parameters contained a constraint fault.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.InvalidEdgeError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">InvalidEdgeError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#InvalidEdgeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.InvalidEdgeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.RouteError" title="bosdyn.client.graph_nav.RouteError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.RouteError</span></code></a></p>
+<p>One or more edges do not connect to expected waypoints.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.UnkownRouteElementsError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">UnkownRouteElementsError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#UnkownRouteElementsError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.UnkownRouteElementsError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.RouteError" title="bosdyn.client.graph_nav.RouteError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.RouteError</span></code></a></p>
+<p>One or more waypoints/edges are not in the map.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.NoPathError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">NoPathError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#NoPathError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.NoPathError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.RouteError" title="bosdyn.client.graph_nav.RouteError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.RouteError</span></code></a></p>
+<p>There is no path to the specified waypoint.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.UnknownWaypointError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">UnknownWaypointError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#UnknownWaypointError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.UnknownWaypointError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.RouteError" title="bosdyn.client.graph_nav.RouteError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.RouteError</span></code></a></p>
+<p>One or more waypoints are not in the map.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.RouteNavigationError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">RouteNavigationError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#RouteNavigationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.RouteNavigationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.GraphNavServiceResponseError" title="bosdyn.client.graph_nav.GraphNavServiceResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.GraphNavServiceResponseError</span></code></a></p>
+<p>Errors related to how the robot navigates the route.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.FeatureDesertError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">FeatureDesertError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#FeatureDesertError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.FeatureDesertError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.RouteNavigationError" title="bosdyn.client.graph_nav.RouteNavigationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.RouteNavigationError</span></code></a></p>
+<p>Route contained too many waypoints with low-quality features.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.RouteNotUpdatingError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">RouteNotUpdatingError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#RouteNotUpdatingError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.RouteNotUpdatingError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.RouteNavigationError" title="bosdyn.client.graph_nav.RouteNavigationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.RouteNavigationError</span></code></a></p>
+<p>Graph nav was unable to update and follow the specified route.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.RobotLostError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">RobotLostError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#RobotLostError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.RobotLostError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.RouteNavigationError" title="bosdyn.client.graph_nav.RouteNavigationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.RouteNavigationError</span></code></a></p>
+<p>Cannot issue a navigation request when the robot is already lost.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.graph_nav.RobotNotLocalizedToRouteError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.graph_nav.</code><code class="sig-name descname">RobotNotLocalizedToRouteError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/graph_nav.html#RobotNotLocalizedToRouteError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.graph_nav.RobotNotLocalizedToRouteError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.graph_nav.RouteNavigationError" title="bosdyn.client.graph_nav.RouteNavigationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.graph_nav.RouteNavigationError</span></code></a></p>
+<p>The current localization doesn’t refer to any waypoint in the route (possibly uninitialized localization).</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      
+      &copy; Copyright 2020 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

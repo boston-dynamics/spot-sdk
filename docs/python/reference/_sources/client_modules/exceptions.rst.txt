@@ -1,7 +1,0 @@
-Exceptions
-===================================
-
-.. automodule:: bosdyn.client.exceptions
-   :members:
-   :undoc-members:
-   :show-inheritance:

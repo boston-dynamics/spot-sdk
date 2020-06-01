@@ -33,7 +33,7 @@ message ServiceEntry {
     // Last update time in robot timebase for this service record.
     google.protobuf.Timestamp last_update = 4;
 
-    // If |user_token_required| is true, any requests to this service must contain
+    // If 'user_token_required' field is true, any requests to this service must contain
     // a user token for the machine.  Requests without a user token will result in a
     // 401. Most services will want to require a user_token, but ones like auth_service
     // do not.
@@ -44,7 +44,7 @@ message ServiceEntry {
     reserved "application_token_required";
     reserved 6;
 
-    // If |permission_required| is non-empty, any requests to this service must
+    // If 'permission_required' field is non-empty, any requests to this service must
     // have the same string in the "per" claim of the user token.
     string permission_required = 7;
 }
@@ -59,6 +59,7 @@ message Endpoint {
     int32 port = 2;
 }
 
+// The GetServiceEntry request message sends the service name to the robot.
 message GetServiceEntryRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -67,36 +68,36 @@ message GetServiceEntryRequest {
     string service_name = 2;
 }
 
+// The GetServiceEntry response message returns a ServiceEntry for the desired service name.
 message GetServiceEntryResponse {
     // Common response Header.
     ResponseHeader header = 1;
 
-    // Return status.
     enum Status {
-        // UNKNOWN should never be used.
-        //
-        // An internal DirectoryService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal DirectoryService issue has happened if UNKNOWN is set.
         STATUS_UNKNOWN = 0;
 
-        // GetService was successful.
-        //
-        // |service_entry| is filled out.
+        // GetService was successful. The service_entry field is filled out.
         STATUS_OK = 1;
 
         // GetService failed because the requested service name does not exist.
         STATUS_NONEXISTENT_SERVICE = 2;
     }
+    // Current status of the request.
     Status status = 2;
 
-    // The record for the discovered service.  Only set if |status| == OK.
+    // The record for the discovered service.  Only set if 'status' field == STATUS_OK.
     ServiceEntry service_entry = 3;
 }
 
+// The ListServiceEntries request message will ask the robot for all services.
 message ListServiceEntriesRequest {
     // Common request header.
     RequestHeader header = 1;
 }
 
+// The ListServiceEntries response message returns all known services at the time the request
+// was recieved.
 message ListServiceEntriesResponse {
     // Common response header.
     ResponseHeader header = 1;

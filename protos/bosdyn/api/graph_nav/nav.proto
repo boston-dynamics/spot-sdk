@@ -26,7 +26,8 @@ message Route {
     repeated Edge.Id edge_id = 3;
 }
 
-
+// The localization state of the robot. This reports the pose of the robot relative
+// to a particular waypoint on the graph nav map.
 message Localization {
     // Waypoint we're localized to.
     string waypoint_id = 1;
@@ -34,5 +35,5 @@ message Localization {
     SE3Pose waypoint_tform_body = 2;
     // Time (in robot time basis) that this localization was valid.
     google.protobuf.Timestamp timestamp = 3;
-    
+
 }

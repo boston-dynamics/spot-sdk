@@ -1,0 +1,817 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>QuickStart &mdash; Spot 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https:://dev.bostondynamics.com/docs/python/quickstart.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Understanding Spot Programming" href="understanding_spot_programming.html" />
+    <link rel="prev" title="Python Library" href="README.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../README.html">
+          
+
+          
+            
+            <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../concepts/README.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/base_services.html">Base services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/geometry_and_frames.html">Geometry and Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/robot_services.html">Robot services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/autonomy/README.html">Autonomy services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/initialization.html">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/localization.html">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/missions_service.html">Missions service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="README.html">Python</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding_spot_programming.html">Understanding Spot Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/examples/README.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/add_image_coordinates_to_scene/README.html">Add Image Coordinates to Scene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/directory/README.html">Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/estop/README.html">E-Stop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Get Depth Plus Visual Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/logging/README.html">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/mission_question_answerer/README.html">Mission Question Anwerer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/payloads/README.html">Payloads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/replay_mission/README.html">Replay Mission</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/spot_check/README.html">Spot Check</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/wasd/README.html">WASD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/xbox_controller/README.html">Xbox Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/README.html">Python Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/command_line.html">Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/common.html">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/processors.html">Processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/recording.html">Recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot_command.html">Robot Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot_id.html">Robot ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html">PTZ</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/streamquality.html">Stream Quality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html">Version</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_check.html">Spot Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/time_sync.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/bosdyn-core/src/bosdyn/README.html">Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-core/src/bosdyn/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../payload/README.html">Payloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../payload/payload_configuration_requirements.html">Payload configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/mechanical_interfaces.html">Mechanical interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/robot_mounting_rails.html">Robot mounting rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/configuring_payload_software.html">Configuring payload software</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../protos/README.html">API Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../protos/style_guide.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html">auth.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#data-chunk-proto">data_chunk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#directory-proto">directory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#directory-registration-proto">directory_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#directory-registration-service-proto">directory_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#directory-service-proto">directory_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#estop-proto">estop.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#estop-service-proto">estop_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#local-grid-proto">local_grid.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-mission-service-proto">mission/mission_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-nodes-proto">mission/nodes.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-remote-proto">mission/remote.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-remote-service-proto">mission/remote_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-util-proto">mission/util.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#payload-registration-proto">payload_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#payload-registration-service-proto">payload_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#payload-service-proto">payload_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#point-cloud-proto">point_cloud.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#power-proto">power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#power-service-proto">power_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-command-service-proto">robot_command_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-id-proto">robot_id.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-led-proto">spot_cam/LED.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-factoryservice-proto">spot_cam/factoryservice.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-factorysetup-proto">spot_cam/factorysetup.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-health-proto">spot_cam/health.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-network-proto">spot_cam/network.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-power-proto">spot_cam/power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-ptz-proto">spot_cam/ptz.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-service-proto">spot_cam/service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-streamquality-proto">spot_cam/streamquality.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-version-proto">spot_cam/version.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../README.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../README.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="README.html">Python Library</a> &raquo;</li>
+        
+      <li>QuickStart</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!--
+Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+
+Downloading, reproducing, distributing or otherwise using the SDK Software
+is subject to the terms and conditions of the Boston Dynamics Software
+Development Kit License (20191101-BDSDK-SL).
+--><div class="section" id="quickstart">
+<h1>QuickStart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<p>This guide will help you set up your programming environment to successfully command and control Boston Dynamics’ <code class="docutils literal notranslate"><span class="pre">Spot</span></code> robot using the <code class="docutils literal notranslate"><span class="pre">Spot</span> <span class="pre">Python</span> <span class="pre">SDK</span></code>.</p>
+<p><strong>Windows users:</strong> Please find notes like this to help you.</p>
+<!--ts--><ul class="simple">
+<li><p><a class="reference external" href="#system-setup">System Setup</a></p>
+<ul>
+<li><p><a class="reference external" href="#system-requirements">System Requirements</a></p></li>
+<li><p><a class="reference external" href="#python-requirements">Python Requirements</a></p></li>
+<li><p><a class="reference external" href="#pip-installation">Pip Installation</a></p></li>
+<li><p><a class="reference external" href="#manage-multiple-python-environments">Manage Multiple Python Environments with virtualenv</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#install-spot-sdk">Install Spot SDK</a></p>
+<ul>
+<li><p><a class="reference external" href="#install-spot-python-wheels-from-pypi">Install Spot Python Wheels from PyPI</a>&gt;</p></li>
+<li><p><a class="reference external" href="#install-spot-sdk-from-git-repository">Install Spot SDK from Git Repository</a></p>
+<ul>
+<li><p><a class="reference external" href="#get-spot-sdk">Get Spot SDK</a></p></li>
+<li><p><a class="reference external" href="#install-python-wheels-from-spot-sdk">Install Python Wheels from Spot SDK</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#verify-your-spot-sdk-installation">Verify your Spot SDK installation</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#verify-you-can-talk-to-spot-using-the-sdk">Verify you can talk to Spot using the SDK</a></p>
+<ul>
+<li><p><a class="reference external" href="#get-a-spot-robot">Get a Spot Robot</a></p></li>
+<li><p><a class="reference external" href="#get-and-install-an-application-token">Get and Install an Application Token</a></p></li>
+<li><p><a class="reference external" href="#get-a-user-account-on-the-robot">Get a user account on the robot</a></p></li>
+<li><p><a class="reference external" href="#ping-spot">Ping Spot</a></p></li>
+<li><p><a class="reference external" href="#request-a-spot-robot-s-id">Request Spot’s ID from Spot</a></p></li>
+<li><p><a class="reference external" href="#run-hello-spot-let-s-see-the-robot-move">Run Hello Spot - let’s see the robot move!</a></p>
+<ul>
+<li><p><a class="reference external" href="#run-an-independent-e-stop">Run an Independent E-Stop</a></p></li>
+<li><p><a class="reference external" href="#run-hello-spot-take-2">Run Hello Spot (Take 2)</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#next-steps">Next Steps</a></p></li>
+</ul>
+<!--te--><div class="section" id="system-setup">
+<h2>System setup<a class="headerlink" href="#system-setup" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="system-requirements">
+<h3>System requirements<a class="headerlink" href="#system-requirements" title="Permalink to this headline">¶</a></h3>
+<p>The Boston Dynamics Spot Python SDK works with most operating systems including:</p>
+<ul class="simple">
+<li><p>Linux Ubuntu 18.04 LTS</p></li>
+<li><p>Windows 10</p></li>
+<li><p>MacOS 10.14 (Mojave)</p></li>
+</ul>
+<p>Windows WSL use is discouraged due to so many examples having graphics.</p>
+</div>
+<div class="section" id="python-requirements">
+<h3>Python requirements<a class="headerlink" href="#python-requirements" title="Permalink to this headline">¶</a></h3>
+<p>Spot Python SDK works with Python 3.6 or Python 3.7 only. <u>Python 3.8 is not supported</u>.</p>
+<p>Downloads and instructions for installing Python can be found at https://www.python.org/.</p>
+<p><strong>IMPORTANT:</strong> If you have multiple versions of Python installed then running <code class="docutils literal notranslate"><span class="pre">python</span></code> might reference an incorrect version (e.g. version 2.7).  For example, to run python 3 on Ubuntu 18.04 you would run <code class="docutils literal notranslate"><span class="pre">python3</span></code> and on Windows you could use the <a class="reference external" href="https://docs.python.org/3/using/windows.html#launcher">Python launcher</a> and run <code class="docutils literal notranslate"><span class="pre">py</span> <span class="pre">-3</span></code>. Our documentation uses <code class="docutils literal notranslate"><span class="pre">python</span></code> assuming that the command launches a compatible version of Python.</p>
+<p>Verify your python install is the correct version.  Open a command prompt or start your python IDE:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python --version
+Python 3.6.8
+</pre></div>
+</div>
+<p><strong>Windows users:</strong> There are two common methods for starting the Python interpreter on the command
+line. First, launch a terminal: Start &gt; Command Prompt. At the command prompt, enter either:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span><span class="o">.</span><span class="n">exe</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="o">.</span><span class="n">exe</span>
+</pre></div>
+</div>
+<p>The former will directly call the <code class="docutils literal notranslate"><span class="pre">python.exe</span></code> that is highest priority in the PATH environment variable. (Note you could also supply a full pathname <code class="docutils literal notranslate"><span class="pre">c:\path\to\install\python.exe</span></code> to directly call the executable).</p>
+<p>The latter uses the Python launcher, which by default starts the most recent version of Python
+installed.  You can also optionally pass arguments to the launcher to control what version of
+python to launch:</p>
+<p><code class="docutils literal notranslate"><span class="pre">py.exe</span> <span class="pre">-2</span></code> (launches Python 2)</p>
+<p><code class="docutils literal notranslate"><span class="pre">py.exe</span> <span class="pre">-3</span></code> (launches Python 3)</p>
+<p><code class="docutils literal notranslate"><span class="pre">py.exe</span> <span class="pre">-3.6</span></code> (launches Python 3.6)</p>
+</div>
+<div class="section" id="pip-installation">
+<h3>Pip Installation<a class="headerlink" href="#pip-installation" title="Permalink to this headline">¶</a></h3>
+<p>Pip is the package installer for Python. The Spot SDK and the third-party packages used by many of its programming examples use pip to install.</p>
+<p>Check if pip is installed by requesting its version:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m pip --version
+pip 19.2.1 from &lt;path on your computer&gt;
+</pre></div>
+</div>
+<p><strong>Windows users:</strong></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>&gt; py.exe -m pip --version.
+</pre></div>
+</div>
+<p>If pip is not found, you’ll need to install it. There are a few options:</p>
+<ul class="simple">
+<li><p>pip comes preinstalled with all Python 3 versions &gt;= 3.4 downloaded from python.org</p></li>
+<li><p>Use the <a class="reference external" href="https://pip.pypa.io/en/stable/installing/"><code class="docutils literal notranslate"><span class="pre">get-pip.py</span></code> installation script.</a></p></li>
+<li><p>Use an OS-specific package manager (such as the python3-pip package on Ubuntu)</p></li>
+</ul>
+<p><strong>Permission Denied:</strong> If you do not use virtualenv (described below), when you install packages using pip, you may receive Permission Denied errors, if so, add the <code class="docutils literal notranslate"><span class="pre">--user</span></code> option to your pip command.</p>
+</div>
+<div class="section" id="manage-multiple-python-environments">
+<h3>Manage multiple Python environments<a class="headerlink" href="#manage-multiple-python-environments" title="Permalink to this headline">¶</a></h3>
+<p><strong>This section is optional, but recommended.</strong></p>
+<p>Users with multiple python versions, anaconda, etc., are responsible for maintaining separation between those installs.  Common failures include using the wrong version of python, installing python packages to the wrong python, or using pip associated with the wrong python.  One way to improve the stability of your Spot code and your pre-existing python code is to keep them separate using virtual environments.  Here are some tips to working with <a class="reference external" href="https://pypi.org/project/virtualenv">virtualenv</a>.</p>
+<ul class="simple">
+<li><p>Install virtualenv.</p></li>
+<li><p>Create a virtualenv, being careful to point at the proper python executable.</p></li>
+<li><p>Activate the virtualenv.</p></li>
+<li><p>Install packages as needed, including Spot SDK.</p></li>
+<li><p>When finished with a session, deactivate.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m pip install virtualenv
+$ python -m virtualenv my_spot_v2_0_env
+$ source my_spot_v2_0_env/bin/activate
+$ (install packages including Spot SDK, code, edit, execute, etc.)
+$ deactivate
+</pre></div>
+</div>
+<p><strong>Note:</strong> Please ensure the virtualenv was created using the expected version of python.  If you see:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ python -m virtualenv my_spot_v2_0_env
+Running virtualenv with interpreter /usr/bin/python2
+...
+</pre></div>
+</div>
+<p>Then the wrong interpreter is being used.  You can pass the interpreter as an additional argument, for example:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ python -m virtualenv -p /usr/bin/python3 my_spot_v2_0_env
+</pre></div>
+</div>
+<p><strong>Windows users:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">py</span><span class="o">.</span><span class="n">exe</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">virtualenv</span>
+<span class="o">&gt;</span> <span class="n">py</span><span class="o">.</span><span class="n">exe</span> <span class="o">-</span><span class="n">m</span> <span class="n">virtualenv</span> <span class="n">my_spot_v2_0_env</span>
+<span class="o">&gt;</span> <span class="o">.</span>\<span class="n">my_spot_v2_0_env</span>\<span class="n">Scripts</span>\<span class="n">activate</span><span class="o">.</span><span class="n">bat</span>
+</pre></div>
+</div>
+<p>Install packages including Spot SDK, code, edit, execute, etc.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="o">.</span>\<span class="n">my_spot_v2_0_env</span>\<span class="n">Scripts</span>\<span class="n">deactivate</span><span class="o">.</span><span class="n">bat</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="install-spot-sdk">
+<h2>Install Spot SDK<a class="headerlink" href="#install-spot-sdk" title="Permalink to this headline">¶</a></h2>
+<p>The Spot SDK is open source and available in multiple ways. The three main components of the SDK are:</p>
+<ul class="simple">
+<li><p>Python wheels</p></li>
+<li><p>Documentation</p></li>
+<li><p>Example applications</p></li>
+</ul>
+<p>The Spot SDK <a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">Git repository</a> contains everything listed above. The Python wheels are also available through PyPI, and the full documentation is also available at <a class="reference external" href="https://dev.bostondynamics.com">https://dev.bostondynamics.com</a>. For the same version, the wheels are identical between those two options. For example, SDK version 2.0.0 contains the same wheels as the ones with version 2.0.0 installed from PyPI. The documentation hosted at <a class="reference external" href="https://dev.bostondynamics.com">https://dev.bostondynamics.com</a> is identical to the documentation in an SDK, accessed through the <code class="docutils literal notranslate"><span class="pre">docs/html/README.html</span></code> file. We recommend installing the Python wheels from PyPI, as described in the setion below <a class="reference external" href="#install-spot-python-wheels-from-pypi">Install Spot Python Wheels from PyPI</a>, and accessing the documentation through <a class="reference external" href="https://dev.bostondynamics.com">https://dev.bostondynamics.com</a>. For installations from the cloned Spot SDK repository and to get the Python example applications, please follow the instructions in the section <a class="reference external" href="#install-spot-sdk-from-git-repository">Install Spot SDK from Git Repository</a>.</p>
+<div class="section" id="install-spot-python-wheels-from-pypi">
+<h3>Install Spot Python Wheels from PyPI<a class="headerlink" href="#install-spot-python-wheels-from-pypi" title="Permalink to this headline">¶</a></h3>
+<p>With <code class="docutils literal notranslate"><span class="pre">python</span></code> and <code class="docutils literal notranslate"><span class="pre">pip</span></code> properly installed and configured, the Python wheels are easily installed
+from PyPI with the following command.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m pip install bosdyn-client bosdyn-mission
+</pre></div>
+</div>
+<p>Installing the <code class="docutils literal notranslate"><span class="pre">bosdyn-client</span></code> and <code class="docutils literal notranslate"><span class="pre">bosdyn-mission</span></code> wheels will also install <code class="docutils literal notranslate"><span class="pre">bosdyn-api</span></code> and
+<code class="docutils literal notranslate"><span class="pre">bosdyn-core</span></code> wheels with the same version. The command above installs the latest version of the
+wheels. To install a different version of the wheels from PyPI, for example 2.0.0, use the
+following command.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m pip install bosdyn-client==2.0.0 bosdyn-mission==2.0.0
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-spot-sdk-from-git-repository">
+<h3>Install Spot SDK from Git Repository<a class="headerlink" href="#install-spot-sdk-from-git-repository" title="Permalink to this headline">¶</a></h3>
+<p>This section descibes how to get and install the complete Spot SDK from the Git repository.</p>
+<div class="section" id="get-spot-sdk">
+<h4>Get Spot SDK<a class="headerlink" href="#get-spot-sdk" title="Permalink to this headline">¶</a></h4>
+<p>The Spot Python SDK is available at https://github.com/boston-dynamics/spot-sdk.</p>
+<p>Users can either:</p>
+<ul class="simple">
+<li><p>git clone https://github.com/boston-dynamics/spot-sdk.git (recommended)</p></li>
+<li><p>Download a zipfile distribution:</p>
+<ul>
+<li><p>Select green box “Clone or download” from the webpage.</p></li>
+<li><p>Select “Download ZIP”.</p></li>
+<li><p>Unzip the file to your home directory.</p></li>
+<li><p>Rename the top-level directory <code class="docutils literal notranslate"><span class="pre">spot-sdk-master</span></code> to <code class="docutils literal notranslate"><span class="pre">spot-sdk</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="install-python-wheels-from-spot-sdk">
+<h4>Install Python Wheels from Spot SDK<a class="headerlink" href="#install-python-wheels-from-spot-sdk" title="Permalink to this headline">¶</a></h4>
+<p>Now that your python and pip are properly configured and you have Spot SDK downloaded or cloned, it is time to install the Spot SDK Python Packages.</p>
+<p>The following commands require a pathname to the SDK which we will call <code class="docutils literal notranslate"><span class="pre">~/spot-sdk</span></code> in the following examples.  But your pathname may be different depending on where you cloned/downloaded the files.  For example, <strong>Windows users</strong> may have downloaded these files to <code class="docutils literal notranslate"><span class="pre">c:\Downloads\spot-sdk</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd ~/spot-sdk/prebuilt
+$ python -m pip install *.whl
+</pre></div>
+</div>
+<p><strong>Windows users:</strong>
+Instead of <code class="docutils literal notranslate"><span class="pre">*.whl</span></code>, please list all <code class="docutils literal notranslate"><span class="pre">.whl</span></code> files in the directory explicitly in the following order (api, core, client, mission), for example:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> ~/spot-sdk/prebuilt
+$ python -m pip install bosdyn_api-2.0.0-py2.py3-none-any.whl
+$ python -m pip install bosdyn_core-2.0.0-py2.py3-none-any.whl
+$ python -m pip install bosdyn_client-2.0.0-py2.py3-none-any.whl
+$ python -m pip install bosdyn_mission-2.0.0-py2.py3-none-any.whl
+</pre></div>
+</div>
+<p><strong>Version incompatibility:</strong></p>
+<p>If you see a version incompatiblity error during pip install such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ERROR</span><span class="p">:</span> <span class="n">bosdyn</span><span class="o">-</span><span class="n">core</span> \<span class="o">&lt;</span><span class="n">a</span> <span class="n">version</span> <span class="n">string</span><span class="o">&gt;</span> <span class="n">has</span> <span class="n">requirement</span> <span class="n">bosdyn</span><span class="o">-</span><span class="n">api</span><span class="o">==</span>\<span class="o">&lt;</span><span class="n">a</span> <span class="n">version</span> <span class="n">string</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">but</span> <span class="n">you</span><span class="s1">&#39;ll </span>
+<span class="n">have</span> <span class="n">bosdyn</span><span class="o">-</span><span class="n">api</span> <span class="mf">2.0</span><span class="o">.</span><span class="mi">0</span> <span class="n">which</span> <span class="ow">is</span> <span class="n">incompatible</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Try uninstalling the bosdyn package and then reinstalling:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ python -m pip uninstall bosdyn-api
+$ python -m pip install bosdyn_api-2.0.0-py2.py3-none-any.whl
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="verify-your-spot-sdk-installation">
+<h3>Verify your Spot SDK installation<a class="headerlink" href="#verify-your-spot-sdk-installation" title="Permalink to this headline">¶</a></h3>
+<p>Make sure that the packages have been installed.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m pip list --format=columns | grep bosdyn
+bosdyn-api                    2.0.0
+bosdyn-client                 2.0.0
+bosdyn-core                   2.0.0
+bosdyn-mission                2.0.0
+</pre></div>
+</div>
+<p>If you don’t see these 4 packages with your target version, something went wrong during
+installation.  Contact support&#64;bostondynamics.com for help.</p>
+<p><strong>Windows users:</strong> Omit <code class="docutils literal notranslate"><span class="pre">grep</span></code> if not recognized.</p>
+<p>Next, start your python interpreter:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python
+Python 3.6.8 (default, Jan 14 2019, 11:02:34)
+[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]] on linux
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; import bosdyn.client
+&gt;&gt;&gt; help(bosdyn.client)
+Help on package bosdyn.client in bosdyn:
+
+NAME
+    bosdyn.client
+
+DESCRIPTION
+    The client library package.
+    Sets up some convenience imports for commonly used classes.
+
+PACKAGE CONTENTS
+    __main__
+...
+</pre></div>
+</div>
+<p>If the libraries are <strong>not</strong> installed correctly, you may see an error like this one:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bosdyn.client</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">ModuleNotFoundError</span>: <span class="n">No module named &#39;bosdyn.client&#39;</span>
+</pre></div>
+</div>
+<p>If that’s the case, run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">list</span></code> again to make sure that the Boston Dynamics Python libraries are installed.</p>
+<p>If you can’t import bosdyn.client without an error, you may have multiple instances of Python on your computer, have installed bosdyn to one, and are now running the other.  Check the pathnames of your python executables. Are they where you’d expect them to be?  If not, this is a potential sign that you may have multiple python installs.  Consider using virtual environments (see above).  If all else fails, contact support&#64;bostondynamics.com for help.</p>
+</div>
+</div>
+<div class="section" id="verify-you-can-talk-to-spot-using-the-sdk">
+<h2>Verify you can talk to Spot using the SDK<a class="headerlink" href="#verify-you-can-talk-to-spot-using-the-sdk" title="Permalink to this headline">¶</a></h2>
+<p>To use the SDK, you need:</p>
+<ul class="simple">
+<li><p>A Spot Robot on the same version as your SDK,</p></li>
+<li><p>An Application Token (“app_token”),</p></li>
+<li><p>A user account on the robot</p></li>
+</ul>
+<div class="section" id="get-a-spot-robot">
+<h3>Get a Spot robot<a class="headerlink" href="#get-a-spot-robot" title="Permalink to this headline">¶</a></h3>
+<p>Contact sales&#64;bostondynamics.com to get a Spot robot.</p>
+</div>
+<div class="section" id="get-and-install-an-application-token">
+<h3>Get and install an application token<a class="headerlink" href="#get-and-install-an-application-token" title="Permalink to this headline">¶</a></h3>
+<p>To get an application token, email support&#64;bostondynamics.com with subject “Application Token Request.” You should receive an email with an attached application token within one business day.</p>
+<p>While you can technically put your token anywhere, Boston Dynamics recommends you create a <code class="docutils literal notranslate"><span class="pre">.bosdyn</span></code> directory in your home directory and then copy your token to that directory, renaming it to <code class="docutils literal notranslate"><span class="pre">~/.bosdyn/dev.app_token</span></code>.  The Spot SDK will always look for your token at this location.  If you do not put the token there, you will need to explicitly tell the SDK where your token is, often as an argument to your python executable.</p>
+</div>
+<div class="section" id="get-a-user-account-on-the-robot">
+<h3>Get a user account on the robot<a class="headerlink" href="#get-a-user-account-on-the-robot" title="Permalink to this headline">¶</a></h3>
+<p>If you just unboxed your Spot robot, you will find a sticker inside the battery cavity with wifi, admin, and username “user” credentials.  Please note however that Boston Dynamics recommends that you first have your designated robot administrator log onto the robot with admin credentials and change passwords to increase security.</p>
+<p>NOTE: The following examples will assume username “user” and password “password.”</p>
+</div>
+<div class="section" id="ping-spot">
+<h3>Ping Spot<a class="headerlink" href="#ping-spot" title="Permalink to this headline">¶</a></h3>
+<ol class="simple">
+<li><p>Power on Spot.  Wait for the fans to turn off (and maybe 10-20 seconds after that)</p></li>
+<li><p>Connect to Spot via wifi.</p></li>
+<li><p>Ping spot at 192.168.80.3</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ping 192.168.80.3
+</pre></div>
+</div>
+</div>
+<div class="section" id="request-a-spot-robot-s-id">
+<h3>Request a Spot robot’s ID<a class="headerlink" href="#request-a-spot-robot-s-id" title="Permalink to this headline">¶</a></h3>
+<p>Issue the following command to get your Spot robot’s ID:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m bosdyn.client 192.168.80.3 id
+beta-BD-90490007     02-19904-9903   beta29     spot (V3)
+Software: 2.0.0 (b11205d698e 2020-03-11 11:53:12)
+Installed: 2020-03-11 15:06:57
+</pre></div>
+</div>
+<p>If this worked for you, SUCCESS!  You are now successfully communicating with Spot using the SDK!  Note that the output returned shows your Spot robot’s unique serial number, its nickname and robot type (Boston Dynamics has multiple robots), the software version, and install date.</p>
+<p>If you see the following:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ python -m bosdyn.client <span class="m">192</span>.168.80.3 id
+Could not contact robot with hostname <span class="s2">&quot;192.168.80.3&quot;</span>
+</pre></div>
+</div>
+<p>The robot is not powered on or is unreachable.  Go back and try to get your ping to work.  You can also try the <code class="docutils literal notranslate"><span class="pre">-v</span></code> or <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> to get more information to debug the issue.</p>
+<p>If you see the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m bosdyn.client 192.168.80.3 id
+Cannot retrieve app token from &quot;None&quot;.
+</pre></div>
+</div>
+<p>The SDK failed to find a valid app_token.  Follow the earlier quickstart instructions to get an app_token.  If you do have an app token but it is not stored at the default location, you need to specify its location using the <code class="docutils literal notranslate"><span class="pre">--app-token</span></code> command line option.</p>
+</div>
+<div class="section" id="run-hello-spot-let-s-see-the-robot-move">
+<h3>Run Hello Spot - let’s see the robot move!<a class="headerlink" href="#run-hello-spot-let-s-see-the-robot-move" title="Permalink to this headline">¶</a></h3>
+<p>OK, we now have our SDK installed properly and we are successfully able to command the robot to
+give us its id.  Let’s now see the robot do something!</p>
+<p>Change your working directory to the hello_spot example. Do a pip install with <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> as an argument so that any dependent packages are installed. Then run hello_spot:</p>
+<p><strong>HELPFUL HINT: When working with any Spot SDK programming example, always use the associated <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> to install dependent third party packages.</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd ~/spot-sdk/python/examples/hello_spot # or wherever you installed Spot SDK
+$ python -m pip install -r requirements.txt # will install dependent packages
+$ python hello_spot.py --username user --password password 192.168.80.3
+</pre></div>
+</div>
+<p>Hello_spot will fail because there is not an E-Stop endpoint.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2020</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">30</span> <span class="mi">15</span><span class="p">:</span><span class="mi">26</span><span class="p">:</span><span class="mi">36</span><span class="p">,</span><span class="mi">283</span> <span class="o">-</span> <span class="n">ERROR</span> <span class="o">-</span> <span class="n">Robot</span> <span class="ow">is</span> <span class="n">E</span><span class="o">-</span><span class="n">Stopped</span><span class="o">.</span> <span class="n">Please</span> <span class="n">use</span> <span class="n">an</span> <span class="n">external</span> <span class="n">E</span><span class="o">-</span><span class="n">Stop</span> <span class="n">client</span><span class="p">,</span> <span class="n">such</span> <span class="k">as</span> 
+<span class="n">the</span> <span class="n">E</span><span class="o">-</span><span class="n">Stop</span> <span class="n">SDK</span> <span class="n">example</span><span class="p">,</span> <span class="n">to</span> <span class="n">configure</span> <span class="n">E</span><span class="o">-</span><span class="n">Stop</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>If you see the following error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python hello_spot.py --username usehername --password pazwierd 192.168.80.3
+2020-04-03 15:10:28,189 - ERROR - Hello, Spot! threw an exception: bosdyn.api.GetAuthTokenResponse: 
+Provided username/password is invalid.
+</pre></div>
+</div>
+<p>Your username or password is incorrect. Check your spelling and verify your credentials with your robot administrator.</p>
+<div class="section" id="run-an-independent-e-stop">
+<h4>Run an independent E-Stop<a class="headerlink" href="#run-an-independent-e-stop" title="Permalink to this headline">¶</a></h4>
+<p>Change your working directory to the E-Stop example and run the nogui version:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd ~/spot-sdk/python/examples/estop # or wherever you installed Spot SDK
+$ python -m pip install -r requirements.txt # will install dependent packages
+$ python estop_nogui.py --username user --password password 192.168.80.3
+</pre></div>
+</div>
+<p>Now try to run the estop_gui version:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python estop_gui.py --username user --password password 192.168.80.3
+</pre></div>
+</div>
+<p>You should now have a big red STOP button displayed on your screen. You’re now ready to go! (or stop in an emergency!!)</p>
+</div>
+<div class="section" id="run-hello-spot-take-2">
+<h4>Run Hello Spot (take 2)<a class="headerlink" href="#run-hello-spot-take-2" title="Permalink to this headline">¶</a></h4>
+<p>OK, now we have an E-Stop. Leave it running, and open a second python window, and again run hello_spot:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd ~/spot-sdk/python/examples/hello_spot # or wherever you installed Spot SDK
+$ python hello_spot.py --username user --password password 192.168.80.3
+</pre></div>
+</div>
+<p>Your Spot robot should have powered up its motors, stood up, made a few poses, taken a picture, and sat down.  If it didn’t, be sure to check that the <strong>Motor power enable</strong> button on the back of Spot was properly turned on.</p>
+<p>Try it again, and this time, push the E-Stop button and watch the robot do a “glide-stop.”  Remember, E-Stop is your friend.</p>
+<p><strong>Congratulations, you are now a full-fledged Spot Programming Example Operator!</strong></p>
+<p>But, if you also want to be a full-fledged Spot Programmer, you need to understand more about how Spot works.  Here are the next steps we recommend:</p>
+</div>
+</div>
+</div>
+<div class="section" id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><p>Read our next section, <a class="reference internal" href="understanding_spot_programming.html"><span class="doc">Spot Programming</span></a>  Highly recommended!</p></li>
+<li><p>Take time to explore the <a class="reference internal" href="../../python/examples/README.html"><span class="doc">programming examples</span></a> which all launch in essentially the same manner as hello_spot.</p>
+<ul class="simple">
+<li><p>Try making simple modifications to the code.  NOTE: If you installed the SDK using a zipfile, be careful to understand what changes you’ve made, as users sometimes inject errors into the SDK code unintentionally.  Git users can simply use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">diff</span></code> to understand all changes they have made.</p></li>
+<li><p>Try out the <a class="reference internal" href="../../python/examples/wasd/README.html"><span class="doc">wasd programming example</span></a>. This is a more detailed example built on top of the Python API which lets you interactively control Spot using the keyboard on your development machine. It covers issuing commands in far more detail than this quick start.  And it is fun!</p></li>
+</ul>
+</li>
+<li><p>Read through the <a class="reference internal" href="../protos/README.html"><span class="doc">protocol buffer definitions</span></a> and the Spot Python SDK <a class="reference internal" href="../../python/README.html"><span class="doc">source code documentation</span></a> to understand even more.</p></li>
+</ol>
+<p>If you have any questions, please email support&#64;bostondynamics.com.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      
+      &copy; Copyright 2020 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

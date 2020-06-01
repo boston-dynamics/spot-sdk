@@ -17,28 +17,38 @@ import "bosdyn/api/image.proto";
 import "bosdyn/api/geometry.proto";
 import "google/protobuf/timestamp.proto";
 
+// A representation of a stored data acquisition.
 message Logpoint {
+    // Possible types of media that can be stored.
     enum RecordType {
         STILLIMAGE = 0;
     }
+    // Possible stages of data acquisition.
     enum LogStatus {
         FAILED = 0;
         QUEUED = 1;
         COMPLETE = 2;
         UNKNOWN = -1;
     }
+    // Unique identifier for a data acquisition event.
     string name = 1;
+    // Type of data held in this log point.
     RecordType type = 2;
+    // Current stage of acquisition.
     LogStatus status = 3;
-    //an arbitrary string to be stored with the log data
+    // An arbitrary string to be stored with the log data.
     string tag = 4;
+    // Time of acquisition.
     google.protobuf.Timestamp timestamp=5;
+    // Description of image format.
     message ImageParams {
         int32 width = 1;
         int32 height = 2;
         bosdyn.api.Image.PixelFormat format = 3;
     }
+    // Image format of the stored data.
     ImageParams image_params=6;
+    // Data describing the camera intrinsics and extrinsics for a window of the image.
     message Calibration {
         int32 xoffset=1;
         int32 yoffset=2;
@@ -48,102 +58,154 @@ message Logpoint {
         SE3Pose base_tfrom_sensor = 5;
         bosdyn.api.spot_cam.Camera.PinholeIntrinsics intrinsics=6;
     }
+    // Camera data for all sub-images contained within the image data.
     repeated Calibration calibration=7;
 }
 
+// Delete a log point from the store.
 message DeleteRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+    // Log point to delete.  Only the name is used.
     Logpoint point = 2;
 }
 
+// Response to a deletion with any errors that occurred.
 message DeleteResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
 }
 
+// Request for status about the current stage of data acquisition.
 message GetStatusRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+    // Log point to query.  Only the name is used.
     Logpoint point = 2;
 }
 
+// Provide an update on the stage of data acquisition.
 message GetStatusResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
-    //the logpoint returned here can be used to add a tag to the Logpoint later
+
+    // The logpoint returned here can be used to add a tag to the Logpoint later
     Logpoint point = 2;
 }
 
+// Retrieve the binary data associated with a log point.
 message RetrieveRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+    // Log point to retrieve.  Only the name is used.
     Logpoint point = 2;
 }
 
+// Provide the data stored at a log point.
+// Store() dictates what processing happens in this response.
+// c0 -> c4 will return the raw (rgb24) fisheye image of the camera at that index.
+// Storing a panorama will process the data into a stitched image.
 message RetrieveResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
-    // Store() dictates what processing happens in this response.
-    // c0 -> c4 will return the raw (rgb24) fisheye image of the camera at that index.
+    // Log point retrieved.
     Logpoint logpoint = 2;
+    // Data chunk bytes field should be concatenated together to recover the binary data.
     DataChunk data = 3;
 }
 
+// Retrieve the binary data associated with a log point, with no processing applied.
+// Storing a panorama will retrieve tiled individual images.
 message RetrieveRawDataRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+    // Log point to retrieve.  Only the name is used.
     Logpoint point = 2;
 }
 
 message RetrieveRawDataResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+    // Log point retrieved.
     Logpoint logpoint = 2;
+    // Data chunk bytes field should be concatenated together to recover the binary data.
     DataChunk data = 3;
 }
 
+// Trigger a data acquisition.
 message StoreRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+    // Which camera to capture.
     Camera camera = 2;
+    // Type of data capture to perform.
     Logpoint.RecordType type = 3;
+    // Metadata to associate with the store.
     string tag = 4;
 }
 
+// Result of data acquisition trigger.
 message StoreResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
-    //the logpoint returned here can be used to add a tag to the Logpoint later
-    //it will very likely be in th 'QUEUED' state
+
+    // The log point returned here can be used to add a tag to the Logpoint later
+    // It will very likely be in th 'QUEUED' state.
     Logpoint point = 2;
 }
 
+// Add tag metadata to an existing log point.
 message TagRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+    // Logpoint to add metadata to. Name and tag are used.
     Logpoint point = 2;
 }
 
+// Result of adding tag metadata to a log point.
 message TagResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
 }
 
+// Request the available cameras.
 message ListCamerasRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
 }
 
+// Provide the list of available cameras.
 message ListCamerasResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+
+    // List of all cameras which can be used in a StoreRequest.
     repeated Camera cameras = 2;
 }
 
+// List all available log points, whether they have completed or not.
 message ListLogpointsRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
 }
 
+// Provide all log points in the system.
 message ListLogpointsResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+    // List of log points.  Concatenate with all streamed ListLogpointsResponses to recover the full list.
     repeated Logpoint logpoints = 2;
 }
 
+// Set encryption for the disk.
 message SetPassphraseRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
 
-    //a passphrase is a human-readable string used to generate
-    //an encryption key. an empty passphrase disables encryption.
+    // A passphrase is a human-readable string used to generate
+    // an encryption key. An empty passphrase disables encryption.
 
-
-    // if the encryption key is set, everything new written to the drive gets encrypted. this includes
+    // If the encryption key is set, everything new written to the drive gets encrypted. this includes
 
     // 1) the sql database
     // 2) logged data
@@ -157,37 +219,44 @@ message SetPassphraseRequest {
     // encrypted with the new key; old log and audio data remains
     // unencrypted however.
 
-    //after setting the passphrase, please reboot the system to
-    //remount the encrypted filesystem layer.
+    // After setting the passphrase, please reboot the system to
+    // remount the encrypted filesystem layer.
     string passphrase = 2;
 }
 
+// Response from setting the disk encryption.
+// After setting the passphrase, please reboot the system to
+// remount the encrypted filesystem layer.
 message SetPassphraseResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
 }
 
+// Change debug logging settings on the SpotCam.
 message DebugRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
-    //set true to enable logging of temperature data;
+    // Set true to enable logging of temperature data;
     bool enable_temperature = 2;
-    //set true to enable logging of humidity data;
+    // Set true to enable logging of humidity data;
     bool enable_humidity = 3;
-    //set true to enable logging of BIT events;
-    //BIT events are always recorded to volatile memory
-    //and can be viewed (and cleared) with the Health service,
-    //but this enables writing them to disk.
+    // Set true to enable logging of BIT events;
+    // BIT events are always recorded to volatile memory
+    // and can be viewed (and cleared) with the Health service,
+    // but this enables writing them to disk.
     bool enable_BIT = 4;
-    //set true to enable logging of Shock data;
-    //this is on by default.
+    // Set true to enable logging of Shock data;
+    // this is on by default.
     bool enable_shock = 5;
-    //set to true to enable logging of system load stats
+    // Set to true to enable logging of system load stats
     // cpu, gpu, memory, and network utilization
     bool enable_system_stat = 6;
-    //now a BIT
-    //set true to enable logging of led driver status
-    //bool enable_led_stat = 7;
+    // Nowow a BIT, set true to enable logging of led driver status.
+    // bool enable_led_stat = 7;
 }
 
+// Response with any errors for debug setting changes.
 message DebugResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
 }

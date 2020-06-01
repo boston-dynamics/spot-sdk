@@ -13,6 +13,7 @@ option java_outer_classname = "NetworkProto";
 import "bosdyn/api/header.proto";
 import "google/protobuf/wrappers.proto";
 
+// Network configuration data.
 message NetworkTuple {
     //a big-endian representation of an IPv4 address
     google.protobuf.UInt32Value address = 2;
@@ -25,78 +26,114 @@ message NetworkTuple {
     google.protobuf.UInt32Value mtu = 5;
 }
 
+// Retrieve current network configuration.
 message GetNetworkSettingsRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
 }
 
+// Provides the current network configuration.
 message GetNetworkSettingsResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+
+    // Current network configuration.
     NetworkTuple settings = 2;
 }
 
+// Request the SSL certificate currently in use.
 message GetSSLCertRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
 }
 
+// Provides the SSL certificate currently in use.
 message GetSSLCertResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
-    // An ascii-armored representation of the ssl certificate
+
+    // An ASCII-armored representation of the SSL certificate
     string certificate = 2;
 }
 
+// Change network settings of the SpotCam.
 message SetNetworkSettingsRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+    // Network configuration to apply.
     NetworkTuple settings = 2;
 }
 
+// Result of a SetNetworkSettingsRequest
 message SetNetworkSettingsResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+    // Network settings applied.
     NetworkTuple settings = 2;
 }
 
+// Change the SSL certificate.
 message SetSSLKeyPairRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
-    // An ascii-armored representation of the ssl certificate
+    // An ASCII-armored representation of the SSL certificate
     string certificate = 2;
-    // An ascii-armored representation of the ssl key (or EC pair, in the case of ECDSA keys)
+    // An ASCII-armored representation of the SSL key (or EC pair, in the case of ECDSA keys)
     string key = 3;
 }
 
+// Result of changing the SSL certificate.
 message SetSSLKeyPairResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
-    // An ascii-armored representation of the ssl certificate
+
+    // An ASCII-armored representation of the SSL certificate
     string certificate = 2;
 }
 
-//these servers are used in the ICE resolution process. 
+// Servers used in the ICE resolution process.
 message ICEServer {
+    // Possible types of servers
     enum servertype {
         UNKNOWN = 0;
         STUN = 1;
         TURN = 2;
     }
+    // STUN or TURN server.
     servertype type = 1;
+    // Network address of the server.
     string address = 2;
-    //only the least significant 16 bits are used.
+    // Only the least significant 16 bits are used.
     uint32 port = 3;
 }
 
+// Request the servers used for ICE resolution.
 message GetICEConfigurationRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
 }
 
+// Provides the ICE resolution servers.
 message GetICEConfigurationResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+
+    // List of servers used for ICE resolution.
     repeated ICEServer servers = 2;
 }
 
-//Note: this configuration replaces any configuration currently present.
-//it is *not* appended
+// Modify the ICE configuration.
+// Note: this configuration replaces any configuration currently present.
+// It is *not* appended.
 message SetICEConfigurationRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+    // List of servers used for ICE resolution.
     repeated ICEServer servers = 2;
 }
 
+// Result of modifying the ICE configuration.
 message SetICEConfigurationResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
 }

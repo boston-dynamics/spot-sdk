@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# [Spot SDK](../../README.md) > [Payload Developer Guide](README.md) > Software Interface
+# Payload Software Interface
 
 To log payload data and debug payload issues, payloads developed for the Spot platform should observe the following guidelines:
 
@@ -39,143 +39,53 @@ Robot directory services are used to register services that a payload might offe
 
 RemoteMissionService RPCs are called by MissionService to communicate with a robot  payload. The mission service uses these RPCs to communicate with a remote mission service.
 
+| RPC   | Description |
+| ----- | ----------- |
+| EstablishSession |	Call this once at mission load time, per node.
+| Tick |	Call this every time the RemoteGrpc node is ticked.
+| Stop |	Call this every time the RemoteGrpc node was ticked in the previous cycle, but not ticked in this cycle.
+| TeardownSession |	Tells the service it can forget any data associated with the given session.
 
-<table>
-  <tr>
-   <td><strong>RPC</strong>
-   </td>
-   <td><strong>Description</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>EstablishSession
-   </td>
-   <td>Call this once at mission load time, per node.
-   </td>
-  </tr>
-  <tr>
-   <td>Tick
-   </td>
-   <td>Call this every time the RemoteGrpc node is ticked.
-   </td>
-  </tr>
-  <tr>
-   <td>Stop
-   </td>
-   <td>Call this every time the RemoteGrpc node was ticked in the previous cycle, but not ticked in this cycle.
-   </td>
-  </tr>
-  <tr>
-   <td>TeardownSession
-   </td>
-   <td>Tells the service it can forget any data associated with the given session.
-   </td>
-  </tr>
-</table>
 
 
 
 ### DirectoryService RPCs
 
 
-<table>
-  <tr>
-   <td><strong>RPC</strong>
-   </td>
-   <td><strong>Description</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>GetServiceEntry
-   </td>
-   <td>Get information about a specific service.
-   </td>
-  </tr>
-  <tr>
-   <td>ListServiceEntries
-   </td>
-   <td>List all known services at the time of the request.
-   </td>
-  </tr>
-</table>
+| RPC   | Description |
+| ----- | ----------- |
+| GetServiceEntry |	Get information about a specific service.
+| ListServiceEntries |	List all known services at the time of the request.
 
 
 
-### DirectoryRegistrationService
+
+### DirectoryRegistrationService RPCs
 
 
-<table>
-  <tr>
-   <td><strong>RPC</strong>
-   </td>
-   <td><strong>Description</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>RegisterService
-   </td>
-   <td>Called by a system to announce, via the robot directory, a new service it is hosting.
-   </td>
-  </tr>
-  <tr>
-   <td>UnregisterService
-   </td>
-   <td>Called by a system to deregister a service from the robot directory.
-   </td>
-  </tr>
-  <tr>
-   <td>UpdateService
-   </td>
-   <td>Update the ServiceEntry for a system hosting a service.
-   </td>
-  </tr>
-</table>
+| RPC   | Description |
+| ----- | ----------- |
+| RegisterService |	Called by a system to announce, via the robot directory, a new service it is hosting.
+| UnregisterService |	Called by a system to deregister a service from the robot directory.
+| UpdateService |	Update the ServiceEntry for a system hosting a service.
 
 
 
 ### PayloadService RPCs
 
-
-<table>
-  <tr>
-   <td><strong>RPC</strong>
-   </td>
-   <td><strong>Description</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>ListPayloads
-   </td>
-   <td>Query the robot for a list of currently-registered payloads.
-   </td>
-  </tr>
-</table>
+| RPC   | Description |
+| ----- | ----------- |
+| ListPayloads |	Query the robot for a list of currently-registered payloads. |
 
 
 
 ### PayloadRegistrationService RPCs
 
 
-<table>
-  <tr>
-   <td><strong>RPC</strong>
-   </td>
-   <td><strong>Description</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>RegisterPayload
-   </td>
-   <td>Register a new payload with the robot.
-   </td>
-  </tr>
-  <tr>
-   <td>GetPayloadAuthToken
-   </td>
-   <td>Get an auth token to enable the payload.
-   </td>
-  </tr>
-</table>
+| RPC   | Description |
+| ----- | ----------- |
+| RegisterPayload |	Register a new payload with the robot.
+| GetPayloadAuthToken |	Get an auth token to enable the payload.
 
 
 
@@ -213,7 +123,7 @@ This code snippet example uses the API to communicate payload configuration sett
     print(payloads)
     ...
 
-Refer to the [Python payload registration code example in the Spot SDK](../../python/examples/payloads/payloads.py) for details.
+Refer to the [Python payload registration code example in the Spot SDK](../../python/examples/payloads/README.md) for details.
 
 
 ## Payload self-registration
@@ -233,7 +143,7 @@ Once a payload has been authorized, its unique GUID and secret combination can b
 
 ### Payload and service registration examples
 
-The Spot SDK Python code examples includes payload registration and service registration examples that provide sample scripts, protos, and a list of dependencies: [Self-registration Python code examples in the Spot SDK](../../python/examples/self_registration/index.html).
+The Spot SDK Python code examples includes payload registration and service registration examples that provide sample scripts, protos, and a list of dependencies: [Self-registration Python code examples in the Spot SDK](../../python/examples/self_registration/README.md).
 
 
 ## Configuring and authorizing payloads
@@ -271,59 +181,13 @@ Devices on the payload network can reach the robot at 192.168.50.3 via port 443.
 
 ## Payload port forwarding table
 
+| Description | Robot port  | Target | Protocol |
+| ----------- | ----------- | ------ | -------- |
+| Standard Forwards 1 |	20000 + [22, 80, 443] |	192.168.50.5:[22, 80, 443] |	TCP
+| Fixed Forwards 1 |	21000-22000 |	192.158.50.5:21000-22000 |	TCP/UDP
+| Standard Forwards 2 | 30000 + [22, 80, 443] |	192.168.50.6:[22, 80, 443] |	TCP
+| Fixed Forwards 2 |	31000-32000 |	192.158.50.6:31000-32000 |	TCP/UDP
 
-<table>
-  <tr>
-   <td><strong>DESCRIPTION</strong>
-   </td>
-   <td><strong>ROBOT PORT</strong>
-   </td>
-   <td><strong>TARGET</strong>
-   </td>
-   <td><strong>PROTOCOL</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>Standard Forwards 1
-   </td>
-   <td>20000 + [22, 80, 443]
-   </td>
-   <td>192.168.50.5:[22, 80, 443]
-   </td>
-   <td>TCP
-   </td>
-  </tr>
-  <tr>
-   <td>Fixed Forwards 1
-   </td>
-   <td>21000-22000
-   </td>
-   <td>192.158.50.5:21000-22000
-   </td>
-   <td>TCP/UDP
-   </td>
-  </tr>
-  <tr>
-   <td>Standard Forwards 2
-   </td>
-   <td>30000 + [22, 80, 443]
-   </td>
-   <td>192.168.50.6:[22, 80, 443]
-   </td>
-   <td>TCP
-   </td>
-  </tr>
-  <tr>
-   <td>Fixed Forwards 2
-   </td>
-   <td>31000-32000
-   </td>
-   <td>192.158.50.6:31000-32000
-   </td>
-   <td>TCP/UDP
-   </td>
-  </tr>
-</table>
 
 
 
@@ -337,250 +201,93 @@ The following payload configuration table shows configuration values for the Spo
 
 This table provides a reference when developing a client application using the the RegisterPayload RPC to register a Spot payload.
 
+### Position  (m)
 
-<table>
-  <tr>
-   <td><strong>Configuration</strong>
-   </td>
-   <td><strong>Item</strong>
-   </td>
-   <td><strong>Value</strong>
-   </td>
-   <td><strong>Units</strong>
-   </td>
-  </tr>
-  <tr>
-   <td rowspan="3" >Position (m)
-   </td>
-   <td>X
-   </td>
-   <td>-0.16
-   </td>
-   <td>m
-   </td>
-  </tr>
-  <tr>
-   <td>Y
-   </td>
-   <td>0
-   </td>
-   <td>m
-   </td>
-  </tr>
-  <tr>
-   <td>Z
-   </td>
-   <td>0
-   </td>
-   <td>m
-   </td>
-  </tr>
-  <tr>
-   <td rowspan="3" >Orientation (radians)
-   </td>
-   <td>Yaw
-   </td>
-   <td>0
-   </td>
-   <td>rad.
-   </td>
-  </tr>
-  <tr>
-   <td>Roll
-   </td>
-   <td>0
-   </td>
-   <td>rad.
-   </td>
-  </tr>
-  <tr>
-   <td>Pitch
-   </td>
-   <td>0
-   </td>
-   <td>rad.
-   </td>
-  </tr>
-  <tr>
-   <td>Total mass (kg)
-   </td>
-   <td>
-   </td>
-   <td>2.0
-   </td>
-   <td>kg
-   </td>
-  </tr>
-  <tr>
-   <td rowspan="3" >Position of Center of Mass (m)
-   </td>
-   <td>X
-   </td>
-   <td>-0.13
-   </td>
-   <td>m
-   </td>
-  </tr>
-  <tr>
-   <td>Y
-   </td>
-   <td>0
-   </td>
-   <td>m
-   </td>
-  </tr>
-  <tr>
-   <td>Z
-   </td>
-   <td>0.045
-   </td>
-   <td>m
-   </td>
-  </tr>
-  <tr>
-   <td rowspan="6" >Moment of inertia tensor (kg-m<sup>2</sup>)
-   </td>
-   <td>XX
-   </td>
-   <td>0.00675
-   </td>
-   <td>kg-m<sup>2</sup>
-   </td>
-  </tr>
-  <tr>
-   <td>XY
-   </td>
-   <td>0
-   </td>
-   <td>kg-m<sup>2</sup>
-   </td>
-  </tr>
-  <tr>
-   <td>XZ
-   </td>
-   <td>0
-   </td>
-   <td>kg-m<sup>2</sup>
-   </td>
-  </tr>
-  <tr>
-   <td>YY
-   </td>
-   <td>0.0126167
-   </td>
-   <td>kg-m<sup>2</sup>
-   </td>
-  </tr>
-  <tr>
-   <td>YZ
-   </td>
-   <td>0
-   </td>
-   <td>kg-m<sup>2</sup>
-   </td>
-  </tr>
-  <tr>
-   <td>ZZ
-   </td>
-   <td>0.0166667
-   </td>
-   <td>kg-m<sup>2</sup>
-   </td>
-  </tr>
-  <tr>
-   <td rowspan="3" >Bounding boxes:  \
-Center (m)
-   </td>
-   <td>X
-   </td>
-   <td>-0.13m
-   </td>
-   <td>m
-   </td>
-  </tr>
-  <tr>
-   <td>Y
-   </td>
-   <td>0
-   </td>
-   <td>m
-   </td>
-  </tr>
-  <tr>
-   <td>Z
-   </td>
-   <td>0.045
-   </td>
-   <td>m
-   </td>
-  </tr>
-  <tr>
-   <td rowspan="3" >Bounding boxes:  \
-Orientation (radians) ZXY
-   </td>
-   <td>Yaw
-   </td>
-   <td>0
-   </td>
-   <td>rad.
-   </td>
-  </tr>
-  <tr>
-   <td>Roll
-   </td>
-   <td>0
-   </td>
-   <td>rad.
-   </td>
-  </tr>
-  <tr>
-   <td>Pitch
-   </td>
-   <td>0
-   </td>
-   <td>rad.
-   </td>
-  </tr>
-  <tr>
-   <td rowspan="3" >Bounding boxes:  \
-XYZ extent (m)
-   </td>
-   <td>X
-   </td>
-   <td>0.13
-   </td>
-   <td>m
-   </td>
-  </tr>
-  <tr>
-   <td>Y
-   </td>
-   <td>0.095
-   </td>
-   <td>m
-   </td>
-  </tr>
-  <tr>
-   <td>Z
-   </td>
-   <td>0.045
-   </td>
-   <td>m
-   </td>
-  </tr>
-</table>
+| Item | Value | Units |
+| ---- | ----- | ----- |
+| X |	-0.16 |	m
+| Y |	0 |	m
+| Z |	0 |	m
+
+
+### Orientation (radians)
+
+| Item | Value | Units |
+| ---- | ----- | ----- |
+| Yaw |	0 |	rad.
+| Roll |	0 |	rad.
+| Pitch |	0 |	rad.
+
+### Total mass (kg)
+
+| Item | Value | Units |
+| ---- | ----- | ----- |
+| &nbsp; | 2.0 | kg |
+
+### Position of Center of Mass (m)
+
+| Item | Value | Units |
+| ---- | ----- | ----- |
+| X |	-0.13 |	m
+| Y |	0 |	m
+| Z |	0.045 |	m
+
+### Moment of inertia tensor (kg-m2)
+
+| Item | Value | Units |
+| ---- | ----- | ----- |
+| XX |	0.00675 |	kg-m2
+| XY |	0 |	kg-m2
+| XZ |	0 |	kg-m2
+| YY |	0.0126167 |	kg-m2
+| YZ |	0 |	kg-m2
+| ZZ |	0.0166667 |	kg-m2
+
+### Bounding boxes: \ Center (m)
+
+| Item | Value | Units |
+| ---- | ----- | ----- |
+| X |	-0.13m |	m
+| Y |	0 |	m
+| Z |	0.045 |	m
+
+
+
+### Bounding boxes: \ Orientation (radians) ZXY
+
+| Item | Value | Units |
+| ---- | ----- | ----- |
+| Yaw | 0 |	rad.
+| Roll |	0 |	rad.
+| Pitch |	0 |	rad.
+
+
+### Bounding boxes: \ XYZ extent (m)
+
+| Item | Value | Units |
+| ---- | ----- | ----- |
+| X |	0.13 |	m
+| Y |	0.095 |	m
+| Z |	0.045 |	m
+
+
 
 
 The [payload.proto](../../protos/bosdyn/api/payload.proto) file in the Spot SDK provides details about fields and data types.
 
 
-<br />
-
-<a href="robot_electrical_interface.md" class="previous">&laquo; Previous</a>
-
-
-
 <!--- image and page reference link definitions --->
+[config-image1]: images/payload1.png
+[config-image2]: images/payload2.png
+[config-image3]: images/payload3.png
+[config-image4]: images/payload4.png
+[config-image5]: images/config-image5.png
+[config-image6]: images/config-image6.png
+[config-image7]: images/payload7.png
+[config-image8]: images/payload8.png
+
+
+
 [payload-top]: Readme.md "Developing and managing Spot payloads"
 [configuration]: payload_configuration_requirements.md "Payload configuration requirements"
 [mechanical]: mechanical_interfaces.md "Mechanical interfaces"

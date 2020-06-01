@@ -6,24 +6,34 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# Spot Tensorflow Detector 
+#  API Example - Spot Tensorflow Detector
 
-Spot Tensorflow Detector example collects images from the 5 Spot cameras and performs object detection using Tensorflow. It accepts any Tensorflow model, and it allows the user to specify a subset of detection classes included in the model. It performs this set of operations for a predefined number of iterations, blocking for a predefined amount of time between each iteration. The output of each iteration is a plot of the original 5 images collected from the cameras and another set of those 5 images with boxes around the detections reported by the Tensorflow model.
+Spot Tensorflow Detector example collects images from the 5 Spot cameras and performs object 
+detection using Tensorflow. It accepts any Tensorflow model, and it allows the user to specify a 
+subset of detection classes included in the model. It performs this set of operations for a 
+predefined number of iterations, blocking for a predefined amount of time between each iteration. 
+The output of each iteration is a plot of the original 5 images collected from the cameras and 
+another set of those 5 images with boxes around the detections reported by the Tensorflow model.
 
 
-The program is organized as three sets of Python processes communicating with the Spot robot. The process diagram is shown below. The main process communicates with the Spot robot over GRPC and constanty receives images.These images are pushed into the RAW_IMAGES_QUEUE and read by the Tensorflow processes.Those processes detect objects in the images, draw the bounding boxes around the detections, and push those processed images into the PROCESSED_IMAGES_QUEUE. The Display process then pull images from the PROCESSED_IMAGES_QUEUE and displayes them to the screen.
+The program is organized as three sets of Python processes communicating with the Spot robot. The 
+process diagram is shown below. The main process communicates with the Spot robot over GRPC and 
+constanty receives images.These images are pushed into the RAW_IMAGES_QUEUE and read by the 
+Tensorflow processes.Those processes detect objects in the images, draw the bounding boxes around 
+the detections, and push those processed images into the PROCESSED_IMAGES_QUEUE. The Display 
+process then pull images from the PROCESSED_IMAGES_QUEUE and displayes them to the screen.
 
-<img src="documentation/process_diagram.png" alt="Process Diagram" width="250"/>
+<img src="documentation/process_diagram.png" alt="Process Diagram" style="width:250px;"/>
 
 ## User Guide
 ### Installation
+For your best learning experience, please use the [Quickstart Guide](../../../docs/python/quickstart.md) 
+found in the SDK's docs/python directory.  That will help you get your Python programming 
+environment setup properly.
+
 To install this example on Ubunty 18.04, follow these instructions:
-- Install python3: `sudo apt-get install python3.6`
-- Install pip3: `sudo apt-get install python3-pip`
-- Install virtualenv: `pip3 install virtualenv`
-- Change into example directory: `cd spot_tensorflow_detector`
-- Create virtual environment (one time operation): `virtualenv -p {PATH_TO_PYTHON3_EXECUTABLE} venv`. The path to the executable is the output of `which python3` command, usually set to `/usr/bin/python3`.
-- Start virtual environment: `source venv/bin/activate`
+- Create virtual environment as described in this 
+[Quickstart Guide virtualenv section](../../../docs/python/quickstart.md#manage-multiple-python-environments)
 - Install dependencies: `python -m pip install -r requirements.txt`
 - Run the example using instructions in the next section
 - To exit the virtual environment, run `deactivate`

@@ -13,16 +13,17 @@ option java_outer_classname = "StreamQualityProto";
 import "bosdyn/api/header.proto";
 import "google/protobuf/wrappers.proto";
 
-
+// Parameters for how the video stream should be processed and compressed.
 message StreamParams {
-    //the compression level in target BPS
+    // The compression level in target BPS
     google.protobuf.Int64Value targetbitrate = 1;
-    //how often should the entire feed be refreshed? (in frames)
-    //note: the feed is refreshed on a macroblock level; there are no full I-frames
+    // How often should the entire feed be refreshed? (in frames)
+    // Note: the feed is refreshed on a macroblock level; there are no full I-frames
     google.protobuf.Int64Value refreshinterval = 2;
-    //how often should an IDR message get sent? (in frames)
+    // How often should an IDR message get sent? (in frames)
     google.protobuf.Int64Value idrinterval = 3;
 
+    // Options for automatic white balancing mode.
     enum AwbModeEnum {
         OFF = 0;
         AUTO = 1;
@@ -35,28 +36,40 @@ message StreamParams {
         SHADE = 8;
         DARK = 9;
     }
-
+    // Wrapper for AwbModeEnum to allow it to be optionally set.
     message AwbMode {
         AwbModeEnum awb = 1;
     }
+    // Optional setting of automatic white balancing mode.
     AwbMode awb = 4;
 }
 
+// Request the current video stream parameters.
 message GetStreamParamsRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
 }
 
+// Provides the current video stream parameters.
 message GetStreamParamsResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+    // Current video stream parameters.
     StreamParams params = 2;
 }
 
+// Modify the video stream parameters.
 message SetStreamParamsRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+    // Set only the fields that should be modified.
     StreamParams params = 2;
 }
 
+// Result of setting video stream parameters.
 message SetStreamParamsResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+    // Applied video stream parameters.
     StreamParams params = 2;
 }

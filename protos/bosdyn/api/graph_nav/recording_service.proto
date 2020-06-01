@@ -12,20 +12,21 @@ import "bosdyn/api/graph_nav/recording.proto";
 
 option java_outer_classname = "RecordingServiceProto";
 
-// Terminology:
-//  Chain -- a topological arrangement of waypoints/edges where every waypoint has
-//   at least 1 but at most 2 edges attached to it.
-//  Branch -- separate Chains can be joined together into a Branch at exactly one waypoint.
-//  Loop -- a single Chain may be connected back to itself, creating a Loop.
-// Recording should generally follow this pattern:
+
+// The recording service can be used to record a Graph Nav map (containing waypoints and edges).
+// The recorded map can consist of the following:
+// * Chain: a topological arrangement of waypoints/edges where every waypoint has at least 1
+// but at most 2 edges attached to it.
+// * Branch: separate Chains can be joined together into a Branch at exactly one waypoint.
+// When recording a map using the recording service, a common pattern is:
 // * Call StartRecording to begin recording a chain of waypoints.
 // * Call SetRecordingEnvironment to define persistent annotations for the edges and waypoints.
 // * While recording, call GetRecordStatus to get feedback on the state of the recording service.
 // * While recording, call GetMapStatus to determine what waypoints have been created.
 // * Optionally call CreateWaypoint to create waypoints in specific locations.
 // * Call StopRecording to pause the recording service and create branches.
-// * While recording (or after completing recording), call DownloadWaypoint/Edge Snapshot
-//   to download the large sensor data associated with the map.
+// * While recording (or after completing recording), call DownloadWaypoint/Edge Snapshot rpc's
+// from the GraphNavService to download the large sensor data with the map.
 service GraphNavRecordingService {
     // Start recording the map from the current localization.
     // Creates a waypoint if you are starting to record. Otherwise, waits until you are

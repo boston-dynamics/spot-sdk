@@ -145,7 +145,7 @@ class GraphNavClient(BaseClient):
             graph_nav.TooDistantError: Time too far in the future.
             graph_nav.RobotImpairedError: Robot cannot travel a route.
             graph_nav.IsRecordingError: Robot cannot navigate while recording.
-            graph_nav.UnkownRouteElementsError: Unknown edges or waypoints
+            graph_nav.UnknownRouteElementsError: Unknown edges or waypoints
             graph_nav.InvalidEdgeError: Mismatch between edges and waypoints.
             graph_nav.RobotNotLocalizedToRouteError: The robot is localized somewhere else.
             graph_nav.ConstraintFaultError: The route involves invalid constraints.
@@ -624,7 +624,7 @@ def _get_status(response):
 
 
 def _get_response(response):
-    """Return full response for RecordStatus to get enviornment and is_recording information."""
+    """Return full response for RecordStatus to get environment and is_recording information."""
     return response
 
 

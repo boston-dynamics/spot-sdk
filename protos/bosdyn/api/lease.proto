@@ -14,17 +14,15 @@ import "bosdyn/api/header.proto";
 // Leases are used to verify that a client has exclusive access to a shared
 // resources. Examples of shared resources are the motors for a robot, or
 // indicator lights on a robot.
-//
 // Leases are initially obtained by clients from the LeaseService. Clients
 // then attach Leases to Commands which require them. Clients may also
 // generate sub-Leases to delegate out control of the resource to other
 // services.
-//
 message Lease {
     // The resource that the Lease is for.
     string resource = 1;
 
-    // The epoch for the Lease. |sequences| are scoped to a particular epoch.
+    // The epoch for the Lease. The sequences field are scoped to a particular epoch.
     // One example of where this can be used is to generate a random epoch
     // at LeaseService startup.
     string epoch = 2;
@@ -76,7 +74,7 @@ message LeaseUseResult {
     Lease previous_lease = 4;
 }
 
-
+// The AcquireLease request message which sends which resource the lease should be for.
 message AcquireLeaseRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -85,31 +83,29 @@ message AcquireLeaseRequest {
     string resource = 2;
 }
 
+// The AcquireLease response returns the lease for the desired resource if it could be obtained.
+// If a client is returned a new lease, the client should initiate a
+// RetainLease bidirectional streaming request immediately after completion
+// of AcquireLease.
 message AcquireLeaseResponse {
     // Common response Header.
     ResponseHeader header = 1;
 
-    // Return status.
     enum Status {
-        // UNKNOWN should never be used.
-        //
-        // An internal LeaseService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal LeaseService issue has happened
+        // if UNKNOWN is set.
         STATUS_UNKNOWN = 0;
 
-        // AcquireLease was successful.
-        //
-        // |lease| will be populated with the new lease for the resource.
-        // The client is expected to call the RetainLease method immediately
-        // after.
+        // AcquireLease was successful.The lease field will be populated with the new
+        // lease for the resource. The client is expected to call the RetainLease method
+        // immediately after.
         STATUS_OK = 1;
 
         // AcquireLease failed since the resource has already been claimed.
-        //
         // The TakeLease method may be used to forcefully grab the lease.
         STATUS_RESOURCE_ALREADY_CLAIMED = 2;
 
         // AcquireLease failed since the resource is not known to LeaseService.
-        //
         // The ListLeaseResources method may be used to list all known
         // resources.
         STATUS_INVALID_RESOURCE = 3;
@@ -117,15 +113,17 @@ message AcquireLeaseResponse {
         // The LeaseService is not authoritative - so Acquire should not work.
         STATUS_NOT_AUTHORITATIVE_SERVICE = 4;
     }
+    // Return status for the request.
     Status status = 2;
 
-    // The lease for the resource. Only set if |status| == OK.
+    // The lease for the resource. Only set if status field == STATUS_OK.
     Lease lease = 3;
 
-    // The owner for the lease. Set if |status| == OK or |status| == RESOURCE_ALREADY_CLAIMED.
+    // The owner for the lease. Set if status field == OK or status field == RESOURCE_ALREADY_CLAIMED.
     LeaseOwner lease_owner = 4;
 }
 
+// The TakeLease request message which sends which resource the lease should be for.
 message TakeLeaseRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -134,26 +132,28 @@ message TakeLeaseRequest {
     string resource = 2;
 }
 
+// The TakeLease response returns the lease for the desired resource if it could be obtained.
+// In most cases if the resource is managed by the LeaseService, TakeLease
+// will succeed. However, in the future policies may be introduced which will prevent
+// TakeLease from succeeding and clients should be prepared to handle that
+// case.
+// If a client obtains a new lease, the client should initiate a
+// RetainLease bidirectional streaming request immediately after completion
+// of TakeLease.
 message TakeLeaseResponse {
     // Common response header.
     ResponseHeader header = 1;
 
-    // Return status.
     enum Status {
-        // UNKNOWN should never be used.
-        //
-        // An internal LeaseService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal LeaseService issue has happened if UNKNOWN is set.
         STATUS_UNKNOWN = 0;
 
-        // TakeLease was successful.
-        //
-        // |lease| will be populated with the new lease for the resource.
-        // The client is expected to call the RetainLease method immediately
-        // after.
+        // TakeLease was successful. The lease field will be populated with the
+        // new lease for the resource. The client is expected to call the RetainLease
+        // method immediately after.
         STATUS_OK = 1;
 
         // TakeLease failed since the resource is not known to LeaseService.
-        //
         // The ListLeaseResources method may be used to list all known
         // resources.
         STATUS_INVALID_RESOURCE = 2;
@@ -161,15 +161,19 @@ message TakeLeaseResponse {
         // The LeaseService is not authoritative - so Acquire should not work.
         STATUS_NOT_AUTHORITATIVE_SERVICE = 3;
     }
+    // Return status for the request.
     Status status = 2;
 
-    // The lease for the resource. Only set if |status| == OK.
+    // The lease for the resource. Only set if status field == STATUS_OK.
     Lease lease = 3;
 
-    // The owner for the lease. Set if |status| == OK.
+    // The owner for the lease. Set if status field == STATUS_OK.
     LeaseOwner lease_owner = 4;
 }
 
+// The ReturnLease request message will be sent to the LeaseService. If the lease
+// is currently active for the resource, the LeaseService will invalidate the lease.
+// Future calls to AcquireLease by any client will now succeed.
 message ReturnLeaseRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -178,15 +182,13 @@ message ReturnLeaseRequest {
     Lease lease = 2;
 }
 
+// The ReturnLease response message
 message ReturnLeaseResponse {
     // Common response header.
     ResponseHeader header = 1;
 
-    // Return status.
     enum Status {
-        // UNKNOWN should never be used.
-        //
-        // An internal LeaseService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal LeaseService issue has happened if UNKNOWN is set.
         STATUS_UNKNOWN = 0;
 
         // ReturnLease was successful.
@@ -199,18 +201,22 @@ message ReturnLeaseResponse {
         // ReturnLease failed because the lease was not the active lease.
         STATUS_NOT_ACTIVE_LEASE = 3;
 
-        
+
         // The LeaseService is not authoritative - so Acquire should not work.
         STATUS_NOT_AUTHORITATIVE_SERVICE = 4;
     }
+    // Return status for the request.
     Status status = 2;
 }
 
+// The ListLease request message asks for information about any known lease resources.
 message ListLeasesRequest {
     // Common request header.
     RequestHeader header = 1;
 }
 
+// Describes all information about a sepcific lease: including the resource it covers, the
+// active lease, and which application is the owner of a lease.
 message LeaseResource {
     // The resource name.
     string resource = 1;
@@ -222,6 +228,7 @@ message LeaseResource {
     LeaseOwner lease_owner = 3;
 }
 
+// The ListLease response message returns all known lease resources from the LeaseService.
 message ListLeasesResponse {
     // Common response header.
     ResponseHeader header = 1;
@@ -230,6 +237,9 @@ message ListLeasesResponse {
     repeated LeaseResource resources = 2;
 }
 
+// The RetainLease request will inform the LeaseService that the application contains to hold
+// ownership of this lease. Lease holders are expected to be reachable and alive. If enough time
+// has passed since the last RetainLeaseRequest, the LeaseService will revoke the lease.
 message RetainLeaseRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -239,9 +249,11 @@ message RetainLeaseRequest {
     Lease lease = 2;
 }
 
+// The RetainLease response message sends the result of the attempted RetainLease request, which
+// contains whether or not the lease is still owned by the application sending the request.
 message RetainLeaseResponse {
     // Common response header.
     ResponseHeader header = 1;
-
+    // Result of using the lease.
     LeaseUseResult lease_use_result = 2;
 }

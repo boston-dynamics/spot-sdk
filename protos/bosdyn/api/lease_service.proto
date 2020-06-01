@@ -13,53 +13,27 @@ option java_outer_classname = "LeaseServiceProto";
 import "bosdyn/api/lease.proto";
 
 // LeaseService provides Leases of shared resources to clients.
-//
 // An example of a shared resource is the set of leg motors on Spot, which
 // has the resource name of "body".
-//
 // Clients can delegate out the Leases they receive from the LeaseService
 // to additional clients or services by generating sub-leases.
-//
 // Leases obtained from the LeaseService may be revoked if the Lease holder
 // does not check in frequently to the LeaseService, or if another client
 // force-acquires a Lease.
 service LeaseService {
 
     // Acquire a lease to a specific resource if the resource is available.
-    //  
-    // If a client obtains a new lease, the client should initiate a
-    // RetainLease bidirectional streaming request immediately after completion
-    // of AcquireLease.
     rpc AcquireLease(AcquireLeaseRequest) returns (AcquireLeaseResponse);
 
     // Take a lease for a specific resource even if another client has a lease.
-    //
-    // In most cases if the resource is managed by the LeaseService, TakeLease
-    // will succeed.
-    //
-    // However, in the future policies may be introduced which will prevent
-    // TakeLease from succeeding and clients should be prepared to handle that
-    // case.
-    //
-    // If a client obtains a new lease, the client should initiate a
-    // RetainLease bidirectional streaming request immediately after completion
-    // of AcquireLease.
     rpc TakeLease(TakeLeaseRequest) returns (TakeLeaseResponse);
 
     // Return a lease to the LeaseService.
-    //
-    // If the lease is currently active for the resource, the LeaseService will
-    // invalidate the lease. Future calls to AcquireLease by any client will
-    // succeed.
     rpc ReturnLease(ReturnLeaseRequest) returns (ReturnLeaseResponse);
 
     // List state of all leases managed by the LeaseService.
     rpc ListLeases(ListLeasesRequest) returns (ListLeasesResponse);
 
     // Retain possession of a lease.
-    //
-    // Lease holders are expected to be reachable and alive. If enough time
-    // has passed since the last RetainLeaseRequest, the LeaseService will
-    // revoke the lease.
     rpc RetainLease(RetainLeaseRequest) returns (RetainLeaseResponse);
 }

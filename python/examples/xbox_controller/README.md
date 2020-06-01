@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# Xbox Controller
+#  API Example - Xbox Controller
 
 Xbox Controller example allows users to control a Spot robot through an Xbox controller. The example was tested with an Xbox 360 wired controller. The button mapping is:
 
@@ -35,22 +35,21 @@ Xbox Controller example allows users to control a Spot robot through an Xbox con
 | - Left Stick       | Move                     |
 | - Right Stick      | Turn                     |
 |                    |                          |
-| LB + RB + B        | E-stop                   |
+| LB + RB + B        | E-Stop                   |
 | Start              | Motor power & Control    |
 | Back               | Exit                     |
 
 
 ## User Guide
 ### Installation
-Currently, the Xbox Controller supports only Ubuntu OS. To install this example on Ubuntu 18.04, follow these instructions:
-- Install python3: `sudo apt-get install python3.6`
-- Install pip3: `sudo apt-get install python3-pip`
-- Install virtualenv: `pip3 install virtualenv`
-- Install xboxdrv: `sudo apt-get install xboxdrv`
-- Change into example directory: `cd xbox_controller`
-- Create virtual environment (one time operation): `virtualenv -p {PATH_TO_PYTHON3_EXECUTABLE} venv`. The path to the executable is the output of `which python3` command, usually set to `/usr/bin/python3`.
-- Start virtual environment: `source venv/bin/activate`
-- Install dependencies: `python -m pip install -r requirements.txtpip install -r requirements.txt`
+For your best learning experience, please use the [Quickstart Guide](../../../docs/python/quickstart.md) 
+found in the SDK's docs/python directory.  That will help you get your Python programming 
+environment setup properly.
+
+To install this example on Ubunty 18.04, follow these instructions:
+- Create virtual environment as described in this 
+[Quickstart Guide virtualenv section](../../../docs/python/quickstart.md#manage-multiple-python-environments)
+- Install dependencies: `python -m pip install -r requirements.txt`
 - Run the example using instructions in the next section
 - To exit the virtual environment, run `deactivate`
 
@@ -90,6 +89,6 @@ X       X       X
 
 **6)** The robot is now ready to be controlled.
 
-**7)** To E-stop the robot at any time, press the E-stop button combination (LB + RB + B)
+**7)** To E-Stop the robot at any time, press the E-Stop button combination (LB + RB + B)
 
 **8)** To exit and power off the robot, press the `Back` button.

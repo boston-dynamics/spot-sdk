@@ -13,60 +13,94 @@ option java_outer_classname = "CompositorProto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/spot_cam/camera.proto";
 
+// A "Screen" represents a particular layout of camera images
+// used by the video stream.
 message ScreenDescription {
+    // Unique identifer for a screen.
     string name = 1;
 }
 
+// Request the current screen in use.
 message GetScreenRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+
 }
 
+// Specify which screen is currently being displayed in the video stream.
 message GetScreenResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+    // Identifier of the current screen.
     string name = 2;
 }
 
+// Request information about the current cameras in the video stream.
 message GetVisibleCamerasRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+
 }
 
+// Description of the parameters and locations of each camera in the
+// current video stream.
 message GetVisibleCamerasResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
-    message Stream { 
+
+    // The location and camera parameters for a single camera.
+    message Stream {
+        // The location of a sub-image within a larger image.
         message Window {
             int32 xoffset=1;
             int32 yoffset=2;
-            //the image should be cropped out of the stream at this
+            //The image should be cropped out of the stream at this
             //resolution, and then scaled to the resolution described
             //in the 'camera' member, below.  once that scaling takes
             //place, the intrinsics will be valid.
             int32 width=3;
             int32 height=4;
         }
+        // The location of this camera stream within the larger stream.
         Window window=1;
-        //the name field in this camera member is of the form 'c:w',
-        //where c is the name of the camera and w is the name of the
-        //window that's projecting it.
+        // The name field in this camera member is of the form 'c:w',
+        // where c is the name of the camera and w is the name of the
+        // window that's projecting it.
         bosdyn.api.spot_cam.Camera camera=2;
     }
+    // List of all camera streams visible in the current video stream.
     repeated Stream streams=2;
 }
 
+// Request the different screen layouts available.
 message ListScreensRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+
 }
 
+// Response with all screen layouts available.
 message ListScreensResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+    // List of all screen layouts that can be selected.
     repeated ScreenDescription screens = 2;
 }
 
+// Switch the camera layout in the video stream to the one specified.
 message SetScreenRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
+
+    // Identifier as specified in ListScreensResponse.
     string name = 2;
 }
 
+
+// Result of setting the camera layout.
 message SetScreenResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+    // Identifier of the screen used.
     string name = 2;
 }

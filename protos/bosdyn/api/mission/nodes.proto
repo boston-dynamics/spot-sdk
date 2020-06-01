@@ -57,16 +57,22 @@ message Node {
 
 }
 
-// Run children until a child fails.
+// Run  all children in order until a child fails.
 message Sequence {
+    // Forces the execution to always begin with the first child.  If false, and
+    // the Sequence ran last tick, it will continue with the node it was ticking.
     bool always_restart = 1;
+    // List of all children to iterate through.
     repeated Node children = 2;
 }
 
 
-// Run children until a child succeeds.
+// Run all children in order until a child succeeds.
 message Selector {
+    // Forces the execution to always begin with the first child.  If false, and
+    // the Selector ran last tick, it will continue with the node it was ticking.
     bool always_restart = 1;
+    // List of all children to iterate through.
     repeated Node children = 2;
 }
 
@@ -76,6 +82,7 @@ message Repeat {
     // Start the child node exactly this many times.
     // Note that a value of 1 makes the Repeat node a no-op.
     int32 max_starts = 1;
+    // Child to repeat max_starts times.
     Node child = 4;
 }
 
@@ -84,6 +91,7 @@ message Repeat {
 message Retry {
     // Only allow this many attempts. Note that a value of 1 makes this Retry node a no-op.
     int32 max_attempts = 1;
+    // Child to retry up to max_attempts.
     Node child = 2;
 }
 
@@ -92,14 +100,18 @@ message Retry {
 // Will exit with child's status if the child finishes early,
 // FAILURE if the child remains in RUNNING state for too long.
 message ForDuration {
+    // Maximum duration of mission execution time.
     google.protobuf.Duration duration = 1;
+    // Child to execute for the duration.
     Node child = 2;
 }
 
 
-// Run two child nodes together, returning the primary child's result when it completes. 
+// Run two child nodes together, returning the primary child's result when it completes.
 message SimpleParallel {
+    // Primary node, whose completion will end the execution of SimpleParallel.
     Node primary = 1;
+    // Secondary node, which will be ticked as long as the primary is still running.
     Node secondary = 2;
 }
 
@@ -107,9 +119,12 @@ message SimpleParallel {
 // Checks a simple comparison statement.
 message Condition {
 
+    // Options for where to retrieve values from.
     message Operand {
         oneof type {
+            // Reference an existing variable.
             VariableDeclaration var = 1;
+            // Use a constant value.
             ConstantValue const = 2;
         }
     }
@@ -121,6 +136,7 @@ message Condition {
 
     // Comparison operator.
     enum Compare {
+        // Invalid, do not use.
         COMPARE_UNKNOWN = 0;
         // Equal.
         COMPARE_EQ = 1;
@@ -135,6 +151,7 @@ message Condition {
         // Greater than or equal.
         COMPARE_GE = 6;
     }
+    // Comparison operator to compare lhs and rhs.
     Compare operation = 5;
 }
 
@@ -177,7 +194,7 @@ message BosdynPowerRequest {
 }
 
 
-// Tell robot to navigate to a waypoint.
+// Tell the robot to navigate to a waypoint.
 message BosdynNavigateTo {
     // Name of the service to use.
     string service_name = 1;
@@ -193,7 +210,7 @@ message BosdynNavigateTo {
     bosdyn.api.graph_nav.TravelParams travel_params = 5;
 }
 
-// Get GraphNav state from the robot.
+// Get GraphNav state from the robot and save it to the blackboard.
 message BosdynGraphNavState {
     // Name of the service to use.
     string service_name = 1;
@@ -207,7 +224,7 @@ message BosdynGraphNavState {
     string state_name = 4;
 }
 
-// Tell GraphNav to localize robot.
+// Tell GraphNav to re-localize the robot to the nearest visible fiducial.
 message BosdynGraphNavLocalize {
     // Name of the service to use.
     string service_name = 1;
@@ -258,13 +275,14 @@ message Prompt {
     // The answer will be written into the state blackboard with this as the variable name.
     string source = 3;
 
-    // Options to choose from.
+    // Data about the options to choose from.
     message Option {
         // Text associated with this option. Should be displayed to the user.
         string text = 1;
         // Numeric code corresponding to this option. Passed as part of the answer.
         int64 answer_code = 2;
     }
+    // The set of options that can be chosen for this prompt.
     repeated Option options = 4;
 
     // Child node, run after the prompt has been responded to.
@@ -286,15 +304,21 @@ message SpotCamStoreMedia {
     // The rest of the fields are from bosdyn.api.spot_cam.logging.StoreRequest, see that message for
     // details.
     bosdyn.api.spot_cam.Camera camera = 3;
+    // What type of media should be stored from this action.
     bosdyn.api.spot_cam.Logpoint.RecordType type = 4;
+
+
+    // Extra metadata to store alongside the captured media.
     string tag = 5;
 }
 
 // Defines new blackboard variables within the scope of the child. Shadows blackboard
 // variables in the parent scope.
 message DefineBlackboard {
+    // The list of variables that should be defined for this subtree,
+    // with initial values.
     repeated KeyValue blackboard_variables = 1;
-    // The blackboard variable will only persist in the subtree defined by this
+    // The blackboard variables will only persist in the subtree defined by this
     // child node. The child's tick() will be called on the child until it
     // returns either SUCCESS or FAILURE.
     Node child = 2;

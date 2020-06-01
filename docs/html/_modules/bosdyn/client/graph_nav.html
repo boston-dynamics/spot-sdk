@@ -1,0 +1,1230 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bosdyn.client.graph_nav &mdash; Spot 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https:://dev.bostondynamics.com/_modules/bosdyn/client/graph_nav.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../README.html">
+          
+
+          
+            
+            <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/robot_services.html">Robot services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/python/README.html">Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/quickstart.html">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/understanding_spot_programming.html">Understanding Spot Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../python/examples/README.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/add_image_coordinates_to_scene/README.html">Add Image Coordinates to Scene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/directory/README.html">Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/estop/README.html">E-Stop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Get Depth Plus Visual Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/logging/README.html">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/mission_question_answerer/README.html">Mission Question Anwerer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/payloads/README.html">Payloads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_check/README.html">Spot Check</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/wasd/README.html">WASD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/xbox_controller/README.html">Xbox Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html">Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/common.html">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/processors.html">Processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html">Recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html">Robot Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_id.html">Robot ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html">PTZ</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/streamquality.html">Stream Quality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html">Version</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html">Spot Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/time_sync.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/README.html">Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/payload_configuration_requirements.html">Payload configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/mechanical_interfaces.html">Mechanical interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_mounting_rails.html">Robot mounting rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/protos/style_guide.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html">auth.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-chunk-proto">data_chunk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-proto">directory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-registration-proto">directory_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-registration-service-proto">directory_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-service-proto">directory_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#estop-proto">estop.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#estop-service-proto">estop_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-proto">local_grid.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-service-proto">mission/mission_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-nodes-proto">mission/nodes.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-remote-proto">mission/remote.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-remote-service-proto">mission/remote_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-util-proto">mission/util.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-registration-proto">payload_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-registration-service-proto">payload_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-service-proto">payload_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#point-cloud-proto">point_cloud.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#power-proto">power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#power-service-proto">power_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-command-service-proto">robot_command_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-proto">robot_id.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-led-proto">spot_cam/LED.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-factoryservice-proto">spot_cam/factoryservice.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-factorysetup-proto">spot_cam/factorysetup.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-health-proto">spot_cam/health.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-network-proto">spot_cam/network.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-power-proto">spot_cam/power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-ptz-proto">spot_cam/ptz.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-service-proto">spot_cam/service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-streamquality-proto">spot_cam/streamquality.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-version-proto">spot_cam/version.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../README.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../README.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bosdyn.client.graph_nav</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bosdyn.client.graph_nav</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;For clients to the graphnav service.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.graph_nav</span> <span class="kn">import</span> <span class="n">graph_nav_service_pb2_grpc</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.graph_nav</span> <span class="kn">import</span> <span class="n">graph_nav_service_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.graph_nav</span> <span class="kn">import</span> <span class="n">graph_nav_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.graph_nav</span> <span class="kn">import</span> <span class="n">nav_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.graph_nav</span> <span class="kn">import</span> <span class="n">map_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">data_chunk_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="n">BaseClient</span><span class="p">,</span> <span class="n">error_pair</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">common_lease_errors</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span>
+                                  <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_unset_status_error</span><span class="p">,</span>
+                                  <span class="n">handle_lease_use_result_errors</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">InvalidRequestError</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.lease</span> <span class="kn">import</span> <span class="n">add_lease_wallet_processors</span>
+
+
+<div class="viewcode-block" id="GraphNavClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient">[docs]</a><span class="k">class</span> <span class="nc">GraphNavClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Client to the GraphNav service.&quot;&quot;&quot;</span>
+    <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;graph-nav-service&#39;</span>
+    <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.graph_nav.GraphNavService&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GraphNavClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">graph_nav_service_pb2_grpc</span><span class="o">.</span><span class="n">GraphNavServiceStub</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_chunk_size</span> <span class="o">=</span> <span class="mi">1000</span>  <span class="c1"># bytes = 1 KB</span>
+
+<div class="viewcode-block" id="GraphNavClient.update_from"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.update_from">[docs]</a>    <span class="k">def</span> <span class="nf">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GraphNavClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">update_from</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="p">:</span>
+            <span class="n">add_lease_wallet_processors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="p">)</span>
+
+        <span class="c1"># Grab a timesync endpoint if it is available.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">time_sync</span><span class="o">.</span><span class="n">endpoint</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>  <span class="c1"># other doesn&#39;t have a time_sync accessor</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.set_localization"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.set_localization">[docs]</a>    <span class="k">def</span> <span class="nf">set_localization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_guess_localization</span><span class="p">,</span> <span class="n">ko_tform_body</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">max_yaw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">fiducial_init</span><span class="o">=</span><span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">SetLocalizationRequest</span><span class="o">.</span><span class="n">FIDUCIAL_INIT_NEAREST</span><span class="p">,</span>
+                         <span class="n">use_fiducial_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">refine_fiducial_result_with_icp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                         <span class="n">do_ambiguity_check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Trigger a manual localization. Typically done to provide the initial localization.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            initial_guess_localization (nav_pb2.Localization): Operator-supplied guess at localization.</span>
+<span class="sd">            ko_tform_body: Robot SE3Pose protobuf when the initial_guess was made.</span>
+<span class="sd">            max_distance: [optional] Margin of distance (meters) away from the initial guess.</span>
+<span class="sd">            max_yaw: [optional] Margin of angle (radians) away from the initial guess.</span>
+<span class="sd">            fiducial_init: Tells the initializer whether to use fiducials, and how to use them.</span>
+<span class="sd">            use_fiducial_id: If using FIDUCIAL_INIT_SPECIFIC, this is the specific fiducial ID to use for initialization.</span>
+<span class="sd">            refine_fiducial_result_with_icp: Boolean determining if ICP will run after a fiducial is used for an initial guess.</span>
+<span class="sd">            do_ambiguity_check: Boolean where if true, consider how nearby localizations appear.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The resulting localization after being triggered with a guess.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot</span>
+<span class="sd">            RobotFaultedError: Robot is experiencing a fault condition that prevents localization.</span>
+<span class="sd">            UnknownMapInformationError: Specified waypoint is unknown.</span>
+<span class="sd">            InvalidRequestError: The data provided is incomplete or invalid</span>
+<span class="sd">            GraphNavServiceResponseError: Localization was aborted or failed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_set_localization_request</span><span class="p">(</span><span class="n">initial_guess_localization</span><span class="p">,</span> <span class="n">ko_tform_body</span><span class="p">,</span>
+                                                   <span class="n">max_distance</span><span class="p">,</span> <span class="n">max_yaw</span><span class="p">,</span> <span class="n">fiducial_init</span><span class="p">,</span>
+                                                   <span class="n">use_fiducial_id</span><span class="p">,</span> <span class="n">refine_fiducial_result_with_icp</span><span class="p">,</span>
+                                                   <span class="n">do_ambiguity_check</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetLocalization</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_localization_from_response</span><span class="p">,</span>
+                         <span class="n">_set_localization_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.set_localization_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.set_localization_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_localization_async</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">initial_guess_localization</span><span class="p">,</span> <span class="n">ko_tform_body</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_yaw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">fiducial_init</span><span class="o">=</span><span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">SetLocalizationRequest</span><span class="o">.</span><span class="n">FIDUCIAL_INIT_NEAREST</span><span class="p">,</span>
+            <span class="n">use_fiducial_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">refine_fiducial_result_with_icp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">do_ambiguity_check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of set_localization()&quot;&quot;&quot;</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_set_localization_request</span><span class="p">(</span><span class="n">initial_guess_localization</span><span class="p">,</span> <span class="n">ko_tform_body</span><span class="p">,</span>
+                                                   <span class="n">max_distance</span><span class="p">,</span> <span class="n">max_yaw</span><span class="p">,</span> <span class="n">fiducial_init</span><span class="p">,</span>
+                                                   <span class="n">use_fiducial_id</span><span class="p">,</span> <span class="n">refine_fiducial_result_with_icp</span><span class="p">,</span>
+                                                   <span class="n">do_ambiguity_check</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetLocalization</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_localization_from_response</span><span class="p">,</span>
+                               <span class="n">_set_localization_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.get_localization_state"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.get_localization_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_localization_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                               <span class="n">request_live_point_cloud</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                               <span class="n">request_live_images</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                               <span class="n">request_live_terrain_maps</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                               <span class="n">request_live_world_objects</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                               <span class="n">request_live_robot_state</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                               <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Obtain current localization state of the robot.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The current localization protobuf for the robot.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_get_localization_state_request</span><span class="p">(</span>
+            <span class="n">request_live_point_cloud</span><span class="o">=</span><span class="n">request_live_point_cloud</span><span class="p">,</span>
+            <span class="n">request_live_images</span><span class="o">=</span><span class="n">request_live_images</span><span class="p">,</span>
+            <span class="n">request_live_terrain_maps</span><span class="o">=</span><span class="n">request_live_terrain_maps</span><span class="p">,</span>
+            <span class="n">request_live_world_objects</span><span class="o">=</span><span class="n">request_live_world_objects</span><span class="p">,</span>
+            <span class="n">request_live_robot_state</span><span class="o">=</span><span class="n">request_live_robot_state</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetLocalizationState</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.get_localization_state_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.get_localization_state_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_localization_state_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_live_point_cloud</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="n">request_live_images</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">request_live_terrain_maps</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="n">request_live_world_objects</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                     <span class="n">request_live_robot_state</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_localization_state().&quot;&quot;&quot;</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_get_localization_state_request</span><span class="p">(</span>
+            <span class="n">request_live_point_cloud</span><span class="o">=</span><span class="n">request_live_point_cloud</span><span class="p">,</span>
+            <span class="n">request_live_images</span><span class="o">=</span><span class="n">request_live_images</span><span class="p">,</span>
+            <span class="n">request_live_terrain_maps</span><span class="o">=</span><span class="n">request_live_terrain_maps</span><span class="p">,</span>
+            <span class="n">request_live_world_objects</span><span class="o">=</span><span class="n">request_live_world_objects</span><span class="p">,</span>
+            <span class="n">request_live_robot_state</span><span class="o">=</span><span class="n">request_live_robot_state</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetLocalizationState</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span>
+                               <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.navigate_route"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.navigate_route">[docs]</a>    <span class="k">def</span> <span class="nf">navigate_route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">cmd_duration</span><span class="p">,</span> <span class="n">travel_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">leases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">timesync_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Navigate the given route.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            route: Route protobuf of the route to follow.</span>
+<span class="sd">            travel_params: API TravelParams for the route.</span>
+<span class="sd">            cmd_duration: Number of seconds the command can run for.</span>
+<span class="sd">            leases: Leases to show ownership of necessary resources. Will use the client&#39;s leases by default.</span>
+<span class="sd">            timesync_endpoint: Use this endpoint for timesync fields. Will use the client&#39;s endpoint by default.</span>
+<span class="sd">            kwargs: Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Command ID to use in feedback lookup.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">            LeaseUseError: Error using provided leases.</span>
+<span class="sd">            graph_nav.NoTimeSyncError: Missing clock identifier.</span>
+<span class="sd">            graph_nav.CommandExpiredError: Command already expired.</span>
+<span class="sd">            graph_nav.TooDistantError: Time too far in the future.</span>
+<span class="sd">            graph_nav.RobotImpairedError: Robot cannot travel a route.</span>
+<span class="sd">            graph_nav.IsRecordingError: Robot cannot navigate while recording.</span>
+<span class="sd">            graph_nav.UnknownRouteElementsError: Unknown edges or waypoints</span>
+<span class="sd">            graph_nav.InvalidEdgeError: Mismatch between edges and waypoints.</span>
+<span class="sd">            graph_nav.RobotNotLocalizedToRouteError: The robot is localized somewhere else.</span>
+<span class="sd">            graph_nav.ConstraintFaultError: The route involves invalid constraints.</span>
+<span class="sd">            graph_nav.RouteNavigationError: A subclass detailing trouble navigating the route.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">used_endpoint</span> <span class="o">=</span> <span class="n">timesync_endpoint</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">used_endpoint</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">GraphNavServiceResponseError</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="s1">&#39;No timesync endpoint!&#39;</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_navigate_route_request</span><span class="p">(</span><span class="n">route</span><span class="p">,</span> <span class="n">travel_params</span><span class="p">,</span> <span class="n">cmd_duration</span><span class="p">,</span> <span class="n">leases</span><span class="p">,</span>
+                                                     <span class="n">used_endpoint</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">NavigateRoute</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                         <span class="n">_command_id_from_navigate_route_response</span><span class="p">,</span> <span class="n">_navigate_route_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.navigate_route_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.navigate_route_async">[docs]</a>    <span class="k">def</span> <span class="nf">navigate_route_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">cmd_duration</span><span class="p">,</span> <span class="n">travel_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">leases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">timesync_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of navigate_route()&quot;&quot;&quot;</span>
+        <span class="n">used_endpoint</span> <span class="o">=</span> <span class="n">timesync_endpoint</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">used_endpoint</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">GraphNavServiceResponseError</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="s1">&#39;No timesync endpoint!&#39;</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_navigate_route_request</span><span class="p">(</span><span class="n">route</span><span class="p">,</span> <span class="n">travel_params</span><span class="p">,</span> <span class="n">cmd_duration</span><span class="p">,</span> <span class="n">leases</span><span class="p">,</span>
+                                                     <span class="n">used_endpoint</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">NavigateRoute</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                               <span class="n">_command_id_from_navigate_route_response</span><span class="p">,</span> <span class="n">_navigate_route_error</span><span class="p">,</span>
+                               <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.navigate_to"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.navigate_to">[docs]</a>    <span class="k">def</span> <span class="nf">navigate_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">destination_waypoint_id</span><span class="p">,</span> <span class="n">cmd_duration</span><span class="p">,</span> <span class="n">route_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">travel_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">leases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Navigate to a specific waypoint along a route chosen by the GraphNav service.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            destination_waypoint_id: Waypoint id string for where to go to.</span>
+<span class="sd">            cmd_duration: Number of seconds the command can run for.</span>
+<span class="sd">            route_params: API RouteGenParams for the route.</span>
+<span class="sd">            travel_params: API TravelParams for the route.</span>
+<span class="sd">            leases: Leases to show ownership of necessary resources. Will use the client&#39;s leases by default.</span>
+<span class="sd">            timesync_endpoint: Use this endpoint for timesync fields. Will use the client&#39;s endpoint by default.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Command ID to use in feedback lookup.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">            LeaseUseError: Error using provided leases.</span>
+<span class="sd">            graph_nav.NoTimeSyncError: Missing clock identifier.</span>
+<span class="sd">            graph_nav.CommandExpiredError: Command already expired.</span>
+<span class="sd">            graph_nav.TooDistantError: Time too far in the future.</span>
+<span class="sd">            graph_nav.RobotImpairedError: Robot cannot travel a route.</span>
+<span class="sd">            graph_nav.IsRecordingError: Robot cannot navigate while recording.</span>
+<span class="sd">            graph_nav.UnknownWaypointError: Destination waypoint is unknown.</span>
+<span class="sd">            graph_nav.NoPathError: No route to destination.</span>
+<span class="sd">            graph_nav.RobotNotLocalizedToRouteError: The robot not correctly localized.</span>
+<span class="sd">            graph_nav.RouteNavigationError: A subclass detailing trouble navigating the route.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">used_endpoint</span> <span class="o">=</span> <span class="n">timesync_endpoint</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">used_endpoint</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">GraphNavServiceResponseError</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="s1">&#39;No timesync endpoint!&#39;</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_navigate_to_request</span><span class="p">(</span><span class="n">destination_waypoint_id</span><span class="p">,</span> <span class="n">travel_params</span><span class="p">,</span>
+                                                  <span class="n">route_params</span><span class="p">,</span> <span class="n">cmd_duration</span><span class="p">,</span> <span class="n">leases</span><span class="p">,</span> <span class="n">used_endpoint</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">NavigateTo</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                         <span class="n">value_from_response</span><span class="o">=</span><span class="n">_command_id_from_navigate_route_response</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">_navigate_to_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.navigate_to_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.navigate_to_async">[docs]</a>    <span class="k">def</span> <span class="nf">navigate_to_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">destination_waypoint_id</span><span class="p">,</span> <span class="n">cmd_duration</span><span class="p">,</span> <span class="n">route_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">travel_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">leases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of navigate_to().&quot;&quot;&quot;</span>
+        <span class="n">used_endpoint</span> <span class="o">=</span> <span class="n">timesync_endpoint</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">used_endpoint</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">GraphNavServiceResponseError</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="s1">&#39;No timesync endpoint!&#39;</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_navigate_to_request</span><span class="p">(</span><span class="n">destination_waypoint_id</span><span class="p">,</span> <span class="n">travel_params</span><span class="p">,</span>
+                                                  <span class="n">route_params</span><span class="p">,</span> <span class="n">cmd_duration</span><span class="p">,</span> <span class="n">leases</span><span class="p">,</span> <span class="n">used_endpoint</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">NavigateTo</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                               <span class="n">value_from_response</span><span class="o">=</span><span class="n">_command_id_from_navigate_route_response</span><span class="p">,</span>
+                               <span class="n">error_from_response</span><span class="o">=</span><span class="n">_navigate_to_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.navigation_feedback"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.navigation_feedback">[docs]</a>    <span class="k">def</span> <span class="nf">navigation_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the feedback corresponding to the active route follow command.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            command_id (int):  If blank, will return current command status.  If filled</span>
+<span class="sd">                out, will attempt to return that command status</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            NavigationFeedbackResponse</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_navigate_feedback_request</span><span class="p">(</span><span class="n">command_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">NavigationFeedback</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_response</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">_navigate_feedback_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.navigation_feedback_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.navigation_feedback_async">[docs]</a>    <span class="k">def</span> <span class="nf">navigation_feedback_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of navigation_feedback().&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_navigate_feedback_request</span><span class="p">(</span><span class="n">command_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">NavigationFeedback</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                               <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_response</span><span class="p">,</span>
+                               <span class="n">error_from_response</span><span class="o">=</span><span class="n">_navigate_feedback_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.clear_graph"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.clear_graph">[docs]</a>    <span class="k">def</span> <span class="nf">clear_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clears the local graph structure. Also erases any snapshots currently in RAM.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            leases: Leases to show ownership of necessary resources. Will use the client&#39;s leases by default.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">            LeaseUseError: Error using provided lease.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_clear_graph_request</span><span class="p">(</span><span class="n">lease</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ClearGraph</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">handle_common_header_errors</span><span class="p">(</span><span class="n">common_lease_errors</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.clear_graph_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.clear_graph_async">[docs]</a>    <span class="k">def</span> <span class="nf">clear_graph_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of clear_graph().&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_clear_graph_request</span><span class="p">(</span><span class="n">lease</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ClearGraph</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                               <span class="n">error_from_response</span><span class="o">=</span><span class="n">handle_common_header_errors</span><span class="p">(</span><span class="n">common_lease_errors</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.upload_graph"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.upload_graph">[docs]</a>    <span class="k">def</span> <span class="nf">upload_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Uploads a graph to the server and appends to the existing graph.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            leases: Leases to show ownership of necessary resources. Will use the client&#39;s leases by default.</span>
+<span class="sd">            graph: Graph protobuf that represents the map with waypoints and edges.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The response, which includes waypoint and edge id&#39;s sorted by whether it was cached.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">            LeaseUseError: Error using provided lease.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_upload_graph_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">graph</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">UploadGraph</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_response</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">handle_common_header_errors</span><span class="p">(</span><span class="n">common_lease_errors</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.upload_graph_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.upload_graph_async">[docs]</a>    <span class="k">def</span> <span class="nf">upload_graph_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of upload_graph().&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_upload_graph_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">graph</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">UploadGraph</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_response</span><span class="p">,</span>
+                               <span class="n">error_from_response</span><span class="o">=</span><span class="n">handle_common_header_errors</span><span class="p">(</span><span class="n">common_lease_errors</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.upload_waypoint_snapshot"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.upload_waypoint_snapshot">[docs]</a>    <span class="k">def</span> <span class="nf">upload_waypoint_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waypoint_snapshot</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Uploads large waypoint snapshot as a stream for a particular waypoint.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            leases: Leases to show ownership of necessary resources. Will use the client&#39;s leases by default.</span>
+<span class="sd">            waypoint_snapshot: WaypointSnapshot protobuf that will be stream uploaded to the robot.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The status of the upload request.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">            LeaseUseError: Error using provided lease.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">serialized</span> <span class="o">=</span> <span class="n">waypoint_snapshot</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">UploadWaypointSnapshot</span><span class="p">,</span>
+                  <span class="n">GraphNavClient</span><span class="o">.</span><span class="n">_data_chunk_iterator_upload_waypoint_snapshot</span><span class="p">(</span>
+                      <span class="n">serialized</span><span class="p">,</span> <span class="n">lease</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_chunk_size</span><span class="p">),</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">error_from_response</span><span class="o">=</span><span class="n">handle_common_header_errors</span><span class="p">(</span><span class="n">common_lease_errors</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.upload_edge_snapshot"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.upload_edge_snapshot">[docs]</a>    <span class="k">def</span> <span class="nf">upload_edge_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_snapshot</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Uploads large edge snapshot as a stream for a particular edge.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            leases: Leases to show ownership of necessary resources. Will use the client&#39;s leases by default.</span>
+<span class="sd">            edge_snapshot: EdgeSnapshot protobuf that will be stream uploaded to the robot.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The status of the upload request.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">            LeaseUseError: Error using provided leases.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">serialized</span> <span class="o">=</span> <span class="n">edge_snapshot</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">UploadEdgeSnapshot</span><span class="p">,</span>
+                  <span class="n">GraphNavClient</span><span class="o">.</span><span class="n">_data_chunk_iterator_upload_edge_snapshot</span><span class="p">(</span>
+                      <span class="n">serialized</span><span class="p">,</span> <span class="n">lease</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_chunk_size</span><span class="p">),</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">error_from_response</span><span class="o">=</span><span class="n">handle_common_header_errors</span><span class="p">(</span><span class="n">common_lease_errors</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.download_graph"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.download_graph">[docs]</a>    <span class="k">def</span> <span class="nf">download_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Downloads the graph from the server.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The graph protobuf that represents the current map on the robot (with waypoints and edges).</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_download_graph_request</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">DownloadGraph</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_graph</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.download_graph_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.download_graph_async">[docs]</a>    <span class="k">def</span> <span class="nf">download_graph_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of download_graph().&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_download_graph_request</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">DownloadGraph</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_graph</span><span class="p">,</span>
+                               <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.download_waypoint_snapshot"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.download_waypoint_snapshot">[docs]</a>    <span class="k">def</span> <span class="nf">download_waypoint_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                    <span class="n">waypoint_snapshot_id</span><span class="p">,</span>
+                                    <span class="n">download_images</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Download a specific waypoint snapshot with streaming from the server.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            waypoint_snapshot_id: WaypointSnapshot string ID for which snapshot to download from robot.</span>
+<span class="sd">            download_images: Boolean indicating whether or not to include images in the download.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The WaypointSnapshot protobuf from the robot&#39;s current map.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot</span>
+<span class="sd">            UnknownMapInformationError: Snapshot id not found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_download_waypoint_snapshot_request</span><span class="p">(</span><span class="n">waypoint_snapshot_id</span><span class="p">,</span>
+                                                                 <span class="n">download_images</span>
+                                                                <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">DownloadWaypointSnapshot</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                         <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_streamed_waypoint_snapshot</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">_download_waypoint_snapshot_stream_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.download_edge_snapshot"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.download_edge_snapshot">[docs]</a>    <span class="k">def</span> <span class="nf">download_edge_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_snapshot_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Downloads a specific edge snapshot with streaming from the server.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            edge_snapshot_id: EdgeSnapshot string ID for which snapshot to download from robot.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The EdgeSnapshot protobuf from the robot&#39;s current map.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: Problem communicating with the robot</span>
+<span class="sd">            UnknownMapInformationError: Snapshot id not found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_download_edge_snapshot_request</span><span class="p">(</span><span class="n">edge_snapshot_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">DownloadEdgeSnapshot</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                         <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_streamed_edge_snapshot</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">_download_edge_snapshot_stream_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_build_set_localization_request</span><span class="p">(</span>
+            <span class="n">initial_guess_localization</span><span class="p">,</span> <span class="n">ko_tform_body</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_yaw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">fiducial_init</span><span class="o">=</span><span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">SetLocalizationRequest</span><span class="o">.</span><span class="n">FIDUCIAL_INIT_NEAREST</span><span class="p">,</span>
+            <span class="n">use_fiducial_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">refine_fiducial_result_with_icp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">do_ambiguity_check</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">SetLocalizationRequest</span><span class="p">(</span><span class="n">fiducial_init</span><span class="o">=</span><span class="n">fiducial_init</span><span class="p">)</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">initial_guess</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">initial_guess_localization</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ko_tform_body</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">ko_tform_body</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">ko_tform_body</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">max_distance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">max_distance</span> <span class="o">=</span> <span class="n">max_distance</span>
+        <span class="k">if</span> <span class="n">max_yaw</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">max_yaw</span> <span class="o">=</span> <span class="n">max_yaw</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">fiducial_init</span> <span class="o">==</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">SetLocalizationRequest</span><span class="o">.</span><span class="n">FIDUCIAL_INIT_SPECIFIC</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">use_fiducial_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">use_fiducial_id</span> <span class="o">=</span> <span class="n">use_fiducial_id</span>
+
+        <span class="n">request</span><span class="o">.</span><span class="n">refine_fiducial_result_with_icp</span> <span class="o">=</span> <span class="n">refine_fiducial_result_with_icp</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">do_ambiguity_check</span> <span class="o">=</span> <span class="n">do_ambiguity_check</span>
+        <span class="k">return</span> <span class="n">request</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_build_get_localization_state_request</span><span class="p">(</span><span class="n">request_live_point_cloud</span><span class="p">,</span> <span class="n">request_live_images</span><span class="p">,</span>
+                                              <span class="n">request_live_terrain_maps</span><span class="p">,</span> <span class="n">request_live_world_objects</span><span class="p">,</span>
+                                              <span class="n">request_live_robot_state</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">GetLocalizationStateRequest</span><span class="p">(</span>
+            <span class="n">request_live_point_cloud</span><span class="o">=</span><span class="n">request_live_point_cloud</span><span class="p">,</span>
+            <span class="n">request_live_images</span><span class="o">=</span><span class="n">request_live_images</span><span class="p">,</span>
+            <span class="n">request_live_terrain_maps</span><span class="o">=</span><span class="n">request_live_terrain_maps</span><span class="p">,</span>
+            <span class="n">request_live_world_objects</span><span class="o">=</span><span class="n">request_live_world_objects</span><span class="p">,</span>
+            <span class="n">request_live_robot_state</span><span class="o">=</span><span class="n">request_live_robot_state</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_build_navigate_route_request</span><span class="p">(</span><span class="n">route</span><span class="p">,</span> <span class="n">travel_params</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="p">,</span> <span class="n">leases</span><span class="p">,</span>
+                                      <span class="n">timesync_endpoint</span><span class="p">):</span>
+        <span class="n">converter</span> <span class="o">=</span> <span class="n">timesync_endpoint</span><span class="o">.</span><span class="n">get_robot_time_converter</span><span class="p">()</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateRouteRequest</span><span class="p">(</span>
+            <span class="n">route</span><span class="o">=</span><span class="n">route</span><span class="p">,</span> <span class="n">clock_identifier</span><span class="o">=</span><span class="n">timesync_endpoint</span><span class="o">.</span><span class="n">clock_identifier</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">travel_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">travel_params</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">travel_params</span><span class="p">)</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">end_time</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span>
+            <span class="n">converter</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="n">end_time_secs</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">request</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_build_navigate_to_request</span><span class="p">(</span><span class="n">destination_waypoint_id</span><span class="p">,</span> <span class="n">travel_params</span><span class="p">,</span> <span class="n">route_params</span><span class="p">,</span>
+                                   <span class="n">end_time_secs</span><span class="p">,</span> <span class="n">leases</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">):</span>
+        <span class="n">converter</span> <span class="o">=</span> <span class="n">timesync_endpoint</span><span class="o">.</span><span class="n">get_robot_time_converter</span><span class="p">()</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateToRequest</span><span class="p">(</span>
+            <span class="n">destination_waypoint_id</span><span class="o">=</span><span class="n">destination_waypoint_id</span><span class="p">,</span>
+            <span class="n">clock_identifier</span><span class="o">=</span><span class="n">timesync_endpoint</span><span class="o">.</span><span class="n">clock_identifier</span><span class="p">)</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">end_time</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span>
+            <span class="n">converter</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="n">end_time_secs</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">travel_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">travel_params</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">travel_params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">route_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">route_params</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">route_params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">request</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_build_clear_graph_request</span><span class="p">(</span><span class="n">lease</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">ClearGraphRequest</span><span class="p">(</span><span class="n">lease</span><span class="o">=</span><span class="n">lease</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_build_navigate_feedback_request</span><span class="p">(</span><span class="n">command_id</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigationFeedbackRequest</span><span class="p">(</span><span class="n">command_id</span><span class="o">=</span><span class="n">command_id</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_build_upload_graph_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">UploadGraphRequest</span><span class="p">(</span><span class="n">lease</span><span class="o">=</span><span class="n">lease</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_data_chunk_iterator_upload_waypoint_snapshot</span><span class="p">(</span><span class="n">serialized_waypoint_snapshot</span><span class="p">,</span> <span class="n">lease</span><span class="p">,</span>
+                                                      <span class="n">data_chunk_byte_size</span><span class="p">):</span>
+        <span class="n">total_bytes_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">serialized_waypoint_snapshot</span><span class="p">)</span>
+        <span class="n">num_chunks</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">total_bytes_size</span> <span class="o">/</span> <span class="n">data_chunk_byte_size</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_chunks</span><span class="p">):</span>
+            <span class="n">start_index</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">data_chunk_byte_size</span>
+            <span class="n">end_index</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">data_chunk_byte_size</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="n">data_chunk_pb2</span><span class="o">.</span><span class="n">DataChunk</span><span class="p">(</span><span class="n">total_size</span><span class="o">=</span><span class="n">total_bytes_size</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">end_index</span> <span class="o">&gt;</span> <span class="n">total_bytes_size</span><span class="p">):</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">serialized_waypoint_snapshot</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">total_bytes_size</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">serialized_waypoint_snapshot</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">end_index</span><span class="p">]</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">UploadWaypointSnapshotRequest</span><span class="p">(</span><span class="n">lease</span><span class="o">=</span><span class="n">lease</span><span class="p">,</span> <span class="n">chunk</span><span class="o">=</span><span class="n">chunk</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">req</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_data_chunk_iterator_upload_edge_snapshot</span><span class="p">(</span><span class="n">serialized_edge_snapshot</span><span class="p">,</span> <span class="n">lease</span><span class="p">,</span>
+                                                  <span class="n">data_chunk_byte_size</span><span class="p">):</span>
+        <span class="n">total_bytes_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">serialized_edge_snapshot</span><span class="p">)</span>
+        <span class="n">num_chunks</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">total_bytes_size</span> <span class="o">/</span> <span class="n">data_chunk_byte_size</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_chunks</span><span class="p">):</span>
+            <span class="n">start_index</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">data_chunk_byte_size</span>
+            <span class="n">end_index</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">data_chunk_byte_size</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="n">data_chunk_pb2</span><span class="o">.</span><span class="n">DataChunk</span><span class="p">(</span><span class="n">total_size</span><span class="o">=</span><span class="n">total_bytes_size</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">end_index</span> <span class="o">&gt;</span> <span class="n">total_bytes_size</span><span class="p">):</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">serialized_edge_snapshot</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">total_bytes_size</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">serialized_edge_snapshot</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">end_index</span><span class="p">]</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">UploadWaypointSnapshotRequest</span><span class="p">(</span><span class="n">lease</span><span class="o">=</span><span class="n">lease</span><span class="p">,</span> <span class="n">chunk</span><span class="o">=</span><span class="n">chunk</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">req</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_build_download_graph_request</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">DownloadGraphRequest</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_build_download_waypoint_snapshot_request</span><span class="p">(</span><span class="n">waypoint_snapshot_id</span><span class="p">,</span> <span class="n">download_images</span>
+                                                  <span class="p">):</span>
+        <span class="k">return</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">DownloadWaypointSnapshotRequest</span><span class="p">(</span>
+            <span class="n">waypoint_snapshot_id</span><span class="o">=</span><span class="n">waypoint_snapshot_id</span><span class="p">,</span> <span class="n">download_images</span><span class="o">=</span><span class="n">download_images</span>
+            <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_build_download_edge_snapshot_request</span><span class="p">(</span><span class="n">edge_snapshot_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">DownloadEdgeSnapshotRequest</span><span class="p">(</span><span class="n">edge_snapshot_id</span><span class="o">=</span><span class="n">edge_snapshot_id</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GraphNavClient.generate_travel_params"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.generate_travel_params">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">generate_travel_params</span><span class="p">(</span><span class="n">max_distance</span><span class="p">,</span> <span class="n">max_yaw</span><span class="p">,</span> <span class="n">velocity_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Generate the API TravelParams for navigation requests.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            max_distance: Distances (meters) threshold for when we&#39;ve reached the final waypoint.</span>
+<span class="sd">            max_yaw: Angle (radians) threshold for when we&#39;ve reached the final waypoint.</span>
+<span class="sd">            velocity_limit: SE2VelocityLimit protobuf message for the speed the robot should use.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The API TravelParams protobuf message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">travel_params</span> <span class="o">=</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">TravelParams</span><span class="p">(</span><span class="n">max_distance</span><span class="o">=</span><span class="n">max_distance</span><span class="p">,</span> <span class="n">max_yaw</span><span class="o">=</span><span class="n">max_yaw</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">velocity_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">travel_params</span><span class="o">.</span><span class="n">velocity_limit</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">velocity_limit</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">travel_params</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.generate_route_params"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.generate_route_params">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">generate_route_params</span><span class="p">(</span><span class="n">waypoint_id_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Generate the API RouteGenParams for navigation requests.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            waypoint_id_list: List of waypoint id strings in which a route should pass through.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The API RouteGenParams protobuf message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">route_params</span> <span class="o">=</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">RouteGenParams</span><span class="p">()</span>
+        <span class="n">route_params</span><span class="o">.</span><span class="n">via_waypoints</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">waypoint_id_list</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">route_params</span></div>
+
+<div class="viewcode-block" id="GraphNavClient.build_route"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.build_route">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">build_route</span><span class="p">(</span><span class="n">waypoint_id_list</span><span class="p">,</span> <span class="n">edge_id_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Generate the API RouteGenParams for navigation requests.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            waypoint_id_list: List of waypoint id strings in which a route should pass through.</span>
+<span class="sd">                                The ids should be ordered from [start waypoint --&gt; destination waypoint].</span>
+<span class="sd">            edge_id_list: List of the edge_id&#39;s which should be in the same ordering as the waypoint list.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The API Route protobuf message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">route</span> <span class="o">=</span> <span class="n">nav_pb2</span><span class="o">.</span><span class="n">Route</span><span class="p">()</span>
+        <span class="n">route</span><span class="o">.</span><span class="n">waypoint_id</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">waypoint_id_list</span><span class="p">)</span>
+        <span class="n">route</span><span class="o">.</span><span class="n">edge_id</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">edge_id_list</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">route</span></div></div>
+
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Static helper methods for handing responses and errors.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+
+<div class="viewcode-block" id="GraphNavServiceResponseError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavServiceResponseError">[docs]</a><span class="k">class</span> <span class="nc">GraphNavServiceResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;General class of errors for the GraphNav Recording Service.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="RequestAbortedError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.RequestAbortedError">[docs]</a><span class="k">class</span> <span class="nc">RequestAbortedError</span><span class="p">(</span><span class="n">GraphNavServiceResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Request was aborted by the system.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="RequestFailedError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.RequestFailedError">[docs]</a><span class="k">class</span> <span class="nc">RequestFailedError</span><span class="p">(</span><span class="n">GraphNavServiceResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Request failed to complete by the system.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="RobotFaultedError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.RobotFaultedError">[docs]</a><span class="k">class</span> <span class="nc">RobotFaultedError</span><span class="p">(</span><span class="n">GraphNavServiceResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Robot is experiencing a fault condition that prevents localization.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="UnknownMapInformationError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.UnknownMapInformationError">[docs]</a><span class="k">class</span> <span class="nc">UnknownMapInformationError</span><span class="p">(</span><span class="n">GraphNavServiceResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The given map information (waypoints,edges,routes) is unknown by the system.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="TimeError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.TimeError">[docs]</a><span class="k">class</span> <span class="nc">TimeError</span><span class="p">(</span><span class="n">GraphNavServiceResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Errors associated with timestamps and time sync.&quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="CommandExpiredError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.CommandExpiredError">[docs]</a><span class="k">class</span> <span class="nc">CommandExpiredError</span><span class="p">(</span><span class="n">TimeError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The command was received after its end time had already passed.&quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="NoTimeSyncError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.NoTimeSyncError">[docs]</a><span class="k">class</span> <span class="nc">NoTimeSyncError</span><span class="p">(</span><span class="n">TimeError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Client has not performed timesync with robot.&quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="TooDistantError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.TooDistantError">[docs]</a><span class="k">class</span> <span class="nc">TooDistantError</span><span class="p">(</span><span class="n">TimeError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The command was too far in the future.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="RobotStateError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.RobotStateError">[docs]</a><span class="k">class</span> <span class="nc">RobotStateError</span><span class="p">(</span><span class="n">GraphNavServiceResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Errors associated with the current state of the robot.&quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="IsRecordingError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.IsRecordingError">[docs]</a><span class="k">class</span> <span class="nc">IsRecordingError</span><span class="p">(</span><span class="n">RobotStateError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Cannot navigate a route while recording a map.&quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="RobotImpairedError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.RobotImpairedError">[docs]</a><span class="k">class</span> <span class="nc">RobotImpairedError</span><span class="p">(</span><span class="n">RobotStateError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Robot has a critical perception or behavior fault and cannot navigate.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="RouteError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.RouteError">[docs]</a><span class="k">class</span> <span class="nc">RouteError</span><span class="p">(</span><span class="n">GraphNavServiceResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Errors associated with the specified route.&quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="ConstraintFaultError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.ConstraintFaultError">[docs]</a><span class="k">class</span> <span class="nc">ConstraintFaultError</span><span class="p">(</span><span class="n">RouteError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Route parameters contained a constraint fault.&quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="InvalidEdgeError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.InvalidEdgeError">[docs]</a><span class="k">class</span> <span class="nc">InvalidEdgeError</span><span class="p">(</span><span class="n">RouteError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;One or more edges do not connect to expected waypoints.&quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="UnkownRouteElementsError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.UnkownRouteElementsError">[docs]</a><span class="k">class</span> <span class="nc">UnkownRouteElementsError</span><span class="p">(</span><span class="n">RouteError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;One or more waypoints/edges are not in the map.&quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="NoPathError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.NoPathError">[docs]</a><span class="k">class</span> <span class="nc">NoPathError</span><span class="p">(</span><span class="n">RouteError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;There is no path to the specified waypoint.&quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="UnknownWaypointError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.UnknownWaypointError">[docs]</a><span class="k">class</span> <span class="nc">UnknownWaypointError</span><span class="p">(</span><span class="n">RouteError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;One or more waypoints are not in the map.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="RouteNavigationError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.RouteNavigationError">[docs]</a><span class="k">class</span> <span class="nc">RouteNavigationError</span><span class="p">(</span><span class="n">GraphNavServiceResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Errors related to how the robot navigates the route.&quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="FeatureDesertError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.FeatureDesertError">[docs]</a><span class="k">class</span> <span class="nc">FeatureDesertError</span><span class="p">(</span><span class="n">RouteNavigationError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Route contained too many waypoints with low-quality features.&quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="RouteNotUpdatingError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.RouteNotUpdatingError">[docs]</a><span class="k">class</span> <span class="nc">RouteNotUpdatingError</span><span class="p">(</span><span class="n">RouteNavigationError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Graph nav was unable to update and follow the specified route.&quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="RobotLostError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.RobotLostError">[docs]</a><span class="k">class</span> <span class="nc">RobotLostError</span><span class="p">(</span><span class="n">RouteNavigationError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Cannot issue a navigation request when the robot is already lost.&quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="RobotNotLocalizedToRouteError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.RobotNotLocalizedToRouteError">[docs]</a><span class="k">class</span> <span class="nc">RobotNotLocalizedToRouteError</span><span class="p">(</span><span class="n">RouteNavigationError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The current localization doesn&#39;t refer to any waypoint in the route (possibly uninitialized localization).&quot;&quot;&quot;</span></div>
+
+
+<span class="k">def</span> <span class="nf">_localization_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the localization state from the response.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">localization</span>
+
+
+<span class="k">def</span> <span class="nf">_command_id_from_navigate_route_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the navigation command id from the response.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">command_id</span>
+
+
+<span class="k">def</span> <span class="nf">_get_status</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the status of the response.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span>
+
+
+<span class="k">def</span> <span class="nf">_get_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return full response for RecordStatus to get environment and is_recording information.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">response</span>
+
+
+<span class="k">def</span> <span class="nf">_get_graph</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the graph from the response.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">graph</span>
+
+
+<span class="k">def</span> <span class="nf">_get_streamed_waypoint_snapshot</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reads a streamed response to recreate a waypoint snapshot.&quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">num_chunks</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">num_chunks</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">chunk</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">+=</span> <span class="n">resp</span><span class="o">.</span><span class="n">chunk</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">num_chunks</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">waypoint_snapshot</span> <span class="o">=</span> <span class="n">map_pb2</span><span class="o">.</span><span class="n">WaypointSnapshot</span><span class="p">()</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">num_chunks</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">waypoint_snapshot</span><span class="o">.</span><span class="n">ParseFromString</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">waypoint_snapshot</span>
+
+
+<span class="k">def</span> <span class="nf">_get_streamed_edge_snapshot</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reads a streamed response to recreate a edge snapshot.&quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">num_chunks</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">num_chunks</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">chunk</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">+=</span> <span class="n">resp</span><span class="o">.</span><span class="n">chunk</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">num_chunks</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">edge_snapshot</span> <span class="o">=</span> <span class="n">map_pb2</span><span class="o">.</span><span class="n">EdgeSnapshot</span><span class="p">()</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">num_chunks</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">edge_snapshot</span><span class="o">.</span><span class="n">ParseFromString</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">edge_snapshot</span>
+
+
+<span class="n">_SET_LOCALIZATION_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+<span class="n">_SET_LOCALIZATION_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">SetLocalizationResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">SetLocalizationResponse</span><span class="o">.</span><span class="n">STATUS_ROBOT_IMPAIRED</span><span class="p">:</span> <span class="n">error_pair</span><span class="p">(</span><span class="n">RobotFaultedError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">SetLocalizationResponse</span><span class="o">.</span><span class="n">STATUS_UNKNOWN_WAYPOINT</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">UnknownMapInformationError</span><span class="p">,</span>
+         <span class="n">UnknownMapInformationError</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+</span> <span class="s2">&quot; The waypoint is unknown.&quot;</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">SetLocalizationResponse</span><span class="o">.</span><span class="n">STATUS_ABORTED</span><span class="p">:</span> <span class="n">error_pair</span><span class="p">(</span><span class="n">RequestAbortedError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">SetLocalizationResponse</span><span class="o">.</span><span class="n">STATUS_FAILED</span><span class="p">:</span> <span class="n">error_pair</span><span class="p">(</span><span class="n">RequestFailedError</span><span class="p">),</span>
+<span class="p">})</span>
+
+
+<span class="nd">@handle_common_header_errors</span>
+<span class="nd">@handle_lease_use_result_errors</span>
+<span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_set_localization_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on set localization response, None if no error.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                         <span class="n">status_to_string</span><span class="o">=</span><span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">SetLocalizationResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+                         <span class="n">status_to_error</span><span class="o">=</span><span class="n">_SET_LOCALIZATION_STATUS_TO_ERROR</span><span class="p">)</span>
+
+
+<span class="n">_NAVIGATE_ROUTE_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+<span class="n">_NAVIGATE_ROUTE_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateRouteResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateRouteResponse</span><span class="o">.</span><span class="n">STATUS_NO_TIMESYNC</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">NoTimeSyncError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateRouteResponse</span><span class="o">.</span><span class="n">STATUS_EXPIRED</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">CommandExpiredError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateRouteResponse</span><span class="o">.</span><span class="n">STATUS_TOO_DISTANT</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">TooDistantError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateRouteResponse</span><span class="o">.</span><span class="n">STATUS_ROBOT_IMPAIRED</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">RobotImpairedError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateRouteResponse</span><span class="o">.</span><span class="n">STATUS_RECORDING</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">IsRecordingError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateRouteResponse</span><span class="o">.</span><span class="n">STATUS_UNKNOWN_ROUTE_ELEMENTS</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">UnkownRouteElementsError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateRouteResponse</span><span class="o">.</span><span class="n">STATUS_INVALID_EDGE</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">InvalidEdgeError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateRouteResponse</span><span class="o">.</span><span class="n">STATUS_CONSTRAINT_FAULT</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">ConstraintFaultError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateRouteResponse</span><span class="o">.</span><span class="n">STATUS_FEATURE_DESERT</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">FeatureDesertError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateRouteResponse</span><span class="o">.</span><span class="n">STATUS_LOST</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">RobotLostError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateRouteResponse</span><span class="o">.</span><span class="n">STATUS_NOT_LOCALIZED_TO_ROUTE</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">RobotNotLocalizedToRouteError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateRouteResponse</span><span class="o">.</span><span class="n">STATUS_COULD_NOT_UPDATE_ROUTE</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">RouteNotUpdatingError</span><span class="p">)</span>
+<span class="p">})</span>
+
+
+<span class="nd">@handle_common_header_errors</span>
+<span class="nd">@handle_lease_use_result_errors</span>
+<span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_navigate_route_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on navigate route response, None if no error.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                         <span class="n">status_to_string</span><span class="o">=</span><span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateRouteResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+                         <span class="n">status_to_error</span><span class="o">=</span><span class="n">_NAVIGATE_ROUTE_STATUS_TO_ERROR</span><span class="p">)</span>
+
+
+<span class="n">_NAVIGATE_TO_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+<span class="n">_NAVIGATE_TO_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateToResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateToResponse</span><span class="o">.</span><span class="n">STATUS_NO_TIMESYNC</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">NoTimeSyncError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateToResponse</span><span class="o">.</span><span class="n">STATUS_EXPIRED</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">CommandExpiredError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateToResponse</span><span class="o">.</span><span class="n">STATUS_TOO_DISTANT</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">TooDistantError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateToResponse</span><span class="o">.</span><span class="n">STATUS_ROBOT_IMPAIRED</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">RobotImpairedError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateToResponse</span><span class="o">.</span><span class="n">STATUS_RECORDING</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">IsRecordingError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateToResponse</span><span class="o">.</span><span class="n">STATUS_NO_PATH</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">NoPathError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateToResponse</span><span class="o">.</span><span class="n">STATUS_UNKNOWN_WAYPOINT</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">UnknownWaypointError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateToResponse</span><span class="o">.</span><span class="n">STATUS_FEATURE_DESERT</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">FeatureDesertError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateToResponse</span><span class="o">.</span><span class="n">STATUS_LOST</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">RobotLostError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateToResponse</span><span class="o">.</span><span class="n">STATUS_NOT_LOCALIZED_TO_MAP</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">RobotNotLocalizedToRouteError</span><span class="p">),</span>
+    <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateToResponse</span><span class="o">.</span><span class="n">STATUS_COULD_NOT_UPDATE_ROUTE</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">RouteNotUpdatingError</span><span class="p">)</span>
+<span class="p">})</span>
+
+
+<span class="nd">@handle_common_header_errors</span>
+<span class="nd">@handle_lease_use_result_errors</span>
+<span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_navigate_to_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on navigate to response, None if no error.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                         <span class="n">status_to_string</span><span class="o">=</span><span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateToResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+                         <span class="n">status_to_error</span><span class="o">=</span><span class="n">_NAVIGATE_TO_STATUS_TO_ERROR</span><span class="p">)</span>
+
+
+<span class="nd">@handle_common_header_errors</span>
+<span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_navigate_feedback_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on navigate to response, None if no error.&quot;&quot;&quot;</span>
+    <span class="c1"># If the common response header is OK and the status is set, no error.</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="nd">@handle_common_header_errors</span>
+<span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_download_waypoint_snapshot_stream_errors</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on download waypoint snapshot streaming response, None if no error.&quot;&quot;&quot;</span>
+    <span class="c1"># Iterate through the response since the download request responds with a stream.</span>
+    <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+        <span class="c1"># Handle error statuses from the request.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span>
+                <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">DownloadWaypointSnapshotResponse</span><span class="o">.</span><span class="n">STATUS_SNAPSHOT_DOES_NOT_EXIST</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">UnknownMapInformationError</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="n">resp</span><span class="p">,</span>
+                                              <span class="n">error_message</span><span class="o">=</span><span class="n">UnknownMapInformationError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+    <span class="c1"># All responses (in the iterator) had status_ok</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="nd">@handle_common_header_errors</span>
+<span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_download_edge_snapshot_stream_errors</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on download edge snapshot streaming response, None if no error.&quot;&quot;&quot;</span>
+    <span class="c1"># Iterate through the response since the download request responds with a stream.</span>
+    <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+        <span class="c1"># Handle error statuses from the request.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">DownloadEdgeSnapshotResponse</span><span class="o">.</span><span class="n">STATUS_SNAPSHOT_DOES_NOT_EXIST</span>
+           <span class="p">):</span>
+            <span class="k">return</span> <span class="n">UnknownMapInformationError</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="n">resp</span><span class="p">,</span>
+                                              <span class="n">error_message</span><span class="o">=</span><span class="n">UnknownMapInformationError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+    <span class="c1"># All responses (in the iterator) had status_ok</span>
+    <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      
+      &copy; Copyright 2020 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

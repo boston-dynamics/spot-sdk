@@ -13,11 +13,16 @@ option java_outer_classname = "VersionProto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/robot_id.proto";
 
+// Request the software version running on the SpotCam.
 message GetSoftwareVersionRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
 }
 
+// Provide the SpotCam's software release version.
 message GetSoftwareVersionResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+    // Version of the software currently running on the SpotCam.
     bosdyn.api.SoftwareVersion version = 2;
 }

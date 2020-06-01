@@ -4,8 +4,6 @@
 // is subject to the terms and conditions of the Boston Dynamics Software
 // Development Kit License (20191101-BDSDK-SL).
 
-// Id contains basic information about a robot which is made available over the network as part of
-//  robot discovery without requiring user authentication.
 syntax = "proto3";
 
 package bosdyn.api;
@@ -34,10 +32,11 @@ message RobotId {
     string nickname = 5;
 
     // Computer Serial Number. Unlike serial_number, which identifies a complete robot,
-    //  the computer_serial_number identifies the computer hardware used in the robot.
+    // the computer_serial_number identifies the computer hardware used in the robot.
     string computer_serial_number = 6;
 }
 
+// The software versioning number for a release.
 message SoftwareVersion {
    // Signficant changes to software.
    int32 major_version = 1;
@@ -51,10 +50,10 @@ message SoftwareVersion {
 
 // Description of the software release currently running on the robot.
 message RobotSoftwareRelease {
-    // E.g., 2.0.1
+    // The software version, e.g., 2.0.1
     SoftwareVersion version = 1;
 
-    // e.g., '20190601'
+    // The name of the robot, e.g., '20190601'
     string name = 2;
 
     // Kind of software release.
@@ -79,10 +78,12 @@ message RobotSoftwareRelease {
     repeated Parameter parameters = 9;
 }
 
+// The RobotId request message sent to a robot to learn it's basic identification information.
 message RobotIdRequest {
     RequestHeader header = 1;  // Common request/response header.
 }
 
+// The RobotId response message, including the ID information for a robot.
 message RobotIdResponse {
     ResponseHeader header = 1;  // Common request/response header.
     RobotId robot_id = 2;       // The requested RobotId information.

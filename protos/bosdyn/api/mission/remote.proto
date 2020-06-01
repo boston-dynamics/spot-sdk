@@ -14,7 +14,10 @@ import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
 import "bosdyn/api/mission/util.proto";
 
+// Information to initialize a session to the remote service
+// for a particular mission node.
 message EstablishSessionRequest {
+    // Common request header.
     RequestHeader header = 1;
 
     // All leases that the remote service may need.
@@ -26,10 +29,14 @@ message EstablishSessionRequest {
 
 }
 
+// Provide the id to use for the particular mission node to tick this remote service.
 message EstablishSessionResponse {
+    // Common response header.
     ResponseHeader header = 1;
 
+    // Possible results of establishing a session.
     enum Status {
+        // Status unknown/unset.
         STATUS_UNKNOWN = 0;
         // Provided inputs / outputs are compatible.
         STATUS_OK = 1;
@@ -43,6 +50,7 @@ message EstablishSessionResponse {
         // Note there is no status for an error condition in the LeaseUseResult field.
         // Even if STATUS_OK is returned, an error may be indicated in lease_use_results.
     }
+    // Result of this establish session request.
     Status status = 2;
 
     // On success, contains an ID for this session.
@@ -60,7 +68,9 @@ message EstablishSessionResponse {
 
 }
 
+// Request that the remote tick itself for a particular node in the mission.
 message TickRequest {
+    // Common request header.
     RequestHeader header = 1;
     // Session ID as returned by the EstablishSessionResponse.
     // Used to guarantee coherence between a single client and a servicer.
@@ -73,19 +83,22 @@ message TickRequest {
     repeated KeyValue inputs = 4;
 }
 
+// Response with the results of the tick.
+// Remote services should strive to return quickly, even if only returning RUNNING.
 message TickResponse {
+    // Common response header.
     ResponseHeader header = 1;
 
-    // Status from the node. The FAILURE, RUNNING, and SUCCESS statuses map to the
+    // Possible results from the node. The FAILURE, RUNNING, and SUCCESS statuses map to the
     // behavior tree terms, all others indicate an error in the TickRequest.
     enum Status {
         // Invalid; do not use.
         STATUS_UNKNOWN = 0;
-        // Node failed.
+        // Node completed but failed.
         STATUS_FAILURE = 1;
-        // Node is processing, check in again later.
+        // Node is processing and may finish in a future tick.
         STATUS_RUNNING = 2;
-        // Node succeeded.
+        // Node completed and succeeded.
         STATUS_SUCCESS = 3;
         // The request provided an invalid session ID.
         STATUS_INVALID_SESSION_ID = 4;
@@ -94,7 +107,7 @@ message TickResponse {
         // The request was missing required inputs.
         STATUS_MISSING_INPUTS = 6;
     }
-
+    // Result of the current tick.
     Status status = 3;
 
     // Need to provide leases on these resources.
@@ -112,36 +125,50 @@ message TickResponse {
     string error_message = 8;
 }
 
+// Used to stop a node that was previously ticked, so that it knows that
+// the next Tick represents a restart rather than a continuation.
 message StopRequest {
+    // Common request header.
     RequestHeader header = 1;
     // Session ID as returned by the EstablishSessionResponse.
     // Used to guarantee coherence between a single client and a servicer.
     string session_id = 2;
 }
 
+// Results of attempting to stop a remote node.
 message StopResponse {
+    // Common response header.
     ResponseHeader header = 1;
+    // Possible results for a StopRequest.
     enum Status {
+        // Status unknown/unset.
         STATUS_UNKNOWN = 0;
         // Service stopped.
         STATUS_OK = 1;
         // The request provided an invalid session ID.
         STATUS_INVALID_SESSION_ID = 2;
     }
+    // Result of the stop request.
     Status status = 2;
 }
 
+// End the session originally established by an EstablishSessionRequest.
 message TeardownSessionRequest {
+    // Common request header.
     RequestHeader header = 1;
     // Session ID as returned by the EstablishSessionResponse.
     // Used to guarantee coherence between a single client and a servicer.
     string session_id = 2;
 }
 
+// Results of ending a session.
 message TeardownSessionResponse {
+    // Common response header.
     ResponseHeader header = 1;
 
+    // Possible results of ending a session.
     enum Status {
+        // Status unknown/unset.
         STATUS_UNKNOWN = 0;
         // Session was torn down -- servicer has probably wiped all associated data / state.
         STATUS_OK = 1;
@@ -149,5 +176,6 @@ message TeardownSessionResponse {
         // This may mean the session was already torn down.
         STATUS_INVALID_SESSION_ID = 2;
     }
+    // The result of a TeardownSessionRequest.
     Status status = 2;
 }

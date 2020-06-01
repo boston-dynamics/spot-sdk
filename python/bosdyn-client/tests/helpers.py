@@ -45,7 +45,7 @@ def add_common_header(response, request, error_code=HeaderProto.CommonError.CODE
         response: The response object to fill the header with.
         request: The request to be echoed in the response common header.
         error_code: The code to use, OK by default.
-        error_message: Any error meesage to include, empty by default.
+        error_message: Any error message to include, empty by default.
     """
     header = HeaderProto.ResponseHeader()
     header.request_header.CopyFrom(request.header)

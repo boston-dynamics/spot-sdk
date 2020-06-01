@@ -1,0 +1,925 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bosdyn.client.robot &mdash; Spot 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https:://dev.bostondynamics.com/_modules/bosdyn/client/robot.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../README.html">
+          
+
+          
+            
+            <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/robot_services.html">Robot services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/python/README.html">Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/quickstart.html">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/understanding_spot_programming.html">Understanding Spot Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../python/examples/README.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/add_image_coordinates_to_scene/README.html">Add Image Coordinates to Scene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/directory/README.html">Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/estop/README.html">E-Stop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Get Depth Plus Visual Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/logging/README.html">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/mission_question_answerer/README.html">Mission Question Anwerer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/payloads/README.html">Payloads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_check/README.html">Spot Check</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/wasd/README.html">WASD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/xbox_controller/README.html">Xbox Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html">Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/common.html">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/processors.html">Processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html">Recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html">Robot Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_id.html">Robot ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html">PTZ</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/streamquality.html">Stream Quality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html">Version</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html">Spot Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/time_sync.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/README.html">Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/payload_configuration_requirements.html">Payload configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/mechanical_interfaces.html">Mechanical interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_mounting_rails.html">Robot mounting rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/protos/style_guide.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html">auth.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-chunk-proto">data_chunk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-proto">directory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-registration-proto">directory_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-registration-service-proto">directory_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-service-proto">directory_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#estop-proto">estop.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#estop-service-proto">estop_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-proto">local_grid.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-service-proto">mission/mission_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-nodes-proto">mission/nodes.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-remote-proto">mission/remote.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-remote-service-proto">mission/remote_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-util-proto">mission/util.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-registration-proto">payload_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-registration-service-proto">payload_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-service-proto">payload_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#point-cloud-proto">point_cloud.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#power-proto">power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#power-service-proto">power_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-command-service-proto">robot_command_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-proto">robot_id.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-led-proto">spot_cam/LED.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-factoryservice-proto">spot_cam/factoryservice.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-factorysetup-proto">spot_cam/factorysetup.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-health-proto">spot_cam/health.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-network-proto">spot_cam/network.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-power-proto">spot_cam/power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-ptz-proto">spot_cam/ptz.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-service-proto">spot_cam/service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-streamquality-proto">spot_cam/streamquality.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-version-proto">spot_cam/version.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../README.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../README.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bosdyn.client.robot</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bosdyn.client.robot</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;Settings common to a user&#39;s access to one robot.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">bosdyn.client.channel</span>
+
+<span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">AuthClient</span>
+<span class="kn">from</span> <span class="nn">.directory</span> <span class="kn">import</span> <span class="n">DirectoryClient</span>
+<span class="kn">from</span> <span class="nn">.directory_registration</span> <span class="kn">import</span> <span class="n">DirectoryRegistrationClient</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">Error</span>
+<span class="kn">from</span> <span class="nn">.lease</span> <span class="kn">import</span> <span class="n">LeaseWallet</span>
+<span class="kn">from</span> <span class="nn">.log_annotation</span> <span class="kn">import</span> <span class="n">LogAnnotationClient</span>
+<span class="kn">from</span> <span class="nn">.payload_registration</span> <span class="kn">import</span> <span class="n">PayloadRegistrationClient</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">PowerClient</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">power_on</span> <span class="k">as</span> <span class="n">pkg_power_on</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">power_off</span> <span class="k">as</span> <span class="n">pkg_power_off</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">safe_power_off</span> <span class="k">as</span> <span class="n">pkg_safe_power_off</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">is_powered_on</span> <span class="k">as</span> <span class="n">pkg_is_powered_on</span>
+<span class="kn">from</span> <span class="nn">.robot_command</span> <span class="kn">import</span> <span class="n">RobotCommandClient</span>
+<span class="kn">from</span> <span class="nn">.robot_id</span> <span class="kn">import</span> <span class="n">RobotIdClient</span>
+<span class="kn">from</span> <span class="nn">.robot_state</span> <span class="kn">import</span> <span class="n">RobotStateClient</span>
+<span class="kn">from</span> <span class="nn">.time_sync</span> <span class="kn">import</span> <span class="n">TimeSyncThread</span><span class="p">,</span> <span class="n">TimeSyncClient</span><span class="p">,</span> <span class="n">TimeSyncError</span>
+<span class="kn">from</span> <span class="nn">.token_manager</span> <span class="kn">import</span> <span class="n">TokenManager</span>
+<span class="kn">from</span> <span class="nn">.token_cache</span> <span class="kn">import</span> <span class="n">TokenCache</span>
+
+<span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">_DEFAULT_SECURE_CHANNEL_PORT</span> <span class="o">=</span> <span class="mi">443</span>
+
+
+<div class="viewcode-block" id="RobotError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.RobotError">[docs]</a><span class="k">class</span> <span class="nc">RobotError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;General class of errors to handle non-response non-grpc errors.&quot;&quot;&quot;</span></div>
+
+
+
+
+<div class="viewcode-block" id="UnregisteredServiceError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.UnregisteredServiceError">[docs]</a><span class="k">class</span> <span class="nc">UnregisteredServiceError</span><span class="p">(</span><span class="n">RobotError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Full service definition has not been registered in the robot instance.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="UnregisteredServiceNameError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.UnregisteredServiceNameError">[docs]</a><span class="k">class</span> <span class="nc">UnregisteredServiceNameError</span><span class="p">(</span><span class="n">UnregisteredServiceError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Service name has not been registered in the robot instance.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_name</span> <span class="o">=</span> <span class="n">service_name</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;Service name &quot;</span><span class="si">{}</span><span class="s1">&quot; has not been registered&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">service_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UnregisteredServiceTypeError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.UnregisteredServiceTypeError">[docs]</a><span class="k">class</span> <span class="nc">UnregisteredServiceTypeError</span><span class="p">(</span><span class="n">UnregisteredServiceError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Service type has not been registered in the robot instance.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_type</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_type</span> <span class="o">=</span> <span class="n">service_type</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;Service type &quot;</span><span class="si">{}</span><span class="s1">&quot; has not been registered&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">service_type</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Robot"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot">[docs]</a><span class="k">class</span> <span class="nc">Robot</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Settings common to one user&#39;s access to one robot.</span>
+
+<span class="sd">    This is the main point of access to all client functionality.  The ensure_client member is used</span>
+<span class="sd">    to get any client to a service exposed on the robot.  Additionally, many helpers are exposed to</span>
+<span class="sd">    provide commonly used functionality without explicitly accessing a particular client object.</span>
+
+<span class="sd">    Note that any rpc call made to the robot can raise an RpcError subclass if there are errors</span>
+<span class="sd">    communicating with the robot.  Additionally, ResponseErrors will be raised if there was an error</span>
+<span class="sd">    acting on the request itself.  An InvalidRequestError indicates a programming error, where the</span>
+<span class="sd">    request was malformed in some way.  InvalidRequestErrors will never be thrown except in the</span>
+<span class="sd">    case of client bugs.</span>
+
+<span class="sd">    See also Sdk and BaseClient</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_bootstrap_service_authorities</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">AuthClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">:</span> <span class="s1">&#39;auth.spot.robot&#39;</span><span class="p">,</span>
+        <span class="n">DirectoryClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">:</span> <span class="s1">&#39;api.spot.robot&#39;</span><span class="p">,</span>
+        <span class="n">DirectoryRegistrationClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">:</span> <span class="s1">&#39;api.spot.robot&#39;</span><span class="p">,</span>
+        <span class="n">PayloadRegistrationClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">:</span> <span class="s1">&#39;payload-registration.spot.robot&#39;</span><span class="p">,</span>
+        <span class="n">RobotIdClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">:</span> <span class="s1">&#39;id.spot.robot&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serial_number</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="ow">or</span> <span class="s1">&#39;bosdyn.Robot&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_token</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_cache</span> <span class="o">=</span> <span class="n">TokenCache</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token_manager</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_user</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_clients_by_name</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channels_by_authority</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">authorities_by_name</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_robot_id</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Things usually updated from an Sdk object.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_client_factories_by_type</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_type_by_name</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">request_processors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response_processors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app_token</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cert</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span> <span class="o">=</span> <span class="n">LeaseWallet</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_token_manager</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_token_manager</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_get_token_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">serial_number</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_token_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Updates the cache with the existing user token.</span>
+
+<span class="sd">           This method also instantiates a token manager to refresh the</span>
+<span class="sd">           user token.  Furthermore, it should only be called after the</span>
+<span class="sd">           token has been retrieved.</span>
+
+<span class="sd">            Raises:</span>
+<span class="sd">                  token_cache.WriteFailedError: Error saving to the cache.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_token_manager</span> <span class="ow">or</span> <span class="n">TokenManager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_user</span> <span class="o">=</span> <span class="n">username</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_user</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_user</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_token_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_user</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">token_cache</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_token</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Robot.setup_token_cache"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.setup_token_cache">[docs]</a>    <span class="k">def</span> <span class="nf">setup_token_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_cache</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unique_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Instantiates a token cache to persist the user token.</span>
+
+<span class="sd">           If the user provides a cache, it will be saved in the robot object for convenience.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serial_number</span> <span class="o">=</span> <span class="n">unique_id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">serial_number</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span><span class="o">.</span><span class="n">serial_number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_cache</span> <span class="o">=</span> <span class="n">token_cache</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_cache</span></div>
+
+<div class="viewcode-block" id="Robot.update_from"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.update_from">[docs]</a>    <span class="k">def</span> <span class="nf">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds to this object&#39;s processors, etc based on other&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">request_processors</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">request_processors</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_processors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response_processors</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">response_processors</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">response_processors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_client_factories_by_type</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">service_client_factories_by_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_type_by_name</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">service_type_by_name</span><span class="p">)</span>
+        <span class="c1"># Don&#39;t know the types here, so use explicit deepcopy.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app_token</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">app_token</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cert</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">cert</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">getChild</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="ow">or</span> <span class="s1">&#39;Robot&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Robot.ensure_client"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.ensure_client">[docs]</a>    <span class="k">def</span> <span class="nf">ensure_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Ensure a Client for a given service.</span>
+<span class="sd">        Note: If a new service has been registered with the directory service, this may raise</span>
+<span class="sd">        UnregisteredServiceNameError when trying to connect to it until sync_with_directory() is</span>
+<span class="sd">        called.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            service_name: The name of the service.</span>
+<span class="sd">            channel: gRPC channel object to use. Default None, in which case the Sdk data</span>
+<span class="sd">                       is used to generate a channel. The channel will become associated with</span>
+<span class="sd">                       the client.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            UnregisteredServiceNameError: The service is not known.</span>
+<span class="sd">            UnregisteredServiceTypeError: The client type for this service was never registered.</span>
+<span class="sd">            RpcError:                There was an error communicating with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if a client with this name is already running</span>
+        <span class="k">if</span> <span class="n">service_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_clients_by_name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_clients_by_name</span><span class="p">[</span><span class="n">service_name</span><span class="p">]</span>
+
+        <span class="c1"># Create an instance of the class</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">service_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_type_by_name</span><span class="p">[</span><span class="n">service_name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnregisteredServiceNameError</span><span class="p">(</span><span class="n">service_name</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">creation_function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_client_factories_by_type</span><span class="p">[</span><span class="n">service_type</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnregisteredServiceTypeError</span><span class="p">(</span><span class="n">service_type</span><span class="p">)</span>
+
+        <span class="n">client</span> <span class="o">=</span> <span class="n">creation_function</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Created client for </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">service_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">channel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_channel</span><span class="p">(</span><span class="n">service_name</span><span class="p">)</span>
+
+        <span class="n">client</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">channel</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># Track service clients that have been created to avoid duplicate clients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_clients_by_name</span><span class="p">[</span><span class="n">service_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">client</span>
+        <span class="k">return</span> <span class="n">client</span></div>
+
+<div class="viewcode-block" id="Robot.get_cached_robot_id"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.get_cached_robot_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_cached_robot_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the RobotId proto for this robot, querying it from the robot if not yet cached.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: There as a problem communicating with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_robot_id</span><span class="p">:</span>
+            <span class="n">robot_id_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="s1">&#39;robot-id&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_robot_id</span> <span class="o">=</span> <span class="n">robot_id_client</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_robot_id</span></div>
+
+    <span class="k">def</span> <span class="nf">_should_send_app_token_on_each_request</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">robot_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cached_robot_id</span><span class="p">()</span>
+        <span class="n">robot_software_version</span> <span class="o">=</span> <span class="n">robot_id</span><span class="o">.</span><span class="n">software_release</span><span class="o">.</span><span class="n">version</span>
+        <span class="c1"># Send app tokens on 1.1.x and below versions of robot software to be backwards</span>
+        <span class="c1"># compatible</span>
+        <span class="k">if</span> <span class="n">robot_software_version</span><span class="o">.</span><span class="n">major_version</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">robot_software_version</span><span class="o">.</span><span class="n">minor_version</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="c1"># Otherwise, the robot software is recent enough to not require app tokens on every</span>
+        <span class="c1"># request. Don&#39;t add them to help save data usage.</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="Robot.ensure_channel"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.ensure_channel">[docs]</a>    <span class="k">def</span> <span class="nf">ensure_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Verify the right information exists before calling the ensure_secure_channel</span>
+<span class="sd">        method.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            service_name: Name of the service in the directory.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Existing channel if found, or newly created channel if not found.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: There was a problem communicating with the robot.</span>
+<span class="sd">            UnregisteredServiceNameError: service_name is unknown.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="c1"># If a specific channel was not set, look up the authority so we can get a channel.</span>
+        <span class="c1"># Get the authority from either</span>
+        <span class="c1">#   1. The bootstrap authority for this client_class, if available</span>
+        <span class="c1">#   2. The authority of a registered service with matching service_name in DirectoryService</span>
+        <span class="n">authority</span> <span class="o">=</span> <span class="n">Robot</span><span class="o">.</span><span class="n">_bootstrap_service_authorities</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">service_name</span><span class="p">)</span>
+
+        <span class="c1"># Attempt to get authority from the robot Directory Service by name</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">authority</span><span class="p">:</span>
+            <span class="n">authority</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">authorities_by_name</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">service_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">authority</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sync_with_directory</span><span class="p">()</span>
+                <span class="n">authority</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">authorities_by_name</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">service_name</span><span class="p">)</span>
+
+        <span class="c1"># If authority still not known, then the service name has not been registered.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">authority</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnregisteredServiceNameError</span><span class="p">(</span><span class="n">service_name</span><span class="p">)</span>
+
+        <span class="n">skip_app_token_check</span> <span class="o">=</span> <span class="n">service_name</span> <span class="o">==</span> <span class="s1">&#39;robot-id&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_secure_channel</span><span class="p">(</span><span class="n">authority</span><span class="p">,</span> <span class="n">skip_app_token_check</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Robot.ensure_secure_channel"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.ensure_secure_channel">[docs]</a>    <span class="k">def</span> <span class="nf">ensure_secure_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">authority</span><span class="p">,</span> <span class="n">skip_app_token_check</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the channel to access the given authority, creating it if it doesn&#39;t exist.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">authority</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels_by_authority</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels_by_authority</span><span class="p">[</span><span class="n">authority</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">skip_app_token_check</span><span class="p">:</span>
+            <span class="n">should_send_app_token</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">should_send_app_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_should_send_app_token_on_each_request</span><span class="p">()</span>
+
+        <span class="c1"># Channel doesn&#39;t exist, so create it.</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="n">_DEFAULT_SECURE_CHANNEL_PORT</span>
+        <span class="n">creds</span> <span class="o">=</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">create_secure_channel_creds</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cert</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_token</span><span class="p">),</span> <span class="n">should_send_app_token</span><span class="p">)</span>
+        <span class="n">channel</span> <span class="o">=</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">create_secure_channel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">creds</span><span class="p">,</span> <span class="n">authority</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Created channel to </span><span class="si">%s</span><span class="s1"> at port </span><span class="si">%i</span><span class="s1"> with authority </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span>
+                          <span class="n">authority</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channels_by_authority</span><span class="p">[</span><span class="n">authority</span><span class="p">]</span> <span class="o">=</span> <span class="n">channel</span>
+        <span class="k">return</span> <span class="n">channel</span></div>
+
+
+<div class="viewcode-block" id="Robot.authenticate"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">username</span><span class="p">,</span>
+            <span class="n">password</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Authenticate to this Robot with the username/password at the given service.</span>
+
+<span class="sd">            Raises:</span>
+<span class="sd">                InvalidLoginError: The username and/or password are not valid.</span>
+<span class="sd">                token_cache.WriteFailedError: Authentication succeeded, but failed to update the</span>
+<span class="sd">                    local token_cache.</span>
+<span class="sd">                RpcError: There was a problem communicating with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># We cannot use the directory for the auth service until we are authenticated, so hard-code</span>
+        <span class="c1"># the authority name.</span>
+        <span class="n">auth_channel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_secure_channel</span><span class="p">(</span>
+            <span class="n">Robot</span><span class="o">.</span><span class="n">_bootstrap_service_authorities</span><span class="p">[</span><span class="n">AuthClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">])</span>
+        <span class="n">auth_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">AuthClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">,</span> <span class="n">auth_channel</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_token</span> <span class="o">=</span> <span class="n">auth_client</span><span class="o">.</span><span class="n">auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">app_token</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_token_cache</span><span class="p">(</span><span class="n">username</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Robot.authenticate_with_token"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.authenticate_with_token">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate_with_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Authenticate to this Robot with the token at the given service.</span>
+
+<span class="sd">            Raises:</span>
+<span class="sd">                InvalidTokenError: The token was incorrectly formed, for the wrong robot, or expired.</span>
+<span class="sd">                token_cache.WriteFailedError: Authentication succeeded, but failed to update the</span>
+<span class="sd">                    local token_cache.</span>
+<span class="sd">                RpcError: There was a problem communicating with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># We cannot use the directory for the auth service until we are authenticated, so hard-code</span>
+        <span class="c1"># the authority name.</span>
+        <span class="n">auth_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">AuthClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_token</span> <span class="o">=</span> <span class="n">auth_client</span><span class="o">.</span><span class="n">auth_with_token</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">app_token</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_token_cache</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Robot.authenticate_from_cache"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.authenticate_from_cache">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate_from_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Authenticate to this Robot with a cached token at the given service.</span>
+
+<span class="sd">            Raises:</span>
+<span class="sd">                token_cache.NotInCacheError: No token found for this robot/username.</span>
+<span class="sd">                token_cache.WriteFailedError: Authentication succeeded, but failed to update the</span>
+<span class="sd">                    local token_cache.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_cache</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_token_id</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
+
+        <span class="c1"># We cannot use the directory for the auth service until we are authenticated, so hard-code</span>
+        <span class="c1"># the authority name.</span>
+        <span class="n">auth_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">AuthClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_token</span> <span class="o">=</span> <span class="n">auth_client</span><span class="o">.</span><span class="n">auth_with_token</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">app_token</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_token_cache</span><span class="p">(</span><span class="n">username</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Robot.update_user_token"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.update_user_token">[docs]</a>    <span class="k">def</span> <span class="nf">update_user_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_token</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update this Robot with an outside user token.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_token</span> <span class="o">=</span> <span class="n">user_token</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_token_cache</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Robot.get_cached_usernames"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.get_cached_usernames">[docs]</a>    <span class="k">def</span> <span class="nf">get_cached_usernames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return an ordered list of usernames queryable from the cache.&quot;&quot;&quot;</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_cache</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">serial_number</span><span class="p">)</span>
+        <span class="n">usernames</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">username</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+            <span class="n">usernames</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">username</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">usernames</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Robot.get_id"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.get_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_service_name</span><span class="o">=</span><span class="n">RobotIdClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get all the information that identifies the robot.&quot;&quot;&quot;</span>
+        <span class="n">id_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">id_service_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">id_client</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Robot.list_services"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.list_services">[docs]</a>    <span class="k">def</span> <span class="nf">list_services</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory_service_name</span><span class="o">=</span><span class="n">DirectoryClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">,</span>
+                      <span class="n">directory_service_authority</span><span class="o">=</span><span class="n">_bootstrap_service_authorities</span><span class="p">[</span>
+                          <span class="n">DirectoryClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Get all the available services on the robot.&quot;&quot;&quot;</span>
+        <span class="n">directory_channel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_secure_channel</span><span class="p">(</span><span class="n">directory_service_authority</span><span class="p">)</span>
+        <span class="n">dir_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">directory_service_name</span><span class="p">,</span> <span class="n">directory_channel</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dir_client</span><span class="o">.</span><span class="n">list</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Robot.sync_with_directory"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.sync_with_directory">[docs]</a>    <span class="k">def</span> <span class="nf">sync_with_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory_service_name</span><span class="o">=</span><span class="n">DirectoryClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">,</span>
+                            <span class="n">directory_service_authority</span><span class="o">=</span><span class="n">_bootstrap_service_authorities</span><span class="p">[</span>
+                                <span class="n">DirectoryClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Update local state with all available services on the robot.&quot;&quot;&quot;</span>
+        <span class="n">remote_services</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_services</span><span class="p">(</span>
+            <span class="n">directory_service_name</span><span class="o">=</span><span class="n">directory_service_name</span><span class="p">,</span>
+            <span class="n">directory_service_authority</span><span class="o">=</span><span class="n">directory_service_authority</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">remote_services</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">authorities_by_name</span><span class="p">[</span><span class="n">service</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">authority</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">service_type_by_name</span><span class="p">[</span><span class="n">service</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">type</span></div>
+
+
+<div class="viewcode-block" id="Robot.start_time_sync"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.start_time_sync">[docs]</a>    <span class="k">def</span> <span class="nf">start_time_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Start time sync thread if needed.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span> <span class="o">=</span> <span class="n">TimeSyncThread</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">TimeSyncClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span><span class="o">.</span><span class="n">stopped</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Robot.stop_time_sync"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.stop_time_sync">[docs]</a>    <span class="k">def</span> <span class="nf">stop_time_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Stop the time sync thread if needed.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span><span class="o">.</span><span class="n">stopped</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">time_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Accessor for the time-sync thread.  Creates and starts thread if not already started.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time_sync</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span>
+
+<div class="viewcode-block" id="Robot.operator_comment"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.operator_comment">[docs]</a>    <span class="k">def</span> <span class="nf">operator_comment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">timestamp_secs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Send an operator comment to the robot for the robot&#39;s log files.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">           comment (string):        Operator comment text to be added to the log.</span>
+<span class="sd">           timestamp_secs (float):  Comment time in seconds since the unix epoch (client clock).</span>
+<span class="sd">                                    If set, this is converted to robot time when sent to the robot.</span>
+<span class="sd">                                    If None and time sync is available, the current time is converted</span>
+<span class="sd">                                    to robot time and sent as the comment timestamp.</span>
+<span class="sd">                                    If None and time sync is unavailable, the logged timestamp will</span>
+<span class="sd">                                    be the time the robot receives this message.</span>
+<span class="sd">           timeout (float):         Number of seconds to wait for RPC response.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">          NotEstablishedError: timestamp_secs given, but time-sync has not been achieved.</span>
+<span class="sd">          RpcError:            A problem occurred sending the comment to the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">LogAnnotationClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">timestamp_secs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">robot_timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_sync</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+            <span class="k">except</span> <span class="n">TimeSyncError</span><span class="p">:</span>
+                <span class="n">robot_timestamp</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Timestamp will be set when robot receives the reques msg.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># This will raise an exception if time-sync is unavailable.</span>
+            <span class="n">robot_timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_sync</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="n">timestamp_secs</span><span class="p">)</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">add_operator_comment</span><span class="p">(</span><span class="n">comment</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="o">=</span><span class="n">robot_timestamp</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Robot.power_on"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.power_on">[docs]</a>    <span class="k">def</span> <span class="nf">power_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Power on robot. This function blocks until robot powers on.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timeout_sec (float): Max time this function will block for.</span>
+<span class="sd">            update_frequency (float): Frequency at which power status is checked.</span>
+<span class="sd">            timeout: Number of seconds to wait for RPC response.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            PowerResponseError: Problem with the power on sequence.</span>
+<span class="sd">            RpcError:           Problem communicating with the robot.</span>
+<span class="sd">            power_client.CommandTimedOutError: The robot did not power on within timeout_sec</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">service_name</span> <span class="o">=</span> <span class="n">PowerClient</span><span class="o">.</span><span class="n">default_service_name</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">service_name</span><span class="p">)</span>
+        <span class="n">pkg_power_on</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Robot.power_off"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.power_off">[docs]</a>    <span class="k">def</span> <span class="nf">power_off</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cut_immediately</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Power off robot. This function blocks until robot powers off. By default, this will</span>
+<span class="sd">        attempt to put the robot in a safe state before cutting power.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cut_immediately (bool): True to cut power to the robot immediately. False to issue a</span>
+<span class="sd">                safe power off command to the robot.</span>
+<span class="sd">            timeout_sec (float): Max time this function will block for.</span>
+<span class="sd">            update_frequency (float): Frequency at which power status is checked.</span>
+<span class="sd">            timeout: Number of seconds to wait for RPC response.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError:                          Problem communicating with the robot.</span>
+<span class="sd">            power_client.CommandTimedOutError: The robot did not power off within timeout_sec</span>
+<span class="sd">            PowerResponseError:        If cut_immediately, raised on problems with the power on</span>
+<span class="sd">                sequence.</span>
+<span class="sd">            RobotCommandResponseError: If not cut_immediately, raised on problems with the safe</span>
+<span class="sd">                power off.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">cut_immediately</span><span class="p">:</span>
+            <span class="n">power_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">PowerClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+            <span class="n">pkg_power_off</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Ideally we wouldn&#39;t need a state client, and all feedback could come from command</span>
+            <span class="c1"># service. For V1, we should either implement this, or remove feedback from the proto</span>
+            <span class="c1"># we are releasing. See bugzilla bug 4111 for more details.</span>
+            <span class="n">command_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">RobotCommandClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+            <span class="n">state_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">RobotStateClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+            <span class="n">pkg_safe_power_off</span><span class="p">(</span><span class="n">command_client</span><span class="p">,</span> <span class="n">state_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span>
+                               <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Robot.is_powered_on"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.is_powered_on">[docs]</a>    <span class="k">def</span> <span class="nf">is_powered_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check the power state of the robot.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timeout: Number of seconds to wait for RPC response.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Returns True if robot is powered on, False otherwise.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RpcError: A problem occurred trying to communicate with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">state_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">RobotStateClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pkg_is_powered_on</span><span class="p">(</span><span class="n">state_client</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span></div></div>
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      
+      &copy; Copyright 2020 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

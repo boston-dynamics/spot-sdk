@@ -28,6 +28,7 @@ message SpotCheckCommandRequest {
         COMMAND_ABORT = 2;          // Abort spot check joint calibration and camera check.
         COMMAND_REVERT_CAL = 3;     // Revert joint calibration back to the previous values.
     }
+    // The describing what the spot check service should do.
     Command command = 3;
 }
 
@@ -51,8 +52,8 @@ message SpotCheckFeedbackResponse {
     // Common response header.
     ResponseHeader header = 1;
 
-    // State of spot check routine.
     enum State {
+
         STATE_UNKNOWN = 0;               // Unused enum.
         STATE_USER_ABORTED = 1;          // SpotCheck is aborted by the user.
         STATE_STARTING = 2;              // SpotCheck is initializing.
@@ -62,10 +63,10 @@ message SpotCheckFeedbackResponse {
         STATE_BODY_POSING = 6;           // Body pose routine underway.
         STATE_FINISHED = 7;              // Spot check successfully finished.
         STATE_REVERTING_CAL = 8;         // Reverting calibration to previous values.
-        STATE_ERROR = 9;                 // Error occurred while running spotcheck. Inspect
-                                         //  error for more info.
+        STATE_ERROR = 9;                 // Error occurred while running spotcheck. Inspect error for more info.
         STATE_WAITING_FOR_COMMAND = 10;  // Waiting for user command.
     }
+    // The state of the spot check routine.
     State state = 2;
 
     // The last command executed by Spotcheck. When SpotCheck is in state WAITING_FOR_COMMAND,
@@ -88,6 +89,7 @@ message SpotCheckFeedbackResponse {
         ERROR_GROUND_CHECK = 10;              // Flat ground check failed.
         ERROR_POWER_OFF_FAILURE = 11;         // Robot failed to power off.
     }
+    // The specifics of the error for the SpotCheck service.
     Error error = 6;
 
     // Results from camera check.
@@ -129,6 +131,7 @@ message DepthPlaneSpotCheckResult {
         STATUS_WARNING = 2;     // Possible calibration error detected.
         STATUS_ERROR = 3;       // Error with robot calibration.
     }
+    // Return status for the request.
     Status status = 1;
 
     // Higher is worse. Above 100 means the camera is severely out of calibration.
@@ -139,11 +142,14 @@ message DepthPlaneSpotCheckResult {
 message PayloadCheckResult {
     // Errors reflect an issue with payload configuration.
     enum Error {
+        // Unused enum.
         ERROR_UNKNOWN = 0;
+        // No error found in the payloads.
         ERROR_NONE = 1;
+        // There is a mass discrepancy between the registered payload and what is estimated.
         ERROR_MASS_DISCREPANCY = 2;
     }
-    // A flag to indicate if configuration has an error
+    // A flag to indicate if configuration has an error.
     Error error = 1;
 
     // Indicates how much extra payload (in kg) we think the robot has
@@ -161,6 +167,7 @@ message LoadCellSpotCheckResult {
         ERROR_NONE = 1;                 // No hardware error detected.
         ERROR_ZERO_OUT_OF_RANGE = 2;    // Load cell calibration failure.
     }
+    // A flag to indicate if results has an error.
     Error error = 2;
 
     // The current loadcell zero as fraction of full range [0-1]
@@ -177,6 +184,7 @@ message JointKinematicCheckResult {
         ERROR_NONE = 1;          // No hardware error detected.
         ERROR_CLUTCH_SLIP = 2;   // Error detected in clutch performance.
     }
+    // A flag to indicate if results has an error.
     Error error = 2;
 
     // The current offset [rad]
@@ -200,6 +208,7 @@ message FootHeightCheckResult {
         STATUS_WARNING = 2;     // Possible calibration error detected.
         STATUS_ERROR = 3;       // Error with robot calibration.
     }
+    // Return status for the request.
     Status status = 2;
 
     // The difference between foot height and mean feet height (m).
@@ -208,13 +217,13 @@ message FootHeightCheckResult {
 
 // Results from leg pair checks..
 message LegPairCheckResult {
-    // Errors reflect an issue with robot calibration.
     enum Status {
         STATUS_UNKNOWN = 0;     // Unused enum.
         STATUS_OK = 1;          // No detected calibration error.
         STATUS_WARNING = 2;     // Possible calibration error detected.
         STATUS_ERROR = 3;       // Error with robot calibration.
     }
+    // Return status for the request.
     Status status = 2;
 
     // The change in estimated distance between two feet from tall to short stand (m)
@@ -234,6 +243,7 @@ message CameraCalibrationCommandRequest {
         COMMAND_START = 1;      // Start calibration routine.
         COMMAND_CANCEL = 2;     // Cancel calibration routine.
     }
+    // Command to start/stop the calibration.
     Command command = 3;
 }
 
@@ -257,38 +267,46 @@ message CameraCalibrationFeedbackResponse {
     // Common response header.
     ResponseHeader header = 1;
 
-    // Status of camera calibration procedure.
     enum Status {
-        STATUS_UNKNOWN = 0;                 // Unused enum.
-        STATUS_PROCESSING = 1;              // The robot is actively running calibration routine.
-        STATUS_SUCCESS = 2;                 // The robot successfully ran calibration routine and
-                                            // is ready to use again.
-        STATUS_USER_CANCELED = 3;           // API client canceled calibration.
-        STATUS_POWER_ERROR = 4;             // The robot is not powered on.
-        STATUS_LEASE_ERROR = 5;             // Ownership error during calibration.
-        STATUS_ROBOT_COMMAND_ERROR = 7;     // Robot encountered an error while trying to move
-                                            // around the calibration target. Robot possibly
-                                            // encountered a fault. Check robot state for more
-                                            // details
-        STATUS_CALIBRATION_ERROR = 8;       // Calibration procedure produced an invalid result.
-                                            // This may occur in poor lighting conditions or if
-                                            // calibration target moved during calibration
-                                            // procedure.
-        STATUS_INTERNAL_ERROR = 9;          // Something extraordinary happened. Try power
-                                            // cycling robot or contact BD.
-        STATUS_CAMERA_FOCUS_ERROR = 14;     // Camera focus issue detected. This is a hardware
-                                            //  issue that required
-
-        STATUS_TARGET_NOT_CENTERED = 6;           // Target partially, but not fully, in view when
-                                                  // starting calibration.
-        STATUS_TARGET_NOT_IN_VIEW = 11;           // Target not visible when starting calibration.
-        STATUS_TARGET_NOT_GRAVITY_ALIGNED = 12;   // Target not aligned with gravity when
-                                                  //  starting calibration.
-        STATUS_TARGET_UPSIDE_DOWN = 13;           // Target upside down when starting calibration.
-
-        STATUS_NEVER_RUN = 10;              // Calibration routine has never been run. No feedback
-                                            // to give.
+        // Unused enum.
+        STATUS_UNKNOWN = 0;
+        // The robot is actively running calibration routine.
+        STATUS_PROCESSING = 1;
+        // The robot successfully ran calibration routine and
+        // is ready to use again.
+        STATUS_SUCCESS = 2;
+        // API client canceled calibration.
+        STATUS_USER_CANCELED = 3;
+        // The robot is not powered on.
+        STATUS_POWER_ERROR = 4;
+        // Ownership error during calibration.
+        STATUS_LEASE_ERROR = 5;
+        // Robot encountered an error while trying to move
+        // around the calibration target. Robot possibly
+        // encountered a fault. Check robot state for more
+        // details
+        STATUS_ROBOT_COMMAND_ERROR = 7;
+        // Calibration procedure produced an invalid result.
+        // This may occur in poor lighting conditions or if
+        // calibration target moved during calibration
+        // procedure.
+        STATUS_CALIBRATION_ERROR = 8;
+        // Something extraordinary happened. Try power cycling robot or contact BD.
+        STATUS_INTERNAL_ERROR = 9;
+         // Camera focus issue detected. This is a hardware issue.
+        STATUS_CAMERA_FOCUS_ERROR = 14;
+        // Target partially, but not fully, in view when starting calibration.
+        STATUS_TARGET_NOT_CENTERED = 6;
+        // Target not visible when starting calibration.
+        STATUS_TARGET_NOT_IN_VIEW = 11;
+        // Target not aligned with gravity when starting calibration.
+        STATUS_TARGET_NOT_GRAVITY_ALIGNED = 12;
+        // Target upside down when starting calibration.
+        STATUS_TARGET_UPSIDE_DOWN = 13;
+        // Calibration routine has never been run. No feedback to give.
+        STATUS_NEVER_RUN = 10;
     }
+    // Status of camera calibration procedure.
     Status status = 2;
 
     // The approximate progress of the calibration routine, range [0-1].

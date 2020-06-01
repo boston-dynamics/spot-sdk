@@ -20,6 +20,7 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
 
+// Indicator of whether or not the waypoint and edge annotations are complete and filled out.
 enum AnnotationState {
     // No assertions made about this annotation.
     ANNOTATION_STATE_UNKNOWN = 0;
@@ -29,6 +30,8 @@ enum AnnotationState {
     ANNOTATION_STATE_NONE = 2;
 }
 
+// A base element of the graph nav map. A waypoint consists of a reference frame, a name,
+// a unique ID, annotations, and sensor data.
 message Waypoint {
     // Identifier of the waypoint. Unique across all maps.
     // This identifier does not have to be updated when its fields change.
@@ -64,21 +67,24 @@ message Waypoint {
             // - If less than zero, no scan matching will be performed at this waypoint.
             // - If greater than zero, scan matching will only be performed if the robot is at most this
             //   far away from the waypoint.
-            // Distance calculation is done in the 2d plane w.r.t the waypoint.
+            // Distance calculation is done in the 2d plane with respect to the waypoint.
             message Circle2D {
                 double dist_2d = 1; // meters.
             }
 
             oneof region {
+                // Oneof field that describes the waypoint's location as a default region (no special features/traits).
                 Default default_region = 2;
+                // Oneof field that describes the waypoint's location as a empty/featureless region.
                 Empty empty = 3;
+                // Oneof field that describes the waypoint's location as a circular region.
                 Circle2D circle = 4;
             }
         }
         // Options for how to localize to a waypoint (if at all).
         LocalizeRegion scan_match_region = 3;
     }
-
+    // Annotations specific to the current waypoint.
     Annotations annotations = 4;
 }
 
@@ -102,7 +108,7 @@ message WaypointSnapshot {
     // Full robot state during snapshot.
     bosdyn.api.RobotState robot_state = 5;
 
-    // Robot maps.
+    // Robot grid data.
     repeated bosdyn.api.LocalGrid robot_local_grids = 6;
 
 
@@ -110,6 +116,9 @@ message WaypointSnapshot {
     bool is_point_cloud_processed = 8;
 }
 
+// A base element of the graph nav map. Edges consist of a directed edge from one
+// waypoint to another and a transform that estimates the relationship in 3D space
+// between the two waypoints.
 message Edge {
     // An edge is uniquely identified by the waypoints it connects.
     // Two waypoints will only ever be connected by a single edge.
@@ -157,9 +166,10 @@ message Edge {
                 // Each stair should be rise followed by run. The last stair will have zero run.
                 repeated Stair stairs = 2;
             }
+            //  Parameters describing a straight staircase.
             StraightStaircase straight_staircase = 2;
         }
-
+        // Stairs information/parameters specific to the edge.
         StairData stairs = 2;
 
         enum DirectionConstraint {
@@ -174,7 +184,8 @@ message Edge {
             // No constraints on which way the robot faces.
             DIRECTION_CONSTRAINT_NONE = 4;
         }
-
+        // Direction constraints for how the robot must move and the directions it can face
+        // when traversing the edge.
         DirectionConstraint direction_constraint = 4;
 
         // If true, the robot must be aligned with the edge in yaw before traversing it.
@@ -193,7 +204,7 @@ message Edge {
         // perception system to allow it to see grated floors bettter.
         google.protobuf.BoolValue grated_floor = 8;
     }
-
+    // Annotations specific to the current edge.
     Annotations annotations = 4;
 }
 
@@ -222,6 +233,8 @@ message EdgeSnapshot {
 // Note that the graph does not contain any of the waypoint/edge data (which is found in snapshots).
 // Snapshots are stored separately.
 message Graph {
+    // The waypoints for the graph (containing frames, annotations, and sensor data).
     repeated Waypoint waypoints = 1;
+    // The edges connecting the graph's waypoints.
     repeated Edge edges = 2;
 }

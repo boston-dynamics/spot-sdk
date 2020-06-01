@@ -1,7 +1,0 @@
-Robot Command
-===================================
-
-.. automodule:: bosdyn.client.robot_command
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -43,7 +43,7 @@ def main(argv):
     print("Current World objects before mutations: " + str([obj for obj in world_objects]))
 
     # Set the detection time for the additional april tag. The client library will convert the time into robot time.
-    # Uses afunction to get google.protobuf.Timestamp of the current system time.
+    # Uses a function to get google.protobuf.Timestamp of the current system time.
     timestamp = now_timestamp()
 
     # Create the image coordinate object. This type of object does not require a base frame for the world object.

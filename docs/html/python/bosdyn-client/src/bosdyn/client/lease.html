@@ -1,0 +1,1079 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Lease &mdash; Spot 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../../../../_static/bd-favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https:://dev.bostondynamics.com/python/bosdyn-client/src/bosdyn/client/lease.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="Local Grid" href="local_grid.html" />
+    <link rel="prev" title="Image" href="image.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../README.html">
+          
+
+          
+            
+            <img src="../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/concepts/README.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/base_services.html">Base services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/robot_services.html">Robot services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/localization.html">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../docs/python/README.html">Python</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/python/quickstart.html">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/python/understanding_spot_programming.html">Understanding Spot Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examples/README.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/add_image_coordinates_to_scene/README.html">Add Image Coordinates to Scene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/directory/README.html">Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/estop/README.html">E-Stop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_depth_plus_visual_image/README.html">Get Depth Plus Visual Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/logging/README.html">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/mission_question_answerer/README.html">Mission Question Anwerer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/payloads/README.html">Payloads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/replay_mission/README.html">Replay Mission</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/spot_check/README.html">Spot Check</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/wasd/README.html">WASD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/xbox_controller/README.html">Xbox Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../README.html">Python Reference Guide</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="README.html">Client</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="channel.html">Channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="command_line.html">Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="directory_registration.html">Directory Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="image.html">Image</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="local_grid.html">Local Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="payload.html">Payload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="processors.html">Processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recording.html">Recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="robot_command.html">Robot Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="robot_id.html">Robot ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="robot_state.html">Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spot_cam/README.html">Spot CAM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/audio.html">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/compositor.html">Compositor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/health.html">Health</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/media_log.html">Media Log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/network.html">Network</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/power.html">Power</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/ptz.html">PTZ</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/streamquality.html">Stream Quality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/version.html">Version</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="spot_check.html">Spot Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="time_sync.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="token_cache.html">Token Cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="world_object.html">World Object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../bosdyn-core/src/bosdyn/README.html">Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-core/src/bosdyn/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/payload/README.html">Payloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/payload_configuration_requirements.html">Payload configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/mechanical_interfaces.html">Mechanical interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/robot_mounting_rails.html">Robot mounting rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/protos/README.html">API Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/protos/style_guide.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html">auth.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#data-chunk-proto">data_chunk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#directory-proto">directory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#directory-registration-proto">directory_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#directory-registration-service-proto">directory_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#directory-service-proto">directory_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#estop-proto">estop.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#estop-service-proto">estop_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#local-grid-proto">local_grid.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-mission-service-proto">mission/mission_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-nodes-proto">mission/nodes.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-remote-proto">mission/remote.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-remote-service-proto">mission/remote_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-util-proto">mission/util.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#payload-registration-proto">payload_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#payload-registration-service-proto">payload_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#payload-service-proto">payload_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#point-cloud-proto">point_cloud.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#power-proto">power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#power-service-proto">power_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-command-service-proto">robot_command_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-id-proto">robot_id.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-led-proto">spot_cam/LED.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-factoryservice-proto">spot_cam/factoryservice.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-factorysetup-proto">spot_cam/factorysetup.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-health-proto">spot_cam/health.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-network-proto">spot_cam/network.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-power-proto">spot_cam/power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-ptz-proto">spot_cam/ptz.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-service-proto">spot_cam/service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-streamquality-proto">spot_cam/streamquality.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-cam-version-proto">spot_cam/version.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../README.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../README.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../../docs/python/README.html">Python Library</a> &raquo;</li>
+        
+          <li><a href="../../../../README.html">Boston Dynamics Python Reference Guide</a> &raquo;</li>
+        
+          <li><a href="README.html">Python Client</a> &raquo;</li>
+        
+      <li>Lease</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-bosdyn.client.lease">
+<span id="lease"></span><h1>Lease<a class="headerlink" href="#module-bosdyn.client.lease" title="Permalink to this headline">¶</a></h1>
+<p>Lease clients</p>
+<dl class="py exception">
+<dt id="bosdyn.client.lease.LeaseResponseError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">LeaseResponseError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseResponseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseResponseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.ResponseError</span></code></a></p>
+<p>General class of errors for LeaseResponseError service.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.lease.InvalidLeaseError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">InvalidLeaseError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#InvalidLeaseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.InvalidLeaseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.lease.LeaseResponseError" title="bosdyn.client.lease.LeaseResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.lease.LeaseResponseError</span></code></a></p>
+<p>The provided lease is invalid.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.lease.DisplacedLeaseError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">DisplacedLeaseError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#DisplacedLeaseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.DisplacedLeaseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.lease.LeaseResponseError" title="bosdyn.client.lease.LeaseResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.lease.LeaseResponseError</span></code></a></p>
+<p>Lease is older than the current lease.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.lease.InvalidResourceError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">InvalidResourceError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#InvalidResourceError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.InvalidResourceError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.lease.LeaseResponseError" title="bosdyn.client.lease.LeaseResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.lease.LeaseResponseError</span></code></a></p>
+<p>Resource is not known to the LeaseService.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.lease.NotAuthoritativeServiceError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">NotAuthoritativeServiceError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#NotAuthoritativeServiceError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.NotAuthoritativeServiceError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.lease.LeaseResponseError" title="bosdyn.client.lease.LeaseResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.lease.LeaseResponseError</span></code></a></p>
+<p>LeaseService is not authoritative so Acquire should not work.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.lease.ResourceAlreadyClaimedError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">ResourceAlreadyClaimedError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#ResourceAlreadyClaimedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.ResourceAlreadyClaimedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.lease.LeaseResponseError" title="bosdyn.client.lease.LeaseResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.lease.LeaseResponseError</span></code></a></p>
+<p>Use TakeLease method to forcefully grab the already claimed lease.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.lease.RevokedLeaseError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">RevokedLeaseError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#RevokedLeaseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.RevokedLeaseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.lease.LeaseResponseError" title="bosdyn.client.lease.LeaseResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.lease.LeaseResponseError</span></code></a></p>
+<p>Lease is stale cause lease holder did not check in regularly enough.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.lease.UnmanagedResourceError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">UnmanagedResourceError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#UnmanagedResourceError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.UnmanagedResourceError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.lease.LeaseResponseError" title="bosdyn.client.lease.LeaseResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.lease.LeaseResponseError</span></code></a></p>
+<p>LeaseService does not manage this resource.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.lease.WrongEpochError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">WrongEpochError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#WrongEpochError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.WrongEpochError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.lease.LeaseResponseError" title="bosdyn.client.lease.LeaseResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.lease.LeaseResponseError</span></code></a></p>
+<p>Lease is for the wrong epoch.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.lease.NotActiveLeaseError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">NotActiveLeaseError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#NotActiveLeaseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.NotActiveLeaseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.lease.LeaseResponseError" title="bosdyn.client.lease.LeaseResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.lease.LeaseResponseError</span></code></a></p>
+<p>Lease is not the active lease.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.lease.Error">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">Error</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#Error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.Error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Base non-response error for lease module.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.lease.NoSuchLease">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">NoSuchLease</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resource</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#NoSuchLease"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.NoSuchLease" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.lease.Error" title="bosdyn.client.lease.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.lease.Error</span></code></a></p>
+<p>The requested lease does not exist.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="bosdyn.client.lease.LeaseNotOwnedByWallet">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">LeaseNotOwnedByWallet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resource</span></em>, <em class="sig-param"><span class="n">lease_state</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseNotOwnedByWallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseNotOwnedByWallet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.lease.Error" title="bosdyn.client.lease.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.lease.Error</span></code></a></p>
+<p>The lease is not owned by the wallet.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.lease.Lease">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">Lease</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease_proto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#Lease"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.Lease" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Leases are used to coordinate access to shared resources on a Boston Dynamics robot.</p>
+<p>A service will grant access to the shared resource if the lease which accompanies a request is
+“more recent” than any previously seen leases. Recency is determined using a sequence of
+monotonically increasing numbers, similar to a Lamport logical clock.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lease_proto</strong> – bosdyn.api.Lease protobuf object.</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="bosdyn.client.lease.Lease.CompareResult">
+<em class="property">class </em><code class="sig-name descname">CompareResult</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#Lease.CompareResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.Lease.CompareResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Enum for comparison results between two leases.</p>
+<dl class="py attribute">
+<dt id="bosdyn.client.lease.Lease.CompareResult.SAME">
+<code class="sig-name descname">SAME</code><em class="property"> = 1</em><a class="headerlink" href="#bosdyn.client.lease.Lease.CompareResult.SAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="bosdyn.client.lease.Lease.CompareResult.SUPER_LEASE">
+<code class="sig-name descname">SUPER_LEASE</code><em class="property"> = 2</em><a class="headerlink" href="#bosdyn.client.lease.Lease.CompareResult.SUPER_LEASE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="bosdyn.client.lease.Lease.CompareResult.SUB_LEASE">
+<code class="sig-name descname">SUB_LEASE</code><em class="property"> = 3</em><a class="headerlink" href="#bosdyn.client.lease.Lease.CompareResult.SUB_LEASE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="bosdyn.client.lease.Lease.CompareResult.OLDER">
+<code class="sig-name descname">OLDER</code><em class="property"> = 4</em><a class="headerlink" href="#bosdyn.client.lease.Lease.CompareResult.OLDER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="bosdyn.client.lease.Lease.CompareResult.NEWER">
+<code class="sig-name descname">NEWER</code><em class="property"> = 5</em><a class="headerlink" href="#bosdyn.client.lease.Lease.CompareResult.NEWER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="bosdyn.client.lease.Lease.CompareResult.DIFFERENT_RESOURCES">
+<code class="sig-name descname">DIFFERENT_RESOURCES</code><em class="property"> = 6</em><a class="headerlink" href="#bosdyn.client.lease.Lease.CompareResult.DIFFERENT_RESOURCES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="bosdyn.client.lease.Lease.CompareResult.DIFFERENT_EPOCHS">
+<code class="sig-name descname">DIFFERENT_EPOCHS</code><em class="property"> = 7</em><a class="headerlink" href="#bosdyn.client.lease.Lease.CompareResult.DIFFERENT_EPOCHS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.Lease.compare">
+<code class="sig-name descname">compare</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other_lease</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#Lease.compare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.Lease.compare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare two different lease objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other_lease</strong> – The lease to compare this lease with.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>CompareResult.SAME if this lease is exactly the same as other_lease.</p></li>
+<li><p>CompareResult.SUPER_LEASE if this lease is a “super-lease” of the other
+lease - in other words, the other lease is a sublease of this lease.</p></li>
+<li><p>CompareResult.SUB_LEASE if this lease is a “sub-lease” of the other lease.</p></li>
+<li><p>CompareResult.OLDER if this lease is older than other_lease.
+other_lease may be a sublease of this lease.</p></li>
+<li><p>CompareResult.NEWER if this is lease is newer than other_lease. This
+lease may be a sublease of other_lease.</p></li>
+<li><p>CompareResult.DIFFERENT_RESOURCES if this lease is for a different
+resource than other_lease. There is no way to compare recency/time of
+Leases for two different resources.</p></li>
+<li><p>CompareResult.DIFFERENT_EPOCHS if this lease is for a different
+epoch than other_lease. There is no way to compare recency/time of
+Leases for two different epochs.</p></li>
+<li><p>CompareResult.INVALID if either this or other_lease is invalid.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.Lease.create_newer">
+<code class="sig-name descname">create_newer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#Lease.create_newer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.Lease.create_newer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new Lease which is newer than this Lease.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A new Lease object where self.compare(returned_lease) would return OLDER.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.Lease.create_sublease">
+<code class="sig-name descname">create_sublease</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#Lease.create_sublease"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.Lease.create_sublease" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a sublease of this lease.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A new Lease object where self.compare(returned_lease) would return SUB_LEASE.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.Lease.is_valid_proto">
+<em class="property">static </em><code class="sig-name descname">is_valid_proto</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease_proto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#Lease.is_valid_proto"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.Lease.is_valid_proto" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether this lease is valid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>bool indicating that this lease has a valid resource and sequence.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.lease.LeaseState">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">LeaseState</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease_status</span></em>, <em class="sig-param"><span class="n">lease_owner</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lease</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lease_current</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="bosdyn.client.lease.LeaseState.STATUS_UNOWNED">
+<code class="sig-name descname">STATUS_UNOWNED</code><em class="property"> = 0</em><a class="headerlink" href="#bosdyn.client.lease.LeaseState.STATUS_UNOWNED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="bosdyn.client.lease.LeaseState.STATUS_REVOKED">
+<code class="sig-name descname">STATUS_REVOKED</code><em class="property"> = 1</em><a class="headerlink" href="#bosdyn.client.lease.LeaseState.STATUS_REVOKED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="bosdyn.client.lease.LeaseState.STATUS_SELF_OWNER">
+<code class="sig-name descname">STATUS_SELF_OWNER</code><em class="property"> = 2</em><a class="headerlink" href="#bosdyn.client.lease.LeaseState.STATUS_SELF_OWNER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="bosdyn.client.lease.LeaseState.STATUS_OTHER_OWNER">
+<code class="sig-name descname">STATUS_OTHER_OWNER</code><em class="property"> = 3</em><a class="headerlink" href="#bosdyn.client.lease.LeaseState.STATUS_OTHER_OWNER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="bosdyn.client.lease.LeaseState.STATUS_NOT_MANAGED">
+<code class="sig-name descname">STATUS_NOT_MANAGED</code><em class="property"> = 4</em><a class="headerlink" href="#bosdyn.client.lease.LeaseState.STATUS_NOT_MANAGED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseState.create_newer">
+<code class="sig-name descname">create_newer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseState.create_newer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseState.create_newer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create newer version of the Lease.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Instance of itself if lease_current was not passed, or a new LeaseState.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseState.update_from_lease_use_result">
+<code class="sig-name descname">update_from_lease_use_result</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease_use_result</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseState.update_from_lease_use_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseState.update_from_lease_use_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update internal instance of LeaseState from given lease.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lease_use_result</strong> – LeaseUseResult from the server.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Updated internal instance of LeaseState.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.lease.LeaseWallet">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">LeaseWallet</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseWallet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseWallet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Thread-safe storage of Leases.</p>
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseWallet.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseWallet.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseWallet.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add lease in the wallet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lease</strong> – Lease to add in the wallet.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseWallet.remove">
+<code class="sig-name descname">remove</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseWallet.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseWallet.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove lease from the wallet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lease</strong> – Lease to remove from the wallet.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseWallet.advance">
+<code class="sig-name descname">advance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resource</span><span class="o">=</span><span class="default_value">'body'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseWallet.advance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseWallet.advance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Advance the lease for a specific resource.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>resource</strong> – The resource that the Lease is for.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Advanced lease for the resource.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#bosdyn.client.lease.LeaseNotOwnedByWallet" title="bosdyn.client.lease.LeaseNotOwnedByWallet"><strong>LeaseNotOwnedByWallet</strong></a> – The lease is not owned by the wallet.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseWallet.get_lease">
+<code class="sig-name descname">get_lease</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resource</span><span class="o">=</span><span class="default_value">'body'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseWallet.get_lease"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseWallet.get_lease" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the lease for a specific resource.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>resource</strong> – The resource that the Lease is for.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Lease for the resource.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#bosdyn.client.lease.LeaseNotOwnedByWallet" title="bosdyn.client.lease.LeaseNotOwnedByWallet"><strong>LeaseNotOwnedByWallet</strong></a> – The lease is not owned by the wallet.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseWallet.get_lease_state">
+<code class="sig-name descname">get_lease_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resource</span><span class="o">=</span><span class="default_value">'body'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseWallet.get_lease_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseWallet.get_lease_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the lease state for a specific resource.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>resource</strong> – The resource that the Lease is for.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Lease state for the resource.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#bosdyn.client.lease.NoSuchLease" title="bosdyn.client.lease.NoSuchLease"><strong>NoSuchLease</strong></a> – The requested lease does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseWallet.on_lease_use_result">
+<code class="sig-name descname">on_lease_use_result</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease_use_result</span></em>, <em class="sig-param"><span class="n">resource</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseWallet.on_lease_use_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseWallet.on_lease_use_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the lease state based on result of using the lease.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lease_use_result</strong> – LeaseUseResult from the server.</p></li>
+<li><p><strong>resource</strong> – Resource to update, e.g. ‘body’. Default to None to use the resource specified
+by the lease_use_result.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.lease.LeaseClient">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">LeaseClient</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease_wallet</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="common.html#bosdyn.client.common.BaseClient" title="bosdyn.client.common.BaseClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.common.BaseClient</span></code></a></p>
+<p>Client to the lease service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lease_wallet</strong> – Lease wallet to use.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="bosdyn.client.lease.LeaseClient.default_service_name">
+<code class="sig-name descname">default_service_name</code><em class="property"> = 'lease'</em><a class="headerlink" href="#bosdyn.client.lease.LeaseClient.default_service_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="bosdyn.client.lease.LeaseClient.service_type">
+<code class="sig-name descname">service_type</code><em class="property"> = 'bosdyn.api.LeaseService'</em><a class="headerlink" href="#bosdyn.client.lease.LeaseClient.service_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseClient.acquire">
+<code class="sig-name descname">acquire</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resource</span><span class="o">=</span><span class="default_value">'body'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseClient.acquire"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseClient.acquire" title="Permalink to this definition">¶</a></dt>
+<dd><p>Acquire a lease for the given resource.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>resorce</strong> – Resource for the lease.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Acquired Lease object.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#bosdyn.client.lease.ResourceAlreadyClaimedError" title="bosdyn.client.lease.ResourceAlreadyClaimedError"><strong>ResourceAlreadyClaimedError</strong></a> – Use TakeLease method to forcefully grab the already
+    claimed lease.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.lease.InvalidResourceError" title="bosdyn.client.lease.InvalidResourceError"><strong>InvalidResourceError</strong></a> – Resource is not known to the LeaseService.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.lease.NotAuthoritativeServiceError" title="bosdyn.client.lease.NotAuthoritativeServiceError"><strong>NotAuthoritativeServiceError</strong></a> – LeaseService is not authoritative so Acquire should not work.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseClient.acquire_async">
+<code class="sig-name descname">acquire_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resource</span><span class="o">=</span><span class="default_value">'body'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseClient.acquire_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseClient.acquire_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of acquire() function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseClient.take">
+<code class="sig-name descname">take</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resource</span><span class="o">=</span><span class="default_value">'body'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseClient.take"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseClient.take" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take the lease for the given resource.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>resorce</strong> – Resource for the lease.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Taken Lease object.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#bosdyn.client.lease.InvalidResourceError" title="bosdyn.client.lease.InvalidResourceError"><strong>InvalidResourceError</strong></a> – Resource is not known to the LeaseService.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.lease.NotAuthoritativeServiceError" title="bosdyn.client.lease.NotAuthoritativeServiceError"><strong>NotAuthoritativeServiceError</strong></a> – LeaseService is not authoritative so Acquire should not
+    work.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseClient.take_async">
+<code class="sig-name descname">take_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resource</span><span class="o">=</span><span class="default_value">'body'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseClient.take_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseClient.take_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of the take() function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseClient.return_lease">
+<code class="sig-name descname">return_lease</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseClient.return_lease"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseClient.return_lease" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an acquired lease.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lease</strong> – Lease to return.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#bosdyn.client.lease.InvalidResourceError" title="bosdyn.client.lease.InvalidResourceError"><strong>InvalidResourceError</strong></a> – Resource is not known to the LeaseService.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.lease.NotActiveLeaseError" title="bosdyn.client.lease.NotActiveLeaseError"><strong>NotActiveLeaseError</strong></a> – Lease is not the active lease.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.lease.NotAuthoritativeServiceError" title="bosdyn.client.lease.NotAuthoritativeServiceError"><strong>NotAuthoritativeServiceError</strong></a> – LeaseService is not authoritative so Acquire should not
+    work.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseClient.return_lease_async">
+<code class="sig-name descname">return_lease_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseClient.return_lease_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseClient.return_lease_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of the return_lease() function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseClient.retain_lease">
+<code class="sig-name descname">retain_lease</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseClient.retain_lease"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseClient.retain_lease" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retain the lease.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lease</strong> – Lease to retain.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.InternalServerError" title="bosdyn.client.exceptions.InternalServerError"><strong>InternalServerError</strong></a> – Service experienced an unexpected error state.</p></li>
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.LeaseUseError" title="bosdyn.client.exceptions.LeaseUseError"><strong>LeaseUseError</strong></a> – Request was rejected due to using an invalid lease.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseClient.retain_lease_async">
+<code class="sig-name descname">retain_lease_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseClient.retain_lease_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseClient.retain_lease_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of the retain_lease() function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseClient.list_leases">
+<code class="sig-name descname">list_leases</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseClient.list_leases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseClient.list_leases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of the leases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of lease resources.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.InternalServerError" title="bosdyn.client.exceptions.InternalServerError"><strong>InternalServerError</strong></a> – Service experienced an unexpected error state.</p></li>
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.LeaseUseError" title="bosdyn.client.exceptions.LeaseUseError"><strong>LeaseUseError</strong></a> – Request was rejected due to using an invalid lease.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseClient.list_leases_async">
+<code class="sig-name descname">list_leases_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseClient.list_leases_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseClient.list_leases_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Async version of the list_leases() function.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.lease.LeaseWalletRequestProcessor">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">LeaseWalletRequestProcessor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease_wallet</span></em>, <em class="sig-param"><span class="n">resource_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseWalletRequestProcessor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseWalletRequestProcessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>LeaseWalletRequestProcessor adds a lease from a wallet to a request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lease_wallet</strong> – The LeaseWallet to read leases from.</p></li>
+<li><p><strong>resource_list</strong> – List of resources this processors should add to requests. Default None
+to use the default resource.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseWalletRequestProcessor.mutate">
+<code class="sig-name descname">mutate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseWalletRequestProcessor.mutate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseWalletRequestProcessor.mutate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the leases for the necessary resources if no leases have been specified yet.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseWalletRequestProcessor.get_lease_state">
+<em class="property">static </em><code class="sig-name descname">get_lease_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseWalletRequestProcessor.get_lease_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseWalletRequestProcessor.get_lease_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a tuple of (“are there multiple leases in request?”, “are they set already?”)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.lease.LeaseWalletResponseProcessor">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">LeaseWalletResponseProcessor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease_wallet</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseWalletResponseProcessor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseWalletResponseProcessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>LeaseWalletResponseProcessor updates the wallet with a LeaseUseResult.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lease_wallet</strong> – Lease wallet to use.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseWalletResponseProcessor.mutate">
+<code class="sig-name descname">mutate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseWalletResponseProcessor.mutate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseWalletResponseProcessor.mutate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the wallet if a response has a lease_use_result.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.client.lease.add_lease_wallet_processors">
+<code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">add_lease_wallet_processors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em>, <em class="sig-param"><span class="n">lease_wallet</span></em>, <em class="sig-param"><span class="n">resource_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#add_lease_wallet_processors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.add_lease_wallet_processors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds LeaseWallet related processors to a gRPC client.</p>
+<dl class="simple">
+<dt>For services which use leases for access control, this does two things:</dt><dd><ul class="simple">
+<li><p>Advance the lease from the LeaseWallet and attach to a request.</p></li>
+<li><p>Handle the LeaseUseResult from a response and update LeaseWallet.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>client</strong> (<em>*</em>) – BaseClient derived class for a single service.</p></li>
+<li><p><strong>lease_wallet</strong> (<em>*</em>) – The LeaseWallet to track from, must be non-None.</p></li>
+<li><p><strong>resource_list</strong> (<em>*</em>) – List of resources these processors should add to requests. Default None
+to use a default resource.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="bosdyn.client.lease.LeaseKeepAlive">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.lease.</code><code class="sig-name descname">LeaseKeepAlive</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lease_client</span></em>, <em class="sig-param"><span class="n">lease_wallet</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resource</span><span class="o">=</span><span class="default_value">'body'</span></em>, <em class="sig-param"><span class="n">rpc_interval_seconds</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">keep_running_cb</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseKeepAlive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseKeepAlive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>LeaseKeepAlive issues lease liveness checks on a background thread.</p>
+<p>The robot’s lease system expects lease holders to check in at a regular
+cadence. If the check-ins do not happen, the robot will treat it as a
+communications loss. Typically this will result in the robot stopping,
+powering off, and the lease holder getting their lease revoked.</p>
+<p>Using a LeaseKeepAlive object hides most of the details of issuing the
+lease liveness check. Developers can also manage liveness checks directly
+by using the retain_lease methods on the LeaseClient object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lease_client</strong> – The LeaseClient object to issue requests on.</p></li>
+<li><p><strong>lease_wallet</strong> – The LeaseWallet to retrieve current leases from,
+and to handle any bad LeaseUseResults from. If not specified,
+the lease_client’s lease_wallet will be used.</p></li>
+<li><p><strong>resource</strong> – The resource to do liveness checks for.</p></li>
+<li><p><strong>rpc_interval_seconds</strong> – Duration in seconds between liveness checks.</p></li>
+<li><p><strong>keep_running_cb</strong> – If specified, should be a callable object that
+returns True if the liveness checks should proceed, False
+otherwise. LeaseKeepAlive will invoke keep_running_cb on its
+background thread. One example of where this could be used is
+in an interactive UI - keep_running_cb could stall or return
+False if the UI thread is wedged, which prevents the
+application from continuing to keep the Lease alive when it is
+no longer in a good state.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseKeepAlive.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseKeepAlive.shutdown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseKeepAlive.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shut the background thread down and stop the liveness checks.</p>
+<p>Can be called multiple times, but subsequent calls are no-ops.
+Blocks until the background thread completes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseKeepAlive.is_alive">
+<code class="sig-name descname">is_alive</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseKeepAlive.is_alive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseKeepAlive.is_alive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseKeepAlive.lease_wallet">
+<em class="property">property </em><code class="sig-name descname">lease_wallet</code><a class="headerlink" href="#bosdyn.client.lease.LeaseKeepAlive.lease_wallet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.client.lease.LeaseKeepAlive.wait_until_done">
+<code class="sig-name descname">wait_until_done</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseKeepAlive.wait_until_done"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseKeepAlive.wait_until_done" title="Permalink to this definition">¶</a></dt>
+<dd><p>Waits until the background thread exits.</p>
+<p>Most client code should exit the background thread by using shutdown
+or by passing in a keep_running_cb callback in the constructor.</p>
+<p>However, this can be useful in unit tests for ensuring exits.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      
+      &copy; Copyright 2020 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

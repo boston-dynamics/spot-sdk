@@ -26,7 +26,11 @@ setuptools.setup(
     description="Boston Dynamics API client code and interfaces",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://www.bostondynamics.com/",
+    url="https://dev.bostondynamics.com/",
+    project_urls={
+        "Documentation": "https://dev.bostondynamics.com/",
+        "Source": "https://github.com/boston-dynamics/spot-sdk/",
+    },
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
     package_data={'': ['*.pem']},

@@ -22,7 +22,7 @@ try:
     import PyQt5.QtWidgets as QtWidgets
     import PyQt5.QtCore as QtCore
 
-# Enable backwards compatability with Python2 via PyQt4
+# Enable backwards compatibility with Python2 via PyQt4
 except ImportError:
     from PyQt4.QtGui import QIcon
     import PyQt4.QtGui as QtWidgets
@@ -194,7 +194,7 @@ def status_response_to_markup(status, my_id=None):
 def build_app(hostname, estop_client, timeout_sec):
     """Build the application window and configure the estop.
     Args:
-      timeout: Timeout of this estop endoint (seconds)
+      timeout: Timeout of this estop endpoint (seconds)
     """
     qt_app = QtWidgets.QApplication(sys.argv)
 

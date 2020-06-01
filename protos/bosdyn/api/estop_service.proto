@@ -4,10 +4,6 @@
 // is subject to the terms and conditions of the Boston Dynamics Software
 // Development Kit License (20191101-BDSDK-SL).
 
-// The software robot E-Stop system:
-//  1. Uses challenge-style communication to enforce end user (aka “originators”) connection
-//     for Authority to Operate (ATO).
-//  2. Offers the ability to issue a direct denial of  ATO.
 syntax = "proto3";
 
 package bosdyn.api;
@@ -16,7 +12,11 @@ option java_outer_classname = "EstopServiceProto";
 
 import "bosdyn/api/estop.proto";
 
-// The GRPC service interface for the robot EStop/Authority to Operate system.
+// The software robot E-Stop system:
+//  1. Uses challenge-style communication to enforce end user (aka “originators”) connection
+//     for Authority to Operate (ATO).
+//  2. Offers the ability to issue a direct denial of  ATO.
+// The EstopService provides a service interface for the robot EStop/Authority to operate the system.
 service EstopService {
     // Register an Estop "originator" or "endpoint".
     // This may be a replacement for another active endpoint.
@@ -28,7 +28,7 @@ service EstopService {
         returns (DeregisterEstopEndpointResponse) {}
 
     // Answer challenge from previous response (unless this is the first call), and request
-    //  a stop level.
+    // a stop level.
     rpc EstopCheckIn(EstopCheckInRequest) returns (EstopCheckInResponse) {}
 
     // Request the current EstopConfig, describing the expected set of endpoints.

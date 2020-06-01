@@ -30,7 +30,9 @@ message Value {
 
 // Declaration of a run-time or compile-time variable.
 message VariableDeclaration {
+    // Name of the variable, to be used as the key in KeyValue pairs.
     string name = 1;
+    // Supported types for blackboard or parameter values.
     enum Type {
         TYPE_UNKNOWN = 0;
         TYPE_FLOAT = 1;
@@ -39,6 +41,7 @@ message VariableDeclaration {
         TYPE_BOOL = 4;
         TYPE_MESSAGE = 5;
     }
+    // Type that this variable is expected to have. Used to verify assignments and comparisons.
     Type type = 2;
 }
 
@@ -65,9 +68,14 @@ message UserData {
 
 // Results from executing / ticking / running a single node.
 enum Result {
+    // Invalid, should not be used.
     RESULT_UNKNOWN = 0;
+    // The node completed running, but failed.
     RESULT_FAILURE = 1;
+    // The node is still in process and has not completed.
     RESULT_RUNNING = 2;
+    // The node completed, and succeeded.
     RESULT_SUCCESS = 3;
+    // The node encountered an operational error while trying to execute.
     RESULT_ERROR = 4;
 }

@@ -4,7 +4,6 @@
 // is subject to the terms and conditions of the Boston Dynamics Software
 // Development Kit License (20191101-BDSDK-SL).
 
-// Geometric primitives used in the API.
 syntax = "proto3";
 
 package bosdyn.api;
@@ -13,11 +12,13 @@ option java_outer_classname = "GeometryProto";
 
 import "google/protobuf/wrappers.proto";
 
+// Two dimensional vector primitive.
 message Vec2 {
   double x = 1;
   double y = 2;
 }
 
+// Three dimensional vector primitive.
 message Vec3 {
   double x = 1;
   double y = 2;
@@ -26,14 +27,15 @@ message Vec3 {
 
 // Cylindrical coordinates are a generalization of polar coordiates, adding a
 // height
-//  axis. See (http://mathworld.wolfram.com/CylindricalCoordinates.html) for
-//  more details.
+// axis. See (http://mathworld.wolfram.com/CylindricalCoordinates.html) for
+// more details.
 message CylindricalCoordinate {
   double r = 1;     // Radial coordinate
   double theta = 2; // Azimuthal coordinate
   double z = 3;     // Vertical coordiante
 }
 
+// Quaternion primitive. A quaternion can be used to describe the rotation.
 message Quaternion {
   double x = 1;
   double y = 2;
@@ -41,21 +43,25 @@ message Quaternion {
   double w = 4;
 }
 
+// Plane primitive, described with a point and normal.
 message Plane {
   Vec3 point = 1;  // A point on the plane.
   Vec3 normal = 2; // The direction of the planes normal.
 }
 
+// Geometric primitive to describe 2D position and rotation.
 message SE2Pose {
   Vec2 position = 1; // (m)
   double angle = 2;  // (rad)
 }
 
+// Geometric primitive that describes a 2D velocity through it's linear and angular components.
 message SE2Velocity {
   Vec2 linear = 1;    // (m/s)
   double angular = 2; // (rad/s)
 }
 
+// Geometric primitive to couple minimum and maximum SE2Velocities in a single message.
 message SE2VelocityLimit {
   // If set, limits the maximum velocity.
   SE2Velocity max_vel = 1;
@@ -63,92 +69,88 @@ message SE2VelocityLimit {
   SE2Velocity min_vel = 2;
 }
 
+// Geometric primitive to describe 3D position and rotation.
 message SE3Pose {
   Vec3 position = 1; // (m)
   Quaternion rotation = 2;
 }
 
+// Geometric primitive that describes a 3D velocity through it's linear and angular components.
 message SE3Velocity {
   Vec3 linear = 1;  // (m/s)
   Vec3 angular = 2; // (rad/s)
 }
 
-// Used to specify forces and torques.
+// Geometric primitive used to specify forces and torques.
 message Wrench {
   Vec3 force = 1;  // (N)
   Vec3 torque = 2; // (Nm)
 }
 
 message FrameTreeSnapshot {
-  // A frame is a named location in space.
-  //
-  // For example, the following frames are defined by the API:
-  //   * "body":   A frame centered on the robot's body.
-  //   * "vision": A non-moving (inertial) frame that is the robot's best
-  //               estimate of a fixed location in the world. It is based on
-  //               both dead reckoning and visual analysis of the world.
-  //   * "odom":   A non-moving (inertial) frame that is based on the kinematic
-  //               odometry of the robot only.
-  //
-  // Additional frames are available for robot joints, sensors, and items
-  // detected in the world.
-  //
-  // The FrameTreeSnapshot represents the relationships between the frames
-  // that the robot knows about at a particular point in time. For example,
-  // with the FrameTreeSnapshot, an API client can determine where the "body"
-  // is relative to the "vision".
-  //
-  // To reduce data bandwidth, the FrameTreeSnapshot will typically contain
-  // a small subset of all known frames. By default, all services MUST
-  // include "vision", "body", and "odom" frames in the FrameTreeSnapshot, but
-  // additional frames can also be included. For example, an Image service
-  // would likely include the frame located at the base of the camera lens
-  // where the picture was taken.
-  //
-  // Frame relationships are expressed as edges between "parent" frames and
-  // "child" frames, with an SE3Pose indicating the pose of the "child" frame
-  // expressed in the "child" frame. These edges are included in the edge_map
-  // field. For example, if frame "hand" is 1m in front of the frame "shoulder",
-  // then the FrameTreeSnapshot might contain:
-  //
-  // edge_map {
-  //   key: "hand"
-  //   value: {
-  //     parent_frame_name: "shoulder"
-  //     parent_tform_child: {
-  //       position: {
-  //         x: 1.0
-  //         y: 0.0
-  //         z: 0.0
-  //       }
-  //     }
-  //   }
-  // }
-  //
-  //
-  // Frame relationships can be inverted. So, to find where the "shoulder"
-  // is in relationship the "hand", the parent_tform_child pose in the edge
-  // above can be inverted:
-  //
-  //     hand_tform_shoulder = shoulder_tform_hand.inverse()
-  //
-  // Frame relationships can also be concatenated. If there is an additional
-  // Edge specifying the pose of the "shoulder" relative to the "body", then
-  // to find where the "hand" is relative to the "body" do:
-  //
-  //     body_tform_hand = body_tform_shoulder * shoulder_tform_hand
-  //
-  // The two properties above reduce data size. Instead of having to send N^2
-  // edge_map entries to represent all relationships between N frames,
-  // only N edge_map entries need to be sent. Clients will need to determine
-  // the chain of edges to follow to get from one frame to another frame,
-  // and then do inversion and concatentation to generate the appropriate pose.
-  //
-  // Note that all FrameTreeSnapshots are expected to be a single rooted tree.
-  // The syntax for FrameTreeSnapshot could also support graphs with
-  // cycles, or forests of trees - but clients should treat those as invalid
-  // representations.
-
+/**
+ *   A frame is a named location in space.
+ * For example, the following frames are defined by the API:
+ *  - "body":   A frame centered on the robot's body.
+ *  - "vision": A non-moving (inertial) frame that is the robot's best
+ *              estimate of a fixed location in the world. It is based on
+ *              both dead reckoning and visual analysis of the world.
+ *  - "odom":   A non-moving (inertial) frame that is based on the kinematic
+ *              odometry of the robot only.
+ * Additional frames are available for robot joints, sensors, and items
+ * detected in the world.
+ *
+ * The FrameTreeSnapshot represents the relationships between the frames that the robot
+ * knows about at a particular point in time. For example, with the FrameTreeSnapshot,
+ * an API client can determine where the "body" is relative to the "vision".
+ *
+ * To reduce data bandwidth, the FrameTreeSnapshot will typically contain
+ * a small subset of all known frames. By default, all services MUST
+ * include "vision", "body", and "odom" frames in the FrameTreeSnapshot, but
+ * additional frames can also be included. For example, an Image service
+ * would likely include the frame located at the base of the camera lens
+ * where the picture was taken.
+ *
+ * Frame relationships are expressed as edges between "parent" frames and
+ * "child" frames, with an SE3Pose indicating the pose of the "child" frame
+ * expressed in the "child" frame. These edges are included in the edge_map
+ * field. For example, if frame "hand" is 1m in front of the frame "shoulder",
+ * then the FrameTreeSnapshot might contain:
+ *  edge_map {
+ *     key: "hand"
+ *     value: {
+ *         parent_frame_name: "shoulder"
+ *         parent_tform_child: {
+ *            position: {
+ *              x: 1.0
+ *              y: 0.0
+ *              z: 0.0
+ *            }
+ *         }
+ *      }
+ *  }
+ *
+ * Frame relationships can be inverted. So, to find where the "shoulder"
+ * is in relationship the "hand", the parent_tform_child pose in the edge
+ * above can be inverted:
+ *      hand_tform_shoulder = shoulder_tform_hand.inverse()
+ * Frame relationships can also be concatenated. If there is an additional
+ * edge specifying the pose of the "shoulder" relative to the "body", then
+ * to find where the "hand" is relative to the "body" do:
+ *      body_tform_hand = body_tform_shoulder * shoulder_tform_hand
+ *
+ * The two properties above reduce data size. Instead of having to send N^2
+ * edge_map entries to represent all relationships between N frames,
+ * only N edge_map entries need to be sent. Clients will need to determine
+ * the chain of edges to follow to get from one frame to another frame,
+ * and then do inversion and concatentation to generate the appropriate pose.
+ *
+ * Note that all FrameTreeSnapshots are expected to be a single rooted tree.
+ * The syntax for FrameTreeSnapshot could also support graphs with
+ * cycles, or forests of trees - but clients should treat those as invalid
+ * representations.
+ */
+ 
   // ParentEdge represents the relationship from a child frame to a parent frame.
   message ParentEdge {
     // The name of the parent frame. Must be non-empty. If parent_frame_name is
@@ -166,9 +168,10 @@ message FrameTreeSnapshot {
 }
 
 
-// Box2 is short-hand for a two-dimensional box.
+// Geometric primitive describing a two-dimensional box.
 message Box2 { Vec2 size = 1; }
 
+// Geometric primitive to describe a 2D box in a specific frame.
 message Box2WithFrame {
   // The box is specified with width (y) and length (x), and the full box is
   // fixed at an origin, where it's sides are along the coordinate frame's
@@ -181,9 +184,10 @@ message Box2WithFrame {
   SE3Pose frame_name_tform_box = 3;
 }
 
-// Box3 is short-hand for a three-dimensional box.
+// Geometric primitive describing a three-dimensional box.
 message Box3 { Vec3 size = 1; }
 
+// Geometric primitive to describe a 3D box in a specific frame.
 message Box3WithFrame {
   // The box width (y), length (x), and height (z) are interpreted in, and the
   // full box is fixed at an origin, where it's sides are along the coordinate
@@ -226,8 +230,8 @@ message EulerZXYRate {
 message PolyLine { repeated bosdyn.api.Vec2 points = 1; }
 
 // Polygon in the XY plane.
-// May be concave, but should not self-intersect.
-// Vertexes may be in clockwise or ccw order.
+// May be concave, but should not self-intersect. Vertices can be specified in either
+// clockwise or counterclockwise orders.
 message Polygon { repeated Vec2 vertexes = 1; }
 
 // Represents a circular 2D area.

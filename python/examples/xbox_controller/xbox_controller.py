@@ -472,7 +472,7 @@ class XboxController:
         Mapping
         Button Combination    -> Functionality
         --------------------------------------
-        LB + RB + B           -> E-stop
+        LB + RB + B           -> E-Stop
         A                     -> Walk
         B                     -> Stand
         X                     -> Sit
@@ -526,7 +526,7 @@ class XboxController:
                         self._reset_yaw()
 
                 # Handle button combinations first
-                # If E-stop button combination is pressed, toggle E-stop functionality only when
+                # If E-Stop button combination is pressed, toggle E-Stop functionality only when
                 # buttons are released.
                 if joy.left_bumper() and joy.right_bumper() and joy.B():
                     self.estop_buttons_pressed = True

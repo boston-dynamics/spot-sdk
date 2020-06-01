@@ -1,0 +1,859 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Understanding Spot Programming &mdash; Spot 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https:://dev.bostondynamics.com/docs/python/understanding_spot_programming.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Python Examples" href="../../python/examples/README.html" />
+    <link rel="prev" title="QuickStart" href="quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../README.html">
+          
+
+          
+            
+            <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../concepts/README.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/base_services.html">Base services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/geometry_and_frames.html">Geometry and Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/robot_services.html">Robot services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/autonomy/README.html">Autonomy services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/initialization.html">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/localization.html">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/missions_service.html">Missions service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="README.html">Python</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Understanding Spot Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/examples/README.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/add_image_coordinates_to_scene/README.html">Add Image Coordinates to Scene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/directory/README.html">Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/estop/README.html">E-Stop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Get Depth Plus Visual Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/logging/README.html">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/mission_question_answerer/README.html">Mission Question Anwerer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/payloads/README.html">Payloads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/replay_mission/README.html">Replay Mission</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/spot_check/README.html">Spot Check</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/wasd/README.html">WASD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/xbox_controller/README.html">Xbox Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/README.html">Python Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/command_line.html">Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/common.html">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/processors.html">Processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/recording.html">Recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot_command.html">Robot Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot_id.html">Robot ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html">PTZ</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/streamquality.html">Stream Quality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html">Version</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_check.html">Spot Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/time_sync.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/bosdyn-core/src/bosdyn/README.html">Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-core/src/bosdyn/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../payload/README.html">Payloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../payload/payload_configuration_requirements.html">Payload configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/mechanical_interfaces.html">Mechanical interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/robot_mounting_rails.html">Robot mounting rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/configuring_payload_software.html">Configuring payload software</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../protos/README.html">API Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../protos/style_guide.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html">auth.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#data-chunk-proto">data_chunk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#directory-proto">directory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#directory-registration-proto">directory_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#directory-registration-service-proto">directory_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#directory-service-proto">directory_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#estop-proto">estop.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#estop-service-proto">estop_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#local-grid-proto">local_grid.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-mission-service-proto">mission/mission_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-nodes-proto">mission/nodes.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-remote-proto">mission/remote.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-remote-service-proto">mission/remote_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-util-proto">mission/util.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#payload-registration-proto">payload_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#payload-registration-service-proto">payload_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#payload-service-proto">payload_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#point-cloud-proto">point_cloud.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#power-proto">power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#power-service-proto">power_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-command-service-proto">robot_command_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-id-proto">robot_id.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-led-proto">spot_cam/LED.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-factoryservice-proto">spot_cam/factoryservice.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-factorysetup-proto">spot_cam/factorysetup.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-health-proto">spot_cam/health.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-network-proto">spot_cam/network.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-power-proto">spot_cam/power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-ptz-proto">spot_cam/ptz.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-service-proto">spot_cam/service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-streamquality-proto">spot_cam/streamquality.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-version-proto">spot_cam/version.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../README.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../README.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="README.html">Python Library</a> &raquo;</li>
+        
+      <li>Understanding Spot Programming</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!--
+Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+
+Downloading, reproducing, distributing or otherwise using the SDK Software
+is subject to the terms and conditions of the Boston Dynamics Software
+Development Kit License (20191101-BDSDK-SL).
+--><div class="section" id="understanding-spot-programming">
+<h1>Understanding Spot Programming<a class="headerlink" href="#understanding-spot-programming" title="Permalink to this headline">¶</a></h1>
+<p>This guide will help you understand the programming principles that drive <code class="docutils literal notranslate"><span class="pre">Spot</span></code> and the <code class="docutils literal notranslate"><span class="pre">Spot</span> <span class="pre">Python</span> <span class="pre">SDK</span></code>.</p>
+<!--ts--><ul class="simple">
+<li><p><a class="reference external" href="#fundamental-robot-services">Fundamental Robot Services</a></p>
+<ul>
+<li><p><a class="reference external" href="#understanding-the-id-command">Understanding the “id” command</a></p></li>
+<li><p><a class="reference external" href="#listing-services">Listing Services</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#how-to-setup-and-command-spot-to-move">Understanding How to Setup and Command Spot to Move</a></p>
+<ul>
+<li><p><a class="reference external" href="#create-the-sdk-object">Create the SDK object</a></p></li>
+<li><p><a class="reference external" href="#load-your-app-token">Load your app_token</a></p></li>
+<li><p><a class="reference external" href="#create-a-robot-object">Create a Robot object</a></p></li>
+<li><p><a class="reference external" href="#retrieve-the-robot-id">Retrieve the Robot ID</a></p></li>
+<li><p><a class="reference external" href="#blocking-vs-asynchronous-spot-python-sdk-functions">Blocking vs. Asynchronous Spot Python SDK functions</a></p></li>
+<li><p><a class="reference external" href="#inspecting-robot-state">Inspecting robot state</a></p>
+<ul>
+<li><p><a class="reference external" href="#services-and-authentication">Services and Authentication</a></p></li>
+<li><p><a class="reference external" href="#retrieving-robot-state">Retrieving Robot State</a></p></li>
+<li><p><a class="reference external" href="#robot-state-was-a-message-messages-are-defined-by-protobufs">Robot State was a Message, Messages are defined by Protobufs</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#capture-and-view-camera-images">Capture and View Camera images</a></p></li>
+<li><p><a class="reference external" href="#configuring-motor-power-authority-software-e-stop">Configuring “Motor Power Authority” (software E-Stop)</a></p>
+<ul>
+<li><p><a class="reference external" href="#create-and-register-an-e-stop-endpoint">Create and register an E-Stop Endpoint</a></p></li>
+<li><p><a class="reference external" href="#clear-the-e-stop">Clear the E-Stop</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#taking-ownership-of-spot-leases">Taking ownership of Spot (Leases)</a></p></li>
+<li><p><a class="reference external" href="#powering-on-the-robot">Powering on the robot</a></p></li>
+<li><p><a class="reference external" href="#establishing-timesync">Establishing timesync</a></p></li>
+<li><p><a class="reference external" href="#commanding-the-robot">Commanding the robot</a></p></li>
+<li><p><a class="reference external" href="#powering-off-the-robot">Powering off the robot</a></p></li>
+</ul>
+</li>
+</ul>
+<!--te--><div class="section" id="fundamental-robot-services">
+<h2>Fundamental Robot Services<a class="headerlink" href="#fundamental-robot-services" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="understanding-the-id-command">
+<h3>Understanding the “id” command<a class="headerlink" href="#understanding-the-id-command" title="Permalink to this headline">¶</a></h3>
+<p>The “id” command is one of the simplest Spot commands, so it’s useful to understand how it works, since every command to Spot performs many of the same basic functions.</p>
+<p>Specify the verbose flag with <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> , and you’ll get a lot of information! We’ll explain the pieces…</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m bosdyn.client --verbose 192.168.80.3 id
+2020-03-26 17:30:27,571 - DEBUG - Creating standard Sdk, cert glob: &quot;None&quot;
+2020-03-26 17:30:27,608 - DEBUG - Application token expires on 2020/05/20
+2020-03-26 17:30:27,610 - DEBUG - Created client for robot-id
+2020-03-26 17:30:27,615 - DEBUG - Created channel to 192.168.80.3 at port 443 with authority id.spot.robot
+...
+</pre></div>
+</div>
+<p>The first output line creates a Spot <code class="docutils literal notranslate"><span class="pre">SDK</span> <span class="pre">object</span></code>.  All Spot API programs start this way.</p>
+<p>Note that the output text itself demonstrates Spot’s use of Python’s <a class="reference external" href="https://docs.python.org/3/library/logging.html">logging facility</a>, we recommend you perform your logging with the same.</p>
+<p>The third line creates a <code class="docutils literal notranslate"><span class="pre">client</span></code> of Spot’s <code class="docutils literal notranslate"><span class="pre">robot-id</span> <span class="pre">service</span></code>. The Spot API exposes on-robot capabilities via a set of network-accessible services - similar to a <a class="reference external" href="https://en.wikipedia.org/wiki/Microservices">microservice</a> architecture.</p>
+<p>The final line of output above shows the command initiating a gRPC channel to Spot.  All communication to the robot is over a secure HTTPS connection.  Spot API uses <a class="reference external" href="https://grpc.io">gRPC</a> as its underlying RPC (Remote Procedure Call) transport. gRPC is a high-performance  networking connection for services which supports a wide variety of programming environments. gRPC uses <a class="reference external" href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a> as the messaging format, which has a compact over-the-wire representation and supports backwards and forwards compatibility.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2020</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">26</span> <span class="mi">17</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="mi">27</span><span class="p">,</span><span class="mi">616</span> <span class="o">-</span> <span class="n">DEBUG</span> <span class="o">-</span> <span class="n">blocking</span> <span class="n">request</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39;/bosdyn.api.RobotIdService/GetRobotId&#39;</span>
+<span class="n">header</span> <span class="p">{</span>
+  <span class="n">request_timestamp</span> <span class="p">{</span>
+    <span class="n">seconds</span><span class="p">:</span> <span class="mi">1585258227</span>
+    <span class="n">nanos</span><span class="p">:</span> <span class="mi">616570624</span>
+  <span class="p">}</span>
+  <span class="n">client_name</span><span class="p">:</span> <span class="s2">&quot;BosdynClientbblank02:__main__.py-28906&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In the above output, a blocking <code class="docutils literal notranslate"><span class="pre">GetRobotId</span></code> RPC can be seen being made to the <code class="docutils literal notranslate"><span class="pre">bosdyn.api.RobotIdService</span></code>.</p>
+<p>Finally, the RobotIdService responds to the GetRobotId RPC with a response including information about the robot.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2020</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">26</span> <span class="mi">17</span><span class="p">:</span><span class="mi">30</span><span class="p">:</span><span class="mi">27</span><span class="p">,</span><span class="mi">650</span> <span class="o">-</span> <span class="n">DEBUG</span> <span class="o">-</span> <span class="n">response</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39;/bosdyn.api.RobotIdService/GetRobotId&#39;</span>
+<span class="n">header</span> <span class="p">{</span>
+  <span class="n">request_header</span> <span class="p">{</span>
+    <span class="n">request_timestamp</span> <span class="p">{</span>
+      <span class="n">seconds</span><span class="p">:</span> <span class="mi">1585258227</span>
+      <span class="n">nanos</span><span class="p">:</span> <span class="mi">616570624</span>
+    <span class="p">}</span>
+    <span class="n">client_name</span><span class="p">:</span> <span class="s2">&quot;BosdynClientbblank02:__main__.py-28906&quot;</span>
+  <span class="p">}</span>
+  <span class="n">request_received_timestamp</span> <span class="p">{</span>
+    <span class="n">seconds</span><span class="p">:</span> <span class="mi">1585258226</span>
+    <span class="n">nanos</span><span class="p">:</span> <span class="mi">224952738</span>
+  <span class="p">}</span>
+  <span class="n">response_timestamp</span> <span class="p">{</span>
+    <span class="n">seconds</span><span class="p">:</span> <span class="mi">1585258226</span>
+    <span class="n">nanos</span><span class="p">:</span> <span class="mi">224990830</span>
+  <span class="p">}</span>
+  <span class="n">error</span> <span class="p">{</span>
+    <span class="n">code</span><span class="p">:</span> <span class="n">CODE_OK</span>
+  <span class="p">}</span>
+  <span class="n">request</span> <span class="p">{</span>
+    <span class="n">type_url</span><span class="p">:</span> <span class="s2">&quot;type.googleapis.com/bosdyn.api.RobotIdRequest&quot;</span>
+    <span class="n">value</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">6</span><span class="se">\n\014\010\363\275\364\363\005\020\200\276\200\246\002\022</span><span class="s2">&amp;BosdynClientbblank02:__main__.py-28906&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">robot_id</span> <span class="p">{</span>
+  <span class="n">serial_number</span><span class="p">:</span> <span class="s2">&quot;beta-BD-90490007&quot;</span>
+  <span class="n">species</span><span class="p">:</span> <span class="s2">&quot;spot&quot;</span>
+  <span class="n">version</span><span class="p">:</span> <span class="s2">&quot;V3&quot;</span>
+  <span class="n">software_release</span> <span class="p">{</span>
+    <span class="n">version</span> <span class="p">{</span>
+      <span class="n">major_version</span><span class="p">:</span> <span class="mi">2</span>
+    <span class="p">}</span>
+    <span class="n">changeset_date</span> <span class="p">{</span>
+      <span class="n">seconds</span><span class="p">:</span> <span class="mi">1583941992</span>
+    <span class="p">}</span>
+    <span class="n">changeset</span><span class="p">:</span> <span class="s2">&quot;b11205d698e&quot;</span>
+    <span class="n">install_date</span> <span class="p">{</span>
+      <span class="n">seconds</span><span class="p">:</span> <span class="mi">1583953617</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">nickname</span><span class="p">:</span> <span class="s2">&quot;beta29&quot;</span>
+  <span class="n">computer_serial_number</span><span class="p">:</span> <span class="s2">&quot;02-19904-9903&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="listing-services">
+<h3>Listing services<a class="headerlink" href="#listing-services" title="Permalink to this headline">¶</a></h3>
+<p>The following command lists all of the services available on the robot.  Note the robot-id service is listed, which we just used in the previous section.  Services are what you communicate with on Spot, use them to issue commands, retrieve information, etc.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m bosdyn.client --user user --password password 192.168.80.3 dir list
+name                                  type                                               authority                             tokens
+------------------------------------------------------------------------------------------------------------------------------------
+arm-control                           bosdyn.api.internal.ArmControlService              arm-control.spot.robot                user
+arm-demo                              bosdyn.api.ArmDemoService                          arm-demo.spot.robot                   user
+auth                                  bosdyn.api.AuthService                             auth.spot.robot                
+deprecated-auth                       bdRobotApi.AuthService                             auth.spot.robot                
+directory                             bosdyn.api.DirectoryService                        api.spot.robot                        user
+...
+robot-id                              bosdyn.api.RobotIdService                          id.spot.robot                  
+...
+</pre></div>
+</div>
+<p>See the Concept documents for more details about <a class="reference internal" href="../concepts/README.html"><span class="doc">Spot’s API Architecture</span></a>.</p>
+</div>
+</div>
+<div class="section" id="how-to-setup-and-command-spot-to-move">
+<h2>How to Setup and Command Spot to Move<a class="headerlink" href="#how-to-setup-and-command-spot-to-move" title="Permalink to this headline">¶</a></h2>
+<p>It is useful to run Spot from the command line to understand the basics for commanding Spot.</p>
+<p>Start up a python interpreter and import the bosdyn.client package - this should work assuming you’ve successfully completed our <a class="reference internal" href="quickstart.html"><span class="doc">Spot Python SDK Quickstart</span></a>.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ python
+Python <span class="m">3</span>.6.8 <span class="o">(</span>default, Jan <span class="m">14</span> <span class="m">2019</span>, <span class="m">11</span>:02:34<span class="o">)</span>
+<span class="o">[</span>GCC <span class="m">8</span>.0.1 <span class="m">20180414</span> <span class="o">(</span>experimental<span class="o">)</span> <span class="o">[</span>trunk revision <span class="m">259383</span><span class="o">]]</span> on linux
+Type <span class="s2">&quot;help&quot;</span>, <span class="s2">&quot;copyright&quot;</span>, <span class="s2">&quot;credits&quot;</span> or <span class="s2">&quot;license&quot;</span> <span class="k">for</span> more information.
+&gt;&gt;&gt; import bosdyn.client
+</pre></div>
+</div>
+<div class="section" id="create-the-sdk-object">
+<h3>Create the SDK object<a class="headerlink" href="#create-the-sdk-object" title="Permalink to this headline">¶</a></h3>
+<p>All Boston Dynamics API programs start by creating an SDK object with a client name argument. The client name is used to help with debugging, and does not have any semantic information - so use whatever string is helpful for you.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdk</span> <span class="o">=</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">create_standard_sdk</span><span class="p">(</span><span class="s1">&#39;understanding-spot&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="load-your-app-token">
+<h3>Load your app token<a class="headerlink" href="#load-your-app-token" title="Permalink to this headline">¶</a></h3>
+<p>You’ll need to let the SDK know about the Application Token to use it.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sdk</span><span class="o">.</span><span class="n">load_app_token</span><span class="p">(</span><span class="s1">&#39;~/.bosdyn/dev.app_token&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-a-robot-object">
+<h3>Create a robot object<a class="headerlink" href="#create-a-robot-object" title="Permalink to this headline">¶</a></h3>
+<p>To retrieve the robot id like we did in <a class="reference internal" href="quickstart.html"><span class="doc">Spot Python SDK Quickstart</span></a> we’ll first need to create a <code class="docutils literal notranslate"><span class="pre">robot</span></code> object, using its network address as an argument. In this example, we only create one <code class="docutils literal notranslate"><span class="pre">robot</span></code> object, but it is possible to create and control multiple robots in the same program with the Boston Dynamics API.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span> <span class="o">=</span> <span class="n">sdk</span><span class="o">.</span><span class="n">create_robot</span><span class="p">(</span><span class="s1">&#39;192.168.80.3&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="retrieve-the-robot-id">
+<h3>Retrieve the Robot ID<a class="headerlink" href="#retrieve-the-robot-id" title="Permalink to this headline">¶</a></h3>
+<p>As discussed earlier, Spot exposes its capability via a number of services. The Boston Dynamics Python API has a corresponding set of clients for each service, which are created off of the robot object.</p>
+<p>Let’s create a <code class="docutils literal notranslate"><span class="pre">robot_id</span> <span class="pre">client</span></code> of the <code class="docutils literal notranslate"><span class="pre">robot-id</span> <span class="pre">service</span></code>, and then retrieve id information:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">id_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="s1">&#39;robot-id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">id_client</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span>
+<span class="go">serial_number: &quot;beta-BD-90490007&quot;</span>
+<span class="go">species: &quot;spot&quot;</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="blocking-vs-asynchronous-spot-python-sdk-functions">
+<h3>Blocking vs. Asynchronous Spot Python SDK functions<a class="headerlink" href="#blocking-vs-asynchronous-spot-python-sdk-functions" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">get_id()</span></code> call above is blocking - it will not complete until after the RPC completes. It is possible to tweak parameters for the call, such as a timeout for how long to wait. The following example sets a too short timeout and fails…</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">id_client</span><span class="o">.</span><span class="n">get_id</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;/mnt/c/spot_v2_0/bblank_spot_v2_0_env/lib/python3.6/site-packages/bosdyn/client/common.py&quot;</span>, line <span class="m">290</span>, in <span class="n">call</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">rpc_method</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+  File <span class="nb">&quot;/mnt/c/spot_v2_0/bblank_spot_v2_0_env/lib/python3.6/site-packages/grpc/_channel.py&quot;</span>, line <span class="m">826</span>, in <span class="n">__call__</span>
+    <span class="k">return</span> <span class="n">_end_unary_response_blocking</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">call</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+  File <span class="nb">&quot;/mnt/c/spot_v2_0/bblank_spot_v2_0_env/lib/python3.6/site-packages/grpc/_channel.py&quot;</span>, line <span class="m">729</span>, in <span class="n">_end_unary_response_blocking</span>
+    <span class="k">raise</span> <span class="n">_InactiveRpcError</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+<span class="gr">grpc._channel._InactiveRpcError</span>: <span class="n">&lt;_InactiveRpcError of RPC that terminated with:</span>
+<span class="go">        status = StatusCode.DEADLINE_EXCEEDED</span>
+<span class="go">        details = &quot;Deadline Exceeded&quot;</span>
+<span class="go">        debug_error_string = &quot;{&quot;created&quot;:&quot;@1585323526.280242100&quot;,&quot;description&quot;:&quot;Error received from peer ipv4:192.168.80.3:443&quot;,&quot;file&quot;:&quot;src/core/lib/surface/call.cc&quot;,&quot;file_line&quot;:1056,&quot;grpc_message&quot;:&quot;Deadline Exceeded&quot;,&quot;grpc_status&quot;:4}&quot;</span>
+<span class="go">&gt;</span>
+</pre></div>
+</div>
+<p>In addition to blocking calls, clients support non-blocking <code class="docutils literal notranslate"><span class="pre">asynchronous</span></code> calls. This can be useful in high performance applications where a thread of execution can not stall waiting for an RPC to complete. Python’s <a class="reference external" href="https://docs.python.org/3/library/concurrent.futures.html#future-objects">futures</a> architecture is used as the underpinning of asynchronous communication.  See the <a class="reference internal" href="../../python/examples/get_robot_state_async/README.html"><span class="doc">get_robot_state_async programming example</span></a> for how to use these functions.</p>
+<p>Let’s make an asynchronous call for the robot id and wait for the result from the returned future object:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fut</span> <span class="o">=</span> <span class="n">id_client</span><span class="o">.</span><span class="n">get_id_async</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fut</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="go">serial_number: &quot;beta-BD-90490007&quot;</span>
+<span class="go">species: &quot;spot&quot;</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="inspecting-robot-state">
+<h3>Inspecting robot state<a class="headerlink" href="#inspecting-robot-state" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">robot-state</span> <span class="pre">service</span></code> contains dynamic information about the robot such as location, battery status, etc.</p>
+<div class="section" id="services-and-authentication">
+<h4>Services and Authentication<a class="headerlink" href="#services-and-authentication" title="Permalink to this headline">¶</a></h4>
+<p>Before robot state can be retrieved, you need to authenticate to the robot. The majority of services require the user to be authenticated - this prevents random network attackers from being able to control the robot or intercept information which might be sensitive.</p>
+<p>Assuming that the username is <code class="docutils literal notranslate"><span class="pre">user</span></code> and the password is <code class="docutils literal notranslate"><span class="pre">password</span></code>, issue the following command.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you provided the wrong credentials, an exception will be raised.</p>
+</div>
+<div class="section" id="retrieving-robot-state">
+<h4>Retrieving robot state<a class="headerlink" href="#retrieving-robot-state" title="Permalink to this headline">¶</a></h4>
+<p>Now we can create a client to robot-state, and obtain information about Spot:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">state_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="s1">&#39;robot-state&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state_client</span><span class="o">.</span><span class="n">get_robot_state</span><span class="p">()</span>
+<span class="go">power_state {</span>
+<span class="go">  timestamp {</span>
+<span class="go">    seconds: 1585324337</span>
+<span class="go">    nanos: 644209920</span>
+<span class="go">  }</span>
+<span class="go">  ... a whole lot more</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="robot-state-was-a-message-messages-are-defined-by-protobufs">
+<h4>Robot State was a message, messages are defined by protobufs<a class="headerlink" href="#robot-state-was-a-message-messages-are-defined-by-protobufs" title="Permalink to this headline">¶</a></h4>
+<p>The structure of the robot state message retrieved above is defined by its <code class="docutils literal notranslate"><span class="pre">protobuf</span> <span class="pre">definition</span></code>.  This is the language the robot speaks.  Spot SDK completely exposes the protobuf, so to really understand Spot programming you want to look at and understand the protobufs. Take a look, they are right here in your distribution!   <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#robot-state-proto">../../protos/bosdyn/api/robot_state.proto</a></p>
+</div>
+</div>
+<div class="section" id="capture-and-view-camera-images">
+<h3>Capture and View Camera Images<a class="headerlink" href="#capture-and-view-camera-images" title="Permalink to this headline">¶</a></h3>
+<p>Spot has 5 “fisheye” cameras in addition to 5 depth cameras.  Images can be captured from the  these image sources. The ‘list_image_sources’ RPC returns valid camera source names.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">bosdyn.client.image</span> <span class="kn">import</span> <span class="n">ImageClient</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">image_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">ImageClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sources</span> <span class="o">=</span> <span class="n">image_client</span><span class="o">.</span><span class="n">list_image_sources</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">source</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">]</span>
+<span class="go">[&#39;back_depth&#39;, &#39;back_depth_in_visual_frame&#39;, &#39;back_fisheye_image&#39;, &#39;frontleft_depth&#39;, &#39;frontleft_depth_in_visual_frame&#39;, &#39;frontleft_fisheye_image&#39;, &#39;frontright_depth&#39;, &#39;frontright_depth_in_visual_frame&#39;, &#39;frontright_fisheye_image&#39;, &#39;left_depth&#39;, &#39;left_depth_in_visual_frame&#39;, &#39;left_fisheye_image&#39;, &#39;right_depth&#39;, &#39;right_depth_in_visual_frame&#39;, &#39;right_fisheye_image&#39;]</span>
+</pre></div>
+</div>
+<p>Using the source names listed above, we can capture an image from one or more image sources. These images can be captured in RAW format or JPG format (with specified quality). Multiple images requested in a single RPC will be hardware time-synced with one another.  Let’s retrieve the left_fisheye_image and display it (unless you are on MacOS or WSL)…</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">image_response</span> <span class="o">=</span> <span class="n">image_client</span><span class="o">.</span><span class="n">get_image_from_sources</span><span class="p">([</span><span class="s2">&quot;left_fisheye_image&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">io</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">image_response</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">image</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="configuring-motor-power-authority-software-e-stop">
+<h3>Configuring “Motor Power Authority” (software E-Stop)<a class="headerlink" href="#configuring-motor-power-authority-software-e-stop" title="Permalink to this headline">¶</a></h3>
+<p>Before Spot can power on, an independent <code class="docutils literal notranslate"><span class="pre">Motor</span> <span class="pre">Power</span> <span class="pre">Authority</span></code> must be correctly configured.  We use the term <code class="docutils literal notranslate"><span class="pre">&quot;estop&quot;</span></code> below and in our functions as shorthand for Motor Power Authority. The E-Stop is a key safety feature of Spot which lets operators kill motor power immediately if a situation calls for it.  Note that in some circles the term <code class="docutils literal notranslate"><span class="pre">&quot;E-Stop&quot;</span></code> implies a hardware power short-circuit, hence our semantic dancing, as Spot’s Motor Power Authority is a networked software solution, not a hardware solution.</p>
+<p>Let’s take a look at the initial E-Stop state of the robot by creating a client to the E-Stop service and requesting status:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">estop_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="s1">&#39;estop&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">estop_client</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span>
+<span class="go">stop_level: ESTOP_LEVEL_CUT</span>
+<span class="go">stop_level_details: &quot;Not all endpoints are registered&quot;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">stop_level:</span> <span class="pre">ESTOP_LEVEL_CUT</span></code> line indicates that power will not be enabled since the E-Stop level is CUT.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">stop_level_details:</span> <span class="pre">&quot;Not</span> <span class="pre">all</span> <span class="pre">endpoints</span> <span class="pre">are</span> <span class="pre">registered&quot;</span></code> line indicates that there are no E-Stop Endpoints registered. An E-Stop Endpoint is the client component of the E-Stop system which lets a user immediately kill power. Spot may have more than one E-Stop Endpoint registered at a time - for example, during operator training the trainee may have a tablet which lets them control the robot and the E-Stop, and the trainer may have a tablet which also lets them e-stop the robot.</p>
+<div class="section" id="create-and-register-an-e-stop-endpoint">
+<h4>Create and register an E-Stop Endpoint<a class="headerlink" href="#create-and-register-an-e-stop-endpoint" title="Permalink to this headline">¶</a></h4>
+<p><strong>SAFETY NOTE</strong>: the act of registering an endpoint will trigger an emergency stop on the robot, so only perform this step when Spot’s motors are already powered off.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">estop_endpoint</span> <span class="o">=</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">estop</span><span class="o">.</span><span class="n">EstopEndpoint</span><span class="p">(</span><span class="n">client</span><span class="o">=</span><span class="n">estop_client</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my_estop&#39;</span><span class="p">,</span> <span class="n">estop_timeout</span><span class="o">=</span><span class="mf">9.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">estop_endpoint</span><span class="o">.</span><span class="n">force_simple_setup</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>E-Stop endpoints are expected to regularly-check in to the robot to assure the robot is safely being controlled.  If it has been more than <code class="docutils literal notranslate"><span class="pre">estop_timeout</span></code> seconds, the motor power will be cut. Tuning this number is important: too low a number, and the power may cut out due to transient network issues; too large a number and you run the risk of Spot operating without safe supervision.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">force_simple_setup</span></code> call issues a few API calls to make your E-Stop Endpoint the sole endpoint in a new E-Stop configuration.</p>
+<p>Let’s request E-Stop status after registering our endpoint:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">estop_client</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span>
+<span class="go">endpoints {</span>
+<span class="go">  endpoint {</span>
+<span class="go">    role: &quot;PDB_rooted&quot;</span>
+<span class="go">    name: &quot;my_estop&quot;</span>
+<span class="go">    unique_id: &quot;0&quot;</span>
+<span class="go">    timeout {</span>
+<span class="go">      seconds: 9</span>
+<span class="go">    }</span>
+<span class="go">    cut_power_timeout {</span>
+<span class="go">      seconds: 13</span>
+<span class="go">    }</span>
+<span class="go">  }</span>
+<span class="go">  stop_level: ESTOP_LEVEL_CUT</span>
+<span class="go">  time_since_valid_response {</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+<span class="go">stop_level: ESTOP_LEVEL_CUT</span>
+<span class="go">stop_level_details: &quot;Endpoint requested stop&quot;</span>
+</pre></div>
+</div>
+<p>Now an E-Stop Endpoint appears with the name my_estop. The endpoint itself says ESTOP_LEVEL_CUT, with a very long ago time_since_valid_response. No check-ins from the E-Stop Endpoint have happened yet. Both the endpoint and the E-Stop systems stop level is ESTOP_LEVEL_CUT - if a single Endpoint wants to cut power, the entire system will cut power.</p>
+</div>
+<div class="section" id="clear-the-e-stop">
+<h4>Clear the E-Stop<a class="headerlink" href="#clear-the-e-stop" title="Permalink to this headline">¶</a></h4>
+<p>To change E-Stop status and allow power, the endpoint needs to check in on a regular basis. We’ll use the <code class="docutils literal notranslate"><span class="pre">EstopKeepAlive</span></code> class to do these checkins on a regular basis from a background thread.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">estop_keep_alive</span> <span class="o">=</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">estop</span><span class="o">.</span><span class="n">EstopKeepAlive</span><span class="p">(</span><span class="n">estop_endpoint</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">estop_client</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span>
+<span class="go">endpoints {</span>
+<span class="go">  endpoint {</span>
+<span class="go">    role: &quot;PDB_rooted&quot;</span>
+<span class="go">    name: &quot;my_estop&quot;</span>
+<span class="go">    unique_id: &quot;0&quot;</span>
+<span class="go">    timeout {</span>
+<span class="go">      seconds: 9</span>
+<span class="go">    }</span>
+<span class="go">    cut_power_timeout {</span>
+<span class="go">      seconds: 13</span>
+<span class="go">    }</span>
+<span class="go">  }</span>
+<span class="go">  stop_level: ESTOP_LEVEL_NONE</span>
+<span class="go">  time_since_valid_response {</span>
+<span class="go">    nanos: 996009984</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+<span class="go">stop_level: ESTOP_LEVEL_NONE</span>
+</pre></div>
+</div>
+<p>The stop_level is now <code class="docutils literal notranslate"><span class="pre">ESTOP_LEVEL_NONE</span></code>, indicating that power can start up.</p>
+<p>Note that in many implementations, you should specify the <code class="docutils literal notranslate"><span class="pre">keep_running_cb</span></code> argument to EstopKeepAlive, a function called by the background thread to see if check-ins should continue. For example, an interactive UI should give the E-Stop system a keep_running_cb function which blocks until the UI thread has run a cycle. This prevents a frozen client from continuing to allow power to the robot.</p>
+</div>
+</div>
+<div class="section" id="taking-ownership-of-spot-leases">
+<h3>Taking ownership of Spot (Leases).<a class="headerlink" href="#taking-ownership-of-spot-leases" title="Permalink to this headline">¶</a></h3>
+<p>There’s one more step before powering on Spot’s motors, and that’s to acquire ownership of the robot.  The robot can have multiple clients but only one can control the robot even as other clients may be requesting data or acting as E-Stop endpoints.</p>
+<p>To gain control of the robot, a client needs to acquire a <code class="docutils literal notranslate"><span class="pre">Lease</span></code>. A valid lease must be presented with every mobility command to the robot. Leases can be returned when the client no longer wants to control the robot.</p>
+<p>Like the E-Stop, lease holders need to periodically check in with Spot to indicate that they are still actively controlling the robot.  If it has been too long since a check-in, the robot will commence a <code class="docutils literal notranslate"><span class="pre">Comms</span> <span class="pre">Loss</span> <span class="pre">Procedure</span></code> - sitting down if it can, and then powering off.</p>
+<p>Let’s make a client to the <code class="docutils literal notranslate"><span class="pre">lease</span></code> service and list the current leases:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lease_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="s1">&#39;lease&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lease_client</span><span class="o">.</span><span class="n">list_leases</span><span class="p">()</span>
+<span class="go">[resource: &quot;body&quot;</span>
+<span class="go">lease {</span>
+<span class="go">  resource: &quot;body&quot;</span>
+<span class="go">  epoch: &quot;IOSDMpfEqvdTHZGV&quot;</span>
+<span class="go">  sequence: 0</span>
+<span class="go">}</span>
+<span class="go">lease_owner {</span>
+<span class="go">}</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+<p>Leasable resources are listed: currently the only resource supported is “body”, which covers all of the motors on Spot.  Note that the <code class="docutils literal notranslate"><span class="pre">lease_owner</span></code> field is empty since no one has acquired the body lease.</p>
+<p>Let’s acquire a lease and again list:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lease_keep_alive</span> <span class="o">=</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">lease</span><span class="o">.</span><span class="n">LeaseKeepAlive</span><span class="p">(</span><span class="n">lease_client</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lease</span> <span class="o">=</span> <span class="n">lease_client</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lease_client</span><span class="o">.</span><span class="n">list_leases</span><span class="p">()</span>
+<span class="go">[resource: &quot;body&quot;</span>
+<span class="go">lease {</span>
+<span class="go">  resource: &quot;body&quot;</span>
+<span class="go">  epoch: &quot;IOSDMpfEqvdTHZGV&quot;</span>
+<span class="go">  sequence: 1</span>
+<span class="go">}</span>
+<span class="go">lease_owner {</span>
+<span class="go">  client_name: &quot;understanding-spotbblank02:29516&quot;</span>
+<span class="go">}</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="powering-on-the-robot">
+<h3>Powering on the robot<a class="headerlink" href="#powering-on-the-robot" title="Permalink to this headline">¶</a></h3>
+<p>Now that you’ve authenticated to Spot, created an E-Stop endpoint, and acquired a lease, it’s time to power on the robot.</p>
+<p>Make sure that the robot is in a safe spot, in a seated position, with a charged battery, and not connected to shore power.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">power_on</span></code> helper function first issues a lower level power command to the robot and then waits for power command feedback. This command returns once the robot is powered on or throws an error if the power command fails for any reason. It typically takes several seconds to complete.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">power_on</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The robot object provides a method to check the power status of the robot. This just uses the RobotStateService to check the PowerState:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">is_powered_on</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="establishing-timesync">
+<h3>Establishing timesync<a class="headerlink" href="#establishing-timesync" title="Permalink to this headline">¶</a></h3>
+<p>Timesync is required to coordinate clock skew between your device and Spot.   From a safety perspective, this allows users to define a period of time for which a command will be valid. The robot class maintains a timesync thread. The <code class="docutils literal notranslate"><span class="pre">wait_for_sync</span></code> call below will start a timesync thread, and block until sync is established. After timesync is established, this thread will make periodic calls to maintain timesync. Each client is issued a clock identifier which is used to validate that the client has performed timesync, for services that require this functionality. The client library is written such that most implementation details of timesync are taken care of in the background.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">time_sync</span><span class="o">.</span><span class="n">wait_for_sync</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="commanding-the-robot">
+<h3>Commanding the robot<a class="headerlink" href="#commanding-the-robot" title="Permalink to this headline">¶</a></h3>
+<p>The RobotCommandService is the primary interface for commanding mobility. Mobility and mobility-related commands include <code class="docutils literal notranslate"><span class="pre">stand</span></code>, <code class="docutils literal notranslate"><span class="pre">sit</span></code>, <code class="docutils literal notranslate"><span class="pre">selfright</span></code>, <code class="docutils literal notranslate"><span class="pre">safe_power_off</span></code>, <code class="docutils literal notranslate"><span class="pre">velocity</span></code>, and <code class="docutils literal notranslate"><span class="pre">trajectory</span></code>. For this tutorial, we will just issue stand and safe power off commands.</p>
+<p>The API provides a helper function to stand Spot. This command wraps several RobotCommand RPC calls. First a stand command is issued. The robot checks some basic pre conditions (powered on, not faulted, not E-Stopped) and returns a command id. This command id can then be passed to the robot command feedback RPC. This call returns both high level feedback (“is the robot still processing the command?”) as well as command specific feedback (in the case of stand, “is the robot standing?”).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">bosdyn.client.robot_command</span> <span class="kn">import</span> <span class="n">RobotCommandClient</span><span class="p">,</span> <span class="n">blocking_stand</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">command_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">RobotCommandClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blocking_stand</span><span class="p">(</span><span class="n">command_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The robot should now be standing. In addition, the stand command can be modified to control the height of the body as well as the orientation of the body with respect to the <code class="docutils literal notranslate"><span class="pre">footprint</span> <span class="pre">frame</span></code>. The footprint frame is a gravity aligned frame with its origin located at the geometric center of the feet. The Z axis up, and the X axis is forward.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">commands</span> <span class="pre">proto</span></code> can be quite expressive, and therefore, if going beyond default parameters, non-trivial.  To increase simplicity, Spot API provides several helper functions that combine Spot API RPC commands into single line functions.</p>
+<p>We encourage you to experiment with these various parameters, referencing the <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command proto</a> parent class for general Boston Dynamics robots and the <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">robot command proto</a> Spot subclass.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Command Spot to rotate about the Z axis.</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">bosdyn.geometry</span> <span class="kn">import</span> <span class="n">EulerZXY</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">footprint_R_body</span> <span class="o">=</span> <span class="n">EulerZXY</span><span class="p">(</span><span class="n">yaw</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">roll</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">bosdyn.client.robot_command</span> <span class="kn">import</span> <span class="n">RobotCommandBuilder</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cmd</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">stand_command</span><span class="p">(</span><span class="n">footprint_R_body</span><span class="o">=</span><span class="n">footprint_R_body</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+<span class="c1"># Command Spot to raise up.</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cmd</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">stand_command</span><span class="p">(</span><span class="n">body_height</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="powering-off-the-robot">
+<h3>Powering off the robot<a class="headerlink" href="#powering-off-the-robot" title="Permalink to this headline">¶</a></h3>
+<p>Power off the robot using the <code class="docutils literal notranslate"><span class="pre">power_off</span></code> command.  Note the preferred method is with <code class="docutils literal notranslate"><span class="pre">cut_immediately=False</span></code> where Spot will come to a stop and sit down gently before powering off.  The other power off option cuts motor power immediately, which causes the robot to collapse.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">power_off</span><span class="p">(</span><span class="n">cut_immediately</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      
+      &copy; Copyright 2020 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

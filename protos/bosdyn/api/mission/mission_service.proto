@@ -12,6 +12,7 @@ option java_outer_classname = "MissionServiceProto";
 
 import "bosdyn/api/mission/mission.proto";
 
+// The MissionService can be used to specify high level autonomous behaviors for Spot using behavior trees.
 service MissionService {
     // Load a mission to run later.
     rpc LoadMission(LoadMissionRequest) returns (LoadMissionResponse) {}
@@ -30,7 +31,7 @@ service MissionService {
     // Get the state of the mission.
     rpc GetState(GetStateRequest) returns (GetStateResponse) {}
 
-    // Get static information regarding the mission.
+    // Get static information regarding the mission. Used to interpret mission state.
     rpc GetInfo(GetInfoRequest) returns (GetInfoResponse) {}
 
     // Download the mission as it was uploaded to the service.

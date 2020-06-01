@@ -14,28 +14,40 @@ import "bosdyn/api/geometry.proto";
 import "bosdyn/api/trajectory.proto";
 import "google/protobuf/wrappers.proto";
 
+// The locomotion hint specifying the gait of the robot.
 enum LocomotionHint {
     option allow_alias = true;
-    HINT_UNKNOWN = 0;             // Invalid; do not use.
-    HINT_AUTO = 1;                // No hint, robot chooses an appropriate gait (typically trot.)
-    HINT_TROT = 2;                // Most robust gait which moves diagonal legs together.
-    HINT_SPEED_SELECT_TROT = 3;   // Trot which comes to a stand when not commanded to move.
-    HINT_CRAWL = 4;               // Slow and steady gait which moves only one foot at a time.
-    HINT_SPEED_SELECT_CRAWL = 10; // Crawl which comes to a stand when not commanded to move.
-    HINT_AMBLE = 5;               // Four beat gait where one foot touches down at a time.
-    HINT_SPEED_SELECT_AMBLE = 6;  // Amble which comes to a stand when not commanded to move.
-    HINT_JOG = 7;                 // Demo gait which moves diagonal leg pairs together with an aerial phase.
-    HINT_HOP = 8;                 // Demo gait which hops while holding some feet in the air.
+    // Invalid; do not use.
+    HINT_UNKNOWN = 0;
+    // No hint, robot chooses an appropriate gait (typically trot.)
+    HINT_AUTO = 1;
+    // Most robust gait which moves diagonal legs together.
+    HINT_TROT = 2;
+    // Trot which comes to a stand when not commanded to move.
+    HINT_SPEED_SELECT_TROT = 3;
+    // Slow and steady gait which moves only one foot at a time.
+    HINT_CRAWL = 4;
+    // Crawl which comes to a stand when not commanded to move.
+    HINT_SPEED_SELECT_CRAWL = 10;
+    // Four beat gait where one foot touches down at a time.
+    HINT_AMBLE = 5;
+    // Amble which comes to a stand when not commanded to move.
+    HINT_SPEED_SELECT_AMBLE = 6;
+    // Demo gait which moves diagonal leg pairs together with an aerial phase.
+    HINT_JOG = 7;
+    // Demo gait which hops while holding some feet in the air.
+    HINT_HOP = 8;
     // HINT_AUTO_TROT is deprecated due to the name being too similar to the Spot Autowalk feature.
     // It has been replaced by HINT_SPEED_SELECT_TROT. Keeping this value in here for now for backwards
     // compatibility, but this may be removed in future releases.
-    HINT_AUTO_TROT = 3;           // Same as HINT_SPEED_SELECT_TROT.
+    HINT_AUTO_TROT = 3;
     // HINT_AUTO_AMBLE is deprecated due to the name being too similar to the Spot Autowalk feature.
     // It has been replaced by HINT_SPEED_SELECT_AMBLE. Keeping this value in here for now for backwards
     // compatibility, but this may be removed in future releases.
-    HINT_AUTO_AMBLE = 6;          // Same as HINT_SPEED_SELECT_AMBLE.
+    HINT_AUTO_AMBLE = 6;
 }
 
+// The type of swing height for a step.
 enum SwingHeight {
     SWING_HEIGHT_UNKNOWN = 0;    // Invalid; do not use.
     SWING_HEIGHT_LOW = 1;        // Low-stepping. Robot will try to only swing legs a few cm away from ground.
@@ -86,14 +98,13 @@ message MobilityParams {
 // Parameters for offsetting the body from the normal default.
 message BodyControlParams {
     // Desired base offset relative to the footprint pseudo-frame.
-    //
     // The footprint pseudo-frame is a gravity aligned frame with its origin located at the
     // geometric center of the feet in the X-Y axis, and at the nominal height of the hips in the Z axis.
     // The yaw of the frame (wrt the world) is calcuated by the average foot locations, and is aligned with the feet.
     SE3Trajectory base_offset_rt_footprint = 1;
 
     // Setting for how the robot interprets base offset pitch & roll components.
-    // In the default case (OFFSET) the robot will naturally align the body to the pitch of the current terrain.
+    // In the default case (ROTATION_SETTING_OFFSET) the robot will naturally align the body to the pitch of the current terrain.
     // In some circumstances, the user may wish to override this value and try to maintain alignment
     // with respect to gravity. Be careful with this setting as it may likely degrade robot performance in
     // complex terrain, e.g. stairs, platforms, or slopes of sufficiently high grade.
@@ -102,7 +113,7 @@ message BodyControlParams {
         ROTATION_SETTING_OFFSET = 1;     // Pitch & Roll are offset with respect to orientation of the footprint.
         ROTATION_SETTING_ABSOLUTE = 2;   // Pitch & Roll are offset with respect to gravity.
     }
-
+    // The rotation setting for the robot body.
     RotationSetting rotation_setting = 2;
 }
 
@@ -115,12 +126,13 @@ message ObstacleParams {
   // Use vision to make the body avoid obstacles?
   bool disable_vision_body_obstacle_avoidance = 3;
   // Desired padding around the body to use when attempting to avoid obstacles.
-  double obstacle_avoidance_padding = 4; // meters. Must be >= 0.
+  // Described in meters. Must be >= 0.
+  double obstacle_avoidance_padding = 4;
 
 }
 
 
-// Ground contact parameters
+// Ground contact parameters that describe the terrain.
 message TerrainParams {
     // Terrain coefficient of friction user hint. This value must be postive and will clamped if
     // necessary on the robot side. Best suggested values lie in the range between 0.4 and 0.8
@@ -140,6 +152,7 @@ message BodyExternalForceParams {
         EXTERNAL_FORCE_USE_ESTIMATE = 1; // Use external forces estimated by the robot
         EXTERNAL_FORCE_USE_OVERRIDE = 2; // Use external forces specified in an override vector.
     }
+    // The type of external force described by the parameters.
     ExternalForceIndicator external_force_indicator = 1;
 
     // The frame name for which the external_force_override is defined in. The frame must be known to the robot.

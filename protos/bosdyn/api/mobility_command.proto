@@ -14,12 +14,25 @@ import "bosdyn/api/basic_command.proto";
 import "google/protobuf/any.proto";
 
 
+
+// The robot command message to specify a basic command that moves the robot.
 message MobilityCommand {
+
+    // The mobility request must be one of the basic command primitives.
     message Request {
+
+        // Only one mobility command can be requested at a time.
         oneof command {
+            // Command to move the robot along a trajectory.
             SE2TrajectoryCommand.Request se2_trajectory_request = 1;
+
+            // Command to move the robot at a fixed velocity.
             SE2VelocityCommand.Request se2_velocity_request = 2;
+
+            // Command to sit the robot down.
             SitCommand.Request sit_request = 3;
+
+            // Command to stand up the robot.
             StandCommand.Request stand_request = 4;
 
         }
@@ -28,11 +41,24 @@ message MobilityCommand {
         google.protobuf.Any params = 100;
     }
 
+    // The feedback for the mobility command that will provide information on the progress
+    // of the robot command.
     message Feedback {
+
+        // The feedback message associated with the requested command. Some commands may have
+        // an empty feedback message if they do not provide any updates/progress.
         oneof feedback {
+
+            // Feedback for the trajectory command.
             SE2TrajectoryCommand.Feedback se2_trajectory_feedback = 1;
+
+            // Feedback for the velocity command.
             SE2VelocityCommand.Feedback se2_velocity_feedback = 2;
+
+            // Feedback for the sit command.
             SitCommand.Feedback sit_feedback = 3;
+
+            // Feedback for the stand command.
             StandCommand.Feedback stand_feedback = 4;
 
         }

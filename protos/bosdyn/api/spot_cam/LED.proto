@@ -12,22 +12,30 @@ option java_outer_classname = "LightingProto";
 
 import "bosdyn/api/header.proto";
 
+// Request the current state of LEDs on the SpotCam.
 message GetLEDBrightnessRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
 }
 
+// Describes the current brightnesses of all LEDs.
 message GetLEDBrightnessResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
     // Brightness [0, 1] of the LED located at indices [0, 3].
     repeated float brightnesses = 2;
 }
-  
+
+// Set individual LED brightnesses.
 message SetLEDBrightnessRequest {
+    // Common request header.
     bosdyn.api.RequestHeader header = 1;
     // Brightness [0, 1] to assign to the LED located at indices [0, 3].
     map<int32, float> brightnesses = 2;
 }
 
+// Response with any errors setting LED brightnesses.
 message SetLEDBrightnessResponse {
+    // Common response header.
     bosdyn.api.ResponseHeader header = 1;
-}  
+}

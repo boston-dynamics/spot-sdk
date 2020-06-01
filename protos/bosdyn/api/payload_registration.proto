@@ -13,7 +13,10 @@ import "bosdyn/api/payload.proto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/robot_id.proto";
 
+// The RegisterPayload request message contains the payload information and secret to be
+// able to register it to the directory.
 message RegisterPayloadRequest {
+    // Common request header.
     RequestHeader header = 1;
 
     // The payload to register, which must have, at minimum, GUID specified correctly.
@@ -25,14 +28,14 @@ message RegisterPayloadRequest {
     string payload_secret = 3;
 }
 
+// The RegisterPayload response message contains the status of whether the payload was successfully
+// registered to the directory.
 message RegisterPayloadResponse {
+    // Common response header.
     ResponseHeader header = 1;
 
-    // Return status.
     enum Status {
-        // UNKNOWN should never be used.
-        //
-        // An internal PayloadRegistrationService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal PayloadRegistrationService issue has happened if UNKNOWN is set.
         STATUS_UNKNOWN = 0;
 
         // Success.  The new service record is available.
@@ -41,6 +44,7 @@ message RegisterPayloadResponse {
         // RegisterPayload failed because a payload with this GUID already exists.
         STATUS_ALREADY_EXISTS = 2;
     }
+    // Return status for the request.
     Status status = 2;
 }
 
@@ -48,23 +52,26 @@ message RegisterPayloadResponse {
 // have a secret set and the request must provide the secret for access.
 // GUID, is_authorized, and is_enabled fields are immutable and cannot be updated.
 message UpdatePayloadVersionRequest {
+    // Common request header.
     RequestHeader header = 1;
 
+    // The GUID of the payload to be updated.
     string payload_guid = 2;
 
+    // The payload secret for the specified payload.
     string payload_secret = 3;
-    
+
+    // The new software version that the payload is being updated to.
     SoftwareVersion updated_version = 4;
 }
 
+// The UpdatePayloadVersion response message contains the status of whether the update was successful.
 message UpdatePayloadVersionResponse {
+    // Common response header.
     ResponseHeader header = 1;
 
-    // Return status.
     enum Status {
-        // UNKNOWN should never be used.
-        //
-        // An internal PayloadRegistrationService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal PayloadRegistrationService issue has happened if UNKNOWN is set.
         STATUS_UNKNOWN = 0;
 
         // Success.  The payload version has been updated.
@@ -76,28 +83,31 @@ message UpdatePayloadVersionResponse {
         // UpdatePayload failed because the paylod guid & secret do not match any registered payloads.
         STATUS_INVALID_CREDENTIALS = 3;
     }
+    // Return status for the request.
     Status status = 2;
 }
 
 // Request a user token from the robot
-// A token will only be provided after the registered payload has been enabled by an admin
-// The returned user token will have limited access to the services necessary for a simple payload
+// A token will only be provided after the registered payload has been enabled by an admin.
+// The returned user token will have limited access to the services necessary for a simple payload.
 message GetPayloadAuthTokenRequest {
+    // Common request header.
     RequestHeader header = 1;
 
+    // The GUID to identify which payload to get the auth token for.
     string payload_guid = 2;
 
+    // The payload secret for the specified payload.
     string payload_secret = 3;
 }
 
+// The GetPayloadAuthToken response message that returns the token for the payload.
 message GetPayloadAuthTokenResponse {
+    // Common response header.
     ResponseHeader header = 1;
 
-    // Return status.
     enum Status {
-        // UNKNOWN should never be used.
-        //
-        // An internal PayloadRegistrationService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal PayloadRegistrationService issue has happened if UNKNOWN is set.
         STATUS_UNKNOWN = 0;
 
         // Success.  The token is available.
@@ -110,6 +120,7 @@ message GetPayloadAuthTokenResponse {
         STATUS_PAYLOAD_NOT_AUTHORIZED = 3;
 
     }
+    // Return status for the request.
     Status status = 2;
 
     // A limited-access user token provided on successful payload registration

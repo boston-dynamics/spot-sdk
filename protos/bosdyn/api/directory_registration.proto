@@ -13,6 +13,7 @@ option java_outer_classname = "DirectoryRegistrationProto";
 import "bosdyn/api/directory.proto";
 import "bosdyn/api/header.proto";
 
+// The RegisterService request message sends the service's entry and endpoint to the robot's directory.
 message RegisterServiceRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -24,27 +25,26 @@ message RegisterServiceRequest {
     ServiceEntry service_entry = 3;
 }
 
+// The RegisterService response message has information of whether the service was registered correctly.
 message RegisterServiceResponse {
     // Common response Header.
     ResponseHeader header = 1;
 
-    // Return status.
     enum Status {
-        // UNKNOWN should never be used.
-        //
-        // An internal DirectoryRegistrationService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal DirectoryRegistrationService issue has happened if UNKNOWN is set.
         STATUS_UNKNOWN = 0;
 
-        // Success.  The new service record is available.
+        // Success. The new service record is available.
         STATUS_OK = 1;
 
         // RegisterService failed because a service with this name already exists.
         STATUS_ALREADY_EXISTS = 2;
     }
+    // Return status for the request.
     Status status = 2;
 }
 
-// Unregister service based on name
+// The UnregisterService request message will unregister a service based on name.
 message UnregisterServiceRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -53,15 +53,14 @@ message UnregisterServiceRequest {
     string service_name = 2;
 }
 
+// The UnregisterService response message has information of whether the service was unregistered.
 message UnregisterServiceResponse {
     // Common response Header.
     ResponseHeader header = 1;
 
-    // Return status.
     enum Status {
-        // UNKNOWN should never be used.
-        //
-        // An internal DirectoryRegistrationService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal DirectoryRegistrationService issue has
+        // happened if UNKNOWN is set.
         STATUS_UNKNOWN = 0;
 
         // Success.  The service record was deleted.
@@ -70,9 +69,11 @@ message UnregisterServiceResponse {
         // The provided service name was not found.
         STATUS_NONEXISTENT_SERVICE = 2;
     }
+    // Return status for the request.
     Status status = 2;
 }
 
+// The UpdateService request message will update a service based on name to include the new endpoint and service entry.
 message UpdateServiceRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -84,16 +85,13 @@ message UpdateServiceRequest {
     ServiceEntry service_entry = 3;
 }
 
-// Update service based on name
+// The UpdateService response message has information of whether the service was updated on robot.
 message UpdateServiceResponse {
     // Common response Header.
     ResponseHeader header = 1;
 
-    // Return status.
     enum Status {
-        // UNKNOWN should never be used.
-        //
-        // An internal DirectoryRegistrationService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal DirectoryRegistrationService issue has happened if UNKNOWN is set.
         STATUS_UNKNOWN = 0;
 
         // Success.  The new service record is available.
@@ -102,5 +100,6 @@ message UpdateServiceResponse {
         // The provided service name was not found.
         STATUS_NONEXISTENT_SERVICE = 2;
     }
+    // Return status for the request.
     Status status = 2;
 }

@@ -21,7 +21,7 @@ import "google/protobuf/wrappers.proto";
 
 // Get the state of the mission.
 message GetStateRequest {
-    // Common request/response header.
+    // Common request header.
     RequestHeader header = 1;
     // Upper bound on the node state to retrieve, inclusive. Leave unset for the latest data.
     google.protobuf.Int64Value history_upper_tick_bound = 2;
@@ -39,7 +39,7 @@ message GetStateRequest {
 
 // Response to a GetStateRequest.
 message GetStateResponse {
-    // Common request/response header.
+    // Common response header.
     ResponseHeader header = 1;
     // The requested mission state.
     State state = 2;
@@ -51,6 +51,7 @@ message State {
     repeated Question questions = 1;
     // A question that has been answered already.
     message AnsweredQuestion {
+        // The question that this state information is related to.
         Question question = 1;
         // The answer that was provided.
         int64 accepted_answer_code = 2;
@@ -81,8 +82,9 @@ message State {
     // history[0] will always be the data from this tick.
     repeated NodeStatesAtTick history = 3;
 
-    // Overall status of the mission.
+    // Possible overall status states of the mission.
     enum Status {
+        // Invalid status, do not use.
         STATUS_UNKNOWN = 0;
         // The mission has failed due to a node failure.
         STATUS_FAILURE = 1;
@@ -97,6 +99,7 @@ message State {
         // No mission has been loaded.
         STATUS_NONE = 6;
     }
+    // Current status of the mission.
     Status status = 4;
 
     // Describes the unexpected error encountered by the mission service.
@@ -112,7 +115,7 @@ message State {
     int64 mission_id = 7;
 }
 
-// A question posed by a Prompt node.
+// A question posed by a Prompt node, or by the internal operation of another node.
 message Question {
     // Identifier of this question, unique across all missions executing on a single host.
     int64 id = 1;
@@ -134,7 +137,7 @@ message Question {
 
 // Answer one of the outstanding questions.
 message AnswerQuestionRequest {
-    // Common request/response header.
+    // Common request header.
     RequestHeader header = 1;
     // Identifier of the question being answered.
     int64 question_id = 2;
@@ -144,9 +147,10 @@ message AnswerQuestionRequest {
 
 // Response from the server after a client has answered one of its questions.
 message AnswerQuestionResponse {
-    // Common request/response header.
+    // Common response header.
     ResponseHeader header = 1;
 
+    // Possible results for answering a question.
     enum Status {
         // Invalid; do not use.
         STATUS_UNKNOWN = 0;
@@ -159,10 +163,11 @@ message AnswerQuestionResponse {
         // Question was already answered.
         STATUS_ALREADY_ANSWERED = 4;
     }
+    // The result of the AnswerQuestionRequest.
     Status status = 2;
 }
 
-// Static information about the mission.
+// Static information about the mission. Used to interpret the mission state.
 message MissionInfo {
     // Mission ID assigned by the server.
     int64 id = 1;
@@ -175,6 +180,7 @@ message MissionInfo {
 message NodeInfo {
     // Unique to each node within the LOADED mission.
     // Not guaranteed to be consistent between loads of the same mission.
+    // Used to identify the nodes in the State message.
     int64 id = 1;
     // Human-readable name of this node, e.g. "Goto waypoint 1", or "Power On".
     string name = 2;
@@ -193,7 +199,9 @@ message FailedNode {
     string error = 2;
 }
 
+// A request to play the currently loaded mission for a fixed amount of time.
 message PlayMissionRequest {
+    // Common request header.
     RequestHeader header = 1;
 
     // Run the mission until this time.
@@ -220,9 +228,13 @@ message PlaySettings {
 }
 
 
+// The PlayMission response message will return the status of the play mission request.
 message PlayMissionResponse {
+    // Common response header.
     ResponseHeader header = 1;
+    // Possible results for a play request.
     enum Status {
+        // Invalid status, do not use.
         STATUS_UNKNOWN = 0;
         // Mission is playing, or the mission has already completed.
         // Use GetStateResponse to tell the difference.
@@ -231,15 +243,16 @@ message PlayMissionResponse {
         STATUS_NO_MISSION = 2;
     }
 
+    // The result of the play request.
     Status status = 2;
 
-    // Results from any leases that may have been used.
-    // As part of mission validation, some of the non-mission leases may have been used.
+    // Results from any leases that may have been provided with the play request.
     repeated bosdyn.api.LeaseUseResult lease_use_results = 3;
 }
 
-
+// A request to restart the currently loaded mission.
 message RestartMissionRequest {
+    // Common request header.
     RequestHeader header = 1;
 
     // Run the mission until this time.
@@ -256,11 +269,14 @@ message RestartMissionRequest {
     PlaySettings settings = 4;
 }
 
-
+// The RestartMission response includes the status and any failed nodes for the request.
 message RestartMissionResponse {
+    // Common response header.
     ResponseHeader header = 1;
 
+    // Possible results of requesting a restart.
     enum Status {
+        // Invalid status, do not use.
         STATUS_UNKNOWN = 0;
         // Mission has restarted.
         STATUS_OK = 1;
@@ -269,7 +285,7 @@ message RestartMissionResponse {
         // Validation failed.
         STATUS_VALIDATE_ERROR = 3;
     }
-
+    // The result of the restart request.
     Status status = 2;
 
     // Results from any leases that may have been used.
@@ -280,8 +296,9 @@ message RestartMissionResponse {
     repeated FailedNode failed_nodes = 4;
 }
 
-
+// The LoadMission request specifies a root node for the mission that should be used.
 message LoadMissionRequest {
+    // Common request header.
     RequestHeader header = 1;
     // Root node of the mission to load.
     Node root = 2;
@@ -289,23 +306,31 @@ message LoadMissionRequest {
     repeated bosdyn.api.Lease leases = 3;
 }
 
-
+// The LoadMission response returns the mission info generated by the service if successfully loaded, and
+// a status and other inforamtion if the request fails.
 message LoadMissionResponse {
+    // Common response header.
     ResponseHeader header = 1;
 
+    // Possible results of loading a mission.
     enum Status {
+        // Invalid status, do not use.
         STATUS_UNKNOWN = 0;
+        // The mission was loaded successfully.
         STATUS_OK = 1;
-        // Load-time compilation failed.
+        // Load-time compilation failed. The mission was malformed.
         STATUS_COMPILE_ERROR = 2;
-        // Load-time validation failed.
+        // Load-time validation failed. Some part of the mission was unable to initialize.
         STATUS_VALIDATE_ERROR = 3;
     }
+    // Result of loading the mission.
     Status status = 2;
 
+    // Results from any leases that may have been used.
+    // As part of mission validation, some of the non-mission leases may have been used.
     repeated bosdyn.api.LeaseUseResult lease_use_results = 3;
 
-    // Set on success.
+    // Provides the structure of the mission. Set when loading succeeds.
     MissionInfo mission_info = 4;
 
     // If certain nodes failed compilation or validation, they will be reported back in this field.
@@ -316,28 +341,34 @@ message LoadMissionResponse {
 // Request mission information.
 // This covers information that stays static until a new mission is loaded.
 message GetInfoRequest {
+    // Common request header.
     RequestHeader header = 1;
 }
 
-
+// Provides the currently loaded mission's information.
 message GetInfoResponse {
+    // Common response header.
     ResponseHeader header = 1;
 
-    // Description of the loaded mission.
+    // Description of the loaded mission's structure.
     MissionInfo mission_info = 2;
 }
 
-
+// The PauseMission request message will pause the mission that is currently executing, if there is one.
 message PauseMissionRequest {
+    // Common request header.
     RequestHeader header = 1;
     // Lease on the mission service.
     bosdyn.api.Lease lease = 2;
 }
 
-
+// The PauseMission response message will return the status of the request.
 message PauseMissionResponse {
+    // Common response header.
     ResponseHeader header = 1;
+    // Possible results of a pause request.
     enum Status {
+        // Invalid status, do not use.
         STATUS_UNKNOWN = 0;
         // Mission is paused or finished running.
         STATUS_OK = 1;
@@ -346,17 +377,21 @@ message PauseMissionResponse {
         // you will get STATUS_OK.
         STATUS_NO_MISSION_PLAYING = 2;
     }
+    // Result of the pause request.
     Status status = 2;
+    // Result of the lease in the pause request.
     bosdyn.api.LeaseUseResult lease_use_result = 3;
 }
 
 // For requesting the mission as it was loaded in LoadMission.
 message GetMissionRequest {
+    // Common request header.
     RequestHeader header = 1;
 }
 
 // Responding with the mission as it was loaded in LoadMission.
 message GetMissionResponse {
+    // Common response header.
     ResponseHeader header = 1;
     // Root node of the mission loaded.
     // Unset if no mission has been loaded.

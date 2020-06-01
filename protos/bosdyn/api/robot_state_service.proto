@@ -12,11 +12,15 @@ option java_outer_classname = "RobotStateServiceProto";
 
 import "bosdyn/api/robot_state.proto";
 
+// The robot state service tracks all information about the measured and computed states of the robot at the current time.
 service RobotStateService {
+    // Get robot state information (such as kinematic state, power state, or faults).
     rpc GetRobotState(RobotStateRequest) returns (RobotStateResponse) {}
 
+    // Get different robot metrics and parameters from the robot.
     rpc GetRobotMetrics(RobotMetricsRequest) returns (RobotMetricsResponse) {}
 
+    // Get the hardware configuration of the robot, which describes the robot skeleton and urdf.
     rpc GetRobotHardwareConfiguration(RobotHardwareConfigurationRequest)
         returns (RobotHardwareConfigurationResponse) {}
 

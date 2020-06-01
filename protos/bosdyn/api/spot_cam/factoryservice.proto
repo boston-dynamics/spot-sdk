@@ -14,17 +14,17 @@ import "bosdyn/api/spot_cam/factorysetup.proto";
 
 //These services contains RPCs meant for factory configuration, and should not
 //be called by a normal client
-
 service PtzConfigurationService {
+    // Get the Ptz offset info.
     rpc PtzOffset (PtzOffsetRequest) returns (PtzOffsetResponse);
 }
 
 service CameraConfigurationService {
-    //load a camera calibration on
+    // Load a camera calibration on.
     rpc CameraCalibrate (CameraCalibrateRequest) returns (CameraCalibrateResponse);
 }
 
 service FactoryResetService {
-    //clear all configuration data and return the device to a pre-configured factory state.
+    // Clear all configuration data and return the device to a pre-configured factory state.
     rpc Reset (ResetRequest) returns (ResetResponse);
 }

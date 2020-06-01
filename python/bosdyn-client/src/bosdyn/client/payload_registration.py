@@ -23,7 +23,7 @@ from bosdyn.client import ResponseError
 LOGGER = logging.getLogger('payload_registration_client')
 
 
-# Define payload-registration-specefic errors
+# Define payload-registration-specific errors
 class PayloadRegistrationResponseError(ResponseError):
     """General class of errors for PayloadRegistration service."""
 
@@ -151,7 +151,7 @@ class PayloadRegistrationClient(BaseClient):
 
         Args:
           guid:                 The GUID of the registered payload requesting the token.
-          secret:               The secret of the registed payload requesting the token.
+          secret:               The secret of the registered payload requesting the token.
           kw_args:              Extra arguments to pass to grpc call invocation.
 
         Returns:

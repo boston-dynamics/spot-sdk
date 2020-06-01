@@ -12,8 +12,11 @@ option java_outer_classname = "CameraProto";
 
 import "bosdyn/api/geometry.proto";
 
+// Description of the details of a particular camera.
 message Camera {
+    // Identifier for the camera.
     string name = 1;
+    // Resolution of the sensor, where x = width and y = height.
     bosdyn.api.Vec2 resolution=2;
 
     // The frame name for the image sensor source. This frame will show up in the FrameTreeSnapshot
@@ -23,30 +26,37 @@ message Camera {
     // The transform from the base of spot cam to this specific camera.
     SE3Pose base_tfrom_sensor = 4;
 
+    // Parameters for a pinhole model of distortion.
     message PinholeIntrinsics {
+        // Focal_length in pixels
         bosdyn.api.Vec2 focal_length=1;
+        // Center point in pixels
         bosdyn.api.Vec2 center_point=2;
-        //the following 4 parameters are radial distortion coefficeints to 4 orders.
-        //see https://en.wikipedia.org/wiki/Distortion_(optics)#Software_correction
-        //if all 4 of these values are 0, do not apply any correction.
+        // The following 4 parameters are radial distortion coefficeints to 4 orders.
+        // See https://en.wikipedia.org/wiki/Distortion_(optics)#Software_correction
+        // If all 4 of these values are 0, do not apply any correction.
         float k1=3;
         float k2=4;
         float k3=5;
         float k4=6;
     }
 
-    //spherical limits are the minimum and maximum angle of the image;
-    //IE the upper left pixel is at min_angle.x, min_angle.y
-    //and the lower right pixel is at max_angle.x, max_angle.y
-    //for a full-FOV image this will be (-180, 90) and (180, -90)
+    // Spherical limits are the minimum and maximum angle of the image;
+    // IE the upper left pixel is at min_angle.x, min_angle.y
+    // and the lower right pixel is at max_angle.x, max_angle.y
+    // for a full-FOV image this will be (-180, 90) and (180, -90)
     message SphericalLimits {
+        // Upper left pixel location in degrees.
         bosdyn.api.Vec2 min_angle=1;
+        // Lower right pixel location in degrees.
         bosdyn.api.Vec2 max_angle=2;
     }
 
     oneof intrinsics{
-        PinholeIntrinsics pinhole=5; //physical cameras
-        SphericalLimits spherical=6; //only synthetic spherical panoramas
+        // Physical cameras
+        PinholeIntrinsics pinhole=5;
+        // Only synthetic spherical panoramas
+        SphericalLimits spherical=6;
     }
 }
 

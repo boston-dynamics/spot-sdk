@@ -15,6 +15,11 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 import "bosdyn/api/header.proto";
 
+// The world object message is used to describe different objects seen by a robot. It contains information
+// about the properties of the object in addition to a unique id and the transform snapshot.
+// The world object uses "properties" to describe different traits about the object, such as image coordinates
+// associated with the camera the object was detected in. A world object can have multiple different properties
+// that are all associated with the single object.
 message WorldObject {
     // Unique integer identifier that will be consistent for the duration of a robot's battery life
     // The id is set internally by the world object service.
@@ -30,19 +35,22 @@ message WorldObject {
     // A tree-based collection of transformations, which will include the transformations to each
     // of the returned world objects in addition to transformations to the common frames ("vision",
     // "body", "odom"). All transforms within the snapshot are at the acquistion time of the world object.
-    //
     // Note that each object's frame names are defined within the properties submessage. For example,
     // the apriltag frame name is defined in the AprilTagProperties message as "frame_name_fiducial"
     FrameTreeSnapshot transforms_snapshot = 31;
 
-    // Potential fields for the given object
+    // The drawable properties describe geometric shapes associated with an object.
     repeated DrawableProperties drawable_properties = 5;
+    // The apriltag properties describe any fiducial identifying an object.
     AprilTagProperties apriltag_properties = 6;
+    // The image properties describe any camera and image coordinates associated with an object.
     ImageProperties image_properties = 9;
-
+    // An extra field for application-specific object properties.
     google.protobuf.Any additional_properties = 100;
 }
 
+// A type for the world object, which is associated with whatever properties the world object includes. This can
+// be used to request specific kinds of objects; for example, a request for only fiducials.
 enum WorldObjectType {
   WORLD_OBJECT_UNKNOWN = 0;
   WORLD_OBJECT_DRAWABLE = 1;
@@ -50,6 +58,7 @@ enum WorldObjectType {
   WORLD_OBJECT_IMAGE_COORDINATES = 5;
 }
 
+// The ListWorldObject request message, which can optionally include filters for the object type or timestamp.
 message ListWorldObjectRequest {
   // Common request header
   RequestHeader header = 1;
@@ -63,37 +72,52 @@ message ListWorldObjectRequest {
   google.protobuf.Timestamp timestamp_filter = 3;
 }
 
+// The ListWorldObject response message, which contains all of the current world objects in the
+// robot's perception scene.
 message ListWorldObjectResponse {
   // Common response header
   ResponseHeader header = 1;
 
+  // The currently perceived world objects.
   repeated WorldObject world_objects = 2;
 }
 
+// The MutateWorldObject request message, which specifies the type of mutation and which object
+// the mutation should be applied to.
 message MutateWorldObjectRequest {
   // Common request header
   RequestHeader header = 1;
 
   enum Action {
-      ACTION_UNKNOWN = 0;   // Invalid action.
-      ACTION_ADD = 1;       // Add a new object.
-      ACTION_CHANGE = 2;    // Change an existing objected (ID'd by integer ID number). This is
-                            // only allowed to change objects added by the API-user, and not
-                            // objects detected by Spot's perception system.
-      ACTION_DELETE = 3;    // Delete the object, ID'd by integer ID number. This is
-                            // only allowed to change objects added by the API-user, and not
-                            // objects detected by Spot's perception system.
+      // Invalid action.
+      ACTION_UNKNOWN = 0;
+      // Add a new object.
+      ACTION_ADD = 1;
+      // Change an existing objected (ID'd by integer ID number). This is
+      // only allowed to change objects added by the API-user, and not
+      // objects detected by Spot's perception system.
+      ACTION_CHANGE = 2;
+      // Delete the object, ID'd by integer ID number. This is
+      // only allowed to change objects added by the API-user, and not
+      // objects detected by Spot's perception system.
+      ACTION_DELETE = 3;
   }
 
   message Mutation {
+      // The action (add, change, or delete) to be applied to a world object.
       Action action = 1;
 
-      // World object to be mutated
+      // World object to be mutated.
+      // If an object is being changed/deleted, then the world object id must match a world
+      // object id known by the service.
       WorldObject object = 2;
   }
+  // The mutation for this request.
   Mutation mutation = 2;
 }
 
+// The MutateWorldObject response message, which includes the world object id for the object that
+// the mutation was applied to if the request succeeds.
 message MutateWorldObjectResponse {
   // Common response header
   ResponseHeader header = 1;
@@ -114,27 +138,29 @@ message MutateWorldObjectResponse {
       // detected by Spot's perception system.
       STATUS_NO_PERMISSION = 3;
   }
+  // Return status for the request.
   Status status = 2;
 
   // ID set by the world object service for the mutated object
   int32 mutated_object_id = 4;
 }
 
+//  World object properties describing image coordinates associated with an object.
 message ImageProperties {
     // Camera Source of such as "back", "frontleft", etc.
     string camera_source = 1;
 
-    // Image Coordinates (Pixels of x[row], y[col]) in either clockwise/counter clockwise order
+    // Image Coordinates (pixels of x[row], y[col]) in either clockwise/counter clockwise order
     Polygon coordinates = 2;
 
     // Frame name for the object described by image coordinates.
     string frame_name_image_coordinates = 3;
 }
 
+//  World object properties describing a fiducial object.
 message AprilTagProperties {
-    // April Tag detections from the tag family 36h11
-
-    // Consistent integer id associated with a given apriltag
+    // Consistent integer id associated with a given apriltag. April Tag detections will be from the
+    // tag family 36h11.
     int32 tag_id = 1;
 
     // Apriltag size in meters, where x is the row/width length and y is the
@@ -149,33 +175,38 @@ message AprilTagProperties {
 }
 
 
+// The drawing and visualization information for a world object.
 message DrawableProperties {
-    // Color of the object
+    // RGBA values for color ranging from [0,255] for R/G/B, and [0,1] for A.
     message Color {
-        // RGBA values for color ranging from [0,255] for R/G/B, and [0,1] for A
+        // Red value ranging from [0,255].
         int32 r = 1;
+        /// Green value ranging from [0,255].
         int32 g = 2;
+        // Blue value ranging from [0,255].
         int32 b = 3;
+        // Alpha (transparancy) value ranging from [0,1].
         double a = 4;
     }
+    // Color of the object.
     Color color = 1;
 
-    // Label to be drawn at the origin of the object
+    // Label to be drawn at the origin of the object.
     string label = 2;
 
-    // Drawn objects in wireframe
+    // Drawn objects in wireframe.
     bool wireframe = 3;
 
-    // The object to draw -- e.g. Sphere, cube, ...
+    // The object to draw, e.g. a Sphere.
     oneof drawable {
-        DrawableFrame frame = 4;
-        DrawableSphere sphere = 5;
-        DrawableBox box = 6;
-        DrawableArrow arrow = 7;
-        DrawableCapsule capsule = 8;
-        DrawableCylinder cylinder = 9;
-        DrawableLineStrip linestrip = 10;
-        DrawablePoints points = 11;
+        DrawableFrame frame = 4;          // A drawable frame (oneof drawable field).
+        DrawableSphere sphere = 5;        // A drawable sphere (oneof drawable field).
+        DrawableBox box = 6;              // A drawable box (oneof drawable field).
+        DrawableArrow arrow = 7;          // A drawable arrow (oneof drawable field).
+        DrawableCapsule capsule = 8;      // A drawable capsule (oneof drawable field).
+        DrawableCylinder cylinder = 9;    // A drawable cylinder (oneof drawable field).
+        DrawableLineStrip linestrip = 10; // A drawable linestrip (oneof drawable field).
+        DrawablePoints points = 11;       // A drawable set of points (oneof drawable field).
     }
 
     // The frame name for the drawable object. This will optionally be
@@ -183,38 +214,46 @@ message DrawableProperties {
     string frame_name_drawable = 12;
 }
 
+// A coordinate frame drawing object, describing how large to render the arrows.
 message DrawableFrame {
   double arrow_length = 1;
   double arrow_radius = 2;
 }
 
+// A sphere drawing object.
 message DrawableSphere {
   double radius = 1;
 }
 
+// A three dimensional box drawing object.
 message DrawableBox {
   Vec3 size = 1;
 }
 
+// A directed arrow drawing object.
 message DrawableArrow {
   Vec3 direction = 1;
   double radius = 2;
 }
 
+// A oval-like capsule drawing object.
 message DrawableCapsule {
   Vec3 direction = 1;
   double radius = 2;
 }
 
+// A cylinder drawing object.
 message DrawableCylinder {
   Vec3 direction = 1;
   double radius = 2;
 }
 
+// A line strip drawing object.
 message DrawableLineStrip {
   Vec3 points = 1;
 }
 
+// A set of points drawing object.
 message DrawablePoints {
   repeated Vec3 points = 1;
 }

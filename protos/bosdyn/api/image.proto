@@ -16,10 +16,11 @@ import "google/protobuf/timestamp.proto";
 // Rectangular color/greyscale/depth images.
 message Image {
     enum Format {
+        // Unknown image format.
         FORMAT_UNKNOWN = 0;
 
         // Color/greyscale formats.
-        // JPEG format
+        // JPEG format.
         FORMAT_JPEG = 1;
 
         // Uncompressed.  Requires pixel_format.
@@ -46,8 +47,9 @@ message Image {
         PIXEL_FORMAT_DEPTH_U16 = 5;
     }
 
-    // Image dimensions in pixels.
+    // Number of columns in the image (in pixels).
     int32 cols = 2;
+    // Number of rows in the image (in pixels).
     int32 rows = 3;
 
     // Raw image data.
@@ -80,45 +82,49 @@ message ImageCapture {
     reserved 1, 2;
 }
 
-// Proto for a description of an image source on the robot
+// Proto for a description of an image source on the robot.
 message ImageSource {
+
+    // The camera can be modeled as a pinhole camera described with a matrix.
+    // Camera Matrix can be constructed by the camera intrinsics:
+    // [[focal_length.x,         skew.x, principal_point.x],
+    // [[        skew.y, focal_length.y, principal_point.y],
+    // [[             0,              0,                 1]]
     message PinholeModel {
-        // Camera Matrix is
-        // [[focal_length.x,         skew.x, principal_point.x],
-        // [[        skew.y, focal_length.y, principal_point.y],
-        // [[             0,              0,                 1]]
-        // Parameters are in pixel space.
+        // Intrinsic parameters are in pixel space.
         message CameraIntrinsics {
+            // The focal length of the camera.
             Vec2 focal_length = 1;
+            // The optical center in sensor coordinates.
             Vec2 principal_point = 2;
+            // The skew for the intrinsic matrix.
             Vec2 skew = 3;
         }
-
+        // The camera intrinsics are necessary for descrbing the pinhole camera matrix.
         CameraIntrinsics intrinsics = 1;
     }
 
     // The name of this image source used to get images.
     string name = 2;
 
-    reserved 3;
-
-    // image dimensions in pixels
+    // Number of columns in the image (in pixels).
     int32 cols = 4;
+    // Number of rows in the image (in pixels).
     int32 rows = 5;
 
-    // typically 1000 (converting mm to m).
+    // The depth scale for the image data. Typically 1000, which converts it from mm to m.
     double depth_scale = 6;
 
-    reserved 7;
+    // Fields reserved for deprecated messages.
+    reserved 3, 7;
 
     oneof camera_models {
         // Rectilinear camera model.
         PinholeModel pinhole = 8;
     }
 
-    // The kind of images returned by this image source.
     enum ImageType {
-        // Unspecified -- do not use.
+        // Unspecified image type.
         IMAGE_TYPE_UNKNOWN = 0;
 
         // Color or greyscale intensity image.
@@ -127,25 +133,29 @@ message ImageSource {
         // Pixel values represent distances to objects/surfaces.
         IMAGE_TYPE_DEPTH = 2;
     };
+    // The kind of images returned by this image source.
     ImageType image_type = 9;
 }
 
-
+// The ListImageSources request message for the robot image service.
 message ListImageSourcesRequest {
     // Common request header.
     RequestHeader header = 1;
 }
 
+// The ListImageSources response message which contains all known image sources for the robot.
 message ListImageSourcesResponse {
     // Common response Header.
     ResponseHeader header = 1;
 
     // The set of ImageSources available from this service.
-    // May be empty if the service serves no images (e.g., if no cameras were found on startup).
+    // May be empty if the service serves no cameras (e.g., if no cameras were found on startup).
     repeated ImageSource image_sources = 2;
 }
 
+// The image request specifying the image source and data format desired.
 message ImageRequest {
+    // The string name of the image source to get image data from.
     string image_source_name = 1;
 
     // Image quality: a number from 0 (worst) to 100 (highest).
@@ -156,21 +166,26 @@ message ImageRequest {
     Image.Format image_format = 3;
 }
 
+// The GetImage request message which can send multiple different image source requests at once.
 message GetImageRequest {
     // Common request header.
     RequestHeader header = 1;
 
+    // The different image requests for this rpc call.
     repeated ImageRequest image_requests = 2;
 }
 
+// The image response for each request, that includes image data and image source information.
 message ImageResponse {
+    // The image capture contains the image data and information about the state of the camera and robot
+    // at the time the image was collected.
     ImageCapture shot = 1;
+
+    // The source describes general information about the camera source the image data was collected from.
     ImageSource source = 2;
 
-    // Return status.
     enum Status {
         // UNKNOWN should never be used.
-        //
         // An internal ImageService issue has happened if UNKNOWN is set.
         // None of the other fields are filled out.
         STATUS_UNKNOWN = 0;
@@ -187,12 +202,14 @@ message ImageResponse {
         // There was a problem with the image data.  Only the ImageSource is filled out.
         STATUS_IMAGE_DATA_ERROR = 4;
     }
+    // Return status of the request.
     Status status = 4;
 
     // Previous fields in the protobuf that are now reserved.
     reserved 3, 5;
 }
 
+// The GetImage response message which includes image data for all requested sources.
 message GetImageResponse {
     // Common response header.
     ResponseHeader header = 1;

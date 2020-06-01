@@ -12,7 +12,7 @@ option java_outer_classname = "AuthProto";
 
 import "bosdyn/api/header.proto";
 
-// Send login information...
+// The GetAuthToken request message includes login information for the robot.
 message GetAuthTokenRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -26,14 +26,16 @@ message GetAuthTokenRequest {
     string application_token = 5;
 }
 
-// ... and get a token.
+// The GetAuthToken response message includes an authentication token if the login information
+// is correct and succeeds.
 message GetAuthTokenResponse {
     ResponseHeader header = 1;
+
     enum Status{
         // STATUS_UNKNOWN should never be used. If used, an internal error has happend.
         STATUS_UNKNOWN = 0;
 
-        // STATUS_OK indicates that authentication has succeeded. The |token| field will
+        // STATUS_OK indicates that authentication has succeeded. The 'token' field field will
         // be populated with a session token that can be used to authenticate the user.
         STATUS_OK = 1;
 
@@ -41,7 +43,7 @@ message GetAuthTokenResponse {
         // username and/or password were provided.
         STATUS_INVALID_LOGIN = 2;
 
-        // STATUS_INVALID_TOKEN indicates that authentication has failed since the |token|
+        // STATUS_INVALID_TOKEN indicates that authentication has failed since the 'token'
         // provided in the request is invalid. Reasons for the token being invalid could be
         // because it has expired, because it is improperly formed, for the wrong robot, the
         // user that the token is for has changed a password, or many other reasons. Clients
@@ -54,14 +56,15 @@ message GetAuthTokenResponse {
         // the lock out period ends.
         STATUS_TEMPORARILY_LOCKED_OUT = 4;
 
-        // STATUS_INVALID_APPLICATION_TOKEN indicates that the |application_token| in the
+        // STATUS_INVALID_APPLICATION_TOKEN indicates that the 'application_token' field in the
         // request was invalid.
         STATUS_INVALID_APPLICATION_TOKEN = 5;
 
-        // STATUS_EXPIRED_APPLICATION_TOKEN indicates that the |application_token| in the
+        // STATUS_EXPIRED_APPLICATION_TOKEN indicates that the 'application_token' field in the
         // request was valid, but has expired.
         STATUS_EXPIRED_APPLICATION_TOKEN = 6;
     }
+    // The status of the grpc GetAuthToken request.
     Status status = 2;
 
     // Token data. Only specified if status == STATUS_OK.
