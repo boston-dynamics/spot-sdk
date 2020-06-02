@@ -14,9 +14,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 The bosdyn-client wheel contains client interfaces for interacting with the Boston Dynamics Spot 
 API. The client interfaces implement the Remote Procedure Calls (RPCs) defined in the 
-[bosdyn-api wheel](https://pypi.org/project/bosdyn-api/). Full documentation for the classes 
-included in this wheel can be found 
-[here](https://dev.bostondynamics.com/docs/python/reference/client_modules/client_index).
+[bosdyn-api wheel](https://pypi.org/project/bosdyn-api/).
 
 ## Main Classes
 The main classes contained in this wheel are Sdk and Robot.
@@ -39,8 +37,6 @@ corresponding method, as shown below. It is that simple!
 Clients that trigger robot movement also need to set up the TimeSync, Lease and E-Stop clients. Our 
 [examples](https://github.com/boston-dynamics/spot-sdk/tree/master/python/examples) repository 
 contains many tutorials on how to use the clients included in this wheel.
-
-The full list of clients included in this wheel is described in this part of our [documentation](https://dev.bostondynamics.com/python/bosdyn-client/). 
 
 
 ## Command-line Support

@@ -35,7 +35,7 @@ setuptools.setup(
     package_dir={'': 'src'},
     install_requires=['bosdyn-api=={}'.format(SDK_VERSION)],
     classifiers=[
-        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.6",
         "License :: Other/Proprietary License",
         "Operating System :: OS Independent",
     ],

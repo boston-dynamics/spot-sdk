@@ -18,6 +18,4 @@ implement the mission-related Remote Procedure Calls (RPCs) defined in
 [bosdyn-api wheel](https://pypi.org/project/bosdyn-api/) and they utilize code included in the 
 [bosdyn-client wheel](https://pypi.org/project/bosdyn-client/). Full design documentation for the 
 functionality included in this wheel can be found 
-[here](https://dev.bostondynamics.com/docs/concepts/autonomy/missions_service). Full Python 
-documentation for the code included in this wheel can be found 
-[here](https://dev.bostondynamics.com/docs/python/reference/mission_modules/mission_index).
+[here](https://dev.bostondynamics.com/docs/concepts/autonomy/missions_service).
