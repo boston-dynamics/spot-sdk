@@ -6,6 +6,10 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
+<p class="github-only">
+<b>The Spot SDK documentation is best viewed via our developer site at <a href="https://dev.bostondynamics.com">dev.bostondynamics.com</a>. </b>
+</p>
+
 # Payload Developer Guide
 
 This section of the Spot SDK documentation provides details about designing, configuring, and attaching payloads to the Spot platform. information in this section includes electrical, mechanical, and software requirements and interfaces.

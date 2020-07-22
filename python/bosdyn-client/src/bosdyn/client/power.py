@@ -7,17 +7,19 @@
 """For clients to the power command service."""
 import collections
 from concurrent.futures import TimeoutError
+import functools
 import time
 
 from bosdyn.client.common import BaseClient
 from bosdyn.client.common import (error_factory, handle_unset_status_error,
                                   handle_common_header_errors, handle_lease_use_result_errors)
-from bosdyn.client.exceptions import Error, ResponseError, InternalServerError
+from bosdyn.client.exceptions import Error, ResponseError, InternalServerError, LicenseError
 
 from bosdyn.api import power_pb2
 from bosdyn.api import power_service_pb2_grpc
 from bosdyn.api import basic_command_pb2
 from bosdyn.api import full_body_command_pb2
+from bosdyn.api import license_pb2
 from bosdyn.api import robot_command_pb2
 from bosdyn.api import robot_state_pb2
 
@@ -110,8 +112,35 @@ class PowerClient(BaseClient):
         return power_pb2.PowerCommandFeedbackRequest(power_command_id=power_command_id)
 
 
+def _handle_license_errors(func):
+    """Decorate "error from response" functions to handle typical license errors."""
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        return _common_license_errors(*args) or func(*args, **kwargs)
+
+    return wrapper
+
+
+def _common_license_errors(response):
+    """Return an exception based on license status. None if no error."""
+
+    license_status = None
+    if response.status != power_pb2.STATUS_LICENSE_ERROR:
+        return None
+    if hasattr(response, 'license_status'):
+        license_status = response.license_status
+    else:
+        # This means you're using the wrong error handler.
+        return InternalServerError(response, 'No LicenseInfo.Status field found!')
+
+    if license_status != license_pb2.LicenseInfo.STATUS_VALID:
+        return LicenseError(response)
+    return None
+
 @handle_common_header_errors
 @handle_lease_use_result_errors
+@_handle_license_errors
 @handle_unset_status_error(unset='STATUS_UNKNOWN', statustype=power_pb2)
 def _power_command_error_from_response(response):
     """Return a custom exception based on response, None if no error."""
@@ -137,6 +166,7 @@ _STATUS_TO_ERROR.update({
     power_pb2.STATUS_ESTOPPED: (EstoppedError, EstoppedError.__doc__),
     power_pb2.STATUS_FAULTED: (FaultedError, FaultedError.__doc__),
     power_pb2.STATUS_INTERNAL_ERROR: (InternalServerError, InternalServerError.__doc__),
+    power_pb2.STATUS_LICENSE_ERROR: (LicenseError, LicenseError.__doc__),
 })
 
 
@@ -201,6 +231,7 @@ def power_on(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
     """
     request = power_pb2.PowerCommandRequest.REQUEST_ON
     _power_command(power_client, request, timeout_sec, update_frequency, **kwargs)
+
 
 def power_off(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
     """Power off robot immediately. This function blocks until robot powers off. This will not put

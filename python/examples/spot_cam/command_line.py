@@ -21,6 +21,7 @@ from ptz import PtzCommands
 from streamquality import StreamQualityCommands
 from utils import UtilityCommands
 from version import VersionCommands
+from webrtc import WebRTCCommands
 
 from bosdyn.client import spot_cam
 
@@ -36,7 +37,8 @@ def register_all_commands(subparsers, command_dict):
         PtzCommands,
         StreamQualityCommands,
         UtilityCommands,
-        VersionCommands
+        VersionCommands,
+        WebRTCCommands
     ]
 
     for register_command in COMMANDS:

@@ -57,8 +57,6 @@ There are two ways to authenticate a user:
 1. With a username and password combination. The usernames and passwords are the same as those managed using the robot's admin console web page.
 2. By refreshing an existing valid user token. This approach can be used to support a long-lived client application to minimize repeated prompts for username/password.
 
-In both cases, an application token must also be included in the authentication request. An application token is issued by Boston Dynamics and authorizes developers to access services on Spot. If the application token has expired, the authentication will not succeed. `STATUS_INVALID_APPLICATION_TOKEN` or `STATUS_EXPIRED_APPLICATION_TOKEN` status codes will be returned in these cases. The Python client warns when the application token will expire soon, but other developers may need to inspect.
-
 The `auth` service rate-limits invalid authentication attempts to prevent a network attacker from trying to guess users or passwords. After six consecutive failed authentication attempts, authentication is locked out for 1 minute. `STATUS_TEMPORARILY_LOCKED_OUT` is returned in this case.
 
 ## directory

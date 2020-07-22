@@ -15,8 +15,9 @@ from bosdyn.client import power
 
 from bosdyn.api import power_pb2
 from bosdyn.api import robot_state_pb2
+from bosdyn.api import license_pb2
 
-from bosdyn.client import ResponseError, InternalServerError, InvalidRequestError, LeaseUseError, UnsetStatusError
+from bosdyn.client import ResponseError, InternalServerError, InvalidRequestError, LicenseError, LeaseUseError, UnsetStatusError
 
 # For coverage report, run with...
 # python -m pytest --cov bosdyn.client.power --cov-report term-missing tests/test_power.py
@@ -25,6 +26,7 @@ from bosdyn.client import ResponseError, InternalServerError, InvalidRequestErro
 def test_power_command_error():
     # Test unset header error
     response = power_pb2.PowerCommandResponse()
+    response.license_status = license_pb2.LicenseInfo.STATUS_VALID
     assert isinstance(_power_command_error_from_response(response), UnsetStatusError)
     # Test header internal server error
     response.header.error.code = response.header.error.CODE_INTERNAL_SERVER_ERROR
@@ -54,6 +56,16 @@ def test_power_command_error():
     # Test lease error even when response status is OK.
     response.lease_use_result.status = response.lease_use_result.STATUS_INVALID_LEASE
     assert isinstance(_power_command_error_from_response(response), LeaseUseError)
+    # Test license error even when response status is OK.
+    response.license_status = license_pb2.LicenseInfo.STATUS_NO_LICENSE
+    response.lease_use_result.status = response.lease_use_result.STATUS_OK
+    response.status = power_pb2.STATUS_LICENSE_ERROR
+    assert isinstance(_power_command_error_from_response(response), LicenseError)
+
+    # test backwards compatibility with old clients
+    response.license_status = license_pb2.LicenseInfo.STATUS_NO_LICENSE
+    response.status = power_pb2.STATUS_SUCCESS
+    assert not _power_command_error_from_response(response)
 
 
 def test_power_feedback_error():

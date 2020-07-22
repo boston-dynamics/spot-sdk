@@ -53,7 +53,7 @@ def main(argv):
                 dtype = np.uint8
                 extension = ".jpg"
 
-            img = np.fromstring(image.shot.image.data, dtype=dtype)
+            img = np.frombuffer(image.shot.image.data, dtype=dtype)
             if image.shot.image.format == image_pb2.Image.FORMAT_RAW:
                 img = img.reshape(image.shot.image.rows, image.shot.image.cols)
             else:

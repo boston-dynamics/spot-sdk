@@ -4,6 +4,8 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
+from __future__ import unicode_literals
+from builtins import str as text
 from bosdyn.mission import util
 
 
@@ -33,7 +35,7 @@ class ValidationError(Error):
 
     def __str__(self):
         return 'Encountered {} validation errors: \n\t{}'.format(
-            len(self.errors), '\n\t'.join([str(e) for e in self.errors]))
+            len(self.errors), '\n\t'.join([text(e) for e in self.errors]))
 
 
 class MissingParameterError(CompileError):

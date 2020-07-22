@@ -20,7 +20,7 @@ from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
 from bosdyn.api import robot_command_service_pb2_grpc
 from bosdyn.api import trajectory_pb2
 
-from bosdyn.client.common import (BaseClient, error_factory, handle_unset_status_error,
+from bosdyn.client.common import (BaseClient, error_factory, error_pair, handle_unset_status_error,
                                   handle_common_header_errors, handle_lease_use_result_errors)
 
 from .exceptions import ResponseError, InvalidRequestError, TimedOutError
@@ -52,6 +52,8 @@ class TooDistantError(RobotCommandResponseError):
 class NotPoweredOnError(RobotCommandResponseError):
     """The robot must be powered on to accept a command."""
 
+class BehaviorFaultError(RobotCommandResponseError):
+    """The robot may not be commanded with uncleared behavior faults."""
 
 class NotClearedError(RobotCommandResponseError):
     """Behavior fault could not be cleared."""
@@ -223,6 +225,7 @@ class RobotCommandClient(BaseClient):
             ExpiredError: The command was received after its max_duration had already passed.
             bosdyn.client.robot_command.TooDistantError: The command end time was too far in the future.
             NotPoweredOnError: The robot must be powered on to accept a command.
+            BehaviorFaultError: The robot is faulted and the fault must be cleared first.
             UnknownFrameError: Robot does not know how to handle supplied frame.
         """
 
@@ -417,22 +420,17 @@ def _robot_command_value(response):
     return response.robot_command_id
 
 
-_ROBOT_COMMAND_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
+_ROBOT_COMMAND_STATUS_TO_ERROR = collections.defaultdict(lambda: (RobotCommandResponseError, None))
 _ROBOT_COMMAND_STATUS_TO_ERROR.update({
     robot_command_pb2.RobotCommandResponse.STATUS_OK: (None, None),
-    robot_command_pb2.RobotCommandResponse.STATUS_INVALID_REQUEST: (InvalidRequestError,
-                                                                    InvalidRequestError.__doc__),
-    robot_command_pb2.RobotCommandResponse.STATUS_UNSUPPORTED: (UnsupportedError,
-                                                                UnsupportedError.__doc__),
-    robot_command_pb2.RobotCommandResponse.STATUS_NO_TIMESYNC: (NoTimeSyncError,
-                                                                NoTimeSyncError.__doc__),
-    robot_command_pb2.RobotCommandResponse.STATUS_EXPIRED: (ExpiredError, ExpiredError.__doc__),
-    robot_command_pb2.RobotCommandResponse.STATUS_TOO_DISTANT: (TooDistantError,
-                                                                TooDistantError.__doc__),
-    robot_command_pb2.RobotCommandResponse.STATUS_NOT_POWERED_ON: (NotPoweredOnError,
-                                                                   NotPoweredOnError.__doc__),
-    robot_command_pb2.RobotCommandResponse.STATUS_UNKNOWN_FRAME: (UnknownFrameError,
-                                                                  UnknownFrameError.__doc__),
+    robot_command_pb2.RobotCommandResponse.STATUS_INVALID_REQUEST: error_pair(InvalidRequestError),
+    robot_command_pb2.RobotCommandResponse.STATUS_UNSUPPORTED: error_pair(UnsupportedError),
+    robot_command_pb2.RobotCommandResponse.STATUS_NO_TIMESYNC: error_pair(NoTimeSyncError),
+    robot_command_pb2.RobotCommandResponse.STATUS_EXPIRED: error_pair(ExpiredError),
+    robot_command_pb2.RobotCommandResponse.STATUS_TOO_DISTANT: error_pair(TooDistantError),
+    robot_command_pb2.RobotCommandResponse.STATUS_NOT_POWERED_ON: error_pair(NotPoweredOnError),
+    robot_command_pb2.RobotCommandResponse.STATUS_BEHAVIOR_FAULT: error_pair(BehaviorFaultError),
+    robot_command_pb2.RobotCommandResponse.STATUS_UNKNOWN_FRAME: error_pair(UnknownFrameError),
 })
 
 
@@ -499,7 +497,7 @@ def _clear_behavior_fault_error(response):
 
 class RobotCommandBuilder(object):
     """This class contains a set of static helper functions to build and issue robot commands.
-    
+
     This is not intended to cover every use case, but rather give developers a starting point for
     issuing commands to the robot.The robot command proto uses several advanced protobuf techniques,
     including the use of Any and OneOf.
@@ -739,7 +737,7 @@ class RobotCommandBuilder(object):
                                       enabled/disabled or an override force should be used. Can be
                                       specified as one of three values:
                                       spot_command_pb2.BodyExternalForceParams.{
-                                      EXTERNAL_FORCE_NONE, EXTERNAL_FORCE_USE_ESTIMATE, 
+                                      EXTERNAL_FORCE_NONE, EXTERNAL_FORCE_USE_ESTIMATE,
                                       EXTERNAL_FORCE_USE_OVERRIDE }
             override_external_force_vec: x/y/z list of forces in the body frame. Only used when the
                                          indicator specifies EXTERNAL_FORCE_USE_OVERRIDE

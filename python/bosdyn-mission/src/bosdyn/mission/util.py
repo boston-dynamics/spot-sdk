@@ -4,6 +4,8 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
+from __future__ import unicode_literals
+from builtins import str as text
 import copy
 import operator
 import re
@@ -43,7 +45,7 @@ def tree_to_string(root, start_level=0, include_status=False):
     if start_level == 0:
         string += '\n'
     prefix = '|' + '-' * start_level
-    string += prefix + str(root) + (' ' if str(root) else '') + '(' + root.__class__.__name__ + ')'
+    string += prefix + text(root) + (' ' if text(root) else '') + '(' + root.__class__.__name__ + ')'
     if include_status:
         string += '\n' + prefix + 'Status code: [{}]'.format(root.last_result)
     for child in root.children:
@@ -268,7 +270,7 @@ def most_restrictive_travel_params(travel_params, vel_limit=None):
         # Look at max_vel using >=, then min_vel using <=.
         for min_max, comp in (('max_vel', operator.ge), ('min_vel', operator.le)):
             # If the other doesn't even have this field, skip to the next one.
-            if not other.HasField(min_max):
+            if not other.HasField(text(min_max)):
                 continue
 
             lim_returned = getattr(returned, min_max)
@@ -291,10 +293,10 @@ def get_value_from_constant_value_message(const_proto):
 
 
 def get_value_from_value_message(node, blackboard, value_msg):
-    if value_msg.HasField("constant"):
+    if value_msg.HasField(text("constant")):
         constant = value_msg.constant
         return get_value_from_constant_value_message(constant)
-    elif value_msg.HasField("runtime_var"):
+    elif value_msg.HasField(text("runtime_var")):
         return blackboard.read(node, value_msg.runtime_var.name)
     else:
         raise AttributeError("Value must be a runtime variable or constant.")

@@ -25,22 +25,10 @@ class NetworkCommands(Subcommands):
 
     def __init__(self, subparsers, command_dict):
         super(NetworkCommands, self).__init__(subparsers, command_dict, [
-            NetworkGetNetworkSettingsCommand, NetworkGetICEConfigurationCommand,
-            NetworkSetNetworkSettingsCommand, NetworkSetICEConfigurationCommand,
+            NetworkGetICEConfigurationCommand,
+            NetworkSetICEConfigurationCommand,
         ])
 
-class NetworkGetNetworkSettingsCommand(Command):
-    """Current network settings"""
-
-    NAME = 'settings'
-
-    def __init__(self, subparsers, command_dict):
-        super(NetworkGetNetworkSettingsCommand, self).__init__(subparsers, command_dict)
-
-    def _run(self, robot, options):
-        ns = robot.ensure_client(NetworkClient.default_service_name).get_network_settings()
-
-        return ns
 
 
 class NetworkGetICEConfigurationCommand(Command):
@@ -57,22 +45,6 @@ class NetworkGetICEConfigurationCommand(Command):
         return ic
 
 
-class NetworkSetNetworkSettingsCommand(Command):
-    """Set network settings"""
-
-    NAME = 'set'
-
-    def __init__(self, subparsers, command_dict):
-        super(NetworkSetNetworkSettingsCommand, self).__init__(subparsers, command_dict)
-        self._parser.add_argument('ip_address', help='e.g. 127.0.0.1')
-        self._parser.add_argument('netmask', help='e.g. 255.255.255.0')
-        self._parser.add_argument('gateway', help='e.g. 8.8.8.8')
-        self._parser.add_argument('mtu', help='maximum transmission unit')
-
-    def _run(self, robot, options):
-        ns = robot.ensure_client(NetworkClient.default_service_name).set_network_settings(options.ip_address, options.netmask, options.gateway, options.mtu)
-
-        return ns
 
 
 class NetworkSetICEConfigurationCommand(Command):

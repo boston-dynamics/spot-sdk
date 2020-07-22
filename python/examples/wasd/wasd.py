@@ -129,17 +129,6 @@ class CursesHandler(logging.Handler):
         self._wasd_interface.add_message('{:s} {:s}'.format(record.levelname, msg))
 
 
-class AsyncMetrics(AsyncPeriodicQuery):
-    """Grab robot metrics every few seconds."""
-
-    def __init__(self, robot_state_client):
-        super(AsyncMetrics, self).__init__("robot_metrics", robot_state_client, LOGGER,
-                                           period_sec=5.0)
-
-    def _start_query(self):
-        return self._client.get_robot_metrics_async()
-
-
 class AsyncRobotState(AsyncPeriodicQuery):
     """Grab robot state."""
 
@@ -208,11 +197,10 @@ class WasdInterface(object):
         self._power_client = robot.ensure_client(PowerClient.default_service_name)
         self._robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
         self._robot_command_client = robot.ensure_client(RobotCommandClient.default_service_name)
-        self._robot_metrics_task = AsyncMetrics(self._robot_state_client)
         self._robot_state_task = AsyncRobotState(self._robot_state_client)
         self._image_task = AsyncImageCapture(robot)
         self._async_tasks = AsyncTasks(
-            [self._robot_metrics_task, self._robot_state_task, self._image_task])
+            [self._robot_state_task, self._image_task])
         self._lock = threading.Lock()
         self._command_dictionary = {
             ord('\t'): self._quit_program,
@@ -285,11 +273,6 @@ class WasdInterface(object):
         """Get latest robot state proto."""
         return self._robot_state_task.proto
 
-    @property
-    def robot_metrics(self):
-        """Get latest robot metrics proto."""
-        return self._robot_metrics_task.proto
-
     def drive(self, stdscr):
         """User interface to control the robot via the passed-in curses screen interface object."""
         with ExitCheck() as self._exit_check:
@@ -337,7 +320,6 @@ class WasdInterface(object):
         stdscr.addstr(5, 0, self._time_sync_str())
         for i in range(3):
             stdscr.addstr(7 + i, 2, self.message(i))
-        self._show_metrics(stdscr)
         stdscr.addstr(10, 0, "Commands: [TAB]: quit                               ")
         stdscr.addstr(11, 0, "          [T]: Time-sync, [SPACE]: Estop, [P]: Power")
         stdscr.addstr(12, 0, "          [I]: Take image, [O]: Video mode          ")
@@ -354,7 +336,7 @@ class WasdInterface(object):
                 if y_i + 17 >= max_y:
                     break
 
-                stdscr.addstr('\n' + img_line)
+                stdscr.addstr(y_i + 17, 0, img_line)
 
         stdscr.refresh()
 
@@ -486,13 +468,6 @@ class WasdInterface(object):
 
     def _safe_power_off(self):
         self._start_robot_command('safe_power_off', RobotCommandBuilder.safe_power_off_command())
-
-    def _show_metrics(self, stdscr):
-        metrics = self.robot_metrics
-        if not metrics:
-            return
-        for idx, metric in enumerate(metrics.metrics):
-            stdscr.addstr(2 + idx, 50, format_metric(metric))
 
     def _power_state(self):
         state = self.robot_state

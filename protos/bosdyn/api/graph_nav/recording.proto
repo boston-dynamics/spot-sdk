@@ -10,6 +10,7 @@ package bosdyn.api.graph_nav;
 
 import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
+import "bosdyn/api/license.proto";
 import "bosdyn/api/graph_nav/map.proto";
 
 option java_outer_classname = "RecordingProto";
@@ -63,6 +64,10 @@ message StartRecordingRequest {
     // and the edge from the previous waypoint to the new one.
     // It will not affect the persistent environment.
     RecordingEnvironment recording_environment = 3;
+    // If filled out, asks that the record service verify that the given fiducial IDs
+    // are presently visible before starting to record. This is useful for verifying
+    // that the robot is where the user thinks it is in an area with known fiducials.
+    repeated int32 require_fiducials = 4;
 }
 
 // The StartRecording response messge returns the first created waypoint, which is made at the location
@@ -87,9 +92,23 @@ message StartRecordingResponse {
         // When recording branches, the robot is not localized to the existing map before starting
         // to record a new branch.
         STATUS_NOT_LOCALIZED_TO_EXISTING_MAP = 4;
+        // Can't start recording because the robot doesn't see the required fiducials.
+        STATUS_MISSING_FIDUCIALS = 5;
+        // Can't start recording because the map was too large for the license.
+        STATUS_MAP_TOO_LARGE_LICENSE = 6;
     }
     // Return status for the request.
     Status status = 4;
+
+    // If the status is STATUS_MISSING_FIDUCIALS, these are the fiducials that are not currently
+    // visible.
+    repeated int32 missing_fiducials = 5;
+
+    // Large graphs can only be uploaded if the license permits them. Recording
+    // will stop automatically when the graph gets too large. If StartRecording
+    // is requested again after the graph gets too large, it will fail, and license
+    // status will be filled out.
+    LicenseInfo.Status license_status = 6;
 }
 
 // The StopRecording request message tells the robot to no longer continue adding waypoints and
@@ -145,6 +164,10 @@ message CreateWaypointRequest {
     // The recording service is protected by a lease. The client must have a
     // lease to the recording service to modify its internal state.
     Lease lease = 4;
+    // If filled out, asks that the record service verify that the given fiducial IDs
+    // are presently visible before creating a waypoint. This is useful for verifying
+    // that the robot is where the user thinks it is in an area with known fiducials.
+    repeated int32 require_fiducials = 5;
 }
 
 // The CreateWaypoint response message contains the complete waypoint, and the associated
@@ -165,11 +188,26 @@ message CreateWaypointResponse {
         STATUS_NOT_RECORDING = 2;
         // An internal server error prevented the creation of the waypoint.
         STATUS_COULD_NOT_CREATE_WAYPOINT = 3;
+        // Could not see the required fiducials.
+        STATUS_MISSING_FIDUCIALS = 4;
+        // The map was too big to create a waypoint based on the license.
+        STATUS_MAP_TOO_LARGE_LICENSE = 5;
     }
     // Return status for the request.
     Status status = 5;
     // The results/status of the lease provided.
     LeaseUseResult lease_use_result = 4;
+
+    // If the status is STATUS_MISSING_FIDUCIALS, the following fiducials
+    // were not visible to the robot when trying to create the waypoint.
+    repeated int32 missing_fiducials = 6;
+
+
+    // Large graphs can only be uploaded if the license permits them. Recording
+    // will stop automatically when the graph gets too large. If CreateWaypointResponse
+    // is requested after the graph gets too large, it will fail, and license
+    // status will be filled out.
+    LicenseInfo.Status license_status = 7;
 }
 
 // The CreateEdge request message specifies an edge to create between two existing waypoints.
@@ -229,4 +267,10 @@ message GetRecordStatusResponse {
     bool is_recording = 2;
     // The current persistent recording environment.
     RecordingEnvironment recording_environment = 3;
+    enum MapState {
+        MAP_STATE_UNKNOWN = 0;
+        MAP_STATE_OK = 1;
+        MAP_STATE_TOO_LARGE_FOR_LICENSE = 2;
+    };
+    MapState map_state = 4;
 }

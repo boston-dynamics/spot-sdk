@@ -25,6 +25,7 @@ Client code and interfaces for the Boston Dynamics robot API.
 * [Graph Nav](graph_nav)
 * [Image](image)
 * [Lease](lease)
+* [License](license)
 * [Local Grid](local_grid)
 * [Log Annotation](log_annotation)
 * [Math Helpers](math_helpers)

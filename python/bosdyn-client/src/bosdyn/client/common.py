@@ -12,9 +12,11 @@ import types
 import grpc
 
 from .channel import TransportError, translate_exception
-from .exceptions import Error, InternalServerError, InvalidRequestError, LeaseUseError, UnsetStatusError
+from .exceptions import Error, InternalServerError, InvalidRequestError, LicenseError, LeaseUseError, UnsetStatusError
 
 _LOGGER = logging.getLogger(__name__)
+
+from bosdyn.api import license_pb2
 
 
 def common_header_errors(response):

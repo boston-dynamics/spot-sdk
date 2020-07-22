@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>auth.proto &mdash; Spot 2.0.0 documentation</title>
+  <title>auth.proto &mdash; Spot 2.0.1 documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                2.0.0
+                2.0.1
               </div>
             
           
@@ -123,6 +123,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../python/examples/README.html">Examples</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/add_image_coordinates_to_scene/README.html">Add Image Coordinates to Scene</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/directory/README.html">Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/estop/README.html">E-Stop</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
@@ -141,6 +142,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/payloads/README.html">Payloads</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_check/README.html">Spot Check</a></li>
@@ -168,6 +170,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
@@ -255,6 +258,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lease-service-proto">lease_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#license-proto">license.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#license-service-proto">license_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#local-grid-proto">local_grid.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#log-annotation-proto">log_annotation.proto</a></li>
@@ -287,8 +292,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#spot-cam-factoryservice-proto">spot_cam/factoryservice.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#spot-cam-factorysetup-proto">spot_cam/factorysetup.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#spot-cam-health-proto">spot_cam/health.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#spot-cam-network-proto">spot_cam/network.proto</a></li>
@@ -416,7 +419,7 @@
 <tr>
 <td>application_token</td>
 <td><a href="#string">string</a></td>
-<td>Application Token accompanying authentication. This must be present.</td>
+<td>Deprecated as of 2.0.1. Application Token for authenticating with robots on older releases.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.GetAuthTokenResponse"></a></p>
@@ -3385,74 +3388,6 @@ as any requested live data information.</p>
 <td>If the robot drives around without a good localization for a while, eventually it becomes "lost." I.E. it has a localization, but it no longer trusts that the localization it has is accurate. Lost detector state is available through this message.</td>
 </tr>
 </tbody>
-</table><p><a name="bosdyn.api.graph_nav.GetRouteRequest"></a></p>
-</div>
-<div class="section" id="getrouterequest">
-<h2>GetRouteRequest<a class="headerlink" href="#getrouterequest" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>header</td>
-<td><a href="#bosdyn.api.RequestHeader">bosdyn.api.RequestHeader</a></td>
-<td>Common request header.</td>
-</tr>
-<tr>
-<td>starting_waypoint_id</td>
-<td><a href="#string">string</a></td>
-<td>ID of the waypoint to start the route from.</td>
-</tr>
-<tr>
-<td>destination_waypoint_id</td>
-<td><a href="#string">string</a></td>
-<td>ID of the waypoint to end the route at.</td>
-</tr>
-<tr>
-<td>params</td>
-<td><a href="#bosdyn.api.graph_nav.RouteGenParams">RouteGenParams</a></td>
-<td>Preferences on how to pick the route.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn.api.graph_nav.GetRouteResponse"></a></p>
-</div>
-<div class="section" id="getrouteresponse">
-<h2>GetRouteResponse<a class="headerlink" href="#getrouteresponse" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>header</td>
-<td><a href="#bosdyn.api.ResponseHeader">bosdyn.api.ResponseHeader</a></td>
-<td>Common response header.</td>
-</tr>
-<tr>
-<td>status</td>
-<td><a href="#bosdyn.api.graph_nav.GetRouteResponse.Status">GetRouteResponse.Status</a></td>
-<td>Return status for the request.</td>
-</tr>
-<tr>
-<td>route</td>
-<td><a href="#bosdyn.api.graph_nav.Route">Route</a></td>
-<td>On STATUS_OK, provides a route to go from request's "starting_waypoint_id" to "destination_waypoint_id".</td>
-</tr>
-<tr>
-<td>error_waypoint_ids</td>
-<td><a href="#string">string</a></td>
-<td>On a relevant error status code, these fields contain the waypoint/edge IDs that caused the error.</td>
-</tr>
-</tbody>
 </table><p><a name="bosdyn.api.graph_nav.LostDetectorState"></a></p>
 </div>
 <div class="section" id="lostdetectorstate">
@@ -3574,8 +3509,6 @@ service for feedback the navigation request.</p>
 </div>
 <div class="section" id="navigatetorequest">
 <h2>NavigateToRequest<a class="headerlink" href="#navigatetorequest" title="Permalink to this headline">¶</a></h2>
-<p>A NavigateTo request message specifies the waypoint id to go towards and parameters
-about how to get there.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4031,6 +3964,11 @@ which id’s it had cached or not.</p>
 <td>Common response header.</td>
 </tr>
 <tr>
+<td>status</td>
+<td><a href="#bosdyn.api.graph_nav.UploadGraphResponse.Status">UploadGraphResponse.Status</a></td>
+<td>Status for an upload request.</td>
+</tr>
+<tr>
 <td>lease_use_result</td>
 <td><a href="#bosdyn.api.LeaseUseResult">bosdyn.api.LeaseUseResult</a></td>
 <td>Details about how the lease was used.</td>
@@ -4054,6 +3992,11 @@ which id’s it had cached or not.</p>
 <td>unknown_edge_snapshot_ids</td>
 <td><a href="#string">string</a></td>
 <td>The edge snapshot ids for which there was no cached data.</td>
+</tr>
+<tr>
+<td>license_status</td>
+<td><a href="#bosdyn.api.LicenseInfo.Status">bosdyn.api.LicenseInfo.Status</a></td>
+<td>Large graphs can only be uploaded if the license permits them.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.graph_nav.UploadWaypointSnapshotRequest"></a></p>
@@ -4169,40 +4112,6 @@ been concatenated and deserialized.</p>
 <td>STATUS_SNAPSHOT_DOES_NOT_EXIST</td>
 <td>2</td>
 <td>Error where the given snapshot ID does not exist.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn.api.graph_nav.GetRouteResponse.Status"></a></p>
-</div>
-<div class="section" id="getrouteresponse-status">
-<h2>GetRouteResponse.Status<a class="headerlink" href="#getrouteresponse-status" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Name</th>
-<th>Number</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>STATUS_UNKNOWN</td>
-<td>0</td>
-<td></td>
-</tr>
-<tr>
-<td>STATUS_OK</td>
-<td>1</td>
-<td></td>
-</tr>
-<tr>
-<td>STATUS_UNKNOWN_WAYPOINT</td>
-<td>2</td>
-<td></td>
-</tr>
-<tr>
-<td>STATUS_NO_PATH</td>
-<td>3</td>
-<td></td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.graph_nav.NavigateRouteResponse.Status"></a></p>
@@ -4494,6 +4403,35 @@ been concatenated and deserialized.</p>
 <td>STATUS_FAILED</td>
 <td>5</td>
 <td>Failed to localize for some other reason; see the error_report for details. This is often because the initial guess was incorrect.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.graph_nav.UploadGraphResponse.Status"></a></p>
+</div>
+<div class="section" id="uploadgraphresponse-status">
+<h2>UploadGraphResponse.Status<a class="headerlink" href="#uploadgraphresponse-status" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STATUS_UNKNOWN</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_OK</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_MAP_TOO_LARGE_LICENSE</td>
+<td>3</td>
+<td>Can't upload the graph because it was too large for the license.</td>
 </tr>
 </tbody>
 </table> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn/api/graph_nav/graph_nav_service.proto"></a></p>
@@ -5055,6 +4993,11 @@ Should be indexed by a waypoint’s “snapshot_id” field.</p>
 <td><a href="#bool">bool</a></td>
 <td>If true, the point cloud of this snapshot has been processed.</td>
 </tr>
+<tr>
+<td>version_id</td>
+<td><a href="#string">string</a></td>
+<td>If this snapshot is a modified version of the raw snapshot with the given ID (for example, it has been processed), a new unique ID will we assigned to this field. If the field is empty, this is the raw version of the snapshot.</td>
+</tr>
 </tbody>
 </table> <!-- end messages --><p><a name="bosdyn.api.graph_nav.AnnotationState"></a></p>
 </div>
@@ -5292,6 +5235,11 @@ use to generate a waypoint in the graph at it’s current location.</p>
 <td><a href="#bosdyn.api.Lease">bosdyn.api.Lease</a></td>
 <td>The recording service is protected by a lease. The client must have a lease to the recording service to modify its internal state.</td>
 </tr>
+<tr>
+<td>require_fiducials</td>
+<td><a href="#int32">int32</a></td>
+<td>If filled out, asks that the record service verify that the given fiducial IDs are presently visible before creating a waypoint. This is useful for verifying that the robot is where the user thinks it is in an area with known fiducials.</td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn.api.graph_nav.CreateWaypointResponse"></a></p>
 </div>
@@ -5332,6 +5280,16 @@ edge connecting this waypoint to the graph when the request succeeds.</p>
 <td>lease_use_result</td>
 <td><a href="#bosdyn.api.LeaseUseResult">bosdyn.api.LeaseUseResult</a></td>
 <td>The results/status of the lease provided.</td>
+</tr>
+<tr>
+<td>missing_fiducials</td>
+<td><a href="#int32">int32</a></td>
+<td>If the status is STATUS_MISSING_FIDUCIALS, the following fiducials were not visible to the robot when trying to create the waypoint.</td>
+</tr>
+<tr>
+<td>license_status</td>
+<td><a href="#bosdyn.api.LicenseInfo.Status">bosdyn.api.LicenseInfo.Status</a></td>
+<td>Large graphs can only be uploaded if the license permits them. Recording will stop automatically when the graph gets too large. If CreateWaypointResponse is requested after the graph gets too large, it will fail, and license status will be filled out.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.graph_nav.GetRecordStatusRequest"></a></p>
@@ -5383,6 +5341,11 @@ persistent recording environment is at the time the request was recieved.</p>
 <td>recording_environment</td>
 <td><a href="#bosdyn.api.graph_nav.RecordingEnvironment">RecordingEnvironment</a></td>
 <td>The current persistent recording environment.</td>
+</tr>
+<tr>
+<td>map_state</td>
+<td><a href="#bosdyn.api.graph_nav.GetRecordStatusResponse.MapState">GetRecordStatusResponse.MapState</a></td>
+<td></td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.graph_nav.RecordingEnvironment"></a></p>
@@ -5503,6 +5466,11 @@ specified recording_environment.</p>
 <td><a href="#bosdyn.api.graph_nav.RecordingEnvironment">RecordingEnvironment</a></td>
 <td>This will be merged into a copy of the existing persistent recording environment and used as the environment for the created waypoint and the edge from the previous waypoint to the new one. It will not affect the persistent environment.</td>
 </tr>
+<tr>
+<td>require_fiducials</td>
+<td><a href="#int32">int32</a></td>
+<td>If filled out, asks that the record service verify that the given fiducial IDs are presently visible before starting to record. This is useful for verifying that the robot is where the user thinks it is in an area with known fiducials.</td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn.api.graph_nav.StartRecordingResponse"></a></p>
 </div>
@@ -5538,6 +5506,16 @@ the robot was standing when the request was made, in addition to any status info
 <td>status</td>
 <td><a href="#bosdyn.api.graph_nav.StartRecordingResponse.Status">StartRecordingResponse.Status</a></td>
 <td>Return status for the request.</td>
+</tr>
+<tr>
+<td>missing_fiducials</td>
+<td><a href="#int32">int32</a></td>
+<td>If the status is STATUS_MISSING_FIDUCIALS, these are the fiducials that are not currently visible.</td>
+</tr>
+<tr>
+<td>license_status</td>
+<td><a href="#bosdyn.api.LicenseInfo.Status">bosdyn.api.LicenseInfo.Status</a></td>
+<td>Large graphs can only be uploaded if the license permits them. Recording will stop automatically when the graph gets too large. If StartRecording is requested again after the graph gets too large, it will fail, and license status will be filled out.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.graph_nav.StopRecordingRequest"></a></p>
@@ -5679,6 +5657,45 @@ information if the request fails.</p>
 <td>3</td>
 <td>An internal server error prevented the creation of the waypoint.</td>
 </tr>
+<tr>
+<td>STATUS_MISSING_FIDUCIALS</td>
+<td>4</td>
+<td>Could not see the required fiducials.</td>
+</tr>
+<tr>
+<td>STATUS_MAP_TOO_LARGE_LICENSE</td>
+<td>5</td>
+<td>The map was too big to create a waypoint based on the license.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.graph_nav.GetRecordStatusResponse.MapState"></a></p>
+</div>
+<div class="section" id="getrecordstatusresponse-mapstate">
+<h2>GetRecordStatusResponse.MapState<a class="headerlink" href="#getrecordstatusresponse-mapstate" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MAP_STATE_UNKNOWN</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>MAP_STATE_OK</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>MAP_STATE_TOO_LARGE_FOR_LICENSE</td>
+<td>2</td>
+<td></td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn.api.graph_nav.StartRecordingResponse.Status"></a></p>
 </div>
@@ -5717,6 +5734,16 @@ information if the request fails.</p>
 <td>STATUS_NOT_LOCALIZED_TO_EXISTING_MAP</td>
 <td>4</td>
 <td>When recording branches, the robot is not localized to the existing map before starting to record a new branch.</td>
+</tr>
+<tr>
+<td>STATUS_MISSING_FIDUCIALS</td>
+<td>5</td>
+<td>Can't start recording because the robot doesn't see the required fiducials.</td>
+</tr>
+<tr>
+<td>STATUS_MAP_TOO_LARGE_LICENSE</td>
+<td>6</td>
+<td>Can't start recording because the map was too large for the license.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.graph_nav.StopRecordingResponse.Status"></a></p>
@@ -7095,6 +7122,172 @@ force-acquires a Lease.</p>
 <td><a href="#bosdyn.api.RetainLeaseRequest">RetainLeaseRequest</a></td>
 <td><a href="#bosdyn.api.RetainLeaseResponse">RetainLeaseResponse</a></td>
 <td>Retain possession of a lease.</td>
+</tr>
+</tbody>
+</table> <!-- end services --><p><a name="bosdyn/api/license.proto"></a></p>
+</div>
+</div>
+<div class="section" id="license-proto">
+<h1>license.proto<a class="headerlink" href="#license-proto" title="Permalink to this headline">¶</a></h1>
+<p><a name="bosdyn.api.GetLicenseInfoRequest"></a></p>
+<div class="section" id="getlicenseinforequest">
+<h2>GetLicenseInfoRequest<a class="headerlink" href="#getlicenseinforequest" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.RequestHeader">RequestHeader</a></td>
+<td>Common request header.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.GetLicenseInfoResponse"></a></p>
+</div>
+<div class="section" id="getlicenseinforesponse">
+<h2>GetLicenseInfoResponse<a class="headerlink" href="#getlicenseinforesponse" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.ResponseHeader">ResponseHeader</a></td>
+<td>Common response header</td>
+</tr>
+<tr>
+<td>license</td>
+<td><a href="#bosdyn.api.LicenseInfo">LicenseInfo</a></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.LicenseInfo"></a></p>
+</div>
+<div class="section" id="licenseinfo">
+<h2>LicenseInfo<a class="headerlink" href="#licenseinfo" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>status</td>
+<td><a href="#bosdyn.api.LicenseInfo.Status">LicenseInfo.Status</a></td>
+<td></td>
+</tr>
+<tr>
+<td>id</td>
+<td><a href="#string">string</a></td>
+<td>Unique license number</td>
+</tr>
+<tr>
+<td>robot_serial</td>
+<td><a href="#string">string</a></td>
+<td>Serial number of the robot this license covers</td>
+</tr>
+<tr>
+<td>not_valid_before</td>
+<td><a href="#google.protobuf.Timestamp">google.protobuf.Timestamp</a></td>
+<td></td>
+</tr>
+<tr>
+<td>not_valid_after</td>
+<td><a href="#google.protobuf.Timestamp">google.protobuf.Timestamp</a></td>
+<td></td>
+</tr>
+<tr>
+<td>licensed_features</td>
+<td><a href="#string">string</a></td>
+<td>Human readable list of licensed features</td>
+</tr>
+</tbody>
+</table> <!-- end messages --><p><a name="bosdyn.api.LicenseInfo.Status"></a></p>
+</div>
+<div class="section" id="licenseinfo-status">
+<h2>LicenseInfo.Status<a class="headerlink" href="#licenseinfo-status" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STATUS_UNKNOWN</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_VALID</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_EXPIRED</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_NOT_YET_VALID</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_MALFORMED</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_SERIAL_MISMATCH</td>
+<td>5</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_NO_LICENSE</td>
+<td>6</td>
+<td></td>
+</tr>
+</tbody>
+</table> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn/api/license_service.proto"></a></p>
+</div>
+</div>
+<div class="section" id="license-service-proto">
+<h1>license_service.proto<a class="headerlink" href="#license-service-proto" title="Permalink to this headline">¶</a></h1>
+ <!-- end messages --> <!-- end enums --> <!-- end HasExtensions --><p><a name="bosdyn.api.LicenseService"></a></p>
+<div class="section" id="licenseservice">
+<h2>LicenseService<a class="headerlink" href="#licenseservice" title="Permalink to this headline">¶</a></h2>
+<p>The LicenseService allows clients to query the currently installed license on robot.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Method Name</th>
+<th>Request Type</th>
+<th>Response Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GetLicenseInfo</td>
+<td><a href="#bosdyn.api.GetLicenseInfoRequest">GetLicenseInfoRequest</a></td>
+<td><a href="#bosdyn.api.GetLicenseInfoResponse">GetLicenseInfoResponse</a></td>
+<td></td>
 </tr>
 </tbody>
 </table> <!-- end services --><p><a name="bosdyn/api/local_grid.proto"></a></p>
@@ -11419,6 +11612,11 @@ get feedback on the progress of a power command from the power service.</p>
 <td><a href="#uint32">uint32</a></td>
 <td>Unique identifier for the command, If empty, was not accepted.</td>
 </tr>
+<tr>
+<td>license_status</td>
+<td><a href="#bosdyn.api.LicenseInfo.Status">LicenseInfo.Status</a></td>
+<td>License check status</td>
+</tr>
 </tbody>
 </table> <!-- end messages --><p><a name="bosdyn.api.PowerCommandRequest.Request"></a></p>
 </div>
@@ -11508,6 +11706,11 @@ get feedback on the progress of a power command from the power service.</p>
 <td>STATUS_INTERNAL_ERROR</td>
 <td>8</td>
 <td>ERROR: Internal error occurred, maybe clear-able by issuing a power off command.</td>
+</tr>
+<tr>
+<td>STATUS_LICENSE_ERROR</td>
+<td>9</td>
+<td>ERROR: License check failed. Check license_status field for details.</td>
 </tr>
 </tbody>
 </table> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn/api/power_service.proto"></a></p>
@@ -11916,15 +12119,13 @@ robot command service for feedback on the state of the command.</p>
 <tr>
 <td>STATUS_NOT_POWERED_ON</td>
 <td>7</td>
-<td>[Hardware Error] The robot must be powered on to accept a command.</td>
-</tr>
-<tr>
-<td>STATUS_UNKNOWN_FRAME</td>
-<td>8</td>
-<td>[Frame Error] The frame_name for a command was not a known frame.</td>
+<td>Robot state errors.</td>
 </tr>
 </tbody>
-</table> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn/api/robot_command_service.proto"></a></p>
+</table><p>[Hardware Error] The robot must be powered on to accept a command. |
+| STATUS_BEHAVIOR_FAULT | 9 | The robot must not have behavior faults. |
+| STATUS_UNKNOWN_FRAME | 8 | [Frame Error] The frame_name for a command was not a known frame. |</p>
+ <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn/api/robot_command_service.proto"></a></p>
 </div>
 </div>
 <div class="section" id="robot-command-service-proto">
@@ -15647,254 +15848,6 @@ used by the video stream.</p>
 <td>Identifier of the screen used.</td>
 </tr>
 </tbody>
-</table> <!-- end messages --> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn/api/spot_cam/factoryservice.proto"></a></p>
-</div>
-</div>
-<div class="section" id="spot-cam-factoryservice-proto">
-<h1>spot_cam/factoryservice.proto<a class="headerlink" href="#spot-cam-factoryservice-proto" title="Permalink to this headline">¶</a></h1>
- <!-- end messages --> <!-- end enums --> <!-- end HasExtensions --><p><a name="bosdyn.api.spot_cam.CameraConfigurationService"></a></p>
-<div class="section" id="cameraconfigurationservice">
-<h2>CameraConfigurationService<a class="headerlink" href="#cameraconfigurationservice" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Method Name</th>
-<th>Request Type</th>
-<th>Response Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CameraCalibrate</td>
-<td><a href="#bosdyn.api.spot_cam.CameraCalibrateRequest">CameraCalibrateRequest</a></td>
-<td><a href="#bosdyn.api.spot_cam.CameraCalibrateResponse">CameraCalibrateResponse</a></td>
-<td>Load a camera calibration on.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn.api.spot_cam.FactoryResetService"></a></p>
-</div>
-<div class="section" id="factoryresetservice">
-<h2>FactoryResetService<a class="headerlink" href="#factoryresetservice" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Method Name</th>
-<th>Request Type</th>
-<th>Response Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Reset</td>
-<td><a href="#bosdyn.api.spot_cam.ResetRequest">ResetRequest</a></td>
-<td><a href="#bosdyn.api.spot_cam.ResetResponse">ResetResponse</a></td>
-<td>Clear all configuration data and return the device to a pre-configured factory state.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn.api.spot_cam.PtzConfigurationService"></a></p>
-</div>
-<div class="section" id="ptzconfigurationservice">
-<h2>PtzConfigurationService<a class="headerlink" href="#ptzconfigurationservice" title="Permalink to this headline">¶</a></h2>
-<p>These services contains RPCs meant for factory configuration, and should not
-be called by a normal client</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Method Name</th>
-<th>Request Type</th>
-<th>Response Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PtzOffset</td>
-<td><a href="#bosdyn.api.spot_cam.PtzOffsetRequest">PtzOffsetRequest</a></td>
-<td><a href="#bosdyn.api.spot_cam.PtzOffsetResponse">PtzOffsetResponse</a></td>
-<td>Get the Ptz offset info.</td>
-</tr>
-</tbody>
-</table> <!-- end services --><p><a name="bosdyn/api/spot_cam/factorysetup.proto"></a></p>
-</div>
-</div>
-<div class="section" id="spot-cam-factorysetup-proto">
-<h1>spot_cam/factorysetup.proto<a class="headerlink" href="#spot-cam-factorysetup-proto" title="Permalink to this headline">¶</a></h1>
-<p><a name="bosdyn.api.spot_cam.CalibrationData"></a></p>
-<div class="section" id="calibrationdata">
-<h2>CalibrationData<a class="headerlink" href="#calibrationdata" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>cameras</td>
-<td><a href="#bosdyn.api.spot_cam.Camera">Camera</a></td>
-<td>This is an array of the 5 ring cameras, which must be named 'c0', 'c1', 'c2', 'c3', 'c4'. and each must contain a pinhole intrinsics structure, and a pose.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn.api.spot_cam.CameraCalibrateRequest"></a></p>
-</div>
-<div class="section" id="cameracalibraterequest">
-<h2>CameraCalibrateRequest<a class="headerlink" href="#cameracalibraterequest" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>header</td>
-<td><a href="#bosdyn.api.RequestHeader">bosdyn.api.RequestHeader</a></td>
-<td>Common request header.</td>
-</tr>
-<tr>
-<td>data</td>
-<td><a href="#bosdyn.api.spot_cam.CalibrationData">CalibrationData</a></td>
-<td></td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn.api.spot_cam.CameraCalibrateResponse"></a></p>
-</div>
-<div class="section" id="cameracalibrateresponse">
-<h2>CameraCalibrateResponse<a class="headerlink" href="#cameracalibrateresponse" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>header</td>
-<td><a href="#bosdyn.api.ResponseHeader">bosdyn.api.ResponseHeader</a></td>
-<td>Common response header.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn.api.spot_cam.PtzOffsetRequest"></a></p>
-</div>
-<div class="section" id="ptzoffsetrequest">
-<h2>PtzOffsetRequest<a class="headerlink" href="#ptzoffsetrequest" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>header</td>
-<td><a href="#bosdyn.api.RequestHeader">bosdyn.api.RequestHeader</a></td>
-<td>Common request header.</td>
-</tr>
-<tr>
-<td>value</td>
-<td><a href="#bosdyn.api.spot_cam.PtzOffsetValue">PtzOffsetValue</a></td>
-<td></td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn.api.spot_cam.PtzOffsetResponse"></a></p>
-</div>
-<div class="section" id="ptzoffsetresponse">
-<h2>PtzOffsetResponse<a class="headerlink" href="#ptzoffsetresponse" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>header</td>
-<td><a href="#bosdyn.api.ResponseHeader">bosdyn.api.ResponseHeader</a></td>
-<td>Common response header.</td>
-</tr>
-<tr>
-<td>value</td>
-<td><a href="#bosdyn.api.spot_cam.PtzOffsetValue">PtzOffsetValue</a></td>
-<td></td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn.api.spot_cam.PtzOffsetValue"></a></p>
-</div>
-<div class="section" id="ptzoffsetvalue">
-<h2>PtzOffsetValue<a class="headerlink" href="#ptzoffsetvalue" title="Permalink to this headline">¶</a></h2>
-<p>these objects are for factory setup, and are seperated from the rest of the definition.
-They are integral values that are specific to the VE ptz unit; best not to pollute the
-PTZ message set with them.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>pan</td>
-<td><a href="#int32">int32</a></td>
-<td></td>
-</tr>
-<tr>
-<td>tilt</td>
-<td><a href="#int32">int32</a></td>
-<td></td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn.api.spot_cam.ResetRequest"></a></p>
-</div>
-<div class="section" id="resetrequest">
-<h2>ResetRequest<a class="headerlink" href="#resetrequest" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>header</td>
-<td><a href="#bosdyn.api.RequestHeader">bosdyn.api.RequestHeader</a></td>
-<td>Common request header.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn.api.spot_cam.ResetResponse"></a></p>
-</div>
-<div class="section" id="resetresponse">
-<h2>ResetResponse<a class="headerlink" href="#resetresponse" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>header</td>
-<td><a href="#bosdyn.api.ResponseHeader">bosdyn.api.ResponseHeader</a></td>
-<td>Common response header.</td>
-</tr>
-</tbody>
 </table> <!-- end messages --> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn/api/spot_cam/health.proto"></a></p>
 </div>
 </div>
@@ -17070,111 +17023,6 @@ It is <em>not</em> appended.</p>
 <td>Common response header.</td>
 </tr>
 </tbody>
-</table><p><a name="bosdyn.api.spot_cam.SetNetworkSettingsRequest"></a></p>
-</div>
-<div class="section" id="setnetworksettingsrequest">
-<h2>SetNetworkSettingsRequest<a class="headerlink" href="#setnetworksettingsrequest" title="Permalink to this headline">¶</a></h2>
-<p>Change network settings of the SpotCam.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>header</td>
-<td><a href="#bosdyn.api.RequestHeader">bosdyn.api.RequestHeader</a></td>
-<td>Common request header.</td>
-</tr>
-<tr>
-<td>settings</td>
-<td><a href="#bosdyn.api.spot_cam.NetworkTuple">NetworkTuple</a></td>
-<td>Network configuration to apply.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn.api.spot_cam.SetNetworkSettingsResponse"></a></p>
-</div>
-<div class="section" id="setnetworksettingsresponse">
-<h2>SetNetworkSettingsResponse<a class="headerlink" href="#setnetworksettingsresponse" title="Permalink to this headline">¶</a></h2>
-<p>Result of a SetNetworkSettingsRequest</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>header</td>
-<td><a href="#bosdyn.api.ResponseHeader">bosdyn.api.ResponseHeader</a></td>
-<td>Common response header.</td>
-</tr>
-<tr>
-<td>settings</td>
-<td><a href="#bosdyn.api.spot_cam.NetworkTuple">NetworkTuple</a></td>
-<td>Network settings applied.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn.api.spot_cam.SetSSLKeyPairRequest"></a></p>
-</div>
-<div class="section" id="setsslkeypairrequest">
-<h2>SetSSLKeyPairRequest<a class="headerlink" href="#setsslkeypairrequest" title="Permalink to this headline">¶</a></h2>
-<p>Change the SSL certificate.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>header</td>
-<td><a href="#bosdyn.api.RequestHeader">bosdyn.api.RequestHeader</a></td>
-<td>Common request header.</td>
-</tr>
-<tr>
-<td>certificate</td>
-<td><a href="#string">string</a></td>
-<td>An ASCII-armored representation of the SSL certificate</td>
-</tr>
-<tr>
-<td>key</td>
-<td><a href="#string">string</a></td>
-<td>An ASCII-armored representation of the SSL key (or EC pair, in the case of ECDSA keys)</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn.api.spot_cam.SetSSLKeyPairResponse"></a></p>
-</div>
-<div class="section" id="setsslkeypairresponse">
-<h2>SetSSLKeyPairResponse<a class="headerlink" href="#setsslkeypairresponse" title="Permalink to this headline">¶</a></h2>
-<p>Result of changing the SSL certificate.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>header</td>
-<td><a href="#bosdyn.api.ResponseHeader">bosdyn.api.ResponseHeader</a></td>
-<td>Common response header.</td>
-</tr>
-<tr>
-<td>certificate</td>
-<td><a href="#string">string</a></td>
-<td>An ASCII-armored representation of the SSL certificate</td>
-</tr>
-</tbody>
 </table> <!-- end messages --><p><a name="bosdyn.api.spot_cam.ICEServer.servertype"></a></p>
 </div>
 <div class="section" id="iceserver-servertype">
@@ -17907,6 +17755,12 @@ describe a PTZ, but ListPtzResponse will include more information.</p>
 <td>ListCameras returns a list of strings that identify valid cameras for logging</td>
 </tr>
 <tr>
+<td>RetrieveRawData</td>
+<td><a href="#bosdyn.api.spot_cam.RetrieveRawDataRequest">RetrieveRawDataRequest</a></td>
+<td><a href="#bosdyn.api.spot_cam.RetrieveRawDataResponse">RetrieveRawDataResponse</a> stream</td>
+<td>Retrieve returns all raw data associated with a given logpoint</td>
+</tr>
+<tr>
 <td>Retrieve</td>
 <td><a href="#bosdyn.api.spot_cam.RetrieveRequest">RetrieveRequest</a></td>
 <td><a href="#bosdyn.api.spot_cam.RetrieveResponse">RetrieveResponse</a> stream</td>
@@ -17946,18 +17800,6 @@ describe a PTZ, but ListPtzResponse will include more information.</p>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>GetNetworkSettings</td>
-<td><a href="#bosdyn.api.spot_cam.GetNetworkSettingsRequest">GetNetworkSettingsRequest</a></td>
-<td><a href="#bosdyn.api.spot_cam.GetNetworkSettingsResponse">GetNetworkSettingsResponse</a></td>
-<td></td>
-</tr>
-<tr>
-<td>SetNetworkSettings</td>
-<td><a href="#bosdyn.api.spot_cam.SetNetworkSettingsRequest">SetNetworkSettingsRequest</a></td>
-<td><a href="#bosdyn.api.spot_cam.SetNetworkSettingsResponse">SetNetworkSettingsResponse</a></td>
-<td></td>
-</tr>
 <tr>
 <td>SetICEConfiguration</td>
 <td><a href="#bosdyn.api.spot_cam.SetICEConfigurationRequest">SetICEConfigurationRequest</a></td>
@@ -18460,82 +18302,6 @@ client and server clocks.</p>
 <td>Time of best estimate, in server time.</td>
 </tr>
 </tbody>
-</table><p><a name="bosdyn.api.TimeSyncStatusRequest"></a></p>
-</div>
-<div class="section" id="timesyncstatusrequest">
-<h2>TimeSyncStatusRequest<a class="headerlink" href="#timesyncstatusrequest" title="Permalink to this headline">¶</a></h2>
-<p>A TimeSyncStatus request message which passes the clock_identifier to get the status information
-of the client associated with that identifier.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>header</td>
-<td><a href="#bosdyn.api.RequestHeader">RequestHeader</a></td>
-<td>Common request header.</td>
-</tr>
-<tr>
-<td>clock_identifier</td>
-<td><a href="#string">string</a></td>
-<td>Identifier assigned to specific client. If not set, this service will return time sync info from all clients.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn.api.TimeSyncStatusResponse"></a></p>
-</div>
-<div class="section" id="timesyncstatusresponse">
-<h2>TimeSyncStatusResponse<a class="headerlink" href="#timesyncstatusresponse" title="Permalink to this headline">¶</a></h2>
-<p>A TimeSyncStatus response message that includes the time sync states for the clients using the
-requested clock identifier.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>header</td>
-<td><a href="#bosdyn.api.ResponseHeader">ResponseHeader</a></td>
-<td>Common response header.</td>
-</tr>
-<tr>
-<td>time_sync_status_map</td>
-<td><a href="#bosdyn.api.TimeSyncStatusResponse.TimeSyncStatusMapEntry">TimeSyncStatusResponse.TimeSyncStatusMapEntry</a></td>
-<td>Map from client ids to best time sync estimate. This only returns clients which have established a valid time sync estimate.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn.api.TimeSyncStatusResponse.TimeSyncStatusMapEntry"></a></p>
-</div>
-<div class="section" id="timesyncstatusresponse-timesyncstatusmapentry">
-<h2>TimeSyncStatusResponse.TimeSyncStatusMapEntry<a class="headerlink" href="#timesyncstatusresponse-timesyncstatusmapentry" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>key</td>
-<td><a href="#string">string</a></td>
-<td></td>
-</tr>
-<tr>
-<td>value</td>
-<td><a href="#bosdyn.api.TimeSyncState">TimeSyncState</a></td>
-<td></td>
-</tr>
-</tbody>
 </table><p><a name="bosdyn.api.TimeSyncUpdateRequest"></a></p>
 </div>
 <div class="section" id="timesyncupdaterequest">
@@ -18665,12 +18431,6 @@ establish a per-process offset between two processes which may be on separate sy
 <td><a href="#bosdyn.api.TimeSyncUpdateRequest">TimeSyncUpdateRequest</a></td>
 <td><a href="#bosdyn.api.TimeSyncUpdateResponse">TimeSyncUpdateResponse</a></td>
 <td>See the exchange documentation in time_sync.proto. This call makes one client/server round trip toward clock synchronization.</td>
-</tr>
-<tr>
-<td>TimeSyncStatus</td>
-<td><a href="#bosdyn.api.TimeSyncStatusRequest">TimeSyncStatusRequest</a></td>
-<td><a href="#bosdyn.api.TimeSyncStatusResponse">TimeSyncStatusResponse</a></td>
-<td>Returns the time synchronization status of a specific client, or all clients currently communicating with this server. Used for time sync verification. Some services (e.g. RobotCommandService) require clients to timesync with robot.</td>
 </tr>
 </tbody>
 </table> <!-- end services --><p><a name="bosdyn/api/trajectory.proto"></a></p>

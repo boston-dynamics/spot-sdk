@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Spot Release Notes &mdash; Spot 2.0.0 documentation</title>
+  <title>Spot Release Notes &mdash; Spot 2.0.1 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                2.0.0
+                2.0.1
               </div>
             
           
@@ -122,6 +122,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../python/examples/README.html">Examples</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../python/examples/add_image_coordinates_to_scene/README.html">Add Image Coordinates to Scene</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/examples/directory/README.html">Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/examples/estop/README.html">E-Stop</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
@@ -140,6 +141,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../python/examples/payloads/README.html">Payloads</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/examples/replay_mission/README.html">Replay Mission</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/examples/self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/examples/spot_cam/README.html">Spot CAM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/examples/spot_check/README.html">Spot Check</a></li>
@@ -167,6 +169,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
@@ -254,6 +257,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protos/bosdyn/api/proto_reference.html#license-service-proto">license_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protos/bosdyn/api/proto_reference.html#local-grid-proto">local_grid.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
@@ -286,8 +291,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../protos/bosdyn/api/proto_reference.html#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protos/bosdyn/api/proto_reference.html#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protos/bosdyn/api/proto_reference.html#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protos/bosdyn/api/proto_reference.html#spot-cam-factoryservice-proto">spot_cam/factoryservice.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protos/bosdyn/api/proto_reference.html#spot-cam-factorysetup-proto">spot_cam/factorysetup.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protos/bosdyn/api/proto_reference.html#spot-cam-health-proto">spot_cam/health.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protos/bosdyn/api/proto_reference.html#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protos/bosdyn/api/proto_reference.html#spot-cam-network-proto">spot_cam/network.proto</a></li>
@@ -377,20 +380,115 @@ Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="spot-release-notes">
+--><p class="github-only">
+<b>The Spot SDK documentation is best viewed via our developer site at <a href="https://dev.bostondynamics.com">dev.bostondynamics.com</a>. </b>
+</p><div class="section" id="spot-release-notes">
 <h1>Spot Release Notes<a class="headerlink" href="#spot-release-notes" title="Permalink to this headline">¶</a></h1>
-<p>May 2020</p>
 <div class="section" id="id1">
-<h2>2.0.0<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p><a class="reference external" href="#new-features">New features</a></p></li>
-<li><p><a class="reference external" href="#bug-fixes-and-improvements">Bug fixes</a></p></li>
-<li><p><a class="reference external" href="#breaking-changes">Breaking changes</a></p></li>
-<li><p><a class="reference external" href="#known-issues">Known issues</a></p></li>
-<li><p><a class="reference external" href="#sample-code">Sample code</a></p></li>
-</ul>
+<h2>2.0.1<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="new-features">
 <h3>New Features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="license-changes">
+<h4>License Changes<a class="headerlink" href="#license-changes" title="Permalink to this headline">¶</a></h4>
+<p>App tokens are no longer required to authorize applications. Instead, each robot itself will be licensed itself. From a programming perspective, this means that it is no longer necessary to load app tokens into the sdk object, or to fill them out in GetAuthTokenRequest.</p>
+<p>If a client attempts to call a function for which the robot is not licensed, the robot will respond with an error related to the license issue.  The PowerService and GraphNavService responses now include new error codes for license errors on certain actions.</p>
+<p>There is a new LicenseClient which can be used to query the license information for a robot. License information can also be queried from the bosdyn.client command line utility.</p>
+</div>
+</div>
+<div class="section" id="bug-fixes-and-improvements">
+<h3>Bug Fixes and Improvements<a class="headerlink" href="#bug-fixes-and-improvements" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="behavior-faults">
+<h4>Behavior Faults<a class="headerlink" href="#behavior-faults" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><p>The robot previously accepted new commands when there were behavior faults, but did not execute them and would not provide feedback on them. The robot will now reject them with the new status <code class="docutils literal notranslate"><span class="pre">STATUS_BEHAVIOR_FAULT</span></code>.</p></li>
+<li><p>The python SDK will throw the exception <code class="docutils literal notranslate"><span class="pre">BehaviorFaultError</span></code>. 2.0.0 clients will throw a <code class="docutils literal notranslate"><span class="pre">ResponseError</span></code> in these cases.</p></li>
+</ul>
+</div>
+<div class="section" id="map-recording">
+<h4>Map Recording<a class="headerlink" href="#map-recording" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><p>If the fiducials are not visible, the action will fail with <code class="docutils literal notranslate"><span class="pre">STATUS_MISSING_FIDUCIALS</span></code>. When starting recording or creating a manual waypoint in the GraphNavRecordingService, the client can require certain fiducials to be visible.  If the fiducials are not visible, the action will fail with <code class="docutils literal notranslate"><span class="pre">STATUS_MISSING_FIDUCIALS</span></code>.</p></li>
+<li><p>When recording a map, grated floor mode and ground friction hints that are set in the recording environment are now correctly recorded into the map and used during playback.</p></li>
+</ul>
+</div>
+<div class="section" id="spotcam">
+<h4>SpotCam<a class="headerlink" href="#spotcam" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><p>Added an option to the SpotCam MediaLogService to retrieve the raw (unstitched) images for a log point.</p></li>
+</ul>
+</div>
+<div class="section" id="payload-integration">
+<h4>Payload Integration<a class="headerlink" href="#payload-integration" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><p>When a payload is authorized, it is given full access to the services on the robot, rather than a limited set. For example, a payload could now operate Spot.</p></li>
+</ul>
+</div>
+<div class="section" id="additional-fixes">
+<h4>Additional Fixes<a class="headerlink" href="#additional-fixes" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><p>Removed some obsolete or internal protobuf messages and service RPCs which were not in use in the SDK.</p></li>
+<li><p>Fixed an issue where the SDK would continuously try to request new tokens if it lost connection to the robot at the time when it tried to renew its current user token.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="known-issues">
+<h3>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this headline">¶</a></h3>
+<p>Release 2.0.1 contains the same issues as release 2.0.0, listed below.</p>
+<p><strong>If you delete an object from the world object service</strong>, there is a chance that a ListWorldObjects call immediately afterwards may still include that object.</p>
+<ul class="simple">
+<li><p>Workaround: wait a short time before expecting the object to be gone.</p></li>
+</ul>
+<p><strong>If you register a new service with the robot</strong>, calling robot.ensure_client to create a client for that service may result in a UnregisteredServiceNameError.</p>
+<ul class="simple">
+<li><p>Workaround: call robot.sync_with_directory() before robot.ensure_client()</p></li>
+</ul>
+<p><strong>SE2VelocityLimits require care</strong>.  The proto comment states that “if set, limits the min/max velocity,” implying that one should not set values for any directions one does not want limited. However, if any of the numeric fields are not set in the message, they will be interpreted as 0. For example, if angular is not set but linear is, then the message will be incorrectly interpreted as having an angular limit of 0 and the robot will fail to rotate (obviously not the intent). Similarly, if the user only sets say the ‘x’ field of linear, then ‘y’ will be incorrectly limited to 0 as well.</p>
+<ul class="simple">
+<li><p>Workaround: Correct usage of the SE2VelocityLimit message requires the user to fully fill out all the fields, setting unlimited values to a large number, say 1e6.</p></li>
+</ul>
+<p><strong>LogAnnotationClient does not include async versions</strong> of its rpcs.</p>
+<ul class="simple">
+<li><p>Workaround: If you need to call these in an async manner, call them on a separate thread.</p></li>
+</ul>
+</div>
+<div class="section" id="sample-code">
+<h3>Sample Code<a class="headerlink" href="#sample-code" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="../python/examples/ricoh_theta/README.html"><span class="doc">Ricoh Theta (new)</span></a></p>
+<ul class="simple">
+<li><p>Example that utilizes the 360-degree Ricoh Theta camera during an Autowalk mission.</p></li>
+</ul>
+<p><a class="reference internal" href="../python/examples/cloud_upload/README.html"><span class="doc">Cloud Upload (new)</span></a></p>
+<ul class="simple">
+<li><p>Example that shows how to upload a file to a Google Cloud Platform (GCP) bucket or an Amazon Web Services (AWS) S3 bucket.</p></li>
+</ul>
+<p><a class="reference internal" href="../python/examples/wasd/README.html"><span class="doc">WASD</span></a></p>
+<ul class="simple">
+<li><p>Updated to account for the additional state metrics that are reported.  Older versions of this example may fail when connecting to updated robots.</p></li>
+</ul>
+<p><a class="reference internal" href="../python/examples/spot_cam/README.html"><span class="doc">Spot Cam</span></a></p>
+<ul class="simple">
+<li><p>Added support for viewing the WebRTC stream.</p></li>
+</ul>
+<p><a class="reference internal" href="../python/examples/replay_mission/README.html"><span class="doc">Replay Mission</span></a></p>
+<ul class="simple">
+<li><p>The example script does not localize itself to any map, but assumes the robot is already localized or that the mission has a localization node in it.</p></li>
+<li><p>It verifies that an estop is properly connected before trying to run the mission.</p></li>
+<li><p>It contains an additional –timeout parameter that can be used to set an overall time limit on mission execution.</p></li>
+</ul>
+<p><a class="reference internal" href="../python/examples/mission_recorder/README.html"><span class="doc">Mission Recorder</span></a></p>
+<ul class="simple">
+<li><p>Can add relocalization nodes to a mission.</p></li>
+</ul>
+<p><a class="reference internal" href="../python/examples/fiducial_follow/README.html"><span class="doc">Fiducial Follow</span></a></p>
+<ul class="simple">
+<li><p>Fixed a UI crash on MacOS X.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>2.0.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>New Features<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="autonomous-navigation-apis">
 <h4>Autonomous Navigation APIs<a class="headerlink" href="#autonomous-navigation-apis" title="Permalink to this headline">¶</a></h4>
 <p>The APIs used by Autowalk are now accessible to developers.</p>
@@ -433,8 +531,8 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </div>
 </div>
-<div class="section" id="bug-fixes-and-improvements">
-<h3>Bug Fixes and Improvements<a class="headerlink" href="#bug-fixes-and-improvements" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>Bug Fixes and Improvements<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="expanded-and-improved-documentation">
 <h4>Expanded and improved documentation<a class="headerlink" href="#expanded-and-improved-documentation" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
@@ -578,8 +676,8 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </div>
 </div>
-<div class="section" id="known-issues">
-<h3>Known issues<a class="headerlink" href="#known-issues" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Known issues<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p><strong>If you delete an object from the world object service</strong>, there is a chance that a ListWorldObjects call immediately afterwards may still include that object.</p>
 <ul class="simple">
 <li><p>Workaround: wait a short time before expecting the object to be gone.</p></li>
@@ -597,8 +695,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Workaround: If you need to call these in an async manner, call them on a separate thread.</p></li>
 </ul>
 </div>
-<div class="section" id="sample-code">
-<h3>Sample Code<a class="headerlink" href="#sample-code" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>Sample Code<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="../python/examples/directory/README.html"><span class="doc">directory</span></a></p>
 <ul class="simple">
 <li><p>Register, update, and unregister a service.</p></li>
@@ -680,38 +778,38 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </div>
 </div>
-<div class="section" id="id2">
-<h2>1.1.2<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id3">
-<h3>New features<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h2>1.1.2<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id8">
+<h3>New features<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Missions API Beta and Callbacks</strong> When an Autowalk Mission is created with a “Callback” event, a client can detect that change using a beta version of the Mission API, then tell the robot to continue or abort the Mission. Example uses include a sensor payload that detects Callback events and captures sensor information before advancing the mission, and a desktop UI which waits for the user to push a button before advancing the mission.</p></li>
 <li><p><strong>External Forces Beta</strong>. Mobility commands can specify how to handle external forces. Examples of external forces could include an object that Spot is towing, or an object Spot is pushing. The default behavior is to do nothing, but clients can specify whether Spot should estimate external forces and compensate for it, or explicitly specify what the external forces are.</p></li>
 </ul>
 </div>
-<div class="section" id="id4">
-<h3>Bug fixes and improvements<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id9">
+<h3>Bug fixes and improvements<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Depth image</strong> extrinsics are fixed. In earlier 1.1.x releases, the extrinsics were incorrectly the same as the fisheye cameras.</p></li>
 <li><p><strong>App Token expiration logging.</strong>. The Python SDK object logs if the app token will expire in the next 30 days. New tokens can be requested at support&#64;bostondynamics.com.</p></li>
 </ul>
 </div>
-<div class="section" id="id5">
-<h3>Sample Code<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id10">
+<h3>Sample Code<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><strong>mission_question_answerer</strong> demonstrates how to build a client which responds to Mission Callbacks.</p></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id6">
-<h2>1.1.1<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id11">
+<h2>1.1.1<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
 <p>1.1.1 has no SDK-related changes.</p>
 </div>
-<div class="section" id="id7">
-<h2>1.1.0<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id12">
+<h2>1.1.0<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
 <p>The 1.1.0 SDK software is published under a new software license which can be found in the LICENSE file at the top of the SDK directory.</p>
-<div class="section" id="id8">
-<h3>New features<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id13">
+<h3>New features<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><strong>ImageService</strong> exposes depth maps from on-board stereo cameras as additional image sources. Image Sources specify an ImageType to differentiate depth maps from grayscale images.</p></li>
 <li><p><strong>PayloadService</strong> is a new service which lists all known payloads on the robot.</p></li>
@@ -721,8 +819,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><strong>Log Annotations</strong> a new type of log: Blob for large binary data.</p></li>
 </ul>
 </div>
-<div class="section" id="id9">
-<h3>Sample code<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id14">
+<h3>Sample code<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <p>The sample code directory structure has changed to directory-per-example under python/examples. Each example includes a requirements.txt file for specifying dependencies.</p>
 <ul class="simple">
 <li><p><strong>estop</strong> is a desktop GUI which creates an E-Stop endpoint for a robot. This example demonstrates how to use the E-Stop endpoint system, and is a useful utility on its own.</p></li>
@@ -740,8 +838,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><strong>xbox_controller</strong> demonstrates how to specify more advanced options for mobility commands.</p></li>
 </ul>
 </div>
-<div class="section" id="id10">
-<h3>Bug fixes and Improvements<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id15">
+<h3>Bug fixes and Improvements<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Too many invalid login attempts will lock a user out from being able to authenticate for a temporary period to prevent brute-force attacks. GetAuthTokenResponse indicates this state with a STATUS_TEMPORARILY_LOCKED_OUT.</p></li>
 <li><p>Elliptic Curve (ECDSA) cryptography used for user tokens - reducing the size of RPC requests by several hundred bytes.</p></li>
@@ -766,8 +864,8 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </div>
 </div>
-<div class="section" id="id11">
-<h2>1.0.1<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id16">
+<h2>1.0.1<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Improved documentation on SDK installation.</p></li>
 <li><p>Clearer Python dependency requirements.</p></li>
@@ -776,8 +874,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Fixed timing bugs in power service.</p></li>
 </ul>
 </div>
-<div class="section" id="id12">
-<h2>1.0.0<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id17">
+<h2>1.0.0<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
 <p>Initial release of the SDK.</p>
 </div>
 </div>

@@ -22,8 +22,8 @@ message GetAuthTokenRequest {
     string password = 3;
     // Token to authenticate with. Can be used in place of the password, to re-mint a token.
     string token = 4;
-    // Application Token accompanying authentication. This must be present.
-    string application_token = 5;
+    // Deprecated as of 2.0.1. Application Token for authenticating with robots on older releases.
+    string application_token = 5 [deprecated=true];
 }
 
 // The GetAuthToken response message includes an authentication token if the login information

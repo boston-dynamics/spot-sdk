@@ -36,6 +36,7 @@ setuptools.setup(
     install_requires=[
         'bosdyn-client=={}'.format(SDK_VERSION),
         'bosdyn-api=={}'.format(SDK_VERSION),
+        'future;python_version<"3.3"',
         'six',
         'enum34;python_version<"3.4"',
     ],

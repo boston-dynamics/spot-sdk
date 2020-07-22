@@ -254,7 +254,7 @@ def build_and_run_app(hostname, estop_client, options):
 def main(argv):
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
-    parser.add_argument('-t', '--timeout', default=5, help='Timeout in seconds')
+    parser.add_argument('-t', '--timeout', default=5, type=float, help='Timeout in seconds')
     parser.add_argument('--no-on-top', help='Allow window to be hidden.', dest='on_top',
                         action='store_false', default=True)
     parser.add_argument('--start-minimized', help='Start the window minimized.',

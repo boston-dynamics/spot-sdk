@@ -114,6 +114,9 @@ message WaypointSnapshot {
 
     // If true, the point cloud of this snapshot has been processed.
     bool is_point_cloud_processed = 8;
+    // If this snapshot is a modified version of the raw snapshot with the given ID (for example, it has been processed),
+    // a new unique ID will we assigned to this field. If the field is empty, this is the raw version of the snapshot.
+    string version_id = 9;
 }
 
 // A base element of the graph nav map. Edges consist of a directed edge from one

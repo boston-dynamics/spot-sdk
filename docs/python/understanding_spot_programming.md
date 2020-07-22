@@ -16,7 +16,6 @@ This guide will help you understand the programming principles that drive `Spot`
       * [Listing Services](#listing-services)
   * [Understanding How to Setup and Command Spot to Move](#how-to-setup-and-command-spot-to-move)
       * [Create the SDK object](#create-the-sdk-object)
-      * [Load your app_token](#load-your-app-token)
       * [Create a Robot object](#create-a-robot-object)
       * [Retrieve the Robot ID](#retrieve-the-robot-id)
       * [Blocking vs. Asynchronous Spot Python SDK functions](#blocking-vs-asynchronous-spot-python-sdk-functions)
@@ -44,12 +43,11 @@ Specify the verbose flag with `--verbose` , and you'll get a lot of information!
 ```
 $ python -m bosdyn.client --verbose 192.168.80.3 id
 2020-03-26 17:30:27,571 - DEBUG - Creating standard Sdk, cert glob: "None"
-2020-03-26 17:30:27,608 - DEBUG - Application token expires on 2020/05/20
 2020-03-26 17:30:27,610 - DEBUG - Created client for robot-id
 2020-03-26 17:30:27,615 - DEBUG - Created channel to 192.168.80.3 at port 443 with authority id.spot.robot
 ...
 ```
-The first output line creates a Spot `SDK object`.  All Spot API programs start this way. 
+The first output line creates a Spot `SDK object`.  All Spot API programs start this way.
 
 Note that the output text itself demonstrates Spot's use of Python's [logging facility](https://docs.python.org/3/library/logging.html), we recommend you perform your logging with the same.
 
@@ -68,7 +66,7 @@ header {
 }
 ```
 
-In the above output, a blocking `GetRobotId` RPC can be seen being made to the `bosdyn.api.RobotIdService`. 
+In the above output, a blocking `GetRobotId` RPC can be seen being made to the `bosdyn.api.RobotIdService`.
 
 Finally, the RobotIdService responds to the GetRobotId RPC with a response including information about the robot.
 
@@ -125,15 +123,15 @@ The following command lists all of the services available on the robot.  Note th
 
 ```
 $ python -m bosdyn.client --user user --password password 192.168.80.3 dir list
-name                                  type                                               authority                             tokens
+name                             type                                              authority                                   tokens
 ------------------------------------------------------------------------------------------------------------------------------------
-arm-control                           bosdyn.api.internal.ArmControlService              arm-control.spot.robot                user
-arm-demo                              bosdyn.api.ArmDemoService                          arm-demo.spot.robot                   user
-auth                                  bosdyn.api.AuthService                             auth.spot.robot                
-deprecated-auth                       bdRobotApi.AuthService                             auth.spot.robot                
-directory                             bosdyn.api.DirectoryService                        api.spot.robot                        user
-...
-robot-id                              bosdyn.api.RobotIdService                          id.spot.robot                  
+auth                             bosdyn.api.AuthService                            auth.spot.robot
+directory                        bosdyn.api.DirectoryService                       api.spot.robot                              user
+directory-registration           bosdyn.api.DirectoryRegistrationService           api.spot.robot                              user
+estop                            bosdyn.api.EstopService                           estop.spot.robot                            user
+graph-nav-service                bosdyn.api.graph_nav.GraphNavService              graph-nav.spot.robot                        user
+image                            bosdyn.api.ImageService                           api.spot.robot                              user
+lease                            bosdyn.api.LeaseService                           api.spot.robot                              user
 ...
 ```
 
@@ -160,14 +158,6 @@ All Boston Dynamics API programs start by creating an SDK object with a client n
 
 ```python
 >>> sdk = bosdyn.client.create_standard_sdk('understanding-spot')
-```
-### Load your app token
-
-You'll need to let the SDK know about the Application Token to use it.
-
-```python
->>> import os
->>> sdk.load_app_token('~/.bosdyn/dev.app_token')
 ```
 
 ### Create a robot object
@@ -210,7 +200,7 @@ grpc._channel._InactiveRpcError: <_InactiveRpcError of RPC that terminated with:
 >
 ```
 
-In addition to blocking calls, clients support non-blocking `asynchronous` calls. This can be useful in high performance applications where a thread of execution can not stall waiting for an RPC to complete. Python's [futures](https://docs.python.org/3/library/concurrent.futures.html#future-objects) architecture is used as the underpinning of asynchronous communication.  See the [get_robot_state_async programming example](../../python/examples/get_robot_state_async/README.md) for how to use these functions. 
+In addition to blocking calls, clients support non-blocking `asynchronous` calls. This can be useful in high performance applications where a thread of execution can not stall waiting for an RPC to complete. Python's [futures](https://docs.python.org/3/library/concurrent.futures.html#future-objects) architecture is used as the underpinning of asynchronous communication.  See the [get_robot_state_async programming example](../../python/examples/get_robot_state_async/README.md) for how to use these functions.
 
 Let's make an asynchronous call for the robot id and wait for the result from the returned future object:
 
@@ -252,7 +242,7 @@ power_state {
 ```
 
 #### Robot State was a message, messages are defined by protobufs
-The structure of the robot state message retrieved above is defined by its `protobuf definition`.  This is the language the robot speaks.  Spot SDK completely exposes the protobuf, so to really understand Spot programming you want to look at and understand the protobufs. Take a look, they are right here in your distribution!   [../../protos/bosdyn/api/robot_state.proto](../../protos/bosdyn/api/robot_state.proto) 
+The structure of the robot state message retrieved above is defined by its `protobuf definition`.  This is the language the robot speaks.  Spot SDK completely exposes the protobuf, so to really understand Spot programming you want to look at and understand the protobufs. Take a look, they are right here in your distribution!   [../../protos/bosdyn/api/robot_state.proto](../../protos/bosdyn/api/robot_state.proto)
 
 ### Capture and View Camera Images
 
@@ -359,7 +349,7 @@ endpoints {
 stop_level: ESTOP_LEVEL_NONE
 ```
 
-The stop_level is now `ESTOP_LEVEL_NONE`, indicating that power can start up. 
+The stop_level is now `ESTOP_LEVEL_NONE`, indicating that power can start up.
 
 Note that in many implementations, you should specify the `keep_running_cb` argument to EstopKeepAlive, a function called by the background thread to see if check-ins should continue. For example, an interactive UI should give the E-Stop system a keep_running_cb function which blocks until the UI thread has run a cycle. This prevents a frozen client from continuing to allow power to the robot.
 
@@ -389,7 +379,7 @@ lease_owner {
 
 Leasable resources are listed: currently the only resource supported is "body", which covers all of the motors on Spot.  Note that the `lease_owner` field is empty since no one has acquired the body lease.
 
-Let's acquire a lease and again list: 
+Let's acquire a lease and again list:
 
 ```python
 >>> lease_keep_alive = bosdyn.client.lease.LeaseKeepAlive(lease_client)
@@ -446,11 +436,11 @@ The API provides a helper function to stand Spot. This command wraps several Rob
 >>> blocking_stand(command_client, timeout_sec=10)
 ```
 
-The robot should now be standing. In addition, the stand command can be modified to control the height of the body as well as the orientation of the body with respect to the `footprint frame`. The footprint frame is a gravity aligned frame with its origin located at the geometric center of the feet. The Z axis up, and the X axis is forward. 
+The robot should now be standing. In addition, the stand command can be modified to control the height of the body as well as the orientation of the body with respect to the `footprint frame`. The footprint frame is a gravity aligned frame with its origin located at the geometric center of the feet. The Z axis up, and the X axis is forward.
 
 The `commands proto` can be quite expressive, and therefore, if going beyond default parameters, non-trivial.  To increase simplicity, Spot API provides several helper functions that combine Spot API RPC commands into single line functions.
 
-We encourage you to experiment with these various parameters, referencing the [robot_command proto](../../protos/bosdyn/api/robot_command.proto) parent class for general Boston Dynamics robots and the [robot command proto](../../protos/bosdyn/api/spot/robot_command.proto) Spot subclass. 
+We encourage you to experiment with these various parameters, referencing the [robot_command proto](../../protos/bosdyn/api/robot_command.proto) parent class for general Boston Dynamics robots and the [robot command proto](../../protos/bosdyn/api/spot/robot_command.proto) Spot subclass.
 
 ```python
 # Command Spot to rotate about the Z axis.

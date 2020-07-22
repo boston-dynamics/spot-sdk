@@ -41,12 +41,12 @@ def main(argv):
     # Convert to opencv images.
 
     # Depth is a raw bytestream
-    cv_depth = np.fromstring(image_responses[0].shot.image.data, dtype=np.uint16)
+    cv_depth = np.frombuffer(image_responses[0].shot.image.data, dtype=np.uint16)
     cv_depth = cv_depth.reshape(image_responses[0].shot.image.rows,
                                 image_responses[0].shot.image.cols)
 
     # Visual is a JPEG
-    cv_visual = cv2.imdecode(np.fromstring(image_responses[1].shot.image.data, dtype=np.uint8), -1)
+    cv_visual = cv2.imdecode(np.frombuffer(image_responses[1].shot.image.data, dtype=np.uint8), -1)
 
     # Convert the visual image from a single channel to RGB so we can add color
     visual_rgb = cv2.cvtColor(cv_visual, cv2.COLOR_GRAY2RGB)

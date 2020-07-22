@@ -6,16 +6,91 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
+<p class="github-only">
+<b>The Spot SDK documentation is best viewed via our developer site at <a href="https://dev.bostondynamics.com">dev.bostondynamics.com</a>. </b>
+</p>
+
 # Spot Release Notes
 
-May 2020
-## 2.0.0
 
-*  [New features](#new-features)
-*  [Bug fixes](#bug-fixes-and-improvements)
-*  [Breaking changes](#breaking-changes)
-*  [Known issues](#known-issues)
-*  [Sample code](#sample-code)
+## 2.0.1
+
+### New Features
+
+#### License Changes
+
+App tokens are no longer required to authorize applications. Instead, each robot itself will be licensed itself. From a programming perspective, this means that it is no longer necessary to load app tokens into the sdk object, or to fill them out in GetAuthTokenRequest.
+
+If a client attempts to call a function for which the robot is not licensed, the robot will respond with an error related to the license issue.  The PowerService and GraphNavService responses now include new error codes for license errors on certain actions.
+
+There is a new LicenseClient which can be used to query the license information for a robot. License information can also be queried from the bosdyn.client command line utility.
+
+### Bug Fixes and Improvements
+
+#### Behavior Faults
+  * The robot previously accepted new commands when there were behavior faults, but did not execute them and would not provide feedback on them. The robot will now reject them with the new status `STATUS_BEHAVIOR_FAULT`.
+  * The python SDK will throw the exception `BehaviorFaultError`. 2.0.0 clients will throw a `ResponseError` in these cases.
+
+#### Map Recording
+  * If the fiducials are not visible, the action will fail with `STATUS_MISSING_FIDUCIALS`. When starting recording or creating a manual waypoint in the GraphNavRecordingService, the client can require certain fiducials to be visible.  If the fiducials are not visible, the action will fail with `STATUS_MISSING_FIDUCIALS`.
+  * When recording a map, grated floor mode and ground friction hints that are set in the recording environment are now correctly recorded into the map and used during playback.
+
+#### SpotCam
+  * Added an option to the SpotCam MediaLogService to retrieve the raw (unstitched) images for a log point.
+
+#### Payload Integration
+  * When a payload is authorized, it is given full access to the services on the robot, rather than a limited set. For example, a payload could now operate Spot.
+
+#### Additional Fixes
+  * Removed some obsolete or internal protobuf messages and service RPCs which were not in use in the SDK.
+  * Fixed an issue where the SDK would continuously try to request new tokens if it lost connection to the robot at the time when it tried to renew its current user token.
+
+### Known Issues
+Release 2.0.1 contains the same issues as release 2.0.0, listed below.
+
+**If you delete an object from the world object service**, there is a chance that a ListWorldObjects call immediately afterwards may still include that object.
+
+  * Workaround: wait a short time before expecting the object to be gone.
+
+**If you register a new service with the robot**, calling robot.ensure_client to create a client for that service may result in a UnregisteredServiceNameError.
+
+  * Workaround: call robot.sync_with_directory() before robot.ensure_client()
+
+**SE2VelocityLimits require care**.  The proto comment states that "if set, limits the min/max velocity," implying that one should not set values for any directions one does not want limited. However, if any of the numeric fields are not set in the message, they will be interpreted as 0. For example, if angular is not set but linear is, then the message will be incorrectly interpreted as having an angular limit of 0 and the robot will fail to rotate (obviously not the intent). Similarly, if the user only sets say the 'x' field of linear, then 'y' will be incorrectly limited to 0 as well.
+
+  * Workaround: Correct usage of the SE2VelocityLimit message requires the user to fully fill out all the fields, setting unlimited values to a large number, say 1e6.
+
+**LogAnnotationClient does not include async versions** of its rpcs.
+
+  * Workaround: If you need to call these in an async manner, call them on a separate thread.
+
+### Sample Code
+
+[**Ricoh Theta (new)**](../python/examples/ricoh_theta/README.md)
+  * Example that utilizes the 360-degree Ricoh Theta camera during an Autowalk mission.
+
+[**Cloud Upload (new)**](../python/examples/cloud_upload/README.md)
+  * Example that shows how to upload a file to a Google Cloud Platform (GCP) bucket or an Amazon Web Services (AWS) S3 bucket.
+
+[**WASD**](../python/examples/wasd/README.md)
+  * Updated to account for the additional state metrics that are reported.  Older versions of this example may fail when connecting to updated robots.
+
+[**Spot Cam**](../python/examples/spot_cam/README.md)
+  * Added support for viewing the WebRTC stream.
+
+[**Replay Mission**](../python/examples/replay_mission/README.md)
+  * The example script does not localize itself to any map, but assumes the robot is already localized or that the mission has a localization node in it.
+  * It verifies that an estop is properly connected before trying to run the mission.
+  * It contains an additional --timeout parameter that can be used to set an overall time limit on mission execution.
+
+[**Mission Recorder**](../python/examples/mission_recorder/README.md)
+  * Can add relocalization nodes to a mission.
+
+[**Fiducial Follow**](../python/examples/fiducial_follow/README.md)
+  * Fixed a UI crash on MacOS X.
+
+
+## 2.0.0
 
 ### New Features
 

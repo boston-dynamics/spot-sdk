@@ -96,17 +96,6 @@ class CursesHandler(logging.Handler):
         self._wasd_interface.add_message('{:s} {:s}'.format(record.levelname, msg))
 
 
-class AsyncMetrics(AsyncPeriodicQuery):
-    """Grab robot metrics every few seconds."""
-
-    def __init__(self, robot_state_client):
-        super(AsyncMetrics, self).__init__("robot_metrics", robot_state_client, LOGGER,
-                                           period_sec=5.0)
-
-    def _start_query(self):
-        return self._client.get_robot_metrics_async()
-
-
 class AsyncRobotState(AsyncPeriodicQuery):
     """Grab robot state."""
 
@@ -158,9 +147,8 @@ class RecorderInterface(object):
         # Setup the graph nav service client.
         self._graph_nav_client = robot.ensure_client(GraphNavClient.default_service_name)
 
-        self._robot_metrics_task = AsyncMetrics(self._robot_state_client)
         self._robot_state_task = AsyncRobotState(self._robot_state_client)
-        self._async_tasks = AsyncTasks([self._robot_metrics_task, self._robot_state_task])
+        self._async_tasks = AsyncTasks([self._robot_state_task])
         self._lock = threading.Lock()
         self._command_dictionary = {
             ord('\t'): self._quit_program,
@@ -177,6 +165,7 @@ class RecorderInterface(object):
             ord('q'): self._turn_left,
             ord('e'): self._turn_right,
             ord('m'): self._start_recording,
+            ord('l'): self._relocalize,
             ord('g'): self._generate_mission,
         }
         self._locked_messages = ['', '', '']  # string: displayed message for user
@@ -196,12 +185,15 @@ class RecorderInterface(object):
             self._estop_endpoint.force_simple_setup(
             )  # Set this endpoint as the robot's sole estop.
 
+        # Clear existing graph nav map
+        self._graph_nav_client.clear_graph()
+
     def shutdown(self):
         """Release control of robot as gracefully as posssible."""
-        LOGGER.info("Shutting down RecorderInterface.")
+        LOGGER.info("Shutting down WasdInterface.")
         if self._estop_keepalive:
-            _grpc_or_log("stopping estop", self._estop_keepalive.stop)
-            self._estop_keepalive = None
+            # This stops the check-in thread but does not stop the robot.
+            self._estop_keepalive.shutdown()
         if self._lease:
             _grpc_or_log("returning lease", lambda: self._lease_client.return_lease(self._lease))
             self._lease = None
@@ -231,11 +223,6 @@ class RecorderInterface(object):
     def robot_state(self):
         """Get latest robot state proto."""
         return self._robot_state_task.proto
-
-    @property
-    def robot_metrics(self):
-        """Get latest robot metrics proto."""
-        return self._robot_metrics_task.proto
 
     def drive(self, stdscr):
         """User interface to control the robot via the passed-in curses screen interface object."""
@@ -295,14 +282,14 @@ class RecorderInterface(object):
         stdscr.addstr(7, 0, self._fiducial_str())
         for i in range(3):
             stdscr.addstr(9 + i, 2, self.message(i))
-        self._show_metrics(stdscr)
         stdscr.addstr(13, 0, "Commands: [TAB]: quit                               ")
         stdscr.addstr(14, 0, "          [T]: Time-sync, [SPACE]: Estop, [P]: Power")
         stdscr.addstr(15, 0, "          [v]: Sit, [f]: Stand, [r]: Self-right     ")
         stdscr.addstr(16, 0, "          [wasd]: Directional strafing              ")
         stdscr.addstr(17, 0, "          [qe]: Turning                             ")
         stdscr.addstr(18, 0, "          [m]: Start recording mission              ")
-        stdscr.addstr(19, 0, "          [g]: Stop recording and generate mission  ")
+        stdscr.addstr(19, 0, "          [l]: Add fiducial localization to mission ")
+        stdscr.addstr(20, 0, "          [g]: Stop recording and generate mission  ")
 
         stdscr.refresh()
 
@@ -324,7 +311,7 @@ class RecorderInterface(object):
             return None
 
     def _quit_program(self):
-        self._sit()
+        self._robot.power_off()
         self.shutdown()
         if self._exit_check is not None:
             self._exit_check.request_exit()
@@ -409,13 +396,6 @@ class RecorderInterface(object):
 
     def _safe_power_off(self):
         self._start_robot_command('safe_power_off', RobotCommandBuilder.safe_power_off_command())
-
-    def _show_metrics(self, stdscr):
-        metrics = self.robot_metrics
-        if not metrics:
-            return
-        for idx, metric in enumerate(metrics.metrics):
-            stdscr.addstr(2 + idx, 50, format_metric(metric))
 
     def _power_state(self):
         state = self.robot_state
@@ -550,6 +530,16 @@ class RecorderInterface(object):
             self.add_message("ERROR: Move to final waypoint before stopping recording.")
             return False
 
+    def _relocalize(self):
+        """Insert localization node into mission."""
+        if not self._recording:
+            print('Not recording mission.')
+            return False
+
+        self.add_message("Adding fiducial localization to mission.")
+        self._waypoint_path += ['LOCALIZE']
+        return True
+
     def _generate_mission(self):
         """Save graph map and mission file."""
 
@@ -636,7 +626,10 @@ class RecorderInterface(object):
         sequence.children.add().CopyFrom(self._make_localize_node())
 
         for waypoint_id in self._waypoint_path:
-            sequence.children.add().CopyFrom(self._make_goto_node(waypoint_id))
+            if waypoint_id == 'LOCALIZE':
+                sequence.children.add().CopyFrom(self._make_localize_node())
+            else:
+                sequence.children.add().CopyFrom(self._make_goto_node(waypoint_id))
 
         # Return a Node with the Sequence.
         ret = nodes_pb2.Node()
@@ -709,7 +702,7 @@ def main():
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
     parser.add_argument('directory', help='Output directory for graph map and mission file.')
-    
+
     options = parser.parse_args()
 
     stream_handler = setup_logging(options.verbose)

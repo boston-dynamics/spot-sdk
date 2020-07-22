@@ -39,9 +39,12 @@ class TokenManager:
         self._exit_thread = threading.Event()
         self._exit_thread.clear()
 
-        th = threading.Thread(name='token_manager', target=self.update)
-        th.daemon = True
-        th.start()
+        self.th = threading.Thread(name='token_manager', target=self.update)
+        self.th.daemon = True
+        self.th.start()
+
+    def is_alive(self):
+        return self.th.is_alive()
 
     def stop(self):
         self._exit_thread.set()
@@ -50,21 +53,31 @@ class TokenManager:
         """Refresh the user token as needed."""
         USER_TOKEN_MAX_DURATION_TIME_DELTA = datetime.timedelta(hours=11)
         USER_TOKEN_REFRESH_TIME_DELTA = datetime.timedelta(hours=1)
+        USER_TOKEN_RETRY_INTERVAL_START = datetime.timedelta(seconds=1)
 
+        retry_interval = USER_TOKEN_RETRY_INTERVAL_START
         while not self._exit_thread.is_set():
             elapsed_time = datetime.datetime.now() - self._last_timestamp
             if elapsed_time >= USER_TOKEN_REFRESH_TIME_DELTA:
                 try:
                     self.robot.authenticate_with_token(self.robot.user_token)
-                except (ResponseError, RpcError, InvalidTokenError, WriteFailedError) as e:
-                    _LOGGER.exception(e)
+                except WriteFailedError:
+                    _LOGGER.exception("Failed to save the token to the cache.  Continuing without caching.")
+                except (InvalidTokenError, ResponseError, RpcError):
+                    _LOGGER.exception("Error refreshing the token.  Retry in %s", retry_interval)
 
                     # Nothing to do except retry unless we're at expiration time.
                     last_refresh = datetime.datetime.now() - self._last_timestamp
                     if last_refresh > USER_TOKEN_MAX_DURATION_TIME_DELTA:
                         self.stop()
+                        break
 
+                    # Exponential back-off on retrying
+                    self._exit_thread.wait(retry_interval.seconds)
+                    retry_interval = min(2 * retry_interval, USER_TOKEN_REFRESH_TIME_DELTA)
                     continue
+
+                retry_interval = USER_TOKEN_RETRY_INTERVAL_START
 
                 # Wait until the specified time or get interrupted by user.
                 self._last_timestamp = datetime.datetime.now()

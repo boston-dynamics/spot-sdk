@@ -75,7 +75,7 @@ class MySpot(object):
         image_response = image_client.get_image_from_sources(['frontleft_fisheye_image'])
         # Convert the image data to an openCV image
         img_stream = io.BytesIO(image_response[0].shot.image.data)
-        img = cv2.imdecode(numpy.fromstring(img_stream.read(), numpy.uint8), 1)
+        img = cv2.imdecode(numpy.frombuffer(img_stream.read(), numpy.uint8), 1)
 
         # Rotate the image so it alight better with the real world
         angle = 90

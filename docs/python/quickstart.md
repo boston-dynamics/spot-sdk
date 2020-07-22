@@ -19,14 +19,13 @@ This guide will help you set up your programming environment to successfully com
      * [Pip Installation](#pip-installation)
      * [Manage Multiple Python Environments with virtualenv](#manage-multiple-python-environments)
   * [Install Spot SDK](#install-spot-sdk)
-     * [Install Spot Python Wheels from PyPI](#install-spot-python-wheels-from-pypi)>
-     * [Install Spot SDK from Git Repository](#install-spot-sdk-from-git-repository)
-        * [Get Spot SDK](#get-spot-sdk)
-        * [Install Python Wheels from Spot SDK](#install-python-wheels-from-spot-sdk)
+     * [Install Spot Packages from PyPI (recommended)](#install-spot-packages-from-pypi-recommended)
+     * [Install Spot Packages from Git Repository](#install-spot-packages-from-git-repository-alternate)
+        * [Download Git Repository](#download-git-repository)
+        * [Install Prebuilt Packages from Git Repository](#install-prebuilt-packages-from-git-repository)
      * [Verify your Spot SDK installation](#verify-your-spot-sdk-installation)
   * [Verify you can talk to Spot using the SDK](#verify-you-can-talk-to-spot-using-the-sdk)
      * [Get a Spot Robot](#get-a-spot-robot)
-     * [Get and Install an Application Token](#get-and-install-an-application-token)
      * [Get a user account on the robot](#get-a-user-account-on-the-robot)
      * [Ping Spot](#ping-spot)
      * [Request Spot's ID from Spot](#request-a-spot-robot-s-id)
@@ -61,7 +60,7 @@ $ python --version
 Python 3.6.8
 ```
 
-**Windows users:** There are two common methods for starting the Python interpreter on the command 
+**Windows users:** There are two common methods for starting the Python interpreter on the command
 line. First, launch a terminal: Start > Command Prompt. At the command prompt, enter either:
 
     python.exe
@@ -72,8 +71,8 @@ or
 
 The former will directly call the `python.exe` that is highest priority in the PATH environment variable. (Note you could also supply a full pathname `c:\path\to\install\python.exe` to directly call the executable).
 
-The latter uses the Python launcher, which by default starts the most recent version of Python 
-installed.  You can also optionally pass arguments to the launcher to control what version of 
+The latter uses the Python launcher, which by default starts the most recent version of Python
+installed.  You can also optionally pass arguments to the launcher to control what version of
 python to launch:
 
 `py.exe -2` (launches Python 2)
@@ -144,7 +143,7 @@ $ python -m virtualenv -p /usr/bin/python3 my_spot_v2_0_env
 ```
 
 
-**Windows users:** 
+**Windows users:**
 
 ```
 > py.exe -m pip install virtualenv
@@ -160,41 +159,41 @@ Install packages including Spot SDK, code, edit, execute, etc.
 
 ## Install Spot SDK
 
-The Spot SDK is open source and available in multiple ways. The three main components of the SDK are:
-* Python wheels
-* Documentation
-* Example applications
+The recommended installation method is to install the SDK packages [from PyPI using pip](#install-spot-packages-from-pypi-recommended). The same SDK packages are available from the [git repository](https://github.com/boston-dynamics/spot-sdk), and can be installed from there.
 
-The Spot SDK [Git repository](https://github.com/boston-dynamics/spot-sdk) contains everything listed above. The Python wheels are also available through PyPI, and the full documentation is also available at [https://dev.bostondynamics.com](https://dev.bostondynamics.com). For the same version, the wheels are identical between those two options. For example, SDK version 2.0.0 contains the same wheels as the ones with version 2.0.0 installed from PyPI. The documentation hosted at [https://dev.bostondynamics.com](https://dev.bostondynamics.com) is identical to the documentation in an SDK, accessed through the `docs/html/README.html` file. We recommend installing the Python wheels from PyPI, as described in the setion below [Install Spot Python Wheels from PyPI](#install-spot-python-wheels-from-pypi), and accessing the documentation through [https://dev.bostondynamics.com](https://dev.bostondynamics.com). For installations from the cloned Spot SDK repository and to get the Python example applications, please follow the instructions in the section [Install Spot SDK from Git Repository](#install-spot-sdk-from-git-repository).
+The full documentation is also available at [https://dev.bostondynamics.com](https://dev.bostondynamics.com).
 
-### Install Spot Python Wheels from PyPI
+Example applications and sample code can be found in the git repository. Follow the [instructions below](#download-git-repository) to download from GitHub.
 
-With `python` and `pip` properly installed and configured, the Python wheels are easily installed 
-from PyPI with the following command.
+### Install Spot Packages from PyPI (recommended)
+
+With `python` and `pip` properly installed and configured, the Python packages are easily installed
+or upgraded from PyPI with the following command.
 
 ```
-$ python -m pip install bosdyn-client bosdyn-mission
+$ python -m pip install --upgrade bosdyn-client bosdyn-mission
 ```
 
-Installing the `bosdyn-client` and `bosdyn-mission` wheels will also install `bosdyn-api` and 
-`bosdyn-core` wheels with the same version. The command above installs the latest version of the 
-wheels. To install a different version of the wheels from PyPI, for example 2.0.0, use the 
+Installing the `bosdyn-client` and `bosdyn-mission` packages will also install `bosdyn-api` and
+`bosdyn-core` packages with the same version. The command above installs the latest version of the
+packages. To install a different version of the packages from PyPI, for example 2.0.1, use the
 following command.
 
 ```
-$ python -m pip install bosdyn-client==2.0.0 bosdyn-mission==2.0.0
+$ python -m pip install bosdyn-client==2.0.1 bosdyn-mission==2.0.1
 ```
 
-### Install Spot SDK from Git Repository
+
+### Install Spot Packages from Git Repository (alternate)
 This section descibes how to get and install the complete Spot SDK from the Git repository.
 
-#### Get Spot SDK
+#### Download Git Repository
 
 The Spot Python SDK is available at https://github.com/boston-dynamics/spot-sdk.
 
 Users can either:
 
-  * git clone https://github.com/boston-dynamics/spot-sdk.git (recommended)
+  * `git clone https://github.com/boston-dynamics/spot-sdk.git` (recommended)
   * Download a zipfile distribution:
     * Select green box "Clone or download" from the webpage.
     * Select "Download ZIP".
@@ -202,7 +201,9 @@ Users can either:
     * Rename the top-level directory `spot-sdk-master` to `spot-sdk`.
 
 
-#### Install Python Wheels from Spot SDK
+#### Install Prebuilt Packages from Git Repository
+
+This step is not needed if you have already installed the packages from PyPI.
 
 Now that your python and pip are properly configured and you have Spot SDK downloaded or cloned, it is time to install the Spot SDK Python Packages.
 
@@ -219,10 +220,10 @@ Instead of `*.whl`, please list all `.whl` files in the directory explicitly in 
 
 ```shell
 $ cd ~/spot-sdk/prebuilt
-$ python -m pip install bosdyn_api-2.0.0-py2.py3-none-any.whl
-$ python -m pip install bosdyn_core-2.0.0-py2.py3-none-any.whl
-$ python -m pip install bosdyn_client-2.0.0-py2.py3-none-any.whl
-$ python -m pip install bosdyn_mission-2.0.0-py2.py3-none-any.whl
+$ python -m pip install bosdyn_api-2.0.1-py2.py3-none-any.whl
+$ python -m pip install bosdyn_core-2.0.1-py2.py3-none-any.whl
+$ python -m pip install bosdyn_client-2.0.1-py2.py3-none-any.whl
+$ python -m pip install bosdyn_mission-2.0.1-py2.py3-none-any.whl
 ```
 
 **Version incompatibility:**
@@ -230,31 +231,31 @@ $ python -m pip install bosdyn_mission-2.0.0-py2.py3-none-any.whl
 If you see a version incompatiblity error during pip install such as:
 
 ```
-ERROR: bosdyn-core \<a version string> has requirement bosdyn-api==\<a version string>, but you'll 
-have bosdyn-api 2.0.0 which is incompatible.
+ERROR: bosdyn-core \<a version string> has requirement bosdyn-api==\<a version string>, but you'll
+have bosdyn-api 2.0.1 which is incompatible.
 ```
 
 Try uninstalling the bosdyn package and then reinstalling:
 
 ```shell
 $ python -m pip uninstall bosdyn-api
-$ python -m pip install bosdyn_api-2.0.0-py2.py3-none-any.whl
+$ python -m pip install bosdyn_api-2.0.1-py2.py3-none-any.whl
 ```
 
 ### Verify your Spot SDK installation
-Make sure that the packages have been installed. 
+Make sure that the packages have been installed.
 
 ```
 $ python -m pip list --format=columns | grep bosdyn
-bosdyn-api                    2.0.0
-bosdyn-client                 2.0.0
-bosdyn-core                   2.0.0
-bosdyn-mission                2.0.0
+bosdyn-api                    2.0.1
+bosdyn-client                 2.0.1
+bosdyn-core                   2.0.1
+bosdyn-mission                2.0.1
 ```
-If you don't see these 4 packages with your target version, something went wrong during 
+If you don't see these 4 packages with your target version, something went wrong during
 installation.  Contact support@bostondynamics.com for help.
 
-**Windows users:** Omit `grep` if not recognized.
+**Windows users:** Omit `grep` and replace with `findstr` if not recognized.
 
 Next, start your python interpreter:
 
@@ -278,7 +279,7 @@ PACKAGE CONTENTS
     __main__
 ...
 ```
-If the libraries are **not** installed correctly, you may see an error like this one:
+If the packages are **not** installed correctly, you may see an error like this one:
 
 ```python
 >>> import bosdyn.client
@@ -287,7 +288,7 @@ Traceback (most recent call last):
 ModuleNotFoundError: No module named 'bosdyn.client'
 ```
 
-If that's the case, run `python -m pip list` again to make sure that the Boston Dynamics Python libraries are installed.
+If that's the case, run `python -m pip list` again to make sure that the Boston Dynamics Python packages are installed.
 
 If you can't import bosdyn.client without an error, you may have multiple instances of Python on your computer, have installed bosdyn to one, and are now running the other.  Check the pathnames of your python executables. Are they where you'd expect them to be?  If not, this is a potential sign that you may have multiple python installs.  Consider using virtual environments (see above).  If all else fails, contact support@bostondynamics.com for help.
 
@@ -296,18 +297,11 @@ If you can't import bosdyn.client without an error, you may have multiple instan
 To use the SDK, you need:
 
 *  A Spot Robot on the same version as your SDK,
-*  An Application Token ("app_token"),
 *  A user account on the robot
 
 ### Get a Spot robot
 
 Contact sales@bostondynamics.com to get a Spot robot.
-
-### Get and install an application token
-
-To get an application token, email support@bostondynamics.com with subject "Application Token Request." You should receive an email with an attached application token within one business day.
-
-While you can technically put your token anywhere, Boston Dynamics recommends you create a `.bosdyn` directory in your home directory and then copy your token to that directory, renaming it to `~/.bosdyn/dev.app_token`.  The Spot SDK will always look for your token at this location.  If you do not put the token there, you will need to explicitly tell the SDK where your token is, often as an argument to your python executable.
 
 ### Get a user account on the robot
 
@@ -333,7 +327,7 @@ Issue the following command to get your Spot robot's ID:
 ```
 $ python -m bosdyn.client 192.168.80.3 id
 beta-BD-90490007     02-19904-9903   beta29     spot (V3)
-Software: 2.0.0 (b11205d698e 2020-03-11 11:53:12)
+Software: 2.0.1 (b11205d698e 2020-03-11 11:53:12)
 Installed: 2020-03-11 15:06:57
 ```
 
@@ -348,19 +342,9 @@ Could not contact robot with hostname "192.168.80.3"
 
 The robot is not powered on or is unreachable.  Go back and try to get your ping to work.  You can also try the `-v` or `--verbose` to get more information to debug the issue.
 
-If you see the following:
-
-```
-$ python -m bosdyn.client 192.168.80.3 id
-Cannot retrieve app token from "None".
-```
-
-
-The SDK failed to find a valid app_token.  Follow the earlier quickstart instructions to get an app_token.  If you do have an app token but it is not stored at the default location, you need to specify its location using the `--app-token` command line option.
-
 ### Run Hello Spot - let's see the robot move!
 
-OK, we now have our SDK installed properly and we are successfully able to command the robot to 
+OK, we now have our SDK installed properly and we are successfully able to command the robot to
 give us its id.  Let's now see the robot do something!
 
 
@@ -377,14 +361,14 @@ $ python hello_spot.py --username user --password password 192.168.80.3
 Hello_spot will fail because there is not an E-Stop endpoint.
 
 ```
-2020-03-30 15:26:36,283 - ERROR - Robot is E-Stopped. Please use an external E-Stop client, such as 
+2020-03-30 15:26:36,283 - ERROR - Robot is E-Stopped. Please use an external E-Stop client, such as
 the E-Stop SDK example, to configure E-Stop.
 ```
 
 If you see the following error:
 ```
 $ python hello_spot.py --username usehername --password pazwierd 192.168.80.3
-2020-04-03 15:10:28,189 - ERROR - Hello, Spot! threw an exception: bosdyn.api.GetAuthTokenResponse: 
+2020-04-03 15:10:28,189 - ERROR - Hello, Spot! threw an exception: bosdyn.api.GetAuthTokenResponse:
 Provided username/password is invalid.
 ```
 

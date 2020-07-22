@@ -6,6 +6,10 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
+<p class="github-only">
+<b>The Spot SDK documentation is best viewed via our developer site at <a href="https://dev.bostondynamics.com">dev.bostondynamics.com</a>. </b>
+</p>
+
 # Concepts
 
 ## Spot API

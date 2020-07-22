@@ -65,6 +65,8 @@ service MediaLogService {
     rpc EnableDebug (DebugRequest) returns (DebugResponse);
     //ListCameras returns a list of strings that identify valid cameras for logging
     rpc ListCameras (ListCamerasRequest) returns (ListCamerasResponse);
+    //Retrieve returns all raw data associated with a given logpoint
+    rpc RetrieveRawData (RetrieveRawDataRequest) returns (stream RetrieveRawDataResponse);
     //Retrieve returns all data associated with a given logpoint
     rpc Retrieve (RetrieveRequest) returns (stream RetrieveResponse);
     //Delete removes a Logpoint from the system
@@ -121,8 +123,6 @@ service HealthService {
 
 // Modify or query network settings of the SpotCam and ICE resolution servers.
 service NetworkService {
-    rpc GetNetworkSettings (GetNetworkSettingsRequest) returns (GetNetworkSettingsResponse);
-    rpc SetNetworkSettings (SetNetworkSettingsRequest) returns (SetNetworkSettingsResponse);
     //SetICEConfiguration sets up parameters for ICE, including addresses for STUN and TURN services
     rpc SetICEConfiguration (SetICEConfigurationRequest) returns (SetICEConfigurationResponse);
     //GetICEConfiguration retrieves currently set parameters for ICE, including addresses for STUN and TURN services

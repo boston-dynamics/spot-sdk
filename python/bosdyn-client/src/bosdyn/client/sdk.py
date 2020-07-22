@@ -24,6 +24,7 @@ from .estop import EstopClient
 from .graph_nav import GraphNavClient
 from .image import ImageClient
 from .lease import LeaseClient
+from .license import LicenseClient
 from .log_annotation import LogAnnotationClient
 from .local_grid import LocalGridClient
 from .payload import PayloadClient
@@ -86,6 +87,7 @@ _DEFAULT_SERVICE_CLIENTS = [
     GraphNavRecordingServiceClient,
     ImageClient,
     LeaseClient,
+    LicenseClient,
     LogAnnotationClient,
     LocalGridClient,
     PayloadClient,
@@ -165,17 +167,16 @@ class Sdk(object):
         """
 
 
-        if self.app_token is None:
-                _LOGGER.warning('Warning: App token unset at robot creation time. API access may '
-                             'be limited.')
         if address in self.robots:
             return self.robots[address]
         robot = Robot(
             name=name or address
         )
         robot.address = address
+
         robot.update_from(self)
         self.robots[address] = robot
+
         return robot
 
     def register_service_client(self, creation_func, service_type=None, service_name=None):
@@ -232,11 +233,11 @@ class Sdk(object):
             UnableToLoadAppTokenError: If the file exists, but is unloadable.
         """
         if not resource_path:
-            raise UnsetAppTokenError
+            # App tokens are no longer required, but this function still exists for compatibility
+            return
         try:
             with open(os.path.expanduser(resource_path), 'rb') as token_file:
                 token = token_file.read().decode().strip()
-                log_token_time_remaining(token)
         except IOError as err:
             _LOGGER.exception(err)
             raise UnableToLoadAppTokenError(

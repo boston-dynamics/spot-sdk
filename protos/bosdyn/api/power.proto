@@ -12,6 +12,7 @@ option java_outer_classname = "PowerProto";
 
 import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
+import "bosdyn/api/license.proto";
 
 // Feedback on the current state of a power command on the robot.
 enum PowerCommandStatus {
@@ -42,6 +43,9 @@ enum PowerCommandStatus {
 
     // ERROR: Internal error occurred, maybe clear-able by issuing a power off command.
     STATUS_INTERNAL_ERROR = 8;
+
+    // ERROR: License check failed. Check license_status field for details.
+    STATUS_LICENSE_ERROR = 9;
 }
 
 // The PowerCommand request which specifies a change in the robot's motor power.
@@ -75,6 +79,9 @@ message PowerCommandResponse {
 
     // Unique identifier for the command, If empty, was not accepted.
     uint32 power_command_id = 4;
+
+    // License check status
+    LicenseInfo.Status license_status = 5;
 }
 
 // The PowerCommandFeedback request message, which can get the feedback for a specific

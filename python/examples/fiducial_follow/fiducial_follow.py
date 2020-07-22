@@ -12,6 +12,7 @@ import numpy as np
 from PIL import Image
 import signal
 import sys
+from sys import platform
 import threading
 import time
 
@@ -69,12 +70,6 @@ class FollowFiducial(object):
         self._use_world_object_service = (options.use_world_objects and
                                           self.check_if_version_has_world_objects(self._robot_id))
 
-        if not self._use_world_object_service:
-            # Import the apriltag library if we are not using the world object service.
-            try:
-                from apriltag import apriltag
-            except ImportError as e:
-                print("Could not import the AprilTag library. Exception: ", str(e))
 
         # Indicators for movement and image displays.
         self._standup = True  # Stand up the robot.
@@ -288,6 +283,7 @@ class FollowFiducial(object):
             bboxes = self.detect_fiducial_in_image(image_response[0].shot.image, (width, height),
                                                    source_name)
             if bboxes:
+                print("Found bounding box for " + str(source_name))
                 return bboxes, source_name
             else:
                 self._tag_not_located = True
@@ -616,6 +612,15 @@ def main():
         help="If fiducials should be from the world object service or the apriltag library.")
     options = parser.parse_args()
 
+    # If requested, attempt import of Apriltag library
+    if not options.use_world_objects:
+        try:
+            global apriltag
+            from apriltag import apriltag
+        except ImportError as e:
+            print("Could not import the AprilTag library. Aborting. Exception: ", str(e))
+            return False
+
     # Create robot object.
     sdk = create_standard_sdk('FollowFiducialClient')
     sdk.load_app_token(options.app_token)
@@ -633,8 +638,9 @@ def main():
 
             fiducial_follower = FollowFiducial(robot, options)
             time.sleep(.1)
-            if not options.use_world_objects:
+            if not options.use_world_objects and str.lower(sys.platform) != "darwin":
                 # Display the detected bounding boxes on the images when using the april tag library.
+                # This is disabled for MacOS-X operating systems.
                 image_viewer = DisplayImagesAsync(fiducial_follower)
                 image_viewer.start()
             fiducial_follower.start()

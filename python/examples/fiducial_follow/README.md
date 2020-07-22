@@ -6,19 +6,19 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Follow a Fiducial 
+# API Example - Follow a Fiducial
 
 This example program demonstrates how to make Spot interactively walk to fiducial markers (april tags) it sees with its built-in cameras.  The robot will iteratively:
   * Detects fiducials in any of Spot's cameras, choosing the first fiducial detection it recieves if there are multiple detections.
   * Determines the go-to position based on the fiducial's location in the world.
-  * Commands the robot to walk towards the fiducial and repeat. 
+  * Commands the robot to walk towards the fiducial and repeat.
 
 There are two modes in which this example can operate:
 
 1. Using the world object service to detect fiducials, which are provided as a transformation in the world frame, using Spot's perception system. This mode has been added in the 1.2 software release of the spot-sdk.
-2. To detect april tags in an image source using an external AprilTag library, compute the bouding box, and then transform the pixel coordinates into world coordinates. 
+2. To detect april tags in an image source using an external AprilTag library, compute the bouding box, and then transform the pixel coordinates into world coordinates.
 
-The command line argument `--use-world-objects` will toggle between these modes. By default, this argument is set to true, so the program will use the world object service (mode 1). 
+The command line argument `--use-world-objects` will toggle between these modes. By default, this argument is set to true, so the program will use the world object service (mode 1).
 
 ## Setup Dependencies
 These examples requires the bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:
@@ -29,10 +29,10 @@ python -m pip install -r requirements.txt
 
 Additionally, the example requires a fiducial in Spot's range of view. This fiducial (also referenced as an april tag) must be the right size as specified in Spot's User Guide and documentation.
 
-### External AprilTag library 
+### External AprilTag library
 If the user intends to only use fiducial detections from the world object service, then these installation instructions can be skipped.
 
-This example uses an AprilTag library from an external repo (https://github.com/AprilRobotics/apriltag.git), please follow the instructions on the AprilTag github readme to fully setup the library (the instructions on the external github are targeted to a Linux OS). 
+This example uses an AprilTag library from an external repo (https://github.com/AprilRobotics/apriltag.git), please follow the instructions on the AprilTag github readme to fully setup the library (the instructions on the external github are targeted to a Linux OS).
 
 On Linux, follow the instructions below to build the apriltag repository correctly:
 - The `make install` command of the external apriltag repo instructions will install the shared library and requires `LD_LIBRARY_PATH=/usr/local/lib` to be set.
@@ -47,11 +47,10 @@ On MacOS, follow the instructions below to build the apriltag repository correct
   - Replace libapriltag.so with libapriltag.dylib
 - Run cmake and make commands as specified in the apriltag README file
 - Copy the compiled apriltag library into your python site-packages folder. For example, if you configure a virtualenv named `venv`, execute this command `cp /Users/apitester/.local/lib/python3.7/site-packages/apriltag.cpython-37m-darwin.so venv/lib/python3.7/site-packages/`
-- Update the file fiducial_follow.py to specify `self._display_images = False` instead of `True`. Images are not displayed on MacOS with OpenCV.
 
 Note, in these instructions, the filepath `/Users/apitester/.local/lib/python3.7/site-packages/` represents the folder where the apriltag github library installs by default on MacOS, and it includes "apitester" as a placeholder for your system username, and "python3.7" as a placeholder for your system's python version.
 
-This example is not supported on Windows OS if you want to use the external apriltag library. However, the example can be run using the world object service. 
+This example is not supported on Windows OS if you want to use the external apriltag library. However, the example can be run using the world object service.
 
 
 ## Running the Example
@@ -65,7 +64,7 @@ The example depends on an external E-Stop endpoint application to configure E-St
 
 To run the example:
 ```
-python -m fiducial_follow --username USER --password PASSWORD ROBOT_IP 
+python -m fiducial_follow --username USER --password PASSWORD ROBOT_IP
 ```
 
 To stop the robot from moving, either remove the fiducial it is following from all camera's field of view or stop the code in the command line.

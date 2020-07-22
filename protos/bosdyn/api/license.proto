@@ -1,0 +1,49 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "LicenseProto";
+
+import "bosdyn/api/header.proto";
+import "google/protobuf/timestamp.proto";
+
+message LicenseInfo {
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_VALID = 1;
+        STATUS_EXPIRED = 2;
+        STATUS_NOT_YET_VALID = 3;
+        STATUS_MALFORMED = 4;
+        STATUS_SERIAL_MISMATCH = 5;
+        STATUS_NO_LICENSE = 6;
+    }
+
+    Status status = 1;
+
+    // Unique license number
+    string id = 2;
+
+    // Serial number of the robot this license covers
+    string robot_serial = 3;
+
+    google.protobuf.Timestamp not_valid_before = 4;
+    google.protobuf.Timestamp not_valid_after = 5;
+
+    /// Human readable list of licensed features
+    repeated string licensed_features = 6;
+};
+
+message GetLicenseInfoRequest {
+    RequestHeader header = 1; // Common request header.
+}
+message GetLicenseInfoResponse {
+    ResponseHeader header = 1; // Common response header
+
+    LicenseInfo license = 2;
+}

@@ -260,7 +260,7 @@ class RobotStateTimedCallbackEvent(object):
 
 def expand_data_by_rle_count(local_grid_proto, data_type=np.int16):
     """Expand local grid data to full bytes data using the RLE count."""
-    cells_pz = np.fromstring(local_grid_proto.local_grid.data, dtype=data_type)
+    cells_pz = np.frombuffer(local_grid_proto.local_grid.data, dtype=data_type)
     cells_pz_full = []
     # For each value of rle_counts, we expand the cell data at the matching index
     # to have that many repeated, consecutive values.
@@ -428,7 +428,7 @@ def unpack_grid(local_grid_proto):
         return None
     # Decode the local grid.
     if local_grid_proto.local_grid.encoding == local_grid_pb2.LocalGrid.ENCODING_RAW:
-        full_grid = np.fromstring(local_grid_proto.local_grid.data, dtype=data_type)
+        full_grid = np.frombuffer(local_grid_proto.local_grid.data, dtype=data_type)
     elif local_grid_proto.local_grid.encoding == local_grid_pb2.LocalGrid.ENCODING_RLE:
         full_grid = expand_data_by_rle_count(local_grid_proto, data_type=data_type)
     else:

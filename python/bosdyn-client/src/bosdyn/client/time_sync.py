@@ -17,7 +17,6 @@ import time
 from threading import Event, Lock, Thread
 
 from bosdyn.api import time_sync_pb2
-from bosdyn.api import time_sync_pb2
 from bosdyn.api import time_sync_service_pb2_grpc
 
 from bosdyn.util import RobotTimeConverter
@@ -79,10 +78,6 @@ class TimeSyncClient(BaseClient):
     def _get_time_sync_update_request(previous_round_trip, clock_identifier):
         return time_sync_pb2.TimeSyncUpdateRequest(previous_round_trip=previous_round_trip,
                                                    clock_identifier=clock_identifier)
-
-    @staticmethod
-    def _get_time_sync_status_request(clock_identifier=""):
-        return time_sync_pb2.TimeSyncStatusRequest(clock_identifier=clock_identifier)
 
 
 def _get_time_sync_status_value(response):

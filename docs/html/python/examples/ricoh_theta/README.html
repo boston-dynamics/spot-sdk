@@ -1,0 +1,689 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Ricoh Theta &mdash; Spot 2.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https:://dev.bostondynamics.com/python/examples/ricoh_theta/README.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Payload &amp; Service Initialization" href="../self_registration/README.html" />
+    <link rel="prev" title="API Example - Replaying a Mission" href="../replay_mission/README.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../README.html">
+          
+
+          
+            
+            <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/robot_services.html">Robot services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../docs/python/README.html">Python</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/quickstart.html">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/understanding_spot_programming.html">Understanding Spot Programming</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../README.html">Examples</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../add_image_coordinates_to_scene/README.html">Add Image Coordinates to Scene</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../directory/README.html">Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cloud_upload/README.html">Cloud Upload</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../estop/README.html">E-Stop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get_depth_plus_visual_image/README.html">Get Depth Plus Visual Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get_image/README.html">Get Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../logging/README.html">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mission_question_answerer/README.html">Mission Question Anwerer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../payloads/README.html">Payloads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../replay_mission/README.html">Replay Mission</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Ricoh Theta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spot_check/README.html">Spot Check</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wasd/README.html">WASD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../xbox_controller/README.html">Xbox Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../README.html">Python Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/command_line.html">Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/common.html">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/license.html">License</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/processors.html">Processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/recording.html">Recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/robot_command.html">Robot Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/robot_id.html">Robot ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/ptz.html">PTZ</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/streamquality.html">Stream Quality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/version.html">Version</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_check.html">Spot Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/time_sync.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../bosdyn-core/src/bosdyn/README.html">Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-core/src/bosdyn/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/payload_configuration_requirements.html">Payload configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/mechanical_interfaces.html">Mechanical interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_mounting_rails.html">Robot mounting rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/protos/style_guide.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html">auth.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-chunk-proto">data_chunk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-proto">directory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-registration-proto">directory_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-registration-service-proto">directory_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-service-proto">directory_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#estop-proto">estop.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#estop-service-proto">estop_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#license-service-proto">license_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-proto">local_grid.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-service-proto">mission/mission_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-nodes-proto">mission/nodes.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-remote-proto">mission/remote.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-remote-service-proto">mission/remote_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-util-proto">mission/util.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-registration-proto">payload_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-registration-service-proto">payload_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-service-proto">payload_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#point-cloud-proto">point_cloud.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#power-proto">power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#power-service-proto">power_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-command-service-proto">robot_command_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-proto">robot_id.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-led-proto">spot_cam/LED.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-health-proto">spot_cam/health.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-network-proto">spot_cam/network.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-power-proto">spot_cam/power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-ptz-proto">spot_cam/ptz.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-service-proto">spot_cam/service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-streamquality-proto">spot_cam/streamquality.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-version-proto">spot_cam/version.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../README.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../README.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../docs/python/README.html">Python Library</a> &raquo;</li>
+        
+          <li><a href="../README.html">Python Examples</a> &raquo;</li>
+        
+      <li>Ricoh Theta</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!--
+Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+
+Downloading, reproducing, distributing or otherwise using the SDK Software
+is subject to the terms and conditions of the Boston Dynamics Software
+Development Kit License (20191101-BDSDK-SL).
+--><div class="section" id="ricoh-theta">
+<h1>Ricoh Theta<a class="headerlink" href="#ricoh-theta" title="Permalink to this headline">¶</a></h1>
+<p>This document will explain step-by-step how to setup a Ricoh Theta V or Z1 for an Autowalk Mission using the Remote Mission Service on the Spot CORE. This document assumes you are using the default settings of a Ricoh Theta camera and mounted/registered Spot CORE.</p>
+<div class="section" id="required-items">
+<h2>Required Items<a class="headerlink" href="#required-items" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Spot CORE</p></li>
+<li><p>USB WiFi dongle</p></li>
+<li><p>Ricoh Theta V or Z1</p></li>
+<li><p>Personal Computer</p></li>
+</ul>
+</div>
+<div class="section" id="installation-steps">
+<h2>Installation Steps<a class="headerlink" href="#installation-steps" title="Permalink to this headline">¶</a></h2>
+<p>The following installation steps assume you:</p>
+<ul class="simple">
+<li><p>have read the ricoh theta online manual and understand client mode operation</p></li>
+<li><p>have the latest spot-sdk downloaded &amp; installed on your PC</p></li>
+<li><p>familiar with SSH and using a Command Line Interface (CLI)</p></li>
+</ul>
+<div class="section" id="install-packages-on-pc">
+<h3>Install Packages on PC<a class="headerlink" href="#install-packages-on-pc" title="Permalink to this headline">¶</a></h3>
+<p>Navigate via the CLI on your PC to the ricoh_theta directory and review the requirements.txt document for this example before continuing. Several python packages will need to be installed along with the standard SDK:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="test-ricoh-theta">
+<h3>Test Ricoh Theta<a class="headerlink" href="#test-ricoh-theta" title="Permalink to this headline">¶</a></h3>
+<p>A <code class="docutils literal notranslate"><span class="pre">test_driver.py</span></code> script has been included which will show the state of the camera and take a picture. Before running this script, wirelessly connect your personal computer to the ricoh theta camera and adjust the theta_ssid for your camera. The script is currently configured for direct mode ip settings for running on your PC. Edit the python script as desired.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">test_driver</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="connect-ricoh-theta-to-spot">
+<h3>Connect Ricoh Theta to Spot<a class="headerlink" href="#connect-ricoh-theta-to-spot" title="Permalink to this headline">¶</a></h3>
+<p>Perform the following steps on your PC to setup ricoh theta client mode.</p>
+<ol>
+<li><p>Enable wireless connection on the ricoh theta and connect your PC to the ricoh theta via WiFi.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">ricoh_client_mode.py</span></code> on your PC via the CLI. Replace the capitilized letters in the command below with your Ricoh Theta SSID, Spot’s WiFi SSID, and Spot’s WiFi password.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">ricoh_client_mode</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">theta</span><span class="o">-</span><span class="n">ssid</span> <span class="n">THETAYL00196843</span> <span class="o">--</span><span class="n">wifi</span><span class="o">-</span><span class="n">ssid</span> <span class="n">WIFI_SSID</span> <span class="o">--</span><span class="n">wifi</span><span class="o">-</span><span class="n">password</span> <span class="n">WIFI_PASSWORD</span>
+</pre></div>
+</div>
+<p>If all goes well, you should see a positive response that shows the new static ip:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Response</span> <span class="n">Below</span><span class="p">:</span>
+<span class="p">{</span>
+  <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;camera._setAccessPoint&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;done&quot;</span>
+<span class="p">}</span>
+<span class="n">New</span> <span class="n">static</span> <span class="n">ip</span><span class="p">:</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">80.110</span>
+</pre></div>
+</div>
+<p>The above script will specify the access point settings for ricoh theta client mode and a static ip address.</p>
+<p>For Developers: As an <em>additional</em> option, you can configure the ip settings by editing the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> function directly in <code class="docutils literal notranslate"><span class="pre">ricoh_theta.py</span></code> or when creating the Theta() object. These settings are featured below and have been tested on the Spot CORE.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">static_ip</span><span class="o">=</span><span class="s2">&quot;192.168.80.110&quot;</span><span class="p">,</span> <span class="n">subnet_mask</span><span class="o">=</span><span class="s2">&quot;255.255.255.0&quot;</span><span class="p">,</span> <span class="n">default_gateway</span><span class="o">=</span><span class="s2">&quot;192.168.80.1&quot;</span><span class="p">):</span>
+</pre></div>
+</div>
+</li>
+<li><p>Enable client mode on your ricoh theta (press the wireless button again) and confirm connection with Spot’s access point (the wireless indicator should stop blinking and become solid in client mode). Sometimes a ricoh theta power cycle is required.</p></li>
+</ol>
+</div>
+<div class="section" id="edit-spot-core-network-settings">
+<h3>Edit Spot CORE Network Settings<a class="headerlink" href="#edit-spot-core-network-settings" title="Permalink to this headline">¶</a></h3>
+<p>These steps are required if you intend to connect your Spot CORE to the internet via a WiFi dongle and communicate from the Spot CORE to a device connected with the robot’s access point.</p>
+<ol>
+<li><p>Ensure a WiFi dongle is connected to the Spot CORE.</p></li>
+<li><p>ssh into the Spot CORE using your PC’s CLI</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="o">-</span><span class="n">p</span> <span class="mi">20022</span> <span class="n">spot</span><span class="nd">@ROBOT_IP_ADDRESS</span>
+</pre></div>
+</div>
+</li>
+<li><p>Follow <a class="reference external" href="https://docs.ubuntu.com/core/en/stacks/network/network-manager/docs/configure-wifi-connections">these instructions</a> to configure your WiFi adapter from the terminal. A condensed version is below. Connecting to a wireless access point can also be achieved using the standard desktop environment with a montior, keyboard, and mouse plugged into the Spot CORE.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nmcli</span> <span class="n">d</span>
+<span class="n">nmcli</span> <span class="n">r</span> <span class="n">wifi</span> <span class="n">on</span>
+<span class="n">nmcli</span> <span class="n">d</span> <span class="n">wifi</span> <span class="nb">list</span>
+</pre></div>
+</div>
+<p>From the listed wireless access points, replace the captilized letters of the command below with your desired wifi network (that has internet access) and password.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nmcli</span> <span class="n">d</span> <span class="n">wifi</span> <span class="n">connect</span> <span class="n">MY_WIFI</span> <span class="n">password</span> <span class="n">MY_PASSWORD</span>
+</pre></div>
+</div>
+</li>
+<li><p>Edit the interface file. Run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">network</span><span class="o">/</span><span class="n">interfaces</span>
+</pre></div>
+</div>
+<p>Comment out or remove this line: “gateway 192.168.50.3” (which will enable internet access after reboot); and add a route pointing to Spot’s access point: “up ip route add 192.168.80.0/24 via 192.168.50.3”</p>
+<p>The network interface file should now look similar to this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Default payload network settings</span>
+<span class="c1"># LOOPBACK</span>
+<span class="n">auto</span> <span class="n">lo</span>
+<span class="n">iface</span> <span class="n">lo</span> <span class="n">inet</span> <span class="n">loopback</span>
+
+<span class="n">auto</span> <span class="n">enp2s0</span>
+<span class="n">iface</span> <span class="n">enp2s0</span> <span class="n">inet</span> <span class="n">static</span>
+    <span class="n">address</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">50.5</span><span class="o">/</span><span class="mi">24</span>
+    <span class="c1"># gateway 192.168.50.3</span>
+    <span class="n">up</span> <span class="n">ip</span> <span class="n">route</span> <span class="n">add</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">80.0</span><span class="o">/</span><span class="mi">24</span> <span class="n">via</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">50.3</span>
+
+<span class="n">auto</span> <span class="n">eno1</span>
+<span class="n">iface</span> <span class="n">eno1</span> <span class="n">inet</span> <span class="n">static</span>
+    <span class="n">address</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.9</span><span class="o">/</span><span class="mi">24</span>
+</pre></div>
+</div>
+</li>
+<li><p>Reboot the Spot CORE. This will close the ssh connection.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">reboot</span>
+</pre></div>
+</div>
+</li>
+<li><p>After 30 seconds, check Spot CORE network settings:</p>
+<p>ssh back into the Spot CORE</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="o">-</span><span class="n">p</span> <span class="mi">20022</span> <span class="n">spot</span><span class="nd">@ROBOT_IP_ADDRESS</span>
+</pre></div>
+</div>
+<p>Ping an external address to confirm internet connection. You should see an ip address in paraentheses following google. Use Ctrl + C to exit.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ping</span> <span class="n">google</span><span class="o">.</span><span class="n">com</span>
+
+<span class="n">PING</span> <span class="n">google</span><span class="o">.</span><span class="n">com</span> <span class="p">(</span><span class="mf">172.217</span><span class="o">.</span><span class="mf">6.238</span><span class="p">)</span> <span class="mi">56</span><span class="p">(</span><span class="mi">84</span><span class="p">)</span> <span class="nb">bytes</span> <span class="n">of</span> <span class="n">data</span><span class="o">.</span>
+<span class="mi">64</span> <span class="nb">bytes</span> <span class="kn">from</span> <span class="nn">lga25s55</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">f238</span><span class="o">.</span><span class="mf">1e100</span><span class="o">.</span><span class="n">net</span> <span class="p">(</span><span class="mf">172.217</span><span class="o">.</span><span class="mf">6.238</span><span class="p">):</span> <span class="n">icmp_seq</span><span class="o">=</span><span class="mi">1</span> <span class="n">ttl</span><span class="o">=</span><span class="mi">56</span> <span class="n">time</span><span class="o">=</span><span class="mf">20.8</span> <span class="n">ms</span>
+<span class="mi">64</span> <span class="nb">bytes</span> <span class="kn">from</span> <span class="nn">lga25s55</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">f238</span><span class="o">.</span><span class="mf">1e100</span><span class="o">.</span><span class="n">net</span> <span class="p">(</span><span class="mf">172.217</span><span class="o">.</span><span class="mf">6.238</span><span class="p">):</span> <span class="n">icmp_seq</span><span class="o">=</span><span class="mi">2</span> <span class="n">ttl</span><span class="o">=</span><span class="mi">56</span> <span class="n">time</span><span class="o">=</span><span class="mf">23.5</span> <span class="n">ms</span>
+<span class="mi">64</span> <span class="nb">bytes</span> <span class="kn">from</span> <span class="nn">lga25s55</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">f238</span><span class="o">.</span><span class="mf">1e100</span><span class="o">.</span><span class="n">net</span> <span class="p">(</span><span class="mf">172.217</span><span class="o">.</span><span class="mf">6.238</span><span class="p">):</span> <span class="n">icmp_seq</span><span class="o">=</span><span class="mi">3</span> <span class="n">ttl</span><span class="o">=</span><span class="mi">56</span> <span class="n">time</span><span class="o">=</span><span class="mf">17.6</span> <span class="n">ms</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>Enable client mode on your ricoh theta and ping the static ip once connected. You should see repeated responses. Use Ctrl + C to exit.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ping</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">80.110</span>
+</pre></div>
+</div>
+<p>Lastly, close ssh connection. Ctrl + D</p>
+</li>
+</ol>
+</div>
+<div class="section" id="edit-remote-mission-service">
+<h3>Edit Remote Mission Service<a class="headerlink" href="#edit-remote-mission-service" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">remote_mission_service_ricoh.py</span></code> script uses a couple of global variables near the top of the script that you will need to edit for your specific use case. The current settings are featured below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DEFAULT_PATH</span> <span class="o">=</span> <span class="s1">&#39;/home/spot/Pictures/&#39;</span>
+<span class="n">GCP_BUCKET_NAME</span> <span class="o">=</span> <span class="s1">&#39;c-imagedemo&#39;</span>
+<span class="n">AWS_BUCKET_NAME</span> <span class="o">=</span> <span class="s1">&#39;aws-imagedemo&#39;</span>
+<span class="n">YOUR_THETA_SSID</span> <span class="o">=</span> <span class="s1">&#39;THETAYL00196843&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-packages-on-spot-core">
+<h3>Install Packages on Spot CORE<a class="headerlink" href="#install-packages-on-spot-core" title="Permalink to this headline">¶</a></h3>
+<p>The changes made to these files on your local PC will need to be mirrored on the Spot CORE. In your PC’s CLI, you can use the below scp command to copy the files from your PC’s local SDK ricoh_client directory into the <code class="docutils literal notranslate"><span class="pre">/home/spot/</span></code> folder on your Spot CORE.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scp</span> <span class="o">-</span><span class="n">r</span> <span class="o">-</span><span class="n">P</span> <span class="mi">20022</span> <span class="n">ricoh_theta</span><span class="o">/</span> <span class="n">spot</span><span class="nd">@ROBOT_IP_ADDRESS</span><span class="p">:</span>
+</pre></div>
+</div>
+<p>You will also need to copy over the cloud_upload example.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scp</span> <span class="o">-</span><span class="n">r</span> <span class="o">-</span><span class="n">P</span> <span class="mi">20022</span> <span class="n">cloud_upload</span><span class="o">/</span> <span class="n">spot</span><span class="nd">@ROBOT_IP_ADDRESS</span><span class="p">:</span>
+</pre></div>
+</div>
+<p>Don’t forget to install the python packages on the Spot CORE. SSH into the Spot CORE, navigate via the terminal on the Spot CORE to the ricoh_theta directory, and install the requirements.txt document for this example before continuing. Like on the PC, several python packages will need to be installed along with the standard SDK:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>The assumed installation structure on the Spot CORE is featured below.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">spot</span><span class="o">/</span>
+    <span class="n">ricoh_theta</span><span class="o">/</span>
+        <span class="n">README</span><span class="o">.</span><span class="n">md</span>  
+        <span class="n">remote_mission_service_ricoh</span><span class="o">.</span><span class="n">py</span> 
+        <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span> 
+        <span class="n">ricoh_client_mode</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">ricoh</span><span class="o">.</span><span class="n">service</span>
+        <span class="n">ricoh_theta</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">sh</span> 
+        <span class="n">test_driver</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">cloud_upload</span><span class="o">/</span>
+        <span class="n">cloud_upload</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">README</span><span class="o">.</span><span class="n">md</span>  
+        <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>Because of the above structure, an adjustment to PYTHONPATH for cloud_upload import used in <code class="docutils literal notranslate"><span class="pre">remote_mission_service_ricoh.py</span></code> will likely be required.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">PYTHONPATH</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">spot</span>
+</pre></div>
+</div>
+<p>Add the above line to your .bashrc file to make permanent. If a PYTHONPATH has already been set, add to it instead and use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>PYTHONPATH=$PYTHONPATH:/home/spot
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="run-remote-mission-service">
+<h2>Run Remote Mission Service<a class="headerlink" href="#run-remote-mission-service" title="Permalink to this headline">¶</a></h2>
+<p>In order to use a ricoh theta with an autowalk mission, a remote mission service script must be running. Use <code class="docutils literal notranslate"><span class="pre">remote_mission_service_ricoh.py</span></code> to test ricoh_theta callbacks.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">remote_mission_service_ricoh</span><span class="o">.</span><span class="n">py</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">50.3</span> <span class="o">--</span><span class="n">payload</span><span class="o">-</span><span class="n">token</span> <span class="o">--</span><span class="n">directory</span><span class="o">-</span><span class="n">host</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">50.3</span> <span class="o">--</span><span class="n">my</span><span class="o">-</span><span class="n">host</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">50.5</span> <span class="o">--</span><span class="n">theta</span><span class="o">-</span><span class="n">client</span>
+</pre></div>
+</div>
+<p>Create an autowalk mission and add callbacks when desired (these actions will execute during mission replay, not during record time). Several options are below:</p>
+<ol class="simple">
+<li><p>“take theta image”</p>
+<ul class="simple">
+<li><p>Sends a command to the ricoh theta to take a picture.</p></li>
+<li><p>Note: image processing takes around 3 seconds to complete.</p></li>
+</ul>
+</li>
+<li><p>“download theta images”</p>
+<ul class="simple">
+<li><p>Downloads all the ricoh theta images taken during that mission (or since the last download) to the Spot CORE.</p></li>
+<li><p>Find the images in the DEFAULT_PATH (/home/spot/Pictures/)</p></li>
+</ul>
+</li>
+<li><p>“upload to gcp”</p>
+<ul class="simple">
+<li><p>Uploads all images taken during the mission to a Google Cloud Platform (GCP) bucket.</p></li>
+<li><p>Review the cloud_upload <a class="reference internal" href="../cloud_upload/README.html"><span class="doc">README</span></a> for more details. Additional configuration is required.</p></li>
+</ul>
+</li>
+<li><p>“upload to aws”</p>
+<ul class="simple">
+<li><p>Uploads all images taken during the mission to an Amazon Web Services (AWS) S3 bucket.</p></li>
+<li><p>Review the cloud_upload <a class="reference internal" href="../cloud_upload/README.html"><span class="doc">README</span></a> for more details. Additional configuration is required.</p></li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section" id="run-remote-mission-service-on-boot">
+<h2>Run Remote Mission Service on Boot<a class="headerlink" href="#run-remote-mission-service-on-boot" title="Permalink to this headline">¶</a></h2>
+<p>Autoboot sample files <code class="docutils literal notranslate"><span class="pre">ricoh.service</span></code> and <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> may also need to be updated depending on the location of the files on the Spot CORE. For instance, the default Spot CORE PYTHONPATH is currently set to /home/spot/ in the ricoh.service file in order to import from the cloud_upload directory. If you intend to “upload to gcp”, the systemd <code class="docutils literal notranslate"><span class="pre">ricoh.service</span></code> file will need an additional argument under <code class="docutils literal notranslate"><span class="pre">[Service]</span></code> for the GOOGLE_APPLICATION_CREDENTIALS environmental variable.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Environment</span><span class="o">=</span><span class="s2">&quot;GOOGLE_APPLICATION_CREDENTIALS=&lt;path-to-file&gt;/&lt;filename&gt;.json&quot;</span>
+</pre></div>
+</div>
+<p>Perform the following commands in order to make <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> executable and copy <code class="docutils literal notranslate"><span class="pre">ricoh.service</span></code> to the correct directory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="n">ricoh_theta</span><span class="o">/</span><span class="n">run</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">sudo</span> <span class="n">cp</span> <span class="n">ricoh_theta</span><span class="o">/</span><span class="n">ricoh</span><span class="o">.</span><span class="n">service</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">system</span>
+<span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">daemon</span><span class="o">-</span><span class="n">reload</span>
+<span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">enable</span> <span class="n">ricoh</span><span class="o">.</span><span class="n">service</span>
+<span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">start</span> <span class="n">ricoh</span><span class="o">.</span><span class="n">service</span>
+</pre></div>
+</div>
+<p>Use the below systemctl command to check the status of the service. It should be: <code class="docutils literal notranslate"><span class="pre">active</span> <span class="pre">(running)</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">systemctl</span> <span class="n">status</span> <span class="n">ricoh</span><span class="o">.</span><span class="n">service</span>
+</pre></div>
+</div>
+<p>Journalctl is also a useful tool for debugging.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">journalctl</span> <span class="o">-</span><span class="n">efu</span> <span class="n">ricoh</span><span class="o">.</span><span class="n">service</span>
+</pre></div>
+</div>
+<p>Here is an external sparkfun <a class="reference external" href="https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup/all#method-3-systemd">link</a> to a systemd example on how to run a python script on linux boot.</p>
+</div>
+<div class="section" id="developer-comments">
+<h2>Developer Comments<a class="headerlink" href="#developer-comments" title="Permalink to this headline">¶</a></h2>
+<p>To learn more about the remote mission service, review the remote_mission_service <a class="reference internal" href="../remote_mission_service/README.html"><span class="doc">README</span></a> for details. For the Ricoh Theta integration, the <code class="docutils literal notranslate"><span class="pre">remote_mission_service_ricoh.py</span></code> script has several key edits to a couple functions. Review the comments above each function that have specific “Ricoh Theta Integration Notes” to learn more.</p>
+<p>For Ricoh Theta API Documentation, visit <a class="reference external" href="https://api.ricoh/products/theta-api/">https://api.ricoh/products/theta-api/</a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      
+      &copy; Copyright 2020 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

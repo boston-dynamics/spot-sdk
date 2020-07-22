@@ -49,8 +49,6 @@ message GetAuthTokenRequest {
     string password = 3;
     // Token to authenticate with. Can be used in place of the password, to re-mint a token.
     string token = 4;
-    // Application Token accompanying authentication. This must be present.
-    string application_token = 5;
 }
 ```
 
@@ -62,14 +60,14 @@ Although the `AuthService` example shows the common RPC paradigm of single reque
 The Python library included in the SDK hides the use of gRPC and Protocol Buffers and provides a simpler abstraction. For example, the `AuthClient` class, which speaks to the `AuthService` interface described above, has a method called `auth` demonstrated below.
 
 ```python
-    def auth(self, username, password, app_token, **kwargs):
+    def auth(self, username, password, app_token=None, **kwargs):
         """Authenticate to the robot with a username/password combo.
 
-        Params:
-            username -- username on the robot.
-            password -- password for the username on the robot.
-            app_token -- the application token needed for auth. Note that this is extraneous for robots with old software.
-            kwargs -- extra arguments for controlling RPC details.
+        Args:
+            username: username on the robot.
+            password: password for the username on the robot.
+            app_token: Deprecated.  Only include for robots with old software.
+            kwargs: extra arguments for controlling RPC details.
 
         Returns:
             User token from the server as a string.

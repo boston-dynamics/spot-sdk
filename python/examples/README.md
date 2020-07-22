@@ -17,6 +17,7 @@ Boston Dynamics recommends completing the [QuickStart guide](../../docs/python/q
 
 * [Add Image Coordinates to Scene](add_image_coordinates_to_scene/README.md)
 * [Directory](directory/README.md)
+* [Cloud Upload](cloud_upload/README.md)
 * [E-Stop](estop/README.md)
 * [Fiducial Follow](fiducial_follow/README.md)
 * [Frame Trajectory](frame_trajectory_command/README.md)
@@ -35,6 +36,7 @@ Boston Dynamics recommends completing the [QuickStart guide](../../docs/python/q
 * [Payloads](payloads/README.md)
 * [Remote Mission Service](remote_mission_service/README.md)
 * [Replay Mission](replay_mission/README.md)
+* [Ricoh Theta](ricoh_theta/README.md)
 * [Self Registration](self_registration/README.md)
 * [Spot CAM](spot_cam/README.md)
 * [Spot Check](spot_check/README.md)

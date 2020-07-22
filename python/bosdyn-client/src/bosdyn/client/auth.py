@@ -77,12 +77,12 @@ def _token_from_response(response):
     return response.token
 
 
-def _build_auth_request(username, password, app_token):
+def _build_auth_request(username, password, app_token=None):
     return auth_pb2.GetAuthTokenRequest(username=username, password=password,
                                         application_token=app_token)
 
 
-def _build_auth_token_request(token, app_token):
+def _build_auth_token_request(token, app_token=None):
     return auth_pb2.GetAuthTokenRequest(token=token, application_token=app_token)
 
 
@@ -97,13 +97,13 @@ class AuthClient(BaseClient):
     def __init__(self, name=None):
         super(AuthClient, self).__init__(auth_service_pb2_grpc.AuthServiceStub, name=name)
 
-    def auth(self, username, password, app_token, **kwargs):
+    def auth(self, username, password, app_token=None, **kwargs):
         """Authenticate to the robot with a username/password combo.
 
         Args:
             username: username on the robot.
             password: password for the username on the robot.
-            app_token: the application token needed for auth. Note that this is extraneous for robots with old software.
+            app_token: Deprecated.  Only include for robots with old software.
             kwargs: extra arguments for controlling RPC details.
 
         Returns:
@@ -116,7 +116,7 @@ class AuthClient(BaseClient):
         return self.call(self._stub.GetAuthToken, req, _token_from_response, _error_from_response,
                          **kwargs)
 
-    def auth_async(self, username, password, app_token, **kwargs):
+    def auth_async(self, username, password, app_token=None, **kwargs):
         """Asynchronously authenticate to the robot with a username/password combo.
 
         See auth documentation for more details.
@@ -125,12 +125,12 @@ class AuthClient(BaseClient):
         return self.call_async(self._stub.GetAuthToken, req, _token_from_response,
                                _error_from_response, **kwargs)
 
-    def auth_with_token(self, token, app_token, **kwargs):
+    def auth_with_token(self, token, app_token=None, **kwargs):
         """Authenticate to the robot using a previously created user token.
 
         Args:
             token: a user token previously issued by the robot.
-            app_token: the application token needed for auth. Note that this is extraneous for robots with old software.
+            app_token: Deprecated.  Only include for robots with old software.
             kwargs: extra arguments for controlling RPC details.
 
         Returns:
@@ -145,7 +145,7 @@ class AuthClient(BaseClient):
         return self.call(self._stub.GetAuthToken, req, _token_from_response, _error_from_response,
                          **kwargs)
 
-    def auth_with_token_async(self, token, app_token, **kwargs):
+    def auth_with_token_async(self, token, app_token=None, **kwargs):
         """Authenticate to the robot using a previously created user token.
 
         See auth_with_token documentation for more details.

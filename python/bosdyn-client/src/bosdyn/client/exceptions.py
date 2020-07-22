@@ -26,7 +26,7 @@ class ResponseError(Error):
             full_classname = self.response.DESCRIPTOR.full_name
         else:
             full_classname = "Error"
-        return '{}: {}'.format(full_classname, self.error_message)
+        return '{} ({}): {}'.format(full_classname, self.__class__.__name__, self.error_message)
 
 
 class InvalidRequestError(ResponseError):
@@ -40,6 +40,9 @@ class LeaseUseError(ResponseError):
     """Request was rejected due to using an invalid lease.
 
        This is thrown by services outside of LeaseService."""
+
+class LicenseError(ResponseError):
+    """Request was rejected due to using an invalid license."""
 
 
 class ServerError(ResponseError):

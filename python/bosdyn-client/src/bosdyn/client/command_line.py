@@ -30,6 +30,7 @@ from .directory_registration import DirectoryRegistrationClient, DirectoryRegist
 from .estop import EstopClient, EstopEndpoint, EstopKeepAlive
 from .image import (ImageClient, UnknownImageSourceError, ImageResponseError, build_image_request)
 from .lease import LeaseClient
+from .license import LicenseClient
 from .log_annotation import LogAnnotationClient
 from .local_grid import LocalGridClient
 from .robot_id import RobotIdClient
@@ -799,6 +800,35 @@ class TimeSyncCommand(Command):
 
         return True
 
+class LicenseCommand(Command):
+    """Show installed license."""
+
+    NAME = "license"
+
+    def __init__(self, subparsers, command_dict):
+        super(LicenseCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('--proto', action='store_true',
+                                  help='print listing in proto format')
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True.
+        """
+        license_client = robot.ensure_client(LicenseClient.default_service_name)
+        license = license_client.get_license_info()
+        if options.proto:
+            print(license)
+        else:
+            print(str(license))
+
+        return True
+
 
 class LeaseCommands(Subcommands):
     """Commands related to the lease service.
@@ -1012,7 +1042,7 @@ def write_pgm(image_response, outfile):
     else:
         dtype = np.uint8
 
-    img = np.fromstring(image_response.shot.image.data, dtype=dtype)
+    img = np.frombuffer(image_response.shot.image.data, dtype=dtype)
     height = image_response.shot.image.rows
     width = image_response.shot.image.cols
     img = img.reshape(height, width)
@@ -1204,6 +1234,7 @@ def main(args=None):
     # Register commands that can be run.
     DirectoryCommands(subparsers, command_dict)
     RobotIdCommand(subparsers, command_dict)
+    LicenseCommand(subparsers, command_dict)
     RobotStateCommands(subparsers, command_dict)
     LogAnnotationCommands(subparsers, command_dict)
     TimeSyncCommand(subparsers, command_dict)

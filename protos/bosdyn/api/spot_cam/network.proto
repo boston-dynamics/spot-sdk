@@ -56,41 +56,6 @@ message GetSSLCertResponse {
     string certificate = 2;
 }
 
-// Change network settings of the SpotCam.
-message SetNetworkSettingsRequest {
-    // Common request header.
-    bosdyn.api.RequestHeader header = 1;
-    // Network configuration to apply.
-    NetworkTuple settings = 2;
-}
-
-// Result of a SetNetworkSettingsRequest
-message SetNetworkSettingsResponse {
-    // Common response header.
-    bosdyn.api.ResponseHeader header = 1;
-    // Network settings applied.
-    NetworkTuple settings = 2;
-}
-
-// Change the SSL certificate.
-message SetSSLKeyPairRequest {
-    // Common request header.
-    bosdyn.api.RequestHeader header = 1;
-    // An ASCII-armored representation of the SSL certificate
-    string certificate = 2;
-    // An ASCII-armored representation of the SSL key (or EC pair, in the case of ECDSA keys)
-    string key = 3;
-}
-
-// Result of changing the SSL certificate.
-message SetSSLKeyPairResponse {
-    // Common response header.
-    bosdyn.api.ResponseHeader header = 1;
-
-    // An ASCII-armored representation of the SSL certificate
-    string certificate = 2;
-}
-
 // Servers used in the ICE resolution process.
 message ICEServer {
     // Possible types of servers

@@ -15,11 +15,13 @@ import time
 from bosdyn.api.graph_nav import map_pb2, nav_pb2
 from bosdyn.api.mission import mission_pb2
 from bosdyn.api.mission import nodes_pb2
+from bosdyn.api import estop_pb2
 
 import bosdyn.client
 import bosdyn.client.lease
 import bosdyn.client.util
 
+from bosdyn.client.estop import EstopClient
 from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient
 from bosdyn.client.robot_state import RobotStateClient
 
@@ -45,23 +47,22 @@ def main():
 
     # If the map directory is omitted, we assume that everything the user wants done is encoded in
     # the mission itself.
-    parser.add_argument('map_directory', nargs='?', help='Optional path to map directory')
+    parser.add_argument('--map_directory', nargs='?', help='Optional path to map directory')
     parser.add_argument('--mission', dest='mission_file', help='Optional path to mission file')
-    parser.add_argument('--localize', action='store_true', default=False,
-                        help='Localize robot before running mission')
+    parser.add_argument('--timeout', type=float, default=3.0, dest='timeout',
+                        help='Mission client timeout (s).')
 
     group = parser.add_mutually_exclusive_group()
 
-    group.add_argument('--time', type=float, default=0.0, dest='duration', help='Time to repeat mission (sec)')
+    group.add_argument('--time', type=float, default=0.0, dest='duration',
+                       help='Time to repeat mission (sec)')
     group.add_argument('--static', action='store_true', default=False, dest='static_mode',
-                       help='Stand and localize but do not run robot')
+                       help='Stand, but do not run robot')
 
     args = parser.parse_args()
 
     # Use the optional map_directory argument as a proxy for these other tasks we normally do.
     do_map_load = args.map_directory is not None
-    do_robot_stand = args.map_directory is not None
-    do_localization = (args.map_directory is not None) or args.localize
     fail_on_question = args.map_directory is not None
 
     if not args.mission_file:
@@ -91,42 +92,29 @@ def main():
             robot_state_client, command_client, mission_client, graph_nav_client = init_clients(
                 robot, body_lease, args.mission_file, args.map_directory, do_map_load)
 
-            if do_robot_stand:
-                # Ensure robot is powered on
-                assert ensure_power_on(robot), 'Robot power on failed.'
+            verify_estop(robot)
 
-                # Stand up
-                robot.logger.info('Commanding robot to stand...')
-                stand_command = RobotCommandBuilder.stand_command()
-                command_client.robot_command(stand_command)
-                countdown(5)
-                robot.logger.info('Robot standing.')
+            # Ensure robot is powered on
+            assert ensure_power_on(robot), 'Robot power on failed.'
 
-            # Localize robot
-            localization_error = False
-            if do_localization:
-                graph = graph_nav_client.download_graph()
-                robot.logger.info('Localizing robot...')
-                robot_state = robot_state_client.get_robot_state()
-                localization = nav_pb2.Localization()
+            # Stand up
+            robot.logger.info('Commanding robot to stand...')
+            stand_command = RobotCommandBuilder.stand_command()
+            command_client.robot_command(stand_command)
+            countdown(5)
+            robot.logger.info('Robot standing.')
 
-                # Attempt to localize using any visible fiducial
-                try:
-                    graph_nav_client.set_localization(initial_guess_localization=localization)
-                except:
-                    robot.logger.error('<<< INITIAL LOCALIZATION FAILED >>>')
-                    localization_error = True
-
-            if not args.static_mode and not localization_error:
+            # Run mission
+            if not args.static_mode:
                 if args.duration == 0.0:
-                    run_mission(robot, mission_client, lease_client, fail_on_question, mission_timeout=3)
+                    run_mission(robot, mission_client, lease_client, fail_on_question, args.timeout)
                 else:
-                    repeat_mission(robot, mission_client, lease_client, args.duration, fail_on_question)
+                    repeat_mission(robot, mission_client, lease_client, args.duration,
+                                   fail_on_question, args.timeout)
 
     finally:
-        if do_robot_stand:
-            # Ensure robot is powered off
-            power_off_success = ensure_power_off(robot)
+        # Ensure robot is powered off
+        power_off_success = ensure_power_off(robot)
 
         # Return lease
         robot.logger.info('Returning lease...')
@@ -289,19 +277,16 @@ def run_mission(robot, mission_client, lease_client, fail_on_question, mission_t
             robot.logger.info('Mission failed by triggering operator question.')
             return False
 
-        local_pause_time = time.time() + mission_timeout
-        robot_pause_timestamp = robot.time_sync.robot_timestamp_from_local_secs(
-            local_pause_time, timesync_timeout_sec=10)
-        robot_pause_time = bosdyn.util.timestamp_to_sec(robot_pause_timestamp)
-        assert robot_pause_time is not None, 'Unable to get robot time.'
-
         body_lease = lease_client.lease_wallet.advance()
-        mission_client.play_mission(robot_pause_time, [body_lease])
+        local_pause_time = time.time() + mission_timeout
+
+        mission_client.play_mission(local_pause_time, [body_lease])
         time.sleep(1)
 
         mission_state = mission_client.get_state()
 
-    return mission_state.status == mission_pb2.State.STATUS_SUCCESS
+    return mission_state.status in (mission_pb2.State.STATUS_SUCCESS,
+                                    mission_pb2.State.STATUS_PAUSED)
 
 
 def restart_mission(robot, mission_client, lease_client, mission_timeout):
@@ -309,27 +294,23 @@ def restart_mission(robot, mission_client, lease_client, mission_timeout):
 
     robot.logger.info('Restarting mission')
 
-    local_pause_time = time.time() + mission_timeout
-    robot_pause_timestamp = robot.time_sync.robot_timestamp_from_local_secs(
-        local_pause_time, timesync_timeout_sec=10)
-    robot_pause_time = bosdyn.util.timestamp_to_sec(robot_pause_timestamp)
-    assert robot_pause_time is not None, 'Unable to get robot time.'
-
     body_lease = lease_client.lease_wallet.advance()
-    status = mission_client.restart_mission(robot_pause_time, [body_lease])
+    local_pause_time = time.time() + mission_timeout
+
+    status = mission_client.restart_mission(local_pause_time, [body_lease])
     time.sleep(1)
 
     return status == mission_pb2.State.STATUS_SUCCESS
 
 
-def repeat_mission(robot, mission_client, lease_client, total_time, fail_on_question):
+def repeat_mission(robot, mission_client, lease_client, total_time, fail_on_question, timeout):
     '''Repeat mission for period of time'''
 
     robot.logger.info('Repeating mission for {} seconds.'.format(total_time))
 
     # Run first mission
     start_time = time.time()
-    mission_success = run_mission(robot, mission_client, lease_client, fail_on_question, mission_timeout=3)
+    mission_success = run_mission(robot, mission_client, lease_client, fail_on_question, timeout)
     elapsed_time = time.time() - start_time
     robot.logger.info('Elapsed time = {} (out of {})'.format(elapsed_time, total_time))
 
@@ -340,7 +321,8 @@ def repeat_mission(robot, mission_client, lease_client, total_time, fail_on_ques
     # Repeat mission until total time has expired
     while elapsed_time < total_time:
         restart_mission(robot, mission_client, lease_client, mission_timeout=3)
-        mission_success = run_mission(robot, mission_client, lease_client, fail_on_question, mission_timeout=3)
+        mission_success = run_mission(robot, mission_client, lease_client, fail_on_question,
+                                      timeout)
 
         elapsed_time = time.time() - start_time
         robot.logger.info('Elapsed time = {} (out of {})'.format(elapsed_time, total_time))
@@ -381,6 +363,15 @@ def ensure_power_on(robot):
 
     robot.logger.error('Error powering on robot.')
     return False
+
+def verify_estop(robot):
+    """Verify the robot is not estopped"""
+    client = robot.ensure_client(EstopClient.default_service_name)
+    if client.get_status().stop_level != estop_pb2.ESTOP_LEVEL_NONE:
+        error_message = "Robot is estopped. Please use an external E-Stop client, such as the" \
+        " estop SDK example, to configure E-Stop."
+        robot.logger.error(error_message)
+        raise Exception(error_message)
 
 
 if __name__ == '__main__':

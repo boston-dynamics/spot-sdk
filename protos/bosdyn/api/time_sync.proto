@@ -98,24 +98,3 @@ message TimeSyncUpdateResponse {
     string clock_identifier = 4;
 }
 
-// A TimeSyncStatus request message which passes the clock_identifier to get the status information
-// of the client associated with that identifier.
-message TimeSyncStatusRequest {
-    // Common request header.
-    RequestHeader header = 1;
-
-    // Identifier assigned to specific client. If not set, this service will return time sync info
-    // from all clients.
-    string clock_identifier = 2;
-}
-
-// A TimeSyncStatus response message that includes the time sync states for the clients using the
-// requested clock identifier.
-message TimeSyncStatusResponse {
-    // Common response header.
-    ResponseHeader header = 1;
-
-    // Map from client ids to best time sync estimate.
-    // This only returns clients which have established a valid time sync estimate.
-    map<string, TimeSyncState> time_sync_status_map = 3;
-}

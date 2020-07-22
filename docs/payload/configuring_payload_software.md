@@ -128,14 +128,14 @@ Refer to the [Python payload registration code example in the Spot SDK](../../py
 
 ## Payload self-registration
 
-The Payload Registration API gives developers the ability to deploy payloads that register themselves with the robot when they power on without the need to store an app token or user credentials on the payload.
+The Payload Registration API gives developers the ability to deploy payloads that register themselves with the robot when they power on without the need to store user credentials on the payload.
 
 The payload registration process completes after an admin operator accepts the payload using the robot's admin console. If the payload has registered itself, it should appear in the Payload section of the admin console.
 
 
 
 *   Payloads can register API services. Example: A LIDAR payload registers RemoteService callbacks to trigger scans during robot missions.
-*   Payload and service registration do not require an app token or robot user credentials.
+*   Payload and service registration do not require robot user credentials.
 
 
 Once a payload has been authorized, its unique GUID and secret combination can be used as credentials to request a limited-access user token that will grant permission to the auth, directory, robot-state, and directory-registration services. The granted user token will be valid for 12 hours.
@@ -148,7 +148,7 @@ The Spot SDK Python code examples includes payload registration and service regi
 
 ## Configuring and authorizing payloads
 
-A payload, like any software client, can access the API by using an app token and login credentials. However, for self-registration, paylaods can complete basic registration and get access to host services without needing to pass an app token or hardcoded user credentials.
+A payload, like any software client, can access the API by using login credentials. However, for self-registration, payloads can complete basic registration and get access to host services without needing to pass hardcoded user credentials.
 
 Instead, a payload is manually authorized by an operator on the admin console Payloads page. To ensure that the payload authorization is not used by malicious payloads, each payload must provide a unique GUID and secret (password) at registration time. The GUID and secret can then be used to request a user token that grants access to the basic components of the API (directory, directory registration, robot-state).
 

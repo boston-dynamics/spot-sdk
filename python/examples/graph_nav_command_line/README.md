@@ -57,7 +57,7 @@ The navigation commands will power on and stand the robot up, execute the desire
 
 When issuing a navigate to request, supply the destination waypoint's id as the second argument in the command line. For example, an input could be:
 ```
-> 4 zigzag-filly-8ieN.xz8c9pL5tDZtQYW+w==
+> 6 zigzag-filly-8ieN.xz8c9pL5tDZtQYW+w==
 ```
 Note that ids for the waypoints and edges can be shown by listing the graph ids from the command line.
 Also note that you may use 2 letter short codes whenever they are unambiguous.  In this example "zigzag-filly-8ieN.xz8c9pL5tDZtQYW+w==" could be just "zf" if that is unique.
@@ -65,6 +65,6 @@ Also note that you may use 2 letter short codes whenever they are unambiguous.  
 To issue a navigate route command, the listed waypoints must be in order from the starting waypoint to the final destination waypoint. As well, each consecutive pair of waypoints must have an edge between it that is in the map. For example, an input could be:
 
 ```
-> 5 hammy-skink-iKQI6hGQ.fCBWXJy6mmjqg== unread-beagle-vQfl7NrKVhHPOUoos+ffIg== zigzag-filly-8ieN.xz8c9pL5tDZtQYW+w==
+> 7 hammy-skink-iKQI6hGQ.fCBWXJy6mmjqg== unread-beagle-vQfl7NrKVhHPOUoos+ffIg== zigzag-filly-8ieN.xz8c9pL5tDZtQYW+w==
 ```
-In this example, there would also be a known edge (from waypoint id: hammy-skink-iKQI6hGQ.fCBWXJy6mmjqg==, to waypoint id: unread-beagle-vQfl7NrKVhHPOUoos+ffIg==) and a second edge (from waypoint id: unread-beagle-vQfl7NrKVhHPOUoos+ffIg==, to waypoint id: zigzag-filly-8ieN.xz8c9pL5tDZtQYW+w==).  Note that you would likely be able to simplify this with short codes to "5 hs ub zf".
+In this example, there would also be a known edge (from waypoint id: hammy-skink-iKQI6hGQ.fCBWXJy6mmjqg==, to waypoint id: unread-beagle-vQfl7NrKVhHPOUoos+ffIg==) and a second edge (from waypoint id: unread-beagle-vQfl7NrKVhHPOUoos+ffIg==, to waypoint id: zigzag-filly-8ieN.xz8c9pL5tDZtQYW+w==).  Note that you would likely be able to simplify this with short codes to "7 hs ub zf".
