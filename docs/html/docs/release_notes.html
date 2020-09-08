@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Spot Release Notes &mdash; Spot 2.0.1 documentation</title>
+  <title>Spot Release Notes &mdash; Spot 2.0.2 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                2.0.1
+                2.0.2
               </div>
             
           
@@ -385,9 +385,47 @@ Development Kit License (20191101-BDSDK-SL).
 </p><div class="section" id="spot-release-notes">
 <h1>Spot Release Notes<a class="headerlink" href="#spot-release-notes" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2>2.0.1<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>2.0.2<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="new-features">
 <h3>New Features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="bug-fixes-and-improvements">
+<h3>Bug Fixes and Improvements<a class="headerlink" href="#bug-fixes-and-improvements" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="power-command-exceptions">
+<h4>Power Command Exceptions<a class="headerlink" href="#power-command-exceptions" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><p>Power Client detects errors during a power command right away and propagates them up to the application before the command timeout is reached.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="known-issues">
+<h3>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this headline">¶</a></h3>
+<p>Release 2.0.2 contains the same issues as release 2.0.1, listed below.</p>
+<p><strong>If you delete an object from the world object service</strong>, there is a chance that a ListWorldObjects call immediately afterwards may still include that object.</p>
+<ul class="simple">
+<li><p>Workaround: wait a short time before expecting the object to be gone.</p></li>
+</ul>
+<p><strong>If you register a new service with the robot</strong>, calling robot.ensure_client to create a client for that service may result in a UnregisteredServiceNameError.</p>
+<ul class="simple">
+<li><p>Workaround: call robot.sync_with_directory() before robot.ensure_client()</p></li>
+</ul>
+<p><strong>SE2VelocityLimits require care</strong>.  The proto comment states that “if set, limits the min/max velocity,” implying that one should not set values for any directions one does not want limited. However, if any of the numeric fields are not set in the message, they will be interpreted as 0. For example, if angular is not set but linear is, then the message will be incorrectly interpreted as having an angular limit of 0 and the robot will fail to rotate (obviously not the intent). Similarly, if the user only sets say the ‘x’ field of linear, then ‘y’ will be incorrectly limited to 0 as well.</p>
+<ul class="simple">
+<li><p>Workaround: Correct usage of the SE2VelocityLimit message requires the user to fully fill out all the fields, setting unlimited values to a large number, say 1e6.</p></li>
+</ul>
+<p><strong>LogAnnotationClient does not include async versions</strong> of its rpcs.</p>
+<ul class="simple">
+<li><p>Workaround: If you need to call these in an async manner, call them on a separate thread.</p></li>
+</ul>
+</div>
+<div class="section" id="sample-code">
+<h3>Sample Code<a class="headerlink" href="#sample-code" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>2.0.1<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>New Features<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="license-changes">
 <h4>License Changes<a class="headerlink" href="#license-changes" title="Permalink to this headline">¶</a></h4>
 <p>App tokens are no longer required to authorize applications. Instead, each robot itself will be licensed itself. From a programming perspective, this means that it is no longer necessary to load app tokens into the sdk object, or to fill them out in GetAuthTokenRequest.</p>
@@ -395,8 +433,8 @@ Development Kit License (20191101-BDSDK-SL).
 <p>There is a new LicenseClient which can be used to query the license information for a robot. License information can also be queried from the bosdyn.client command line utility.</p>
 </div>
 </div>
-<div class="section" id="bug-fixes-and-improvements">
-<h3>Bug Fixes and Improvements<a class="headerlink" href="#bug-fixes-and-improvements" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>Bug Fixes and Improvements<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="behavior-faults">
 <h4>Behavior Faults<a class="headerlink" href="#behavior-faults" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
@@ -431,8 +469,8 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </div>
 </div>
-<div class="section" id="known-issues">
-<h3>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Known Issues<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p>Release 2.0.1 contains the same issues as release 2.0.0, listed below.</p>
 <p><strong>If you delete an object from the world object service</strong>, there is a chance that a ListWorldObjects call immediately afterwards may still include that object.</p>
 <ul class="simple">
@@ -451,8 +489,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Workaround: If you need to call these in an async manner, call them on a separate thread.</p></li>
 </ul>
 </div>
-<div class="section" id="sample-code">
-<h3>Sample Code<a class="headerlink" href="#sample-code" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>Sample Code<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="../python/examples/ricoh_theta/README.html"><span class="doc">Ricoh Theta (new)</span></a></p>
 <ul class="simple">
 <li><p>Example that utilizes the 360-degree Ricoh Theta camera during an Autowalk mission.</p></li>
@@ -485,10 +523,10 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </div>
 </div>
-<div class="section" id="id2">
-<h2>2.0.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id3">
-<h3>New Features<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h2>2.0.0<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id8">
+<h3>New Features<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="autonomous-navigation-apis">
 <h4>Autonomous Navigation APIs<a class="headerlink" href="#autonomous-navigation-apis" title="Permalink to this headline">¶</a></h4>
 <p>The APIs used by Autowalk are now accessible to developers.</p>
@@ -531,8 +569,8 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </div>
 </div>
-<div class="section" id="id4">
-<h3>Bug Fixes and Improvements<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id9">
+<h3>Bug Fixes and Improvements<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="expanded-and-improved-documentation">
 <h4>Expanded and improved documentation<a class="headerlink" href="#expanded-and-improved-documentation" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
@@ -676,8 +714,8 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </div>
 </div>
-<div class="section" id="id5">
-<h3>Known issues<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id10">
+<h3>Known issues<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <p><strong>If you delete an object from the world object service</strong>, there is a chance that a ListWorldObjects call immediately afterwards may still include that object.</p>
 <ul class="simple">
 <li><p>Workaround: wait a short time before expecting the object to be gone.</p></li>
@@ -695,8 +733,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Workaround: If you need to call these in an async manner, call them on a separate thread.</p></li>
 </ul>
 </div>
-<div class="section" id="id6">
-<h3>Sample Code<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id11">
+<h3>Sample Code<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="../python/examples/directory/README.html"><span class="doc">directory</span></a></p>
 <ul class="simple">
 <li><p>Register, update, and unregister a service.</p></li>
@@ -778,38 +816,38 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </div>
 </div>
-<div class="section" id="id7">
-<h2>1.1.2<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id8">
-<h3>New features<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id12">
+<h2>1.1.2<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id13">
+<h3>New features<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Missions API Beta and Callbacks</strong> When an Autowalk Mission is created with a “Callback” event, a client can detect that change using a beta version of the Mission API, then tell the robot to continue or abort the Mission. Example uses include a sensor payload that detects Callback events and captures sensor information before advancing the mission, and a desktop UI which waits for the user to push a button before advancing the mission.</p></li>
 <li><p><strong>External Forces Beta</strong>. Mobility commands can specify how to handle external forces. Examples of external forces could include an object that Spot is towing, or an object Spot is pushing. The default behavior is to do nothing, but clients can specify whether Spot should estimate external forces and compensate for it, or explicitly specify what the external forces are.</p></li>
 </ul>
 </div>
-<div class="section" id="id9">
-<h3>Bug fixes and improvements<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id14">
+<h3>Bug fixes and improvements<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Depth image</strong> extrinsics are fixed. In earlier 1.1.x releases, the extrinsics were incorrectly the same as the fisheye cameras.</p></li>
 <li><p><strong>App Token expiration logging.</strong>. The Python SDK object logs if the app token will expire in the next 30 days. New tokens can be requested at support&#64;bostondynamics.com.</p></li>
 </ul>
 </div>
-<div class="section" id="id10">
-<h3>Sample Code<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id15">
+<h3>Sample Code<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><strong>mission_question_answerer</strong> demonstrates how to build a client which responds to Mission Callbacks.</p></li>
 </ul>
 </div>
 </div>
-<div class="section" id="id11">
-<h2>1.1.1<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id16">
+<h2>1.1.1<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
 <p>1.1.1 has no SDK-related changes.</p>
 </div>
-<div class="section" id="id12">
-<h2>1.1.0<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id17">
+<h2>1.1.0<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
 <p>The 1.1.0 SDK software is published under a new software license which can be found in the LICENSE file at the top of the SDK directory.</p>
-<div class="section" id="id13">
-<h3>New features<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id18">
+<h3>New features<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><strong>ImageService</strong> exposes depth maps from on-board stereo cameras as additional image sources. Image Sources specify an ImageType to differentiate depth maps from grayscale images.</p></li>
 <li><p><strong>PayloadService</strong> is a new service which lists all known payloads on the robot.</p></li>
@@ -819,8 +857,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><strong>Log Annotations</strong> a new type of log: Blob for large binary data.</p></li>
 </ul>
 </div>
-<div class="section" id="id14">
-<h3>Sample code<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id19">
+<h3>Sample code<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
 <p>The sample code directory structure has changed to directory-per-example under python/examples. Each example includes a requirements.txt file for specifying dependencies.</p>
 <ul class="simple">
 <li><p><strong>estop</strong> is a desktop GUI which creates an E-Stop endpoint for a robot. This example demonstrates how to use the E-Stop endpoint system, and is a useful utility on its own.</p></li>
@@ -838,8 +876,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><strong>xbox_controller</strong> demonstrates how to specify more advanced options for mobility commands.</p></li>
 </ul>
 </div>
-<div class="section" id="id15">
-<h3>Bug fixes and Improvements<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id20">
+<h3>Bug fixes and Improvements<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Too many invalid login attempts will lock a user out from being able to authenticate for a temporary period to prevent brute-force attacks. GetAuthTokenResponse indicates this state with a STATUS_TEMPORARILY_LOCKED_OUT.</p></li>
 <li><p>Elliptic Curve (ECDSA) cryptography used for user tokens - reducing the size of RPC requests by several hundred bytes.</p></li>
@@ -864,8 +902,8 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </div>
 </div>
-<div class="section" id="id16">
-<h2>1.0.1<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id21">
+<h2>1.0.1<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Improved documentation on SDK installation.</p></li>
 <li><p>Clearer Python dependency requirements.</p></li>
@@ -874,8 +912,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Fixed timing bugs in power service.</p></li>
 </ul>
 </div>
-<div class="section" id="id17">
-<h2>1.0.0<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id22">
+<h2>1.0.0<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h2>
 <p>Initial release of the SDK.</p>
 </div>
 </div>
@@ -893,7 +931,7 @@ Development Kit License (20191101-BDSDK-SL).
     <p>
       
       &copy; Copyright 2020 Boston Dynamics. All rights reserved.
-      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 
     </p>

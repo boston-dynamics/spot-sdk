@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API Example - Spot CAM Services &mdash; Spot 2.0.1 documentation</title>
+  <title>API Example - Spot CAM Services &mdash; Spot 2.0.2 documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                2.0.1
+                2.0.2
               </div>
             
           
@@ -404,36 +404,39 @@ APP_TOKEN_PATH=&lt;~/.bosdyn/dev.app_token&gt;
 ROBOT_IP=&lt;ip-address&gt;
 
 # Version Service
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP version software
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP version software
 
 # Audio Service
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP audio set_volume 1
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP audio get_volume
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP audio load autonomous_robot_en autonomous_robot_en.wav
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP audio list
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP audio play autonomous_robot_en
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP audio delete autonomous_robot_en
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP audio list
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio set_volume 1
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio get_volume
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio load autonomous_robot_en autonomous_robot_en.wav
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio list
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio play autonomous_robot_en
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio delete autonomous_robot_en
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio list
 
 # Lighting Service
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP lighting set 0.1 0.2 0.3 0.4
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP lighting get
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP lighting set 0.1 0.2 0.3 0.4
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP lighting get
 
 # Media Log Service
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP media_log list_cameras
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP media_log store pano
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP media_log list_cameras
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP media_log store pano
 # The UUID is given by the &#39;store&#39; command
 IMAGE_UUID=f0e835c2-54d4-11ea-9365-00044be03a91
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP media_log status $IMAGE_UUID
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP media_log retrieve $IMAGE_UUID
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP media_log delete $IMAGE_UUID
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP media_log status $IMAGE_UUID
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP media_log retrieve $IMAGE_UUID
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP media_log delete $IMAGE_UUID
 # You should not see the UUID in the list of logpoints
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP media_log list_logpoints
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP media_log list_logpoints
 
 # Ptz Service
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP ptz list
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP ptz set_position mech 0 0 1
-python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $APP_TOKEN_PATH $ROBOT_IP ptz get_position mech
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz list
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz set_position mech 0 0 1
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz get_position mech
+
+# webRTC Service
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP webrtc save
 </pre></div>
 </div>
 </div>
@@ -452,7 +455,7 @@ python -m command_line --username=$USERNAME --password=$PASSWORD --app-token $AP
     <p>
       
       &copy; Copyright 2020 Boston Dynamics. All rights reserved.
-      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 
     </p>

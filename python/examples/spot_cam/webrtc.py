@@ -7,7 +7,6 @@
 import asyncio
 import base64
 import json
-import requests
 import threading
 
 from aiortc import (
@@ -16,6 +15,7 @@ from aiortc import (
     RTCSessionDescription,
     MediaStreamTrack,
 )
+import requests
 
 from bosdyn.client.command_line import (Command, Subcommands)
 

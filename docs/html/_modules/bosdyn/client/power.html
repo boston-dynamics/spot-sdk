@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.power &mdash; Spot 2.0.1 documentation</title>
+  <title>bosdyn.client.power &mdash; Spot 2.0.2 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                2.0.1
+                2.0.2
               </div>
             
           
@@ -646,6 +646,10 @@
             <span class="n">response</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">time_until_timeout</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span><span class="p">:</span>
                 <span class="k">return</span>
+            <span class="k">if</span> <span class="n">response</span> <span class="o">!=</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_IN_PROGRESS</span><span class="p">:</span>
+                <span class="n">error_type</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">_STATUS_TO_ERROR</span><span class="p">[</span><span class="n">response</span><span class="p">]</span>
+                <span class="n">exc</span> <span class="o">=</span> <span class="n">error_type</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">exc</span>
         <span class="k">except</span> <span class="ne">TimeoutError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">CommandTimedOutError</span>
         <span class="n">call_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_call_time</span>
@@ -676,7 +680,7 @@
     <p>
       
       &copy; Copyright 2020 Boston Dynamics. All rights reserved.
-      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 
     </p>

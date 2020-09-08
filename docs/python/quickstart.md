@@ -176,11 +176,11 @@ $ python -m pip install --upgrade bosdyn-client bosdyn-mission
 
 Installing the `bosdyn-client` and `bosdyn-mission` packages will also install `bosdyn-api` and
 `bosdyn-core` packages with the same version. The command above installs the latest version of the
-packages. To install a different version of the packages from PyPI, for example 2.0.1, use the
+packages. To install a different version of the packages from PyPI, for example 2.0.2, use the
 following command.
 
 ```
-$ python -m pip install bosdyn-client==2.0.1 bosdyn-mission==2.0.1
+$ python -m pip install bosdyn-client==2.0.2 bosdyn-mission==2.0.2
 ```
 
 
@@ -220,10 +220,10 @@ Instead of `*.whl`, please list all `.whl` files in the directory explicitly in 
 
 ```shell
 $ cd ~/spot-sdk/prebuilt
-$ python -m pip install bosdyn_api-2.0.1-py2.py3-none-any.whl
-$ python -m pip install bosdyn_core-2.0.1-py2.py3-none-any.whl
-$ python -m pip install bosdyn_client-2.0.1-py2.py3-none-any.whl
-$ python -m pip install bosdyn_mission-2.0.1-py2.py3-none-any.whl
+$ python -m pip install bosdyn_api-2.0.2-py2.py3-none-any.whl
+$ python -m pip install bosdyn_core-2.0.2-py2.py3-none-any.whl
+$ python -m pip install bosdyn_client-2.0.2-py2.py3-none-any.whl
+$ python -m pip install bosdyn_mission-2.0.2-py2.py3-none-any.whl
 ```
 
 **Version incompatibility:**
@@ -232,14 +232,14 @@ If you see a version incompatiblity error during pip install such as:
 
 ```
 ERROR: bosdyn-core \<a version string> has requirement bosdyn-api==\<a version string>, but you'll
-have bosdyn-api 2.0.1 which is incompatible.
+have bosdyn-api 2.0.2 which is incompatible.
 ```
 
 Try uninstalling the bosdyn package and then reinstalling:
 
 ```shell
 $ python -m pip uninstall bosdyn-api
-$ python -m pip install bosdyn_api-2.0.1-py2.py3-none-any.whl
+$ python -m pip install bosdyn_api-2.0.2-py2.py3-none-any.whl
 ```
 
 ### Verify your Spot SDK installation
@@ -247,10 +247,10 @@ Make sure that the packages have been installed.
 
 ```
 $ python -m pip list --format=columns | grep bosdyn
-bosdyn-api                    2.0.1
-bosdyn-client                 2.0.1
-bosdyn-core                   2.0.1
-bosdyn-mission                2.0.1
+bosdyn-api                    2.0.2
+bosdyn-client                 2.0.2
+bosdyn-core                   2.0.2
+bosdyn-mission                2.0.2
 ```
 If you don't see these 4 packages with your target version, something went wrong during
 installation.  Contact support@bostondynamics.com for help.
@@ -327,7 +327,7 @@ Issue the following command to get your Spot robot's ID:
 ```
 $ python -m bosdyn.client 192.168.80.3 id
 beta-BD-90490007     02-19904-9903   beta29     spot (V3)
-Software: 2.0.1 (b11205d698e 2020-03-11 11:53:12)
+Software: 2.0.2 (b11205d698e 2020-03-11 11:53:12)
 Installed: 2020-03-11 15:06:57
 ```
 

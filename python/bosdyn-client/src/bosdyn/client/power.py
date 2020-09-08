@@ -270,6 +270,10 @@ def _power_command(power_client, request, timeout_sec=30, update_frequency=1.0, 
             response = future.result(timeout=time_until_timeout)
             if response == power_pb2.STATUS_SUCCESS:
                 return
+            if response != power_pb2.STATUS_IN_PROGRESS:
+                error_type, message = _STATUS_TO_ERROR[response]
+                exc = error_type(response=None, error_message=message)
+                raise exc
         except TimeoutError:
             raise CommandTimedOutError
         call_time = time.time() - start_call_time

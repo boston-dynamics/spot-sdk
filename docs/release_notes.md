@@ -12,6 +12,36 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 2.0.2
+
+### New Features
+
+### Bug Fixes and Improvements
+
+#### Power Command Exceptions
+  * Power Client detects errors during a power command right away and propagates them up to the application before the command timeout is reached.
+
+### Known Issues
+Release 2.0.2 contains the same issues as release 2.0.1, listed below.
+
+**If you delete an object from the world object service**, there is a chance that a ListWorldObjects call immediately afterwards may still include that object.
+
+  * Workaround: wait a short time before expecting the object to be gone.
+
+**If you register a new service with the robot**, calling robot.ensure_client to create a client for that service may result in a UnregisteredServiceNameError.
+
+  * Workaround: call robot.sync_with_directory() before robot.ensure_client()
+
+**SE2VelocityLimits require care**.  The proto comment states that "if set, limits the min/max velocity," implying that one should not set values for any directions one does not want limited. However, if any of the numeric fields are not set in the message, they will be interpreted as 0. For example, if angular is not set but linear is, then the message will be incorrectly interpreted as having an angular limit of 0 and the robot will fail to rotate (obviously not the intent). Similarly, if the user only sets say the 'x' field of linear, then 'y' will be incorrectly limited to 0 as well.
+
+  * Workaround: Correct usage of the SE2VelocityLimit message requires the user to fully fill out all the fields, setting unlimited values to a large number, say 1e6.
+
+**LogAnnotationClient does not include async versions** of its rpcs.
+
+  * Workaround: If you need to call these in an async manner, call them on a separate thread.
+
+### Sample Code
+
 
 ## 2.0.1
 

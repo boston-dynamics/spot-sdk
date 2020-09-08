@@ -62,11 +62,6 @@ def main(args=None):
     # Create robot object and authenticate.
     sdk = bosdyn.client.create_standard_sdk('Spot CAM Client')
     spot_cam.register_all_service_clients(sdk)
-    try:
-        sdk.load_app_token(options.app_token)
-    except SdkError:
-        print('Cannot retrieve app token from "{}".'.format(options.app_token))
-        return
 
     robot = sdk.create_robot(options.hostname)
 

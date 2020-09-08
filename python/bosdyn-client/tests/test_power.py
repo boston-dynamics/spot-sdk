@@ -149,6 +149,14 @@ def test_power_on_success():
     mock_client.response = power_pb2.STATUS_SUCCESS
     power.power_on(mock_client, timeout_sec=timeout)
 
+def test_power_on_failure():
+    mock_client = MockPowerClient()
+    timeout = 1.0
+    mock_client.feedback_fn = lambda: time.sleep(timeout / 2.0)
+    mock_client.response = power_pb2.STATUS_FAULTED
+    with pytest.raises(power.FaultedError, match=r".* Cannot power on due to a fault.*"):
+        power.power_on(mock_client, timeout_sec=timeout)
+
 
 @pytest.mark.parametrize('feedback_fn', [None, lambda: time.sleep(3.0)])
 def test_power_on_timeout(feedback_fn):
