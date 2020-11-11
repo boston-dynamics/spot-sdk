@@ -1,0 +1,155 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option java_outer_classname = "ServiceFaultProto";
+
+import "bosdyn/api/header.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+// Information necessary to uniquely specify a service fault.
+// A service fault typically is associated with a service running on the robot or a
+// payload. Occassionally, the fault may pertain to a payload but no specific service
+// on the payload. In that situation, no service_name should not be specified and instead
+// a payload_guid should be specified. Otherwise, in the standard case of a service
+// originating fault, only the service_name should be specified and the payload_guid
+// will be populated automatically by the fault service on robot.
+message ServiceFaultId {
+    // Name of the fault.
+    string fault_name = 1;
+
+    // Name of the registered service associated with the fault.
+    // Optional. Service name does not need to be specified if this is a payload-level
+    // fault with no associated service.
+    string service_name = 2;
+
+    // GUID of the payload associated with the faulted service.
+    // Optional. If not set, it will be assigned to the payload associated with the
+    // service_name.
+    string payload_guid = 3;
+}
+
+// The current service faults for services registered with the robot.
+// A fault is an indicator of a problem with a service or payload registered
+// with the robot. An active fault may indicate a service may fail to comply
+// with a user request.
+// If the name, service_name, and payload_guid of a newly triggered ServiceFault matches an
+// already active ServiceFault the new fault will not be added to the active fault list.
+// The oldest matching fault will be maintained.
+message ServiceFault {
+    // Identifying information of the fault.
+    ServiceFaultId fault_id = 1;
+
+    // User visible description of the fault (and possibly remedies). Will be
+    // displayed on tablet.
+    string error_message = 2;
+
+    // Fault attributes
+    // Each fault may be flagged with attribute metadata (strings in this case.)
+    // These attributes are useful to communicate that a particular fault may
+    // have significant effect on the operations of services. Some potential attributes
+    // may be "autowalk", "Spot CORE", "vision", or "gauge detection". These
+    // attributes enable the caller to flag a fault as indicating a problem with
+    // particular robot abstractions. A fault may have, zero, one, or more
+    // attributes attached to it.
+    repeated string attributes = 3;
+
+    enum Severity {
+        // Unknown severity
+        SEVERITY_UNKNOWN = 0;
+
+        // Service still functional
+        SEVERITY_INFO = 1;
+
+        // Service performance may be degraded
+        SEVERITY_WARN = 2;
+
+        // Critical service fault
+        SEVERITY_CRITICAL = 3;
+    }
+
+    // The severity level will have some indication of the potential breakage
+    // resulting from the fault. For example, a fault associated with payload
+    // X and severity level SEVERITY_INFO may indicate the payload is in an
+    // unexpected state but still operational. However, a fault with serverity
+    // level SEVERITY_CRITICAL may indicate the payload is no
+    // longer operational.
+    Severity severity = 4;
+
+    // Time of robot local clock at fault onset. Set by robot-state service.
+    google.protobuf.Timestamp onset_timestamp = 5;
+
+    // Time elapsed since onset of the fault. Set by robot-state service.
+    google.protobuf.Duration duration = 6;
+}
+
+// Trigger a new service fault that will be reported in the robot ServiceFaultState.
+// These faults will be displayed in the tablet. Developers should be careful to
+// avoid overwhelming operators with dozens of minor messages.
+message TriggerServiceFaultRequest {
+    // Common request header.
+    RequestHeader header = 1;
+    // The fault to report in ServiceFaultState.
+    ServiceFault fault = 2;
+}
+
+// The TriggerServiceFault response message contains a header indicating success.
+message TriggerServiceFaultResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        // UNKNOWN should never be used.
+        STATUS_UNKNOWN = 0;
+
+        // Success. The fault has been triggerd.
+        STATUS_OK = 1;
+
+        // ServiceFaultId already in active faults.
+        STATUS_FAULT_ALREADY_ACTIVE = 2;
+    }
+    // Return status for the request.
+    Status status = 2;
+}
+
+// Clear a service fault from the robot's ServiceFaultState (in robot_state.proto).
+// The active ServiceFault to clear will be determined by matching fault_name and
+// service_name/payload_guid, specified in the ServiceFaultId message.
+message ClearServiceFaultRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Identifying information of the fault to clear.
+    ServiceFaultId fault_id = 2;
+
+    // Clear all faults that are associated with the same service_name. Use carefully.
+    bool clear_all_service_faults = 3;
+
+    // Clear all faults that are associated with the same payload_guid. Use carefully.
+    bool clear_all_payload_faults = 4;
+}
+
+// The ClearServiceFault response message contains a header indicating success.
+message ClearServiceFaultResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        // UNKNOWN should never be used.
+        STATUS_UNKNOWN = 0;
+
+        // Success. The fault has been cleared.
+        STATUS_OK = 1;
+
+        // ServiceFaultId not found in active faults.
+        STATUS_FAULT_NOT_ACTIVE = 2;
+    }
+    // Return status for the request.
+    Status status = 2;
+}

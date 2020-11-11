@@ -23,27 +23,49 @@ message LicenseInfo {
         STATUS_SERIAL_MISMATCH = 5;
         STATUS_NO_LICENSE = 6;
     }
-
+    // The status of the uploaded license for this robot.
     Status status = 1;
 
-    // Unique license number
+    // Unique license number.
     string id = 2;
 
-    // Serial number of the robot this license covers
+    // Serial number of the robot this license covers.
     string robot_serial = 3;
 
+    // The license is not valid for use for any dates before this timestamp.
     google.protobuf.Timestamp not_valid_before = 4;
+    // The license is not valid for use for any dates after this timestamp.
     google.protobuf.Timestamp not_valid_after = 5;
 
-    /// Human readable list of licensed features
+    /// Human readable list of licensed features included for this license.
     repeated string licensed_features = 6;
 };
 
+//
 message GetLicenseInfoRequest {
     RequestHeader header = 1; // Common request header.
 }
 message GetLicenseInfoResponse {
     ResponseHeader header = 1; // Common response header
 
+    // The details about the current license that is uploaded to the robot.
     LicenseInfo license = 2;
+}
+
+message GetFeatureEnabledRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Check if specific named features are enabled on the robot under the currently
+    // loaded license.
+    repeated string feature_codes = 2;
+}
+
+message GetFeatureEnabledResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // The resulting map showing the feature name (as the map key) and a boolean indicating
+    // if the feature is enabled with this license (as the map value).
+    map<string, bool> feature_enabled = 2;
 }

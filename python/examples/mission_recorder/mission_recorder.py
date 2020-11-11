@@ -17,8 +17,8 @@ import signal
 import threading
 import time
 
-from bosdyn.api import world_object_pb2
-from bosdyn.api.graph_nav import recording_pb2
+from bosdyn.api import geometry_pb2, world_object_pb2
+from bosdyn.api.graph_nav import graph_nav_pb2, map_pb2, recording_pb2
 from bosdyn.api.mission import nodes_pb2
 import bosdyn.api.robot_state_pb2 as robot_state_proto
 import bosdyn.api.spot.robot_command_pb2 as spot_command_pb2
@@ -47,6 +47,17 @@ VELOCITY_BASE_ANGULAR = 0.8  # rad/sec
 VELOCITY_CMD_DURATION = 0.6  # seconds
 COMMAND_INPUT_RATE = 0.1
 
+# Velocity limits for navigation (optional)
+NAV_VELOCITY_MAX_YAW = 1.2  # rad/s
+NAV_VELOCITY_MAX_X = 1.0  # m/s
+NAV_VELOCITY_MAX_Y = 0.5  # m/s
+NAV_VELOCITY_LIMITS = geometry_pb2.SE2VelocityLimit(
+    max_vel=geometry_pb2.SE2Velocity(
+        linear=geometry_pb2.Vec2(x=NAV_VELOCITY_MAX_X, y=NAV_VELOCITY_MAX_Y),
+        angular=NAV_VELOCITY_MAX_YAW),
+    min_vel=geometry_pb2.SE2Velocity(
+        linear=geometry_pb2.Vec2(x=-NAV_VELOCITY_MAX_X, y=-NAV_VELOCITY_MAX_Y),
+        angular=-NAV_VELOCITY_MAX_YAW))
 
 
 def _grpc_or_log(desc, thunk):
@@ -116,11 +127,20 @@ class RecorderInterface(object):
         # Flag indicating whether mission is currently being recorded
         self._recording = False
 
+        # Flag indicating whether robot is in feature desert mode
+        self._desert_mode = False
+
         # Filepath for the location to put the downloaded graph and snapshots.
         self._download_filepath = download_filepath
 
-        # List of visited waypoints in current mission
-        self._waypoint_path = []
+        # List of waypoints in map
+        self._waypoint_list = []
+
+        # List of waypoint commands
+        self._waypoint_commands = []
+
+        # Dictionary indicating which waypoints are deserts
+        self._desert_flag = {}
 
         # Current waypoint id
         self._waypoint_id = 'NONE'
@@ -166,7 +186,9 @@ class RecorderInterface(object):
             ord('e'): self._turn_right,
             ord('m'): self._start_recording,
             ord('l'): self._relocalize,
-            ord('g'): self._generate_mission,
+            ord('z'): self._enter_desert,
+            ord('x'): self._exit_desert,
+            ord('g'): self._generate_mission
         }
         self._locked_messages = ['', '', '']  # string: displayed message for user
         self._estop_keepalive = None
@@ -280,16 +302,19 @@ class RecorderInterface(object):
         stdscr.addstr(5, 0, self._time_sync_str())
         stdscr.addstr(6, 0, self._waypoint_str())
         stdscr.addstr(7, 0, self._fiducial_str())
+        stdscr.addstr(8, 0, self._desert_str())
         for i in range(3):
-            stdscr.addstr(9 + i, 2, self.message(i))
-        stdscr.addstr(13, 0, "Commands: [TAB]: quit                               ")
-        stdscr.addstr(14, 0, "          [T]: Time-sync, [SPACE]: Estop, [P]: Power")
-        stdscr.addstr(15, 0, "          [v]: Sit, [f]: Stand, [r]: Self-right     ")
-        stdscr.addstr(16, 0, "          [wasd]: Directional strafing              ")
-        stdscr.addstr(17, 0, "          [qe]: Turning                             ")
-        stdscr.addstr(18, 0, "          [m]: Start recording mission              ")
-        stdscr.addstr(19, 0, "          [l]: Add fiducial localization to mission ")
-        stdscr.addstr(20, 0, "          [g]: Stop recording and generate mission  ")
+            stdscr.addstr(10 + i, 2, self.message(i))
+        stdscr.addstr(14, 0, "Commands: [TAB]: quit                               ")
+        stdscr.addstr(15, 0, "          [T]: Time-sync, [SPACE]: Estop, [P]: Power")
+        stdscr.addstr(16, 0, "          [v]: Sit, [f]: Stand, [r]: Self-right     ")
+        stdscr.addstr(17, 0, "          [wasd]: Directional strafing              ")
+        stdscr.addstr(18, 0, "          [qe]: Turning                             ")
+        stdscr.addstr(19, 0, "          [m]: Start recording mission              ")
+        stdscr.addstr(20, 0, "          [l]: Add fiducial localization to mission ")
+        stdscr.addstr(21, 0, "          [z]: Enter desert mode                    ")
+        stdscr.addstr(22, 0, "          [x]: Exit desert mode                     ")
+        stdscr.addstr(23, 0, "          [g]: Stop recording and generate mission  ")
 
         stdscr.refresh()
 
@@ -311,6 +336,8 @@ class RecorderInterface(object):
             return None
 
     def _quit_program(self):
+        if self._recording:
+            self._stop_recording()
         self._robot.power_off()
         self.shutdown()
         if self._exit_check is not None:
@@ -344,10 +371,10 @@ class RecorderInterface(object):
         self._start_robot_command('self_right', RobotCommandBuilder.selfright_command())
 
     def _sit(self):
-        self._start_robot_command('sit', RobotCommandBuilder.sit_command())
+        self._start_robot_command('sit', RobotCommandBuilder.synchro_sit_command())
 
     def _stand(self):
-        self._start_robot_command('stand', RobotCommandBuilder.stand_command())
+        self._start_robot_command('stand', RobotCommandBuilder.synchro_stand_command())
 
     def _move_forward(self):
         self._velocity_cmd_helper('move_forward', v_x=VELOCITY_BASE_SPEED)
@@ -369,13 +396,13 @@ class RecorderInterface(object):
 
     def _velocity_cmd_helper(self, desc='', v_x=0.0, v_y=0.0, v_rot=0.0):
         self._start_robot_command(
-            desc, RobotCommandBuilder.velocity_command(v_x=v_x, v_y=v_y, v_rot=v_rot),
+            desc, RobotCommandBuilder.synchro_velocity_command(v_x=v_x, v_y=v_y, v_rot=v_rot),
             end_time_secs=time.time() + VELOCITY_CMD_DURATION)
 
     def _return_to_origin(self):
         self._start_robot_command(
             'fwd_and_rotate',
-            RobotCommandBuilder.trajectory_command(
+            RobotCommandBuilder.synchro_se2_trajectory_point_command(
                 goal_x=0.0, goal_y=0.0, goal_heading=0.0, frame_name=ODOM_FRAME_NAME, params=None,
                 body_height=0.0, locomotion_hint=spot_command_pb2.HINT_SPEED_SELECT_TROT),
             end_time_secs=time.time() + 20)
@@ -460,14 +487,23 @@ class RecorderInterface(object):
             self._waypoint_id = 'ERROR'
 
         if self._recording and self._waypoint_id != 'NONE' and self._waypoint_id != 'ERROR':
-            if (self._waypoint_path == []) or (self._waypoint_id != self._waypoint_path[-1]):
-                self._waypoint_path += [self._waypoint_id]
+            if (self._waypoint_list == []) or (self._waypoint_id != self._waypoint_list[-1]):
+                self._waypoint_list += [self._waypoint_id]
+                self._desert_flag[self._waypoint_id] = self._desert_mode
+            if self._waypoint_commands == []:
+                self._waypoint_commands = [self._waypoint_id]
             return 'Current waypoint: {} [ RECORDING ]'.format(self._waypoint_id)
 
         return 'Current waypoint: {}'.format(self._waypoint_id)
 
     def _fiducial_str(self):
         return 'Visible fiducials: {}'.format(str(self._count_visible_fiducials()))
+
+    def _desert_str(self):
+        if self._desert_mode:
+            return '[ FEATURE DESERT MODE ]'
+        else:
+            return ''
 
     def _battery_str(self):
         if not self.robot_state:
@@ -503,19 +539,28 @@ class RecorderInterface(object):
             self.add_message("ERROR: Can't start recording -- No fiducials in view.")
             return
 
-        self._waypoint_path = []
+        if self._waypoint_id is None:
+            self.add_message("ERROR: Not localized to waypoint.")
+            return
+
+        # Tell graph nav to start recording map
         status = self._recording_client.start_recording()
         if status != recording_pb2.StartRecordingResponse.STATUS_OK:
             self.add_message("Start recording failed.")
-        else:
-            self.add_message("Successfully started recording a map.")
-            self._recording = True
+            return
+
+        self.add_message("Started recording map.")
+        self._waypoint_list = []
+        self._waypoint_commands = []
+        self._recording = True
 
     def _stop_recording(self):
         """Stop or pause recording a map."""
         if not self._recording:
             return True
         self._recording = False
+
+        self._waypoint_commands += [self._waypoint_id]
 
         try:
             status = self._recording_client.stop_recording()
@@ -537,8 +582,21 @@ class RecorderInterface(object):
             return False
 
         self.add_message("Adding fiducial localization to mission.")
-        self._waypoint_path += ['LOCALIZE']
+        self._waypoint_commands += [self._waypoint_id]
+        self._waypoint_commands += ['LOCALIZE']
         return True
+
+    def _enter_desert(self):
+        self._desert_mode = True
+        if self._recording:
+            if self._waypoint_commands == [] or self._waypoint_commands[-1] != self._waypoint_id:
+                self._waypoint_commands += [self._waypoint_id]
+
+    def _exit_desert(self):
+        self._desert_mode = False
+        if self._recording:
+            if self._waypoint_commands == [] or self._waypoint_commands[-1] != self._waypoint_id:
+                self._waypoint_commands += [self._waypoint_id]
 
     def _generate_mission(self):
         """Save graph map and mission file."""
@@ -555,7 +613,9 @@ class RecorderInterface(object):
 
         # Save graph map
         os.mkdir(self._download_filepath)
-        self._download_full_graph()
+        if not self._download_full_graph():
+            self.add_message("ERROR: Error downloading graph.")
+            return
 
         # Generate mission
         mission = self._make_mission()
@@ -568,18 +628,31 @@ class RecorderInterface(object):
         # Quit program
         self._quit_program()
 
+    def _make_desert(self, waypoint):
+        waypoint.annotations.scan_match_region.empty.CopyFrom(
+            map_pb2.Waypoint.Annotations.LocalizeRegion.Empty())
+
     def _download_full_graph(self):
         """Download the graph and snapshots from the robot."""
         graph = self._graph_nav_client.download_graph()
         if graph is None:
             self.add_message("Failed to download the graph.")
-            return
+            return False
+
+        # Mark desert waypoints
+        for waypoint in graph.waypoints:
+            if self._desert_flag[waypoint.id]:
+                self._make_desert(waypoint)
+
+        # Write graph map
         self._write_full_graph(graph)
         self.add_message("Graph downloaded with {} waypoints and {} edges".format(
             len(graph.waypoints), len(graph.edges)))
+
         # Download the waypoint and edge snapshots.
         self._download_and_write_waypoint_snapshots(graph.waypoints)
         self._download_and_write_edge_snapshots(graph.edges)
+        return True
 
     def _write_full_graph(self, graph):
         """Download the graph from robot to the specified, local filepath location."""
@@ -621,11 +694,14 @@ class RecorderInterface(object):
 
     def _make_mission(self):
         """ Create a mission that visits each waypoint on stored path."""
+
+        self.add_message("Mission: " + str(self._waypoint_commands))
+
         # Create a Sequence that visits all the waypoints.
         sequence = nodes_pb2.Sequence()
         sequence.children.add().CopyFrom(self._make_localize_node())
 
-        for waypoint_id in self._waypoint_path:
+        for waypoint_id in self._waypoint_commands:
             if waypoint_id == 'LOCALIZE':
                 sequence.children.add().CopyFrom(self._make_localize_node())
             else:
@@ -633,7 +709,7 @@ class RecorderInterface(object):
 
         # Return a Node with the Sequence.
         ret = nodes_pb2.Node()
-        ret.name = "visit %d waypoints" % len(self._waypoint_path)
+        ret.name = "Visit %d goals" % len(self._waypoint_commands)
         ret.impl.Pack(sequence)
         return ret
 
@@ -641,7 +717,17 @@ class RecorderInterface(object):
         """ Create a leaf node that will go to the waypoint. """
         ret = nodes_pb2.Node()
         ret.name = "goto %s" % waypoint_id
-        impl = nodes_pb2.BosdynNavigateTo()
+        vel_limit = NAV_VELOCITY_LIMITS
+
+        if self._desert_flag[waypoint_id]:
+            tolerance = graph_nav_pb2.TravelParams.TOLERANCE_IGNORE_POOR_FEATURE_QUALITY
+        else:
+            tolerance = graph_nav_pb2.TravelParams.TOLERANCE_DEFAULT
+
+        travel_params = graph_nav_pb2.TravelParams(velocity_limit=vel_limit,
+                                                   feature_quality_tolerance=tolerance)
+
+        impl = nodes_pb2.BosdynNavigateTo(travel_params=travel_params)
         impl.destination_waypoint_id = waypoint_id
         ret.impl.Pack(impl)
         return ret
@@ -709,7 +795,6 @@ def main():
 
     # Create robot object.
     sdk = create_standard_sdk('MissionRecorderClient')
-    sdk.load_app_token(options.app_token)
     robot = sdk.create_robot(options.hostname)
     try:
         robot.authenticate(options.username, options.password)

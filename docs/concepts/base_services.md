@@ -98,7 +98,7 @@ The `time-sync` service is used to estimate the offset between the applicationâ€
 
 Applications built with the Python library can use the `TimeSyncThread` to simplify interaction with the `time-sync` service. The `TimeSyncThread` spawns a background thread which establishes an initial offset estimation, and periodically updates the estimation to avoid drift issues. It also exposes a number of methods to convert time or determine what the current estimate is. See the [`time_sync` example](../../python/examples/time_sync/README.md) for an example of how to use the `TimeSyncThread`.
 
-This estimate is purely at the application layer.  This is important for two reaons:
+This estimate is purely at the application layer.  This is important for two reasons:
 
 *  Neither Spotâ€™s clock nor the application's clock are adjusted, admin/root permissions are not needed.
 *  A client may connect to multiple Spot robots that are not synchronized to each other.

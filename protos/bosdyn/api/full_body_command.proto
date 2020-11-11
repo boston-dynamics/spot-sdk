@@ -35,6 +35,7 @@ message FullBodyCommand {
 
             // Command to safely power off the robot.
             SafePowerOffCommand.Request safe_power_off_request = 4;
+            BatteryChangePoseCommand.Request battery_change_pose_request = 5;
 
         }
 
@@ -61,7 +62,10 @@ message FullBodyCommand {
 
             // Feedback for the safe power off command request.
             SafePowerOffCommand.Feedback safe_power_off_feedback = 4;
+            BatteryChangePoseCommand.Feedback battery_change_pose_feedback = 5;
 
         }
+
+        RobotCommandFeedbackStatus.Status status = 100;
     }
 }

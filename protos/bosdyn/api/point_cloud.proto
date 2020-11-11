@@ -112,16 +112,37 @@ message PointCloud {
     reserved 8, 9;
 }
 
-// The GetPointCloud request message to ask a specific point cloud service for data.
-message GetPointCloudRequest {
+message ListPointCloudSourcesRequest {
     // Common request header.
     RequestHeader header = 1;
 }
 
 // The GetPointCloud response message which returns any point cloud data associated with that service.
-message GetPointCloudResponse {
-    // Common response header.
+message ListPointCloudSourcesResponse {
+    // Common response Header.
     ResponseHeader header = 1;
+
+    // The set of PointCloudSources available from this service.
+    // May be empty if the service serves no point clouds (e.g., if no sensors were found on startup).
+    repeated PointCloudSource point_cloud_sources = 2;
+}
+
+message PointCloudRequest {
+    // Name of the point cloud source to request from.
+    string point_cloud_source_name = 1;
+
+}
+
+// The GetPointCloud request message to ask a specific point cloud service for data.
+message GetPointCloudRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Sources to retrieve from. The service will return a response for each PointCloudRequest.
+    repeated PointCloudRequest point_cloud_requests = 2;
+}
+
+message PointCloudResponse {
 
     enum Status {
         // UNKNOWN should never be used.
@@ -132,15 +153,27 @@ message GetPointCloudResponse {
         // Call succeeded at filling out all the fields.
         STATUS_OK = 1;
 
-        // Failed to fill out PointCloudSource.  All the other fields are not filled out.
+        // Failed to fill out PointCloudSource. All the other fields are not filled out.
         STATUS_SOURCE_DATA_ERROR = 2;
 
         // There was a problem with the point cloud data.  Only the PointCloudSource is filled out.
         STATUS_POINT_CLOUD_DATA_ERROR = 3;
+
+        // Provided point cloud source was not found. One
+        STATUS_UNKNOWN_SOURCE = 4;
     }
     // Return status for the request.
-    Status status = 2;
+    Status status = 1;
 
     // The current point cloud from the service.
-    PointCloud point_cloud = 3;
+    PointCloud point_cloud = 2;
+}
+
+message GetPointCloudResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+
+    // The resulting point clouds for each requested source.
+    repeated PointCloudResponse point_cloud_responses = 4;
 }

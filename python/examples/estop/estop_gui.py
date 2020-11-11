@@ -260,10 +260,10 @@ def main(argv):
     parser.add_argument('--start-minimized', help='Start the window minimized.',
                         dest='start_minimized', action='store_true', default=False)
     options = parser.parse_args(argv)
+    bosdyn.client.util.setup_logging(options.verbose)
 
     # Create robot object
     sdk = bosdyn.client.create_standard_sdk('estop_gui')
-    sdk.load_app_token(options.app_token)
     robot = sdk.create_robot(options.hostname)
     robot.authenticate(options.username, options.password)
 

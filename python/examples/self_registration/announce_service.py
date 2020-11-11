@@ -10,6 +10,8 @@ Example code demonstrating a basic python announce rpc service that handles anno
 This is a generic python grpc server set up.
 """
 import argparse
+import bosdyn.client.util
+from bosdyn.client.util import GrpcServiceRunner, setup_logging
 import logging
 import time
 import sys
@@ -20,15 +22,15 @@ import announce_pb2 as announce_protos
 import announce_service_pb2_grpc as announce_service_protos_grpc
 
 
-class Announce(announce_service_protos_grpc.AnnounceServiceServicer):
+class AnnounceServicer(announce_service_protos_grpc.AnnounceServiceServicer):
     """GRPC Service to handle announcements."""
 
     def Announce(self, request, context):
-        logging.info("Got request")
+        logging.info('Got request')
         if request.message:
             announcement = request.message.upper()
         else:
-            announcement = "DEFAULT ANNOUNCEMENT!"
+            announcement = 'DEFAULT ANNOUNCEMENT!'
         response = announce_protos.AnnounceResponse(message=announcement)
 
         return response
@@ -36,25 +38,19 @@ class Announce(announce_service_protos_grpc.AnnounceServiceServicer):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--port", type=int, required=True, help="Insecure server port")
+    bosdyn.client.util.add_service_hosting_arguments(parser)
     options = parser.parse_args()
 
-    logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', level=logging.DEBUG)
+    setup_logging()
 
     # Create & initialize python service server
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=4),)
-    announce_service_protos_grpc.add_AnnounceServiceServicer_to_server(Announce(), server)
+    announce_service_servicer = AnnounceServicer()
+    service_runner = GrpcServiceRunner(
+        announce_service_servicer,
+        announce_service_protos_grpc.add_AnnounceServiceServicer_to_server, options.port)
 
-    server.add_insecure_port('[::]:' + str(options.port))
-
-    server.start()
-
-    # Keep service alive until a keyboard interrupt
-    try:
-        while True:
-            time.sleep(10)
-    except KeyboardInterrupt:
-        server.stop(0)
+    # Keep service alive until a keyboard interrupt.
+    service_runner.run_until_interrupt()
 
     return True
 

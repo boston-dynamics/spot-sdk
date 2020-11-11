@@ -35,7 +35,7 @@ There are some limitations on the configuration:
 1) There must be exactly one Endpoint with a role set to `PDB_rooted`.
 2) The `PDB_rooted` Endpoint must have a timeout of 60 seconds or less.
 
-The `PDB_rooted` endpoint has its communications verified in the firmwares, which is why it has special requirements on its configuration.
+The `PDB_rooted` endpoint has its communications verified in the firmware, which is why it has special requirements on its configuration.
 
 Once the configuration is set, the robot waits for individual endpoints to register themselves. In the simplest case, a client will set a configuration with one endpoint.
 

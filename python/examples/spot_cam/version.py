@@ -4,15 +4,8 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-import os
-import shutil
-import tempfile
-
 from bosdyn.client.command_line import (Command, Subcommands)
-
 from bosdyn.client.spot_cam.version import VersionClient
-
-from bosdyn.api.spot_cam import version_pb2
 
 
 class VersionCommands(Subcommands):
@@ -34,6 +27,7 @@ class VersionGetSoftwareVersionCommand(Command):
         super(VersionGetSoftwareVersionCommand, self).__init__(subparsers, command_dict)
 
     def _run(self, robot, options):
-        version = robot.ensure_client(VersionClient.default_service_name).get_software_version()
-
-        return version
+        response = robot.ensure_client(VersionClient.default_service_name).get_software_version_full()
+        version = response.version
+        return 'Version {}.{}.{}\n{}'.format(version.major_version, version.minor_version,
+                                             version.patch_level, response.detail)

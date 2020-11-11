@@ -10,8 +10,6 @@ Development Kit License (20191101-BDSDK-SL).
 
 To log payload data and debug payload issues, payloads developed for the Spot platform should observe the following guidelines:
 
-
-
 *   Payloads gather and generate their own log data.
 *   Payloads generate and send their own text annotations to mark robot logs for preservation.
 *   Each payload component provides access to its own debug data.
@@ -22,31 +20,20 @@ To log payload data and debug payload issues, payloads developed for the Spot pl
 
 The API provides two services for managing and registering payloads and payload services:
 
-
-*   RemoteMissionService
 *   PayloadService
 *   PayloadRegistrationService
 
 Robot directory services are used to register services that a payload might offer so that they can be exposed on the robot.
 
-
-
 *   DirectoryService
 *   DirectoryRegistrationService
 
 
-## RemoteMissionService RPCs
+## Service and Payload Faults
 
-RemoteMissionService RPCs are called by MissionService to communicate with a robot  payload. The mission service uses these RPCs to communicate with a remote mission service.
+The Fault Service enables external clients to raise service faults, which can be read by external clients via the robot state and are automatically displayed in the tablet. Service faults are a type of fault that can originate from both on the robot and external clients. Each service fault is associated with a service, a payload, or both.
 
-| RPC   | Description |
-| ----- | ----------- |
-| EstablishSession |	Call this once at mission load time, per node.
-| Tick |	Call this every time the RemoteGrpc node is ticked.
-| Stop |	Call this every time the RemoteGrpc node was ticked in the previous cycle, but not ticked in this cycle.
-| TeardownSession |	Tells the service it can forget any data associated with the given session.
-
-
+Service faults enable services and payloads to easily display information about current systems health to operators. The faults should assist operators in effective debugging and resolution of any off-robot issues that arise during operation.
 
 
 ### DirectoryService RPCs
@@ -164,8 +151,8 @@ The robot’s rear ethernet port can be configured to a user desired IP address 
 Payload devices should use the following network configuration:
 
 
-
-*   IP v4 host address 192.168.50.5 for the front payload, 192.168.50.6 for rear payload
+*   IP v4 host address 192.168.50.5 or 192.168.50.6 for either front or rear payload port
+*   Do not use the same IP address for both front and rear payload port
 *   Netmask 255.255.255.0
 *   Default gateway gateway will be set to 192.168.50.3
 
@@ -189,6 +176,9 @@ Devices on the payload network can reach the robot at 192.168.50.3 via port 443.
 | Fixed Forwards 2 |	31000-32000 |	192.158.50.6:31000-32000 |	TCP/UDP
 
 
+Robot port forwards for ports 20443, 20022, 30443, and 30022 now masquerade. They should allow the payload to respond to forwarded traffic to the robot on any of the robot's ports.
+
+All other forwarded ports are purely port forwarded, meaning that packets received by the payload still have the original address of the sender. These port forwards will only connect for hosts on one of the LANs attached to the robot OR for hosts located on the default route as configured in the robot network page.
 
 
 ## Configuring payload mass properties

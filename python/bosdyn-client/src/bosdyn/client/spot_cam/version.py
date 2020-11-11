@@ -25,7 +25,11 @@ class VersionClient(BaseClient):
         super(VersionClient, self).__init__(service_pb2_grpc.VersionServiceStub)
 
     def get_software_version(self, **kwargs):
-        """Retrieves the Spot CAM's current software version."""
+        """Retrieves the Spot CAM's current software version.
+
+        Returns:
+            SoftwareVersion proto for the currently installed version.
+        """
         request = version_pb2.GetSoftwareVersionRequest()
         return self.call(self._stub.GetSoftwareVersion, request,
                          self._get_software_version_from_response,
@@ -37,6 +41,22 @@ class VersionClient(BaseClient):
         return self.call_async(self._stub.GetSoftwareVersion, request,
                                self._get_software_version_from_response,
                                self._version_error_from_response, **kwargs)
+
+    def get_software_version_full(self, **kwargs):
+        """Retrieves the Spot CAM's full version information.
+
+        Returns:
+            GetSoftwareVersionResponse proto with all version information.
+        """
+        request = version_pb2.GetSoftwareVersionRequest()
+        return self.call(self._stub.GetSoftwareVersion, request,
+                         error_from_response=self._version_error_from_response, **kwargs)
+
+    def get_software_version_full_async(self, **kwargs):
+        """Async version of get_software_version_full()"""
+        request = version_pb2.GetSoftwareVersionRequest()
+        return self.call_async(self._stub.GetSoftwareVersion, request,
+                               error_from_response=self._version_error_from_response, **kwargs)
 
     @staticmethod
     def _get_software_version_from_response(response):

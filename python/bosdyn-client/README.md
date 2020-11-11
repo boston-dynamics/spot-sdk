@@ -23,12 +23,11 @@ The main classes contained in this wheel are Sdk and Robot.
 of access to all client functionality.
 
 For example, to list the robot image sources using the Image client, simply create an Sdk object, 
-load the app token, create a Robot object, authenticate, create the client and call the 
+create a Robot object, authenticate, create the client and call the 
 corresponding method, as shown below. It is that simple!
 ```pycon
 >>> import bosdyn.client
 >>> sdk = bosdyn.client.create_standard_sdk('image_capture')
->>> sdk.load_app_token(app_token)
 >>> robot = sdk.create_robot(hostname)
 >>> robot.authenticate(username, password)
 >>> image_client = robot.ensure_client(ImageClient.default_service_name)
@@ -45,7 +44,6 @@ Some of the clients included in this wheel can also be accessed directly from th
 ```
 python3 -m bosdyn.client --username username --password password hostname -h
 usage: bosdyn.client [-h] [-v] [--username USERNAME] [--password PASSWORD]
-                     [--app-token APP_TOKEN]
                      hostname
                      {dir,id,state,log,time-sync,lease,become-estop,image,local_grid}
                      ...

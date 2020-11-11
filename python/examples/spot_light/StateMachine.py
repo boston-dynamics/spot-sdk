@@ -192,6 +192,8 @@ class StateMachineSit(StateMachine):
         self._robot.sit_down()
         self._state_idx = self._state_idx + 1
 
+        print("\n Shine a light in Spot's front left camera for Spot to stand.\n")
+
 
 #===================================================================================================
 
@@ -219,6 +221,8 @@ class StateMachineStand(StateMachine):
         print('Spot is going to {}.'.format(self._name.lower()))
         self._robot.stand_up()
         self._state_idx = self._state_idx + 1
+
+        print("\n Shine a light in Spot's front left camera, and Spot will tilt to follow the light.\n")
 
 
 #===================================================================================================

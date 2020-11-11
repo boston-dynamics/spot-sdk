@@ -23,7 +23,6 @@ def main():
 
     # Create an SDK that knows about the MissionClient type.
     sdk = bosdyn.client.create_standard_sdk('get-mission-state-example', [MissionClient])
-    sdk.load_app_token(options.app_token)
     robot = sdk.create_robot(options.hostname)
     robot.authenticate(options.username, options.password)
     client = robot.ensure_client(MissionClient.default_service_name)

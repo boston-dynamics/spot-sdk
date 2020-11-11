@@ -19,18 +19,18 @@ See the requirements.txt file for a list of python dependencies which can be ins
 using the command:
 
 ```
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 ## Run the Example
 
 To run the example as a GUI:
 ```
-python estop_gui.py --username USER --password PASSWORD ROBOT_IP
+python3 estop_gui.py --username USER --password PASSWORD ROBOT_IP
 ```
 To run the example without a GUI:
 ```
-python estop_nogui.py --username USER --password PASSWORD ROBOT_IP
+python3 estop_nogui.py --username USER --password PASSWORD ROBOT_IP
 ```
 
 ### GUI Version

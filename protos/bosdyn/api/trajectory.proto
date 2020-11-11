@@ -12,6 +12,7 @@ option java_outer_classname = "TrajectoryProto";
 import "bosdyn/api/geometry.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 // Parameters for how positional trajectories will be interpolated on robot.
 enum PositionalInterpolation {
@@ -121,4 +122,49 @@ message Vec3TrajectoryPoint {
     // The duration to reach the point relative to the trajectory reference time.
     google.protobuf.Duration time_since_reference = 3;
 
+}
+
+// A time-based trajectories of wrenches.
+message WrenchTrajectory {
+    // The wrenches in the trajectory
+    repeated WrenchTrajectoryPoint points = 1;
+
+    // All trajectories specify times relative to this reference time. The reference time should be
+    // in robot clock. If this field is not included, this time will be the receive time of the
+    // command.
+    google.protobuf.Timestamp reference_time = 2;
+}
+
+message WrenchTrajectoryPoint {
+    // The wrench to apply at this point in time.
+    Wrench wrench = 1;
+
+    // The duration to reach the point relative to the trajectory reference time.
+    google.protobuf.Duration time_since_reference = 2;
+}
+
+
+// A Point trajectory.
+message ScalarTrajectory {
+    // The points in trajectory
+    repeated ScalarTrajectoryPoint points = 1;
+
+    // All trajectories specify times relative to this reference time. The reference time should be
+    // in robot clock. If this field is not included, this time will be the receive time of the
+    // command.
+    google.protobuf.Timestamp reference_time = 2;
+
+    // Parameters for how trajectories will be interpolated on robot. 
+    PositionalInterpolation interpolation = 3;
+}
+
+message ScalarTrajectoryPoint {
+    // Required position at the trajectory point's reference time.
+    double point = 1;
+
+    // Optional speed at the trajectory point's reference time.
+    google.protobuf.DoubleValue velocity = 2;
+
+    // The duration to reach the point relative to the trajectory reference time.
+    google.protobuf.Duration time_since_reference = 3;
 }

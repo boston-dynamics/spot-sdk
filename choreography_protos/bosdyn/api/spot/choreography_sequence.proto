@@ -1,0 +1,232 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.spot;
+
+option java_outer_classname = "ChoreographyProto";
+
+import "bosdyn/api/header.proto";
+import "google/protobuf/timestamp.proto";
+import "bosdyn/api/lease.proto";
+import "bosdyn/api/spot/choreography_params.proto";
+
+// Request a list of all possible moves and the associated parameters (min/max values).
+message ListAllMovesRequest {
+    // Common request header
+    RequestHeader header = 1;
+}
+
+// Response for ListAllMoves that defines the list of available moves and their parameter types.
+message ListAllMovesResponse {
+    // Common response header
+    ResponseHeader header = 1;
+
+    // List of moves that the robot knows about
+    repeated MoveInfo moves = 2;
+
+    // A copy of the MoveParamsConfig.txt that the robot is using.
+    string move_param_config = 3;
+}
+
+message UploadChoreographyRequest {
+    // Common request header
+    RequestHeader header = 1;
+
+    // ChoreographySequence to upload and store in memory
+    ChoreographySequence choreography_sequence = 2;
+
+    // Should we run a script that has correctable errors?
+    // If true, the service will fix any correctable errors and run the corrected choreography
+    // script. If false, the service will reject a choreography script that has any errors.
+    bool non_strict_parsing = 3;
+}
+
+message UploadChoreographyResponse {
+    // Common response header. If the dance upload is invalid, the header INVALID request error will
+    // be set, which means that the choreography did not respect bounds of the parameters or has
+    // other attributes missing or incorrect.
+    ResponseHeader header = 1;
+
+    // If the uploaded choreography is invalid (will throw a header InvalidRequest status), then
+    // certain warning messages will be populated here to indicate which choreography moves or
+    // parameters violated constraints of the robot.
+    repeated string warnings = 3;
+}
+
+message ExecuteChoreographyRequest {
+    // Common request header
+    RequestHeader header = 1;
+
+    // The string name of the ChoreographySequence to use.
+    string choreography_sequence_name = 2;
+
+    // The absolute time to start the choreography at. This should be in the robot's clock so we can
+    // synchronize music playing and the robot's choreography.
+    google.protobuf.Timestamp start_time = 3;
+
+    // The slice (betas/sub-beats) that the choreography should begin excution at.
+    double choreography_starting_slice = 4;
+
+    /// The Lease to show ownership of the robot body.
+    Lease lease = 6;
+}
+
+message ExecuteChoreographyResponse {
+    // Common response header
+    ResponseHeader header = 1;
+    LeaseUseResult lease_use_result = 2;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        STATUS_INVALID_UPLOADED_CHOREOGRAPHY = 2;
+        STATUS_ROBOT_COMMAND_ISSUES = 3;
+        STATUS_LEASE_ERROR = 4;
+    }
+    Status status = 3;
+}
+
+// Defines varying parameters for a particular instance of a move.
+message MoveParams {
+    // Unique ID of the move type that these params are associated with.
+    string type = 1;
+
+    // How many slices since the start of the song this move should be executed at.
+    int32 start_slice = 2;
+
+    // The number of slices (beats/sub-beats) that this move is supposed to last for. If the move
+    // was extendable, then this corresponds to the number of slices that the user requested.
+    int32 requested_slices = 3;
+
+    // Each move type can define its own parameters which get stored here. Only a single parameter
+    // set can be used to describe a move instance.
+    oneof params {
+        JumpParams jump_params = 11;
+        RotateBodyParams rotate_body_params = 12;
+        StepParams step_params = 13;
+        ButtCircleParams butt_circle_params = 14;
+        TurnParams turn_params = 15;
+        Pace2StepParams pace_2step_params = 16;
+        TwerkParams twerk_params = 17;
+        ChickenHeadParams chicken_head_params = 18;
+        ClapParams clap_params = 19;
+        FrontUpParams front_up_params = 20;
+        SwayParams sway_params = 21;
+        BodyHoldParams body_hold_params = 22;
+        ArmMoveParams arm_move_params = 23;
+        KneelLegMoveParams kneel_leg_move_params = 24;
+        RunningManParams running_man_params = 25;
+        KneelCircleParams kneel_circle_params = 26;
+        GripperParams gripper_params = 27;
+        HopParams hop_params = 28;
+        RandomRotateParams random_rotate_params = 29;
+        CrawlParams crawl_params = 30;
+        SideParams side_params = 31;
+    }
+}
+
+// Defines properties of a choreography move.
+message MoveInfo {
+    // Unique ID of the move type.
+    string name = 1;
+
+    // The number of "slices" (beats or sub-beats) that this move takes up.
+    int32 move_length_slices = 2;
+
+    // If true, the user can extend the move beyond the requested length.
+    bool is_extendable = 3;
+
+    // The state that the robot is in at the start or end of a move.
+    enum TransitionState {
+        TRANSITION_STATE_UNKNOWN = 0;  // Unknown or unset state.
+        TRANSITION_STATE_STAND = 1;    // The robot is in a normal (standing) state.
+        TRANSITION_STATE_KNEEL = 2;    // The robot is kneeling down.
+        TRANSITION_STATE_SIT = 3;      // The robot is sitting.
+        TRANSITION_STATE_SPRAWL = 4;   // The robot requires a self-right.
+    }
+    // The admissible states the robot can be in currently for this move to execute.
+    repeated TransitionState entrance_states = 4;
+    // The state of the robot after the move is complete.
+    TransitionState exit_state = 5;
+
+    // The absolute minimum and maximum times of the move in seconds.
+    double min_time = 6;
+    double max_time = 7;
+
+    // Indicators as to which parts of the robot that the move controls.
+    bool controls_arm = 8;
+    bool controls_legs = 9;
+    bool controls_body = 10;
+
+    // Information for the GUI tool to visualize the sequence move info.
+    ChoreographerDisplayInfo display = 11;
+}
+
+// Information for the Choreographer to display.
+message ChoreographerDisplayInfo {
+    // Color of the object. Set it to override the default category color.
+    message Color {
+        // RGB values for color ranging from [0,255].
+        int32 r = 1;
+        int32 g = 2;
+        int32 b = 3;
+
+        // Alpha value for the coloration ranges from [0,1].
+        double a = 4;
+    }
+    Color color = 1;
+
+    // For the GUI, these are marked events in steps. For example if the move puts a foot down, the
+    // mark might be exactly when the foot is placed on the ground, relative to the start of the
+    // move.
+    repeated int32 markers = 13;
+    // Textual description to be displayed in the GUI.
+    string description = 14;
+    // Image path (local to the UI) to display as an icon. May be an animated gif.
+    string image = 15;
+
+    // Move Category affects the grouping in the choreographer list view, as well as the color it's
+    // displayed with.
+    enum Category {
+        CATEGORY_UNKNOWN = 0;
+        CATEGORY_BODY = 1;
+        CATEGORY_STEP = 2;
+        CATEGORY_DYNAMIC = 3;
+        CATEGORY_TRANSITION = 4;
+        CATEGORY_KNEEL = 5;
+        CATEGORY_ARM = 6;
+    }
+    Category category = 16;
+}
+
+// Represents a particular choreography sequence, made up of MoveParams.
+message ChoreographySequence {
+    // Display name or file name associated with the choreography sequence.
+    string name = 1;
+
+    // Number of slices per minute in the choreography sequence. Typically a slice will correspond
+    // to 1/4 a beat.
+    double slices_per_minute = 2;
+
+    // All of the moves in this choreography sequence.
+    repeated MoveParams moves = 3;
+}
+
+// Describes the metadata and information only used by the Choreographer GUI, which isn't used in
+// the API
+message ChoreographerSave {
+    // The main ChoreographySequence that makes up the dance and is sent to the robot.
+    ChoreographySequence choreography_sequence = 1;
+
+    // If specified this is the UI local path of the music to load.
+    string music_file = 2;
+
+    // UI specific member that describes exactly when the music should start, in slices. This is for
+    // time sync issues.
+    double music_start_slice = 3;
+}

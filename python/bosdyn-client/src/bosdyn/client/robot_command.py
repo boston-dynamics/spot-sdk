@@ -12,20 +12,24 @@ from google.protobuf import any_pb2
 from bosdyn import geometry
 
 from bosdyn.api import geometry_pb2
+
 from bosdyn.api import robot_command_pb2
 from bosdyn.api import full_body_command_pb2
 from bosdyn.api import mobility_command_pb2
+from bosdyn.api import synchronized_command_pb2
 from bosdyn.api import basic_command_pb2
 from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
 from bosdyn.api import robot_command_service_pb2_grpc
 from bosdyn.api import trajectory_pb2
+from bosdyn.util import seconds_to_duration
 
 from bosdyn.client.common import (BaseClient, error_factory, error_pair, handle_unset_status_error,
                                   handle_common_header_errors, handle_lease_use_result_errors)
 
-from .exceptions import ResponseError, InvalidRequestError, TimedOutError
+from .exceptions import ResponseError, InvalidRequestError, TimedOutError, UnsetStatusError
 from .exceptions import Error as BaseError
-from .frame_helpers import BODY_FRAME_NAME
+from .frame_helpers import BODY_FRAME_NAME, ODOM_FRAME_NAME, get_se2_a_tform_b
+from .math_helpers import SE2Pose
 from .lease import add_lease_wallet_processors
 
 
@@ -69,7 +73,6 @@ class CommandFailedError(Error):
 
 class CommandTimedOutError(Error):
     """Timed out waiting for SUCCESS response from robot command."""
-
 
 class UnknownFrameError(RobotCommandResponseError):
     """Robot does not know how to handle supplied frame."""
@@ -115,6 +118,18 @@ class _TimeConverter(object):
 
 # Tree of proto-fields leading to end_time fields needing to be set from end_time_secs.
 END_TIME_EDIT_TREE = {
+    'synchronized_command': {
+        'mobility_command': {
+            '@command': {  # 'command' is a oneof submessage
+                'se2_velocity_request': {
+                    'end_time': None
+                },
+                'se2_trajectory_request': {
+                    'end_time': None
+                }
+            }
+        },
+    },
     'mobility_command': {
         '@command': {  # 'command' is a oneof submessage
             'se2_velocity_request': {
@@ -130,6 +145,17 @@ END_TIME_EDIT_TREE = {
 # Tree of proto fields leading to Timestamp protos which need to be converted from
 #  client clock to robot clock values using timesync information from the robot.
 EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME = {
+    'synchronized_command': {
+        'mobility_command': {
+            '@command': {
+                'se2_trajectory_request': {
+                    'trajectory': {
+                        'reference_time': None
+                    }
+                }
+            }
+        }
+    },
     'mobility_command': {
         '@command': {
             'se2_trajectory_request': {
@@ -230,7 +256,7 @@ class RobotCommandClient(BaseClient):
         """
 
         req = self._get_robot_command_request(lease, command)
-        # Update req.command instead of command so that we don't modify an input this this function.
+        # Update req.command instead of command so that we don't modify an input in this function.
         self._update_command_timestamps(req.command, end_time_secs, timesync_endpoint)
         return self.call(self._stub.RobotCommand, req, _robot_command_value, _robot_command_error,
                          **kwargs)
@@ -420,6 +446,7 @@ def _robot_command_value(response):
     return response.robot_command_id
 
 
+# yapf: disable
 _ROBOT_COMMAND_STATUS_TO_ERROR = collections.defaultdict(lambda: (RobotCommandResponseError, None))
 _ROBOT_COMMAND_STATUS_TO_ERROR.update({
     robot_command_pb2.RobotCommandResponse.STATUS_OK: (None, None),
@@ -432,6 +459,7 @@ _ROBOT_COMMAND_STATUS_TO_ERROR.update({
     robot_command_pb2.RobotCommandResponse.STATUS_BEHAVIOR_FAULT: error_pair(BehaviorFaultError),
     robot_command_pb2.RobotCommandResponse.STATUS_UNKNOWN_FRAME: error_pair(UnknownFrameError),
 })
+# yapf: enable
 
 
 @handle_common_header_errors
@@ -453,9 +481,16 @@ def _robot_command_error(response):
 
 
 @handle_common_header_errors
-@handle_unset_status_error(unset='STATUS_UNKNOWN')
 def _robot_command_feedback_error(response):
-    return None
+    # Write custom handling unset errors here. Only one of these statuses needs to be set.
+    field = 'status'
+    code = getattr(response, 'STATUS_UNKNOWN')
+    if ((getattr(response, field) != code) or
+        (getattr(response.feedback.full_body_feedback, field)) or
+        (getattr(response.feedback.synchronized_feedback.mobility_command_feedback, field))):
+        return None
+    else:
+        return UnsetStatusError(response)
 
 
 def _clear_behavior_fault_value(response):
@@ -470,12 +505,14 @@ def _clear_behavior_fault_value(response):
     return response.status == robot_command_pb2.ClearBehaviorFaultResponse.STATUS_CLEARED
 
 
+# yapf: disable
 _CLEAR_BEHAVIOR_FAULT_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _CLEAR_BEHAVIOR_FAULT_STATUS_TO_ERROR.update({
     robot_command_pb2.ClearBehaviorFaultResponse.STATUS_CLEARED: (None, None),
-    robot_command_pb2.ClearBehaviorFaultResponse.STATUS_NOT_CLEARED: (NotClearedError,
-                                                                      NotClearedError.__doc__),
+    robot_command_pb2.ClearBehaviorFaultResponse.STATUS_NOT_CLEARED:
+        (NotClearedError, NotClearedError.__doc__),
 })
+# yapf: enable
 
 
 @handle_common_header_errors
@@ -549,6 +586,21 @@ class RobotCommandBuilder(object):
         return command
 
     @staticmethod
+    def battery_change_pose_command(dir_hint=1):
+        """Command that will have the robot sit down (if not already sitting) and roll onto its side
+        for easier battery access.
+
+        Args:
+            dir_hint: Direction to roll over: 1-right/2-left
+
+        Returns:
+            RobotCommand, which can be issued to the robot command service.
+        """
+        command = robot_command_pb2.RobotCommand()
+        command.full_body_command.battery_change_pose_request.direction_hint = dir_hint
+        return command
+
+    @staticmethod
     def safe_power_off_command():
         """Command to get robot into a position where it is safe to power down, then power down. If
         the robot has fallen, it will power down directly. If the robot is not in a safe position,
@@ -562,14 +614,17 @@ class RobotCommandBuilder(object):
             safe_power_off_request=basic_command_pb2.SafePowerOffCommand.Request())
         command = robot_command_pb2.RobotCommand(full_body_command=full_body_command)
         return command
+    ###################################
+    # Mobility commands  - DEPRECATED #
+    ###################################
 
-    #####################
-    # Mobility commands #
-    #####################
     @staticmethod
     def trajectory_command(goal_x, goal_y, goal_heading, frame_name, params=None, body_height=0.0,
                            locomotion_hint=spot_command_pb2.HINT_AUTO):
-        """Command robot to move to pose along a 2D plane. Pose can specified in the world
+        """
+        DEPRECATED - do not use. Instead, use synchro_se2_trajectory_point_command.
+
+        Command robot to move to pose along a 2D plane. Pose can specified in the world
         (kinematic odometry) frame or the robot body frame. The arguments body_height and
         locomotion_hint are ignored if params argument is passed.
 
@@ -607,6 +662,205 @@ class RobotCommandBuilder(object):
     @staticmethod
     def velocity_command(v_x, v_y, v_rot, params=None, body_height=0.0,
                          locomotion_hint=spot_command_pb2.HINT_AUTO, frame_name=BODY_FRAME_NAME):
+        """
+        DEPRECATED - do not use. Instead, use synchro_velocity_command.
+
+        Command robot to move along 2D plane. Velocity should be specified in the robot body
+        frame. Other frames are currently not supported. The arguments body_height and
+        locomotion_hint are ignored if params argument is passed.
+
+        A velocity command requires an end time. End time is not set in this function, but rather
+        is set externally before call to RobotCommandService.
+
+        Args:
+            v_x: Velocity in X direction.
+            v_y: Velocity in Y direction.
+            v_rot: Velocity heading in radians.
+            params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,
+                this will be constructed using other args.
+            body_height: Body height in meters.
+            locomotion_hint: Locomotion hint to use for the velocity command.
+            frame_name: Name of the frame to use.
+        """
+        if not params:
+            params = RobotCommandBuilder.mobility_params(body_height=body_height,
+                                                         locomotion_hint=locomotion_hint)
+        any_params = RobotCommandBuilder._to_any(params)
+        linear = geometry_pb2.Vec2(x=v_x, y=v_y)
+        vel = geometry_pb2.SE2Velocity(linear=linear, angular=v_rot)
+        slew_rate_limit = geometry_pb2.SE2Velocity(linear=geometry_pb2.Vec2(x=4, y=4), angular=2.0)
+        vel_command = basic_command_pb2.SE2VelocityCommand.Request(velocity=vel,
+                                                                   se2_frame_name=frame_name,
+                                                                   slew_rate_limit=slew_rate_limit)
+        mobility_command = mobility_command_pb2.MobilityCommand.Request(
+            se2_velocity_request=vel_command, params=any_params)
+        command = robot_command_pb2.RobotCommand(mobility_command=mobility_command)
+        return command
+
+    @staticmethod
+    def stand_command(params=None, body_height=0.0, footprint_R_body=geometry.EulerZXY()):
+        """
+        DEPRECATED - do not use. Instead, use synchro_stand_command.
+
+        Command robot to stand. If the robot is sitting, it will stand up. If the robot is
+        moving, it will come to a stop. Params can specify a trajectory for the body to follow
+        while standing. In the simplest case, this can be a specific position+orientation which the
+        body will hold at. The arguments body_height and footprint_R_body are ignored if params
+        argument is passed.
+
+        Args:
+            params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,
+                this will be constructed using other args.
+            body_height(float): Height, meters, to stand at relative to a nominal stand height.
+            footprint_R_body(EulerZXY): The orientation of the body frame with respect to the
+                footprint frame (gravity aligned framed with yaw computed from the stance feet)
+
+        Returns:
+            RobotCommand, which can be issued to the robot command service.
+        """
+        if not params:
+            params = RobotCommandBuilder.mobility_params(body_height=body_height,
+                                                         footprint_R_body=footprint_R_body)
+        any_params = RobotCommandBuilder._to_any(params)
+        mobility_command = mobility_command_pb2.MobilityCommand.Request(
+            stand_request=basic_command_pb2.StandCommand.Request(), params=any_params)
+        command = robot_command_pb2.RobotCommand(mobility_command=mobility_command)
+        return command
+
+    @staticmethod
+    def sit_command(params=None):
+        """
+        DEPRECATED - do not use. Instead, use synchro_sit_command.
+
+        Command the robot to sit.
+
+        Args:
+            params(spot.MobilityParams): Spot specific parameters for mobility commands.
+
+        Returns:
+            RobotCommand, which can be issued to the robot command service.
+        """
+        if not params:
+            params = RobotCommandBuilder.mobility_params()
+        any_params = RobotCommandBuilder._to_any(params)
+        mobility_command = mobility_command_pb2.MobilityCommand.Request(
+            sit_request=basic_command_pb2.SitCommand.Request(), params=any_params)
+        command = robot_command_pb2.RobotCommand(mobility_command=mobility_command)
+        return command
+
+
+    #########################
+    # Synchronized commands #
+    #########################
+
+    @staticmethod
+    def synchro_se2_trajectory_point_command(goal_x, goal_y, goal_heading, frame_name, params=None,
+                                             body_height=0.0,
+                                             locomotion_hint=spot_command_pb2.HINT_AUTO):
+        """
+        Command robot to move to pose along a 2D plane. Pose can specified in the world
+        (kinematic odometry) frame or the robot body frame. The arguments body_height and
+        locomotion_hint are ignored if params argument is passed.
+
+        A trajectory command requires an end time. End time is not set in this function, but rather
+        is set externally before call to RobotCommandService.
+
+        Args:
+            goal_x: Position X coordinate.
+            goal_y: Position Y coordinate.
+            goal_heading: Pose heading in radians.
+            frame_name: Name of the frame to use.
+            params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,
+                this will be constructed using other args.
+            body_height: Body height in meters.
+            locomotion_hint: Locomotion hint to use for the trajectory command.
+
+        Returns:
+            RobotCommand, which can be issued to the robot command service.
+        """
+        position = geometry_pb2.Vec2(x=goal_x, y=goal_y)
+        pose = geometry_pb2.SE2Pose(position=position, angle=goal_heading)
+        return RobotCommandBuilder.synchro_se2_trajectory_command(pose, frame_name, params,
+                                                                  body_height, locomotion_hint)
+
+    @staticmethod
+    def synchro_se2_trajectory_command(goal_se2, frame_name, params=None, body_height=0.0,
+                                       locomotion_hint=spot_command_pb2.HINT_AUTO):
+        """Command robot to move to pose along a 2D plane. Pose can specified in the world
+        (kinematic odometry or vision world) frames. The arguments body_height and
+        locomotion_hint are ignored if params argument is passed.
+
+        A trajectory command requires an end time. End time is not set in this function, but rather
+        is set externally before call to RobotCommandService.
+
+        Args:
+            goal_se2: SE2Pose goal.
+            frame_name: Name of the frame to use.
+            params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,
+                this will be constructed using other args.
+            body_height: Body height in meters.
+            locomotion_hint: Locomotion hint to use for the trajectory command.
+
+        Returns:
+            RobotCommand, which can be issued to the robot command service.
+        """
+        if not params:
+            params = RobotCommandBuilder.mobility_params(body_height=body_height,
+                                                         locomotion_hint=locomotion_hint)
+        any_params = RobotCommandBuilder._to_any(params)
+        point = trajectory_pb2.SE2TrajectoryPoint(pose=goal_se2)
+        traj = trajectory_pb2.SE2Trajectory(points=[point])
+        traj_command = basic_command_pb2.SE2TrajectoryCommand.Request(trajectory=traj,
+                                                                      se2_frame_name=frame_name)
+        mobility_command = mobility_command_pb2.MobilityCommand.Request(
+            se2_trajectory_request=traj_command, params=any_params)
+        synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
+            mobility_command=mobility_command)
+        robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
+
+        return robot_command
+
+    @staticmethod
+    def synchro_trajectory_command_in_body_frame(goal_x_rt_body, goal_y_rt_body, goal_heading_rt_body,
+                                                 frame_tree_snapshot, params=None, body_height=0.0,
+                                                 locomotion_hint=spot_command_pb2.HINT_AUTO):
+        """Command robot to move to pose described relative to the robots body along a 2D plane. For example,
+        a command to move forward 2 meters at the same heading will have goal_x_rt_body=2.0, goal_y_rt_body=0.0,
+        goal_heading_rt_body=0.0.
+
+        The arguments body_height and locomotion_hint are ignored if params argument is passed. A trajectory
+        command requires an end time. End time is not set in this function, but rather is set externally before
+        call to RobotCommandService.
+
+        Args:
+            goal_x: Position X coordinate described relative to the body frame.
+            goal_y: Position Y coordinate described relative to the body frame.
+            goal_heading: Pose heading in radians described relative to the body frame.
+            frame_tree_snapshot: Dictionary representing the child_to_parent_edge_map describing different
+                                 transforms. This can be acquired using the robot state client directly, or using
+                                 the robot object's helper function robot.get_frame_tree_snapshot().
+            params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,
+                this will be constructed using other args.
+            body_height: Body height in meters.
+            locomotion_hint: Locomotion hint to use for the trajectory command.
+
+        Returns:
+            RobotCommand, which can be issued to the robot command service. The go-to point will be converted to a
+            non-moving world frame (odom frame) to be issued to the robot.
+        """
+        goto_rt_body = SE2Pose(goal_x_rt_body, goal_y_rt_body, goal_heading_rt_body)
+        # Get an SE2 pose for odom_tform_body to convert the body-based command to a non-moving frame
+        # that can be issued to the robot.
+        odom_tform_body = get_se2_a_tform_b(frame_tree_snapshot, ODOM_FRAME_NAME, BODY_FRAME_NAME)
+        odom_tform_goto = odom_tform_body * goto_rt_body
+        return RobotCommandBuilder.synchro_se2_trajectory_command(odom_tform_goto.to_proto(),
+                                                                 ODOM_FRAME_NAME,
+                                                                 params, body_height, locomotion_hint)
+
+    @staticmethod
+    def synchro_velocity_command(v_x, v_y, v_rot, params=None, body_height=0.0,
+                                 locomotion_hint=spot_command_pb2.HINT_AUTO,
+                                 frame_name=BODY_FRAME_NAME):
         """Command robot to move along 2D plane. Velocity should be specified in the robot body
         frame. Other frames are currently not supported. The arguments body_height and
         locomotion_hint are ignored if params argument is passed.
@@ -639,11 +893,13 @@ class RobotCommandBuilder(object):
                                                                    slew_rate_limit=slew_rate_limit)
         mobility_command = mobility_command_pb2.MobilityCommand.Request(
             se2_velocity_request=vel_command, params=any_params)
-        command = robot_command_pb2.RobotCommand(mobility_command=mobility_command)
-        return command
+        synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
+            mobility_command=mobility_command)
+        robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
+        return robot_command
 
     @staticmethod
-    def stand_command(params=None, body_height=0.0, footprint_R_body=geometry.EulerZXY()):
+    def synchro_stand_command(params=None, body_height=0.0, footprint_R_body=geometry.EulerZXY()):
         """Command robot to stand. If the robot is sitting, it will stand up. If the robot is
         moving, it will come to a stop. Params can specify a trajectory for the body to follow
         while standing. In the simplest case, this can be a specific position+orientation which the
@@ -666,11 +922,13 @@ class RobotCommandBuilder(object):
         any_params = RobotCommandBuilder._to_any(params)
         mobility_command = mobility_command_pb2.MobilityCommand.Request(
             stand_request=basic_command_pb2.StandCommand.Request(), params=any_params)
-        command = robot_command_pb2.RobotCommand(mobility_command=mobility_command)
-        return command
+        synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
+            mobility_command=mobility_command)
+        robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
+        return robot_command
 
     @staticmethod
-    def sit_command(params=None):
+    def synchro_sit_command(params=None):
         """Command the robot to sit.
 
         Args:
@@ -684,8 +942,61 @@ class RobotCommandBuilder(object):
         any_params = RobotCommandBuilder._to_any(params)
         mobility_command = mobility_command_pb2.MobilityCommand.Request(
             sit_request=basic_command_pb2.SitCommand.Request(), params=any_params)
-        command = robot_command_pb2.RobotCommand(mobility_command=mobility_command)
-        return command
+        synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
+            mobility_command=mobility_command)
+        robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
+        return robot_command
+
+    @staticmethod
+    def stance_command(se2_frame_name, pos_fl_rt_frame, pos_fr_rt_frame, pos_hl_rt_frame,
+                       pos_hr_rt_frame, accuracy=0.05, params=None, body_height=0.0,
+                       footprint_R_body=geometry.EulerZXY()):
+        """Command robot to stance with the feet at specified positions.
+        This will cause the robot to reposition it's feet. This is not intended to be a mobility
+        command and will reject commands where the foot position is out of reach without locomoting.
+        To stance at a far location, try using SE2TrajectoryCommand to safely put the robot at the
+        correct location first.
+
+        Params can specify a trajectory for the body to follow
+        while stancing. In the simplest case, this can be a specific position+orientation which the
+        body will hold at. The arguments body_height and footprint_R_body are ignored if params
+        argument is passed.
+
+        Args:
+            se2_fame_name(string): The frame name which the desired foot_positions are described in.
+            pos_fl_rt_frame(Vec2): Position of front left foot in specified frame.
+            pos_fr_rt_frame(Vec2): Position of front right foot in specified frame.
+            pos_hl_rt_frame(Vec2): Position of rear left foot in specified frame.
+            pos_hr_rt_frame(Vec2): Position of rear right foot in specified frame.
+            accuracy(float): Required foot positional accuracy in meters
+            params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,
+                this will be constructed using other args.
+            body_height(float): Height, meters, to stand at relative to a nominal stand height.
+            footprint_R_body(EulerZXY): The orientation of the body frame with respect to the
+                footprint frame (gravity aligned framed with yaw computed from the stance feet)
+        Returns:
+            RobotCommand, which can be issued to the robot command service.
+        """
+        if not params:
+            params = RobotCommandBuilder.mobility_params(body_height=body_height,
+                                                         footprint_R_body=footprint_R_body)
+        any_params = RobotCommandBuilder._to_any(params)
+
+        stance_request = basic_command_pb2.StanceCommand.Request()
+        stance_request.stance.se2_frame_name = se2_frame_name
+        stance_request.stance.accuracy = accuracy
+        stance_request.stance.foot_positions['fl'].CopyFrom(pos_fl_rt_frame)
+        stance_request.stance.foot_positions['fr'].CopyFrom(pos_fr_rt_frame)
+        stance_request.stance.foot_positions['hl'].CopyFrom(pos_hl_rt_frame)
+        stance_request.stance.foot_positions['hr'].CopyFrom(pos_hr_rt_frame)
+
+        mobility_command = mobility_command_pb2.MobilityCommand.Request(
+            stance_request=stance_request, params=any_params)
+        synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
+            mobility_command=mobility_command)
+        robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
+        return robot_command
+
 
     ########################
     # Spot mobility params #
@@ -773,6 +1084,35 @@ class RobotCommandBuilder(object):
         any_params.Pack(params)
         return any_params
 
+    @staticmethod
+    def build_synchro_command(*args):
+        """ Combines multiple commands into one command. There's no intelligence here on
+        duplicate commands.
+        Args: RobotCommand containing only either mobility commands or synchro commands
+        Returns: RobotCommand containing a synchro command """
+        mobility_request = None
+
+        for command in args:
+            if command.HasField('full_body_command'):
+                raise Exception(
+                    'this function only takes RobotCommands containing mobility or synchro cmds')
+            elif command.HasField('mobility_command'):
+                mobility_request = command.mobility_command
+            elif command.HasField('synchronized_command'):
+                if command.synchronized_command.HasField('mobility_command'):
+                    mobility_request = command.synchronized_command.mobility_command
+            else:
+                print('skipping empty robot command')
+
+        if (mobility_request):
+            synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
+                mobility_command=mobility_request)
+            robot_command = robot_command_pb2.RobotCommand(
+                synchronized_command=synchronized_command)
+        else:
+            raise Exception("Nothing to build here")
+        return robot_command
+
 
 def blocking_stand(command_client, timeout_sec=10, update_frequency=1.0):
     """Helper function which uses the RobotCommandService to stand.
@@ -794,7 +1134,7 @@ def blocking_stand(command_client, timeout_sec=10, update_frequency=1.0):
     end_time = start_time + timeout_sec
     update_time = 1.0 / update_frequency
 
-    stand_command = RobotCommandBuilder.stand_command()
+    stand_command = RobotCommandBuilder.synchro_stand_command()
     command_id = command_client.robot_command(stand_command, timeout=timeout_sec)
 
     now = time.time()
@@ -804,15 +1144,18 @@ def blocking_stand(command_client, timeout_sec=10, update_frequency=1.0):
         start_call_time = time.time()
         try:
             response = command_client.robot_command_feedback(command_id, timeout=rpc_timeout)
+            mob_feedback = response.feedback.synchronized_feedback.mobility_command_feedback
+            mob_status = mob_feedback.status
+            stand_status = mob_feedback.stand_feedback.status
         except TimedOutError:
             # Excuse the TimedOutError and let the while check bail us out if we're out of time.
             pass
         else:
-            if response.status != robot_command_pb2.RobotCommandFeedbackResponse.STATUS_PROCESSING:
+            if mob_status != basic_command_pb2.RobotCommandFeedbackStatus.STATUS_PROCESSING:
                 raise CommandFailedError('Stand (ID {}) no longer processing (now {})'.format(
-                    command_id, response.Status.Name(response.status)))
-            if (response.feedback.mobility_feedback.stand_feedback.status ==
-                    basic_command_pb2.StandCommand.Feedback.STATUS_IS_STANDING):
+                    command_id,
+                    basic_command_pb2.RobotCommandFeedbackStatus.Status.Name(mob_status)))
+            if stand_status == basic_command_pb2.StandCommand.Feedback.STATUS_IS_STANDING:
                 return
         delta_t = time.time() - start_call_time
         time.sleep(max(min(delta_t, update_time), 0.0))

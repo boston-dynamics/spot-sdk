@@ -244,6 +244,10 @@ power_state {
 #### Robot State was a message, messages are defined by protobufs
 The structure of the robot state message retrieved above is defined by its `protobuf definition`.  This is the language the robot speaks.  Spot SDK completely exposes the protobuf, so to really understand Spot programming you want to look at and understand the protobufs. Take a look, they are right here in your distribution!   [../../protos/bosdyn/api/robot_state.proto](../../protos/bosdyn/api/robot_state.proto)
 
+### Spot's Frames
+
+Often, it is useful to know about the position of Spot and how it relates to the world around it. To express this information, Spot uses frames to represent objects and locations (e.g. the "body" frame) and 3D transformations to describe the relationship between two frames using a translation vector and a rotation quaternion. See the [Geometry and Frames](../concepts/geometry_and_frames.md) documentation for much more detail on frames and transformations, the math possible with 3D transformations, and the different frame's Spot knows about.
+
 ### Capture and View Camera Images
 
 Spot has 5 "fisheye" cameras in addition to 5 depth cameras.  Images can be captured from the  these image sources. The 'list_image_sources' RPC returns valid camera source names.
@@ -377,7 +381,7 @@ lease_owner {
 ]
 ```
 
-Leasable resources are listed: currently the only resource supported is "body", which covers all of the motors on Spot.  Note that the `lease_owner` field is empty since no one has acquired the body lease.
+Lease-able resources are listed: currently the only resource supported is "body", which covers all of the motors on Spot.  Note that the `lease_owner` field is empty since no one has acquired the body lease.
 
 Let's acquire a lease and again list:
 

@@ -194,7 +194,8 @@ message ListLogpointsRequest {
 message ListLogpointsResponse {
     // Common response header.
     bosdyn.api.ResponseHeader header = 1;
-    // List of log points.  Concatenate with all streamed ListLogpointsResponses to recover the full list.
+    // List of all the individual log points concatenated into a list.
+    // This stream may take a long time to complete if there are a lot of stored images.
     repeated Logpoint logpoints = 2;
 }
 

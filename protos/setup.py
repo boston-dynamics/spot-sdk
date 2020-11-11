@@ -88,7 +88,7 @@ class proto_build(distutils.cmd.Command, object):
                 if not f.endswith('.proto'):
                     continue
                 file_relative_to_root = os.path.join(cwd_relative_to_root, f)
-                # $!@%!!^ the protoc.main discards the first argument, assuming it's the program.
+                # the protoc.main discards the first argument, assuming it's the program.
                 args = ('garbage', file_relative_to_root, "--python_out=" + output_dir,
                         "--grpc_python_out=" + output_dir, "-I.",
                         "-I" + pkg_resources.resource_filename('grpc_tools', '_proto'))

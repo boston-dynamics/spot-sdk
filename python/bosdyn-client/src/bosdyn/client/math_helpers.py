@@ -18,6 +18,14 @@ def angle_diff(a1, a2):
         v += 2 * math.pi
     return v
 
+def angle_diff_degrees(a1, a2):
+    v = a1 - a2
+    while v > 180:
+        v -= 360
+    while v < -180:
+        v += 360
+    return v
+
 class SE2Pose(object):
     """Class representing an SE2Pose with position and angle."""
 
@@ -696,6 +704,7 @@ class Quat(object):
             # behavior and always rotate 180 degrees around the y-axis.
             return Quat(w=0, x=0, y=1, z=0)
 
+
 def pose_to_xyz_yaw(A_tform_B):
     """Gets the x,y,z yaw of B in A from the SE3Pose protobuf message."""
     yaw = Quat.from_obj(A_tform_B.rotation).to_yaw()
@@ -711,6 +720,12 @@ def is_within_threshold(pose_3d, max_translation_meters, max_yaw_degrees):
     dist_2d = math.sqrt(delta.x * delta.x + delta.y * delta.y)
     angle_deg = math.degrees(abs(delta.angle))
     return (dist_2d < max_translation_meters) and (angle_deg < max_yaw_degrees)
+
+def recenter_angle(q, lower_limit, upper_limit):
+    recenter_range = upper_limit - lower_limit
+    while q >= upper_limit: q -= recenter_range
+    while q < lower_limit:  q += recenter_range
+    return q
 
 def skew_matrix_3d(vec3_proto):
     """Creates a 3x3 numpy matrix representing the skew symmetric matrix for a vec3.
@@ -767,3 +782,21 @@ def transform_se3velocity(a_adjoint_b_matrix, se3_velocity_in_b):
     se3_velocity_in_a_vec = numpy.asarray(numpy.matmul(a_adjoint_b_matrix, se3_velocity_in_b_vec))
     se3_velocity_in_a = SE3Velocity.from_vector(se3_velocity_in_a_vec)
     return se3_velocity_in_a
+
+
+def quat_to_eulerZYX(q):
+    """Convert a Quat object into Euler yaw, pitch, roll angles (radians)."""
+    pitch = math.asin(-2 * (q.x * q.z - q.w * q.y))
+    if pitch > 0.9999:
+        yaw = 2 * math.atan2(q.z, q.w)
+        pitch = math.pi / 2
+        roll = 0
+    elif pitch < -0.9999:
+        yaw = 2 * math.atan2(q.z, q.w)
+        pitch = -math.pi / 2
+        roll = 0
+    else:
+        yaw = math.atan2(2 * (q.x * q.y + q.w * q.z), q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z)
+        roll = math.atan2(2 * (q.y * q.z + q.w * q.x),
+                          q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z)
+    return yaw, pitch, roll

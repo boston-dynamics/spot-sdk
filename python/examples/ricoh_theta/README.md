@@ -7,17 +7,18 @@ Development Kit License (20191101-BDSDK-SL).
 -->
 
 # Ricoh Theta
-This document will explain step-by-step how to setup a Ricoh Theta V or Z1 for an Autowalk Mission using the Remote Mission Service on the Spot CORE. This document assumes you are using the default settings of a Ricoh Theta camera and mounted/registered Spot CORE.
+In the 2.1.0 release, we have provided a **new** Ricoh Theta example for developers to learn how to create a standard Boston Dynamics API image service that communicates with the Ricoh Theta camera.
+
+This example assumes you are using the default settings of a Ricoh Theta camera and mounted/registered Spot CORE.
 
 ## Required Items
 - Spot CORE
-- USB WiFi dongle
 - Ricoh Theta V or Z1
 - Personal Computer
 
 ## Installation Steps
 The following installation steps assume you:
-- have read the ricoh theta online manual and understand client mode operation
+- have read the Ricoh Theta online manual and understand client mode operation
 - have the latest spot-sdk downloaded & installed on your PC
 - familiar with SSH and using a Command Line Interface (CLI)
 
@@ -25,22 +26,26 @@ The following installation steps assume you:
 Navigate via the CLI on your PC to the ricoh_theta directory and review the requirements.txt document for this example before continuing. Several python packages will need to be installed along with the standard SDK:
 
 ```
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 ### Test Ricoh Theta
 
-A `test_driver.py` script has been included which will show the state of the camera and take a picture. Before running this script, wirelessly connect your personal computer to the ricoh theta camera and adjust the theta_ssid for your camera. The script is currently configured for direct mode ip settings for running on your PC. Edit the python script as desired.
+A `test_driver.py` script has been included which will show the state of the camera and take a picture.
+
+The `SSID` field within the script must be updated to match your camera's theta_ssid. Additionally, before running the example driver, you must be wirelessly connected to the Ricoh Theta camera from the computer you intend to run this example. Note that the Ricoh Theta's wireless network may not appear or be available when the camera is plugged into a computer through its USB port. For a Ricoh Theta Z, check the OLED display for the WiFi icon to confirm the network is broadcasting. For a Ricoh Theta V, the wireless indicator should be lit up blue if in access point mode.
+
+The script is currently configured for direct mode IP settings for running on your PC. Edit the python script as desired to enable/disable different functions of the Ricoh Theta camera driver.
 
 ```
-python test_driver.py
+python3 test_driver.py
 ```
 
 ### Connect Ricoh Theta to Spot
-Perform the following steps on your PC to setup ricoh theta client mode.
+Perform the following steps on your PC to setup Ricoh Theta client mode, which means the Ricoh Theta will be connected to a different network (in this case, Spot's WiFI) instead of broadcasting its own network (which is the direct mode). The python script below is required for this example to set the static ip, which the App does not allow.
 
-1. Enable wireless connection on the ricoh theta and connect your PC to the ricoh theta via WiFi.
-1. Run `ricoh_client_mode.py` on your PC via the CLI. Replace the capitilized letters in the command below with your Ricoh Theta SSID, Spot's WiFi SSID, and Spot's WiFi password.
+1. Enable wireless connection on the Ricoh Theta and connect your PC to the Ricoh Theta via WiFi.
+1. Run `ricoh_client_mode.py` on your PC via the CLI. Replace the capitilized letters in the command below with your Ricoh Theta SSID **with the .OSC removed from the end**, Spot's WiFi SSID, and Spot's WiFi password.
     ```
     python ricoh_client_mode.py --theta-ssid THETAYL00196843 --wifi-ssid WIFI_SSID --wifi-password WIFI_PASSWORD
     ```
@@ -53,200 +58,90 @@ Perform the following steps on your PC to setup ricoh theta client mode.
     }
     New static ip: 192.168.80.110
     ```
-    The above script will specify the access point settings for ricoh theta client mode and a static ip address. 
-    
+    The above script will specify the access point settings for Ricoh Theta client mode and a static ip address.
+
     For Developers: As an _additional_ option, you can configure the ip settings by editing the `__init__` function directly in `ricoh_theta.py` or when creating the Theta() object. These settings are featured below and have been tested on the Spot CORE.
     ```python
     def __init__(..., static_ip="192.168.80.110", subnet_mask="255.255.255.0", default_gateway="192.168.80.1"):
     ```
-1. Enable client mode on your ricoh theta (press the wireless button again) and confirm connection with Spot's access point (the wireless indicator should stop blinking and become solid in client mode). Sometimes a ricoh theta power cycle is required.
 
-### Edit Spot CORE Network Settings
-These steps are required if you intend to connect your Spot CORE to the internet via a WiFi dongle and communicate from the Spot CORE to a device connected with the robot's access point. 
+1. Enable client mode on your Ricoh Theta (press the wireless button on the camera) and confirm connection with Spot's access point. The wireless indicator should stop blinking and become solid green in client mode for Ricoh Theta V. On a Ricoh Theta Z, on the OLED display screen of the camera, there will be a 'CL' icon next to the wireless indicator. **Often a Ricoh Theta power cycle is required.** Note, the new static IP for the Ricoh Theta in client mode will be persistent across reboots of the camera.
 
-1. Ensure a WiFi dongle is connected to the Spot CORE.
-1. ssh into the Spot CORE using your PC's CLI
-    ```
-    ssh -p 20022 spot@ROBOT_IP_ADDRESS
-    ```
 
-1. Follow [these instructions](https://docs.ubuntu.com/core/en/stacks/network/network-manager/docs/configure-wifi-connections) to configure your WiFi adapter from the terminal. A condensed version is below. Connecting to a wireless access point can also be achieved using the standard desktop environment with a montior, keyboard, and mouse plugged into the Spot CORE.
-    ```
-    nmcli d
-    nmcli r wifi on
-    nmcli d wifi list
-    ```
-    From the listed wireless access points, replace the captilized letters of the command below with your desired wifi network (that has internet access) and password.
-    ```
-    sudo nmcli d wifi connect MY_WIFI password MY_PASSWORD
-    ```
+## Run Image Service
 
-1. Edit the interface file. Run:
-    ```
-    sudo nano /etc/network/interfaces
-    ```
-    Comment out or remove this line: "gateway 192.168.50.3" (which will enable internet access after reboot); and add a route pointing to Spot's access point: "up ip route add 192.168.80.0/24 via 192.168.50.3"
+The image service script creates a standard Boston Dyanmics API image service that communicates with the Ricoh Theta camera.
 
-    The network interface file should now look similar to this:
-    ```
-    # Default payload network settings
-    # LOOPBACK
-    auto lo
-    iface lo inet loopback
-
-    auto enp2s0
-    iface enp2s0 inet static
-        address 192.168.50.5/24
-        # gateway 192.168.50.3
-        up ip route add 192.168.80.0/24 via 192.168.50.3
-
-    auto eno1
-    iface eno1 inet static
-        address 192.168.1.9/24
-
-    ```
-1. Reboot the Spot CORE. This will close the ssh connection.
-    ```
-    sudo reboot
-    ```
-
-1. After 30 seconds, check Spot CORE network settings:
-
-    ssh back into the Spot CORE
-    ```
-    ssh -p 20022 spot@ROBOT_IP_ADDRESS
-    ```
-
-    Ping an external address to confirm internet connection. You should see an ip address in paraentheses following google. Use Ctrl + C to exit.
-    ```
-    ping google.com
-
-    PING google.com (172.217.6.238) 56(84) bytes of data.
-    64 bytes from lga25s55-in-f238.1e100.net (172.217.6.238): icmp_seq=1 ttl=56 time=20.8 ms
-    64 bytes from lga25s55-in-f238.1e100.net (172.217.6.238): icmp_seq=2 ttl=56 time=23.5 ms
-    64 bytes from lga25s55-in-f238.1e100.net (172.217.6.238): icmp_seq=3 ttl=56 time=17.6 ms
-    ...
-    ```
-
-    Enable client mode on your ricoh theta and ping the static ip once connected. You should see repeated responses. Use Ctrl + C to exit.
-    ```
-    ping 192.168.80.110
-    ```
-
-    Lastly, close ssh connection. Ctrl + D
-
-### Edit Remote Mission Service
-The `remote_mission_service_ricoh.py` script uses a couple of global variables near the top of the script that you will need to edit for your specific use case. The current settings are featured below:
-
-```python
-DEFAULT_PATH = '/home/spot/Pictures/'
-GCP_BUCKET_NAME = 'c-imagedemo'
-AWS_BUCKET_NAME = 'aws-imagedemo'
-YOUR_THETA_SSID = 'THETAYL00196843'
+To launch the GRPC image service from a registered payload computer (such as the Spot CORE), authenticate the robot connection using the payload's authentication, and ultimately register the service with the directory **with the service name 'ricoh-theta-image-service'**, issue the following command:
+```
+python3 ricoh_theta_image_service.py --theta-ssid THETA_SSID --theta-client --host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET ROBOT_IP
 ```
 
-### Install Packages on Spot CORE
-The changes made to these files on your local PC will need to be mirrored on the Spot CORE. In your PC's CLI, you can use the below scp command to copy the files from your PC's local SDK ricoh_client directory into the `/home/spot/` folder on your Spot CORE.
-```
-scp -r -P 20022 ricoh_theta/ spot@ROBOT_IP_ADDRESS:
-```
+The `hostname` ("ROBOT_IP") argument should be the IP address of the robot which is hosting the directory service. The `--host-ip` argument is the IP address for the computer running the script. For example, in the example where we run the image service on the Spot CORE, the default IP address of 192.168.50.5 can be provided for the `--host-ip` argument.
 
-You will also need to copy over the cloud_upload example.
-```
-scp -r -P 20022 cloud_upload/ spot@ROBOT_IP_ADDRESS:
-```
+Since the example is created to run off of a payload computer, it requires the input arguments `--guid` (uniquely generated payload specifier) and `--secret` (private string associated with a payload) for the registered payload computer that will be running the Ricoh Theta image service. For the Spot CORE, this information by default will be located in the file `/opt/payload_credentials/payload_guid_and_secret`. Note, you can run the Ricoh Theta image service locally on your PC by registering it as a weightless payload using [the payloads example](../payloads/README.md) and creating a GUID and secret for your computer. See documentation on [configuration of payload software](../../../docs/payload/configuring_payload_software.md#Configuring-and-authorizing-payloads) for more information.
 
-Don't forget to install the python packages on the Spot CORE. SSH into the Spot CORE, navigate via the terminal on the Spot CORE to the ricoh_theta directory, and install the requirements.txt document for this example before continuing. Like on the PC, several python packages will need to be installed along with the standard SDK:
+If the `--theta-client` argument is provided, the Ricoh Theta will be connected to in client mode. Otherwise, it will default to a direct-ip mode connection, requiring the computer running the image service script to be wirelessly connected to the Ricoh Theta's WiFi. If using the Ricoh Theta in client mode, make sure that the `ricoh_client_mode.py` script has been run to create a connection to Spot's WiFi with the correct static ip.
 
-```
-pip3 install -r requirements.txt
-```
+The `--theta-ssid` argument is used to pass the SSID for the Ricoh Theta camera that will take the images and **should have the .OSC removed**. This will be set as the image source name for the service. Additionally, if the password for the Ricoh Theta is different from the default password of the camera, this can be provided using the `--theta-password` argument.
 
-The assumed installation structure on the Spot CORE is featured below.
+Lastly, a port number for the image service can be specified using the `--port` argument, however the script will choose a random default port number if nothing is provided. This port number will be used with the host-ip (HOST_COMPUTER_IP) to fully specify where the image service is running. This port number must be open and cannot be blocked by a local firewall, otherwise the ricoh-theta image service will be unreachable from the robot and the directory registration service.
 
+### Querying the Ricoh Theta Image Service
+
+To validate the ricoh-theta image service is working, the [`get_image` example](../get_image/README.md) has an argument `--image-service` which can be used to specify the service name of the Ricoh Theta service: `'ricoh-theta-image-service'`. This example can be used to list the different image sources or request and save an image from a specified image source. By default, this example will try to query the standard image service on-robot that communicates with the robot's built-in cameras, but can be redirected to any implementation of the API image service using the `--image-service` argument.
+
+Since the ricoh-theta service is registered with the robot's directory service, the get_image example can be run from any computer and just needs an API SDK connection to the robot to be able to access the ricoh-theta service and its images.
+
+### Run the Ricoh Theta Image Service using Docker
+
+With docker installed and setup, the Ricoh Theta image service can be created into a docker container, saved as a tar file, and then run on the Spot CORE using Portainer.
+
+The docker file, which will run the Ricoh Theta image service, can be built and saved to a tar file using the following commands:
 ```
-/home/spot/
-    ricoh_theta/
-        README.md  
-        remote_mission_service_ricoh.py 
-        requirements.txt 
-        ricoh_client_mode.py
-        ricoh.service
-        ricoh_theta.py
-        run.sh 
-        test_driver.py
-    cloud_upload/
-        cloud_upload.py
-        README.md  
-        requirements.txt
+sudo docker build -t ricoh_theta_image_service .
+sudo docker save ricoh_theta_image_service > ricoh_theta_image_service.tar
 ```
 
-Because of the above structure, an adjustment to PYTHONPATH for cloud_upload import used in `remote_mission_service_ricoh.py` will likely be required.
+The dockerfile can now be run locally or run directly on the Spot CORE.
 
+#### Run On Local Computer
+
+To run locally, your computer must be registered as a weightless payload (and authorized on the admin console web server for the robot). This can be done using the [payloads example](../payloads/README.md), which registers the payload with the name 'Client Registered Payload Ex #1' and a default GUID and secret.
+
+To start the dockerfile and the Ricoh Theta image service, run:
 ```
-export PYTHONPATH=/home/spot
+sudo docker run -it --network=host ricoh_theta_image_service --theta-ssid THETA_SSID --theta-client --host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET ROBOT_IP
 ```
-Add the above line to your .bashrc file to make permanent. If a PYTHONPATH has already been set, add to it instead and use: 
+** Note, all the arguments are the same as when running the python script `ricoh_theta_image_service.py`.
+
+#### Run On Spot CORE
+To run the dockerfile and Ricoh Theta image service on the Spot CORE, first ensure that you have a 2.1 release on the Spot CORE. This can be checked by ssh-ing onto the Spot CORE and running `cat /etc/spotcore-release`.
+
+If it is not up to date, upgrade to the latest Spot CORE release following the instructions to upgrade: https://support.bostondynamics.com/s/article/How-to-update-Spot-CORE-software.
+
+Once the Spot CORE is updated, the docker file can be deployed using Portainer. Upload the `ricoh_theta_image_service.tar` as an "Image" on Portainer. If the upload fails, try changing the permissions of the tar file using the command:
 ```
-PYTHONPATH=$PYTHONPATH:/home/spot
+sudo chmod a+r ricoh_theta_image_service.tar
 ```
-
-## Run Remote Mission Service
-
-In order to use a ricoh theta with an autowalk mission, a remote mission service script must be running. Use `remote_mission_service_ricoh.py` to test ricoh_theta callbacks.
-
+Once the upload completes, go to the "Containers" tab in Portainer and add a container. Set the follow fields:
 ```
-python3 remote_mission_service_ricoh.py 192.168.50.3 --payload-token --directory-host 192.168.50.3 --my-host 192.168.50.5 --theta-client
-```
-
-Create an autowalk mission and add callbacks when desired (these actions will execute during mission replay, not during record time). Several options are below:
-
-1. "take theta image"
-    - Sends a command to the ricoh theta to take a picture.
-    - Note: image processing takes around 3 seconds to complete.
-1. "download theta images"
-    - Downloads all the ricoh theta images taken during that mission (or since the last download) to the Spot CORE.
-    - Find the images in the DEFAULT_PATH (/home/spot/Pictures/)
-1. "upload to gcp"
-    - Uploads all images taken during the mission to a Google Cloud Platform (GCP) bucket.
-    - Review the cloud_upload [README](../cloud_upload/README.md) for more details. Additional configuration is required.
-1. "upload to aws"
-    - Uploads all images taken during the mission to an Amazon Web Services (AWS) S3 bucket.
-    - Review the cloud_upload [README](../cloud_upload/README.md) for more details. Additional configuration is required.
-
-
-## Run Remote Mission Service on Boot
-
-Autoboot sample files `ricoh.service` and `run.sh` may also need to be updated depending on the location of the files on the Spot CORE. For instance, the default Spot CORE PYTHONPATH is currently set to /home/spot/ in the ricoh.service file in order to import from the cloud_upload directory. If you intend to "upload to gcp", the systemd `ricoh.service` file will need an additional argument under `[Service]` for the GOOGLE_APPLICATION_CREDENTIALS environmental variable.
-
-```
-Environment="GOOGLE_APPLICATION_CREDENTIALS=<path-to-file>/<filename>.json"
+"Name" = ricoh_theta_image_service
+"Image" = ricoh_theta_image_service:latest
+"Publish all exposed network ports to random host ports" = True
 ```
 
-Perform the following commands in order to make `run.sh` executable and copy `ricoh.service` to the correct directory.
+Under the "Command & logging" tab in the container configuration page, add all of the arguments in the "Command" field. Specifically, these arguments:
 ```
-chmod +x ricoh_theta/run.sh
-sudo cp ricoh_theta/ricoh.service /lib/systemd/system
-sudo systemctl daemon-reload
-sudo systemctl enable ricoh.service
-sudo systemctl start ricoh.service
+--theta-ssid THETA_SSID --theta-client --host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET ROBOT_IP
 ```
+** Make sure the `HOST_COMPUTER_IP` matches the Spot CORE's IP (by default, this is 192.168.50.5 for the rear-mounted Spot CORE), `ROBOT_IP` matches the robot IP from the perspective of the Spot CORE (by default, this is 192.168.50.3), and that `THETA_SSID` has the .OSC removed.
 
-Use the below systemctl command to check the status of the service. It should be: `active (running)`.
+Under the "Network" tab in the container configuration page, set the "Network" field to "host".
 
-```
-systemctl status ricoh.service
-```
+Under the "Restart policy" tab in the container configuration page, set the policy to "Unless stopped". This will allow the docker container to continue to keep running all the time (even after rebooting the spot core) unless it is manually stopped by a user in Portainer.
 
-Journalctl is also a useful tool for debugging.
-
-```
-journalctl -efu ricoh.service
-```
-
-Here is an external sparkfun [link](https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup/all#method-3-systemd) to a systemd example on how to run a python script on linux boot.
+Once all the necessary fields are configured, select "Deploy the container" to run the Ricoh Theta image service using the docker container on Spot CORE.
 
 ## Developer Comments
-To learn more about the remote mission service, review the remote_mission_service [README](../remote_mission_service/README.md) for details. For the Ricoh Theta integration, the `remote_mission_service_ricoh.py` script has several key edits to a couple functions. Review the comments above each function that have specific "Ricoh Theta Integration Notes" to learn more.
-
 For Ricoh Theta API Documentation, visit [https://api.ricoh/products/theta-api/](https://api.ricoh/products/theta-api/)

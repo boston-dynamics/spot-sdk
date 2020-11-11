@@ -18,8 +18,6 @@ from bosdyn.client.estop import EstopEndpoint, EstopKeepAlive, EstopClient
 from bosdyn.client.robot_state import RobotStateClient
 import bosdyn.client.util
 
-LOGGER = logging.getLogger()
-
 
 class EstopNoGui():
     """Provides a software estop without a GUI.
@@ -53,6 +51,9 @@ class EstopNoGui():
     def allow(self):
         self.estop_keep_alive.allow()
 
+    def settle_then_cut(self):
+        self.estop_keep_alive.settle_then_cut()
+
 
 def main(argv):
     """If this file is the main, create an instance of EstopNoGui and wait for user to terminate.
@@ -60,10 +61,6 @@ def main(argv):
     This has little practical use, because calling the function this way does not give the user
     any way to trigger an estop from the terminal.
     """
-    LOGGER.setLevel(logging.INFO)
-    stream_handler = logging.StreamHandler()
-    LOGGER.removeHandler(stream_handler)  # Don't use stream handler in curses mode.
-
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
     parser.add_argument('-t', '--timeout', type=float, default=5, help='Timeout in seconds')
@@ -85,7 +82,6 @@ def main(argv):
 
     # Create robot object
     sdk = bosdyn.client.create_standard_sdk('estop_nogui')
-    sdk.load_app_token(options.app_token)
     robot = sdk.create_robot(options.hostname)
     robot.authenticate(options.username, options.password)
 
@@ -130,6 +126,7 @@ def main(argv):
     stdscr.addstr('[q] or [Ctrl-C]: Quit\n', curses.color_pair(2))
     stdscr.addstr('[SPACE]: Trigger estop\n', curses.color_pair(2))
     stdscr.addstr('[r]: Release estop\n', curses.color_pair(2))
+    stdscr.addstr('[s]: Settle then cut estop\n', curses.color_pair(2))
 
     # Monitor estop until user exits
     while True:
@@ -143,6 +140,8 @@ def main(argv):
                 estop_nogui.allow()
             if c == ord('q') or c == 3:
                 clean_exit('Exit on user input')
+            if c == ord('s'):
+                estop_nogui.settle_then_cut()
         # If the user attempts to toggle estop without valid endpoint
         except bosdyn.client.estop.EndpointUnknownError:
             clean_exit("This estop endpoint no longer valid. Exiting...")

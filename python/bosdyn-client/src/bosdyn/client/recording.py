@@ -36,7 +36,8 @@ class GraphNavRecordingServiceClient(BaseClient):
         super(GraphNavRecordingServiceClient,
               self).__init__(recording_service.GraphNavRecordingServiceStub)
 
-    def start_recording(self, lease=None, recording_environment=None, **kwargs):
+    def start_recording(self, lease=None, recording_environment=None, require_fiducials=None,
+                        **kwargs):
         """Start the recording service to create/update a map.
 
         Args:
@@ -45,13 +46,16 @@ class GraphNavRecordingServiceClient(BaseClient):
         Returns:
             The status of the start recording request.
         """
-        request = self._build_start_recording_request(lease, recording_environment)
+        request = self._build_start_recording_request(lease, recording_environment,
+                                                      require_fiducials)
         return self.call(self._stub.StartRecording, request, value_from_response=_get_status,
                          error_from_response=_start_recording_error, **kwargs)
 
-    def start_recording_async(self, lease=None, recording_environment=None, **kwargs):
+    def start_recording_async(self, lease=None, recording_environment=None, require_fiducials=None,
+                              **kwargs):
         """Async version of start_recording()."""
-        request = self._build_start_recording_request(lease, recording_environment)
+        request = self._build_start_recording_request(lease, recording_environment,
+                                                      require_fiducials)
         return self.call_async(self._stub.StartRecording, request, value_from_response=_get_status,
                                error_from_response=_start_recording_error, **kwargs)
 
@@ -153,8 +157,9 @@ class GraphNavRecordingServiceClient(BaseClient):
                                error_from_response=_create_edge_error, **kwargs)
 
     @staticmethod
-    def _build_start_recording_request(lease, recording_env):
-        return recording_pb2.StartRecordingRequest(lease=lease, recording_environment=recording_env)
+    def _build_start_recording_request(lease, recording_env, require_fiducials):
+        return recording_pb2.StartRecordingRequest(lease=lease, recording_environment=recording_env,
+                                                   require_fiducials=require_fiducials)
 
     @staticmethod
     def _build_stop_recording_request(lease):
@@ -319,8 +324,28 @@ class NotLocalizedToExistingMapError(RecordingServiceResponseError):
     """The robot is not localized to the existing map and cannot start recording."""
 
 
+class RemoteCloudFailureNotInDirectoryError(RecordingServiceResponseError):
+    """Failed to start recording because a remote point cloud (e.g. a LIDAR) is not registered to the service directory."""
+
+
+class RemoteCloudFailureNoDataError(RecordingServiceResponseError):
+    """Failed to start recording because a remote point cloud (e.g. a LIDAR) is not delivering data."""
+
+
 class NotReadyYetError(RecordingServiceResponseError):
     """The service is processing the map at it's current position. Try again in 1-2 seconds."""
+
+
+class MapTooLargeLicenseError(RecordingServiceResponseError):
+    """Map exceeds the size allowed by the license."""
+
+
+class MissingFiducialsError(RecordingServiceResponseError):
+    """One or more required fiducials were not detected."""
+
+
+class FiducialPoseError(RecordingServiceResponseError):
+    """The pose of one or more required fiducials could not be determined accurately."""
 
 
 def _get_status(response):
@@ -340,7 +365,17 @@ _START_RECORDING_STATUS_TO_ERROR.update({
     recording_pb2.StartRecordingResponse.STATUS_FOLLOWING_ROUTE:
         (FollowingRouteError, FollowingRouteError.__doc__),
     recording_pb2.StartRecordingResponse.STATUS_NOT_LOCALIZED_TO_EXISTING_MAP:
-        (NotLocalizedToExistingMapError, NotLocalizedToExistingMapError.__doc__)
+        (NotLocalizedToExistingMapError, NotLocalizedToExistingMapError.__doc__),
+    recording_pb2.StartRecordingResponse.STATUS_MISSING_FIDUCIALS:
+        (MissingFiducialsError, MissingFiducialsError.__doc__),
+    recording_pb2.StartRecordingResponse.STATUS_MAP_TOO_LARGE_LICENSE:
+        (MapTooLargeLicenseError, MapTooLargeLicenseError.__doc__),
+    recording_pb2.StartRecordingResponse.STATUS_REMOTE_CLOUD_FAILURE_NOT_IN_DIRECTORY:
+        (RemoteCloudFailureNotInDirectoryError, RemoteCloudFailureNotInDirectoryError.__doc__),
+    recording_pb2.StartRecordingResponse.STATUS_REMOTE_CLOUD_FAILURE_NO_DATA:
+        (RemoteCloudFailureNoDataError, RemoteCloudFailureNoDataError.__doc__),
+    recording_pb2.StartRecordingResponse.STATUS_FIDUCIAL_POSE_NOT_OK:
+        (FiducialPoseError, FiducialPoseError.__doc__)
 })
 
 
@@ -363,6 +398,7 @@ _STOP_RECORDING_STATUS_TO_ERROR.update({
         (NotReadyYetError, NotReadyYetError.__doc__)
 })
 
+
 @handle_common_header_errors
 # @handle_lease_use_result_errors
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
@@ -376,10 +412,14 @@ def _stop_recording_error(response):
 _CREATE_WAYPOINT_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _CREATE_WAYPOINT_STATUS_TO_ERROR.update({
     recording_pb2.CreateWaypointResponse.STATUS_OK: (None, None),
-    recording_pb2.CreateWaypointResponse.STATUS_NOT_RECORDING: (NotRecordingError,
-                                                                NotRecordingError.__doc__),
+    recording_pb2.CreateWaypointResponse.STATUS_NOT_RECORDING:
+        (NotRecordingError, NotRecordingError.__doc__),
     recording_pb2.CreateWaypointResponse.STATUS_COULD_NOT_CREATE_WAYPOINT:
-    (CouldNotCreateWaypointError, CouldNotCreateWaypointError.__doc__)
+        (CouldNotCreateWaypointError, CouldNotCreateWaypointError.__doc__),
+    recording_pb2.CreateWaypointResponse.STATUS_REMOTE_CLOUD_FAILURE_NOT_IN_DIRECTORY:
+        (RemoteCloudFailureNotInDirectoryError, RemoteCloudFailureNotInDirectoryError.__doc__),
+    recording_pb2.CreateWaypointResponse.STATUS_REMOTE_CLOUD_FAILURE_NO_DATA:
+        (RemoteCloudFailureNoDataError, RemoteCloudFailureNoDataError.__doc__),
 })
 
 
@@ -396,13 +436,13 @@ def _create_waypoint_error(response):
 _CREATE_EDGE_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _CREATE_EDGE_STATUS_TO_ERROR.update({
     recording_pb2.CreateEdgeResponse.STATUS_OK: (None, None),
-    recording_pb2.CreateEdgeResponse.STATUS_NOT_RECORDING: (NotRecordingError,
-                                                            NotRecordingError.__doc__),
+    recording_pb2.CreateEdgeResponse.STATUS_NOT_RECORDING:
+        (NotRecordingError, NotRecordingError.__doc__),
     recording_pb2.CreateEdgeResponse.STATUS_EXISTS: (EdgeExistsError, EdgeExistsError.__doc__),
-    recording_pb2.CreateEdgeResponse.STATUS_UNKNOWN_WAYPOINT: (UnknownWaypointError,
-                                                               UnknownWaypointError.__doc__),
-    recording_pb2.CreateEdgeResponse.STATUS_MISSING_TRANSFORM: (EdgeMissingTransformError,
-                                                                EdgeMissingTransformError.__doc__)
+    recording_pb2.CreateEdgeResponse.STATUS_UNKNOWN_WAYPOINT:
+        (UnknownWaypointError, UnknownWaypointError.__doc__),
+    recording_pb2.CreateEdgeResponse.STATUS_MISSING_TRANSFORM:
+        (EdgeMissingTransformError, EdgeMissingTransformError.__doc__)
 })
 
 

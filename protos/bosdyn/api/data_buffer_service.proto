@@ -1,0 +1,36 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+// DataBufferService allows adding information to the robot's log files.
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "DataBufferServiceProto";
+
+import "bosdyn/api/data_buffer.proto";
+
+// This service is a mechanism for adding information to the robot's log files.
+service DataBufferService {
+    // Add text messages to the log.
+    rpc RecordTextMessages(RecordTextMessagesRequest) returns (RecordTextMessagesResponse) {}
+
+    // Add a set of operator messages to the log.
+    rpc RecordOperatorComments(RecordOperatorCommentsRequest)
+        returns (RecordOperatorCommentsResponse) {}
+
+    // Add message-style data to the log.
+    rpc RecordDataBlobs(RecordDataBlobsRequest) returns (RecordDataBlobsResponse) {}
+
+    // Add event data to the log.
+    rpc RecordEvents(RecordEventsRequest) returns (RecordEventsResponse) {}
+
+    // Register a log tick schema, allowing client to later log tick data.
+    rpc RegisterSignalSchema(RegisterSignalSchemaRequest) returns (RegisterSignalSchemaResponse) {}
+
+    // Add signal data for registered signal schema to the log.
+    rpc RecordSignalTicks(RecordSignalTicksRequest) returns (RecordSignalTicksResponse) {}
+}

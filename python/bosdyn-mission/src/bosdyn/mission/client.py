@@ -6,6 +6,7 @@
 
 """For clients to the mission service."""
 
+from builtins import str as text
 import collections
 
 from google.protobuf import timestamp_pb2
@@ -61,7 +62,7 @@ class NoMissionPlayingError(MissionResponseError):
 
 
 class MissionClient(BaseClient):
-    """Client for the RobotState service."""
+    """Client for the Mission service."""
     default_service_name = 'robot-mission'
     service_type = 'bosdyn.api.mission.MissionService'
 
@@ -291,7 +292,9 @@ def _get_state_value(response):
 
 
 def _get_info_value(response):
-    return response.mission_info
+    if response.HasField(text('mission_info')):
+        return response.mission_info
+    return None
 
 
 _ANSWER_QUESTION_STATUS_TO_ERROR = collections.defaultdict(lambda: (MissionResponseError, None))

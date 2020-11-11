@@ -39,14 +39,6 @@ class MockNetworkService(service_pb2_grpc.NetworkServiceServicer):
         helpers.add_common_header(response, request)
         return response
 
-    def GetNetworkSettings(self, request, context):
-        time.sleep(self._rpc_delay)
-
-        response = network_pb2.GetNetworkSettingsResponse()
-        _fill_network_tuple(response.settings)
-        helpers.add_common_header(response, request)
-        return response
-
     def SetICEConfiguration(self, request, context):
         time.sleep(self._rpc_delay)
 
@@ -54,13 +46,6 @@ class MockNetworkService(service_pb2_grpc.NetworkServiceServicer):
         helpers.add_common_header(response, request)
         return response
 
-    def SetNetworkSettings(self, request, context):
-        time.sleep(self._rpc_delay)
-
-        response = network_pb2.GetNetworkSettingsResponse()
-        response.settings.CopyFrom(request.settings)
-        helpers.add_common_header(response, request)
-        return response
 
 def _setup(rpc_delay=0):
     client = bosdyn.client.spot_cam.network.NetworkClient()
@@ -76,27 +61,12 @@ def _fill_ice_server(server, src=None):
     server.CopyFrom(src)
     return server
 
-def _fill_network_tuple(nt, src=None):
-    if not src:
-        src = _mock_network_tuple()
-
-    nt.CopyFrom(src)
-    return nt
-
 def _mock_ice_server(server_type=network_pb2.ICEServer.TURN, address='127.0.0.1', port=22):
     server = network_pb2.ICEServer()
     server.type = server_type
     server.address = address
     server.port = port
     return server
-
-def _mock_network_tuple(address='127.0.0.1', netmask='255.255.255.0', gateway='8.8.8.8', mtu=1500):
-    nt = network_pb2.NetworkTuple()
-    nt.address.value = ip2int(address)
-    nt.netmask.value = ip2int(netmask)
-    nt.gateway.value = ip2int(gateway)
-    nt.mtu.value = mtu
-    return nt
 
 def test_get_ice_configuration():
     client, service, server = _setup()
@@ -116,24 +86,6 @@ def test_get_ice_configuration_async():
     assert ice[0].address == mock.address
     assert ice[0].port == mock.port
 
-def test_get_network_settings():
-    client, service, server = _setup()
-    ns = client.get_network_settings()
-    mock = _mock_network_tuple()
-    assert ns.address == mock.address
-    assert ns.netmask == mock.netmask
-    assert ns.gateway == mock.gateway
-    assert ns.mtu == mock.mtu
-
-def test_get_network_settings_async():
-    client, service, server = _setup()
-    ns = client.get_network_settings_async().result()
-    mock = _mock_network_tuple()
-    assert ns.address == mock.address
-    assert ns.netmask == mock.netmask
-    assert ns.gateway == mock.gateway
-    assert ns.mtu == mock.mtu
-
 def test_set_ice_configuration():
     client, service, server = _setup()
     ice = client.set_ice_configuration([_mock_ice_server()])
@@ -142,20 +94,3 @@ def test_set_ice_configuration_async():
     client, service, server = _setup()
     ice = client.set_ice_configuration_async([_mock_ice_server()]).result()
 
-def test_set_network_settings():
-    client, service, server = _setup()
-    ns = client.set_network_settings('127.0.0.1', '255.255.255.0', '8.8.8.8', 1500)
-    mock = _mock_network_tuple()
-    assert ns.address == mock.address
-    assert ns.netmask == mock.netmask
-    assert ns.gateway == mock.gateway
-    assert ns.mtu == mock.mtu
-
-def test_set_network_settings_async():
-    client, service, server = _setup()
-    ns = client.set_network_settings_async('127.0.0.1', '255.255.255.0', '8.8.8.8', 1500).result()
-    mock = _mock_network_tuple()
-    assert ns.address == mock.address
-    assert ns.netmask == mock.netmask
-    assert ns.gateway == mock.gateway
-    assert ns.mtu == mock.mtu

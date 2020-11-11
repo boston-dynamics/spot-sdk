@@ -13,13 +13,13 @@ This example creates an interface for operating Spot with your keyboard.
 ## Setup Dependencies
 See requirements.txt for the dependencies required for this example. Using pip, these dependencies can be installed using:
 ```
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 ## Running the Example
 
 ```
-python wasd.py --username USER --password PASSWORD ROBOT_IP
+python3 wasd.py --username USER --password PASSWORD ROBOT_IP
 ```
 
 When run, this example will create an interface in your terminal listing the controls which are as follows:
@@ -34,6 +34,7 @@ When run, this example will create an interface in your terminal listing the con
 | T                  | Time-sync                |
 | O                  | Video mode               |
 | r                  | Self-right               |
+| b                  | Battery-Change Pose      |
 | l                  | Return/Acquire Lease     |
 | SPACE              | E-Stop                   |
 | P                  | Motor power & Control    |

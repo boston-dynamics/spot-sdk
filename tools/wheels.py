@@ -44,6 +44,9 @@ PACKAGES_SOURCE_ROOT = os.path.join(ROOT_DIR, 'python')
 # Protocol buffers directory.
 PROTO_DIR = os.path.join(ROOT_DIR, 'protos')
 
+# Choreography proto directory.
+CHOREOGRAPHY_PROTO_DIR = os.path.join(ROOT_DIR, 'choreography_protos')
+
 # Is this in a git repo?
 IS_GIT_REPO = os.path.exists(os.path.join(ROOT_DIR, '.git'))
 
@@ -328,7 +331,7 @@ class Command(object, six.with_metaclass(abc.ABCMeta)):
 def _wheels_to_build(wheels=None):
     if wheels:
         return wheels
-    return ['bosdyn-api'] + [os.path.basename(path) for path in _list_wheel_source_directories()]
+    return ['bosdyn-api', 'bosdyn-choreography-protos'] + [os.path.basename(path) for path in _list_wheel_source_directories()]
 
 
 def _built_wheel_files(wheel):
@@ -403,7 +406,7 @@ def build_wheel(wheel, srcdir=None, dry_run=False, verbose=False, skip_git=False
     return True
 
 
-def build_proto_wheel(latest_requirements=False, dry_run=False, verbose=False, skip_git=False):
+def build_proto_wheel(wheel_name="bosdyn-api", proto_dir=PROTO_DIR, latest_requirements=False, dry_run=False, verbose=False, skip_git=False):
     """Build the API protobuf wheel."""
 
     print('building_proto_wheel')
@@ -411,7 +414,7 @@ def build_proto_wheel(latest_requirements=False, dry_run=False, verbose=False, s
     if latest_requirements:
         req_file = "requirements-setup-linux-pinned.txt"
 
-    pkg_name = "bosdyn-api"
+    pkg_name = wheel_name
 
     if not (skip_git or _check_git_status(PROTO_DIR)):
         return False
@@ -427,18 +430,18 @@ def build_proto_wheel(latest_requirements=False, dry_run=False, verbose=False, s
     if not _try_run(
             'install build dependencies',
             dry_run,
-            lambda: install_requirements(os.path.join(PROTO_DIR, req_file), quiet=not verbose)):
+            lambda: install_requirements(os.path.join(proto_dir, req_file), quiet=not verbose)):
         return False
 
     # Build the wheel.
-    build_wheel(pkg_name, srcdir=PROTO_DIR, dry_run=dry_run, verbose=verbose)
+    build_wheel(pkg_name, srcdir=proto_dir, dry_run=dry_run, verbose=verbose)
 
     # Cleanup.
     _run_or_log('cleanup downloads', dry_run,
-                lambda: shutil.rmtree(os.path.join(PROTO_DIR, ".eggs"), ignore_errors=True))
+                lambda: shutil.rmtree(os.path.join(proto_dir, ".eggs"), ignore_errors=True))
     _run_or_log(
         'cleanup egg-info', dry_run,
-        lambda: shutil.rmtree(os.path.join(PROTO_DIR, "bosdyn_api.egg-info"), ignore_errors=True))
+        lambda: shutil.rmtree(os.path.join(proto_dir, "bosdyn_api.egg-info"), ignore_errors=True))
     return True
 
 
@@ -460,7 +463,12 @@ class BuildWheelsCommand(Command):
         ret = True
         for wheel in _wheels_to_build(options.wheels):
             if wheel == 'bosdyn-api':
-                ret_ = build_proto_wheel(latest_requirements=options.latest_build_requirements,
+                ret_ = build_proto_wheel(wheel_name=wheel, latest_requirements=options.latest_build_requirements,
+                                         dry_run=options.dry_run, verbose=options.verbose,
+                                         skip_git=options.skip_git_check)
+            elif wheel == 'bosdyn-choreography-protos':
+                ret_ = build_proto_wheel(wheel_name=wheel, proto_dir=CHOREOGRAPHY_PROTO_DIR,
+                                         latest_requirements=options.latest_build_requirements,
                                          dry_run=options.dry_run, verbose=options.verbose,
                                          skip_git=options.skip_git_check)
             else:

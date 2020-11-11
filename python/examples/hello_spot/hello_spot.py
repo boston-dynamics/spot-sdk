@@ -45,7 +45,6 @@ def hello_spot(config):
     # create_standard_sdk will initialize an SDK object with typical default
     # parameters. The argument passed in is a string identifying the client.
     sdk = bosdyn.client.create_standard_sdk('HelloSpotClient')
-    sdk.load_app_token(config.app_token)
 
     # A Robot object represents a single robot. Clients using the Boston
     # Dynamics API can manage multiple robots, but this tutorial limits
@@ -75,7 +74,7 @@ def hello_spot(config):
     lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
     lease = lease_client.acquire()
     try:
-        with bosdyn.client.lease.LeaseKeepAlive(lease_client):
+        with bosdyn.client.lease.LeaseKeepAlive(lease_client): 
             # Now, we are ready to power on the robot. This call will block until the power
             # is on. Commands would fail if this did not happen. We can also check that the robot is
             # powered at any point.
@@ -106,7 +105,7 @@ def hello_spot(config):
             # the robot's length, the Z axis points up aligned with gravity, and the Y
             # axis is the cross-product of the two.
             footprint_R_body = bosdyn.geometry.EulerZXY(yaw=0.4, roll=0.0, pitch=0.0)
-            cmd = RobotCommandBuilder.stand_command(footprint_R_body=footprint_R_body)
+            cmd = RobotCommandBuilder.synchro_stand_command(footprint_R_body=footprint_R_body)
             command_client.robot_command(cmd)
             robot.logger.info("Robot standing twisted.")
             time.sleep(3)
@@ -114,7 +113,7 @@ def hello_spot(config):
             # Now tell the robot to stand taller, using the same approach of constructing
             # a command message with the RobotCommandBuilder and issuing it with
             # robot_command.
-            cmd = RobotCommandBuilder.stand_command(body_height=0.1)
+            cmd = RobotCommandBuilder.synchro_stand_command(body_height=0.1)
             command_client.robot_command(cmd)
             robot.logger.info("Robot standing tall.")
             time.sleep(3)
@@ -162,7 +161,7 @@ def _maybe_display_image(image, display_time=3.0):
         time.sleep(display_time)
     except Exception as exc:
         logger = bosdyn.client.util.get_logger()
-        logger.warning("Exception thrown displaying image. %s" % exc)
+        logger.warning("Exception thrown displaying image. %r", exc)
 
 
 def main(argv):
@@ -175,7 +174,7 @@ def main(argv):
         return True
     except Exception as exc:  # pylint: disable=broad-except
         logger = bosdyn.client.util.get_logger()
-        logger.error("Hello, Spot! threw an exception: %s", exc)
+        logger.error("Hello, Spot! threw an exception: %r", exc)
         return False
 
 

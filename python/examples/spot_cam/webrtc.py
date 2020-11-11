@@ -7,6 +7,8 @@
 import asyncio
 import base64
 import json
+import logging
+import sys
 import threading
 
 from aiortc import (
@@ -18,6 +20,20 @@ from aiortc import (
 import requests
 
 from bosdyn.client.command_line import (Command, Subcommands)
+
+logging.basicConfig(level=logging.DEBUG, filename='webrtc.log', filemode='a+')
+STDERR = logging.getLogger('stderr')
+
+class InterceptStdErr:
+    _stderr = sys.stderr
+
+    def __init__(self):
+        pass
+
+    def write(self, data):
+        STDERR.error(data)
+
+sys.stderr = InterceptStdErr()
 
 class WebRTCCommands(Subcommands):
     """Commands related to the Spot CAM's WebRTC service"""
@@ -43,7 +59,7 @@ class WebRTCSaveCommand(Command):
         self._parser.add_argument('--sdp-port', default=31102, help='SDP port of WebRTC server')
         self._parser.add_argument('--cam-ssl-cert', default=None, help="Path to Spot CAM's client cert to verify against Spot CAM server")
         self._parser.add_argument('--dst-prefix', default='h264.sdp', help='Filename prefix to prepend to all output data')
-        self._parser.add_argument('--count', type=int, default=1, help='Number of images to save')
+        self._parser.add_argument('--count', type=int, default=1, help='Number of images to save.  0 is useful for streaming without saving.')
 
     def _run(self, robot, options):
         if not options.cam_ssl_cert:
@@ -59,6 +75,7 @@ class WebRTCSaveCommand(Command):
 
         try:
             webrtc_thread.join()
+            print('Successfully saved webrtc images to local directory.')
         except KeyboardInterrupt:
             shutdown_flag.set()
             webrtc_thread.join(timeout=3.0)
@@ -82,6 +99,9 @@ async def process_frame(client, options, shutdown_flag):
     while asyncio.get_event_loop().is_running():
         try:
             frame = await client.video_frame_queue.get()
+
+            if options.count == 0:
+                continue
 
             frame.to_image().save(f'{options.dst_prefix}-{count}.jpg')
             count += 1

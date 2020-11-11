@@ -185,18 +185,16 @@ class SpotImageCapture:
         self.image_client = None
         self.source_list = []
 
-    def initialize_sdk_no_motor_control(self, token_path, address, username, password):
+    def initialize_sdk_no_motor_control(self, address, username, password):
         """Initializes the SDK and the robot without motor control.
 
         Args:
-            token_path: Path to the token file received from Boston Dynamics.
             address: IP address of the robot.
             username: Username for authenticating with robot.
             password: Password for authenticating with robot.
         """
 
         sdk = bosdyn.client.create_standard_sdk('quickstart-spot')
-        sdk.load_app_token(os.path.expanduser(token_path))
 
         # Create robot and authenticate
         self.robot = sdk.create_robot(address)
@@ -260,10 +258,10 @@ def main(argv):
     parser.add_argument(
         "--detection-classes", help="Comma-separated list of detection classes " +
         "included in the Tensorflow model; Default is to use all classes in the model")
-    parser.add_argument("--max-processing-delay", default=3.0, type=float,
+    parser.add_argument("--max-processing-delay", default=4.0, type=float,
                         help="Maximum allowed delay for processing an image; " +
                         "any image older than this value will be skipped")
-    parser.add_argument("--max-display-delay", default=4.0, type=float,
+    parser.add_argument("--max-display-delay", default=5.0, type=float,
                         help="Maximum allowed delay for displaying an image; " +
                         "any image older than this value will be skipped")
 
@@ -283,7 +281,7 @@ def main(argv):
             sys.exit(1)
 
         image_capture = SpotImageCapture()
-        image_capture.initialize_sdk_no_motor_control(options.app_token, options.hostname,
+        image_capture.initialize_sdk_no_motor_control(options.hostname,
                                                       options.username, options.password)
 
         # Start Tensorflow processes

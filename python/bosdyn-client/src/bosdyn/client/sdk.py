@@ -10,6 +10,7 @@ import glob
 import logging
 import os
 import platform
+import warnings
 
 import datetime
 from enum import Enum
@@ -17,10 +18,17 @@ import jwt
 import pkg_resources
 
 from .auth import AuthClient
-from .exceptions import Error
+from .channel import DEFAULT_MAX_MESSAGE_LENGTH
+from .data_acquisition import DataAcquisitionClient
+from .data_acquisition_store import DataAcquisitionStoreClient
+from .data_buffer import DataBufferClient
+from .data_service import DataServiceClient
 from .directory import DirectoryClient
 from .directory_registration import DirectoryRegistrationClient
+from .docking import DockingClient
 from .estop import EstopClient
+from .fault import FaultClient
+from .exceptions import Error
 from .graph_nav import GraphNavClient
 from .image import ImageClient
 from .lease import LeaseClient
@@ -29,6 +37,7 @@ from .log_annotation import LogAnnotationClient
 from .local_grid import LocalGridClient
 from .payload import PayloadClient
 from .payload_registration import PayloadRegistrationClient
+from .point_cloud import PointCloudClient
 from .power import PowerClient
 from .processors import AddRequestHeader
 from .recording import GraphNavRecordingServiceClient
@@ -39,6 +48,7 @@ from .robot_state import RobotStateClient
 from .spot_check import SpotCheckClient
 from .time_sync import TimeSyncClient
 from .world_object import WorldObjectClient
+
 
 class SdkError(Error):
     """General class of errors to handle non-response non-rpc errors."""
@@ -80,9 +90,15 @@ def generate_client_name(prefix=''):
 
 _DEFAULT_SERVICE_CLIENTS = [
     AuthClient,
+    DataAcquisitionClient,
+    DataAcquisitionStoreClient,
+    DataBufferClient,
+    DataServiceClient,
     DirectoryClient,
     DirectoryRegistrationClient,
+    DockingClient,
     EstopClient,
+    FaultClient,
     GraphNavClient,
     GraphNavRecordingServiceClient,
     ImageClient,
@@ -92,6 +108,7 @@ _DEFAULT_SERVICE_CLIENTS = [
     LocalGridClient,
     PayloadClient,
     PayloadRegistrationClient,
+    PointCloudClient,
     PowerClient,
     RobotCommandClient,
     RobotIdClient,
@@ -139,7 +156,6 @@ class Sdk(object):
     """
 
     def __init__(self, name=None):
-        self.app_token = None
         self.cert = None
         self.logger = logging.getLogger(name or 'bosdyn.Sdk')
         self.request_processors = []
@@ -148,6 +164,11 @@ class Sdk(object):
         self.service_type_by_name = {}
         # Robots created by this Sdk, keyed by address.
         self.robots = {}
+
+        # Set default max message length for sending and receiving. These values are used when
+        # creating channels in the bosdyn.client.Robot class.
+        self.max_send_message_length = DEFAULT_MAX_MESSAGE_LENGTH
+        self.max_receive_message_length = DEFAULT_MAX_MESSAGE_LENGTH
 
 
 
@@ -178,6 +199,20 @@ class Sdk(object):
         self.robots[address] = robot
 
         return robot
+
+    def set_max_message_length(self, max_message_length):
+        """Updates the send and receive max message length values in all the clients/channels
+        created from this point on.
+
+        Args:
+            max_message_length(int) : Max message length value to use for sending and receiving
+                messages.
+
+        Returns:
+            None.
+        """
+        self.max_send_message_length = max_message_length
+        self.max_receive_message_length = max_message_length
 
     def register_service_client(self, creation_func, service_type=None, service_name=None):
         """Tell the Sdk how to create a specific type of service client.
@@ -222,31 +257,17 @@ class Sdk(object):
                 with open(cert_path, 'rb') as cert_file:
                     self.cert += cert_file.read()
 
-    def load_app_token(self, resource_path):
-        """Load an app token from a file, and set it on the SDK.
+    @staticmethod
+    def load_app_token(*_):
+        """DEPRECATED (v2.0.1) - Kept for compatibility
+        Load an app token from a file, and set it on the SDK.
 
         Arguments:
             resource_path: Path to app token file on file system.
-
-        Raises:
-            UnsetAppTokenError: If resource_path is not set.
-            UnableToLoadAppTokenError: If the file exists, but is unloadable.
         """
-        if not resource_path:
-            # App tokens are no longer required, but this function still exists for compatibility
-            return
-        try:
-            with open(os.path.expanduser(resource_path), 'rb') as token_file:
-                token = token_file.read().decode().strip()
-        except IOError as err:
-            _LOGGER.exception(err)
-            raise UnableToLoadAppTokenError(
-                'Unable to retrieve app token from "{}".'.format(resource_path))
-        except TypeError as err:
-            _LOGGER.exception(err)
-            raise UnsetAppTokenError
-
-        self.app_token = token
+        warnings.warn(
+            "App tokens are deprecated as of 2.0.1.  load_app_token is no longer necessary",
+            DeprecationWarning)
 
 
 def decode_token(token):
@@ -289,12 +310,14 @@ def log_token_time_remaining(token):
     time_to_expiration = expire_time - datetime.datetime.utcnow()
     if time_to_expiration < datetime.timedelta(seconds=0):
         _LOGGER.error('Your application token has expired. Please contact '
-                      'support@bostondynamics.com to request a new token.')
+                      'support@bostondynamics.com to request a robot license as application '
+                      'tokens have been deprecated.')
     elif time_to_expiration <= datetime.timedelta(days=30):
-        _LOGGER.warning('Application token expires in %s days on %s. Please contact '
-                        'support@bostondynamics.com to request a new token before the '
-                        'current token expires.', time_to_expiration.days,
-                        datetime.datetime.strftime(expire_time, '%Y/%m/%d'))
+        _LOGGER.warning(
+            'Application token expires in %s days on %s. Please contact '
+            'support@bostondynamics.com to request a lease as application tokens '
+            'have been deprecated.', time_to_expiration.days,
+            datetime.datetime.strftime(expire_time, '%Y/%m/%d'))
     else:
         _LOGGER.debug('Application token expires on %s',
                       datetime.datetime.strftime(expire_time, '%Y/%m/%d'))

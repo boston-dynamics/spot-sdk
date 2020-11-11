@@ -10,6 +10,7 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
+from bosdyn.client.math_helpers import recenter_angle
 from bosdyn.client.common import (BaseClient, common_header_errors, handle_common_header_errors)
 from bosdyn.api.spot_cam import service_pb2_grpc
 from bosdyn.api.spot_cam import ptz_pb2
@@ -130,3 +131,8 @@ class PtzClient(BaseClient):
     @handle_common_header_errors
     def _ptz_error_from_response(response):  # pylint: disable=unused-argument
         return None
+
+
+def shift_pan_angle(pan):
+    """Shift the pan angle (degrees) so that it is in the [0,360] range."""
+    return recenter_angle(pan, 0, 360)

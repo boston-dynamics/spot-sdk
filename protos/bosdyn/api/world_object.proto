@@ -10,10 +10,11 @@ package bosdyn.api;
 
 option java_outer_classname = "WorldObjectProto";
 
+import "bosdyn/api/docking/docking.proto";
 import "bosdyn/api/geometry.proto";
+import "bosdyn/api/header.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
-import "bosdyn/api/header.proto";
 
 // The world object message is used to describe different objects seen by a robot. It contains information
 // about the properties of the object in addition to a unique id and the transform snapshot.
@@ -45,6 +46,8 @@ message WorldObject {
     AprilTagProperties apriltag_properties = 6;
     // The image properties describe any camera and image coordinates associated with an object.
     ImageProperties image_properties = 9;
+    // Properties describing a dock
+    DockProperties dock_properties = 10;
     // An extra field for application-specific object properties.
     google.protobuf.Any additional_properties = 100;
 }
@@ -56,6 +59,7 @@ enum WorldObjectType {
   WORLD_OBJECT_DRAWABLE = 1;
   WORLD_OBJECT_APRILTAG = 2;
   WORLD_OBJECT_IMAGE_COORDINATES = 5;
+  WORLD_OBJECT_DOCK = 6;
 }
 
 // The ListWorldObject request message, which can optionally include filters for the object type or timestamp.
@@ -157,8 +161,28 @@ message ImageProperties {
     string frame_name_image_coordinates = 3;
 }
 
+// World object properties describing a dock
+message DockProperties {
+  // Consistent id associated with a given dock.
+  uint32 dock_id = 1;
+  // Type of dock.
+  docking.DockType type = 2;
+  // The frame name for the location of dock origin. This will be included in the transform snapshot.
+  string frame_name_dock = 3;
+}
+
 //  World object properties describing a fiducial object.
 message AprilTagProperties {
+    enum AprilTagPoseStatus {
+       STATUS_UNKNOWN = 0;
+       // No known issues with the pose estimate.
+       STATUS_OK = 1;
+       // The orientation of the tag is ambiguous.
+       STATUS_AMBIGUOUS = 2;
+       // The pose may be unreliable due to high reprojection error.
+       STATUS_HIGH_ERROR = 3;
+    }
+
     // Consistent integer id associated with a given apriltag. April Tag detections will be from the
     // tag family 36h11.
     int32 tag_id = 1;
@@ -170,8 +194,28 @@ message AprilTagProperties {
     // The frame name for the raw version of this fiducial. This will be included in the transform snapshot.
     string frame_name_fiducial = 3;
 
+    // Status of the pose estimation of the unfiltered fiducial frame.
+    AprilTagPoseStatus fiducial_pose_status = 8;
+
     // The frame name for the filtered version of this fiducial. This will be included in the transform snapshot.
     string frame_name_fiducial_filtered = 4;
+
+    // Status of the pose estimation of the filtered fiducial frame.
+    AprilTagPoseStatus fiducial_filtered_pose_status = 9;
+
+    // The frame name for the camera that detected this fiducial.
+    string frame_name_camera = 7;
+
+    // A 6 x 6 Covariance matrix representing the marginal uncertainty of the last detection.
+    // The rows/columns are:
+    // rx, ry, rz, tx, ty, tz
+    // which represent incremental rotation and translation along the x, y, and z axes of the
+    // given frame, respectively.
+    // This is computed using the Jacobian of the pose estimation algorithm.
+    SE3Covariance detection_covariance = 5;
+    // The frame that the detection covariance is expressed in.
+    string detection_covariance_reference_frame = 6;
+
 }
 
 

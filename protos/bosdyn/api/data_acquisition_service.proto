@@ -1,0 +1,30 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "DataAcquisitionServiceProto";
+
+import "bosdyn/api/data_acquisition.proto";
+
+// The DataAcquisitionService is the main data acquisition service run on robot, which recieves
+// incoming requests and sends queries to all directory-registered DataAcquisitionPluginServices.
+service DataAcquisitionService {
+    // Trigger a data acquisition to save data and metadata to the data buffer.
+    // Sent by the tablet or a client to initiate a data acquisition and buffering process.
+    rpc AcquireData(AcquireDataRequest) returns (AcquireDataResponse);
+
+    // Query the status of a data acquisition.
+    rpc GetStatus(GetStatusRequest) returns (GetStatusResponse);
+
+    // Get information from a DAQ service; lists acquisition capabilities.
+    rpc GetServiceInfo(GetServiceInfoRequest) returns (GetServiceInfoResponse);
+
+    // Cancel an in-progress data acquisition.
+    rpc CancelAcquisition(CancelAcquisitionRequest) returns (CancelAcquisitionResponse);
+}

@@ -1,0 +1,33 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+// DataBufferService allows adding information to the robot's log files.
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "DataServiceProto";
+
+import "bosdyn/api/data_index.proto";
+
+// The DataService is a mechanism for querying and managing data stored on robot.
+service DataService {
+    // Get index of current data matching a given DataQuery.
+    rpc GetDataIndex(GetDataIndexRequest) returns (GetDataIndexResponse) {}
+
+    // Get events and comments.
+    rpc GetEventsComments(GetEventsCommentsRequest) returns (GetEventsCommentsResponse) {}
+
+
+    // Get basic stats on data buffer storage.
+    rpc GetDataBufferStatus(GetDataBufferStatusRequest) returns (GetDataBufferStatusResponse) {}
+
+    // Get a list pf pages matching a given time range
+    rpc GetDataPages(GetDataPagesRequest) returns (GetDataPagesResponse) {}
+
+    // Delete a list of pages matching a given time range or page ids
+    rpc DeleteDataPages(DeleteDataPagesRequest) returns (DeleteDataPagesResponse) {}
+}

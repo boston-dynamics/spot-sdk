@@ -117,9 +117,6 @@ Spam, Spam, Spam, Spam!
     def test_load_app_token(self):
         sdk = bosdyn.client.Sdk()
 
-        with self.assertRaises(bosdyn.client.sdk.UnableToLoadAppTokenError):
-            sdk.load_app_token('invalid')
-
         # App tokens are deprecated, test that not loading a token does not throw an exception
         sdk.load_app_token(None)
 

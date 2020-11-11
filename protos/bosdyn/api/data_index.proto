@@ -1,0 +1,255 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "DataIndexProto";
+
+import "bosdyn/api/data_buffer.proto";
+import "bosdyn/api/header.proto";
+import "bosdyn/api/time_range.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+// Queries for an index of data on the robot.
+// Since there may a huge number of 'ticks' and messages per type/schema on the robot, the
+//  data service general returns an index in terms of 'pages' which may correspond to matching
+//  data in individual files on robot, or a range of records (by index or time, etc...)
+//  in a database.
+
+
+// Specification for selecting of GRPC logs.
+message GrpcSpec {
+    string service_name = 1;
+}
+
+// Specification for selecting of blob messages.
+message BlobSpec {
+    string source = 1;
+    string message_type = 2;
+    string channel = 3;
+}
+
+
+// Specification for selecting Events.
+message EventSpec {
+    string source = 1;
+    string type = 2;
+    google.protobuf.Int32Value level = 3;
+}
+
+
+// A unit of data storage.
+// This may be a bddf data file.
+// Like a file, this data may be downloaded or deleted all together for example.
+message PageInfo {
+    string id = 1;      // Identifier unique to robot.
+    string path = 2;    // Relative path to file, if file storage.
+    string source = 3;  // Name of service/client which provided the data.
+
+    // Time range of the relevant data in the page.
+    TimeRange time_range = 4;
+
+    int64 num_ticks = 5;    // Number of time samples or blobs.
+    int64 total_bytes = 6;  // Total size of data in the page.
+
+    enum PageFormat {
+        // Unset -- do not use.
+        FORMAT_UNKNOWN = 0;
+
+        // Data is stored in a .bddf file
+        FORMAT_BDDF_FILE = 1;
+
+        // In the future, potentially support other file formats, database storage, etc....
+    }
+    PageFormat format = 7;
+
+    enum Compression {
+        // Not set -- do not use.
+        COMPRESSION_UNKNOWN = 0;
+
+        // Data is not compressed.
+        COMPRESSION_NONE = 1;
+
+        // Data uses gzip compression.
+        COMPRESSION_GZIP = 2;
+
+        // Data uses zstd compression.
+        COMPRESSION_ZSTD = 3;
+    }
+    Compression compression = 8;
+
+    // True if data is still being written into this page, false if page is complete.
+    bool is_open = 9;
+
+    // True if data is marked as having been downloaded.
+    bool is_downloaded = 10;
+
+    // If this exists, the page was deleted from the robot at the specified time.
+    google.protobuf.Timestamp deleted_timestamp = 11;
+
+    // If this exists, download from this page was started at the specified time.
+    google.protobuf.Timestamp download_started_timestamp = 12;
+
+    // True if data has been requested to be preserved.
+    bool request_preserve = 13;
+}
+
+// A set of pages of data which contain specied GRPC request and response messages.
+message GrpcPages {
+    TimeRange time_range = 1;
+    GrpcSpec spec = 2;
+    repeated PageInfo pages = 3;
+}
+
+// A set of blob messages of a given channel/msgtype within a given data page.
+message BlobPage {
+    BlobSpec spec = 1;
+    PageInfo page = 2;
+}
+
+// A set of pages of data which contain specified Blob messages from the data-buffer.
+message BlobPages {
+    TimeRange time_range = 1;
+    repeated BlobPage pages = 3;
+}
+
+// A set of pages and the associated time range they cover.
+message PagesAndTimestamp {
+    TimeRange time_range = 1;
+    repeated PageInfo pages = 2;
+}
+
+// A set of pages of data which contain specified Events from the data-buffer.
+
+// A query for pages containing the desired data.
+message DataQuery {
+    // Timespan for data we want to query
+    TimeRange time_range = 1;
+
+    // Request for pages containing different kinds of data.
+    repeated BlobSpec blobs = 2;
+    // return pages of text-messages during the specified timespan
+    bool text_messages = 3;
+    // return pages of events
+    bool events = 4;
+    // return pages of operator comments during the specified timespan
+    bool comments = 6;
+}
+
+// Description of data matching a given DataQuery.
+message DataIndex {
+    TimeRange time_range = 1;
+
+    repeated BlobPages blobs = 2;
+    PagesAndTimestamp text_messages = 3;
+    PagesAndTimestamp events = 4;
+    PagesAndTimestamp comments = 6;
+}
+
+// A request for Events and/or OperatorComments over a given time range.
+message EventsCommentsSpec {
+    // Timespan for data we want to query
+    TimeRange time_range = 1;
+
+    // Return events which match the request.
+    repeated EventSpec events = 2;
+
+    // Return operator comments which match the request.
+    bool comments = 3;
+}
+
+// Requested Events and/or OperatorComments.
+message EventsComments {
+    // Timespan for data
+    TimeRange time_range = 1;
+
+    repeated Event events = 2;
+    repeated OperatorComment operator_comments = 3;
+}
+
+message DataBufferStatus {
+    int64 num_data_buffer_pages = 1;
+    int64 data_buffer_total_bytes = 2;
+    int64 num_comments = 3;
+    int64 num_events = 4;
+    repeated BlobSpec blob_specs = 5;
+}
+
+// GRPC request for data index information.
+message GetDataIndexResponse {
+    ResponseHeader header = 1;
+    DataIndex data_index = 2;
+}
+
+// GRPC response with requested data index information.
+message GetDataIndexRequest {
+    RequestHeader header = 1;
+    DataQuery data_query = 2;
+}
+
+// GRPC request for Events and OperatorComments.
+message GetEventsCommentsRequest {
+    RequestHeader header = 1;
+    EventsCommentsSpec event_comment_request = 2;
+}
+
+// GRPC response with requested Events and OperatorComments.
+message GetEventsCommentsResponse {
+    ResponseHeader header = 1;
+    EventsComments events_comments = 2;
+}
+
+
+message GetDataBufferStatusRequest {
+    RequestHeader header = 1;
+    bool get_blob_specs = 2;
+}
+
+message GetDataBufferStatusResponse {
+    ResponseHeader header = 1;
+    DataBufferStatus data_buffer_status = 2;
+}
+
+message GetDataPagesRequest {
+    RequestHeader header = 1;
+    TimeRange time_range = 2;
+}
+message GetDataPagesResponse {
+    ResponseHeader header = 1;
+    repeated PageInfo pages = 2;
+}
+
+// GRPC request to delete pages. Both time_range and page_ids can be set.
+message DeleteDataPagesRequest {
+    RequestHeader header = 1;
+
+    // Delete all pages in this time range
+    TimeRange time_range = 2;
+
+    // Delete all pages with matching ids
+    repeated string page_ids = 3;
+};
+
+message DeletePageStatus {
+    string page_id = 1;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_DELETED = 1;
+        STATUS_DELETION_FAILED = 2;
+        STATUS_NOT_FOUND = 3;
+    }
+    Status status = 2;
+};
+message DeleteDataPagesResponse {
+    ResponseHeader header = 1;
+
+    int64 bytes_deleted = 2;
+    repeated DeletePageStatus status = 3;
+}

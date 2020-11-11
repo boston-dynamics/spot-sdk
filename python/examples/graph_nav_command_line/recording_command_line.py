@@ -12,15 +12,17 @@ import os
 import sys
 import time
 
-from bosdyn.api.graph_nav import recording_pb2
+from bosdyn.api.graph_nav import map_pb2, recording_pb2
 from bosdyn.client import create_standard_sdk, ResponseError, RpcError
 import bosdyn.client.channel
 from bosdyn.client.graph_nav import GraphNavClient
 from bosdyn.client.lease import LeaseClient
+from bosdyn.client.math_helpers import SE3Pose, Quat
 from bosdyn.client.recording import GraphNavRecordingServiceClient
 import bosdyn.client.util
 import google.protobuf.timestamp_pb2
 
+import graph_nav_util
 
 class RecordingInterface(object):
     """Recording service command line interface."""
@@ -44,13 +46,22 @@ class RecordingInterface(object):
         # Setup the graph nav service client.
         self._graph_nav_client = robot.ensure_client(GraphNavClient.default_service_name)
 
+        # Store the most recent knowledge of the state of the robot based on rpc calls.
+        self._current_graph = None
+        self._current_edges = dict()  #maps to_waypoint to list(from_waypoint)
+        self._current_waypoint_snapshots = dict()  # maps id to waypoint snapshot
+        self._current_edge_snapshots = dict()  # maps id to edge snapshot
+        self._current_annotation_name_to_wp_id = dict()
+
         # Add recording service properties to the command line dictionary.
         self._command_dictionary = {
             '1': self._start_recording,
             '2': self._stop_recording,
             '3': self._get_recording_status,
             '4': self._create_default_waypoint,
-            '5': self._download_full_graph
+            '5': self._download_full_graph,
+            '6': self._list_graph_waypoint_and_edge_ids,
+            '7': self._create_new_edge
         }
 
     def should_we_start_recording(self):
@@ -71,7 +82,7 @@ class RecordingInterface(object):
         # start recording, so we return True.
         return True
 
-    def _start_recording(self):
+    def _start_recording(self, *args):
         """Start recording a map."""
         should_start_recording = self.should_we_start_recording()
         if not should_start_recording:
@@ -85,7 +96,7 @@ class RecordingInterface(object):
         except Exception as err:
             print("Start recording failed: "+str(err))
 
-    def _stop_recording(self):
+    def _stop_recording(self, *args):
         """Stop or pause recording a map."""
         try:
             status = self._recording_client.stop_recording()
@@ -93,7 +104,7 @@ class RecordingInterface(object):
         except Exception as err:
             print("Stop recording failed: "+str(err))
 
-    def _get_recording_status(self):
+    def _get_recording_status(self, *args):
         """Get the recording service's status."""
         status = self._recording_client.get_record_status()
         if status.is_recording:
@@ -101,7 +112,7 @@ class RecordingInterface(object):
         else:
             print("The recording service is off.")
 
-    def _create_default_waypoint(self):
+    def _create_default_waypoint(self, *args):
         """Create a default waypoint at the robot's current location."""
         resp = self._recording_client.create_waypoint(waypoint_name="default")
         if resp.status == recording_pb2.CreateWaypointResponse.STATUS_OK:
@@ -109,7 +120,7 @@ class RecordingInterface(object):
         else:
             print("Could not create a waypoint.")
 
-    def _download_full_graph(self):
+    def _download_full_graph(self, *args):
         """Download the graph and snapshots from the robot."""
         graph = self._graph_nav_client.download_graph()
         if graph is None:
@@ -167,6 +178,85 @@ class RecordingInterface(object):
             f.write(data)
             f.close()
 
+    def _list_graph_waypoint_and_edge_ids(self, *args):
+        """List the waypoint ids and edge ids of the graph currently on the robot."""
+
+        # Download current graph
+        graph = self._graph_nav_client.download_graph()
+        if graph is None:
+            print("Empty graph.")
+            return
+        self._current_graph = graph
+
+        localization_id = self._graph_nav_client.get_localization_state().localization.waypoint_id
+        
+        # Update and print waypoints and edges
+        self._current_annotation_name_to_wp_id, self._current_edges = graph_nav_util.update_waypoints_and_edges(
+            graph, localization_id)
+
+    def _create_new_edge(self, *args):
+        """Create new edge between existing waypoints in map."""
+
+        print('args = {} : len = {}'.format(args[0], len(args[0])))
+        if len(args[0]) != 2:
+            print("ERROR: Specify the two waypoints to connect (short code or annotation).")
+            return
+
+        from_id = graph_nav_util.find_unique_waypoint_id(args[0][0], self._current_graph,
+                                                         self._current_annotation_name_to_wp_id)
+        to_id = graph_nav_util.find_unique_waypoint_id(args[0][1], self._current_graph,
+                                                       self._current_annotation_name_to_wp_id)
+
+        print("Creating edge from {} to {}.".format(from_id, to_id))
+
+        from_wp = self._get_waypoint(from_id)
+        if from_wp is None:
+            return
+
+        to_wp = self._get_waypoint(to_id)
+        if to_wp is None:
+            return
+
+        # Get edge transform based on kinematic odometry
+        edge_transform = self._get_transform(from_wp, to_wp)
+
+        # Define new edge
+        new_edge = map_pb2.Edge()
+        new_edge.id.from_waypoint = from_id
+        new_edge.id.to_waypoint = to_id
+        new_edge.from_tform_to.CopyFrom(edge_transform)
+
+        # Send request to add edge to map
+        self._recording_client.create_edge(edge=new_edge)
+
+    def _get_waypoint(self, id):
+        '''Get waypoint from graph (return None if waypoint not found)'''
+
+        if self._current_graph is None:
+            self._current_graph = self._graph_nav_client.download_graph()
+
+        for waypoint in self._current_graph.waypoints:
+            if waypoint.id == id:
+                return waypoint
+
+        print('ERROR: Waypoint {} not found in graph.'.format(id))
+        return None
+
+    def _get_transform(self, from_wp, to_wp):
+        '''Get transfrom from from-waypoint to to-waypoint.'''
+
+        from_se3 = from_wp.waypoint_tform_ko
+        from_tf = SE3Pose(from_se3.position.x, from_se3.position.y, from_se3.position.z,
+            Quat(w=from_se3.rotation.w, x=from_se3.rotation.x, y=from_se3.rotation.y, z=from_se3.rotation.z))
+
+        to_se3 = to_wp.waypoint_tform_ko
+        to_tf = SE3Pose(to_se3.position.x, to_se3.position.y, to_se3.position.z,
+            Quat(w=to_se3.rotation.w, x=to_se3.rotation.x, y=to_se3.rotation.y, z=to_se3.rotation.z))
+
+        from_T_to = from_tf.mult(to_tf.inverse())
+        return from_T_to.to_proto()
+
+
     def run(self):
         """Main loop for the command line interface."""
         while True:
@@ -177,6 +267,8 @@ class RecordingInterface(object):
             (3) Get the recording service's status.
             (4) Create a default waypoint in the current robot's location.
             (5) Download the map after recording.
+            (6) List the waypoint ids and edge ids of the map on the robot.
+            (7) Create new edge between existing waypoints using odometry.
             (q) Exit.
             """)
             try:
@@ -193,7 +285,7 @@ class RecordingInterface(object):
                 continue
             try:
                 cmd_func = self._command_dictionary[req_type]
-                cmd_func()
+                cmd_func(str.split(inputs)[1:])
             except Exception as e:
                 print(e)
 
@@ -209,7 +301,6 @@ def main(argv):
 
     # Create robot object.
     sdk = bosdyn.client.create_standard_sdk('RecordingClient')
-    sdk.load_app_token(options.app_token)
     robot = sdk.create_robot(options.hostname)
     robot.authenticate(options.username, options.password)
     recording_command_line = RecordingInterface(robot, options.download_filepath)

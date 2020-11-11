@@ -90,6 +90,18 @@ message SetLocalizationResponse {
         // Failed to localize for some other reason; see the error_report for details.
         // This is often because the initial guess was incorrect.
         STATUS_FAILED = 5;
+        // Failed to localize because the fiducial requested by 'use_fiducial_id' was too far away from
+        // the robot.
+        STATUS_FIDUCIAL_TOO_FAR_AWAY = 6;
+        // Failed to localize because the fiducial requested by 'use_fiducial_id' had a detection time that was too
+        // far in the past.
+        STATUS_FIDUCIAL_TOO_OLD = 7;
+        // Failed to localize because the fiducial requested by 'use_fiducial_id' did not exist in the map at
+        // the required location.
+        STATUS_NO_MATCHING_FIDUCIAL = 8;
+        // Failed to localize because the fiducial requested by 'use_fiducial_id' had an unreliable
+        // pose estimation.
+        STATUS_FIDUCIAL_POSE_UNCERTAIN = 9;
     }
     // Return status for the request.
     Status status = 3;
@@ -132,6 +144,14 @@ message TravelParams {
     // it will attempt to achieve the yaw as well.
     bool ignore_final_yaw = 4;
 
+
+    // Indicates whether robot will navigate through areas with poor quality features
+    enum FeatureQualityTolerance {
+        TOLERANCE_UNKNOWN                       = 0;    // Unknown value
+        TOLERANCE_DEFAULT                       = 1;    // Navigate through default number of waypoints with poor quality features
+        TOLERANCE_IGNORE_POOR_FEATURE_QUALITY   = 2;    // Navigate through unlimited number of waypoints with poor quality features
+    }
+    FeatureQualityTolerance feature_quality_tolerance = 5;
 }
 
 message NavigateToRequest {
@@ -166,31 +186,38 @@ message NavigateToResponse {
     repeated LeaseUseResult lease_use_results = 2;
 
     enum Status {
-        STATUS_UNKNOWN                = 0;  // An unknown / unexpected error occurred.
-        STATUS_OK                     = 1;  // Request was accepted.
+        // An unknown / unexpected error occurred.
+        STATUS_UNKNOWN                = 0;
+        // Request was accepted.
+        STATUS_OK                     = 1;
 
-        // Time errors.
-        STATUS_NO_TIMESYNC            = 2;  // Client has not done timesync with robot.
-        STATUS_EXPIRED                = 3;  // The command was received after its end time had already passed.
-        STATUS_TOO_DISTANT            = 4;  // The command end time was too far in the future.
+        // [Time error] Client has not done timesync with robot.
+        STATUS_NO_TIMESYNC            = 2;
+        // [Time error] The command was received after its end time had already passed.
+        STATUS_EXPIRED                = 3;
+        // [Time error]The command end time was too far in the future.
+        STATUS_TOO_DISTANT            = 4;
 
-        // Robot State Errors.
-        STATUS_ROBOT_IMPAIRED         = 5;  // Cannot navigate a route if the robot has a crtical
-                                            //  perception fault, or behavior fault, or LIDAR not working.
-        STATUS_RECORDING              = 6;  // Cannot navigate a route while recording a map.
+        // [Robot State Error] Cannot navigate a route if the robot has a critical
+        //  perception fault, or behavior fault, or LIDAR not working.
+        STATUS_ROBOT_IMPAIRED         = 5;
+        // [Robot State Error] Cannot navigate a route while recording a map.
+        STATUS_RECORDING              = 6;
 
-        // Route errors.
-        STATUS_UNKNOWN_WAYPOINT       = 7;  // One or more of the waypoints specified weren't in the map.
-        STATUS_NO_PATH                = 8;  // There is no path to the specified waypoint.
+        // [Route Error] One or more of the waypoints specified weren't in the map.
+        STATUS_UNKNOWN_WAYPOINT       = 7;
+        // [Route Error] There is no path to the specified waypoint.
+        STATUS_NO_PATH                = 8;
 
-        // Route errors shared with NavigateTo.
-        STATUS_FEATURE_DESERT         = 10; // Route contained too many waypoints with low-quality features.
-        STATUS_LOST                   = 11; // Happens when you try to issue a navigate to while the robot is lost.
-        STATUS_NOT_LOCALIZED_TO_MAP = 13; // Happens when the current localization doesn't refer to any waypoint in the map (possibly uninitialized localization).
+        // [Route Error] Route contained too many waypoints with low-quality features.
+        STATUS_FEATURE_DESERT         = 10;
+        // [Route Error] Happens when you try to issue a navigate to while the robot is lost.
+        STATUS_LOST                   = 11;
+        // [Route Error] Happens when the current localization doesn't refer to any waypoint in the map (possibly uninitialized localization).
+        STATUS_NOT_LOCALIZED_TO_MAP = 13;
 
-        // Wrestling errors.
-        STATUS_COULD_NOT_UPDATE_ROUTE = 12;  // Happens when graph nav refuses to follow the route you specified.  Try saying please?
-
+        // [Wrestling error] Happens when graph nav refuses to follow the route you specified.
+        STATUS_COULD_NOT_UPDATE_ROUTE = 12;
 
     }
     // Return status for the request.
@@ -258,12 +285,11 @@ message NavigateRouteResponse {
         STATUS_INVALID_EDGE           = 9;
         // [Route Error] Route contained a constraint fault.
         STATUS_CONSTRAINT_FAULT       = 11;
-
-        // [NavTo Specific Route Error] Route contained too many waypoints with low-quality features.
+        // [Route Error] Route contained too many waypoints with low-quality features.
         STATUS_FEATURE_DESERT         = 13;
-        // [NavTo Specific Route Error] Happens when you try to issue a navigate route while the robot is lost.
+        // [Route Error] Happens when you try to issue a navigate route while the robot is lost.
         STATUS_LOST                   = 14;
-        // [NavTo Specific Route Error] Happens when the current localization doesn't refer to any waypoint
+        // [Route Error] Happens when the current localization doesn't refer to any waypoint
         // in the route (possibly uninitialized localization).
         STATUS_NOT_LOCALIZED_TO_ROUTE = 16;
 
@@ -350,6 +376,9 @@ message GetLocalizationStateRequest {
     // Common request header.
     RequestHeader header = 1;
 
+    // Return the localization relative to this waypoint, if specified.
+    string waypoint_id = 8;
+
     // If true, request the live edge-segmented point cloud that was used
     // to generate this localization.
     bool request_live_point_cloud = 2;
@@ -396,7 +425,8 @@ message GetLocalizationStateResponse {
     // Common response header.
     ResponseHeader header = 1;
 
-    // Where the robot currently is.
+    // Where the robot currently is. If a waypoint_id was specified in the request, this localization
+    // will be relative to that waypoint.
     Localization localization = 2;
 
     // Robot kinematic state at time of localization.

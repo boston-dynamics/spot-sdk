@@ -53,6 +53,7 @@ def mat_to_vtk(mat):
     t.SetMatrix(mat.flatten())
     return t
 
+
 def vtk_to_mat(transform):
     """
     Converts a VTK transform object to 4x4 homogenous numpy matrix.

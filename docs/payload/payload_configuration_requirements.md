@@ -108,7 +108,7 @@ NOTE: The Spot Arm weighs 8 kg. Total combined payload weight should be within t
 [elec-image2]: images/elec-image2.png
 [elec-image3]: images/elec-image3.png
 
-[guidlines-image1]: images/elec-image3.png
+[guidelines-image1]: images/elec-image3.png
 
 [mech-image1]: images/mech-image1.png
 [mech-image2]: images/mech-image2.png

@@ -21,7 +21,6 @@ def main():
 
     # Create robot object with a power client.
     sdk = bosdyn.client.create_standard_sdk('PowerClient')
-    sdk.load_app_token(options.app_token)
     robot = sdk.create_robot(options.hostname)
     robot.authenticate(options.username, options.password)
     power_client = robot.ensure_client(PowerClient.default_service_name)

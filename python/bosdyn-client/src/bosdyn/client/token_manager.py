@@ -51,7 +51,6 @@ class TokenManager:
 
     def update(self):
         """Refresh the user token as needed."""
-        USER_TOKEN_MAX_DURATION_TIME_DELTA = datetime.timedelta(hours=11)
         USER_TOKEN_REFRESH_TIME_DELTA = datetime.timedelta(hours=1)
         USER_TOKEN_RETRY_INTERVAL_START = datetime.timedelta(seconds=1)
 
@@ -65,12 +64,6 @@ class TokenManager:
                     _LOGGER.exception("Failed to save the token to the cache.  Continuing without caching.")
                 except (InvalidTokenError, ResponseError, RpcError):
                     _LOGGER.exception("Error refreshing the token.  Retry in %s", retry_interval)
-
-                    # Nothing to do except retry unless we're at expiration time.
-                    last_refresh = datetime.datetime.now() - self._last_timestamp
-                    if last_refresh > USER_TOKEN_MAX_DURATION_TIME_DELTA:
-                        self.stop()
-                        break
 
                     # Exponential back-off on retrying
                     self._exit_thread.wait(retry_interval.seconds)

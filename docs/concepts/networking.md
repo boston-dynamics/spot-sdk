@@ -19,7 +19,7 @@ Spot offers a variety of networking options to support a diverse set of applicat
 *  **Spot as a WiFi client**. Spot can join an existing WiFi network, and applications can also join the same WiFi network to talk to Spot. This approach increases the possible range between application and Spot, but attention needs to be paid to dead zones in the network, handoff times between access points, and other considerations.
 *  **Spot via custom communications links**. Custom communication links such as cell modems and Persistent Systems radios can act as a bridge between Spot and applications. These can be useful when the above cases are insufficient for network design.
 
-While the application-layer protocol for the Spot API works across any IP-based network connection, the examples above show that networking choice can have a signifcant impact on the performance and reliability of an application as well as deployment strategies.
+While the application-layer protocol for the Spot API works across any IP-based network connection, the examples above show that networking choice can have a significant impact on the performance and reliability of an application as well as deployment strategies.
 
 ## gRPC and Protocol Buffers
 
@@ -173,7 +173,7 @@ The Python library handles Networking, Common RPC errors, and Specific RPC error
 
 gRPC is built on top of other networking protocols, as shown in the diagram below.
 
-<img src="network_protocol_stack.png" alt="Nework protocol stack" style="width:350px">
+<img src="network_protocol_stack.png" alt="Network protocol stack" style="width:350px">
 
 This protocol stack has a few implications:
 

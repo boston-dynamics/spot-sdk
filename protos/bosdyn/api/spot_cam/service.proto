@@ -37,6 +37,7 @@ service CompositorService {
 service StreamQualityService {
     rpc SetStreamParams (SetStreamParamsRequest) returns (SetStreamParamsResponse);
     rpc GetStreamParams (GetStreamParamsRequest) returns (GetStreamParamsResponse);
+    rpc EnableCongestionControl (EnableCongestionControlRequest) returns (EnableCongestionControlResponse);
 }
 
 // Turn hardware components' power on or off.
@@ -107,6 +108,10 @@ service AudioService {
     rpc SetVolume (SetVolumeRequest) returns (SetVolumeResponse);
     // Set the overall volume level for playing sounds.
     rpc GetVolume (GetVolumeRequest) returns (GetVolumeResponse);
+    rpc SetAudioCaptureChannel (SetAudioCaptureChannelRequest) returns (SetAudioCaptureChannelResponse);
+    rpc GetAudioCaptureChannel (GetAudioCaptureChannelRequest) returns (GetAudioCaptureChannelResponse);
+    rpc SetAudioCaptureGain (SetAudioCaptureGainRequest) returns (SetAudioCaptureGainResponse);
+    rpc GetAudioCaptureGain (GetAudioCaptureGainRequest) returns (GetAudioCaptureGainResponse);
 }
 
 // Query temperature and built-in test results.

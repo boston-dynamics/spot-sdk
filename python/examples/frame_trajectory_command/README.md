@@ -22,5 +22,5 @@ You will have to launch a software E-Stop separately in order to run this exampl
 ## Run the Example
 To run the example:
 ```
-python frame_trajectory_command.py --username USER --password PASSWORD ROBOT_IP
+python3 frame_trajectory_command.py --username USER --password PASSWORD ROBOT_IP
 ```

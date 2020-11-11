@@ -1,0 +1,12 @@
+# The protobuf requirements have to deal with two constraints:
+#   * The generated proto code in the bosdyn-api whieel assumes protobuf >= 3.3
+#   * Avoiding C++11 features being required requires protobuf < 3.6.
+protobuf>=3.3,<3.6
+
+# The version makes sure that protobufs are compiled without the serialized_options which breaks if older protobuf libraries are used
+grpcio-tools==1.7.3
+
+# Need this version for some interceptor features.
+grpcio==1.19.0
+
+pathlib2==2.3.0; python_version < '3.4'

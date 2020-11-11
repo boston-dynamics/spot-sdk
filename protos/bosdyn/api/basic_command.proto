@@ -14,6 +14,53 @@ import "bosdyn/api/geometry.proto";
 import "bosdyn/api/trajectory.proto";
 import "google/protobuf/timestamp.proto";
 
+message RobotCommandFeedbackStatus {
+    enum Status {
+        /// Behavior execution is in an unknown / unexpected state.
+        STATUS_UNKNOWN = 0;
+
+        /// The robot is actively working on the command
+        STATUS_PROCESSING = 1;
+
+        /// The command was replaced by a new command
+        STATUS_COMMAND_OVERRIDDEN = 2;
+
+        /// The command expired
+        STATUS_COMMAND_TIMED_OUT = 3;
+
+        /// The robot is in an unsafe state, and will only respond to known safe commands.
+        STATUS_ROBOT_FROZEN = 4;
+    }
+}
+
+// Get the robot into a convenient pose for changing the battery
+message BatteryChangePoseCommand {
+    message Request {
+        enum DirectionHint {
+            // Unknown direction, just hold still
+            HINT_UNKNOWN = 0;
+            // Roll over right (right feet end up under the robot)
+            HINT_RIGHT = 1;
+            // Roll over left (left feet end up under the robot)
+            HINT_LEFT = 2;
+        }
+        DirectionHint direction_hint = 1;
+    }
+
+    message Feedback {
+        enum Status {
+            STATUS_UNKNOWN = 0;
+            // Robot is finished rolling
+            STATUS_COMPLETED = 1;
+            // Robot still in process of rolling over
+            STATUS_IN_PROGRESS = 2;
+            // Robot has failed to roll onto its side
+            STATUS_FAILED = 3;
+        }
+        Status status = 1;
+    }
+}
+
 // Move the robot into a "ready" position from which it can sit or stand up.
 message SelfRightCommand {
     message Request {
@@ -79,9 +126,9 @@ message SE2TrajectoryCommand {
         // This is a required field and used to prevent runaway commands.
         google.protobuf.Timestamp end_time = 1;
 
-        // The name of the frame that trajectory is relative to. The trajectory must
-        // be expressed in a gravity aligned frame, so either "vision", "odom", or
-        // "flat_body". Any other provided se2_frame_name will be rejected
+        // The name of the frame that trajectory is relative to. The trajectory
+        // must be expressed in a gravity aligned frame, so either "vision",
+        // "odom", or "body". Any other provided se2_frame_name will be rejected
         // and the trajectory command will not be exectuted.
         string se2_frame_name = 3;
 
@@ -182,3 +229,46 @@ message StandCommand {
         Status status = 1;
     }
 }
+
+// Precise foot placement
+// This can be used to reposition the robots feet in place.
+message StanceCommand {
+    message Request {
+        /// The timestamp (in robot time) by which a command must finish executing.
+        /// This is a required field and used to prevent runaway commands.
+        google.protobuf.Timestamp end_time = 1;
+
+        Stance stance = 2;
+    }
+
+    message Feedback {
+        enum Status {
+            STATUS_UNKNOWN = 0;
+            // Robot has finished moving feet and they are at the specified position
+            STATUS_STANCED = 1;
+            // Robot is in the process of moving feet to specified position
+            STATUS_GOING_TO_STANCE = 2;
+            // Robot is not moving, the specified stance was too far away.
+            // Hint: Try using SE2TrajectoryCommand to safely put the robot at the
+            //       correct location first.
+            STATUS_TOO_FAR_AWAY = 3;
+        }
+        Status status = 1;
+    }
+}
+
+message Stance {
+    // The frame name which the desired foot_positions are described in.
+    string se2_frame_name = 3;
+
+    // Map of foot name to its x,y location in specified frame.
+    // Required positions for spot: "fl", "fr", "hl", "hr".
+    map<string, Vec2> foot_positions = 2;
+
+    // Required foot positional accuracy in meters
+    // Advised = 0.05 ( 5cm)
+    // Minimum = 0.02 ( 2cm)
+    // Maximum = 0.10 (10cm)
+    float accuracy = 4;
+}
+

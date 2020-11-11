@@ -23,7 +23,6 @@ def main():
 
     # Create robot object with an image client.
     sdk = bosdyn.client.create_standard_sdk('TimeSyncClient')
-    sdk.load_app_token(options.app_token)
     robot = sdk.create_robot(options.hostname)
     robot.authenticate(options.username, options.password)
     time_sync_client = robot.ensure_client(TimeSyncClient.default_service_name)

@@ -1,0 +1,415 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+package bosdyn.api;
+
+option java_outer_classname = "DataBufferProto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/parameter.proto";
+import "google/protobuf/timestamp.proto";
+
+message RecordTextMessagesRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The text messages to be logged.
+    repeated TextMessage text_messages = 2;
+}
+
+message RecordOperatorCommentsRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The operator comments to be logged.
+    repeated OperatorComment operator_comments = 2;
+}
+
+message RecordDataBlobsRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The data blobs to be logged.
+    repeated DataBlob blob_data = 2;
+}
+
+message RecordSignalTicksRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The signals data to be logged.
+    repeated SignalTick tick_data = 2;
+}
+
+message RecordEventsRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The events to be logged.
+    repeated Event events = 2;
+}
+
+// A text message to add to the log.
+// These could be internal text-log messages from a client for use in debugging, for example.
+message TextMessage {
+    // String annotation message.
+    string message = 1;
+
+    // The timestamp of the annotation.  This must be in robot time.
+    // If this is not specified, this will default to the time the server received the message.
+    google.protobuf.Timestamp timestamp = 2;
+
+    // The client name.
+    // This may be used to segregate data for the same variables to different parts of the buffer.
+    string source = 3;
+
+    enum Level {
+        // Invalid, do not use.
+        LEVEL_UNKNOWN = 0;
+
+        // Events likely of interest only in a debugging context.
+        LEVEL_DEBUG = 1;
+
+        // Informational message during normal operation.
+        LEVEL_INFO = 2;
+
+        // Information about an unexpected but recoverable condition.
+        LEVEL_WARN = 3;
+
+        // Information about an operation which did not succeed.
+        LEVEL_ERROR = 4;
+    }
+    Level level = 4;  // Significance of the message.
+
+    // Optional tag to identify from what code/module this message originated from.
+    string tag = 5;
+
+    // Optional source file name originating the log message.
+    string filename = 6;
+
+    // Optional source file line number originating the log message.
+    int32 line_number = 7;
+}
+
+// An operator comment to be added to the log.
+// These are notes especially intended to mark when logs should be preserved and reviewed
+//  to ensure that robot hardware and/or software is working as intended.
+message OperatorComment {
+    // String annotation message to add to the log.
+    string message = 1;
+
+    // The timestamp of the annotation.  This must be in robot time.
+    // If this is not specified, this will default to the time the server received the message.
+    google.protobuf.Timestamp timestamp = 2;
+}
+
+// Message-style data to add to the log.
+message DataBlob {
+    // Timestamp of data in robot clock time.  This is required.
+    google.protobuf.Timestamp timestamp = 1;
+
+    // A general label for this blob.
+    // This is distinct from type_id, which identifies how the blob is to be parsed.
+    // In practice, this is often the same as the type_id.
+    string channel = 2;
+
+    // A description of the data's content and its encoding.  This is required.
+    // This should be sufficient for deciding how to deserialize the data.
+    // For example, this could be the full name of a protobuf message type.
+    string type_id = 3;
+
+    // Raw data.
+    // For example, jpeg data or a serialized protobuf.
+    bytes data = 4;
+}
+
+// A description of a set of signals-style variables to log together as timestamped samples.
+message SignalSchema {
+    // A variable of signals-style data, which will be sampled in time.
+    message Variable {
+        enum Type {
+            TYPE_UNKNOWN = 0;
+            TYPE_INT8 = 1;
+            TYPE_INT16 = 2;
+            TYPE_INT32 = 3;
+            TYPE_INT64 = 4;
+            TYPE_UINT8 = 5;
+            TYPE_UINT16 = 6;
+            TYPE_UINT32 = 7;
+            TYPE_UINT64 = 8;
+            TYPE_FLOAT32 = 9;
+            TYPE_FLOAT64 = 10;
+        }
+
+        // The name of the variable.
+        string name = 1;
+
+        // The type of the data.
+        Type type = 2;
+
+        // Zero or one variable in 'vars' may be specified as a time variable.
+        // A time variable must have type TYPE_FLOAT64.
+        bool is_time = 3;
+    }
+
+    // A SignalTick using this schema contains the values of this ordered list of variables.
+    repeated Variable vars = 1;
+
+    // The name of the schema.
+    string schema_name = 2;
+}
+
+message SignalSchemaId {
+    // {schema, id} pair
+    uint64 schema_id = 1;
+    SignalSchema schema = 2;
+}
+
+// A timestamped set of signals variable values.
+message SignalTick {
+    // Successive ticks should have successive sequence_id's.
+    // The robot uses this to determine if a tick was somehow lost.
+    int64 sequence_id = 1;
+
+    // Timestamp at which the variable values were sampled.
+    google.protobuf.Timestamp timestamp = 2;
+
+    // The client name.
+    // This may be used to segregate data for the same variables to different parts of the buffer.
+    string source = 3;
+
+    // This specifies the SignalSchema to be used in interpreting the |data| field.
+    // This value was returned by the server when the schema was registered.
+    uint64 schema_id = 4;
+
+    enum Encoding {
+        ENCODING_UNKNOWN = 0;
+
+        // Bytes array is a concatination of little-endian machine representations of
+        //  the variables from the SignalSchema, in order listed in that schema.
+        ENCODING_RAW = 1;
+
+        // Could add GZIP_DELTA, GZIP, etc here
+    }
+    // Format describing how the data bytes array is encoded.
+    Encoding encoding = 5;
+
+    // The encoded data representing a tick of multiple values of signal-styles data.
+    bytes data = 6;
+}
+
+// This message contains event data for logging to the public timeline.
+message Event {
+    // Type of event, typically prefixed with a project or organization, e.g. "bosdyn:startup"
+    string type = 1;
+
+    // Event description.
+    // This is optional.
+    string description = 2;
+
+    // A description of the source of this event. May be the client name.
+    // - Not required to be unique.
+    // - Disambiguates the source of similar event types.
+    string source = 3;
+
+    // Unique identifier to link start and end messages for events with a duration.
+    // - Long running events may have separate messages at the start and end, in case the message
+    //    for the end of the event is lost.
+    // - For events without a separate start and end message (in which case both start_time and
+    //    end time should be specified), the 'id' field should not be set.
+    // - This id is not tracked internally by the service. It is only used to consume the event
+    //    timeline.
+    // - To be effective, the id value should be generated randomly by the client.
+    string id = 4;
+
+    // Start and end times for the event:
+    // - Some events are instantaneous. For these, set start_timestamp and end_timestamp to the
+    //    same value and send a single message (without an id).
+    // - Some events take time. At the onset, send a message with a unique id, the start time, and
+    //    type. The end message should include all data from the start message, any
+    //    additional data, and an end time.  If you have the end message, you should not need
+    //    the start message since it is a strict subset.
+    google.protobuf.Timestamp start_time = 5;
+    google.protobuf.Timestamp end_time = 6;
+
+    // Level, or similarly "visibility," "importance," or "weight" of event.
+    //  - Higher level events will increase the visibility on the event timeline, relative to other
+    //    events.
+    //  - In general, higher level events should be more consequential with respect to the robot
+    //    operation on a per-occurence basis.
+    //  - Lower level events should be less consequential on a per occurence basis.
+    //  - Non-critical events may be one of LOW, MEDIUM, or HIGH.  UNSET is logically equivalent to
+    //    LOW level.
+    //  - Critical events may be either mission or system critical.
+    //  - System-critical is quasi-reserved for internal robot use, and is used to identify events
+    //    that directly affect robot status or capability, such as the onset of a critical fault or
+    //    start of an enabling capability.
+    //  - Mission-critical is quasi-reserved client use, and is intended for events that directly
+    //    affect the ability of the robot to "do what the user wants," such as the onset of a
+    //    service fault or start of an enabling capability.
+    enum Level {
+        // Non-critical events
+        LEVEL_UNSET = 0;
+        LEVEL_LOW = 1;
+        LEVEL_MEDIUM = 2;
+        LEVEL_HIGH = 3;
+        // Critical events
+        LEVEL_MISSION_CRITICAL = 4;
+        LEVEL_SYSTEM_CRITICAL = 5;
+    }
+    Level level = 7;
+
+    // Optional set of event parameters.
+    repeated bosdyn.api.Parameter parameters = 8;
+}
+
+message RecordTextMessagesResponse {
+    
+    // Text message recording error.
+    message Error {
+        enum Type {
+            NONE = 0;
+            CLIENT_ERROR = 1;
+            SERVER_ERROR = 2;
+        }
+        // The type of error: if it was caused by the client or the service.
+        Type type = 1;
+
+        // An error message.
+        string message = 2;
+
+        // The index to identify the data being stored.
+        uint32 index = 3;
+    }
+
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Errors which occurred when logging text message data.
+    repeated Error errors = 2;
+}
+
+message RecordOperatorCommentsResponse {
+
+    // Operator comment recording error.
+    message Error {
+        enum Type {
+            NONE = 0;
+            CLIENT_ERROR = 1;
+            SERVER_ERROR = 2;
+        }
+        // The type of error: if it was caused by the client or the service.
+        Type type = 1;
+
+        // An error message.
+        string message = 2;
+
+        // The index to identify the data being stored.
+        uint32 index = 3;
+    }
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Errors which occurred when logging operator comments.
+    repeated Error errors = 2;
+}
+
+message RecordDataBlobsResponse {
+
+    // DataBlob recording error.
+    message Error {
+        enum Type {
+            NONE = 0;
+            CLIENT_ERROR = 1;
+            SERVER_ERROR = 2;
+        }
+        // The type of error: if it was caused by the client or the service.
+        Type type = 1;
+
+        // An error message.
+        string message = 2;
+
+        // The index to identify the data being stored.
+        uint32 index = 3;
+    }
+
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Errors which occurred when logging data blobs.
+    repeated Error errors = 2;
+}
+
+message RecordSignalTicksResponse {
+
+    // Signal tick recording error.
+    message Error {
+        enum Type {
+            NONE = 0;
+            CLIENT_ERROR = 1;
+            SERVER_ERROR = 2;
+            INVALID_SCHEMA_ID = 3;
+        }
+        // The type of error: if it was caused by the client, the service, or something else.
+        Type type = 1;
+
+        // An error message.
+        string message = 2;
+
+        // The index to identify the data being stored.
+        uint32 index = 3;
+    }
+
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Errors which occurred when logging signal ticks.
+    repeated Error errors = 2;
+}
+
+message RecordEventsResponse {
+
+    // Event recording error.
+    message Error {
+        enum Type {
+            NONE = 0;
+            CLIENT_ERROR = 1;
+            SERVER_ERROR = 2;
+        }
+        // The type of error: if it was caused by the client, the service, or something else.
+        Type type = 1;
+
+        // An error message.
+        string message = 2;
+
+        // The index to identify the data being stored.
+        uint32 index = 3;
+    }
+
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Errors which occurred when logging events.
+    repeated Error errors = 2;
+}
+
+message RegisterSignalSchemaRequest {
+    // Common request/response header.
+    RequestHeader header = 1;
+
+    // Defines a schema for interpreting SignalTick data containing packed signals-type data.
+    SignalSchema schema = 2;
+}
+
+message RegisterSignalSchemaResponse {
+    // Common request/response header.
+    ResponseHeader header = 1;
+
+    // Server returns a unique ID based on the client ID and schema definition.
+    // Always greater than zero.
+    uint64 schema_id = 2;
+}

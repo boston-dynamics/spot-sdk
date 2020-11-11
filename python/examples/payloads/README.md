@@ -14,11 +14,11 @@ This example program demonstrates how to create a payload and register this new 
 This example requires the bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:
 
 ```
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 ## Running the Example
 To run the example:
 ```
-python payloads.py --username USER --password PASSWORD ROBOT_IP
+python3 payloads.py --username USER --password PASSWORD ROBOT_IP
 ```

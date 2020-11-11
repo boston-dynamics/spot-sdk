@@ -589,7 +589,6 @@ def main(argv):
                         help='Which local grid to visualize', default=['terrain'], action='append')
     options = parser.parse_args(argv)
     sdk = bosdyn.client.create_standard_sdk('SpotViz')
-    sdk.load_app_token(options.app_token)
     robot = sdk.create_robot(options.hostname)
     robot.authenticate(options.username, options.password)
     robot.time_sync.wait_for_sync()

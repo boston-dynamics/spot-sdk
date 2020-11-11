@@ -17,7 +17,7 @@ import time
 
 import bosdyn.client
 from bosdyn.client.payload import PayloadClient
-from bosdyn.client.payload_registration import PayloadRegistrationClient
+from bosdyn.client.payload_registration import PayloadRegistrationClient, PayloadRegistrationKeepAlive
 import bosdyn.client.util
 
 import bosdyn.api.payload_pb2 as payload_protos
@@ -33,7 +33,6 @@ def payload_spot(config):
     """
 
     sdk = bosdyn.client.create_standard_sdk('PayloadSpotClient')
-    sdk.load_app_token(config.app_token)
 
     robot = sdk.create_robot(config.hostname)
 
@@ -48,7 +47,7 @@ def payload_spot(config):
     payload = payload_protos.Payload()
     payload.GUID = '78b076a2-b4ba-491d-a099-738928c4410c'
     payload_secret = 'secret'
-    payload.name = 'Client Registered Payload Ex'
+    payload.name = 'Client Registered Payload Ex #1'
     payload.description = 'This payload was created and registered by the payloads.py client example.'
     payload.label_prefix.append("test_payload")
     payload.is_authorized = False
@@ -73,7 +72,35 @@ def payload_spot(config):
 
     # List all payloads
     payloads = payload_client.list_payloads()
+    print('\n\nPayload Listing\n' + '-' * 40)
     print(payloads)
+
+    # Use the PayloadRegistrationKeepAlive to register a payload
+
+    # Create a payload
+    payload = payload_protos.Payload()
+    payload.GUID = '7c49e4f7-9cb9-497a-849f-114360fa9bbf'
+    payload_secret = 'secret'
+    payload.name = 'Client Registered Payload Ex #2'
+    payload.description = 'This payload was created and registered by the payloads.py using a PayloadRegistrationKeepAlive.'
+    payload.label_prefix.append("test_payload")
+    payload.is_authorized = False
+    payload.is_enabled = False
+    payload.is_noncompute_payload = False
+    payload.version.major_version = 3
+    payload.version.minor_version = 2
+    payload.version.patch_level = 1
+
+    # Create and start the keep alive
+    keep_alive = PayloadRegistrationKeepAlive(payload_registration_client, payload, payload_secret)
+    keep_alive.start()
+
+    # List all payloads
+    payloads = payload_client.list_payloads()
+    print('\n\nPayload Listing\n' + '-' * 40)
+    print(payloads)
+
+    print('\n\n\nDont forget to clean up these registrations in the Spot payloads webpage!')
 
 def main(argv):
     """Command line interface."""

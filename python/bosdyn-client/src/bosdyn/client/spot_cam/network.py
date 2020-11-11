@@ -39,17 +39,6 @@ class NetworkClient(BaseClient):
                                self._ice_servers_from_response,
                                self._ice_network_error_from_response, **kwargs)
 
-    def get_network_settings(self, **kwargs):
-        """Get Network configuration from Spot CAM"""
-        request = network_pb2.GetNetworkSettingsRequest()
-        return self.call(self._stub.GetNetworkSettings, request, self._network_settings_from_response,
-                         self._ice_network_error_from_response, **kwargs)
-
-    def get_network_settings_async(self, **kwargs):
-        """Async version of get_network_settings()"""
-        request = network_pb2.GetNetworkSettingsRequest()
-        return self.call_async(self._stub.GetNetworkSettings, request, self._network_settings_from_response,
-                               self._ice_network_error_from_response, **kwargs)
 
     def set_ice_configuration(self, ice_servers, **kwargs):
         """Get ICE configuration from Spot CAM"""
@@ -63,31 +52,6 @@ class NetworkClient(BaseClient):
         return self.call_async(self._stub.SetICEConfiguration, request, None,
                                self._ice_network_error_from_response, **kwargs)
 
-    def set_network_settings(self, ip_address, netmask, gateway, mtu=None, **kwargs):
-        """Set Network configuration on Spot CAM"""
-        request = self._build_SetNetworkSettingsRequest(ip_address, netmask, gateway, mtu)
-
-        return self.call(self._stub.SetNetworkSettings, request, self._network_settings_from_response,
-                         self._ice_network_error_from_response, **kwargs)
-
-    def set_network_settings_async(self, ip_address, netmask, gateway, mtu=None, **kwargs):
-        """Async version of set_network_settings()"""
-        request = self._build_SetNetworkSettingsRequest(ip_address, netmask, gateway, mtu)
-
-        return self.call_async(self._stub.SetNetworkSettings, request, self._network_settings_from_response,
-                               self._ice_network_error_from_response, **kwargs)
-
-    @staticmethod
-    def _build_SetNetworkSettingsRequest(ip_address, netmask, gateway, mtu):
-        request = network_pb2.SetNetworkSettingsRequest()
-        request.settings.address.value = struct.unpack("!I", socket.inet_aton(ip_address))[0]
-        request.settings.netmask.value = struct.unpack("!I", socket.inet_aton(netmask))[0]
-        request.settings.gateway.value = struct.unpack("!I", socket.inet_aton(gateway))[0]
-
-        if mtu:
-            request.settings.mtu.value = mtu
-
-        return request
 
     @staticmethod
     def _set_ice_configuration_request(ice_servers):
@@ -98,10 +62,6 @@ class NetworkClient(BaseClient):
     @staticmethod
     def _ice_servers_from_response(response):
         return response.servers
-
-    @staticmethod
-    def _network_settings_from_response(response):
-        return response.settings
 
     @staticmethod
     @handle_common_header_errors

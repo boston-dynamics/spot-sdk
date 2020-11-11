@@ -590,3 +590,46 @@ def test_transform_velocity():
     adjoint_d = d.to_adjoint_matrix()
     transformed_d = transform_se3velocity(adjoint_d, vel_d)
     compare_se3_velocity(transformed_d, SE3Velocity(1+1.99909*2+1.0003*3, 2*.000302+5*(-0.999698)+1+3*(-.000302), -0.999698+5*.000302+-2, 1, .000302*2-0.999698*3, 0.999698*2+.000302*3), 1e-4)
+
+
+def test_quat_to_euler():
+    # Converted quat_0 should result in the yaw, pitch, roll shown in euler_zyx_0
+    quat_0 = Quat(1, 0, 0, 0)
+    euler_zyx_0 = (0, 0, 0)
+    euler_zyx = quat_to_eulerZYX(quat_0)
+    assert euler_zyx_0 == euler_zyx
+
+    # Converted quat_1 should result in the yaw, pitch, roll shown in euler_zyx_1
+    quat_1 = Quat(0.0, 1.0, 0.0, 0.0)
+    euler_zyx_1 = [0, 0, 180]
+    euler_zyx = [math.degrees(a) for a in quat_to_eulerZYX(quat_1)]
+    assert euler_zyx_1 == euler_zyx
+
+    # Converted quat_2 should result in the yaw, pitch, roll shown in euler_zyx_2
+    quat_2 = Quat(0.0, 0.0, 1.0, 0.0)
+    euler_zyx_2 = [180, 0, 180]
+    euler_zyx = [math.degrees(a) for a in quat_to_eulerZYX(quat_2)]
+    assert euler_zyx_2 == euler_zyx
+
+    # Converted quat_3 should result in the yaw, pitch, roll shown in euler_zyx_3
+    quat_3 = Quat(0.0, 0.0, 0.0, 1.0)
+    euler_zyx_3 = [180, 0, 0]
+    euler_zyx = [math.degrees(a) for a in quat_to_eulerZYX(quat_3)]
+    assert euler_zyx_3 == euler_zyx
+
+    # Converted quat_4 should result in the yaw, pitch, roll shown in euler_zyx_4
+    quat_4 = Quat(0.183, 0.365, 0.548, 0.730)
+    euler_zyx_4 = [134.9686404, -19.4120353, 81.9012582]
+    euler_zyx = [math.degrees(a) for a in quat_to_eulerZYX(quat_4)]
+    for i in range(3):
+        assert abs(euler_zyx_4[i] - euler_zyx[i]) < 0.1
+
+    # Including or excluding the roll should not affect yaw or pitch
+    quat_5 = Quat(0.8098232, 0.069881, 0.4989135, 0.3006466)  # with roll
+    euler_zyx_5 = quat_to_eulerZYX(quat_5)
+    euler_zyx_5 = [round(a, 3) for a in euler_zyx_5]
+    quat_6 = Quat(0.7848856, -0.2113091, 0.3659982, 0.4531539)  # without roll
+    euler_zyx_6 = quat_to_eulerZYX(quat_6)
+    euler_zyx_6 = [round(a, 3) for a in euler_zyx_6]
+    assert euler_zyx_5[0] == euler_zyx_6[0]
+    assert euler_zyx_5[1] == euler_zyx_6[1]

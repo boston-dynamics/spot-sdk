@@ -24,7 +24,7 @@ The command line argument `--use-world-objects` will toggle between these modes.
 These examples requires the bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:
 
 ```
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 Additionally, the example requires a fiducial in Spot's range of view. This fiducial (also referenced as an april tag) must be the right size as specified in Spot's User Guide and documentation.
@@ -64,7 +64,7 @@ The example depends on an external E-Stop endpoint application to configure E-St
 
 To run the example:
 ```
-python -m fiducial_follow --username USER --password PASSWORD ROBOT_IP
+python3 -m fiducial_follow --username USER --password PASSWORD ROBOT_IP
 ```
 
 To stop the robot from moving, either remove the fiducial it is following from all camera's field of view or stop the code in the command line.

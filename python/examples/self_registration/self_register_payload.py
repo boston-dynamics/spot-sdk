@@ -7,7 +7,7 @@
 """
 Example code demonstrating how a payload can register itself.
 
-Payload registration does not require auth credentials or a token; however, registered payloads
+Payload registration does not require auth credentials; however, registered payloads
 must be enabled and authoried via the robot web UI.
 """
 from __future__ import print_function
@@ -16,46 +16,34 @@ import sys
 from time import sleep
 
 import bosdyn.client
-from bosdyn.client.payload_registration import PayloadRegistrationClient, PayloadAlreadyExistsError, PayloadNotAuthorizedError
+from bosdyn.client.payload_registration import PayloadRegistrationClient, PayloadAlreadyExistsError
 import bosdyn.client.util
 
 import bosdyn.api.payload_pb2 as payload_protos
 import bosdyn.api.geometry_pb2 as geometry_protos
 
 
-def self_register_payload(config):
-    """A simple example of using the Boston Dynamics API to self register from a payload.
-    
-    This function represents code that would run directly on a payload to set itself up. It
-    registers a payload (itself) without access to a pre-existing app token or credentials.
-    """
-    # Create an sdk and robot instance.
-    sdk = bosdyn.client.create_standard_sdk('SelfRegisterPayloadExampleClient')
-    robot = sdk.create_robot(config.hostname)
+def define_payload(guid, name, description):
+    """Return an arbitrary bosdyn.api.Payload object."""
 
-    # Since we are not using an auth token, we do not yet have access to the directory service.
-    # As a result, we cannot look up the Payload Registration Service by service name. Instead,
-    # we need to manually establish the channel with the authority of the Payload Registration
-    # Service.
-    kPayloadRegistrationAuthority = 'payload-registration.spot.robot'
-    payload_registration_channel = robot.ensure_secure_channel(kPayloadRegistrationAuthority)
-
-    # Create a payload registration client.
-    payload_registration_client = robot.ensure_client(
-        PayloadRegistrationClient.default_service_name, channel=payload_registration_channel)
-
-    # Populate a payload proto definition with the details of this payload
+    # Populate the fields specified by the input arguments.
     # Secret does not need to be human readable.
     payload = payload_protos.Payload()
-    payload.GUID = config.guid
-    payload.name = config.name
-    payload.description = config.description
+    payload.GUID = guid
+    payload.name = name
+    # Payload description will be overwritten by preset description if a non-default preset is
+    # selected at operator authorization time.
+    payload.description = description
+
+    # Specify other top level fields with filler values.
     payload.label_prefix.append('default configuration')
     payload.is_authorized = False  # is_authorized must be false at registration time
     payload.is_enabled = False  # is_enabled must be false at registration time
     payload.is_noncompute_payload = False
 
-    # Populate the mount part of the payload configuration.
+    # Specify the location of the payload by populating mount_tform_payload with filler values.
+    # This values will be used if the "default" payload configuration is selected at operator
+    # authorization time, else they will be overwritten by the selected payload preset values.
     payload.mount_tform_payload.position.x = 0
     payload.mount_tform_payload.position.y = 0
     payload.mount_tform_payload.position.z = 0
@@ -64,6 +52,9 @@ def self_register_payload(config):
     payload.mount_tform_payload.rotation.z = 0
     payload.mount_tform_payload.rotation.w = 0
 
+    # Specify the physical properties of the payload with filler values.
+    # These values will be used if the "default" payload configuration is selected at operator
+    # authorization time, else they will be overwritten by the selected payload preset values.
     payload.mass_volume_properties.total_mass = 10
     payload.mass_volume_properties.com_pos_rt_payload.x = 0
     payload.mass_volume_properties.com_pos_rt_payload.y = 0
@@ -87,12 +78,11 @@ def self_register_payload(config):
     bb.frame_name_tform_box.rotation.w = 1.0
     bb.frame_name = "payload"
 
-    # Populate preset configuration.
+    # Specify possible payload configurations by populating preset configs with filler values.
     preset_conf = payload.preset_configurations.add()
     preset_conf.preset_name = "Preset1"
     preset_conf.description = "Preset1 Description"
-
-    # Populate the mount part of the payload configuration.
+    # Specify the location of the payload under this possible configuration.
     preset_conf.mount_tform_payload.position.x = 1.1
     preset_conf.mount_tform_payload.position.y = 1.1
     preset_conf.mount_tform_payload.position.z = 1.1
@@ -100,8 +90,7 @@ def self_register_payload(config):
     preset_conf.mount_tform_payload.rotation.y = 1.1
     preset_conf.mount_tform_payload.rotation.z = 1.1
     preset_conf.mount_tform_payload.rotation.w = 1.1
-
-    # Populate the mass volume part of the payload configuration.
+    # Specify the physical properties of the payload under this possible configuration.
     preset_conf.mass_volume_properties.total_mass = 10.1
     preset_conf.mass_volume_properties.com_pos_rt_payload.x = 1.1
     preset_conf.mass_volume_properties.com_pos_rt_payload.y = 1.1
@@ -124,6 +113,7 @@ def self_register_payload(config):
     bb.frame_name_tform_box.rotation.z = 1.1
     bb.frame_name_tform_box.rotation.w = 1.1
     bb.frame_name = "payload"
+    # Specify the joint limits of the payload under this possible configuration.
     joint_limit = preset_conf.mass_volume_properties.joint_limits.add()
     joint_limit.label = 'fr'
     joint_limit.hy.extend([1.34, 1.35, 1.4, 1.5, 1.6, 1.65, 1.8, 1.9, 2.0, 2.2, 2.3, 5.0])
@@ -137,6 +127,24 @@ def self_register_payload(config):
     preset_conf.label_prefix.append('self registered')
     preset_conf.label_prefix.append('preset #1')
 
+    return payload
+
+def self_register_payload(config):
+    """An example of using the Boston Dynamics API to self register a payload from itself.
+    
+    This function represents code that would run directly on a payload to set itself up. It
+    registers a payload (itself) without access to a pre-existing user token or user credentials.
+    Most of the payload fields are populated in the code with generic filler values in order to
+    prevent the calling arguments from becoming unwieldy. When creating payload registration
+    logic for new payloads only populate fields that are needed.
+    """
+    # Create an sdk and robot instance.
+    sdk = bosdyn.client.create_standard_sdk('SelfRegisterPayloadExampleClient')
+    robot = sdk.create_robot(config.hostname)
+    payload_registration_client = robot.ensure_client(PayloadRegistrationClient.default_service_name)
+
+    payload = define_payload(config.guid, config.name, config.description)
+
     # Register the payload.
     try:
         payload_registration_client.register_payload(payload, secret=config.secret)
@@ -144,17 +152,8 @@ def self_register_payload(config):
         print("Payload config for {} already exists. Continuing with pre-existing configuration.".
               format(payload.GUID))
 
-    # Wait here until the admin authorizes the payload
-    print(
-        'An admin MUST authorize (and optionally enable) the payload from the web UI before continuing...'
-    )
-    while True:
-        sleep(1)
-        try:
-            payload_registration_client.get_payload_auth_token(config.guid, config.secret)
-        except PayloadNotAuthorizedError:
-            continue
-        break
+    # Wait here until the admin authorizes the payload.
+    robot.authenticate_from_payload_credentials(config.guid, config.secret)
     print('Payload has been authorized by admin.')
 
     return True
@@ -163,11 +162,10 @@ def self_register_payload(config):
 def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
-    parser.add_argument("--guid", required=True, type=str, help="Unique GUID of the payload")
-    parser.add_argument("--secret", required=True, type=str, help="Secret of the payload")
-    parser.add_argument("--name", required=True, type=str, help="Name of the payload")
-    parser.add_argument("--description", required=True, type=str, help="Description of the payload")
+    bosdyn.client.util.add_base_arguments(parser)
+    bosdyn.client.util.add_payload_credentials_arguments(parser)
+    parser.add_argument("--name", required=True, type=str, help="Name of the payload.")
+    parser.add_argument("--description", required=True, type=str, help="Description of the payload.")
     options = parser.parse_args()
 
     self_register_payload(options)

@@ -34,6 +34,8 @@ message MobilityCommand {
 
             // Command to stand up the robot.
             StandCommand.Request stand_request = 4;
+            StanceCommand.Request stance_request = 5;
+            StopCommand.Request stop_request = 6;
 
         }
 
@@ -60,7 +62,11 @@ message MobilityCommand {
 
             // Feedback for the stand command.
             StandCommand.Feedback stand_feedback = 4;
+            StanceCommand.Feedback stance_feedback = 5;
+            StopCommand.Feedback stop_feedback = 6;
 
         }
+
+        RobotCommandFeedbackStatus.Status status = 100;
     }
 }

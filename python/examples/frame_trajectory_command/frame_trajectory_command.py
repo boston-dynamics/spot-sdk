@@ -39,7 +39,6 @@ def main():
 
     # Create robot object.
     sdk = bosdyn.client.create_standard_sdk('RobotCommandMaster')
-    sdk.load_app_token(options.app_token)
     robot = sdk.create_robot(options.hostname)
     robot.authenticate(options.username, options.password)
 
@@ -77,7 +76,7 @@ def main():
 
     # Command the robot to go to the goal point in the vision frame. The command will stop at the new
     # position in the vision frame.
-    robot_cmd = RobotCommandBuilder.trajectory_command(goal_x=vision_tform_goal.x,
+    robot_cmd = RobotCommandBuilder.synchro_se2_trajectory_point_command(goal_x=vision_tform_goal.x,
                                                      goal_y=vision_tform_goal.y,
                                                      goal_heading=vision_tform_goal.rot.to_yaw(),
                                                      frame_name=VISION_FRAME_NAME)
@@ -101,7 +100,7 @@ def main():
 
     # Command the robot to go to the goal point in the odom frame. The command will stop at the new
     # position in the odom frame.
-    robot_cmd = RobotCommandBuilder.trajectory_command(goal_x=odom_tform_goal.x,
+    robot_cmd = RobotCommandBuilder.synchro_se2_trajectory_point_command(goal_x=odom_tform_goal.x,
                                                      goal_y=odom_tform_goal.y,
                                                      goal_heading=odom_tform_goal.rot.to_yaw(),
                                                      frame_name=ODOM_FRAME_NAME)

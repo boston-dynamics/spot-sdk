@@ -30,7 +30,6 @@ def directory_spot(config):
     all, deletes the service, lists all.
     """
     sdk = bosdyn.client.create_standard_sdk("directory_example")
-    sdk.load_app_token(config.app_token)
 
     robot = sdk.create_robot(config.hostname)
 

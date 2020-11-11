@@ -39,6 +39,18 @@ message SpotCheckCommandResponse {
 
     // Details about how the lease was used.
     LeaseUseResult lease_use_result = 2;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;     // Unknown
+        STATUS_OK = 1;          // Request was accepted.
+        STATUS_ERROR = 2;       // An error ocurred.
+    }
+
+    // Command status
+    Status status = 3;
+
+    // Human-readable description if an error occurred.
+    string message = 4;
 }
 
 // Request for the SpotCheckFeedback service.
@@ -65,6 +77,7 @@ message SpotCheckFeedbackResponse {
         STATE_REVERTING_CAL = 8;         // Reverting calibration to previous values.
         STATE_ERROR = 9;                 // Error occurred while running spotcheck. Inspect error for more info.
         STATE_WAITING_FOR_COMMAND = 10;  // Waiting for user command.
+        STATE_HIP_RANGE_OF_MOTION_CHECK = 11; // Hip range of motion check underway.
     }
     // The state of the spot check routine.
     State state = 2;
@@ -76,18 +89,20 @@ message SpotCheckFeedbackResponse {
     // If SpotCheck experienced an error, specific error details reported here.
     // This reflects an error in the routine.
     enum Error {
-        ERROR_UNKNOWN = 0;                    // Unused enum.
-        ERROR_NONE = 1;                       // No error has occurred.
-        ERROR_UNEXPECTED_POWER_CHANGE = 2;    // Unexpected motor power state transition.
-        ERROR_INIT_IMU_CHECK = 3;             // Robot body is not flat on the ground.
-        ERROR_INIT_NOT_SITTING = 4;           // Robot body is not close to a sitting pose
-        ERROR_LOADCELL_TIMEOUT = 5;           // Timeout during loadcell calibration.
-        ERROR_POWER_ON_FAILURE = 6;           // Error enabling motor power.
-        ERROR_ENDSTOP_TIMEOUT = 7;            // Timeout during endstop calibration.
-        ERROR_FAILED_STAND = 8;               // Robot failed to stand.
-        ERROR_CAMERA_TIMEOUT = 9;             // Timeout during camera check.
-        ERROR_GROUND_CHECK = 10;              // Flat ground check failed.
-        ERROR_POWER_OFF_FAILURE = 11;         // Robot failed to power off.
+        ERROR_UNKNOWN = 0;                  // Unused enum.
+        ERROR_NONE = 1;                     // No error has occurred.
+        ERROR_UNEXPECTED_POWER_CHANGE = 2;  // Unexpected motor power state transition.
+        ERROR_INIT_IMU_CHECK = 3;           // Robot body is not flat on the ground.
+        ERROR_INIT_NOT_SITTING = 4;         // Robot body is not close to a sitting pose
+        ERROR_LOADCELL_TIMEOUT = 5;         // Timeout during loadcell calibration.
+        ERROR_POWER_ON_FAILURE = 6;         // Error enabling motor power.
+        ERROR_ENDSTOP_TIMEOUT = 7;          // Timeout during endstop calibration.
+        ERROR_FAILED_STAND = 8;             // Robot failed to stand.
+        ERROR_CAMERA_TIMEOUT = 9;           // Timeout during camera check.
+        ERROR_GROUND_CHECK = 10;            // Flat ground check failed.
+        ERROR_POWER_OFF_FAILURE = 11;       // Robot failed to power off.
+        ERROR_REVERT_FAILURE = 12;          // Robot failed to revert calibration.
+        ERROR_FGKC_FAILURE = 13;            // Robot failed to do flat ground kinematic calibration.
     }
     // The specifics of the error for the SpotCheck service.
     Error error = 6;
@@ -114,6 +129,10 @@ message SpotCheckFeedbackResponse {
     // Results of leg pair validation.
     // The key string is the name of the leg pair (e.g. fl-fr, fl-hl, ...)
     map<string, LegPairCheckResult> leg_pair_results = 11;
+
+    // Results of the hip range of motion check
+    // The key string is the name of the leg (e.g. fl, fr, hl, ...)
+    map<string, HipRangeOfMotionResult> hip_range_of_motion_results = 13;
 
     // The approximate progress of the spot check routine, range [0-1].
     float progress = 7;
@@ -228,6 +247,20 @@ message LegPairCheckResult {
 
     // The change in estimated distance between two feet from tall to short stand (m)
     float leg_pair_distance_change = 3;
+}
+
+message HipRangeOfMotionResult {
+    // Errors reflect an issue with hip range of motion
+    enum Error {
+        ERROR_UNKNOWN = 0;
+        ERROR_NONE = 1;
+        ERROR_OBSTRUCTED = 2;
+    }
+    Error error = 1;
+
+    // The measured angles (radians) of the HX and HY joints where the obstruction was detected
+    repeated float hx = 2;
+    repeated float hy = 3;
 }
 
 // Request for the CameraCalibrationCommand service.

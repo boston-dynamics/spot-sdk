@@ -104,7 +104,8 @@ def _has_service_name(name, service):
 @pytest.fixture(scope='function')
 def default_service_entry():
     return directory_protos.ServiceEntry(name='test', type='bosdyn.api.TestService',
-                                         authority='test.spot.robot', user_token_required=True)
+                                         authority='test.spot.robot', user_token_required=True,
+                                         liveness_timeout_secs=75.0)
 
 
 @pytest.fixture(scope='function')

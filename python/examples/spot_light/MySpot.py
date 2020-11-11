@@ -56,7 +56,6 @@ class MySpot(object):
 
         # Create the SDK
         self._sdk = bosdyn.client.create_standard_sdk(sdk_name)
-        self._sdk.load_app_token(config.app_token)
 
         # Use the SDK to create a robot
         self._robot = self._sdk.create_robot(config.hostname)
@@ -102,7 +101,7 @@ class MySpot(object):
 
         if self._prep_for_motion():
             command_client = self._robot.ensure_client(RobotCommandClient.default_service_name)
-            cmd = RobotCommandBuilder.sit_command()
+            cmd = RobotCommandBuilder.synchro_sit_command()
             command_client.robot_command(cmd)
 
     def orient(self, yaw=0.0, pitch=0.0, roll=0.0):
@@ -120,7 +119,7 @@ class MySpot(object):
         if self._prep_for_motion():
             rotation = geometry.EulerZXY(yaw=yaw, pitch=pitch, roll=roll)
             command_client = self._robot.ensure_client(RobotCommandClient.default_service_name)
-            cmd = RobotCommandBuilder.stand_command(footprint_R_body=rotation)
+            cmd = RobotCommandBuilder.synchro_stand_command(footprint_R_body=rotation)
             command_client.robot_command(cmd)
 
     def _verify_estop(self):

@@ -1,0 +1,163 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "DataAcquisitionStoreProto";
+
+import "google/protobuf/timestamp.proto";
+import "bosdyn/api/header.proto";
+import "bosdyn/api/image.proto";
+import "bosdyn/api/data_acquisition.proto";
+
+// A query parameter which filters the possible set of data identifiters to those
+// which contain the same action/group names matching any of the names in the
+// set of CaptureActionIds.
+message ActionIdQuery {
+    // The action ids to filter with.
+    repeated CaptureActionId action_ids = 1;
+}
+
+// A query parameter which filters the possible set of data identifiers to
+// those with timestamps within the specified range.
+message TimeRangeQuery {
+    // Start of the time range to query.
+    google.protobuf.Timestamp from_timestamp = 1;
+
+    // End of the time range to query.
+    google.protobuf.Timestamp to_timestamp = 2;
+}
+
+// The message containing the different query parameters which can be applied to
+// the ListData requests.
+message DataQueryParams{
+    oneof query{
+        // Time range to query.
+        TimeRangeQuery time_range = 1;
+
+        
+        // List of action ids to query.
+        ActionIdQuery action_ids = 2;
+    }
+
+}
+
+
+message StoreImageRequest{
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Image to store.
+    ImageCapture image = 2;
+
+    // Data identifier of the image.
+    DataIdentifier data_id = 3;
+}
+
+message StoreImageResponse{
+    // Common response header.
+    ResponseHeader header = 1;
+}
+
+message StoreMetadataRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Metadata to store.
+    AssociatedMetadata metadata = 2;
+
+    // Data identifier of the metadata.
+    DataIdentifier data_id = 3;
+}
+
+message StoreMetadataResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+}
+
+message StoreDataRequest{
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Data to store.
+    bytes data = 2;
+
+    // Data identifier of the data.
+    DataIdentifier data_id = 3;
+
+    // File extension to use when writing the data to file.
+    string file_extension = 4;
+}
+
+message StoreDataResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+}
+
+message ListCaptureActionsRequest{
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Query parameters for finding action ids.
+    DataQueryParams query = 2;
+}
+
+message ListCaptureActionsResponse{
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // List of action ids that satisfied the query parameters.
+    repeated CaptureActionId action_ids = 2;
+}
+
+message ListStoredImagesRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Query parameters for finding images.
+    DataQueryParams query = 2;
+}
+message ListStoredImagesResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // List of image data identifiers that satisfied the query parameters.
+    repeated DataIdentifier data_ids = 2;
+}
+
+message ListStoredMetadataRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Query parameters for finding metadata.
+    DataQueryParams query = 2;
+}
+
+message ListStoredMetadataResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // List of metadata data identifiers that satisfied the query parameters.
+    repeated DataIdentifier data_ids = 2;
+}
+
+message ListStoredDataRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Query parameters for finding data.
+    DataQueryParams query = 2;
+}
+
+message ListStoredDataResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // List of data identifiers that satisfied the query parameters.
+    repeated DataIdentifier data_ids = 2;
+}

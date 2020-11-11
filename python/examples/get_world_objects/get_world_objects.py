@@ -25,7 +25,6 @@ def main(argv):
 
     # Create robot object with a world object client.
     sdk = bosdyn.client.create_standard_sdk('WorldObjectClient')
-    sdk.load_app_token(options.app_token)
     robot = sdk.create_robot(options.hostname)
     robot.authenticate(options.username, options.password)
     # Time sync is necessary so that time-based filter requests can be converted.

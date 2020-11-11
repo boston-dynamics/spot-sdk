@@ -7,18 +7,18 @@
 """
 Tutorial to demonstrate how to use the API to create a custom user interface
 
-This script will allow spot to response to a light shining in its front
+This script will allow Spot to respond to a light shining in its front
 left camera.  The following describes what to expect:
 
-  - with the robot sitting, shine a light into the front left camera, spot should stand up
-  - shine a light into the front left camera again, spot should start following the light
-  - remove the light, spot should sit down
+  - with the robot sitting, shine a light into the front left camera, Spot should stand up
+  - shine a light into the front left camera again, Spot should start following the light (through tilting, not walking)
+  - remove the light, Spot should sit down
 
-NOTE: Both the light detection and controller is very crude.  One needs to have a very steady
-hands and prevent the robot from "seeing" other bright light in the front left camera.
+NOTE: Both the light detection and controller are very crude.  One needs to have a very steady
+hand to prevent the robot from "seeing" other bright lights in the front left camera.
 
 To run this, do:
-python spot_light.py <robot_name>
+python spot_light.py --username USER --password PASSWORD <robot_name>
 
 Dependencies:
 cv2

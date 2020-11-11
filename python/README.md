@@ -25,3 +25,4 @@ Following are dependent libraries:
 * [Client](bosdyn-client/src/bosdyn/client/README.md)
 * [Core](bosdyn-core/src/bosdyn/README.md)
 * [Mission](bosdyn-mission/src/bosdyn/mission/README.md)
+* [Choreography](bosdyn-choreography-client/src/bosdyn/choreography/client/README.md)

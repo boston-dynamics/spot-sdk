@@ -1,0 +1,27 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.docking;
+
+option java_outer_classname = "DockingServiceProto";
+
+import "bosdyn/api/docking/docking.proto";
+
+service DockingService {
+    // Starts a docking command on the robot.
+    rpc DockingCommand(DockingCommandRequest) returns (DockingCommandResponse) {}
+
+    // Check the status of a docking command.
+    rpc DockingCommandFeedback(DockingCommandFeedbackRequest) returns (DockingCommandFeedbackResponse) {}
+
+    // Get the configured dock ID ranges.
+    rpc GetDockingConfig(GetDockingConfigRequest) returns (GetDockingConfigResponse) {}
+
+    // Get the robot's docking state
+    rpc GetDockingState(GetDockingStateRequest) returns (GetDockingStateResponse) {}
+}

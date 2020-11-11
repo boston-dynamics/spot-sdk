@@ -197,7 +197,7 @@ def test_lease_wallet_on_lease_result_ok():
     assert None != lease_state
     assert Lease.CompareResult.SAME == lease.compare(lease_state.lease_original)
     assert Lease.CompareResult.SUPER_LEASE == lease.compare(lease_state.lease_current)
-    assert LeaseState.STATUS_SELF_OWNER == lease_state.lease_status
+    assert LeaseState.Status.SELF_OWNER == lease_state.lease_status
 
     # When an "OK" lease_use_result comes, LeaseState should not change.
     lease_use_result = _create_lease_use_result(LeaseProto.LeaseUseResult.STATUS_OK,
@@ -207,7 +207,7 @@ def test_lease_wallet_on_lease_result_ok():
     assert None != new_lease_state
     assert Lease.CompareResult.SAME == lease.compare(new_lease_state.lease_original)
     assert Lease.CompareResult.SUPER_LEASE == lease.compare(new_lease_state.lease_current)
-    assert LeaseState.STATUS_SELF_OWNER == new_lease_state.lease_status
+    assert LeaseState.Status.SELF_OWNER == new_lease_state.lease_status
 
     # When an "OK" lease_use_result arrives for a lease other than current one, LeaseState also should not change
     lease_wallet.advance(resource='A')
@@ -218,7 +218,7 @@ def test_lease_wallet_on_lease_result_ok():
     assert Lease.CompareResult.SUPER_LEASE == lease.compare(newer_lease_state.lease_current)
     assert Lease.CompareResult.OLDER == new_lease_state.lease_current.compare(
         newer_lease_state.lease_current)
-    assert LeaseState.STATUS_SELF_OWNER == newer_lease_state.lease_status
+    assert LeaseState.Status.SELF_OWNER == newer_lease_state.lease_status
 
 
 def test_lease_wallet_on_lease_result_older():
@@ -231,7 +231,7 @@ def test_lease_wallet_on_lease_result_older():
     assert None != lease_state
     assert Lease.CompareResult.SAME == lease.compare(lease_state.lease_original)
     assert Lease.CompareResult.SUPER_LEASE == lease.compare(lease_state.lease_current)
-    assert LeaseState.STATUS_SELF_OWNER == lease_state.lease_status
+    assert LeaseState.Status.SELF_OWNER == lease_state.lease_status
 
     stale_lease = lease_state.lease_current
 
@@ -247,7 +247,7 @@ def test_lease_wallet_on_lease_result_older():
     assert None != new_lease_state
     assert Lease.CompareResult.SAME == lease.compare(new_lease_state.lease_original)
     assert Lease.CompareResult.SUPER_LEASE == lease.compare(new_lease_state.lease_current)
-    assert LeaseState.STATUS_SELF_OWNER == new_lease_state.lease_status
+    assert LeaseState.Status.SELF_OWNER == new_lease_state.lease_status
 
     # When an "OLDER" result comes in for an attempt which is the current lease,
     # the lease state should change to other owner.
@@ -258,11 +258,11 @@ def test_lease_wallet_on_lease_result_older():
     assert None != newer_lease_state
     assert None == newer_lease_state.lease_current
     assert None == newer_lease_state.lease_original
-    assert LeaseState.STATUS_OTHER_OWNER == newer_lease_state.lease_status
+    assert LeaseState.Status.OTHER_OWNER == newer_lease_state.lease_status
 
     with pytest.raises(LeaseNotOwnedByWallet) as excinfo:
         lease_wallet.get_lease(resource='A')
-    assert 'Lease on "A" has state ({})'.format(LeaseState.STATUS_OTHER_OWNER) == str(excinfo.value)
+    assert 'Lease on "A" has state ({})'.format(LeaseState.Status.OTHER_OWNER) == str(excinfo.value)
 
 
 def test_lease_wallet_on_lease_result_revoked():
@@ -275,7 +275,7 @@ def test_lease_wallet_on_lease_result_revoked():
     assert None != lease_state
     assert Lease.CompareResult.SAME == lease.compare(lease_state.lease_original)
     assert Lease.CompareResult.SUPER_LEASE == lease.compare(lease_state.lease_current)
-    assert LeaseState.STATUS_SELF_OWNER == lease_state.lease_status
+    assert LeaseState.Status.SELF_OWNER == lease_state.lease_status
 
     stale_lease = lease_state.lease_current
 
@@ -291,7 +291,7 @@ def test_lease_wallet_on_lease_result_revoked():
     assert None != new_lease_state
     assert Lease.CompareResult.SAME == lease.compare(new_lease_state.lease_original)
     assert Lease.CompareResult.SUPER_LEASE == lease.compare(new_lease_state.lease_current)
-    assert LeaseState.STATUS_SELF_OWNER == new_lease_state.lease_status
+    assert LeaseState.Status.SELF_OWNER == new_lease_state.lease_status
 
     # When an "REVOKED" result comes in for an attempt which is the current lease,
     # the lease state should change to revoked status
@@ -302,7 +302,7 @@ def test_lease_wallet_on_lease_result_revoked():
     assert None != newer_lease_state
     assert None == newer_lease_state.lease_current
     assert None == newer_lease_state.lease_original
-    assert LeaseState.STATUS_REVOKED == newer_lease_state.lease_status
+    assert LeaseState.Status.REVOKED == newer_lease_state.lease_status
 
 
 def test_lease_wallet_on_lease_result_wrong_epoch():
@@ -315,7 +315,7 @@ def test_lease_wallet_on_lease_result_wrong_epoch():
     assert None != lease_state
     assert Lease.CompareResult.SAME == lease.compare(lease_state.lease_original)
     assert Lease.CompareResult.SUPER_LEASE == lease.compare(lease_state.lease_current)
-    assert LeaseState.STATUS_SELF_OWNER == lease_state.lease_status
+    assert LeaseState.Status.SELF_OWNER == lease_state.lease_status
 
     stale_lease = lease_state.lease_current
 
@@ -331,7 +331,7 @@ def test_lease_wallet_on_lease_result_wrong_epoch():
     assert None != new_lease_state
     assert Lease.CompareResult.SAME == lease.compare(new_lease_state.lease_original)
     assert Lease.CompareResult.SUPER_LEASE == lease.compare(new_lease_state.lease_current)
-    assert LeaseState.STATUS_SELF_OWNER == new_lease_state.lease_status
+    assert LeaseState.Status.SELF_OWNER == new_lease_state.lease_status
 
     # When an "REVOKED" result comes in for an attempt which is the current lease,
     # the lease state should change to revoked status
@@ -342,7 +342,7 @@ def test_lease_wallet_on_lease_result_wrong_epoch():
     assert None != newer_lease_state
     assert None == newer_lease_state.lease_current
     assert None == newer_lease_state.lease_original
-    assert LeaseState.STATUS_UNOWNED == newer_lease_state.lease_status
+    assert LeaseState.Status.UNOWNED == newer_lease_state.lease_status
 
 
 class LeaseWalletThread(threading.Thread):

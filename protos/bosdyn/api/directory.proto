@@ -30,7 +30,8 @@ message ServiceEntry {
     // address (aService).
     string authority = 3;
 
-    // Last update time in robot timebase for this service record.
+    // Last update time in robot timebase for this service record. This serves as the time of
+    // the last heartbeat to the robot.
     google.protobuf.Timestamp last_update = 4;
 
     // If 'user_token_required' field is true, any requests to this service must contain
@@ -47,6 +48,16 @@ message ServiceEntry {
     // If 'permission_required' field is non-empty, any requests to this service must
     // have the same string in the "per" claim of the user token.
     string permission_required = 7;
+
+    // Number of seconds to wait between heartbeats before assuming service in no longer live
+    // If unset (0) liveness checks will be disabled for this service.
+    double liveness_timeout_secs = 8;
+
+    // The GUID of the payload that this service was registered from. An empty string represents a
+    // service that was registered via a client using standard user credentials or internal to the
+    // robot. This value is set automatically based on the user token and cannot be set or updated
+    // via the API, so it should not be populated by the client at registration time.
+    string host_payload_guid = 9;
 }
 
 // A message containing information that allows a client to identify a

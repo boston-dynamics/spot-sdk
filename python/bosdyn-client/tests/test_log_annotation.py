@@ -11,7 +11,7 @@ import sys
 import time
 import types
 import bosdyn.client
-from bosdyn.client.log_annotation import (SignalLogger, LogAnnotationHandler, InvalidArgument,
+from bosdyn.client.log_annotation import (LogAnnotationHandler, InvalidArgument,
                                           LogAnnotationClient)
 from bosdyn.api.log_annotation_pb2 import LogAnnotationTextMessage
 from google.protobuf import timestamp_pb2
@@ -22,78 +22,6 @@ if sys.version_info[0:2] >= (3, 3):
 else:
     # The backport is on PyPi as just "mock"
     import mock
-
-
-def test_register_attributes_as_floats():
-    signal_logger = MockSignalLogger()
-
-    test_obj = DummyClass1()
-    signal_logger.register_object_attributes(test_obj)
-
-    assert (signal_logger.signal_variables.variable_is_registered('var0'))
-    assert (signal_logger.signal_variables.variable_is_registered('var1'))
-    assert (signal_logger.signal_variables.variable_is_registered('var2'))
-    assert (signal_logger.signal_variables.variable_is_registered('embedded_class.var0'))
-
-    # Check if any exceptions are raised when trying to gather the attributes
-    signal_logger.gather()
-
-
-def test_register_variable():
-    signal_logger = MockSignalLogger()
-
-    float_0 = 0.0
-    signal_logger.register_variable('float_0', lambda: float_0, float)
-    int_0 = 0
-    signal_logger.register_variable('int_0', lambda: int_0, int)
-    bool_0 = False
-    signal_logger.register_variable('bool_0', lambda: bool_0, bool)
-
-    assert (signal_logger.signal_variables.variable_is_registered('float_0'))
-    assert (signal_logger.signal_variables.variable_is_registered('int_0'))
-    assert (signal_logger.signal_variables.variable_is_registered('bool_0'))
-
-
-def test_gather():
-    signal_logger = MockSignalLogger()
-
-    float_0 = 0.0
-    signal_logger.register_variable('float_0', lambda: float_0, float)
-
-    signal_logger.gather()
-
-    float_0 = 1.0
-    signal_logger.gather()
-
-    float_0 = 2.0
-    signal_logger.gather()
-
-    old_data_bytes = None
-
-    # Pull out last 3 binary structs built from variables queued for sending to robot.
-    # If the structs did not change, then the float_0 variable did not update properly.
-    for _ in range(3):
-        try:
-            data_bytes = signal_logger.tick_data_queue.get(block=False)
-            assert (data_bytes != old_data_bytes)
-            old_data_bytes = data_bytes
-        except queue.Empty:
-            assert (False)
-
-
-class MockSignalLogger(SignalLogger):
-    """Class to mimic behavior of SignalLogger without requiring a robot connection."""
-
-    def __init__(self):
-        super(MockSignalLogger, self).__init__(None, "mock_signal_logging_client")
-
-    def _send_schema(self):
-        """Override _send_schema to avoid actually trying to interact with a robot."""
-        pass
-
-    def _worker_main(self):
-        """Override _worker_main to avoid actually trying to interact with a robot."""
-        pass
 
 
 class DummyClass0:

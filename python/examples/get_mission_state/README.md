@@ -13,11 +13,11 @@ This example program demonstrates how to retrieve information about the state of
 ## Setup Dependencies
 See the requirements.txt file for a list of python dependencies which can be installed with pip using the command:
 ```
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 ## Running the Example
 To run the example:
 ```
-python get_mission_state.py --username USER --password PASSWORD ROBOT_IP
+python3 get_mission_state.py --username USER --password PASSWORD ROBOT_IP
 ```

@@ -58,14 +58,12 @@ message LocalGrid {
     // All transforms within the snapshot are at the acquistion time of the local grid.
     FrameTreeSnapshot transforms_snapshot = 31;
 
-    // The frame name for the local grid object. The frame will describe the top, left corner of the topmost,
-    // leftmost cell of the local grid.  This will be included in the transform snapshot. The (x,y) position specified
-    // by the local grid frame's SE3Pose transform represents the (x,y)- offsets for the location of the grid's
-    // top left corner.
+    // The frame name for the local grid data. This frame refers to the corner of cell (0, 0), such that
+    // the map data is in the +x, +y quadrant.
     // The cell data is packed in x-y order, so the cell at:
-    //   cell[i + num_cells_x * j]
-    // has position:
-    //   {x_offset + i * extent.cell_size, y_offset + j * extent.cell_size}.
+    //   data[xi + extent.num_cells_x * yj]
+    // has its center at position:
+    //   {(xi + 0.5) * extent.cell_size, (yj + 0.5) * extent.cell_size}.
     string frame_name_local_grid_data = 11;
 
     // Location, size and resolution of the local grid.

@@ -14,8 +14,10 @@ import "bosdyn/api/image.proto";
 import "bosdyn/api/local_grid.proto";
 import "bosdyn/api/point_cloud.proto";
 import "bosdyn/api/robot_state.proto";
+import "bosdyn/api/spot/robot_command.proto";
 import "bosdyn/api/world_object.proto";
 
+import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
@@ -47,6 +49,9 @@ message Waypoint {
     message Annotations {
         // Human-friendly name of the waypoint. For example, "Kitchen Fridge"
         string name = 1;
+
+        // The time that the waypoint was created while recording a map.
+        google.protobuf.Timestamp creation_time = 4;
 
         // Estimate of the variance of ICP when performed at this waypoint, collected at record time.
         bosdyn.api.SE3Covariance icp_variance = 2;
@@ -166,8 +171,24 @@ message Edge {
                     // Depth of each stair.
                     float run = 2;
                 }
+                // Straight staircases have two landings, one at the top and one at the bottom.
+                // Landings are areas of free space before and after the stairs, and are represented
+                // as oriented bounding boxes.
+                message Landing {
+                    // Pose of the landing's center relative to the stairs frame.
+                    bosdyn.api.SE3Pose stairs_tform_landing_center = 1;
+                    // The half-size of the box representing the landing in the x axis.
+                    double landing_extent_x = 2;
+                    // The half-size of the box representing the landing in the y axis.
+                    double landing_extent_y = 3;
+                }
                 // Each stair should be rise followed by run. The last stair will have zero run.
                 repeated Stair stairs = 2;
+                // The lowermost landing of the stairs. The robot will try to
+                // align itself to the stairs while on this landing.
+                Landing bottom_landing = 3;
+                // The uppermost landing of the stairs.
+                Landing top_landing = 4;
             }
             //  Parameters describing a straight staircase.
             StraightStaircase straight_staircase = 2;
@@ -197,15 +218,27 @@ message Edge {
         // If true, the edge crosses flat ground and the robot shouldn't try to climb over obstacles.
         google.protobuf.BoolValue flat_ground = 6;
 
-
         // Terrain coefficient of friction user hint. This value must be postive and will clamped if
         // necessary on the robot side. Best suggested values lie in the range between 0.4 and 0.8
         // (which is the robot's default.)
-        google.protobuf.DoubleValue ground_mu_hint = 7;
+        // WARNING: deprecated as of 2.1. Use mobility_params instead, which includes ground_mu_hint
+        // as part of the terrain_params.
+        google.protobuf.DoubleValue ground_mu_hint = 7 [deprecated = true];
 
         // If true, the edge crosses over grated metal. This changes some parameters of the robot's
         // perception system to allow it to see grated floors bettter.
-        google.protobuf.BoolValue grated_floor = 8;
+        // WARNING: deprecated as of 2.1. Use mobility_params instead, which includes grated_floor
+        // as part of the terrain_params.
+        google.protobuf.BoolValue grated_floor = 8 [deprecated = true];
+        // Overrides the following fields of the mobility parameters to whatever is
+        // stored in the map. For example, if this FieldMask contains "stair_hint" and
+        // "terrain_params.enable_grated_floor", then the map will be
+        // annotated with "stair_hint" and "enable_grated_floor" settings. An empty FieldMask means all fields are active
+        // annotations.
+        google.protobuf.FieldMask override_mobility_params = 9;
+        // Contains terrain parameters, swing height, obstacle avoidance parameters, etc.
+        // When the robot crosses this edge, it will use the mobility parameters here.
+        bosdyn.api.spot.MobilityParams mobility_params = 10;
     }
     // Annotations specific to the current edge.
     Annotations annotations = 4;
@@ -223,8 +256,12 @@ message EdgeSnapshot {
         google.protobuf.Timestamp timestamp = 1;
         // List of all the foot positions for a single stance.
         repeated bosdyn.api.FootState foot_states = 2;
-        // Body position corresponding to this stance.
+        // KO Body position corresponding to this stance.
         bosdyn.api.SE3Pose ko_tform_body = 3;
+        // Vision Body position corresponding to this stance.
+        bosdyn.api.SE3Pose vision_tform_body = 5;
+        // Does this stance correspond to a planar ground region.
+        google.protobuf.BoolValue planar_ground = 4;
     }
     // Sampling of stances as robot traversed this edge.
     repeated Stance stances = 2;

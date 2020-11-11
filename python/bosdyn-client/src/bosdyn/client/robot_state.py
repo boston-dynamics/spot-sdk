@@ -145,3 +145,4 @@ def _get_robot_hardware_configuration_value(response):
 
 def _get_robot_link_model_value(response):
     return response.link_model
+

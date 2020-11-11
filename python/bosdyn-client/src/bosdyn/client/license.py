@@ -27,3 +27,14 @@ class LicenseClient(BaseClient):
         req = license_pb2.GetLicenseInfoRequest()
         return self.call(self._stub.GetLicenseInfo, req, value_from_response=_get_entry_value,
                          error_from_response=common_header_errors, **kwargs)
+
+    def get_feature_enabled(self, feature_list, **kwargs):
+        """Check if the installed license allow a list of feature codes."""
+        assert not isinstance(feature_list, str)
+
+        req = license_pb2.GetFeatureEnabledRequest()
+        req.feature_codes.extend(feature_list)
+
+        return self.call(self._stub.GetFeatureEnabled, req,
+                         value_from_response=lambda response: dict(response.feature_enabled),
+                         error_from_response=common_header_errors, **kwargs)

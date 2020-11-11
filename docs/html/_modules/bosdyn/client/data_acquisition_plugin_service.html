@@ -1,0 +1,999 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bosdyn.client.data_acquisition_plugin_service &mdash; Spot 2.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https:://dev.bostondynamics.com/_modules/bosdyn/client/data_acquisition_plugin_service.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../README.html">
+          
+
+          
+            
+            <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/data_acquisition_overview.html">Data Acquisition Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/faults.html">Faults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/robot_services.html">Robot services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/python/README.html">Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/quickstart.html">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/understanding_spot_programming.html">Understanding Spot Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../python/examples/README.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/comms_test/README.html">Comms Test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/data_acquisition_service/README.html">Data Acquisition Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/data_service/README.html">Data Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/directory/README.html">Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/estop/README.html">E-Stop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Fault</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/logging/README.html">Logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/mission_question_answerer/README.html">Mission Question Anwerer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/payloads/README.html">Payloads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/stance/README.html">Stance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/upload_choreographed_sequence/README.html">Upload Choreographed Sequence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/wasd/README.html">WASD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/world_object_with_image_coordinates/README.html">World Object With Image Coordinates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/xbox_controller/README.html">Xbox Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html">Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/common.html">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html">Data Acquisition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin.html">Data Acquisition Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html">Docking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/processors.html">Processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html">Recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html">Robot Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_id.html">Robot ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html">PTZ</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/streamquality.html">Stream Quality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html">Version</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html">Spot Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/time_sync.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/README.html">Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/README.html">Choreography</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreogrpahy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/payload_configuration_requirements.html">Payload configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/mechanical_interfaces.html">Mechanical interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_mounting_rails.html">Robot mounting rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/protos/style_guide.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html">auth.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-plugin-service-proto">data_acquisition_plugin_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-service-proto">data_acquisition_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-store-proto">data_acquisition_store.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-store-service-proto">data_acquisition_store_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-buffer-proto">data_buffer.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-buffer-service-proto">data_buffer_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-chunk-proto">data_chunk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-index-proto">data_index.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-service-proto">data_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-proto">directory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-registration-proto">directory_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-registration-service-proto">directory_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-service-proto">directory_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#docking-docking-proto">docking/docking.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#docking-docking-service-proto">docking/docking_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#estop-proto">estop.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#estop-service-proto">estop_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#license-service-proto">license_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-proto">local_grid.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-service-proto">mission/mission_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-nodes-proto">mission/nodes.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-remote-proto">mission/remote.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-remote-service-proto">mission/remote_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-util-proto">mission/util.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-registration-proto">payload_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-registration-service-proto">payload_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-service-proto">payload_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#point-cloud-proto">point_cloud.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#point-cloud-service-proto">point_cloud_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#power-proto">power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#power-service-proto">power_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-command-service-proto">robot_command_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-proto">robot_id.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-led-proto">spot_cam/LED.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-health-proto">spot_cam/health.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-network-proto">spot_cam/network.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-power-proto">spot_cam/power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-ptz-proto">spot_cam/ptz.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-service-proto">spot_cam/service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-streamquality-proto">spot_cam/streamquality.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-version-proto">spot_cam/version.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#synchronized-command-proto">synchronized_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-range-proto">time_range.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../choreography_protos/bosdyn/api/README.html">Choreography Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../choreography_protos/bosdyn/api/choreography_reference.html">spot/choreography_params.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../choreography_protos/bosdyn/api/choreography_reference.html#spot-choreography-sequence-proto">spot/choreography_sequence.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../choreography_protos/bosdyn/api/choreography_reference.html#spot-choreography-service-proto">spot/choreography_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../choreography_protos/bosdyn/api/choreography_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../README.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../README.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bosdyn.client.data_acquisition_plugin_service</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bosdyn.client.data_acquisition_plugin_service</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;A set of helper functions for implementing a Data Acquisition plugin service.</span>
+
+<span class="sd">The DataAcquisitionPluginService class in this module is the recommended way to create a</span>
+<span class="sd">plugin service for data acquisition.  To use it, you must define a function for performing the</span>
+<span class="sd">data collection with the following signature:</span>
+
+<span class="sd">``def data_collect_fn(request:AcquirePluginDataRequest, store_helper: DataAcquisitionStoreHelper)``</span>
+
+<span class="sd">This function is responsible for collecting all of your plugin&#39;s data, and storing it with through</span>
+<span class="sd">the store_helper. The store_helper (DataAcquisitionStoreHelper) kicks off asynchronous data store calls</span>
+<span class="sd">for each piece of data, metadata, or images. The plugin service class has an internal helper function</span>
+<span class="sd">which calls DataAcquisitionStoreHelper.wait_for_Stores_complete method that blocks until all saving</span>
+<span class="sd">to the data acquistion store is finished. The helper class will monitor the futures for completion and</span>
+<span class="sd">update the state status and errors appropriately.</span>
+
+<span class="sd">If errors occur during the data collection+saving process, use state.add_errors to report which</span>
+<span class="sd">intended DataIdentifiers had problems:</span>
+
+<span class="sd">``state.add_errors([DataIdentifiers], &#39;Failure to collect data 1&#39;)``</span>
+
+<span class="sd">Long-running acquisitions should be sure to call state.cancel_check() occasionally to exit early</span>
+<span class="sd">and cleanly if the acquisition has been cancelled by the user or a timeout. If your plugin has</span>
+<span class="sd">extra cleanup that it needs to perform in the event of a cancelled request, wrap your check</span>
+<span class="sd">in a try-except block that can catch the RequestCancelledError thrown by the cancel_check function,</span>
+<span class="sd">then perform the cleanup and re-raise the exception. For example::</span>
+
+<span class="sd">    try:</span>
+<span class="sd">        # Data collection and storage here</span>
+<span class="sd">        state.cancel_check()</span>
+<span class="sd">    except RequestCancelledError:</span>
+<span class="sd">        # Perform cleanup here</span>
+<span class="sd">        raise</span>
+
+<span class="sd">Note, the data acquisition plugin service helper class will monitor and respond to the GetStatus RPC.</span>
+<span class="sd">However, the data_collect_fn function should update the status to STATUS_SAVING when it transitions to</span>
+<span class="sd">storing the data.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">concurrent.futures</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">data_acquisition_pb2</span><span class="p">,</span> <span class="n">data_acquisition_plugin_service_pb2_grpc</span><span class="p">,</span> <span class="n">header_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.data_acquisition_pb2</span> <span class="kn">import</span> <span class="n">DataAcquisitionCapability</span> <span class="k">as</span> <span class="n">Capability</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client</span> <span class="kn">import</span> <span class="n">Robot</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.data_acquisition_store</span> <span class="kn">import</span> <span class="n">DataAcquisitionStoreClient</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.util</span> <span class="kn">import</span> <span class="n">populate_response_header</span>
+
+<span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># How long should completed requests be queryable?</span>
+<span class="n">kDefaultRequestExpiration</span> <span class="o">=</span> <span class="mi">30</span>
+
+
+<div class="viewcode-block" id="RequestCancelledError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestCancelledError">[docs]</a><span class="k">class</span> <span class="nc">RequestCancelledError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The request has been cancelled and should no longer be handled.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="make_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.make_error">[docs]</a><span class="k">def</span> <span class="nf">make_error</span><span class="p">(</span><span class="n">data_id</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">,</span> <span class="n">error_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper to simplify creating a DataError to send to RequestState.add_errors.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_id (DataIdentifier): The proto for the data identifier which has an error.</span>
+<span class="sd">        error_msg (string): The error message to associate with the data id.</span>
+<span class="sd">        error_data (google.protobuf.Any): Additional data to be packed with the error.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The DataError protobuf message for this errored data id.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">proto</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">DataError</span><span class="p">(</span><span class="n">data_id</span><span class="o">=</span><span class="n">data_id</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="n">error_msg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">error_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">proto</span><span class="o">.</span><span class="n">error_data</span><span class="o">.</span><span class="n">Pack</span><span class="p">(</span><span class="n">error_data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">proto</span></div>
+
+
+<div class="viewcode-block" id="RequestState"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestState">[docs]</a><span class="k">class</span> <span class="nc">RequestState</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Interface for a data collection to update its state as it proceeds.</span>
+
+<span class="sd">    Each AcquireData RPC made to the plugin service will create an instance of RequestState</span>
+<span class="sd">    to manage the incoming acquisition request&#39;s overall state, including if it has been</span>
+<span class="sd">    cancelled, any errors that occur, and the current status of the request.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Statuses for the GetStatus RPC which indicate the data acquisition and saving is still</span>
+    <span class="c1"># in progress and has not completed or failed.</span>
+    <span class="n">kNonError</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">GetStatusResponse</span><span class="o">.</span><span class="n">STATUS_ACQUIRING</span><span class="p">,</span>
+        <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">GetStatusResponse</span><span class="o">.</span><span class="n">STATUS_SAVING</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="c1"># Boolean indicating if a CancelAcquisition RPC has been recieved for this acquisition request.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cancelled</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># The current status of the request, including any data errors.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_status_proto</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">GetStatusResponse</span><span class="p">(</span>
+            <span class="n">status</span><span class="o">=</span><span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">GetStatusResponse</span><span class="o">.</span><span class="n">STATUS_ACQUIRING</span><span class="p">)</span>
+        <span class="c1"># The time which the acquisition request completes; used by the RequestManager for cleanup.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_completion_time</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="RequestState.set_status"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestState.set_status">[docs]</a>    <span class="k">def</span> <span class="nf">set_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the status of the request.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            status (GetStatusResponse.Status): An updated status enum to be set in the</span>
+<span class="sd">                                               stored GetStatusResponse.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_check_locked</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">status</span></div>
+
+<div class="viewcode-block" id="RequestState.set_complete_if_no_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestState.set_complete_if_no_error">[docs]</a>    <span class="k">def</span> <span class="nf">set_complete_if_no_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Mark that everything is complete.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_check_locked</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">kNonError</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">STATUS_COMPLETE</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">logger</span><span class="p">:</span>
+                <span class="c1"># Intentionally doing the formatting here while we&#39;re holding the lock.</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Error encountered during request:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_status_proto</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="RequestState.add_saved"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestState.add_saved">[docs]</a>    <span class="k">def</span> <span class="nf">add_saved</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_ids</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Record that some data was saved successfully.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data_ids (Iterable[DataId]): Data IDs that have been successfully saved.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_check_locked</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">data_saved</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">data_ids</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RequestState.add_errors"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestState.add_errors">[docs]</a>    <span class="k">def</span> <span class="nf">add_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_errors</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Report that some errors have occurred during the data capture.</span>
+<span class="sd">        Use the make_error function to simplify creating data errors.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data_errors (Iterable[DataError]): data errors to include as errors in the status.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_check_locked</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">data_errors</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">data_errors</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">GetStatusResponse</span><span class="o">.</span><span class="n">STATUS_DATA_ERROR</span>
+            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Errors occurred during acquisition:</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">data_errors</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RequestState.has_data_errors"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestState.has_data_errors">[docs]</a>    <span class="k">def</span> <span class="nf">has_data_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if any data errors have been added to this status.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_check_locked</span><span class="p">()</span>
+            <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">data_errors</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RequestState.cancel_check"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestState.cancel_check">[docs]</a>    <span class="k">def</span> <span class="nf">cancel_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Raises RequestCancelledError if the request has already been cancelled.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_check_locked</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="RequestState.is_cancelled"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestState.is_cancelled">[docs]</a>    <span class="k">def</span> <span class="nf">is_cancelled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Query if the request is already cancelled.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cancelled</span></div>
+
+    <span class="k">def</span> <span class="nf">_cancel_check_locked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cancelled</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">RequestCancelledError</span></div>
+
+
+<div class="viewcode-block" id="DataAcquisitionStoreHelper"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper">[docs]</a><span class="k">class</span> <span class="nc">DataAcquisitionStoreHelper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This class simplifies the management of data acquisition stores for a single request.</span>
+
+<span class="sd">    Request state will be updated according to store progress.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        store_client (bosdyn.client.DataAcquisitionStoreClient): A data acquisition store client.</span>
+<span class="sd">        state (RequestState): state of the request, to be modified with errors or completion.</span>
+<span class="sd">        cancel_interval (float): How often to check for cancellation of the request while</span>
+<span class="sd">            waiting for the futures to complete.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        store_client (bosdyn.client.DataAcquisitionStoreClient): A data acquisition store client.</span>
+<span class="sd">        state (RequestState): state of the request, to be modified with errors or completion.</span>
+<span class="sd">        cancel_interval (float): How often to check for cancellation of the request while</span>
+<span class="sd">            waiting for the futures to complete.</span>
+<span class="sd">        data_id_future_pairs (List[Pair(DataIdentifier, Future)]): The data identifier and the associated</span>
+<span class="sd">            future which results from the async store data rpc.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store_client</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">cancel_interval</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store_client</span> <span class="o">=</span> <span class="n">store_client</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cancel_interval</span> <span class="o">=</span> <span class="n">cancel_interval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_id_future_pairs</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="DataAcquisitionStoreHelper.store_metadata"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">store_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">data_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Store metadata with the data acquisition store service.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            metadata (bosdyn.api.AssociatedMetadata): Metadata message to store.</span>
+<span class="sd">            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RPCError: Problem communicating with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_client</span><span class="o">.</span><span class="n">store_metadata_async</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">data_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_id_future_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">data_id</span><span class="p">,</span> <span class="n">future</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DataAcquisitionStoreHelper.store_image"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_image">[docs]</a>    <span class="k">def</span> <span class="nf">store_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_capture</span><span class="p">,</span> <span class="n">data_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Store an image with the data acquisition store service.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            image_capture (bosdyn.api.ImageCapture): Image to store.</span>
+<span class="sd">            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RPCError: Problem communicating with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_client</span><span class="o">.</span><span class="n">store_image_async</span><span class="p">(</span><span class="n">image_capture</span><span class="p">,</span> <span class="n">data_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_id_future_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">data_id</span><span class="p">,</span> <span class="n">future</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DataAcquisitionStoreHelper.store_data"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_data">[docs]</a>    <span class="k">def</span> <span class="nf">store_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Store a data message with the data acquisition store service.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            message (bytes): Data to store.</span>
+<span class="sd">            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.</span>
+<span class="sd">            file_extension (string) : File extension to use for writing the data to a file.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RPCError: Problem communicating with the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_client</span><span class="o">.</span><span class="n">store_data_async</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_id_future_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">data_id</span><span class="p">,</span> <span class="n">future</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DataAcquisitionStoreHelper.cancel_check"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.cancel_check">[docs]</a>    <span class="k">def</span> <span class="nf">cancel_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Raises RequestCancelledError if the request has already been cancelled.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">cancel_check</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataAcquisitionStoreHelper.wait_for_stores_complete"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.wait_for_stores_complete">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_stores_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Block and wait for all stores to complete. Update state with store success/failures.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RequestCancelledError: The data acquisition request was cancelled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">cancel_check</span><span class="p">()</span>
+
+        <span class="c1"># Block until all futures are done.</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">future</span><span class="o">.</span><span class="n">done</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">future</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_id_future_pairs</span><span class="p">):</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cancel_interval</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">cancel_check</span><span class="p">()</span>
+
+        <span class="c1"># Check each future status and update the status saved and errors.</span>
+        <span class="k">for</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">future</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_id_future_pairs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">future</span><span class="o">.</span><span class="n">exception</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">add_saved</span><span class="p">([</span><span class="n">data_id</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">add_errors</span><span class="p">([</span>
+                    <span class="n">make_error</span><span class="p">(</span><span class="n">data_id</span><span class="p">,</span> <span class="s1">&#39;Failed to store data: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">future</span><span class="o">.</span><span class="n">exception</span><span class="p">()))])</span>
+
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">has_data_errors</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="DataAcquisitionPluginService"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService">[docs]</a><span class="k">class</span> <span class="nc">DataAcquisitionPluginService</span><span class="p">(</span>
+        <span class="n">data_acquisition_plugin_service_pb2_grpc</span><span class="o">.</span><span class="n">DataAcquisitionPluginServiceServicer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Implementation of a data acquisition plugin. It relies on the provided data_collect_fn</span>
+<span class="sd">    to implement the heart of the data collection and storage.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        robot: Authenticated robot object.</span>
+<span class="sd">        capabilities: List of DataAcquisitionCapability that describe what this plugin can do.</span>
+<span class="sd">        data_collect_fn: Function that performs the data collection and storage. Ordered input</span>
+<span class="sd">            arguments (to data_collect_fn): data_acquisition_pb2.AcquirePluginDataRequest, DataAcquisitionStoreHelper.</span>
+<span class="sd">            Output(to data_collect_fn): None</span>
+<span class="sd">        acquire_response_fn: Optional function that can validate a request and provide a timeout deadline. Function returns</span>
+<span class="sd">            a boolean indicating if the request is valid; if False, the response is returned immediately without calling</span>
+<span class="sd">            the data collection function or saving any data. Ordered input arguments (to acquire_response_fn):</span>
+<span class="sd">            data_acquisition_pb2.AcquirePluginDataRequest, data_acquisition_pb2.AcquirePluginDataResponse. Output (to</span>
+<span class="sd">            data_collect_fn): Boolean</span>
+<span class="sd">        executor: Optional thread pool.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        logger (logging.Logger): Logger used by the service.</span>
+<span class="sd">        capabilities (List[DataAcquisitionCapability]): List of capabilities that describe what</span>
+<span class="sd">            this plugin can do.</span>
+<span class="sd">        data_collect_fn: Function that performs the data collection and storage.</span>
+<span class="sd">        acquire_response_fn: Function that can validate a request and provide a timeout deadline.</span>
+<span class="sd">        request_manager (RequestManager): Helper class which manages the RequestStates created with</span>
+<span class="sd">            each acquisition RPC.</span>
+<span class="sd">        executor (ThreadPoolExecutor): Thread pool to run the plugin service on.</span>
+<span class="sd">        robot (Robot): Authenticated robot object.</span>
+<span class="sd">        store_client (DataAcqusitionStoreClient): Client for the data acquisition store service.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.DataAcquisitionPluginService&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">capabilities</span><span class="p">,</span> <span class="n">data_collect_fn</span><span class="p">,</span> <span class="n">acquire_response_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">executor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DataAcquisitionPluginService</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span> <span class="ow">or</span> <span class="n">_LOGGER</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">capabilities</span> <span class="o">=</span> <span class="n">capabilities</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_collect_fn</span> <span class="o">=</span> <span class="n">data_collect_fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acquire_response_fn</span> <span class="o">=</span> <span class="n">acquire_response_fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">request_manager</span> <span class="o">=</span> <span class="n">RequestManager</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executor</span> <span class="o">=</span> <span class="n">executor</span> <span class="ow">or</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">robot</span> <span class="o">=</span> <span class="n">robot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">DataAcquisitionStoreClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_data_collection_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Helper function which initiates the data collection and storage in sequence.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request_id (int): The request_id for the acquisition request being inspected.</span>
+<span class="sd">            request (DataAcquisitionPluginRequest): The data acquisition request.</span>
+<span class="sd">            state (RequestState): The associated internal request state for the data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">store_helper</span> <span class="o">=</span> <span class="n">DataAcquisitionStoreHelper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">store_client</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_collect_fn</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">store_helper</span><span class="p">)</span>
+            <span class="n">store_helper</span><span class="o">.</span><span class="n">wait_for_stores_complete</span><span class="p">()</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">set_complete_if_no_error</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">RequestCancelledError</span><span class="p">:</span>
+            <span class="c1"># Cannot use set_status because it will raise the exception again.</span>
+            <span class="k">with</span> <span class="n">state</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+                <span class="n">state</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">STATUS_ACQUISITION_CANCELLED</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Request </span><span class="si">%d</span><span class="s1"> cancelled&#39;</span><span class="p">,</span> <span class="n">request_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># pylint: disable=broad-except</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed during call to user function&quot;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">state</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+                <span class="n">state</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">STATUS_INTERNAL_ERROR</span>
+                <span class="n">state</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">request_manager</span><span class="o">.</span><span class="n">mark_request_finished</span><span class="p">(</span><span class="n">request_id</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Finished request </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">request_id</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DataAcquisitionPluginService.AcquirePluginData"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.AcquirePluginData">[docs]</a>    <span class="k">def</span> <span class="nf">AcquirePluginData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Trigger a data acquisition and store results in the data acquisition store service.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (data_acquisition_pb2.AcquirePluginDataRequest): The data acquisition request.</span>
+<span class="sd">            context (GRPC ClientContext): tracks internal grpc statuses and information.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An AcquirePluginDataResponse containing a request_id to use with GetStatus.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">AcquirePluginDataResponse</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquire_response_fn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquire_response_fn</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="n">response</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed during call to user acquire response function&#39;</span><span class="p">)</span>
+                <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                                         <span class="n">error_code</span><span class="o">=</span><span class="n">header_pb2</span><span class="o">.</span><span class="n">CommonError</span><span class="o">.</span><span class="n">CODE_INTERNAL_ERROR</span><span class="p">,</span>
+                                         <span class="n">error_msg</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                <span class="k">return</span> <span class="n">response</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">request_manager</span><span class="o">.</span><span class="n">cleanup_requests</span><span class="p">()</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">request_id</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_manager</span><span class="o">.</span><span class="n">add_request</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Beginning request </span><span class="si">%d</span><span class="s1"> for </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">request_id</span><span class="p">,</span>
+                         <span class="p">[</span><span class="n">capture</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">capture</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">acquisition_requests</span><span class="o">.</span><span class="n">data_captures</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_collection_wrapper</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">request_id</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">AcquireDataResponse</span><span class="o">.</span><span class="n">STATUS_OK</span>
+        <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+<div class="viewcode-block" id="DataAcquisitionPluginService.GetStatus"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.GetStatus">[docs]</a>    <span class="k">def</span> <span class="nf">GetStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Query the status of a data acquisition by ID.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (data_acquisition_pb2.GetStatusRequest): The get status request.</span>
+<span class="sd">            context (GRPC ClientContext): tracks internal grpc statuses and information.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An GetStatusResponse containing the details of the data acquisition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_manager</span><span class="o">.</span><span class="n">get_status_proto</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">request_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">GetStatusResponse</span><span class="p">()</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">STATUS_REQUEST_ID_DOES_NOT_EXIST</span>
+        <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+<div class="viewcode-block" id="DataAcquisitionPluginService.GetServiceInfo"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.GetServiceInfo">[docs]</a>    <span class="k">def</span> <span class="nf">GetServiceInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of data acquisition capabilities.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (data_acquisition_pb2.GetServiceInfoRequest): The get service info request.</span>
+<span class="sd">            context (GRPC ClientContext): tracks internal grpc statuses and information.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An GetServiceInfoResponse containing the list of data acquisition capabilities for the plugin.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">GetServiceInfoResponse</span><span class="p">()</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">capabilities</span><span class="o">.</span><span class="n">data_sources</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">capabilities</span><span class="p">)</span>
+        <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+<div class="viewcode-block" id="DataAcquisitionPluginService.CancelAcquisition"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.CancelAcquisition">[docs]</a>    <span class="k">def</span> <span class="nf">CancelAcquisition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Cancel a data acquisition by ID.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (data_acquisition_pb2.CancelAcquisitionRequest): The cancel acquisition request.</span>
+<span class="sd">            context (GRPC ClientContext): tracks internal grpc statuses and information.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An CancelAcquisitionResponse containing the status of the cancel operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">CancelAcquisitionResponse</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">request_manager</span><span class="o">.</span><span class="n">mark_request_cancelled</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">request_id</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Cancelling request </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">request_id</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">STATUS_REQUEST_ID_DOES_NOT_EXIST</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">STATUS_OK</span>
+        <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span></div></div>
+
+
+<span class="c1"># pylint: disable=protected-access</span>
+<div class="viewcode-block" id="RequestManager"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestManager">[docs]</a><span class="k">class</span> <span class="nc">RequestManager</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Manage request lifecycles and status.</span>
+
+<span class="sd">    The RequestManager manages some internals of the RequestState class, so it will access its</span>
+<span class="sd">    protected variables.  We leave those variables protected so that users of the RequestState</span>
+<span class="sd">    class are less tempted to fiddle with them incorrectly, but we turn off the linting for the</span>
+<span class="sd">    rest of this file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_requests</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="RequestManager.add_request"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestManager.add_request">[docs]</a>    <span class="k">def</span> <span class="nf">add_request</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new request to manage&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">RequestState</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_requests</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_counter</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span><span class="p">,</span> <span class="n">state</span></div>
+
+<div class="viewcode-block" id="RequestManager.get_request_state"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestManager.get_request_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_request_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the RequestState object for managing a request.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request_id (int): The request_id for the acquisition request being inspected.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_requests</span><span class="p">[</span><span class="n">request_id</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="RequestManager.get_status_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestManager.get_status_proto">[docs]</a>    <span class="k">def</span> <span class="nf">get_status_proto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a copy of the current status for the specified request.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request_id (int): The request_id for the acquisition request being inspected.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_request_state</span><span class="p">(</span><span class="n">request_id</span><span class="p">)</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">GetStatusResponse</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">state</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="n">status</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">_status_proto</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">status</span></div>
+
+<div class="viewcode-block" id="RequestManager.mark_request_cancelled"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestManager.mark_request_cancelled">[docs]</a>    <span class="k">def</span> <span class="nf">mark_request_cancelled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Mark a request as cancelled, and no longer able to be updated.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request_id (int): The request_id for the acquisition request being cancelled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_request_state</span><span class="p">(</span><span class="n">request_id</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">state</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">_cancelled</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">STATUS_CANCEL_IN_PROGRESS</span></div>
+
+<div class="viewcode-block" id="RequestManager.mark_request_finished"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestManager.mark_request_finished">[docs]</a>    <span class="k">def</span> <span class="nf">mark_request_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Mark a request as finished, and able to be removed later.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request_id (int): The request_id for the acquisition request being completed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_request_state</span><span class="p">(</span><span class="n">request_id</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">state</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">_completion_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="RequestManager.cleanup_requests"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestManager.cleanup_requests">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">older_than_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove all requests that were completed farther in the past than older_than_time.</span>
+
+<span class="sd">        Defaults to removing anything older than 30 seconds.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            older_than_time (float): Optional time (in seconds) that requests will be removed after.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">older_than_time</span> <span class="o">=</span> <span class="n">older_than_time</span> <span class="ow">or</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">kDefaultRequestExpiration</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="c1"># Grab the contents to iterate through outside of the lock</span>
+            <span class="n">requests</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_requests</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="n">to_remove</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">request_id</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">requests</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">state</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">_completion_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">state</span><span class="o">.</span><span class="n">_completion_time</span> <span class="o">&lt;</span> <span class="n">older_than_time</span><span class="p">:</span>
+                    <span class="n">to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">request_id</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">to_remove</span><span class="p">:</span>
+                <span class="c1"># Won&#39;t fail even if the key was already removed</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_requests</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      
+      &copy; Copyright 2020 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

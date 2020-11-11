@@ -31,7 +31,6 @@ def main():
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     sdk = bosdyn.client.create_standard_sdk('EstopClientWithSdk')
-    sdk.load_app_token(options.app_token)
 
     robot = sdk.create_robot(options.hostname)
 

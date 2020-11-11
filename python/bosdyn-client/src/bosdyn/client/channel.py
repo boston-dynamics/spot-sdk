@@ -19,6 +19,10 @@ TransportError = grpc.RpcError
 
 _LOGGER = logging.getLogger(__name__)
 
+# Set default max message length for sending and receiving to 100MB. This value is used when
+# creating channels in the bosdyn.client.Robot class.
+DEFAULT_MAX_MESSAGE_LENGTH = 100 * (1024 ** 2)
+
 
 class RefreshingAccessTokenAuthMetadataPlugin(grpc.AuthMetadataPlugin):
     """Plugin to refresh access token.
@@ -57,25 +61,27 @@ def create_secure_channel_creds(cert, token_cb, add_app_token):
     return grpc.composite_channel_credentials(transport_creds, auth_creds)
 
 
-def create_secure_channel(address, port, creds, authority):
+def create_secure_channel(address, port, creds, authority, options=[]):
     """Create a secure channel to given host:port.
-    
+
     Args:
         address: Connection host address.
         port: Connection port.
-        creds: A ChannelCredentials instance. 
+        creds: A ChannelCredentials instance.
         authority: Authority option for the channel.
+        options: A list of additional parameters for the GRPC channel.
 
     Returns:
         A secure channel.
     """
 
     socket = '{}:{}'.format(address, port)
-    options = (('grpc.ssl_target_name_override', authority),)
-    return grpc.secure_channel(socket, creds, options)
+    complete_options = [('grpc.ssl_target_name_override', authority)]
+    complete_options.extend(options)
+    return grpc.secure_channel(socket, creds, complete_options)
 
 
-def create_insecure_channel(address, port, authority=None):
+def create_insecure_channel(address, port, authority=None, options=[]):
     """Create an insecure channel to given host and port.
 
     This method is only used for testing purposes. Applications must use secure channels to
@@ -85,16 +91,19 @@ def create_insecure_channel(address, port, authority=None):
         address: Connection host address.
         port: Connection port.
         authority: Authority option for the channel.
+        options: A list of additional parameters for the GRPC channel.
 
     Returns:
-        An insecure channel.    
+        An insecure channel.
     """
 
     socket = '{}:{}'.format(address, port)
-    options = None
+    complete_options = []
     if authority:
-        options = (('grpc.ssl_target_name_override', authority),)
-    return grpc.insecure_channel(socket, options=options)
+        complete_options.extend([('grpc.ssl_target_name_override', authority)])
+    if options:
+        complete_options.extend(options)
+    return grpc.insecure_channel(socket, options=complete_options)
 
 
 def translate_exception(rpc_error):
@@ -131,24 +140,27 @@ def translate_exception(rpc_error):
     elif code is grpc.StatusCode.RESOURCE_EXHAUSTED:
         if "Received message larger than max" in details:
             return ResponseTooLargeError(rpc_error, ResponseTooLargeError.__doc__)
-
+    elif code is grpc.StatusCode.UNAUTHENTICATED:
+        return UnauthenticatedError(rpc_error, UnauthenticatedError.__doc__)
+    
     debug = rpc_error.debug_error_string()
-    if 'is not in peer certificate' in debug:
-        return NonexistentAuthorityError(rpc_error, NonexistentAuthorityError.__doc__)
-    elif 'Failed to connect to remote host' in debug or 'Failed to create subchannel' in debug:
-        return ProxyConnectionError(rpc_error, ProxyConnectionError.__doc__)
-    elif 'Exception calling application' in debug:
-        return ServiceFailedDuringExecutionError(rpc_error,
-                                                 ServiceFailedDuringExecutionError.__doc__)
-    elif 'Handshake failed' in debug:
-        return InvalidClientCertificateError(rpc_error, InvalidClientCertificateError.__doc__)
-    elif 'Name resolution failure' in debug:
-        return UnknownDnsNameError(rpc_error, UnknownDnsNameError.__doc__)
-    elif 'channel is in state TRANSIENT_FAILURE' in debug:
-        return TransientFailureError(rpc_error, TransientFailureError.__doc__)
-    elif 'Connect Failed' in debug:
-        # This error should be checked last because a lot of grpc errors contain said substring.
-        return UnableToConnectToRobotError(rpc_error, UnableToConnectToRobotError.__doc__)
+    if debug is not None:
+        if 'is not in peer certificate' in debug:
+            return NonexistentAuthorityError(rpc_error, NonexistentAuthorityError.__doc__)
+        elif 'Failed to connect to remote host' in debug or 'Failed to create subchannel' in debug:
+            return ProxyConnectionError(rpc_error, ProxyConnectionError.__doc__)
+        elif 'Exception calling application' in debug:
+            return ServiceFailedDuringExecutionError(rpc_error,
+                                                     ServiceFailedDuringExecutionError.__doc__)
+        elif 'Handshake failed' in debug:
+            return InvalidClientCertificateError(rpc_error, InvalidClientCertificateError.__doc__)
+        elif 'Name resolution failure' in debug:
+            return UnknownDnsNameError(rpc_error, UnknownDnsNameError.__doc__)
+        elif 'channel is in state TRANSIENT_FAILURE' in debug:
+            return TransientFailureError(rpc_error, TransientFailureError.__doc__)
+        elif 'Connect Failed' in debug:
+            # This error should be checked last because a lot of grpc errors contain said substring.
+            return UnableToConnectToRobotError(rpc_error, UnableToConnectToRobotError.__doc__)
 
     # Handle arbitrary UNAVAILABLE cases
     if code is grpc.StatusCode.UNAVAILABLE:
@@ -157,3 +169,21 @@ def translate_exception(rpc_error):
     _LOGGER.warning('Unclassified exception: %s', rpc_error)
 
     return RpcError(rpc_error, RpcError.__doc__)
+
+def generate_channel_options(max_send_message_length = None, max_receive_message_length = None):
+    """Generate the array of options to specify in the creation of a client channel or server.
+
+    The list contains the values for max allowed message length for both sending and
+    receiving. If no values are provided, the default values of 100 MB are used.
+
+    Args:
+        max_send_message_length (int): Max message length allowed for message to send.
+        max_receive_message_length (int):  Max message length allowed for message to receive.
+
+    Returns:
+        Array with values for channel options.
+    """
+
+    return [('grpc.max_send_message_length', max_send_message_length or DEFAULT_MAX_MESSAGE_LENGTH),
+        ('grpc.max_receive_message_length',
+            max_receive_message_length or DEFAULT_MAX_MESSAGE_LENGTH)]

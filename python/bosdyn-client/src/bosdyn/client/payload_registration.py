@@ -12,13 +12,15 @@ This allows client code to write to the robot payload registry.
 from __future__ import print_function
 import collections
 import logging
+import threading
+import time
 
 import bosdyn.api.payload_registration_pb2 as payload_registration_protos
 import bosdyn.api.payload_registration_service_pb2_grpc as payload_registration_service
 
 from bosdyn.client.common import (BaseClient, error_factory, handle_unset_status_error,
                                   handle_common_header_errors, handle_lease_use_result_errors)
-from bosdyn.client import ResponseError
+from bosdyn.client import ResponseError, TimedOutError
 
 LOGGER = logging.getLogger('payload_registration_client')
 
@@ -233,3 +235,103 @@ def _get_payload_auth_token_error(response):
         response, response.status,
         status_to_string=payload_registration_protos.GetPayloadAuthTokenResponse.Status.Name,
         status_to_error=_GET_PAYLOAD_AUTH_TOKEN_STATUS_TO_ERROR)
+
+
+class PayloadRegistrationKeepAlive(object):
+    """Helper class to keep a payload entry registered.
+
+    Using a payload keep alive will ensure that a payload automatically re-registers itself with
+    the robot if it is ever forgotten. However, payload registrations on Spot are persistent
+    across power cycles and updates, so in most cases there is no need to send a payload
+    registration request after the first successful payload registration. The use of a payload
+    registration keep alive should only be used when a payload is expected to be regularly 
+    reconfigured by forgetting & re-authorizing the payload in the web page.
+
+    Args:
+      pay_reg_client: Client to the payload registration service.
+      payload: bosdyn.api.payload object that defines the payload to register.
+      secret: String secret for the payload.
+      registration_interval_secs: Number of seconds between payload registration requests.
+      logger: logging.Logger object to log with. Defaults to None, in which case one with the
+          class name is acquired.
+      rpc_timeout_secs: Number of seconds to wait for a pay_reg_client RPC. Defaults to None,
+          for no timeout.
+    """
+
+    def __init__(self, pay_reg_client, payload, secret, registration_interval_secs=10, logger=None,
+                 rpc_timeout_secs=None):
+        self.pay_reg_client = pay_reg_client
+        self.payload = payload
+        self.secret = secret
+        self._registration_interval_secs = registration_interval_secs
+        self.logger = logger or logging.getLogger(self.__class__.__name__)
+        self._rpc_timeout_secs = rpc_timeout_secs
+
+        # Configure the thread to do re-registration.
+        self._end_reregister_signal = threading.Event()
+        self._thread = threading.Thread(target=self._periodic_reregister)
+        self._thread.daemon = True
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.shutdown()
+
+    def start(self):
+        """Register and then kick off thread.
+        
+        Can not be restarted with this method after a shutdown.
+        
+        Raises:
+          RpcError: Problem communicating with the robot.
+          RuntimeError: The thread was attempted to start more than once.
+        """
+        try:
+            self.pay_reg_client.register_payload(self.payload, self.secret)
+        except PayloadAlreadyExistsError as exc:
+            # If the payload exists, log a warning and continue.
+            self.logger.warning('Got a "payload already exists" error: %s\nContinuing to start thread.', str(exc))
+        else:
+            self.logger.info('Payload registered.')
+
+        # This will raise an exception if the thread has already started.
+        self._thread.start()
+
+    def is_alive(self):
+        """Are we still periodically re-registering?
+        
+        Returns:
+          A bool stating if still alive
+        """
+        return self._thread.is_alive()
+
+    def shutdown(self):
+        """Stop the background thread."""
+        self.logger.debug('Shutting down')
+        self._end_reregister_signal.set()
+        self._thread.join()
+
+    def _periodic_reregister(self):
+        """Handles a removal of the payload from the robot payload page while still connected.
+        
+        Raises:
+          RpcError: Problem communicating with the robot.
+        """
+        self.logger.info('Starting registration loop')
+        while True:
+            exec_start = time.time()
+            try:
+                self.pay_reg_client.register_payload(self.payload, self.secret)
+            except PayloadAlreadyExistsError:
+                # Ignore "already exists" errors -- we expect those.
+                pass
+            except TimedOutError:
+                self.logger.warning('Timed out, timeout set to "{}"'.format(self._rpc_timeout_secs))
+            except Exception as exc:
+                # Log all other exceptions, but continue looping in hopes that it resolves itself
+                self.logger.exception('Caught general exception.')
+            exec_sec = time.time() - exec_start
+            if self._end_reregister_signal.wait(self._registration_interval_secs - exec_sec):
+                break
+        self.logger.info('Re-registration stopped')

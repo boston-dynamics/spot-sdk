@@ -63,6 +63,7 @@ Action nodes take some action, such as making the robot do something or triggeri
 | Sleep |	Sleep for a specified number of seconds.
 | Prompt |	Prompt a supervisor with a question, such as "Is it safe to cross the street?" The supervisor can be a robot operator responding to a UI prompt or an automated process running anywhere that can communicate with the robot.
 | SpotCamStoreMedia |	Issue a request to write images to the Spot CAM USB stick. Note that an installed Spot CAM payload is required and the USB stick must be inserted before booting the robot.
+| Dock |    Issue a command to dock the robot at the specified station.
 | DefineBlackboard |	Specify a blackboard variable for this node's children to use.
 | SetBlackboard |	Write to a blackboard variable. The variable must have already been defined.
 | ConstantResult |	Always return one of the standard status codes (SUCCESS, RUNNING, or FAILURE).
@@ -94,8 +95,8 @@ The following behavior tree diagram depicts a simple linear sequence of actions.
 The following Python code snippet implements the simple linear behavior tree shown above using `BosdynRobotCommand` action nodes, plus the "Just power on" mission from before.
 
     ...
-    request = robot_command_pb2.StandCommand.Request()
-    mobility_command = robot_command_pb2.MobilityCommand.Request(stand_request=request)
+    request = basic_command_pb2.StandCommand.Request()
+    mobility_command = mobility_command_pb2.MobilityCommand.Request(stand_request=request)
     robot_command = robot_command_pb2.RobotCommand(mobility_command=mobility_command)
     stand = nodes_pb2.BosdynRobotCommand(service_name='robot-command',
 
@@ -105,8 +106,8 @@ The following Python code snippet implements the simple linear behavior tree sho
     stand_mission = nodes_pb2.Node(name='Just stand')
     stand_mission.impl.Pack(stand)
 
-    request = robot_command_pb2.SitCommand.Request() \
-    mobility_command = robot_command_pb2.MobilityCommand.Request(sit_request=request) \
+    request = basic_command_pb2.SitCommand.Request() \
+    mobility_command = mobility_command_pb2.MobilityCommand.Request(sit_request=request) \
     robot_command = robot_command_pb2.RobotCommand(mobility_command=mobility_command) \
     sit = nodes_pb2.BosdynRobotCommand(service_name='robot-command', \
                                    host='localhost', command=robot_command)
@@ -183,6 +184,8 @@ The Selector is set to "always restart", so that it will execute the `BosdynRobo
     ...
 
 
+
+
 ## MissionService RPCs
 
 The MissionService provides RPCs for clients to load and play missions recorded using the GraphNavRecordingService.
@@ -197,6 +200,19 @@ The MissionService provides RPCs for clients to load and play missions recorded 
 | GetInfo |	Get static information regarding the mission.
 | GetMission |	Download the mission as it was uploaded to the service.
 | AnswerQuestion |	Specify an answer to a question asked by the mission.
+
+
+## RemoteMissionService RPCs
+
+RemoteMissionService RPCs are called by MissionService to communicate with a robot payload. The mission service uses these RPCs to communicate with a remote mission service.
+
+| RPC   | Description |
+| ----- | ----------- |
+| EstablishSession |	Call this once at mission load time, per node.
+| Tick |	Call this every time the RemoteGrpc node is ticked.
+| Stop |	Call this every time the RemoteGrpc node was ticked in the previous cycle, but not ticked in this cycle.
+| TeardownSession |	Tells the service it can forget any data associated with the given session.
+
 
 
 <br />

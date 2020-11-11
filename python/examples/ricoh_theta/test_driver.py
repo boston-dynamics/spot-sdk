@@ -17,10 +17,12 @@ python3 test_driver.py
 
 from ricoh_theta import Theta
 
-# set client_mode=True to use client mode network settings
-camera = Theta(theta_ssid='THETAYL00196843', client_mode=False)
-camera.showState()
+# UPDATE ME!! This should be the SSID for the Ricoh Theta that is attempting to be queried.
+SSID = 'THETAYN14103427'
 
+# set client_mode=True to use client mode network settings
+camera = Theta(theta_ssid=SSID, client_mode=False, show_state_at_init=False)
+camera.showState()
 camera.takePicture()
 
 # Below are some additional user functions for testing:
@@ -30,6 +32,8 @@ camera.takePicture()
 # camera.takePicture()
 # camera.listFiles(1)
 # camera.downloadLastImage(directory="")
-# camera.downloadMissionImages(directory="")
 # camera.previewLastImage()
 # camera.connectToAP(ap_ssid=None, ap_sec="WPA/WPA2 PSK", ap_pw=None)
+# camera.getCaptureParameters()
+# camera.getFileFormat()
+# camera.getLastImage()

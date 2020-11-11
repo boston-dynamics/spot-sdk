@@ -41,7 +41,7 @@ message LogAnnotationTextMessage {
     // String annotation message to add to the log.
     string message = 1;
 
-    // The timestamp of the annotation.  This must be in robot time.
+    // Required timestamp of data in robot clock time.
     google.protobuf.Timestamp timestamp = 2;
 
     // The service responsible for the annotation. May be omitted.
@@ -74,6 +74,9 @@ message LogAnnotationTextMessage {
 
     // Optional source file line number originating the log message.
     int32 line_number = 7;
+
+    // Optional timestamp of data in client clock time.
+    google.protobuf.Timestamp timestamp_client = 8;
 }
 
 // An operator message to be added to the robot's logs.
@@ -83,14 +86,17 @@ message LogAnnotationOperatorMessage {
     // String annotation message to add to the log.
     string message = 1;
 
-    // The timestamp of the annotation.  This must be in robot time.
+    // Required timestamp of data in robot clock time.
     google.protobuf.Timestamp timestamp = 2;
+
+    // Optional timestamp of data in client clock time.
+    google.protobuf.Timestamp timestamp_client = 3;
 }
 
 
 // A unit of binary data to be entered in a log.
 message LogAnnotationLogBlob {
-    // Timestamp of data in robot clock time.
+    // Required timestamp of data in robot clock time.
     google.protobuf.Timestamp timestamp = 1;
 
     // A general label for this blob.
@@ -104,6 +110,9 @@ message LogAnnotationLogBlob {
 
     // Raw data to be included as the blob log.
     bytes data = 4;
+
+    // Optional timestamp of data in client clock time.
+    google.protobuf.Timestamp timestamp_client = 5;
 }
 
 

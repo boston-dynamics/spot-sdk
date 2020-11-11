@@ -8,7 +8,7 @@
 
 import collections
 from bosdyn.client.common import BaseClient
-from bosdyn.client.common import (error_factory, common_header_errors, handle_common_header_errors)
+from bosdyn.client.common import (error_factory, error_pair, common_header_errors, handle_common_header_errors)
 from bosdyn.client.exceptions import ResponseError, UnsetStatusError
 
 from bosdyn.api import image_pb2
@@ -30,14 +30,17 @@ class SourceDataError(ImageResponseError):
 class ImageDataError(ImageResponseError):
     """System cannot generate image data at this time."""
 
+class UnsupportedImageFormatRequestedError(ImageResponseError):
+    """The image service cannot return data in this format."""
 
 _STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _STATUS_TO_ERROR.update({
     image_pb2.ImageResponse.STATUS_OK: (None, None),
-    image_pb2.ImageResponse.STATUS_UNKNOWN_CAMERA: (UnknownImageSourceError,
-                                                    UnknownImageSourceError.__doc__),
-    image_pb2.ImageResponse.STATUS_SOURCE_DATA_ERROR: (SourceDataError, SourceDataError.__doc__),
-    image_pb2.ImageResponse.STATUS_IMAGE_DATA_ERROR: (ImageDataError, ImageDataError.__doc__),
+    image_pb2.ImageResponse.STATUS_UNKNOWN_CAMERA: error_pair(UnknownImageSourceError),
+    image_pb2.ImageResponse.STATUS_SOURCE_DATA_ERROR: error_pair(SourceDataError),
+    image_pb2.ImageResponse.STATUS_IMAGE_DATA_ERROR: error_pair(ImageDataError),
+    image_pb2.ImageResponse.STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED: error_pair(UnsupportedImageFormatRequestedError),
+    image_pb2.ImageResponse.STATUS_UNKNOWN: error_pair(UnsetStatusError),
 })
 
 
@@ -45,9 +48,6 @@ _STATUS_TO_ERROR.update({
 def _error_from_response(response):
     """Return a custom exception based on the first invalid image response, None if no error."""
     for image_response in response.image_responses:
-        if image_response.status is image_pb2.ImageResponse.STATUS_UNKNOWN:
-            return UnsetStatusError(response, UnsetStatusError.__doc__)
-
         result = error_factory(response, image_response.status,
                                status_to_string=image_pb2.ImageResponse.Status.Name,
                                status_to_error=_STATUS_TO_ERROR)
@@ -94,6 +94,10 @@ class ImageClient(BaseClient):
 
         Raises:
             RpcError: Problem communicating with the robot.
+            UnknownImageSourceError: Provided image source was invalid or not found
+            image.SourceDataError: Failed to fill out ImageSource. All other fields are not filled
+            UnsetStatusError: An internal ImageService issue has happened
+            ImageDataError: Problem with the image data. Only ImageSource is filled
         """
         return self.get_image([build_image_request(source) for source in image_sources], **kwargs)
 
@@ -114,6 +118,10 @@ class ImageClient(BaseClient):
 
         Raises:
             RpcError: Problem communicating with the robot.
+            UnknownImageSourceError: Provided image source was invalid or not found
+            image.SourceDataError: Failed to fill out ImageSource. All other fields are not filled
+            UnsetStatusError: An internal ImageService issue has happened
+            ImageDataError: Problem with the image data. Only ImageSource is filled
         """
         req = self._get_image_request(image_requests)
         return self.call(self._stub.GetImage, req, _get_image_value, _error_from_response, **kwargs)

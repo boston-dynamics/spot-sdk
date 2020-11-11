@@ -22,6 +22,10 @@ message RequestHeader {
     // symbolic string to identify the program, and a unique integer to identify
     // the specific instance of the process running.
     string client_name = 2;
+
+    // If Set to true, request that request and response messages for this call are not recorded
+    // in the GRPC log.
+    bool disable_rpc_logging = 3;
 }
 
 // General error code are returned in the header to facilitate error-handling which is not

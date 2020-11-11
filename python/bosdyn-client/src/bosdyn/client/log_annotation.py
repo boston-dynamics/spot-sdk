@@ -4,11 +4,11 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""Client for the log-annotation service.
+"""Client for the log-annotation service (DEPRECATED).
 
-This allows client code to add operator comments and text-messages to the robot's log files.
+The log-annotation service is deprecated and will be removed in a later release.
+Instead, please use the data_buffer service going forward.
 """
-
 from __future__ import print_function
 
 import logging
@@ -20,13 +20,14 @@ import threading
 import time
 import traceback
 
+from six.moves.queue import Queue
+
 from bosdyn import util as core_util
 from bosdyn.client.exceptions import Error, RpcError, ServerError
 from bosdyn.client.common import BaseClient, common_header_errors
 from bosdyn.client import time_sync
 import bosdyn.api.log_annotation_pb2 as log_annotation_protos
 import bosdyn.api.log_annotation_service_pb2_grpc as log_annotation_service
-from six.moves.queue import Queue
 
 
 class InvalidArgument(Error):
@@ -34,7 +35,11 @@ class InvalidArgument(Error):
 
 
 class LogAnnotationClient(BaseClient):
-    """A client for adding annotations to robot logs."""
+    """A client for adding annotations to robot logs (DEPRECATED).
+
+    The log-annotation service is deprecated and will be removed in a later release.
+    Instead, please use the data_buffer service going forward.
+    """
 
     default_service_name = 'log-annotation'
     service_type = 'bosdyn.api.LogAnnotationService'
@@ -175,7 +180,7 @@ class LogAnnotationHandler(logging.Handler):
                        log_client.
 
     Raises:
-        InvalidArgument: The TimeSyncEndpoint is not valid.
+        log_annotation.InvalidArgument: The TimeSyncEndpoint is not valid.
     """
 
     def __init__(self, service, log_client, level=logging.NOTSET, time_sync_endpoint=None,

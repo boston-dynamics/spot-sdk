@@ -12,6 +12,7 @@ option java_outer_classname = "RobotStateProto";
 import "bosdyn/api/geometry.proto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/parameter.proto";
+import "bosdyn/api/service_fault.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/wrappers.proto";
@@ -70,7 +71,12 @@ message RobotState {
     // Robot behavior fault state.
     BehaviorFaultState behavior_fault_state = 7;
 
+    // The foot states (and contact information).
     repeated FootState foot_state = 8;
+
+
+    // Service faults for services registered with the robot.
+    ServiceFaultState service_fault_state = 10;
 
 }
 
@@ -132,7 +138,7 @@ message PowerState {
 
 // The current state of each system fault the robot is experiencing.
 // An "active" fault indicates a hardware/software currently on the robot.
-// A "historical" faults indicates a, now cleared, hardware/software problem.
+// A "historical" fault indicates a, now cleared, hardware/software problem.
 // Historical faults are useful to diagnose robot behavior subject to intermittent failed states.
 message SystemFaultState {
     // Currently active faults
@@ -364,6 +370,9 @@ message BehaviorFault {
 
         // Error caused by robot hardware malfunction
         CAUSE_HARDWARE = 2;
+
+        /// A lease has timed out
+        CAUSE_LEASE_TIMEOUT = 3;
     }
     // The potential cause of the fault.
     Cause cause = 3;
@@ -438,6 +447,25 @@ message FootState {
     // Is the foot in contact with the ground?
     Contact contact = 2;
 }
+
+
+// The current state of each service fault the robot is experiencing.
+// An "active" fault indicates a fault currently in a service.
+// A "historical" fault indicates a, now cleared, service problem.
+message ServiceFaultState {
+    // Currently active faults
+    repeated ServiceFault faults = 1;
+
+    // Inactive faults that cleared within the last 10 minutes
+    repeated ServiceFault historical_faults = 2;
+
+    // Aggregated service fault data. Maps attribute string to highest severity level
+    // of any active fault containing that attribute string.
+    // This provides a very quick way of determining if there any "locomotion" or
+    // "vision" faults above a certain severity level.
+    map<string, ServiceFault.Severity> aggregated = 3;
+}
+
 
 // The RobotState request message to get the current state of the robot.
 message RobotStateRequest {

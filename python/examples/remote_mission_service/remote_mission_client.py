@@ -4,7 +4,7 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""Example of how to talk to the remote_mission_service."""
+"""Example of how to talk to the remote mission service examples in this directory."""
 
 import argparse
 import time
@@ -19,18 +19,49 @@ import bosdyn.client.util
 
 def main():
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
-    parser.add_argument('--port', help='Port that service is listening on', type=int, required=True)
-    parser.add_argument('--lease-host', help='Host that provides leases. Typically the robot.')
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--hello-world', action='store_true',
+                       help='Target the Hello World remote mission service.')
+    group.add_argument('--power-off', action='store_true',
+                       help='Target the Power Off remote mission service.')
     parser.add_argument(
         '--user-string',
         help='Specify the user-string input to Tick. Set to the node name in Autowalk missions.')
+
+    subparsers = parser.add_subparsers(help='Select how this service will be accessed.', dest='host_type')
+    # Create the parser for the "local" command.
+    local_parser = subparsers.add_parser('local', help='Connect to a locally hosted service.')
+    bosdyn.client.util.add_service_endpoint_arguments(local_parser)
+    # Create the parser for the "robot" command.
+    robot_parser = subparsers.add_parser('robot', help='Connect to a service through the robot directory.')
+    bosdyn.client.util.add_common_arguments(robot_parser)
+
     options = parser.parse_args()
 
-    # Build a client that can talk to the RemoteMissionService implementation.
-    client = bosdyn.mission.remote_client.RemoteClient()
-    # Point the client at the service. We're assuming there is no encryption to set up.
-    client.channel = grpc.insecure_channel('{}:{}'.format(options.hostname, options.port))
+    if options.hello_world:
+        directory_name = 'hello-world-callback'
+    elif options.power_off:
+        directory_name = 'power-off-callback'
+
+
+    # If attempting to communicate directly to the service.
+    if options.host_type == 'local':
+        # Build a client that can talk directly to the RemoteMissionService implementation.
+        client = bosdyn.mission.remote_client.RemoteClient()
+        # Point the client at the service. We're assuming there is no encryption to set up.
+        client.channel = grpc.insecure_channel('{}:{}'.format(options.host_ip, options.port))
+    # Else if attempting to communicate through the robot.
+    else:
+        # Register the remote mission client with the SDK instance.
+        sdk = bosdyn.client.create_standard_sdk('RemoteMissionClientExample')
+        sdk.register_service_client(bosdyn.mission.remote_client.RemoteClient,
+                                    service_name=directory_name)
+
+        robot = sdk.create_robot(options.hostname)
+        robot.authenticate(options.username, options.password)
+
+        # Create the remote mission client.
+        client = robot.ensure_client(directory_name)
 
     inputs = []
     input_values = []
@@ -41,22 +72,17 @@ def main():
             util_pb2.VariableDeclaration(name=name, type=util_pb2.VariableDeclaration.TYPE_STRING)
         ]
         input_values = [
-            util_pb2.KeyValue(key=name, value=util_pb2.Value(
-                constant=util_pb2.ConstantValue(string_value=options.user_string)))
+            util_pb2.KeyValue(
+                key=name, value=util_pb2.Value(constant=util_pb2.ConstantValue(
+                    string_value=options.user_string)))
         ]
 
     lease_client = None
     body_lease = None
     leases = []
 
-    # If we're using a lease, we'll have to authenticate to the robot to acquire it.
-    if options.lease_host:
-        sdk = bosdyn.client.create_standard_sdk('RemoteMissionClientExample')
-        sdk.load_app_token(options.app_token)
-        robot = sdk.create_robot(options.lease_host)
-
-        robot.authenticate(options.username, options.password)
-
+    if options.power_off:
+        # If we're using a lease, we'll have to authenticate to the robot to acquire it.
         lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
         # Acquire a lease and save it in the list of leases we pass to the servicer.
         body_lease = lease_client.acquire()

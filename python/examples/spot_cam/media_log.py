@@ -25,10 +25,17 @@ class MediaLogCommands(Subcommands):
 
     def __init__(self, subparsers, command_dict):
         super(MediaLogCommands, self).__init__(subparsers, command_dict, [
-            MediaLogDeleteCommand, MediaLogEnableDebugCommand, MediaLogGetStatusCommand,
-            MediaLogListCamerasCommand, MediaLogListLogpointsCommand,
-            MediaLogRetrieveCommand, MediaLogRetrieveAllCommand, MediaLogSetPassphraseCommand,
-            MediaLogStoreCommand, MediaLogStoreRetrieveCommand,
+            MediaLogDeleteCommand,
+            MediaLogDeleteAllCommand,
+            MediaLogEnableDebugCommand,
+            MediaLogGetStatusCommand,
+            MediaLogListCamerasCommand,
+            MediaLogListLogpointsCommand,
+            MediaLogRetrieveCommand,
+            MediaLogRetrieveAllCommand,
+            MediaLogSetPassphraseCommand,
+            MediaLogStoreCommand,
+            MediaLogStoreRetrieveCommand,
             MediaLogTagCommand,
         ])
 
@@ -45,6 +52,21 @@ class MediaLogDeleteCommand(Command):
     def _run(self, robot, options):
         lp = logging_pb2.Logpoint(name=options.name)
         robot.ensure_client(MediaLogClient.default_service_name).delete(lp)
+
+class MediaLogDeleteAllCommand(Command):
+    """Delete all logpoints"""
+
+    NAME = 'delete-all'
+
+    def __init__(self, subparsers, command_dict):
+        super(MediaLogDeleteAllCommand, self).__init__(subparsers, command_dict)
+
+    def _run(self, robot, options):
+        client = robot.ensure_client(MediaLogClient.default_service_name)
+        for logpoint in client.list_logpoints():
+            print('Deleting {}...'.format(logpoint.name))
+            client.delete(logpoint)
+        print('All logpoints deleted.')
 
 
 class MediaLogEnableDebugCommand(Command):
@@ -206,7 +228,7 @@ class MediaLogStoreCommand(Command):
     def __init__(self, subparsers, command_dict):
         super(MediaLogStoreCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('camera_name', default='pano', const='pano', nargs='?',
-                                  choices=['pano', 'c0', 'c1', 'c2', 'c3', 'c4', 'ptz'])
+                                  choices=['pano', 'c0', 'c1', 'c2', 'c3', 'c4', 'ptz', 'ir'])
 
     def _run(self, robot, options):
         args = (camera_pb2.Camera(name=options.camera_name), logging_pb2.Logpoint.STILLIMAGE)
@@ -223,7 +245,7 @@ class MediaLogStoreRetrieveCommand(Command):
     def __init__(self, subparsers, command_dict):
         super(MediaLogStoreRetrieveCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('camera_name', default='pano', const='pano', nargs='?',
-                                  choices=['pano', 'c0', 'c1', 'c2', 'c3', 'c4', 'ptz'])
+                                  choices=['pano', 'c0', 'c1', 'c2', 'c3', 'c4', 'ptz', 'ir'])
         self._parser.add_argument('--dst', default=None, help='Filename of saved image')
         add_bool_arg(self._parser, 'save-as-rgb24', default=False)
         add_bool_arg(self._parser, 'stitching', default=True)

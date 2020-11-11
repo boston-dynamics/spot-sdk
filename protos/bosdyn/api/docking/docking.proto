@@ -1,0 +1,201 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.docking;
+
+option java_outer_classname = "DockingProto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/lease.proto";
+import "google/protobuf/timestamp.proto";
+
+
+
+message DockingCommandRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The Lease to show ownership of the robot.
+    Lease lease = 2;
+
+    // ID of docking station to dock at.
+    uint32 docking_station_id = 3;
+
+    // Identifier provided by the time sync service to verify time sync between robot and client.
+    string clock_identifier = 4;
+
+    // The timestamp (in robot time) by which a command must finish executing.
+    // This is a required field and used to prevent runaway commands.
+    google.protobuf.Timestamp end_time = 5;
+
+    
+}
+
+message DockingCommandResponse {
+
+    enum Status {
+        // Status is not specified.
+        STATUS_UNKNOWN = 0;
+
+        // Docking command accepted
+        STATUS_OK = 1;
+
+        // ERROR: Lease rejected
+        STATUS_ERROR_LEASE = 4;
+
+        // ERROR: Dock fiducial not found.
+        STATUS_ERROR_DOCK_NOT_FOUND = 5;
+    }
+
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Details about how the lease was used.
+    LeaseUseResult lease_use_result = 2;
+
+    // Current feedback of specified command.
+    Status status = 3;
+
+    // Unique identifier for the command (if accepted).
+    uint32 docking_command_id = 5;
+}
+
+message DockingCommandFeedbackRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Unique identifier for the command to get feedback for
+    uint32 docking_command_id = 2;
+}
+
+message DockingCommandFeedbackResponse {
+
+    enum Status {
+        // Status is not specified.
+        STATUS_UNKNOWN = 0;
+
+        // Docking command is executing.
+        STATUS_IN_PROGRESS = 1;
+
+        // Docking command succeeded and valid.
+        STATUS_DOCKED = 2;
+
+        // Docking Command overridden by new docking command
+        STATUS_OLD_DOCKING_COMMAND = 3;
+
+        // ERROR: Dock fiducial lost
+        STATUS_ERROR_DOCK_LOST = 4;
+
+        // ERROR: Lease rejected
+        STATUS_ERROR_LEASE = 5;
+
+        // ERROR: End time has been reached
+        STATUS_ERROR_COMMAND_TIMED_OUT = 6;
+
+        // ERROR: No Timesync with system
+        STATUS_ERROR_NO_TIMESYNC = 7;
+
+        // ERROR: Provided end time too far in the future
+        STATUS_ERROR_TOO_DISTANT = 8;
+
+        // ERROR: Internal system error during execution
+        // This error cannot be resolved by issuing a new DockingCommand
+        // Check the returned message for details
+        // eg internal services or robot not in a state to accept docking commands
+        STATUS_ERROR_SYSTEM = 9;
+    }
+
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Details about how the lease was used (unset if unknown).
+    LeaseUseResult lease_use_result = 2;
+
+    // Current feedback of specified command.
+    Status status = 3;
+}
+
+// Type of dock
+enum DockType {
+    DOCK_TYPE_UNKNOWN = 0;
+
+
+    DOCK_TYPE_CONTACT_PROTOTYPE = 2;
+
+}
+
+// The configuration of a range of dock ID's
+message ConfigRange {
+    // Starting ID
+    uint32 id_start = 1;
+    // Ending ID
+    uint32 id_end = 2;
+    // Type of dock for this range
+    DockType type = 3;
+}
+
+message GetDockingConfigRequest {
+    // Common request header.
+    RequestHeader header = 1;
+}
+
+message GetDockingConfigResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    repeated ConfigRange dock_configs = 2;
+}
+
+// Overall Docking state of the robot, including power & comms connections
+message DockState {
+    enum DockedStatus {
+        DOCK_STATUS_UNKNOWN = 0;
+        // Robot is detected as on a dock
+        DOCK_STATUS_DOCKED = 1;
+        // Robot is currenting running a docking command
+        DOCK_STATUS_DOCKING = 2;
+        // Robot is not detected as on dock
+        DOCK_STATUS_UNDOCKED = 3;
+    }
+    enum LinkStatus {
+        // Unknown or Not applicable
+        LINK_STATUS_UNKNOWN = 0;
+        // The link is detected as connected
+        LINK_STATUS_CONNECTED = 1;
+        // The link could not be detected
+        LINK_STATUS_ERROR = 2;
+   }
+
+   // Status of if the robot is on dock    
+    DockedStatus status = 1;
+
+    // The following fields are only valid if status is DOCK_STATUS_DOCKED or DOCK_STATUS_DOCKING
+
+    // Type of the dock
+    DockType dock_type = 2;
+    // ID of the dock
+    uint32 dock_id = 3;
+    
+    // The following fields are only valid if status is DOCK_STATUS_DOCKED
+    
+    // Status of power detection from the dock
+    LinkStatus power_status = 4;
+    
+}
+
+message GetDockingStateRequest {
+    // Common request header.
+    RequestHeader header = 1;
+}
+
+message GetDockingStateResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    DockState dock_state = 2;
+}

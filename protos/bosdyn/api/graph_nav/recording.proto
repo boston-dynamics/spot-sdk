@@ -96,6 +96,12 @@ message StartRecordingResponse {
         STATUS_MISSING_FIDUCIALS = 5;
         // Can't start recording because the map was too large for the license.
         STATUS_MAP_TOO_LARGE_LICENSE = 6;
+        // A required remote cloud did not exist in the service directory.
+        STATUS_REMOTE_CLOUD_FAILURE_NOT_IN_DIRECTORY = 7;
+        // A required remote cloud did not have data.
+        STATUS_REMOTE_CLOUD_FAILURE_NO_DATA = 8;
+        // All fiducials are visible but at least one pose could not be determined accurately.
+        STATUS_FIDUCIAL_POSE_NOT_OK = 9;
     }
     // Return status for the request.
     Status status = 4;
@@ -103,6 +109,10 @@ message StartRecordingResponse {
     // If the status is STATUS_MISSING_FIDUCIALS, these are the fiducials that are not currently
     // visible.
     repeated int32 missing_fiducials = 5;
+
+    // If the status is STATUS_FIDUCIAL_POSE_NOT_OK, these are the fiducials that could not be
+    // localized confidently.
+    repeated int32 bad_pose_fiducials = 7;
 
     // Large graphs can only be uploaded if the license permits them. Recording
     // will stop automatically when the graph gets too large. If StartRecording
@@ -192,6 +202,13 @@ message CreateWaypointResponse {
         STATUS_MISSING_FIDUCIALS = 4;
         // The map was too big to create a waypoint based on the license.
         STATUS_MAP_TOO_LARGE_LICENSE = 5;
+        // A required remote cloud did not exist in the service directory.
+        STATUS_REMOTE_CLOUD_FAILURE_NOT_IN_DIRECTORY = 6;
+        // A required remote cloud did not have data.
+        STATUS_REMOTE_CLOUD_FAILURE_NO_DATA = 7;
+        // All fiducials are visible but their pose could not be determined accurately.
+        STATUS_FIDUCIAL_POSE_NOT_OK = 8;
+
     }
     // Return status for the request.
     Status status = 5;
@@ -202,6 +219,9 @@ message CreateWaypointResponse {
     // were not visible to the robot when trying to create the waypoint.
     repeated int32 missing_fiducials = 6;
 
+    // If the status is STATUS_FIDUCIAL_POSE_NOT_OK, these are the fiducials that could not be
+    // localized confidently.
+    repeated int32 bad_pose_fiducials = 8;
 
     // Large graphs can only be uploaded if the license permits them. Recording
     // will stop automatically when the graph gets too large. If CreateWaypointResponse
@@ -269,7 +289,9 @@ message GetRecordStatusResponse {
     RecordingEnvironment recording_environment = 3;
     enum MapState {
         MAP_STATE_UNKNOWN = 0;
+        // Successfully started recording.
         MAP_STATE_OK = 1;
+        // Unable to continue recording because a larger map requires an upgraded license.
         MAP_STATE_TOO_LARGE_FOR_LICENSE = 2;
     };
     MapState map_state = 4;

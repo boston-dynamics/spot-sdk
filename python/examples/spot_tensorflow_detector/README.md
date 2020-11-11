@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 #  API Example - Spot Tensorflow Detector
 
-Spot Tensorflow Detector example collects images from the 5 Spot cameras and performs object 
+The Spot Tensorflow Detector example collects images from the 5 Spot cameras and performs object 
 detection using Tensorflow. It accepts any Tensorflow model, and it allows the user to specify a 
 subset of detection classes included in the model. It performs this set of operations for a 
 predefined number of iterations, blocking for a predefined amount of time between each iteration. 
@@ -21,7 +21,7 @@ process diagram is shown below. The main process communicates with the Spot robo
 constanty receives images.These images are pushed into the RAW_IMAGES_QUEUE and read by the 
 Tensorflow processes.Those processes detect objects in the images, draw the bounding boxes around 
 the detections, and push those processed images into the PROCESSED_IMAGES_QUEUE. The Display 
-process then pull images from the PROCESSED_IMAGES_QUEUE and displayes them to the screen.
+process then pulls images from the PROCESSED_IMAGES_QUEUE and displayes them to the screen.
 
 <img src="documentation/process_diagram.png" alt="Process Diagram" style="width:250px;"/>
 
@@ -31,10 +31,10 @@ For your best learning experience, please use the [Quickstart Guide](../../../do
 found in the SDK's docs/python directory.  That will help you get your Python programming 
 environment setup properly.
 
-To install this example on Ubunty 18.04, follow these instructions:
+To install this example on Ubuntu 18.04, follow these instructions:
 - Create virtual environment as described in this 
 [Quickstart Guide virtualenv section](../../../docs/python/quickstart.md#manage-multiple-python-environments)
-- Install dependencies: `python -m pip install -r requirements.txt`
+- Install dependencies: `python3 -m pip install -r requirements.txt`
 - Run the example using instructions in the next section
 - To exit the virtual environment, run `deactivate`
 
@@ -42,7 +42,6 @@ To install this example on Ubunty 18.04, follow these instructions:
 This example follows the common pattern for expected arguments. It needs the common arguments used to configure the SDK and connect to a Spot:
 - --username 
 - --password 
-- --app-token 
 - hostname passed as the last argument
 
 On top of those arguments, it also needs the following arguments:
@@ -51,11 +50,11 @@ On top of those arguments, it also needs the following arguments:
 - --detection-threshold (optional) argument that specifies the threshold to use to consider the Tensorflow detections as real detections; defaults to 0.7
 - --number-tensorflow-processes (optional) argument that specifies the number of Tensorflow processes to start; defaults to 7
 - --sleep-between-capture (optional) argument that specifies the amount to sleep in seconds between each image capture iteration; defaults to 0.0
-- --max-processing-delay (optional) argument that specifies max delay in seconds allowed for each image before being processed; images with greater latency will not be processed
-- --max-display-delay (optional) argument that specifies max delay in seconds allowed for each image before being displayed; images with greater latency will not be displayed
+- --max-processing-delay (optional) argument that specifies max delay in seconds allowed for each image before being processed; images with greater latency will not be processed. Setting this to a larger value can help the model run faster. 
+- --max-display-delay (optional) argument that specifies max delay in seconds allowed for each image before being displayed; images with greater latency will not be displayed. Setting this to a larger value can help the model run faster. 
 
 ```
-python spot_tenserflow_detector.py --username USER --password PASSWORD --model-path <path_to_pb> ROBOT_IP
+python3 spot_tensorflow_detector.py --username USER --password PASSWORD --model-path <path_to_pb> ROBOT_IP
 ```
 
 
@@ -75,4 +74,4 @@ The value of all those parameters is updated asynchronously. The parameters are:
 
 The value for RAW_IMAGES_QUEUE increases rapidly in the beginning of the program, but it should decrease back to 0 in a few minutes. Based on the hardware where the program is running, increasing the value passed to the argument `--number-tensorflow-processes` reduces the size of this queue more quickly. Increasing the value of the argument `--sleep-between-capture` also reduces the size of this queue, but this option also reduces the real-time visualization of the environment around the Spot robot.
 
-Tensorflow models pre-trained on COCO dataset can be obtained [here](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf1_detection_zoo.md). As an example, use the pb file from the faster_rcnn_inception_v2_coco model with --detection-classes argument set to 1 to detect people in the camera images. The models in that tensorflow github location are not supported on Windows or MacOS.
+As an example, the `faster_rcnn_inception_v2_coco` Tensorflow model pre-trained on COCO dataset can be obtained [here](http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz). Run the example with `--model-path` pointing to the `pb` file in that model and with `--detection-classes` argument set to `1` to detect people in the camera images. That model is not supported on Windows or MacOS.

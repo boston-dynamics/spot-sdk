@@ -1,10 +1,23 @@
 #!/bin/bash
 #
 # This script will:
+# 0. Compile the Announce protobuf files
 # 1. Register the payload (current system) with a robot
 # 2. Register the Announce Service with a robot
 # 3. Start an instance of Announce Service on the current system
 # 4. Create a client and access the Announce Service through the robot
+
+# Arguments:
+# <robot_ip> <endpoint_ip> <endpoint_port> <payload_secret>
+# robot_ip - IP address the robot can be accessed at from the current system
+# endpoint_ip - IP address the current system can be accessed at from the robot
+# endpoint_port - An open port on the current system for the service to communicate through
+# payload_secret - A private 16 character string unique to this payload instance
+
+
+# Compile the protobuf files.
+python3 -m pip install grpcio-tools
+python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. announce.proto announce_service.proto
 
 # Robot definition:
 # All requests will be routed to the robot IP.
@@ -19,16 +32,6 @@ payload_secret="$4"
 payload_name="Self-Registered-Payload"
 # Description is humand-readable explanation of a payload.
 payload_description="This payload registered itself via the $(basename -- "$0") example."
-
-# Service definition:
-# Unique name of this service instance.
-service_name="announce-self-registered"
-# RPC service used to define communications with this service.
-service_type="AnnounceService"
-# Authority to direct requests to.
-service_authority="announce-service.spot.robot"
-# Whether access to this service requires the user to have a token.
-user_token_required="--user-token-required"
 
 # Endpoint definition:
 # The endpoint defines the network location that the payload service can be reached at.
@@ -53,16 +56,14 @@ echo "Announce service started."
 
 # Register the service. This can be called from the payload or an arbitrary API client.
 # Must be registered after each robot power cycle.
-python3 self_register_service.py --guid $payload_guid --secret "$payload_secret" --name "$service_name" \
-                            --type $service_type --authority $service_authority $user_token_required \
+python3 self_register_service.py --guid $payload_guid --secret "$payload_secret" \
                             --host-ip $endpoint_ip --port $endpoint_port $robot_ip
 if [ $? -ne 0 ]; then kill -9 $announce_service_script_pid; exit; fi
 echo "Announce service registration complete."
 
 # Create a client and acccess the Announce Service through the robot.
 sleep 5 # Give the robot time to initialize the service
-python3 announce_client.py --service-name "$service_name" --service-type $service_type \
-                           --service-authority $service_authority --guid $payload_guid \
+python3 announce_client.py --guid $payload_guid \
                            --secret "$payload_secret" \
                            --message "This message is passed through the robot." $robot_ip
 if [ $? -ne 0 ]; then kill -9 $announce_service_script_pid; exit; fi
@@ -70,5 +71,4 @@ if [ $? -ne 0 ]; then kill -9 $announce_service_script_pid; exit; fi
 
 # Cleanup background process.
 kill -9 $announce_service_script_pid
-echo "
-Payload and service initialization run complete."
+echo "Payload and service initialization run complete."

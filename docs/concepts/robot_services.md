@@ -46,7 +46,7 @@ To turn off, clients are encouraged to use the `SafePowerOffCommand` RPC from th
 ## robot-command
 The robot command service allows a client to move the robot.
 
-There are many commands exposed to clients to make the robot self-right, sit, stand, move to a position, move with a velocity, stop and power off.  Most commands have assoicated parameters, for example the stand command contains an optional offset allowing the client to orient the robot's body.
+There are many commands exposed to clients to make the robot self-right, sit, stand, move to a position, move with a velocity, stop and power off.  Most commands have associated parameters, for example the stand command contains an optional offset allowing the client to orient the robot's body.
 
 Clients are encouraged to send short-lived commands and continuously resend them so that the robot stops in the even of a client-side issue.  For longer commands, client should cache the id returned by the CommandResponse and poll the associated CommandFeedbackRequest to monitor the command.
 
@@ -72,7 +72,7 @@ The robot state service also tracks different parameters for the robot and this 
 
 Spot can have many different image sources, including the cameras on the base platform or any other payloads which implement the image service proto definitions, like Spot CAM. The image service provides a way to list all these different sources using the `ListImageSources` RPC and then query the sources for their images with the `GetImage` RPC.
 
-Images can be regular pixel-based visual images where the data value corresponds to the greyscale (or color) intensity. They can also be depth images where the data value corresponds to the depth measured from the camera sensor. These image types can also be combined by reprojecting the depth onto the visual image, as shown in [`get_depth_plus_visual_image` example](../../python/examples/get_depth_plus_visual_image/README.md), which allows an application to use a detected bounding box of an object and determine a transform from the camera sensor to the detected object using on the pixel coordinates of the bounding box.
+Images can be regular pixel-based visual images where the data value corresponds to the greyscale (or color) intensity. They can also be depth images where the data value corresponds to the depth measured from the camera sensor. To align depth data with visual image data, use the `depth_in_visual_frame` sources, which reprojects the depth onto the same projection as the visual image.
 
 Since an image can be a lot of data, there are also different types of encodings and compression schemes that the image can be transmitted as to reduce the size of the data sent over the wire. The image service offers a `Format` field to describe the encoding of the image:
 
@@ -109,7 +109,7 @@ In addition to detecting obstacles, Spot can use information about its body and 
 
 The world object service provides a way to track and store objects detected in the world around Spot. A world object is considered a higher-level item in the scene that has some amount of semantic information associated with it. For example, a world object could be an AprilTag fiducial, a door handle, the stairs, or a virtual object drawn for debugging purposes.
 
-While these objects all have different properties associated with them, they also share common properties of a human-readable name, an id assigned by the world object service, an acquisition timestamp representing the time at which the object was most recently detected, and a transform snapshot (described in the [Geometry and Frames](geometry_and_frames.md) section) with transform information for the given acquisition timestamp. The service assigns a guranteed unique id to the object when it is first detected. The service will re-associate this id with the object across detections.
+While these objects all have different properties associated with them, they also share common properties of a human-readable name, an id assigned by the world object service, an acquisition timestamp representing the time at which the object was most recently detected, and a transform snapshot (described in the [Geometry and Frames](geometry_and_frames.md) section) with transform information for the given acquisition timestamp. The service assigns a guaranteed unique id to the object when it is first detected. The service will re-associate this id with the object across detections.
 
 Currently, the most common use case for the world object service is to expose Spot's internal detection of AprilTag fiducials from the robot's base cameras. Fiducials are commonly used as ground truth reference objects, notably in the GraphNav system to initialize the robot's localization. Any fiducials detected within the robot's base cameras will be returned as world objects through the service. The `ListWorldObjects` RPC will return all world objects detected by Spot within the last 15 seconds, and can be filtered to return only certain types of objects or objects after a specific timestamp.
 

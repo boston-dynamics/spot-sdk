@@ -14,5 +14,11 @@ import "bosdyn/api/license.proto";
 
 // The LicenseService allows clients to query the currently installed license on robot.
 service LicenseService {
+    // Get information, such as the license number, dates of validity, and features for the license
+    // currently uploaded on the robot.
     rpc GetLicenseInfo(GetLicenseInfoRequest) returns (GetLicenseInfoResponse) {}
+
+    // Check if specific features (identified by string names) are enabled under the currently loaded
+    // license for this robot.
+    rpc GetFeatureEnabled(GetFeatureEnabledRequest) returns (GetFeatureEnabledResponse) {}
 }

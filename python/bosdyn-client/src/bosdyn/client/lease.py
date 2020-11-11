@@ -242,11 +242,19 @@ class Lease(object):
 
 class LeaseState(object):
 
-    STATUS_UNOWNED = 0
-    STATUS_REVOKED = 1
-    STATUS_SELF_OWNER = 2
-    STATUS_OTHER_OWNER = 3
-    STATUS_NOT_MANAGED = 4
+    class Status(enum.Enum):
+        UNOWNED = 0
+        REVOKED = 1
+        SELF_OWNER = 2
+        OTHER_OWNER = 3
+        NOT_MANAGED = 4
+
+    # Deprecated. Provided for backwards compatibility.
+    STATUS_UNOWNED = Status.UNOWNED
+    STATUS_REVOKED = Status.REVOKED
+    STATUS_SELF_OWNER = Status.SELF_OWNER
+    STATUS_OTHER_OWNER = Status.OTHER_OWNER
+    STATUS_NOT_MANAGED = Status.NOT_MANAGED
 
     def __init__(self, lease_status, lease_owner=None, lease=None, lease_current=None):
         self.lease_status = lease_status
@@ -283,18 +291,18 @@ class LeaseState(object):
             if self.lease_current:
                 attempted_lease = Lease(lease_use_result.attempted_lease)
                 if attempted_lease.compare(self.lease_current) is Lease.CompareResult.SAME:
-                    return LeaseState(LeaseState.STATUS_OTHER_OWNER,
+                    return LeaseState(LeaseState.Status.OTHER_OWNER,
                                       lease_owner=lease_use_result.owner)
         elif lease_use_result.status == lease_use_result.STATUS_WRONG_EPOCH:
             if self.lease_current:
                 attempted_lease = Lease(lease_use_result.attempted_lease)
                 if attempted_lease.compare(self.lease_current) is Lease.CompareResult.SAME:
-                    return LeaseState(LeaseState.STATUS_UNOWNED)
+                    return LeaseState(LeaseState.Status.UNOWNED)
         elif lease_use_result.status == lease_use_result.STATUS_REVOKED:
             if self.lease_current:
                 attempted_lease = Lease(lease_use_result.attempted_lease)
                 if attempted_lease.compare(self.lease_current) is Lease.CompareResult.SAME:
-                    return LeaseState(LeaseState.STATUS_REVOKED)
+                    return LeaseState(LeaseState.Status.REVOKED)
         # The LeaseState is not modified
         return self
 
@@ -317,7 +325,7 @@ class LeaseWallet(object):
         """
         with self._lock:
             self._lease_state_map[lease.lease_proto.resource] = LeaseState(
-                LeaseState.STATUS_SELF_OWNER, lease=lease)
+                LeaseState.Status.SELF_OWNER, lease=lease)
 
     def remove(self, lease):
         """Remove lease from the wallet.
@@ -401,7 +409,7 @@ class LeaseWallet(object):
             LeaseNotOwnedByWallet: The lease is not owned by the wallet.
         """
         lease_state = self._get_lease_state_locked(resource)
-        if lease_state.lease_status != LeaseState.STATUS_SELF_OWNER:
+        if lease_state.lease_status != LeaseState.Status.SELF_OWNER:
             raise LeaseNotOwnedByWallet(resource, lease_state)
         return lease_state
 

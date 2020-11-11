@@ -18,7 +18,8 @@ Xbox Controller example allows users to control a Spot robot through an Xbox con
 | Y                  | Stairs                   |
 | LB + :             |                          |
 | - D-pad up/down    | Walk height              |
-| - D-pad left/right | Self right               |
+| - D-pad left       | Battery-Change Pose      |
+| - D-pad right      | Self right               |
 | - Y                | Jog                      |
 | - A                | Amble                    |
 | - B                | Crawl                    |
@@ -46,10 +47,24 @@ For your best learning experience, please use the [Quickstart Guide](../../../do
 found in the SDK's docs/python directory.  That will help you get your Python programming 
 environment setup properly.
 
-To install this example on Ubunty 18.04, follow these instructions:
+#### OS-Specific Dependencies
+This example has external dependencies to communicate with an XBox controller, and those dependencies are OS-specific.
+
+**Ubuntu**: On Ubuntu 18.04, the example uses the `xboxdrv` driver to communicate with the controller, so please install the driver by executing:
+
+`sudo apt-get install xboxdrv`
+
+The `xboxdrv` driver supports only Xbox360 controllers. Newer controllers are not supported.
+
+**Windows**: On Windows, the example uses `XInput-Python` package, which is automatically installed with the pip command below. The `XInput` package officially supports Xbox360 controllers, but newer controllers also work with this example on Windows.
+
+**MacOS**: This example is not supported on MacOS.
+
+#### Installation Instructions
+To install this example on Ubuntu 18.04 and Windows, follow these instructions:
 - Create virtual environment as described in this 
 [Quickstart Guide virtualenv section](../../../docs/python/quickstart.md#manage-multiple-python-environments)
-- Install dependencies: `python -m pip install -r requirements.txt`
+- Install dependencies: `python3 -m pip install -r requirements.txt`
 - Run the example using instructions in the next section
 - To exit the virtual environment, run `deactivate`
 
@@ -57,7 +72,6 @@ To install this example on Ubunty 18.04, follow these instructions:
 This example follows the common pattern for expected arguments. It needs the common arguments used to configure the SDK and connect to a Spot:
 - --username 
 - --password
-- --app-token 
 - hostname passed as the last argument
 
 **1)** The example needs to be run as sudo. To run a python program as sudo within a virtual environment, you need to specify the python executable in the virtualenv folder:
@@ -75,7 +89,7 @@ E-Stop	Control	Motors On	Mode
 X
 ```
 
-**4)** Next, press the `Guide` button to acquire a lease with the robot:
+**4)** Next, press the `Guide` button to acquire a lease with this Spot:
 ```
 E-Stop	Control	Motors On	Mode
 X       X
@@ -87,8 +101,8 @@ E-Stop	Control	Motors On	Mode
 X       X       X
 ```
 
-**6)** The robot is now ready to be controlled.
+**6)** Spot is now ready to be controlled.
 
-**7)** To E-Stop the robot at any time, press the E-Stop button combination (LB + RB + B)
+**7)** To E-Stop Spot at any time, press the E-Stop button combination (LB + RB + B)
 
-**8)** To exit and power off the robot, press the `Back` button.
+**8)** To exit and power off Spot, press the `Back` button.

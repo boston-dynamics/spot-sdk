@@ -19,7 +19,7 @@ This example program visualizes Spot's perception scene in a consistent coordina
 This example requires the bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:
 
 ```
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 As well, the example program takes an optional command line argument of `--local-grid` to specify which local grid sources to be visualized. The argument must be one of `{terrain, obstacle-distance, no-step}`. By default, the program will visualize the terrain map, which shows the estimated heights of objects near Spot. To visualize more than one grid source at a time, you must repeat the command line argument for each grid source; for example, `--local-grid terrain --local-grid no-step`.
 
@@ -27,7 +27,7 @@ As well, the example program takes an optional command line argument of `--local
 To run the example:
 
 ```
-python -m basic_streaming_visualizer --username USER --password PASSWORD ROBOT_IP
+python3 -m basic_streaming_visualizer --username USER --password PASSWORD ROBOT_IP
 ```
 ### Camera Controls
 

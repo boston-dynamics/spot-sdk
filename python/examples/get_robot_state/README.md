@@ -14,12 +14,12 @@ This example program demonstrates how to query the robot state service for the h
 This example requires the bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:
 
 ```
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 As well, the program requires one of `{state, hardware, metrics}` as a command line argument to specify which robot state request to issue when running the example program.
 
 ## Running the Example
 To run the example:
 ```
-python get_robot_state.py --username USER --password PASSWORD ROBOT_IP {state,hardware,metrics}
+python3 get_robot_state.py --username USER --password PASSWORD ROBOT_IP {state,hardware,metrics}
 ```

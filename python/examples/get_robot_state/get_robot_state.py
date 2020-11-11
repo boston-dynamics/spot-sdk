@@ -29,7 +29,6 @@ def main():
 
     # Create robot object with an image client.
     sdk = bosdyn.client.create_standard_sdk('RobotStateClient')
-    sdk.load_app_token(options.app_token)
     robot = sdk.create_robot(options.hostname)
     robot.authenticate(options.username, options.password)
     robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)

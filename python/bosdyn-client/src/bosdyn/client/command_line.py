@@ -9,25 +9,32 @@
 from __future__ import print_function, division
 import abc
 import argparse
-import numpy as np
 import signal
 import threading
 import time
 import os
-from .exceptions import InvalidRequestError
 
+import numpy as np
 import six
 
 from bosdyn.api import image_pb2
+from bosdyn.api.data_buffer_pb2 import TextMessage
+from bosdyn.api.data_index_pb2 import EventsCommentsSpec
 from bosdyn.api.log_annotation_pb2 import LogAnnotationTextMessage
+from bosdyn.api import data_acquisition_pb2
 import bosdyn.client
 from bosdyn.util import (duration_str, timestamp_to_datetime)
 
 from .auth import InvalidLoginError
-from .exceptions import Error, InvalidAppTokenError, ProxyConnectionError
+from .exceptions import Error, InvalidAppTokenError, InvalidRequestError, ProxyConnectionError, ResponseError
+from .data_acquisition import DataAcquisitionClient
+from .data_buffer import DataBufferClient
+from .data_service import DataServiceClient
 from .directory import DirectoryClient, NonexistentServiceError
 from .directory_registration import DirectoryRegistrationClient, DirectoryRegistrationResponseError
 from .estop import EstopClient, EstopEndpoint, EstopKeepAlive
+from .payload import PayloadClient
+from .payload_registration import PayloadRegistrationClient, PayloadAlreadyExistsError
 from .image import (ImageClient, UnknownImageSourceError, ImageResponseError, build_image_request)
 from .lease import LeaseClient
 from .license import LicenseClient
@@ -38,7 +45,6 @@ from .robot_state import RobotStateClient
 from .sdk import SdkError
 from .time_sync import (TimeSyncClient, TimeSyncEndpoint, TimeSyncError)
 from .util import (add_common_arguments, setup_logging)
-
 
 # pylint: disable=too-few-public-methods
 class Command(object, six.with_metaclass(abc.ABCMeta)):
@@ -71,6 +77,7 @@ class Command(object, six.with_metaclass(abc.ABCMeta)):
         try:
             if self.NEED_AUTHENTICATION:
                 robot.authenticate(options.username, options.password)
+                robot.sync_with_directory() # Make sure that we can use all registered services.
             return self._run(robot, options)
         except ProxyConnectionError:
             print('Could not contact robot with hostname "{}".'.format(options.hostname))
@@ -78,8 +85,8 @@ class Command(object, six.with_metaclass(abc.ABCMeta)):
             print('The provided app token "{}" is invalid.'.format(options.app_token))
         except InvalidLoginError:
             print('Username "{}" and/or password are invalid.'.format(options.username))
-        except Error as e:
-            print('{}: {}'.format(type(e).__name__, e))
+        except Error as err:
+            print('{}: {}'.format(type(err).__name__, err))
 
     @abc.abstractmethod
     def _run(self, robot, options):
@@ -126,16 +133,17 @@ class Subcommands(Command):
 
 
 class DirectoryCommands(Subcommands):
-    """Commands related to the directory service.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Commands related to the directory service."""
 
     NAME = 'dir'
 
     def __init__(self, subparsers, command_dict):
+        """Commands related to the directory service.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(DirectoryCommands, self).__init__(subparsers, command_dict, [
             DirectoryListCommand, DirectoryGetCommand, DirectoryRegisterCommand,
             DirectoryUnregisterCommand
@@ -157,9 +165,8 @@ def _format_dir_entry(name, service_type, authority, tokens, name_width=23, type
         authority_width: Width for printing the authority value.
     """
 
-    print(
-        ('{:' + str(name_width) + '} {:' + str(type_width) + '} {:' + str(authority_width) + '} {}')
-        .format(name, service_type, authority, tokens))
+    print(('{:' + str(name_width) + '} {:' + str(type_width) + '} {:' + str(authority_width) +
+           '} {}').format(name, service_type, authority, tokens))
 
 
 def _token_req_str(entry):
@@ -240,16 +247,17 @@ def _show_directory_entry(robot, service, as_proto=False):
 
 
 class DirectoryListCommand(Command):
-    """List all services in the directory.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """List all services in the directory."""
 
     NAME = 'list'
 
     def __init__(self, subparsers, command_dict):
+        """List all services in the directory.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(DirectoryListCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--proto', action='store_true',
                                   help='print listing in proto format')
@@ -269,16 +277,17 @@ class DirectoryListCommand(Command):
 
 
 class DirectoryGetCommand(Command):
-    """Get entry for a given service in the directory.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Get entry for a given service in the directory."""
 
     NAME = 'get'
 
     def __init__(self, subparsers, command_dict):
+        """Get entry for a given service in the directory.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(DirectoryGetCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--proto', action='store_true',
                                   help='print listing in proto format')
@@ -305,16 +314,17 @@ class DirectoryGetCommand(Command):
 
 
 class DirectoryRegisterCommand(Command):
-    """Register entry for a service in the directory.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Register entry for a service in the directory."""
 
     NAME = 'register'
 
     def __init__(self, subparsers, command_dict):
+        """Register entry for a service in the directory.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(DirectoryRegisterCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--service-name', required=True,
                                   help='unique name of the service')
@@ -359,16 +369,17 @@ class DirectoryRegisterCommand(Command):
 
 
 class DirectoryUnregisterCommand(Command):
-    """Unregister entry for a service in the directory.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Unregister entry for a service in the directory."""
 
     NAME = 'unregister'
 
     def __init__(self, subparsers, command_dict):
+        """Unregister entry for a service in the directory.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(DirectoryUnregisterCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--service-name', required=True,
                                   help='unique name of the service')
@@ -398,18 +409,254 @@ class DirectoryUnregisterCommand(Command):
             return True
 
 
-class RobotIdCommand(Command):
-    """Show robot-id.
+class PayloadCommands(Subcommands):
+    """Commands related to the payload and payload registration services."""
+
+    NAME = 'payload'
+
+    def __init__(self, subparsers, command_dict):
+        """Commands related to the payload and payload registration services.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(PayloadCommands, self).__init__(subparsers, command_dict, [PayloadListCommand, PayloadRegisterCommand])
+
+def _show_payload_list(robot, as_proto=False):
+    """Print payload list for robot.
 
     Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
+        robot: Robot object used to get the list of services.
+        as_proto: Boolean to determine whether the payload entries should be printed as full
+            proto definitions or formatted strings.
+
+    Returns:
+        True
     """
+
+    payload_protos = robot.ensure_client(PayloadClient.default_service_name).list_payloads()
+    if not payload_protos:
+        print("No payloads found")
+        return True
+
+    if as_proto:
+        for payload in payload_protos:
+            print(payload)
+        return True
+
+    # Print out the payload name, description, and GUID in columns with set width.
+    name_width = 30
+    description_width = 60
+    guid_width = 36
+    print(('\n{:' + str(name_width) + '} {:' + str(description_width) + '} {:' + str(guid_width) +
+           '}').format('Name', 'Description', 'GUID'))
+    print("-" * (5 + name_width + description_width + guid_width))
+    for payload in payload_protos:
+        print(('{:' + str(name_width) + '} {:' + str(description_width) + '} {:' + str(guid_width) +
+               '}').format(payload.name, payload.description, payload.GUID))
+    return True
+
+
+class PayloadListCommand(Command):
+    """List all payloads registered with the robot."""
+
+    NAME = 'list'
+
+    def __init__(self, subparsers, command_dict):
+        """List all payloads registered with the robot.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(PayloadListCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('--proto', action='store_true',
+                                  help='print listing in proto format')
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True
+        """
+        _show_payload_list(robot, as_proto=options.proto)
+        return True
+
+
+def _register_payload(robot, name, guid, secret):
+    """Register a payload with the robot.
+
+    Args:
+        robot: Robot object used to register the payload.
+        name: The name that will be assigned to the registered payload.
+        guid: The GUID that will be assigned to the registered payload.
+        secret: The secret that the pyaload will be registed with.
+    Returns:
+        True
+    """
+    payload_registration_client = robot.ensure_client(
+        PayloadRegistrationClient.default_service_name)
+    payload = bosdyn.api.payload_pb2.Payload(GUID=guid, name=name)
+    try:
+        payload_registration_client.register_payload(payload, secret)
+    except PayloadAlreadyExistsError:
+        print('\nA payload with this GUID is already registed. Check the robot Admin Console.')
+    else:
+        print('\nPayload successfully registered with the robot.\n'
+              'Before it can be used, the payload must be authorized in the Admin Console.')
+    return True
+
+
+class PayloadRegisterCommand(Command):
+    """Register a payload with the robot."""
+
+    NAME = 'register'
+
+    def __init__(self, subparsers, command_dict):
+        """Register a payload with the robot.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(PayloadRegisterCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('--payload-name', required=True, help='name of the payload')
+        self._parser.add_argument('--payload-guid', required=True, help='guid of the payload')
+        self._parser.add_argument('--payload-secret', required=True, help='secret for the payload')
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True
+        """
+        _register_payload(robot, options.payload_name, options.payload_guid, options.payload_secret)
+
+
+class FaultCommands(Subcommands):
+    """Commands related to the fault service and robot state service (for fault reading)."""
+
+    NAME = 'fault'
+
+    def __init__(self, subparsers, command_dict):
+        """Commands related to the fault service and robot state service (for fault reading).
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(FaultCommands, self).__init__(subparsers, command_dict,
+                                            [FaultShowCommand, FaultWatchCommand])
+
+
+def _show_service_faults(robot):
+    """Print service faults for the robot.
+
+    Args:
+        robot: Robot object used to get the list of services.
+    """
+
+    robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
+    service_fault_state = robot_state_client.get_robot_state().service_fault_state
+
+    print("\n\n\n" + "-" * 80)
+    if (len(service_fault_state.faults) == 0):
+        print("No active service faults.")
+        return
+
+    for fault in service_fault_state.faults:
+        print('''
+{fault.fault_id.fault_name}
+    Service Name: {fault.fault_id.service_name}
+    Payload GUID: {fault.fault_id.payload_guid}
+    Error Message: {fault.error_message}
+    Onset Time: {timestamp}'''\
+    .format(fault=fault, timestamp=timestamp_to_datetime(fault.onset_timestamp)))
+    return
+
+
+class FaultShowCommand(Command):
+    """Show all service faults currently active in robot state."""
+
+    NAME = 'show'
+
+    def __init__(self, subparsers, command_dict):
+        """Show all service faults currently active in robot state.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(FaultShowCommand, self).__init__(subparsers, command_dict)
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True
+        """
+        _show_service_faults(robot)
+        return True
+
+
+class FaultWatchCommand(Command):
+    """Watch all service faults in robot state and print them out."""
+
+    NAME = 'watch'
+
+    def __init__(self, subparsers, command_dict):
+        """Watch all service faults in robot state and print them out.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(FaultWatchCommand, self).__init__(subparsers, command_dict)
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True
+        """
+        print('Press Ctrl-C or send SIGINT to exit\n\n')
+        while True:
+            _show_service_faults(robot)
+            time.sleep(1)
+
+        return True
+
+
+class RobotIdCommand(Command):
+    """Show robot-id."""
 
     NAME = 'id'
     NEED_AUTHENTICATION = False
 
     def __init__(self, subparsers, command_dict):
+        """Show robot-id.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(RobotIdCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--proto', action='store_true',
                                   help='print listing in proto format')
@@ -443,31 +690,96 @@ class RobotIdCommand(Command):
 
 
 class LogAnnotationCommands(Subcommands):
-    """Commands related to the log-annotation service.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Commands related to the log-annotation service."""
 
     NAME = 'log'
 
     def __init__(self, subparsers, command_dict):
-        super(LogAnnotationCommands, self).__init__(subparsers, command_dict,
-                                                    [LogTextMsgCommand, LogOperatorCommentCommand])
+        """Commands related to the log-annotation service.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(LogAnnotationCommands, self).__init__(
+            subparsers, command_dict,
+            [DataBufferTextMsgCommand, LogTextMsgCommand, LogOperatorCommentCommand])
+
+
+class DataBufferTextMsgCommand(Command):
+    """Send a text-message to the data buffer to be logged."""
+
+    NAME = 'buffertext'
+
+    def __init__(self, subparsers, command_dict):
+        """Send a text-message to the data buffer to be logged.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: DIctionary of command names which take parsed options.
+        """
+        super(DataBufferTextMsgCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('--timestamp', action='store_true',
+                                  help='achieve time-sync and send timestamp')
+        self._parser.add_argument('--tag', help='Tag for message')
+        parser_log_level = self._parser.add_mutually_exclusive_group()
+        parser_log_level.add_argument('--debug', '-D', action='store_true',
+                                      help='Log at debug-level')
+        parser_log_level.add_argument('--info', '-I', action='store_true', help='Log at info-level')
+        parser_log_level.add_argument('--warn', '-W', action='store_true', help='Log at warn-level')
+        parser_log_level.add_argument('--error', '-E', action='store_true',
+                                      help='Log at error-level')
+        self._parser.add_argument('message', help='Message to log')
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            False if TimeSyncError is caught, True otherwise.
+        """
+        robot_timestamp = None
+        if options.timestamp:
+            try:
+                robot_timestamp = robot.time_sync.robot_timestamp_from_local_secs(
+                    time.time(), timesync_timeout_sec=1.0)
+            except TimeSyncError as err:
+                print("Failed to send message with timestamp: {}.".format(err))
+                return False
+        msg_proto = TextMessage(message=options.message, timestamp=robot_timestamp)
+        if options.debug:
+            msg_proto.level = TextMessage.LEVEL_DEBUG
+        elif options.warn:
+            msg_proto.level = TextMessage.LEVEL_WARN
+        elif options.error:
+            msg_proto.level = TextMessage.LEVEL_ERROR
+        else:
+            msg_proto.level = TextMessage.LEVEL_INFO
+
+        if options.tag:
+            msg_proto.tag = options.tag
+
+        data_buffer_client = robot.ensure_client(DataBufferClient.default_service_name)
+        data_buffer_client.add_text_messages([msg_proto])
+
+        return True
 
 
 class LogTextMsgCommand(Command):
-    """Send a text-message to the robot to be logged.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Send a text-message to the robot to be logged."""
 
     NAME = 'textmsg'
 
     def __init__(self, subparsers, command_dict):
+        """Send a text-message to the robot to be logged.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(LogTextMsgCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--timestamp', action='store_true',
                                   help='achieve time-sync and send timestamp')
@@ -523,16 +835,17 @@ class LogTextMsgCommand(Command):
 
 
 class LogOperatorCommentCommand(Command):
-    """Send an operator comment to the robot to be logged.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Send an operator comment to the robot to be logged."""
 
     NAME = 'comment'
 
     def __init__(self, subparsers, command_dict):
+        """Send an operator comment to the robot to be logged.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(LogOperatorCommentCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--timestamp', action='store_true',
                                   help='achieve time-sync and send timestamp')
@@ -560,30 +873,145 @@ class LogOperatorCommentCommand(Command):
         return True
 
 
-class RobotStateCommands(Subcommands):
-    """Commands for querying robot state.
+class DataServiceCommands(Subcommands):
+    """Commands for querying the data-service."""
 
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    NAME = 'data'
+
+    def __init__(self, subparsers, command_dict):
+        """Commands for querying the data-service
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(DataServiceCommands,
+              self).__init__(subparsers, command_dict,
+                             [GetDataBufferCommentsCommand, GetDataBufferEventsCommand,
+                              GetDataBufferStatusCommand])
+
+
+class GetDataBufferCommentsCommand(Command):
+    """Get operator comments from the robot."""
+
+    NAME = 'comments'
+
+    def __init__(self, subparsers, command_dict):
+        """Get operator comments from the robot.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(GetDataBufferCommentsCommand, self).__init__(subparsers, command_dict)
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True
+        """
+        client = robot.ensure_client(DataServiceClient.default_service_name)
+        print(client.get_events_comments(EventsCommentsSpec(
+            comments=True)).events_comments.operator_comments)
+        return True
+
+
+class GetDataBufferEventsCommand(Command):
+    """Get events from the robot."""
+
+    NAME = 'events'
+
+    def __init__(self, subparsers, command_dict):
+        """Get events from the robot.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(GetDataBufferEventsCommand, self).__init__(subparsers, command_dict)
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True
+        """
+        client = robot.ensure_client(DataServiceClient.default_service_name)
+        spec = EventsCommentsSpec()
+        spec.events.add()
+        print(client.get_events_comments(spec).events_comments.events)
+        return True
+
+
+class GetDataBufferStatusCommand(Command):
+    """Get status of data-buffer on robot."""
+
+    NAME = 'status'
+
+    def __init__(self, subparsers, command_dict):
+        """Get status of data-buffer on robot
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(GetDataBufferStatusCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('--get-blob-specs', '-B', action='store_true',
+                                  help='get list of channel/msgtype/source combinations')
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True
+        """
+        client = robot.ensure_client(DataServiceClient.default_service_name)
+        print(client.get_data_buffer_status(get_blob_specs=options.get_blob_specs))
+        return True
+
+
+class RobotStateCommands(Subcommands):
+    """Commands for querying robot state."""
 
     NAME = 'state'
 
     def __init__(self, subparsers, command_dict):
+        """Commands for querying robot state.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(RobotStateCommands, self).__init__(subparsers, command_dict,
                                                  [FullStateCommand, MetricsCommand, RobotModel])
 
 
 class FullStateCommand(Command):
-    """Show robot state.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Show robot state."""
 
     NAME = 'full'
+
+    def __init__(self, subparsers, command_dict):
+        """Show robot state.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(FullStateCommand, self).__init__(subparsers, command_dict)
 
     def _run(self, robot, options):
         """Implementation of the command; prints RobotState proto.
@@ -594,20 +1022,22 @@ class FullStateCommand(Command):
         """
         proto = robot.ensure_client(RobotStateClient.default_service_name).get_robot_state()
         print(proto)
+        return True
 
 
 class RobotModel(Command):
-    """Write robot URDF and mesh to local files.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Write robot URDF and mesh to local files."""
 
     NAME = 'model'
     NEED_AUTHENTICATION = False
 
     def __init__(self, subparsers, command_dict):
+        """Write robot URDF and mesh to local files.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(RobotModel, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--outdir', default='Model_Files',
                                   help='directory into which to save the files')
@@ -631,17 +1061,17 @@ class RobotModel(Command):
         # Make the directory, if it does not already exist
         try:
             os.makedirs(model_directory)
-        except (OSError):
+        except OSError:
             pass
 
         # Write each link model to its own file
-        for l in hardware.skeleton.links:
+        for link in hardware.skeleton.links:
             # Request a Skeleton.Link.ObjModel from the robot for link.name and write it to a file
             try:
-                obj_model_proto = robot_state_client.get_robot_link_model(l.name)
-            except InvalidRequestError as e:
-                print(e, end='')
-                print(" Name of link: " + l.name)
+                obj_model_proto = robot_state_client.get_robot_link_model(link.name)
+            except InvalidRequestError as err:
+                print(err, end='')
+                print(" Name of link: " + link.name)
                 continue
 
             # If file_name is empty, ignore
@@ -649,11 +1079,11 @@ class RobotModel(Command):
                 continue
 
             # Write to a file, ignoring the robot path
-            sub_path = ''.join(obj_model_proto.file_name.split('/')[:-1])  # robot defined path
+            sub_path = '/'.join(obj_model_proto.file_name.split('/')[:-1])  # robot defined path
             path = os.path.join(model_directory, sub_path)  # local path + robot path
             try:
                 os.makedirs(path)
-            except (OSError):
+            except OSError:
                 pass
 
             path_and_name = os.path.join(path, obj_model_proto.file_name.split('/')[-1])
@@ -670,16 +1100,17 @@ class RobotModel(Command):
 
 
 class MetricsCommand(Command):
-    """Show metrics (runtime, etc...).
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Show metrics (runtime, etc...)."""
 
     NAME = 'metrics'
 
     def __init__(self, subparsers, command_dict):
+        """Show metrics (runtime, etc...).
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(MetricsCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--proto', action='store_true',
                                   help='print metrics in proto format')
@@ -762,16 +1193,17 @@ class MetricsCommand(Command):
 
 
 class TimeSyncCommand(Command):
-    """Find clock difference between this and the robot clock.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Find clock difference between this and the robot clock."""
 
     NAME = 'time-sync'
 
     def __init__(self, subparsers, command_dict):
+        """Find clock difference between this and the robot clock.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(TimeSyncCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--proto', action='store_true',
                                   help='print listing in proto format')
@@ -800,6 +1232,7 @@ class TimeSyncCommand(Command):
 
         return True
 
+
 class LicenseCommand(Command):
     """Show installed license."""
 
@@ -821,40 +1254,42 @@ class LicenseCommand(Command):
             True.
         """
         license_client = robot.ensure_client(LicenseClient.default_service_name)
-        license = license_client.get_license_info()
+        license_info = license_client.get_license_info()
         if options.proto:
-            print(license)
+            print(license_info)
         else:
-            print(str(license))
+            print(str(license_info))
 
         return True
 
 
 class LeaseCommands(Subcommands):
-    """Commands related to the lease service.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Commands related to the lease service."""
 
     NAME = 'lease'
 
     def __init__(self, subparsers, command_dict):
+        """Commands related to the lease service.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(LeaseCommands, self).__init__(subparsers, command_dict, [LeaseListCommand])
 
 
 class LeaseListCommand(Command):
-    """List all leases.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """List all leases."""
 
     NAME = 'list'
 
     def __init__(self, subparsers, command_dict):
+        """List all leases.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(LeaseListCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--proto', action='store_true',
                                   help='print listing in proto format')
@@ -884,18 +1319,19 @@ class LeaseListCommand(Command):
 
 
 class BecomeEstopCommand(Command):
-    """Grab and hold estop until Ctl-C.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Grab and hold estop until Ctl-C."""
 
     NAME = 'become-estop'
 
     _RPC_PRINT_CHOICES = ['timestamp', 'full']
 
     def __init__(self, subparsers, command_dict):
+        """Grab and hold estop until Ctl-C.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(BecomeEstopCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--timeout', type=float, help='EStop timeout (seconds)',
                                   default=10)
@@ -967,21 +1403,22 @@ class BecomeEstopCommand(Command):
 
 
 class ImageCommands(Subcommands):
-    """Commands for querying images.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Commands for querying images."""
 
     NAME = 'image'
 
     def __init__(self, subparsers, command_dict):
+        """Commands for querying images.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(ImageCommands, self).__init__(subparsers, command_dict,
                                             [ListImageSourcesCommand, GetImageCommand])
 
 
-def _show_image_sources_list(robot, as_proto=False):
+def _show_image_sources_list(robot, as_proto=False, service_name=None):
     """Print available image sources.
 
     Args:
@@ -992,7 +1429,8 @@ def _show_image_sources_list(robot, as_proto=False):
     Returns:
         True.
     """
-    proto = robot.ensure_client(ImageClient.default_service_name).list_image_sources()
+    service_name = service_name or ImageClient.default_service_name
+    proto = robot.ensure_client(service_name).list_image_sources()
     if as_proto:
         print(proto)
     else:
@@ -1003,19 +1441,22 @@ def _show_image_sources_list(robot, as_proto=False):
 
 
 class ListImageSourcesCommand(Command):
-    """List image sources.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """List image sources."""
 
     NAME = 'list-sources'
 
     def __init__(self, subparsers, command_dict):
+        """List image sources.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(ListImageSourcesCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--proto', action='store_true',
                                   help='print listing in proto format')
+        self._parser.add_argument('--service-name', default=ImageClient.default_service_name,
+                                  help='Image service to query')
 
     def _run(self, robot, options):
         """Implementation of the command.
@@ -1027,7 +1468,9 @@ class ListImageSourcesCommand(Command):
         Returns:
             Output of _show_image_sources_list method.
         """
-        _show_image_sources_list(robot, as_proto=options.proto)
+        _show_image_sources_list(robot, as_proto=options.proto, service_name=options.service_name)
+        return True
+
 
 def write_pgm(image_response, outfile):
     """Write raw data from image_response to a PGM file.
@@ -1050,7 +1493,7 @@ def write_pgm(image_response, outfile):
     filename = outfile or image_source_filename
 
     try:
-        fd_out=open(filename, 'w')
+        fd_out = open(filename, 'w')
     except IOError as err:
         print("Cannot open file " + filename + "Exception: ")
         print(err)
@@ -1065,22 +1508,25 @@ def write_pgm(image_response, outfile):
 
 
 class GetImageCommand(Command):
-    """Get an image from the robot and write it to an image file.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Get an image from the robot and write it to an image file."""
 
     NAME = 'get-image'
 
     def __init__(self, subparsers, command_dict):
+        """Get an image from the robot and write it to an image file.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(GetImageCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--outfile', default=None,
-                                  help='filename into which to save the image')
+                                  help='Filename into which to save the image')
         self._parser.add_argument('--quality-percent', type=int, default=75,
                                   help='Percent image quality (0-100)')
-        self._parser.add_argument('source_name', metavar='SRC', nargs='+', help='image source name')
+        self._parser.add_argument('source_name', metavar='SRC', nargs='+', help='Image source name')
+        self._parser.add_argument('--service-name', help='Image service to query',
+                                  default=ImageClient.default_service_name)
 
     def _run(self, robot, options):
         """Implementation of the command.
@@ -1097,12 +1543,11 @@ class GetImageCommand(Command):
             for source_name in options.source_name
         ]
         try:
-            response = robot.ensure_client(
-                ImageClient.default_service_name).get_image(image_requests)
+            response = robot.ensure_client(options.service_name).get_image(image_requests)
         except UnknownImageSourceError:
             print('Requested image source "{}" does not exist.  Available image sources:'.format(
                 options.source_name))
-            _show_image_sources_list(robot)
+            _show_image_sources_list(robot, service_name=options.service_name)
             return False
         except ImageResponseError:
             print('Robot cannot generate the "{}" at this time.  Retry the command.'.format(
@@ -1128,18 +1573,19 @@ class GetImageCommand(Command):
 
 
 class LocalGridCommands(Subcommands):
-    """Commands for querying local grid maps.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Commands for querying local grid maps."""
 
     NAME = 'local_grid'
 
     def __init__(self, subparsers, command_dict):
+        """Commands for querying local grid maps.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(LocalGridCommands, self).__init__(subparsers, command_dict,
-                                          [ListLocalGridTypesCommand, GetLocalGridsCommand])
+                                                [ListLocalGridTypesCommand, GetLocalGridsCommand])
 
 
 def _show_local_grid_sources_list(robot, as_proto=False):
@@ -1163,16 +1609,17 @@ def _show_local_grid_sources_list(robot, as_proto=False):
 
 
 class ListLocalGridTypesCommand(Command):
-    """List local grid sources.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """List local grid sources."""
 
     NAME = 'types'
 
     def __init__(self, subparsers, command_dict):
+        """List local grid sources.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(ListLocalGridTypesCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--proto', action='store_true',
                                   help='print listing in proto format')
@@ -1188,19 +1635,21 @@ class ListLocalGridTypesCommand(Command):
             Output of _show_local_grid_sources_list method.
         """
         _show_local_grid_sources_list(robot, as_proto=options.proto)
+        return True
 
 
 class GetLocalGridsCommand(Command):
-    """Get local grids from the robot.
-
-    Args:
-        subparsers: List of argument parsers.
-        command_dict: Dictionary of command names which take parsed options.
-    """
+    """Get local grids from the robot."""
 
     NAME = 'get'
 
     def __init__(self, subparsers, command_dict):
+        """Get local grids from the robot.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
         super(GetLocalGridsCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--outfile', default=None,
                                   help='filename into which to save the image')
@@ -1216,10 +1665,202 @@ class GetLocalGridsCommand(Command):
         Returns:
             True.
         """
-        response = robot.ensure_client(LocalGridClient.default_service_name).get_local_grids(options.types)
+        response = robot.ensure_client(LocalGridClient.default_service_name).get_local_grids(
+            options.types)
 
         for local_grid_response in response:
             print(local_grid_response)
+        return True
+
+
+class DataAcquisitionCommand(Subcommands):
+    """Acquire data from the robot and add it in the data buffer with the metadata, or request
+    status."""
+
+    NAME = 'acquire'
+
+    def __init__(self, subparsers, command_dict):
+        """Acquire data from the robot and add it in the data buffer with the metadata, or request
+        status.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(DataAcquisitionCommand,
+              self).__init__(subparsers, command_dict,
+                             [DataAcquisitionServiceCommand,
+                             DataAcquisitionRequestCommand,
+                             DataAcquisitionStatusCommand])
+
+
+class DataAcquisitionRequestCommand(Command):
+    """Capture and save images or metadata specified in the command line arguments."""
+
+    NAME = 'request'
+
+    def __init__(self, subparsers, command_dict):
+        """Capture and save images or metadata specified in the command line arguments.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(DataAcquisitionRequestCommand, self).__init__(
+            subparsers, command_dict)
+        self._parser.add_argument('--image-source', metavar='IMG_SRC', default=[],
+                                  help='Image source name', action='append')
+        self._parser.add_argument('--image-service', metavar='SERVICE_NAME', default=[],
+                                  help='Image service name for the image source.', action='append')
+        self._parser.add_argument('--data-source', metavar='DATA_SRC', default=[],
+                                  help='Data source name', action='append')
+        self._parser.add_argument('--action-name', help='The action name to save the data with.',
+                                  default="quick_captures")
+        self._parser.add_argument('--group-name', help='The group name to save the data with.',
+                                  default="command_line")
+        self._parser.add_argument('--non-blocking-request',
+                                  help='Return after making the acquisition request, without monitoring' +\
+                                      ' the status for completion.',
+                                  default=False, action='store_true')
+
+    def _run(self, robot, options):
+        """Implementation of the 'request' command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+        """
+        if not options.data_source and not (options.image_source and options.image_service):
+            self._parser.error(
+                'A request requires either a data source name or an image source+service name.')
+        if len(options.image_source) != len(options.image_service):
+            self._parser.error(
+                'A request must have a 1:1 correspondence between image source and image service arguments.')
+
+        captures = data_acquisition_pb2.AcquisitionRequestList()
+        captures.data_captures.extend([data_acquisition_pb2.DataCapture(name=data_name) for data_name in options.data_source])
+        img_captures = []
+        for i, src_name in enumerate(options.image_source):
+            img_service = options.image_service[i]
+            img_captures.append(data_acquisition_pb2.ImageSourceCapture(
+                image_service=img_service, image_source=src_name))
+        captures.image_captures.extend(img_captures)
+
+        robot.time_sync.wait_for_sync(timeout_sec=1.0)
+        data_acquisition_client = robot.ensure_client(DataAcquisitionClient.default_service_name)
+        acquisition_id = None
+        try:
+            acquisition_id = data_acquisition_client.acquire_data(captures, options.action_name, options.group_name)
+            print("Request ID: "+str(acquisition_id))
+        except ResponseError as err:
+            print("RPC error occurred: " + str(err))
+            return False
+        if options.non_blocking_request:
+            # Won't check the status and wait for a success/failure if the user specified
+            # this should not be a blocking command.
+            return True
+
+        while True:
+            print("Waiting for acquisition (id: " + str(acquisition_id) + ") to complete.")
+            get_status_response = None
+            try:
+                get_status_response = data_acquisition_client.get_status(acquisition_id)
+            except ResponseError as err:
+                print("Exception: " + str(err))
+                return False
+            print("Current status is: " +
+                data_acquisition_pb2.GetStatusResponse.Status.Name(get_status_response.status))
+            if get_status_response.status == data_acquisition_pb2.GetStatusResponse.STATUS_COMPLETE:
+                return True
+            if get_status_response.status == data_acquisition_pb2.GetStatusResponse.STATUS_TIMEDOUT:
+                print("Unrecoverable request timeout: {}".format(get_status_response))
+                return False
+            if get_status_response.status == data_acquisition_pb2.GetStatusResponse.STATUS_DATA_ERROR:
+                print("Data error was recieved: {}".format(get_status_response))
+                return False
+            time.sleep(0.2)
+        return True
+
+
+class DataAcquisitionServiceCommand(Command):
+    """Get list of different data acquisition capabilities."""
+
+    NAME = 'info'
+
+
+    def __init__(self, subparsers, command_dict):
+        """Get list of different data acquisition capabilities.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(DataAcquisitionServiceCommand, self).__init__(subparsers, command_dict)
+
+        # Constants to describe width of columns for printing the data names and types
+        self._data_type_width = 15
+        self._data_name_width = 35
+        self._service_name_width = 30
+
+    def _format_and_print_capability(self, data_type, data_name, service_name=""):
+        """Print the data acquisition capability.
+
+        Args:
+            data_type (string): Either image or data capabilities.
+            data_name (string): The name of the data acquisition capability
+            service_name(string): For image capabilites, a service name is required.
+        """
+        print(('{:' + str(self._data_type_width) + '} {:' + str(self._data_name_width) + '} {:' + str(self._service_name_width) +
+               '}').format(data_type, data_name, service_name))
+
+    def _run(self, robot, options):
+        """Implementation of the 'info' command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+        """
+        capabilities = robot.ensure_client(DataAcquisitionClient.default_service_name).get_service_info()
+        print("Data Acquisition Service's Available Capabilities\n")
+        self._format_and_print_capability("Data Type", "Data Name", "(optional) Service Name")
+        print("-"*(self._data_type_width+self._data_name_width+self._service_name_width))
+        for data_name in capabilities.data_sources:
+            self._format_and_print_capability("data",data_name.name)
+        for img_service in capabilities.image_sources:
+            for img in img_service.image_source_names:
+                self._format_and_print_capability("image", img, img_service.service_name)
+        return True
+
+
+
+class DataAcquisitionStatusCommand(Command):
+    """Get status of an acquisition request based on the request id."""
+
+    NAME = 'status'
+
+    def __init__(self, subparsers, command_dict):
+        """Get status of an acquisition request based on the request id.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(DataAcquisitionStatusCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('id', type=int, help='Response id to get the status for')
+
+    def _run(self, robot, options):
+        """Implementation of the 'status' command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            False if NonexistentServiceError is caught, True otherwise.
+        """
+        response = robot.ensure_client(DataAcquisitionClient.default_service_name).get_status(
+            options.id)
+        print(response)
         return True
 
 
@@ -1233,15 +1874,19 @@ def main(args=None):
 
     # Register commands that can be run.
     DirectoryCommands(subparsers, command_dict)
+    PayloadCommands(subparsers, command_dict)
+    FaultCommands(subparsers, command_dict)
     RobotIdCommand(subparsers, command_dict)
     LicenseCommand(subparsers, command_dict)
     RobotStateCommands(subparsers, command_dict)
     LogAnnotationCommands(subparsers, command_dict)
+    DataServiceCommands(subparsers, command_dict)
     TimeSyncCommand(subparsers, command_dict)
     LeaseCommands(subparsers, command_dict)
     BecomeEstopCommand(subparsers, command_dict)
     ImageCommands(subparsers, command_dict)
     LocalGridCommands(subparsers, command_dict)
+    DataAcquisitionCommand(subparsers, command_dict)
 
     options = parser.parse_args(args=args)
 
@@ -1249,13 +1894,15 @@ def main(args=None):
 
     # Create robot object and authenticate.
     sdk = bosdyn.client.create_standard_sdk('BosdynClient')
-    try:
-        sdk.load_app_token(options.app_token)
-    except SdkError:
-        print('Cannot retrieve app token from "{}".'.format(options.app_token))
-        return
 
     robot = sdk.create_robot(options.hostname)
 
+    if not options.command:
+        print("Need to specify a command")
+        parser.print_help()
+        return False
+
     if not command_dict[options.command].run(robot, options):
-        return
+        return False
+
+    return True

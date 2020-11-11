@@ -10,32 +10,49 @@ package bosdyn.api;
 
 option java_outer_classname = "RobotCommandProto";
 
+import "bosdyn/api/full_body_command.proto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
-import "bosdyn/api/full_body_command.proto";
 import "bosdyn/api/mobility_command.proto";
+import "bosdyn/api/synchronized_command.proto";
 
 // A command for a robot to execute.
 // The server decides if a set of commands is valid for a given robot and configuration.
 message RobotCommand {
-    // Commands which require control of entire robot.
-    FullBodyCommand.Request full_body_command = 1;
+    oneof command {
+        // Commands which require control of entire robot.
+        FullBodyCommand.Request full_body_command = 1;
 
-    // A mobility command for a robot to execute.
-    MobilityCommand.Request mobility_command = 2;
+        // A synchronized command, for partial or full control of robot.
+        SynchronizedCommand.Request synchronized_command = 3;
 
+        // *** Deprecation Warning ***
+        // The following fields will be deprecated and moved to 'reserved' in a future release.
+
+        // A mobility command for a robot to execute.
+        MobilityCommand.Request mobility_command = 2 [deprecated=true];
+    }
 }
 
 // Command specific feedback. Distance to goal, estimated time remaining, probability of
 // success, etc. Note that the feedback should directly mirror the command request.
 message RobotCommandFeedback {
-    // Commands which require control of entire robot.
-    FullBodyCommand.Feedback full_body_feedback = 2;
+    oneof command {
+        // Commands which require control of entire robot.
+        FullBodyCommand.Feedback full_body_feedback = 2;
 
-    // Command to control mobility system of a robot.
-    MobilityCommand.Feedback mobility_feedback = 1;
+        // A synchronized command, for partial or full control of robot.
+        SynchronizedCommand.Feedback synchronized_feedback = 3;
 
+        // *** Deprecation Warning ***
+        // The following fields will be deprecated and moved to 'reserved' in a future release.
+
+        // Command to control mobility system of a robot.
+        MobilityCommand.Feedback mobility_feedback = 1 [deprecated=true];
+    }
 }
+
+
 
 // A RobotCommand request message includes the lease and command as well as a clock
 // identifier to ensure timesync when issuing commands with a fixed length.
@@ -73,9 +90,8 @@ message RobotCommandResponse {
         STATUS_EXPIRED = 5;          // [Timesync Error] The command was received after its end_time had already passed.
         STATUS_TOO_DISTANT = 6;      // [Timesync Error] The command end time was too far in the future.
 
-        // Robot state errors.
         STATUS_NOT_POWERED_ON = 7;   // [Hardware Error] The robot must be powered on to accept a command.
-        STATUS_BEHAVIOR_FAULT = 9;   // The robot must not have behavior faults.
+        STATUS_BEHAVIOR_FAULT = 9;   // [Robot State Error] The robot must not have behavior faults.
 
         STATUS_UNKNOWN_FRAME = 8;    // [Frame Error] The frame_name for a command was not a known frame.
     }
@@ -121,10 +137,10 @@ message RobotCommandFeedbackResponse {
         STATUS_ROBOT_FROZEN = 4;
     }
     // General status whether or not command is still processing.
-    Status status = 2;
+    Status status = 2 [deprecated=true];
 
     // Human-readable status message.  Not for programmatic analysis.
-    string message = 3;
+    string message = 3 [deprecated=true];
 
     // Command specific feedback.
     RobotCommandFeedback feedback = 4;
@@ -164,5 +180,4 @@ message ClearBehaviorFaultResponse {
     // Return status for a request.
     Status status = 3;
 }
-
 

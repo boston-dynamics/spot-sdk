@@ -8,6 +8,7 @@
 import time
 import collections
 import math
+import os
 from bosdyn.api.graph_nav import graph_nav_service_pb2_grpc
 from bosdyn.api.graph_nav import graph_nav_service_pb2
 from bosdyn.api.graph_nav import graph_nav_pb2
@@ -94,6 +95,7 @@ class GraphNavClient(BaseClient):
                                request_live_terrain_maps=False,
                                request_live_world_objects=False,
                                request_live_robot_state=False,
+                               waypoint_id=None,
                                **kwargs):
         """Obtain current localization state of the robot.
 
@@ -107,20 +109,21 @@ class GraphNavClient(BaseClient):
             request_live_images=request_live_images,
             request_live_terrain_maps=request_live_terrain_maps,
             request_live_world_objects=request_live_world_objects,
-            request_live_robot_state=request_live_robot_state)
+            request_live_robot_state=request_live_robot_state,
+            waypoint_id=waypoint_id)
         return self.call(self._stub.GetLocalizationState, req, None, common_header_errors, **kwargs)
 
     def get_localization_state_async(self, request_live_point_cloud=False,
                                      request_live_images=False, request_live_terrain_maps=False,
                                      request_live_world_objects=False,
-                                     request_live_robot_state=False, **kwargs):
+                                     request_live_robot_state=False, waypoint_id=None, **kwargs):
         """Async version of get_localization_state()."""
         req = self._build_get_localization_state_request(
             request_live_point_cloud=request_live_point_cloud,
             request_live_images=request_live_images,
             request_live_terrain_maps=request_live_terrain_maps,
             request_live_world_objects=request_live_world_objects,
-            request_live_robot_state=request_live_robot_state)
+            request_live_robot_state=request_live_robot_state, waypoint_id=waypoint_id)
         return self.call_async(self._stub.GetLocalizationState, req, None, common_header_errors,
                                **kwargs)
 
@@ -145,7 +148,7 @@ class GraphNavClient(BaseClient):
             graph_nav.TooDistantError: Time too far in the future.
             graph_nav.RobotImpairedError: Robot cannot travel a route.
             graph_nav.IsRecordingError: Robot cannot navigate while recording.
-            graph_nav.UnknownRouteElementsError: Unknown edges or waypoints
+            graph_nav.UnkownRouteElementsError: Unknown edges or waypoints
             graph_nav.InvalidEdgeError: Mismatch between edges and waypoints.
             graph_nav.RobotNotLocalizedToRouteError: The robot is localized somewhere else.
             graph_nav.ConstraintFaultError: The route involves invalid constraints.
@@ -373,6 +376,29 @@ class GraphNavClient(BaseClient):
                          value_from_response=_get_streamed_edge_snapshot,
                          error_from_response=_download_edge_snapshot_stream_errors, **kwargs)
 
+    def _write_bytes(self, filepath, filename, data):
+        """Write data to a file."""
+        os.makedirs(filepath, exist_ok=True)
+        with open(filepath + filename, 'wb+') as f:
+            f.write(data)
+            f.close()
+
+    def write_graph_and_snapshots(self, directory):
+        """Download the graph and snapshots from robot to the specified directory."""
+        graph = self.download_graph()
+        graph_bytes = graph.SerializeToString()
+        self._write_bytes(directory, '/graph', graph_bytes)
+
+        for waypoint in graph.waypoints:
+            waypoint_snapshot = self.download_waypoint_snapshot(waypoint.snapshot_id)
+            self._write_bytes(directory + '/waypoint_snapshots', '/' + waypoint.snapshot_id,
+                              waypoint_snapshot.SerializeToString())
+
+        for edge in graph.edges:
+            edge_snapshot = self.download_edge_snapshot(edge.snapshot_id)
+            self._write_bytes(directory + '/edge_snapshots', '/' + edge.snapshot_id,
+                              edge_snapshot.SerializeToString())
+
     @staticmethod
     def _build_set_localization_request(
             initial_guess_localization, ko_tform_body=None, max_distance=None, max_yaw=None,
@@ -397,15 +423,17 @@ class GraphNavClient(BaseClient):
         return request
 
     @staticmethod
-    def _build_get_localization_state_request(request_live_point_cloud, request_live_images,
-                                              request_live_terrain_maps, request_live_world_objects,
-                                              request_live_robot_state):
+    def _build_get_localization_state_request(request_live_point_cloud,
+                                              request_live_images, request_live_terrain_maps,
+                                              request_live_world_objects, request_live_robot_state,
+                                              waypoint_id):
         return graph_nav_pb2.GetLocalizationStateRequest(
             request_live_point_cloud=request_live_point_cloud,
             request_live_images=request_live_images,
             request_live_terrain_maps=request_live_terrain_maps,
             request_live_world_objects=request_live_world_objects,
-            request_live_robot_state=request_live_robot_state)
+            request_live_robot_state=request_live_robot_state,
+            waypoint_id=waypoint_id)
 
     @staticmethod
     def _build_navigate_route_request(route, travel_params, end_time_secs, leases,

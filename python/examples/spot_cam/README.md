@@ -11,9 +11,9 @@ Development Kit License (20191101-BDSDK-SL).
 These examples demonstrate how to interact with the Spot CAM.
 
 ## Setup Dependencies
-These examples need to be run with python3, and have the SDK 2.0 installed. See the requirements.txt file for a list of dependencies which can be installed with pip.
+These examples need to be run with python3, and have the Spot SDK installed. See the requirements.txt file for a list of dependencies which can be installed with pip.
 ```
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 ## Running the Example
@@ -21,7 +21,6 @@ To run the examples:
 ```
 USERNAME=<username>
 PASSWORD=<password>
-APP_TOKEN_PATH=<~/.bosdyn/dev.app_token>
 ROBOT_IP=<ip-address>
 
 # Version Service
@@ -48,13 +47,20 @@ IMAGE_UUID=f0e835c2-54d4-11ea-9365-00044be03a91
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP media_log status $IMAGE_UUID
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP media_log retrieve $IMAGE_UUID
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP media_log delete $IMAGE_UUID
+
 # You should not see the UUID in the list of logpoints
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP media_log list_logpoints
+
+# You should see 10 stitched jpeg images
+seq 10 | xargs -I{} python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP media_log store_retrieve pano
 
 # Ptz Service
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz list
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz set_position mech 0 0 1
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz get_position mech
+
+# You should see a ptz jpeg image
+python -m command_line --username=$USERNAME --password=$PASSWORD -$ROBOT_IP media_log store_retrieve ptz
 
 # webRTC Service
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP webrtc save

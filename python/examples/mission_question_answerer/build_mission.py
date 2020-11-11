@@ -36,18 +36,18 @@ if __name__ == '__main__':
     # Add one of the valid responses.
     option = prompt.options.add()
     option.text = 'Succeed'
-    option.answer_code = mission_question_answerer.SUCCESS_CODE
+    option.answer_code = 0
 
     # Add one of the valid responses.
     option = prompt.options.add()
     option.text = 'Fail'
-    option.answer_code = mission_question_answerer.FAILURE_CODE
+    option.answer_code = -1
 
     # Now, build the Condition node that checks for a SUCCESS response:
     #   0 == prompt_answer_code
     condition = nodes_pb2.Condition()
     condition.operation = nodes_pb2.Condition.COMPARE_EQ
-    condition.lhs.const.int_value = mission_question_answerer.SUCCESS_CODE
+    condition.lhs.const.int_value = 0
     # During execution, this node will read the value of "prompt_answer_code" out of the blackboard.
     condition.rhs.var.name = prompt.source
     # We expect it to be an integer.

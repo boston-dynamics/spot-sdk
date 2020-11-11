@@ -16,7 +16,8 @@ import "bosdyn/api/image.proto";
 // supports querying for the list of available images provided by the service and then
 // supports requesting a latest given image by source name.
 service ImageService {
-    // Obtain the list of ImageSources.
+    // Obtain the list of ImageSources for this given service.
+    // Note that there may be multiple ImageServices running, each with their own set of sources
     // The name field keys access to individual images when calling GetImage.
     rpc ListImageSources(ListImageSourcesRequest) returns (ListImageSourcesResponse) {}
 

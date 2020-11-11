@@ -382,7 +382,7 @@ class FollowFiducial(object):
 
         #Command the robot to go to the tag in kinematic odometry frame
         mobility_params = self.set_mobility_params()
-        tag_cmd = RobotCommandBuilder.trajectory_command(
+        tag_cmd = RobotCommandBuilder.synchro_se2_trajectory_point_command(
             goal_x=self._current_tag_world_pose[0], goal_y=self._current_tag_world_pose[1],
             goal_heading=self._angle_desired, frame_name=VISION_FRAME_NAME, params=mobility_params,
             body_height=0.0, locomotion_hint=spot_command_pb2.HINT_AUTO)
@@ -623,7 +623,6 @@ def main():
 
     # Create robot object.
     sdk = create_standard_sdk('FollowFiducialClient')
-    sdk.load_app_token(options.app_token)
     robot = sdk.create_robot(options.hostname)
 
     fiducial_follower = None

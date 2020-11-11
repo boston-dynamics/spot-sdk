@@ -111,3 +111,58 @@ message LoadSoundResponse {
     // Common response header.
     bosdyn.api.ResponseHeader header = 1;
 }
+
+// Audio capture channel
+enum AudioCaptureChannel {
+    AUDIO_CHANNEL_UNKNOWN = 0;
+    AUDIO_CHANNEL_INTERNAL_MIC = 1;
+    AUDIO_CHANNEL_EXTERNAL_MIC = 2;
+}
+
+// Request to set the audio capture channel
+message SetAudioCaptureChannelRequest {
+    bosdyn.api.RequestHeader header = 1;
+    AudioCaptureChannel channel = 2;
+}
+
+// Result of setting the audio capture channel
+message SetAudioCaptureChannelResponse {
+    bosdyn.api.ResponseHeader header = 1;
+}
+
+// Request to get the audio capture channel
+message GetAudioCaptureChannelRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+// Result of getting the audio capture channel
+message GetAudioCaptureChannelResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    AudioCaptureChannel channel = 2;
+}
+
+// Request to set the audio capture channel
+message SetAudioCaptureGainRequest {
+    bosdyn.api.RequestHeader header = 1;
+    AudioCaptureChannel channel = 2;
+    // Gain for microphone, range from 0.0 to 1.0
+    double gain = 3;
+}
+
+// Result of setting the audio capture gain
+message SetAudioCaptureGainResponse {
+    bosdyn.api.ResponseHeader header = 1;
+}
+
+// Request to get the audio capture channel
+message GetAudioCaptureGainRequest {
+    bosdyn.api.RequestHeader header = 1;
+    AudioCaptureChannel channel = 2;
+}
+
+// Result of getting the audio capture gain
+message GetAudioCaptureGainResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    // Gain for microphone, range from 0.0 to 1.0
+    double gain = 2;
+}

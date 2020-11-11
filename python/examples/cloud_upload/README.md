@@ -31,7 +31,7 @@ Two python packages will need to be installed:
 - boto3
 
 ```
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 ## Credentials
@@ -59,9 +59,9 @@ destination_file = source_file # using source_file name as destination_file name
 upload_to_aws(aws_bucket_name, source_file, destination_file)
 ```
 
-Run the example cript by executing this command in your CLI.
+Run the example script by executing this command in your CLI.
 ```
-python cloud_upload.py
+python3 cloud_upload.py
 ```
 
 The user should see the below response for a successful AWS upload.

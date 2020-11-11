@@ -1,0 +1,42 @@
+// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "DataAcquisitionStoreServiceProto";
+
+import "bosdyn/api/data_acquisition_store.proto";
+
+// The DataAcquisitionStoreService is used to store data (images, data, metadata) on the robot
+// in association with the DataIdentifiers specified by the DataAcquisitionService. Additionally,
+// requests can be made to the DataAcquisitionStoreService to identify different pieces of data or entire
+// capture actions which match query parameters, such as time ranges or action/group names.
+service DataAcquisitionStoreService {
+    // List all CaptureActionIds (which identify an entire AcquireData RPC's data captures)
+    // that match the query parameters provided in the request.
+    rpc ListCaptureActions(ListCaptureActionsRequest) returns (ListCaptureActionsResponse);
+
+    // List data identifiers (which identify specific pieces of data from
+    // an action) for stored data that satisfy the query parameters in the request.
+    rpc ListStoredData(ListStoredDataRequest) returns (ListStoredDataResponse);
+    // Store arbitrary data associated with a DataIdentifier.
+    rpc StoreData(StoreDataRequest) returns (StoreDataResponse);
+
+    // Type-safe to images: list data identifiers (which identify specific images
+    // from an action) for stored images that satisfy the
+    // query parameters in the request.
+    rpc ListStoredImages(ListStoredImagesRequest) returns (ListStoredImagesResponse);
+    // Type-safe to images: store image data associated with a DataIdentifier.
+    rpc StoreImage(StoreImageRequest) returns (StoreImageResponse);
+
+    // Type-safe to JSON metadata: list data identifiers (which identify specific metadata from
+    // an action) for stored metadata that satisfy the query parameters in the request.
+    rpc ListStoredMetadata(ListStoredMetadataRequest) returns (ListStoredMetadataResponse);
+    // Type-safe to JSON metadata: store metadata associated with a DataIdentifier.
+    rpc StoreMetadata(StoreMetadataRequest) returns (StoreMetadataResponse);
+}

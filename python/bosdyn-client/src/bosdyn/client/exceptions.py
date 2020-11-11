@@ -115,7 +115,7 @@ class UnableToConnectToRobotError(RpcError):
 
 
 class UnauthenticatedError(RpcError):
-    """The user needs to authenticate to get a user token."""
+    """The user needs to authenticate or does not have permission to access requested service."""
 
 
 class UnknownDnsNameError(RpcError):

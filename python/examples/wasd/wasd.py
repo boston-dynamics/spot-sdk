@@ -24,6 +24,7 @@ from bosdyn.api import geometry_pb2
 import bosdyn.api.power_pb2 as PowerServiceProto
 # import bosdyn.api.robot_command_pb2 as robot_command_pb2
 import bosdyn.api.robot_state_pb2 as robot_state_proto
+import bosdyn.api.basic_command_pb2 as basic_command_pb2
 import bosdyn.api.spot.robot_command_pb2 as spot_command_pb2
 from bosdyn.client import create_standard_sdk, ResponseError, RpcError
 from bosdyn.client.async_tasks import AsyncGRPCTask, AsyncPeriodicQuery, AsyncTasks
@@ -209,6 +210,7 @@ class WasdInterface(object):
             ord('r'): self._self_right,
             ord('P'): self._toggle_power,
             ord('v'): self._sit,
+            ord('b'): self._battery_change_pose,
             ord('f'): self._stand,
             ord('w'): self._move_forward,
             ord('s'): self._move_backward,
@@ -218,7 +220,7 @@ class WasdInterface(object):
             ord('e'): self._turn_right,
             ord('I'): self._image_task.take_image,
             ord('O'): self._image_task.toggle_video_mode,
-            ord('l'): self._toggle_lease,
+            ord('l'): self._toggle_lease
         }
         self._locked_messages = ['', '', '']  # string: displayed message for user
         self._estop_keepalive = None
@@ -323,11 +325,12 @@ class WasdInterface(object):
         stdscr.addstr(10, 0, "Commands: [TAB]: quit                               ")
         stdscr.addstr(11, 0, "          [T]: Time-sync, [SPACE]: Estop, [P]: Power")
         stdscr.addstr(12, 0, "          [I]: Take image, [O]: Video mode          ")
-        stdscr.addstr(13, 0, "          [v]: Sit, [f]: Stand, [r]: Self-right     ")
-        stdscr.addstr(14, 0, "          [wasd]: Directional strafing              ")
-        stdscr.addstr(15, 0, "          [qe]: Turning                             ")
-        stdscr.addstr(16, 0, "          [l]: Return/Acquire lease                 ")
-        stdscr.addstr(17, 0, "")
+        stdscr.addstr(13, 0, "          [f]: Stand, [r]: Self-right               ")
+        stdscr.addstr(14, 0, "          [v]: Sit, [b]: Battery-change             ")
+        stdscr.addstr(15, 0, "          [wasd]: Directional strafing              ")
+        stdscr.addstr(16, 0, "          [qe]: Turning                             ")
+        stdscr.addstr(17, 0, "          [l]: Return/Acquire lease                 ")
+        stdscr.addstr(18, 0, "")
 
         # print as many lines of the image as will fit on the curses screen
         if self._image_task.ascii_image != None:
@@ -357,6 +360,16 @@ class WasdInterface(object):
             self.add_message("Failed {}: {}".format(desc, err))
             return None
 
+    def _try_grpc_async(self, desc, thunk):
+        def on_future_done(fut):
+            try:
+                fut.result()
+            except (ResponseError, RpcError, LeaseBaseError) as err:
+                self.add_message("Failed {}: {}".format(desc, err))
+                return None
+        future = thunk()
+        future.add_done_callback(on_future_done)
+
     def _quit_program(self):
         self._sit()
         if self._exit_check is not None:
@@ -364,7 +377,7 @@ class WasdInterface(object):
 
     def _toggle_time_sync(self):
         if self._robot.time_sync.stopped:
-            self._robot.time_sync.start()
+            self._robot.start_time_sync()
         else:
             self._robot.time_sync.stop()
 
@@ -400,11 +413,18 @@ class WasdInterface(object):
     def _self_right(self):
         self._start_robot_command('self_right', RobotCommandBuilder.selfright_command())
 
+    def _battery_change_pose(self):
+        # Default HINT_RIGHT, maybe add option to choose direction?
+        self._start_robot_command(
+            'battery_change_pose',
+            RobotCommandBuilder.battery_change_pose_command(dir_hint=
+            basic_command_pb2.BatteryChangePoseCommand.Request.HINT_RIGHT))
+
     def _sit(self):
-        self._start_robot_command('sit', RobotCommandBuilder.sit_command())
+        self._start_robot_command('sit', RobotCommandBuilder.synchro_sit_command())
 
     def _stand(self):
-        self._start_robot_command('stand', RobotCommandBuilder.stand_command())
+        self._start_robot_command('stand', RobotCommandBuilder.synchro_stand_command())
 
     def _move_forward(self):
         self._velocity_cmd_helper('move_forward', v_x=VELOCITY_BASE_SPEED)
@@ -426,13 +446,13 @@ class WasdInterface(object):
 
     def _velocity_cmd_helper(self, desc='', v_x=0.0, v_y=0.0, v_rot=0.0):
         self._start_robot_command(desc,
-                                  RobotCommandBuilder.velocity_command(
+                                  RobotCommandBuilder.synchro_velocity_command(
                                       v_x=v_x, v_y=v_y, v_rot=v_rot),
                                   end_time_secs=time.time() + VELOCITY_CMD_DURATION)
 
     def _return_to_origin(self):
         self._start_robot_command('fwd_and_rotate',
-                                  RobotCommandBuilder.trajectory_command(
+                                  RobotCommandBuilder.synchro_se2_trajectory_point_command(
                                       goal_x=0.0, goal_y=0.0, goal_heading=0.0,
                                       frame_name=ODOM_FRAME_NAME, params=None, body_height=0.0,
                                       locomotion_hint=spot_command_pb2.HINT_SPEED_SELECT_TROT),
@@ -459,12 +479,13 @@ class WasdInterface(object):
             return
 
         if power_state == robot_state_proto.PowerState.STATE_OFF:
-            self._try_grpc("powering-on", self._request_power_on)
+            self._try_grpc_async("powering-on", self._request_power_on)
         else:
             self._try_grpc("powering-off", self._safe_power_off)
 
     def _request_power_on(self):
-        bosdyn.client.power.power_on(self._power_client)
+        request = PowerServiceProto.PowerCommandRequest.REQUEST_ON
+        return self._power_client.power_command_async(request)
 
     def _safe_power_off(self):
         self._start_robot_command('safe_power_off', RobotCommandBuilder.safe_power_off_command())
@@ -584,17 +605,19 @@ def main():
 
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
+    parser.add_argument('--time-sync-interval-sec',
+                        help='The interval (seconds) that time-sync estimate should be updated.',
+                        type=float)
     options = parser.parse_args()
 
     stream_handler = _setup_logging(options.verbose)
 
     # Create robot object.
     sdk = create_standard_sdk('WASDClient')
-    sdk.load_app_token(options.app_token)
     robot = sdk.create_robot(options.hostname)
     try:
         robot.authenticate(options.username, options.password)
-        robot.start_time_sync()
+        robot.start_time_sync(options.time_sync_interval_sec)
     except RpcError as err:
         LOGGER.error("Failed to communicate with robot: %s" % err)
         return False

@@ -25,6 +25,7 @@ from bosdyn.client.estop import EstopClient
 from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient
 from bosdyn.client.robot_state import RobotStateClient
 
+import bosdyn.api.mission
 import bosdyn.geometry
 import bosdyn.mission.client
 import bosdyn.util
@@ -51,6 +52,8 @@ def main():
     parser.add_argument('--mission', dest='mission_file', help='Optional path to mission file')
     parser.add_argument('--timeout', type=float, default=3.0, dest='timeout',
                         help='Mission client timeout (s).')
+    parser.add_argument('--noloc', action='store_true', default=False, dest='noloc',
+                        help='Skip initial localization')
 
     group = parser.add_mutually_exclusive_group()
 
@@ -62,6 +65,7 @@ def main():
     args = parser.parse_args()
 
     # Use the optional map_directory argument as a proxy for these other tasks we normally do.
+    do_localization = (args.map_directory is not None) and (not args.noloc)
     do_map_load = args.map_directory is not None
     fail_on_question = args.map_directory is not None
 
@@ -75,7 +79,7 @@ def main():
                                                                    args.hostname))
 
     # Initialize robot object
-    robot = init_robot(args.hostname, args.username, args.password, args.app_token)
+    robot = init_robot(args.hostname, args.username, args.password)
 
     # Acquire robot lease
     robot.logger.info('Acquiring lease...')
@@ -99,13 +103,26 @@ def main():
 
             # Stand up
             robot.logger.info('Commanding robot to stand...')
-            stand_command = RobotCommandBuilder.stand_command()
+            stand_command = RobotCommandBuilder.synchro_stand_command()
             command_client.robot_command(stand_command)
             countdown(5)
             robot.logger.info('Robot standing.')
 
+            # Localize robot
+            localization_error = False
+            if do_localization:
+                graph = graph_nav_client.download_graph()
+                robot.logger.info('Localizing robot...')
+                robot_state = robot_state_client.get_robot_state()
+                localization = nav_pb2.Localization()
+
+                # Attempt to localize using any visible fiducial
+                graph_nav_client.set_localization(initial_guess_localization=localization,
+                                                  ko_tform_body=None, max_distance=None,
+                                                  max_yaw=None)
+
             # Run mission
-            if not args.static_mode:
+            if not args.static_mode and not localization_error:
                 if args.duration == 0.0:
                     run_mission(robot, mission_client, lease_client, fail_on_question, args.timeout)
                 else:
@@ -114,6 +131,8 @@ def main():
 
     finally:
         # Ensure robot is powered off
+        lease_client.lease_wallet.advance()
+        robot.logger.info('Powering off...')
         power_off_success = ensure_power_off(robot)
 
         # Return lease
@@ -121,12 +140,11 @@ def main():
         lease_client.return_lease(body_lease)
 
 
-def init_robot(hostname, username, password, token):
+def init_robot(hostname, username, password):
     '''Initialize robot object'''
 
     # Initialize SDK
     sdk = bosdyn.client.create_standard_sdk('MissionReplay', [bosdyn.mission.client.MissionClient])
-    sdk.load_app_token(token)
 
     # Create robot object
     robot = sdk.create_robot(hostname)
@@ -270,7 +288,6 @@ def run_mission(robot, mission_client, lease_client, fail_on_question, mission_t
     mission_state = mission_client.get_state()
 
     while mission_state.status in (mission_pb2.State.STATUS_NONE, mission_pb2.State.STATUS_RUNNING):
-
         # We optionally fail if any questions are triggered. This often indicates a problem in
         # Autowalk missions.
         if mission_state.questions and fail_on_question:
@@ -284,6 +301,8 @@ def run_mission(robot, mission_client, lease_client, fail_on_question, mission_t
         time.sleep(1)
 
         mission_state = mission_client.get_state()
+
+    robot.logger.info('Mission status = ' + mission_state.Status.Name(mission_state.status))
 
     return mission_state.status in (mission_pb2.State.STATUS_SUCCESS,
                                     mission_pb2.State.STATUS_PAUSED)
@@ -363,6 +382,7 @@ def ensure_power_on(robot):
 
     robot.logger.error('Error powering on robot.')
     return False
+
 
 def verify_estop(robot):
     """Verify the robot is not estopped"""

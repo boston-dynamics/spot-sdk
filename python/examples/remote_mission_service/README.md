@@ -13,114 +13,116 @@ This example demonstrates how to
 2) Connect a RemoteClient directly to that server.
 3) Build a mission that talks to that server.
 
-This is the new pattern used by "callback" elements of Autowalk missions.
+This is the new pattern used by "callback" actions of Autowalk missions.
 
 ## Setup Dependencies
 See the requirements.txt file for a list of python dependencies which can be installed with pip using the command:
 ```
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 ## Running the Example
 
 ### Running without a robot
 
-You can test the example server without involving the robot at all. Start the server with
+You can test the example server without involving the robot at all. Start the hello world service with
 ```
-python -m remote_mission_service localhost
+python3 hello_world_mission_service.py local --port {PORT}
 ```
 
-On success, you should see a new line on your terminal like this one:
+On success, you should see service logs appear in your terminal like this:
 ```
-Starting server on port PORT (remote_mission_service.py:71)
+2020-11-04 12:33:37,083 - INFO - Started the HelloWorldServicer server.
+2020-11-04 12:33:37,141 - INFO - hello-world-callback service registered/updated.
+2020-11-04 12:33:37,146 - INFO - Starting directory registration loop for hello-world-callback
 ```
 To start the client, run
 ```
-python -m remote_mission_client localhost --port PORT
+python3 remote_mission_client.py --hello-world local --host-ip localhost --port {PORT}
 ```
-
-where `PORT` matches the port number printed out by the server application. The client should immediately connect to the local server, and the server and client will both print out some information.
-
-The client output will look like this:
-
-```
-EstablishSession is unimplemented.
-Servicer stopped with status STATUS_SUCCESS
-Either Stop or TeardownSession is unimplemented.
-```
+Where `PORT` matches the port number provided to the server application. The client should immediately connect to the local server, and the server and client will both print out some information.
 
 The server output will look like this:
-
 ```
-Exception calling application: Method not implemented! (_server.py:400)
-Traceback (most recent call last):
-  File "site-packages/grpc/_server.py", line 392, in _call_behavior
-    return behavior(argument, context), True
-  File "remote_service_pb2_grpc.py", line 48, in EstablishSession
-    raise NotImplementedError('Method not implemented!')
-NotImplementedError: Method not implemented!
-Hello World! (example_servicers.py:43)
-Exception calling application: Method not implemented! (_server.py:400)
-Traceback (most recent call last):
-  File "site-packages/grpc/_server.py", line 392, in _call_behavior
-    return behavior(argument, context), True
-  File "remote_service_pb2_grpc.py", line 63, in Stop
-    raise NotImplementedError('Method not implemented!')
-NotImplementedError: Method not implemented!
+2020-11-04 12:36:37,874 - INFO - EstablishSession unimplemented!
+2020-11-04 12:36:37,875 - INFO - Hello World!
+2020-11-04 12:36:37,876 - INFO - Stop unimplemented!
 ```
-
-The NotImplementedError tracebacks are normal and can be ignored. They are just telling you that the EstablishSession and Stop RPCs are not implemented in the basic servicer.
+The client output will look like this:
+```
+Servicer stopped with status STATUS_SUCCESS
+```
 
 You can change the `Hello World!` text with an option to the client. For example, if you run the client again with the additional `--user-string` option:
 ```
-python -m remote_mission_client localhost --port PORT --user-string Spot
+python3 remote_mission_client.py --hello-world --user-string Spot local --host-ip localhost --port {PORT}
 ```
-
-The server will print out `Hello Spot!` instead of `Hello World!`
+The server will print out "Hello Spot!" instead of "Hello World!"
 
 ### Running with a robot
 
-There is another example servicer that will power the robot down in a safe way. To run this example, you will need a connection between a robot and the computer running the examples. Here's an example, assuming the host running the examples is connected to the robot's WiFi network:
+There is another example servicer that will power the robot down safely. To run this example, you will need a connection between a robot and the computer running the examples.
 ```
-python -m remote_mission_service 192.168.80.3 --servicer PowerOff --username USER --password PASSWORD
+python3 power_off_mission_service.py ROBOT_IP --port {PORT} --host-ip {ENDPOINT_IP}  --username {USER} --password {PASSWORD}
+```
+A port number for the service can be specified using the --port argument.  The script will choose a random default port number if no --port argument is provided. This port number will be used with the host-ip ("ENDPOINT_IP") to fully specify where the service is running. The port must be open and cannot be blocked by a local firewall. If the port is blocked, the service will be unreachable from the robot and the directory registration service.
+
+This example takes two different IP addresses as arguments. The --host-ip argument describes the IP address for the computer that will be running the service. The hostname ("ROBOT_IP") argument describes the IP address of the robot hosting the directory service.
+
+Now if you run the example client with:
+```
+python3 remote_mission_client.py --power-off robot ROBOT_IP --username {USER} --password {PASSWORD}
 ```
 
-Now if you run the client with:
-```
-python -m remote_mission_client localhost --port PORT --lease-host 192.168.80.3 --username USER --password PASSWORD
-```
-and assuming the robot is already powered off and sitting on the ground, you'll see this output from the server:
-
-```
-Ticked by node "<unknown>" (example_servicers.py:107)
-Ticked by node "<unknown>" (example_servicers.py:107)
-Ticked by node "<unknown>" (example_servicers.py:107)
-```
-
-and this output from the client:
-
+The robot should shut down and you will see this output from the client:
 ```
 Servicer stopped with status STATUS_SUCCESS
 ```
 
 To see the servicer actually power the robot off, you will have to perform the following steps:
 1) Use the wasd example to power the robot on and stand it up.
-1) Return wasd's lease with the [l] key
-1) Run the client.
+2) Return wasd's lease with the [l] key.
+3) Run the client.
 
-You must run the client within 3 seconds of returning wasd's lease, otherwise the normal comms loss policy will kick in.
-
+You must run the client within 3 seconds of returning wasd's lease, otherwise the normal comms loss policy will kick in. To avoid Lease errors when triggering the callback via the tablet, select the "3rd Party" option before confirming the action.
 
 ## Using the example as part of an Autowalk mission
 
-The example will work as part of an Autowalk mission, performing its action during a callback element. A few extra options are necessary, in order to tell the robot about the new callback service. Here is an example command line, assuming the server is being launched on a Spot CORE attached to a Spot with the default networking setup:
+The mission service examples will work as part of an Autowalk mission, performing its action when Spot reaches a callback.
+
+### Step one: Start the remote mission server
+
+The following two command lines show starting the service on a CORE or a wifi laptop
+
 ```
-python -m remote_mission_service 192.168.50.3 --my-host 192.168.50.5 --directory-host 192.168.50.3 --username USER --password PASSWORD
+(on core) python3 hello_world_mission_service.py robot --host-ip 192.168.50.5 --username {USER} --password {PASSWORD} 192.168.50.3
+
+(on laptop over wifi) python3 hello_world_mission_service.py robot --host-ip {YOUR_IP} --port {OPEN_PORT} --username {USER} --password {PASSWORD} 192.168.80.3
+```
+both commands should output something like:
+
+```
+2020-10-30 14:21:41,577 - INFO - Started the HelloWorldServicer server.
+2020-10-30 14:21:41,585 - INFO - hello-world-callback service registered/updated.
+2020-10-30 14:21:41,585 - INFO - Starting directory registration loop for hello-world-callback
 ```
 
-The additional options provide details for directory registration, which lets Spot know how to contact your service. `192.168.50.5` is the address of the host running the service, and `192.168.50.3` is the address of the robot. You must provide an address that Spot knows how to reach for the `--my-host` option.
+Note that both commands target the robot, but also inform the robot of the ip address where the server itself is running.  You may have to change your firewall settings in order for communication to succeed.
 
-Here is an example command line, assuming the server is being launched on your computer used in earlier examples. Note: You may have to change your firewall settings in order for communication to succeed.
+### Step two: Record an Autowalk mission with a callback
+
+You must start the server (Step one) prior to recording the Autowalk mission.
+
+1. On the Tablet, select Actions from the hamburger menu.  You should see the callback listed, such as "Hello World Callback".  Note that if you did not do Step one, this does not appear!
+2. If you click on Callback Default, you can name the callback and configure any user variables you'd like to send to the server.
+3. Stand up Spot and select Autowalk.
+4. Move the robot a bit and then select the + sign to create an action waypoint.
+5. Select your callback.
+6. Finish the recording and playback, you should see your server print out something like:
 ```
-python -m remote_mission_service 192.168.80.3 --my-host <your_ip> --directory-host 192.168.80.3 --username USER --password PASSWORD
+2020-11-04 14:00:24,695 - INFO - EstablishSession unimplemented!
+2020-11-04 14:00:34,009 - INFO - Hello Hello World Callback - Hello World Callback - 1!
+2020-11-04 14:00:34,109 - INFO - Stop unimplemented!
 ```
+
+Note that the "Hello Hello World Callback - Hello World Callback - 1!" shows that you did indeed receive the callback, so you only now need to implement the methods in the server to perform your desired work, make decisions, etc.

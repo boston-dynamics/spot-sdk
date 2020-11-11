@@ -11,6 +11,7 @@ import time
 import datetime
 
 from google.protobuf.timestamp_pb2 import Timestamp
+from google.protobuf.duration_pb2 import Duration
 
 if sys.version_info[0] >= 3:
     LONG = int
@@ -54,6 +55,27 @@ def duration_to_seconds(duration):
       duration (google.protobuf.Duration): input duration
     """
     return duration.seconds + duration.nanos / NSEC_PER_SEC
+
+
+def seconds_to_duration(seconds):
+    """Return a protobuf Duration from number of seconds, as a float.
+
+    Args:
+      seconds (float): duration length
+    """
+    duration_seconds = int(seconds)
+    duration_nanos = int((seconds - duration_seconds) * NSEC_PER_SEC)
+    return Duration(seconds=duration_seconds, nanos=duration_nanos)
+
+def seconds_to_timestamp(seconds):
+    """Return a protobuf Timestamps from number of seconds, as a float.
+
+    Args:
+      seconds (float): seconds since epoch
+    """
+    timestamp_seconds = int(seconds)
+    timestamp_nanos = int((seconds - timestamp_seconds) * NSEC_PER_SEC)
+    return Timestamp(seconds=timestamp_seconds, nanos=timestamp_nanos)
 
 
 def timestamp_str(timestamp):

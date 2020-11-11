@@ -4,11 +4,6 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
-#
-# Downloading, reproducing, distributing or otherwise using the SDK Software
-# is subject to the terms and conditions of the Boston Dynamics Software
-# Development Kit License (20191101-BDSDK-SL).
 """ This example demonstrates 3 different methods for working with Spot asynchronous functions. """
 import argparse
 import sys
@@ -45,7 +40,6 @@ def main():
 
     # Create robot object with a robot_state_client.
     sdk = bosdyn.client.create_standard_sdk('RobotStateClient')
-    sdk.load_app_token(options.app_token)
     robot = sdk.create_robot(options.hostname)
     robot.authenticate(options.username, options.password)
     robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)

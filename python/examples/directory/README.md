@@ -13,11 +13,11 @@ These examples demonstrate how to use Spot's Directory Client to list, register,
 ## Setup Dependencies
 This example needs to be run with python3. See the requirements.txt file for a list of dependencies which can be installed with pip using:
 ```
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 ## Running the Example
 To run the example:
 ```
-python directory_modification.py --username USER --password PASSWORD ROBOT_IP
+python3 directory_modification.py --username USER --password PASSWORD ROBOT_IP
 ```

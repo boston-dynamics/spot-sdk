@@ -30,6 +30,7 @@ from bosdyn.client.robot_state import RobotStateClient
 import bosdyn.client.util
 import google.protobuf.timestamp_pb2
 
+import graph_nav_util
 
 class GraphNavInterface(object):
     """GraphNav service command line interface."""
@@ -70,6 +71,7 @@ class GraphNavInterface(object):
         self._current_edges = dict()  #maps to_waypoint to list(from_waypoint)
         self._current_waypoint_snapshots = dict()  # maps id to waypoint snapshot
         self._current_edge_snapshots = dict()  # maps id to edge snapshot
+        self._current_annotation_name_to_wp_id = dict()
 
         # Filepath for uploading a saved graph's and snapshots too.
         if upload_path[-1] == "/":
@@ -93,7 +95,7 @@ class GraphNavInterface(object):
         state = self._graph_nav_client.get_localization_state()
         print('Got localization: \n%s' % str(state.localization))
         odom_tform_body = get_odom_tform_body(state.robot_kinematics.transforms_snapshot)
-        print('Got robot state in odom frame: \n%s' % str(odom_tform_body))
+        print('Got robot state in kinematic odometry frame: \n%s' % str(odom_tform_body))
 
     def _set_initial_localization_fiducial(self, *args):
         """Trigger localization when near a fiducial."""
@@ -113,7 +115,11 @@ class GraphNavInterface(object):
             # If no waypoint id is given as input, then return without initializing.
             print("No waypoint specified to initialize to.")
             return
-        destination_waypoint = self._short_code_to_id(args[0][0])
+        destination_waypoint = graph_nav_util.find_unique_waypoint_id(
+            args[0][0], self._current_graph, self._current_annotation_name_to_wp_id)
+        if not destination_waypoint:
+            # Failed to find the unique waypoint id.
+            return
 
         robot_state = self._robot_state_client.get_robot_state()
         current_odom_tform_body = get_odom_tform_body(
@@ -130,64 +136,22 @@ class GraphNavInterface(object):
             fiducial_init=graph_nav_pb2.SetLocalizationRequest.FIDUCIAL_INIT_NO_FIDUCIAL,
             ko_tform_body=current_odom_tform_body)
 
-    def _id_to_short_code(self, id):
-        """Convert a unique id to a 2 letter short code."""
-        tokens = id.split('-')
-        if len(tokens) > 2:
-            return '%c%c' % (tokens[0][0], tokens[1][0])
-        return None
-
-    def _short_code_to_id(self, short_code):
-        """Convert a 2 letter short code to a unique id."""
-        if len(short_code) != 2:
-            return short_code  # Not a short code.
-
-        if self._current_graph is None:
-            graph = self._graph_nav_client.download_graph()
-            if graph is not None:
-                self._current_graph = graph
-
-        ret = short_code
-        for waypoint in self._current_graph.waypoints:
-            if short_code == self._id_to_short_code(waypoint.id):
-                if ret != short_code:
-                    return short_code  # Multiple waypoints with same short code.
-                ret = waypoint.id
-        return ret
-
     def _list_graph_waypoint_and_edge_ids(self, *args):
         """List the waypoint ids and edge ids of the graph currently on the robot."""
+
+        # Download current graph
         graph = self._graph_nav_client.download_graph()
+        if graph is None:
+            print("Empty graph.")
+            return
+        self._current_graph = graph
+
         localization_id = self._graph_nav_client.get_localization_state().localization.waypoint_id
-        if graph is not None:
-            self._current_graph = graph
 
-            # Determine how many waypoints have the same short code.
-            short_code_to_count = {}
-            for waypoint in graph.waypoints:
-                short_code = self._id_to_short_code(waypoint.id)
-                if short_code not in short_code_to_count:
-                    short_code_to_count[short_code] = 0
-                short_code_to_count[short_code] += 1
+        # Update and print waypoints and edges
+        self._current_annotation_name_to_wp_id, self._current_edges = graph_nav_util.update_waypoints_and_edges(
+            graph, localization_id)
 
-            print('%d waypoints:' % len(graph.waypoints))
-            for waypoint in graph.waypoints:
-                short_code = self._id_to_short_code(waypoint.id)
-                if short_code is None or short_code_to_count[short_code] != 1:
-                    short_code = '  '  # If the short code is not valid/unique, don't show it.
-
-                print("%s %s Waypoint id: %s name: %s" %
-                      ('->' if localization_id == waypoint.id else '  ', short_code, waypoint.id,
-                       waypoint.annotations.name))
-
-            for edge in graph.edges:
-                if edge.id.to_waypoint in self._current_edges:
-                    if edge.id.from_waypoint not in self._current_edges[edge.id.to_waypoint]:
-                        self._current_edges[edge.id.to_waypoint].append(edge.id.from_waypoint)
-                else:
-                    self._current_edges[edge.id.to_waypoint] = [edge.id.from_waypoint]
-                print("(Edge) from waypoint id: ", edge.id.from_waypoint, " and to waypoint id: ",
-                      edge.id.to_waypoint)
 
     def _upload_graph_and_snapshots(self, *args):
         """Upload the graph and snapshots to the robot."""
@@ -244,7 +208,11 @@ class GraphNavInterface(object):
             return
 
         self._lease = self._lease_wallet.get_lease()
-        destination_waypoint = self._short_code_to_id(args[0][0])
+        destination_waypoint = graph_nav_util.find_unique_waypoint_id(
+            args[0][0], self._current_graph, self._current_annotation_name_to_wp_id)
+        if not destination_waypoint:
+            # Failed to find the appropriate unique waypoint id for the navigation command.
+            return
         if not self.toggle_power(should_power_on=True):
             print("Failed to power on the robot, and cannot complete navigate to request.")
             return
@@ -282,7 +250,11 @@ class GraphNavInterface(object):
             return
         waypoint_ids = args[0]
         for i in range(len(waypoint_ids)):
-            waypoint_ids[i] = self._short_code_to_id(waypoint_ids[i])
+            waypoint_ids[i] = graph_nav_util.find_unique_waypoint_id(
+                waypoint_ids[i], self._current_graph, self._current_annotation_name_to_wp_id)
+            if not waypoint_ids[i]:
+                # Failed to find the unique waypoint id.
+                return
 
         edge_ids_list = []
         all_edges_found = True
@@ -421,7 +393,7 @@ class GraphNavInterface(object):
             (2) Initialize localization to the nearest fiducial (must be in sight of a fiducial).
             (3) Initialize localization to a specific waypoint (must be exactly at the waypoint).
             (4) List the waypoint ids and edge ids of the map on the robot.
-            (5) Upload the graph and it's snapshots.
+            (5) Upload the graph and its snapshots.
             (6) Navigate to. The destination waypoint id is the second argument.
             (7) Navigate route. The (in-order) waypoint ids of the route are the arguments.
             (8) Clear the current graph.
@@ -457,7 +429,6 @@ def main(argv):
 
     # Setup and authenticate the robot.
     sdk = bosdyn.client.create_standard_sdk('GraphNavClient')
-    sdk.load_app_token(options.app_token)
     robot = sdk.create_robot(options.hostname)
     robot.authenticate(options.username, options.password)
 

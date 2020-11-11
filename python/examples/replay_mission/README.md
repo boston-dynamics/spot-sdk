@@ -16,5 +16,5 @@ This example assumes that Spot can see the fiducial from "Start" of your mission
 
 To run the example:
 ```
-python -m replay_mission --mission <path_to_mission> --username USER --password PASSWORD ROBOT_IP
+python3 -m replay_mission --mission <path_to_mission> --username USER --password PASSWORD ROBOT_IP
 ```

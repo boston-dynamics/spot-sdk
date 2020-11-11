@@ -8,10 +8,12 @@ from __future__ import print_function
 import argparse
 from enum import Enum
 import math
+import textwrap
 import time
 
 from bosdyn.api import estop_pb2
 from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
+import bosdyn.api.basic_command_pb2 as basic_command_pb2
 import bosdyn.client
 import bosdyn.client.util
 import bosdyn.client.estop
@@ -55,9 +57,9 @@ class XboxController:
         command_client: Client for all the robot commands.
         lease_client: Client for the lease management.
         estop_client: Client for the E-Stop functionality.
-        estop_keepalive: Estop keep-alive object.
-        estop_buttons_pressed: Boolean used to determine when Estop button combination is released
-                               in order to toggle the Estop
+        estop_keepalive: E-Stop keep-alive object.
+        estop_buttons_pressed: Boolean used to determine when E-Stop button combination is released
+                               in order to toggle the E-Stop
         mobility_params: Mobility parameters to use in each robot command.
         mode: Current robot movement type as RobotMode enum.
         has_robot_control: Boolean whether program has acquired robot control.
@@ -105,7 +107,6 @@ class XboxController:
         """
 
         sdk = bosdyn.client.create_standard_sdk(self.client_name)
-        sdk.load_app_token(config.app_token)
         self.robot = sdk.create_robot(config.hostname)
         self.robot.authenticate(config.username, config.password)
         self.robot.time_sync.wait_for_sync()
@@ -114,6 +115,45 @@ class XboxController:
         self.estop_client = self.robot.ensure_client(EstopClient.default_service_name)
         self.mobility_params = spot_command_pb2.MobilityParams(
             locomotion_hint=spot_command_pb2.HINT_AUTO)
+
+        # Print controls
+        print(textwrap.dedent("""\
+| Button Combination | Functionality            |
+|--------------------|--------------------------|
+| A                  | Walk                     |
+| B                  | Stand                    |
+| X                  | Sit                      |
+| Y                  | Stairs                   |
+| LB + :             |                          |
+| - D-pad up/down    | Walk height              |
+| - D-pad left       | Battery-Change Pose      |
+| - D-pad right      | Self right               |
+| - Y                | Jog                      |
+| - A                | Amble                    |
+| - B                | Crawl                    |
+| - X                | Hop                      |
+|                    |                          |
+| If Stand Mode      |                          |
+| - Left Stick       |                          |
+| -- X               | Rotate body in roll axis |  
+| -- Y               | Control height           |
+| - Right Stick      |                          |
+| -- X               | Turn body in yaw axis    |
+| -- Y               | Turn body in pitch axis  |
+| Else               |                          |
+| - Left Stick       | Move                     |
+| - Right Stick      | Turn                     |
+|                    |                          |
+| LB + RB + B        | E-Stop                   |
+| Start              | Motor power & Control    |
+| Back               | Exit                     |
+        """))
+
+
+        # Describe the necessary steps before one can command the robot.
+        print("Before you can command the robot: \n" + \
+            "\t1. Acquire a software E-Stop (Left Button + Right Button + B). \n" + \
+            "\t2. Obtain a lease and power on the robot's motors (Start button).")
 
     def _force_safe_power_off(self):
         """Safely powers off the robot.
@@ -132,7 +172,7 @@ class XboxController:
 
         if not self.estop_keepalive:
             if self.estop_client.get_status().stop_level == estop_pb2.ESTOP_LEVEL_NONE:
-                print("Taking EStop from another controller")
+                print("Taking E-Stop from another controller")
 
             #register endpoint with 9 second timeout
             estop_endpoint = bosdyn.client.estop.EstopEndpoint(client=self.estop_client,
@@ -146,7 +186,7 @@ class XboxController:
             self.estop_keepalive.shutdown()
             self.estop_keepalive = None
             self._force_safe_power_off()
-            sys.exit('Estop')
+            sys.exit('E-Stop')
 
     def _gain_control(self):
         """Acquires lease of the robot to gain control.
@@ -154,12 +194,11 @@ class XboxController:
 
         if self.has_robot_control or not self.estop_keepalive:
             return
-
         leases = self.lease_client.list_leases()
         lease_owner = str(leases[0].lease_owner).strip()
         if lease_owner != "":
             print("Another controller " + lease_owner + " has a lease. Close that controller"\
-            ", wait a few seconds and press the Guide button again.")
+            ", wait a few seconds and press the Start button again.")
             return
 
         _ = bosdyn.client.lease.LeaseKeepAlive(self.lease_client)
@@ -180,130 +219,136 @@ class XboxController:
         self.robot.is_powered_on()
         self.motors_powered = True
 
+    def _issue_robot_command(self, command, endtime=None):
+        """Check that the lease has been acquired and motors are powered on before issuing a command.
+
+        Args:
+            command: RobotCommand message to be sent to the robot.
+            endtime: Time (in the local clock) that the robot command should stop.
+        """
+        if not self.has_robot_control:
+            print("Must have control by acquiring a lease before commanding the robot.")
+            return
+        if not self.motors_powered:
+            print("Must have motors powered on before commanding the robot.")
+            return
+
+        self.command_client.robot_command_async(command, end_time_secs=endtime)
+
     def _jog(self):
         """Sets robot in Jog mode.
         """
-
-        if not self.motors_powered:
-            return
 
         if self.mode is not RobotMode.Jog:
             self.mode = RobotMode.Jog
             self._reset_height()
             self.mobility_params = spot_command_pb2.MobilityParams(
                 locomotion_hint=spot_command_pb2.HINT_JOG, stair_hint=0)
-            cmd = RobotCommandBuilder.stand_command(params=self.mobility_params)
-            self.command_client.robot_command_async(cmd)
+
+            cmd = RobotCommandBuilder.synchro_stand_command(params=self.mobility_params)
+            self._issue_robot_command(cmd)
 
     def _amble(self):
         """Sets robot in Amble mode.
         """
 
-        if not self.motors_powered:
-            return
-
         if self.mode is not RobotMode.Amble:
             self.mode = RobotMode.Amble
             self.mobility_params = spot_command_pb2.MobilityParams(
                 locomotion_hint=spot_command_pb2.HINT_AMBLE, stair_hint=0)
-            cmd = RobotCommandBuilder.stand_command(params=self.mobility_params)
-            self.command_client.robot_command_async(cmd)
+
+            cmd = RobotCommandBuilder.synchro_stand_command(params=self.mobility_params)
+            self._issue_robot_command(cmd)
 
     def _crawl(self):
         """Sets robot in Crawl mode.
         """
 
-        if not self.motors_powered:
-            return
-
         if self.mode is not RobotMode.Crawl:
             self.mode = RobotMode.Crawl
             self.mobility_params = spot_command_pb2.MobilityParams(
                 locomotion_hint=spot_command_pb2.HINT_CRAWL, stair_hint=0)
-            cmd = RobotCommandBuilder.stand_command(params=self.mobility_params)
-            self.command_client.robot_command_async(cmd)
+
+            cmd = RobotCommandBuilder.synchro_stand_command(params=self.mobility_params)
+            self._issue_robot_command(cmd)
 
     def _hop(self):
         """Sets robot in Hop mode.
         """
-
-        if not self.motors_powered:
-            return
 
         if self.mode is not RobotMode.Hop:
             self.mode = RobotMode.Hop
             self._reset_height()
             self.mobility_params = spot_command_pb2.MobilityParams(
                 locomotion_hint=spot_command_pb2.HINT_HOP, stair_hint=0)
-            cmd = RobotCommandBuilder.stand_command(params=self.mobility_params)
-            self.command_client.robot_command_async(cmd)
+
+            cmd = RobotCommandBuilder.synchro_stand_command(params=self.mobility_params)
+            self._issue_robot_command(cmd)
 
     def _stairs(self):
         """Sets robot in Stairs mode.
         """
 
-        if not self.motors_powered:
-            return
-
         if self.mode is not RobotMode.Stairs:
             self.mode = RobotMode.Stairs
             self.mobility_params = spot_command_pb2.MobilityParams(
                 locomotion_hint=spot_command_pb2.HINT_AUTO, stair_hint=1)
-            cmd = RobotCommandBuilder.stand_command(params=self.mobility_params)
-            self.command_client.robot_command_async(cmd)
+
+            cmd = RobotCommandBuilder.synchro_stand_command(params=self.mobility_params)
+            self._issue_robot_command(cmd)
 
     def _walk(self):
         """Sets robot in Walk mode.
         """
 
-        if not self.motors_powered:
-            return
-
         if self.mode is not RobotMode.Walk:
             self.mode = RobotMode.Walk
             self.mobility_params = spot_command_pb2.MobilityParams(
                 locomotion_hint=spot_command_pb2.HINT_SPEED_SELECT_TROT, stair_hint=0)
-            cmd = RobotCommandBuilder.stand_command(params=self.mobility_params)
-            self.command_client.robot_command_async(cmd)
+
+            cmd = RobotCommandBuilder.synchro_stand_command(params=self.mobility_params)
+            self._issue_robot_command(cmd)
 
     def _stand(self):
         """Sets robot in Stand mode.
         """
 
-        if not self.motors_powered:
-            return
-
         if self.mode is not RobotMode.Stand:
             self.mode = RobotMode.Stand
             self.mobility_params = spot_command_pb2.MobilityParams(
                 locomotion_hint=spot_command_pb2.HINT_AUTO, stair_hint=0)
-            cmd = RobotCommandBuilder.stand_command(params=self.mobility_params)
-            self.command_client.robot_command_async(cmd)
+
+            cmd = RobotCommandBuilder.synchro_stand_command(params=self.mobility_params)
+            self._issue_robot_command(cmd)
 
     def _sit(self):
         """Sets robot in Sit mode.
         """
 
-        if not self.motors_powered:
-            return
-
         if self.mode is not RobotMode.Sit:
             self.mode = RobotMode.Sit
             self.mobility_params = spot_command_pb2.MobilityParams(
                 locomotion_hint=spot_command_pb2.HINT_AUTO, stair_hint=0)
-            cmd = RobotCommandBuilder.sit_command(params=self.mobility_params)
-            self.command_client.robot_command_async(cmd)
+
+            cmd = RobotCommandBuilder.synchro_sit_command(params=self.mobility_params)
+            self._issue_robot_command(cmd)
 
     def _selfright(self):
         """Executes selfright command, which causes the robot to automatically turn if
         it is on its back.
         """
 
-        if not self.motors_powered:
-            return
-
         cmd = RobotCommandBuilder.selfright_command()
-        self.command_client.robot_command_async(cmd)
+        self._issue_robot_command(cmd)
+
+    def _battery_change_pose(self):
+        """Executes the battery-change pose command which causes the robot to sit down if
+        standing then roll to its [right]/left side for easier battery changing.
+        """
+
+        cmd = RobotCommandBuilder.battery_change_pose_command(dir_hint=
+            basic_command_pb2.BatteryChangePoseCommand.Request.HINT_RIGHT)
+        self._issue_robot_command(cmd)
 
     def _move(self, left_x, left_y, right_x):
         """Commands the robot with a velocity command based on left/right stick values.
@@ -328,10 +373,9 @@ class XboxController:
             body_height=self.body_height, locomotion_hint=self.mobility_params.locomotion_hint,
             stair_hint=self.mobility_params.stair_hint)
 
-        cmd = RobotCommandBuilder.velocity_command(v_x=v_x, v_y=v_y, v_rot=v_rot,
+        cmd = RobotCommandBuilder.synchro_velocity_command(v_x=v_x, v_y=v_y, v_rot=v_rot,
                                                    params=self.mobility_params)
-        self.command_client.robot_command_async(cmd,
-                                                end_time_secs=time.time() + VELOCITY_CMD_DURATION)
+        self._issue_robot_command(cmd, endtime=time.time() + VELOCITY_CMD_DURATION)
 
     def _orientation_cmd_helper(self, yaw=0.0, roll=0.0, pitch=0.0, height=0.0):
         """Helper function that commands the robot with an orientation command;
@@ -348,9 +392,8 @@ class XboxController:
             return
 
         orientation = EulerZXY(yaw, roll, pitch)
-        cmd = RobotCommandBuilder.stand_command(body_height=height, footprint_R_body=orientation)
-        self.command_client.robot_command_async(cmd,
-                                                end_time_secs=time.time() + VELOCITY_CMD_DURATION)
+        cmd = RobotCommandBuilder.synchro_stand_command(body_height=height, footprint_R_body=orientation)
+        self._issue_robot_command(cmd, endtime=time.time() + VELOCITY_CMD_DURATION)
 
     def _change_height(self, direction):
         """Changes robot body height.
@@ -455,13 +498,15 @@ class XboxController:
         # Move cursor back to the start of the line
         print(chr(13), end="")
         if self.estop_keepalive:
-            print("X", end="")
+            print("E-Stop: Acquired    ", end="")
+        else:
+            print("E-Stop: Not Acquired", end="")
         if self.has_robot_control:
-            print("\tX", end="")
+            print("\tRobot Lease: Acquired    ", end="")
         if self.robot.is_powered_on():
-            print("\tX", end="")
+            print("\tRobot Motors: Powered On ", end="")
         if self.mode:
-            print("\t\t" + self.mode.name, end="")
+            print("\t\t" + "In Robot Mode: " + self.mode.name, end="")
             num_chars = len(self.mode.name)
             if num_chars < 6:  # 6 is the length of Stairs enum
                 print(" " * (6 - num_chars), end="")
@@ -481,7 +526,8 @@ class XboxController:
         Back                  -> Exit
         LB +
           D-pad up/down       -> walk height
-          D-pad left/right    -> Self right
+          D-pad left          -> Battery-Change Pose (roll over)
+          D-pad right         -> Self right
           Y                   -> Jog
           A                   -> Amble
           B                   -> Crawl
@@ -504,7 +550,6 @@ class XboxController:
 
         try:
             joy = XboxJoystickFactory.get_joystick()
-            print("E-Stop\tControl\tMotors On\tMode")
 
             while not joy.back():
                 start_time = time.time()
@@ -540,7 +585,7 @@ class XboxController:
                 if joy.left_bumper() and joy.dpad_down():
                     self._change_height(-1)
                 if joy.left_bumper() and joy.dpad_left():
-                    self._selfright()
+                    self._battery_change_pose()
                 if joy.left_bumper() and joy.dpad_right():
                     self._selfright()
 
@@ -554,7 +599,7 @@ class XboxController:
                         self._amble()
                     else:
                         self._walk()
-                if joy.B():
+                if joy.B() and not joy.right_bumper():
                     if joy.left_bumper():
                         self._crawl()
                     else:
@@ -606,16 +651,18 @@ def main(argv):
 
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=('''
         Use this script to control the Spot robot from an Xbox controller. Press the Back
-        controller button to safely power off the robot. Note that the example needs the estop
+        controller button to safely power off the robot. Note that the example needs the E-Stop
         to be released. The estop_gui script from the estop SDK example can be used to release
-        the estop. Press ctrl-c at any time to safely power off the robot.
+        the E-Stop. Press ctrl-c at any time to safely power off the robot.
         '''))
     parser.add_argument("--max-frequency", default=10, type=int,
                         help="Max frequency in Hz to send commands to robot")
+    parser.add_argument("--logging", action='store_true', help="Turn on logging output")
 
     bosdyn.client.util.add_common_arguments(parser)
     options = parser.parse_args(argv)
-    bosdyn.client.util.setup_logging(options.verbose)
+    if options.logging:
+        bosdyn.client.util.setup_logging(options.verbose)
 
     max_frequency = options.max_frequency
     if max_frequency <= 0:

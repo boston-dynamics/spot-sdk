@@ -13,10 +13,13 @@ option java_outer_classname = "NodesProto";
 import "google/protobuf/any.proto";
 import "google/protobuf/duration.proto";
 
+import "bosdyn/api/geometry.proto";
 import "bosdyn/api/spot_cam/camera.proto";
 import "bosdyn/api/spot_cam/logging.proto";
+import "bosdyn/api/spot_cam/ptz.proto";
 import "bosdyn/api/robot_command.proto";
 import "bosdyn/api/power.proto";
+import "bosdyn/api/data_acquisition.proto";
 import "bosdyn/api/graph_nav/graph_nav.proto";
 import "bosdyn/api/mission/util.proto";
 
@@ -84,6 +87,9 @@ message Repeat {
     int32 max_starts = 1;
     // Child to repeat max_starts times.
     Node child = 4;
+
+    // If set, the node will write the start index to the blackboard.
+    string start_counter_state_name = 5;
 }
 
 
@@ -93,6 +99,9 @@ message Retry {
     int32 max_attempts = 1;
     // Child to retry up to max_attempts.
     Node child = 2;
+
+    // If set, the node will write the attempt index to the blackboard.
+    string attempt_counter_state_name = 5;
 }
 
 
@@ -222,6 +231,11 @@ message BosdynGraphNavState {
     // if this is set to "nav", children can look up "nav.localization.waypoint_id" in the
     // blackboard to get the waypoint the robot is localized to.
     string state_name = 4;
+
+    // Id of the waypoint that we want the localization to be relative to.
+    // If this is empty, the localization will be relative to the waypoint that the
+    // robot is currently localized to.
+    string waypoint_id = 5;
 }
 
 // Tell GraphNav to re-localize the robot to the nearest visible fiducial.
@@ -238,7 +252,12 @@ message RemoteGrpc {
     string host = 1;
     // Name of the service in the directory.
     string service_name = 3;
-    // Timeout of the RPC. If the timeout is exceeded, the node will indicate FAILURE.
+    // Timeout of any single RPC. If the timeout is exceeded, the RPC will fail. The mission service
+    // treats each failed RPC differently:
+    // - EstablishSession: An error is returned in LoadMission.
+    // - Tick: The RPC is retried.
+    // - Stop: The error is ignored, and the RPC is not retried.
+    // Omit for a default of 60 seconds.
     float timeout = 4;
     // Resources that we will need leases on.
     repeated string lease_resources = 5;
@@ -294,6 +313,35 @@ message Prompt {
     bool for_autonomous_processing = 6;
 }
 
+// Point the PTZ to a specified orientation
+message SpotCamPtz {
+    // Name of the service to use.
+    string service_name = 1;
+
+    // Host machine of the directory server that the Spot CAM registered with.
+    string host = 2;
+
+    // The rest of the fields are from bosdyn.api.spot_cam.ptz.SetPtzPositionRequest, see that
+    // message for details.
+    bosdyn.api.spot_cam.PtzPosition ptz_position = 3;
+
+    message AdjustParameters {
+        // Variable name to retrieve the graph nav state from.
+        string localization_varname = 4;
+
+        // Waypoint ID where this PTZ configuration was originally set up.
+        string waypoint_id = 5;
+
+        // Pose of body in waypoint frame at the time this PTZ configuration was originally set up.
+        SE3Pose waypoint_tform_body = 6;
+    }
+
+    // Setting adjust_parameters will enable auto-adjusting the PTZ pan and tilt at playback time,
+    // based on where the robot is, relative to the waypoint. Leave empty to disable auto-adjust
+    // features.
+    AdjustParameters adjust_parameters = 4;
+}
+
 // Store media using the Spot CAM.
 message SpotCamStoreMedia {
     // Name of the service to use.
@@ -310,6 +358,62 @@ message SpotCamStoreMedia {
 
     // Extra metadata to store alongside the captured media.
     string tag = 5;
+}
+
+message Dock {
+    // Name of the service to use.
+    string service_name = 1;
+    // Host machine of the directory server that the docking service is registered with.
+    string host = 2;
+
+    // ID of docking station to dock at.
+    uint32 docking_station_id = 3;
+
+    // Optional child node. Children will have access to the status variables gathered by this node.
+    // If specified, child node will determine success/failure of this node.
+    Node child = 4;
+
+    // Name of the command status variable in the blackboard.  This is the status of the docking
+    // command request made to the robot.  Please refer to
+    // bosdyn.api.docking.DockingCommandResponse.Status for more details.  Children can use this
+    // name to look up docking command status in the blackboard. If no name is provided, status will
+    // not be available.
+    string command_status_name = 5;
+
+    // Name of the feedback status variable in the blackboard.  This is the feedback provided while
+    // docking is in progress.  Please refer to bosdyn.api.docking.DockingCommandFeedbackResponse.Status
+    // for a list of possible status values.  Children can use this name to look up docking status
+    // in the blackboard. If no name is provided, status will not be available.
+    string feedback_status_name = 6;
+}
+
+// Trigger the acquisition and storage of data.
+message DataAcquisition{
+    // Name of the service to use.
+    string service_name = 1;
+    // Host machine of the directory server that the data acquisition service is registered with.
+    string host = 2;
+
+    // Specification of the data and metadata to store.
+    AcquireDataRequest request = 3;
+
+    enum CompletionBehavior{
+        COMPLETE_UNKNOWN = 0;
+        // Node is complete after all data has been saved.
+        COMPLETE_AFTER_SAVED = 1;
+        // Node is complete after all data is acquired, but before processing and storage.
+        // This allows the robot to continue on with the mission sooner, but
+        // it will be unaware of failures in processing or storage.
+        COMPLETE_AFTER_ACQUIRED = 2;
+    }
+    CompletionBehavior completion_behavior = 4;
+
+    // Define a format string that will be used together with the blackboard to generate
+    // a group name.  Values from the blackboard will replace the keys in braces {}.
+    // Example: "telop-{date}", where "date" is a blackboard variable.
+    // Example: "{date}_loop_{loop_counter}", where "loop_counter" is a blackboard variable from a Repeat.
+    string group_name_format = 5;
+
 }
 
 // Defines new blackboard variables within the scope of the child. Shadows blackboard
@@ -333,6 +437,25 @@ message SetBlackboard {
     // the blackboard. If the value is another blackboard variable, that blackboard
     // variable's value will be copied into the variable specified by the key.
     repeated KeyValue blackboard_variables = 1;
+}
+
+// Sets a blackboard variable to a formatted string, reading from other blackboard vars.
+message FormatBlackboard {
+    // The key of the variable that will be written.
+    string key = 1;
+
+    // Define a format string that will be used together with the blackboard to generate
+    // string value.  Values from the blackboard will replace the keys in braces {}.
+    // Example: "telop-{date}", where "date" is a blackboard variable.
+    // Example: "{date}_loop_{loop_counter}", where "loop_counter" is a blackboard variable from a Repeat.
+    string format = 2;
+}
+
+// Record a datetime string into the blackboard. Writes the date according to ISO8601 format.
+message DateToBlackboard {
+    // The key of the variable that will be written.
+    string key = 1;
+
 }
 
 // Just returns a constant when calling tick().

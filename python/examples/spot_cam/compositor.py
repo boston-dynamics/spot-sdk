@@ -33,7 +33,7 @@ class CompositorSetScreenCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         super(CompositorSetScreenCommand, self).__init__(subparsers, command_dict)
-        self._parser.add_argument('name', default='digi', const='digi', nargs='?', choices=['digi', 'digi_overlay', 'digi_full', 'c0', 'c1', 'c2', 'c3', 'c4'])
+        self._parser.add_argument('name', default='digi', const='digi', nargs='?', choices=['digi', 'digi_overlay', 'digi_full', 'c0', 'c1', 'c2', 'c3', 'c4', 'mech_ir'])
 
     def _run(self, robot, options):
         result = robot.ensure_client(CompositorClient.default_service_name).set_screen(options.name)

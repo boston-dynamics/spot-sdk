@@ -32,13 +32,13 @@ class MockImageServicer(image_service.ImageServiceServicer):
 
     def ListImageSources(self, request, context):
         """Implement the ListImageSources function of the service.
-        
+
         This is simply implemented as a mock version, rather than full version.
         """
         resp = image_protos.ListImageSourcesResponse()
         helpers.add_common_header(resp, request)
         if self._image_sources:
-            resp.image_sources.MergeFrom(self._image_sources)
+            resp.image_sources.extend(self._image_sources)
         time.sleep(self._rpc_delay)
         return resp
 
@@ -50,7 +50,7 @@ class MockImageServicer(image_service.ImageServiceServicer):
         for image_request in request.image_requests:
             assert image_request.image_source_name in self._expected_image_sources
         if self._image_responses:
-            resp.image_responses.MergeFrom(self._image_responses)
+            resp.image_responses.extend(self._image_responses)
         time.sleep(self._rpc_delay)
         return resp
 

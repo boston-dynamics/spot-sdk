@@ -29,10 +29,12 @@ message Route {
 // The localization state of the robot. This reports the pose of the robot relative
 // to a particular waypoint on the graph nav map.
 message Localization {
-    // Waypoint we're localized to.
+    // Waypoint this localization is relative to.
     string waypoint_id = 1;
     // Pose of body in waypoint frame.
     SE3Pose waypoint_tform_body = 2;
+    // Pose of body to starting fiducial frame (origin).
+    SE3Pose seed_tform_body = 5;
     // Time (in robot time basis) that this localization was valid.
     google.protobuf.Timestamp timestamp = 3;
 

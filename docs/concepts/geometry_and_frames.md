@@ -20,14 +20,9 @@ For example, a camera frame origin may be located at the lens of the camera with
 
 ## Frames in the Spot robot world
 
-Generally, you will only need to work with the following frame types:
+Generally, you will only need to work with the following frame types: inertial frames, sensor frames, object frames, and the robot's body frame. However, the robot may also report other frames it has knowledge about.
 
-*   Inertial frames
-*   The robot's body frame
-*   Sensor frames
-*   Object frames
-
-The inertial frames of Spot are the "vision" frame and the "odom" frame. These frames have an origin and rotation matching that of the robot's body when it boots up. The vision frame is the robot's best estimate of a fixed location in the world, and is calculated using visual analysis of the world and the robot's odometry. The "odom" frame also estimates the fixed location in the world, using the kinematics of the robot.
+The inertial frames of Spot are the "vision" frame and the "odom" frame. These frames have an origin and initial rotation matching that of the robot's body when it boots up.
 
 The "body" frame describes the robot's position and orientation, as shown in the illustration. Other frames exist for each joint on the robot. To get a complete rendition of the robot's pose, add the frame values for each joint on the robot: two hip joints and one knee per leg.
 
@@ -37,6 +32,17 @@ Objects can also be described using a frame. For example, a fiducial has an orig
 
 As the robot moves around in the world, the relationship between the two frames can either stay the same always, or be non-static and dynamically changing. The transformation between an inertial frame and the robot's body frame will change as the robot moves. In contrast, the transformation between the robot's body and the camera frame will not change regardless of whether the robot is moving or not.
 
+The following frames are known to Spot:
+* "odom" frame: An inertial frame that estimates the fixed location in the world (relative to where the robot is booted up) using the kinematics of the robot.
+* "vision" frame: An inertial frame that estimates the fixed location in the world (relative to where the robot is booted up), and is calculated using visual analysis of the world and the robot's odometry.
+* "body" frame: A frame describing the robot body's position and orientation. The frame's origin is at the geometric center of the hips with the x-axis pointing from the hip center to the middle of the front hips, as shown in the illustration above.
+* "flat_body" frame: A gravity-aligned frame describing the robot body's position and orientation. The position is at the robot's center, and the x/y-axes lie flat in the "odom" frame x-y plane. Specifically, the x-axis is the normalized projection of the robot's "body" frame x-axis to the "odom" x-y plane.
+* "gpe" frame: A frame that represents the robot's ground plane estimate. The full SE(3) pose can be converted into a plane (a point and normal).
+* "fiducial_XXX" frame: A frame that represents a raw fiducial detection, where "XXX" will be filled with the fiducial's tag ID.
+* "filtered_fiducial_XXX" frame: A frame that represents a filtered, more stable fiducial detection, where "XXX" will be filled with the fiducial's tag ID. This frame is only valid for fiducials which are static in the world and should not be used for fiducials which may be moving.
+* "frontleft_fisheye" frame: An example sensor frame; this frame name represents the frontleft fisheye camera. All five cameras on spot have their own sensor frame names, which will describe the exact camera sensor's position and orientation.
+
+In the API, other frames not listed above will often be captured by name in the proto definition. Typically, an object will have one or more fields prefixed with "frame_name_" to describe its specific frames, and the transforms associated with these frames can then be found in that object's transform snapshot. For example, the [LocalGrid](../../protos/bosdyn/api/local_grid.proto) proto has `frame_name_local_grid_data` which refers to the position and orientation of the top, left corner of the grid map.
 
 ## Transformations between Spot's frames
 

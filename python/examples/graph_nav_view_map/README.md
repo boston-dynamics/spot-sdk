@@ -15,7 +15,7 @@ This is an example program for opening, parsing, and viewing a GraphNav map. Thi
 This example requires VTK (visualization toolkit) and Numpy, and requires python 3. Using pip, these dependencies can be installed using:
 
 ```
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 ## Running the Example
@@ -30,7 +30,7 @@ python -m pip install -r requirements.txt
 
 2. Run the map viewer
 ```
-python -m view_map <path_to_your_map_directory>
+python3 -m view_map <path_to_your_map_directory>
 ```
 
 ## Camera Controls

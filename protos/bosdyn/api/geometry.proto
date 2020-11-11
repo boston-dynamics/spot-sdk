@@ -150,7 +150,7 @@ message FrameTreeSnapshot {
  * cycles, or forests of trees - but clients should treat those as invalid
  * representations.
  */
- 
+
   // ParentEdge represents the relationship from a child frame to a parent frame.
   message ParentEdge {
     // The name of the parent frame. Must be non-empty. If parent_frame_name is
@@ -200,30 +200,49 @@ message Box3WithFrame {
   SE3Pose frame_name_tform_box = 3;
 }
 
-// Represents the translation/rotation covariance of an SE3 Pose.
-message SE3Covariance {
-  // 3x3 translation covariance. They have to be stored this way instead of
-  // having a repeated number of floats because otherwise MergeFrom would
-  // produce the wrong result.
-  double cov_xx = 3;
-  double cov_xy = 4;
-  double cov_xz = 5;
-  double cov_yx = 6;
-  double cov_yy = 7;
-  double cov_yz = 8;
-  double cov_zx = 9;
-  double cov_zy = 10;
-  double cov_zz = 11;
-  // Variance of the yaw component of the SE3 Pose.
-  double yaw_variance = 2;
+// Represents a row-major order matrix of doubles.
+message Matrix {
+  int32 rows = 1;
+  int32 cols = 2;
+  repeated double values = 3;
 }
 
-// Time derivative of Yaw-Roll-Pitch Euler angle, expressed in radians per
-// second.
-message EulerZXYRate {
-  double yaw = 1;
-  double roll = 2;
-  double pitch = 3;
+// Represents the translation/rotation covariance of an SE3 Pose.
+// The 6x6 matrix can be viewed as the covariance among 6 variables:
+//      rx     ry  rz    x    y    z
+// rx rxrx  rxry rxrz  rxx  rxy  rxz
+// ry ryrx  ryry ryrz  ryx  ryy  ryz
+// rz rzrx  rzry rzrz  rzx  rzy  rzz
+// x   xrx   xry  xrz   xx   xy   xz
+// y   yrx   yry  yrz   yx   yy   yz
+// z   zrx   zry  zrz   zx   zy   zz
+// where x, y, z are translations in meters, and rx, ry, rz are rotations around
+// the x, y and z axes in radians.
+// The matrix is symmetric, so, for example, xy = yx.
+message SE3Covariance {
+  // Row-major order representation of the covariance matrix.
+  Matrix matrix = 1;
+  // Variance of the yaw component of the SE3 Pose.
+  // Warning: deprecated in 2.1. This should equal cov_rzrz, inside `matrix`.
+  double yaw_variance = 2 [deprecated = true];
+  // Warning: deprecated in 2.1. Use 'matrix.'
+  double cov_xx = 3 [deprecated = true];
+  // Warning: deprecated in 2.1. Use 'matrix.'
+  double cov_xy = 4 [deprecated = true];
+  // Warning: deprecated in 2.1. Use 'matrix.'
+  double cov_xz = 5 [deprecated = true];
+  // Warning: deprecated in 2.1. Use 'matrix.'
+  double cov_yx = 6 [deprecated = true];
+  // Warning: deprecated in 2.1. Use 'matrix.'
+  double cov_yy = 7 [deprecated = true];
+  // Warning: deprecated in 2.1. Use 'matrix.'
+  double cov_yz = 8 [deprecated = true];
+  // Warning: deprecated in 2.1. Use 'matrix.'
+  double cov_zx = 9 [deprecated = true];
+  // Warning: deprecated in 2.1. Use 'matrix.'
+  double cov_zy = 10 [deprecated = true];
+  // Warning: deprecated in 2.1. Use 'matrix.'
+  double cov_zz = 11 [deprecated = true];
 }
 
 // Multi-part, 1D line segments defined by a series of points.
@@ -233,6 +252,20 @@ message PolyLine { repeated bosdyn.api.Vec2 points = 1; }
 // May be concave, but should not self-intersect. Vertices can be specified in either
 // clockwise or counterclockwise orders.
 message Polygon { repeated Vec2 vertexes = 1; }
+
+// Represents a region in the XY plane that consists of a single polygon
+// from which polygons representing exclusion areas may be subtracted.
+//
+// A point is considered to be inside the region if it is inside the inclusion
+// polygon and not inside any of the exclusion polygons.
+//
+// Note that while this can be used to represent a polygon with holes, that
+// exclusions are not necessarily holes:  An exclusion polygon may not be
+// completely inside the inclusion polygon.
+message PolygonWithExclusions {
+  Polygon inclusion = 5;
+  repeated Polygon exclusions = 6;
+}
 
 // Represents a circular 2D area.
 message Circle {
@@ -255,6 +288,14 @@ message Volume {
   }
 }
 
+// Represents bounds on a value, such that lower < value < upper.
+// If you do not want to specify one side of the bound, set it to
+// an appropriately large (or small) number.
+message Bounds {
+    double lower = 1;
+    double upper = 2;
+}
+
 // A 2D vector of doubles that uses wrapped values so we can tell which elements are set.
 message Vec2Value {
   google.protobuf.DoubleValue x = 1;
@@ -267,4 +308,3 @@ message Vec3Value {
   google.protobuf.DoubleValue y = 2;
   google.protobuf.DoubleValue z = 3;
 }
-

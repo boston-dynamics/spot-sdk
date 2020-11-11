@@ -14,13 +14,22 @@ Client code and interfaces for the Boston Dynamics robot API.
 
 * [Async Tasks](async_tasks)
 * [Auth](auth)
+* [BDDF](bddf)
 * [Channel](channel)
 * [Command ](command_line)
 * [Common](common)
+* [Data Acquisition](data_acquisition)
+* [Data Acquisition Plugin](data_acquisition_plugin)
+* [Data Acquisition Plugin Service](data_acquisition_plugin_service)
+* [Data Acquisition Store](data_acquisition_store)
+* [Data Buffer](data_buffer)
+* [Data Service](data_service)
 * [Directory Registration](directory_registration)
 * [Directory](directory)
+* [Docking](docking)
 * [E-Stop](estop)
 * [Exceptions](exceptions)
+* [Fault](fault)
 * [Frame Helpers](frame_helpers)
 * [Graph Nav](graph_nav)
 * [Image](image)
@@ -31,6 +40,7 @@ Client code and interfaces for the Boston Dynamics robot API.
 * [Math Helpers](math_helpers)
 * [Payload Registration](payload_registration)
 * [Payload](payload)
+* [Point Cloud](point_cloud)
 * [Power](power)
 * [Processors](processors)
 * [Recording](recording)
@@ -57,6 +67,7 @@ The table below specifies the protobuf service definitions supported by each cli
 | [**Auth**](./auth.py) | [auth_service.proto](../../../../../protos/bosdyn/api/auth_service.proto) |
 | [**DirectoryRegistration**](./directory_registration.py) | [directory_registration_service.proto](../../../../../protos/bosdyn/api/directory_registration_service.proto) |
 | [**Directory**](./directory.py) | [directory_service.proto](../../../../../protos/bosdyn/api/directory_service.proto) |
+| [**Docking**](./docking.py) | [docking/docking_service.proto](../../../../../protos/bosdyn/api/docking/docking_service.proto) |
 | [**Estop**](./estop.py) | [estop_service.proto](../../../../../protos/bosdyn/api/estop_service.proto) |
 | [**GraphNav**](./graph_nav.py) | [graph_nav/graph_nav_service.proto](../../../../../protos/bosdyn/api/graph_nav/graph_nav_service.proto) |
 | [**Image**](./image.py) | [image_service.proto](../../../../../protos/bosdyn/api/image_service.proto) |
