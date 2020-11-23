@@ -31,7 +31,18 @@ from bosdyn.api import image_service_pb2
 from bosdyn.api import image_service_pb2_grpc
 from bosdyn.api import service_fault_pb2
 
+# Ricoh Theta
 from ricoh_theta import Theta
+
+# Payload Registration
+import bosdyn.api.payload_pb2 as payload_protos
+
+# Create a virtual payload.
+PLACEHOLDER_PAYLOAD = payload_protos.Payload()
+PLACEHOLDER_PAYLOAD.name = 'Ricoh Theta Image Service'
+PLACEHOLDER_PAYLOAD.description = 'This is currently a virtual/weightless payload defined for the software service only. \
+                                   Please define weight and dimensions if the Ricoh Theta is mounted to Spot.'
+# See https://dev.bostondynamics.com/docs/payload/configuring_payload_software#registering-payloads for more information.
 
 DIRECTORY_NAME = 'ricoh-theta-image-service'
 AUTHORITY = 'robot-ricoh-theta'
@@ -386,7 +397,8 @@ if __name__ == '__main__':
     # Create and authenticate a bosdyn robot object.
     sdk = bosdyn.client.create_standard_sdk("RicohThetaImageServiceSDK")
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate_from_payload_credentials(options.guid, options.secret)
+    PLACEHOLDER_PAYLOAD.GUID = options.guid
+    robot.register_payload_and_authenticate(PLACEHOLDER_PAYLOAD, options.secret)
 
     # Create a service runner to start and maintain the service on background thread. This helper function
     # also returns the servicer associated with the service runner, such that the initialize_camera function

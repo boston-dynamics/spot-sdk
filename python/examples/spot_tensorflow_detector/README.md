@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-#  API Example - Spot Tensorflow Detector
+#  Spot Tensorflow Object Detection
 
 The Spot Tensorflow Detector example collects images from the 5 Spot cameras and performs object 
 detection using Tensorflow. It accepts any Tensorflow model, and it allows the user to specify a 
@@ -60,8 +60,8 @@ python3 spot_tensorflow_detector.py --username USER --password PASSWORD --model-
 
 The program generates two sets of output:
 - A set of 5 image windows with live images from the five cameras with boxes around the Tensorflow detections.
-- A command line log in the format:<br />
-`RAW_IMAGES_QUEUE   PROCESSED_IMAGES_QUEUE   Network_Delay   Processing_Delay   Display_Delay   Total_Delay   Display_Skips   Processing_Skips`<br />
+- A command line log in the format: ```RAW_IMAGES_QUEUE   PROCESSED_IMAGES_QUEUE   Network_Delay   Processing_Delay   Display_Delay   Total_Delay   Display_Skips   Processing_Skips```
+
 The value of all those parameters is updated asynchronously. The parameters are:
     - RAW_IMAGES_QUEUE: The size of the queue holding raw images; main process adds raw images in this queue and the Tensorflow processes get images from this queue
     - PROCESSED_IMAGES_QUEUE: The size of the queue holding processes images; Tensorflow processes add processed images in this queue and the Display process gets images from this queue

@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-#  API Example - Xbox Controller
+#  Controlling the Robot with an Xbox Controller
 
 Xbox Controller example allows users to control a Spot robot through an Xbox controller. The example was tested with an Xbox 360 wired controller. The button mapping is:
 

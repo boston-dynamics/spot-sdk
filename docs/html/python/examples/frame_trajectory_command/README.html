@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API Example - Frame Trajectory Commands &mdash; Spot 2.1.0 documentation</title>
+  <title>Frame Trajectory Commands &mdash; Spot 2.1.0 documentation</title>
   
 
   
@@ -40,8 +40,8 @@
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="API Example - Using the Image Service" href="../get_image/README.html" />
-    <link rel="prev" title="API Example - Follow a Fiducial" href="../fiducial_follow/README.html" /> 
+    <link rel="next" title="Responding to User Interaction via Light" href="../spot_light/README.html" />
+    <link rel="prev" title="Adjusting Robot Stance In Place" href="../stance/README.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -98,12 +98,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/data_acquisition_overview.html">Data Acquisition Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
@@ -121,6 +120,15 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/data.html">Spot Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_overview.html">Data Acquisition Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_output.html">Data Acquisition Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_buffer_overview.html">Data Buffer Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF file format</a></li>
 </ul>
 </li>
 </ul>
@@ -129,45 +137,77 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/python/quickstart.html">Quickstart</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/python/understanding_spot_programming.html">Understanding Spot Programming</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../README.html">Examples</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../comms_test/README.html">Comms Test</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../data_acquisition_service/README.html">Data Acquisition Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../data_service/README.html">Data Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../directory/README.html">Directory</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../cloud_upload/README.html">Cloud Upload</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../estop/README.html">E-Stop</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../service_faults/README.html">Fault</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Frame Trajectory</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../get_image/README.html">Get Image</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../get_mission_state/README.html">Get Mission State</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../get_robot_state/README.html">Get Robot State</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../get_robot_state_async/README.html">Get Robot State Async</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../get_world_objects/README.html">Get World Objects</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../graph_nav_view_map/README.html">Graph Nav View Map</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../hello_spot/README.html">Hello Spot</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../logging/README.html">Logging</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../mission_question_answerer/README.html">Mission Question Anwerer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../mission_recorder/README.html">Mission Recorder</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../payloads/README.html">Payloads</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../remote_mission_service/README.html">Remote Mission Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../replay_mission/README.html">Replay Mission</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../self_registration/README.html">Self Registration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../spot_cam/README.html">Spot CAM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../spot_light/README.html">Spot Light</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../stance/README.html">Stance</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../time_sync/README.html">Time Sync</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../upload_choreographed_sequence/README.html">Upload Choreographed Sequence</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../velodyne_client/README.html">Velodyne</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../visualizer/README.html">Visualizer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../wasd/README.html">WASD</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../world_object_mutations/README.html">World Object Mutations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../world_object_with_image_coordinates/README.html">World Object With Image Coordinates</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../xbox_controller/README.html">Xbox Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../docs/basic_service_examples.html">Basic Service Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../directory/README.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../get_image/README.html">Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../estop/README.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../comms_test/README.html">Comms Test</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../docs/robot_behavior_examples.html">Robot Behavior and Commands Examples</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../stance/README.html">Stance</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Frame Trajectory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../upload_choreographed_sequence/README.html">Upload Choreographed Sequence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../xbox_controller/README.html">Xbox Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../wasd/README.html">WASD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../payloads/README.html">Payloads</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../service_faults/README.html">Faults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../velodyne_client/README.html">Velodyne</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../get_image/README.html">Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../world_object_with_image_coordinates/README.html">World Object With Image Coordinates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../stitch_front_images/README.html">Stitch Front Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../stitch_front_images/README.html">Stitch front images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../docs/logging_examples.html">Logging Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../bddf_download/README.html">BDDF Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../data_service/README.html">Data Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../logging/README.html">Logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../bddf_download/README.html">BDDF Download</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../docs/data_acquisition_examples.html">Data Acquisition Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../data_acquisition_service/README.html">Data Acquisition Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../service_faults/README.html">Faults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../get_image/README.html">Test Image Service Implementation with Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cloud_upload/README.html">Cloud Upload</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../docs/autonomy_and_missions_examples.html">Autonomy and Missions Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../mission_question_answerer/README.html">Mission Question Anwerer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../replay_mission/README.html">Replay Mission</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../README.html">Python Reference Guide</a><ul>
@@ -259,6 +299,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul>
@@ -415,7 +458,9 @@
         
           <li><a href="../README.html">Python Examples</a> &raquo;</li>
         
-      <li>API Example - Frame Trajectory Commands</li>
+          <li><a href="../docs/robot_behavior_examples.html">Robot Behavior and Commands Examples</a> &raquo;</li>
+        
+      <li>Frame Trajectory Commands</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -438,8 +483,8 @@ Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="api-example-frame-trajectory-commands">
-<h1>API Example - Frame Trajectory Commands<a class="headerlink" href="#api-example-frame-trajectory-commands" title="Permalink to this headline">¶</a></h1>
+--><div class="section" id="frame-trajectory-commands">
+<h1>Frame Trajectory Commands<a class="headerlink" href="#frame-trajectory-commands" title="Permalink to this headline">¶</a></h1>
 <p>Spot’s knowledge of different frames can be used to make issuing robot commands much simpler. This example shows how to query the robot for its current position in the visual and odom frames. It then shows how to issue a trajectory command in the visual or odom frames that describes the relative motion of the body. For example, it first issues a commmand telling Spot to walk forward one meter, but issues the trajectory described relative to the visual frame.</p>
 <p>Note that trajectory commands cannot be issued in the body frame since this creates a goal point that is continually moving, so the trajectory can never reach the goal.</p>
 <p>See <a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html"><span class="doc">the geometry and frames documentation</span></a> for more of an overview of Spot’s frames and transformation geometry.</p>

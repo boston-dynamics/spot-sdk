@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Run and interact with a RemoteMissionService.
+# Run and Interact with a RemoteMissionService.
 
 This example demonstrates how to
 1) Run a gRPC server that implements the RemoteMissionService service definition
@@ -65,7 +65,7 @@ There is another example servicer that will power the robot down safely. To run 
 ```
 python3 power_off_mission_service.py ROBOT_IP --port {PORT} --host-ip {ENDPOINT_IP}  --username {USER} --password {PASSWORD}
 ```
-A port number for the service can be specified using the --port argument.  The script will choose a random default port number if no --port argument is provided. This port number will be used with the host-ip ("ENDPOINT_IP") to fully specify where the service is running. The port must be open and cannot be blocked by a local firewall. If the port is blocked, the service will be unreachable from the robot and the directory registration service.
+A port number for the service can be specified using the --port argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a services listening port. This port number will be used with the host-ip ("ENDPOINT_IP") to fully specify where the service is running. The port must be open and cannot be blocked by a local firewall. If the port is blocked, the service will be unreachable from the robot and the directory registration service.
 
 This example takes two different IP addresses as arguments. The --host-ip argument describes the IP address for the computer that will be running the service. The hostname ("ROBOT_IP") argument describes the IP address of the robot hosting the directory service.
 

@@ -22,7 +22,7 @@ from bosdyn.client.data_acquisition import (CancellationFailedError, DataAcquisi
                                             RequestIdDoesNotExistError)
 from bosdyn.client.data_acquisition_plugin import DataAcquisitionPluginClient
 from bosdyn.client.exceptions import (ResponseError, ServiceUnavailableError, TimedOutError,
-                                      InvalidRequestError)
+                                      InvalidRequestError, UnableToConnectToRobotError)
 from bosdyn.client.directory import (DirectoryClient, NonexistentServiceError)
 from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
 from bosdyn.client.robot_state import RobotStateClient
@@ -86,11 +86,12 @@ def test_directory_registration(service_name, directory_client):
         return False
 
 
-def test_if_service_is_reachable(plugin_client):
+def test_if_service_is_reachable(plugin_client, hostname):
     """Checks that the data acquisition plugin service being tested can be communicated to with gRPC.
 
     Args:
         plugin_client (DataAcquisitionPluginClient): The client for the data acquisition plugin service being tested.
+        hostname (string): The robot hostname, used for logging purposes.
 
     Returns:
         A boolean indicating if an RPC to the data acquisition plugin service can successfully
@@ -104,15 +105,21 @@ def test_if_service_is_reachable(plugin_client):
         _LOGGER.error("The data-acquisition plugin service is unreachable with a gRPC service call. Check "
             "the --host-ip argument (for the plugin service python file) matches the IP address of the computer "
             "running the file and that the plugin service is still running.")
+        _LOGGER.warning("The full error message is %s", err)
         return False
-    except TimedOutError:
+    except TimedOutErroras err:
         _LOGGER.error("The gRPC service call to the data-acquisition plugin has timed out. Check that the "
             "service is still running and the service port is NOT blocked by any firewalls.")
+        _LOGGER.warning("The full error message is %s", err)
+        return False
+    except UnableToConnectToRobotError as err:
+        _LOGGER.error("The gRPC service call is unable to connect to robot %s. Check that the service port is specified "
+                      "as an argument (`--port`) when running the service, and that the port is NOT blocked by an firewalls.")
+        _LOGGER.warning("The full error message is %s", err)
         return False
     except ResponseError as err:
         _LOGGER.error("Exception raised when testing the network connection to the plugin: %s", err)
         return False
-
 
 def test_if_service_has_active_service_faults(robot_state_client, plugin_service_name):
     """Check if the plugin service has any active service faults.
@@ -263,6 +270,7 @@ def monitor_status_until_complete_or_failed(request_id, client, capability_name,
             _LOGGER.error("Exception raised when monitoring the status of request %s for data '%s' with action_name '%s': %s",
                 request_id, capability_name, action_name, err)
             return False
+
         if get_status_response.status in kAcquisitionSucceededStatuses:
             return True
         elif get_status_response.status in kAcquisitionFailedStatuses:
@@ -272,6 +280,9 @@ def monitor_status_until_complete_or_failed(request_id, client, capability_name,
             _LOGGER.info("The full GetStatus response: %s", get_status_response)
             return False
         elif get_status_response.status in kAcquisitionContinuesStatuses:
+            # Sleep breifly, then re-attempt to make a GetStatus RPC to see if the acquisition has completed.
+            time.sleep(0.2)
+            should_continue = time.time() - start_time < kMonitorStatusTimeoutSecs
             continue
         else:
             _LOGGER.error("Unexpected status %s when monitoring request %s for data '%s' with action_name '%s'.",
@@ -279,8 +290,7 @@ def monitor_status_until_complete_or_failed(request_id, client, capability_name,
                       get_status_response.status), request_id, capability_name, action_name)
             _LOGGER.info("The full GetStatus response: %s", get_status_response)
             return False
-        time.sleep(0.2)
-        should_continue = time.time() - start_time < kMonitorStatusTimeoutSecs
+
     _LOGGER.warn("No result to the GetStatus RPC within %s seconds for request %s of data '%s' with action_name '%s'.",
         kMonitorStatusTimeoutSecs, request_id, capability_name, action_name)
     return True
@@ -425,7 +435,8 @@ def cancel_request_and_monitor_status(request_id, client, capability_name, actio
         if get_status_response.status in kAcquisitionCancellationSucceededStatuses:
             return True
         elif get_status_response.status in kAcquisitionCancellationContinuesStatuses:
-            continue
+            # Sleep breifly, then re-attempt to make a GetStatus RPC to see if the acquisition has cancelled.
+            time.sleep(0.2)
         elif get_status_response.status in kAcquisitionContinuesStatuses:
             # Warning that plugin did not update status to reflect that cancel rpc was recieved.
             if first_time_warning:
@@ -434,7 +445,8 @@ def cancel_request_and_monitor_status(request_id, client, capability_name, actio
                 _LOGGER.info("Request %s for data '%s' with action_name '%s", request_id, capability_name, action_name)
                 _LOGGER.info("The full GetStatus response: %s", get_status_response)
                 first_time_warning = False
-            continue
+            # Sleep breifly, then re-attempt to make a GetStatus RPC to see if the acquisition has cancelled.
+            time.sleep(0.2)
         elif get_status_response.status in kAcquisitionCancellationFailedStatuses:
             # Cancellation-specific failure.
             _LOGGER.error("The cancellation request %s for data '%s' with action_name '%s' failed the GetStatus "
@@ -456,7 +468,6 @@ def cancel_request_and_monitor_status(request_id, client, capability_name, actio
             _LOGGER.info("The full GetStatus response: %s", get_status_response)
             return False
 
-        time.sleep(0.2)
         should_continue = time.time() - start_time < kMonitorStatusTimeoutSecs
 
     _LOGGER.warn("Did not get a result for the GetStatus RPC within %s seconds for request %s of data '%s' with "
@@ -606,7 +617,7 @@ def main(argv):
     # Test that the gRPC communications go through to the plugin service.
     _LOGGER.info("TEST: Plugin's directory registration networking information is correct "
                  "and the plugin can be communicated with via gRPC.")
-    if test_if_service_is_reachable(plugin_daq_client):
+    if test_if_service_is_reachable(plugin_daq_client, options.hostname):
         _LOGGER.info("SUCCESS!\n")
     else:
         return False

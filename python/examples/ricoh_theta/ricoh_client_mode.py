@@ -24,15 +24,16 @@ from ricoh_theta import Theta
 
 def connect(options):
     """Uses the ricoh_theta.py script to connect to an access point"""
-    camera = Theta(theta_ssid=options.theta_ssid, theta_pw=options.theta_password, client_mode=False)
-    camera.showState()
+    camera = Theta(theta_ssid=options.theta_ssid, theta_pw=options.theta_password, client_mode=False, show_state_at_init=True)
     camera.connectToAP(ap_ssid=options.wifi_ssid, ap_pw=options.wifi_password, ap_sec=options.security)
+    if options.disable_sleep_mode:
+        camera.sleepMode(enabled=False)
 
 def main(argv):
     """Collects command line arugments to enable client mode"""
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--theta-ssid', default=None, help='ricoh theta ssid')
+    parser.add_argument('--theta-ssid', default=None, required=True, help='ricoh theta ssid')
     parser.add_argument('--theta-password', default=None,
                         help='ricoh theta password (leave empty to use default password)')
     parser.add_argument('--wifi-ssid', help='WiFi network SSID/name for desired access point',
@@ -40,6 +41,8 @@ def main(argv):
     parser.add_argument('--wifi-password', help='WiFi network password', required=True)
     parser.add_argument('--security', default='WPA/WPA2 PSK',
                         help='WiFi security type: "none", "WEP", "WPA/WPA2 PSK"')
+    parser.add_argument('--disable-sleep-mode', action='store_true',
+                        help='Disables the Ricoh theta from automatically sleeping.')
     options = parser.parse_args(argv)
 
     connect(options)

@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Perform asynchronous state queries on Spot
+# Performing Asynchronous State Queries on Spot
 
 This example program demonstrates how to query the robot state service using wait-until-done, block-until-done, and callback-when-done. Please look at the code to see how each asyncronous query is accomplished.
 

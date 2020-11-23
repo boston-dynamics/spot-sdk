@@ -53,3 +53,14 @@ def add_common_header(response, request, error_code=HeaderProto.CommonError.CODE
     if error_message:
         header.error.message = error_message
     response.header.CopyFrom(header)
+
+
+def make_async(fn):
+    """Make an async version of a regular function"""
+
+    def output_fn(*args, **kwargs):
+        future = concurrent.futures.Future()
+        future.set_result(fn())
+        return future
+
+    return output_fn

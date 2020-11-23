@@ -51,6 +51,8 @@ python3 spot_detect_and_follow.py --username USER --password PASSWORD --model-pa
 ```
 
 #### Running in Docker
+Please refer to this [document](../../../docs/payload/docker_containers.md) for general instructions on how to run software applications on SpotCORE as docker containers.
+
 This example provides a Dockerfile for running in a container. This requires installing Nvidia Docker.
 You can follow the instructions at https://github.com/NVIDIA/nvidia-docker to install Nvidia Docker.
 Nvidia Docker is preinstalled on the Spot CORE AI.

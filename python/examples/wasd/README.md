@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - WASD
+# Controlling the Robot with a Keyboard
 
 This example creates an interface for operating Spot with your keyboard.
 

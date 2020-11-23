@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - World Object Service with Image Coordinates
+# Using World Object Service with Image Coordinates
 
 The "image properties" field of a world object can be used to describe pixel coordinates which could represent the bounding boxes of an object or a single point pixel marking the object within the image. Image coordinates often have no associated transform information, unlike fiducial world objects, so this example demonstrates issuing a mutation world object request without appending any transformations to the frame tree snapshot.
 

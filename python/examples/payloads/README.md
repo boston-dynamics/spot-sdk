@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Using the Payload Service
+# Using the Payload Service
 
 This example program demonstrates how to create a payload and register this new payload with the payload service. As well, the example program shows how to list all payloads registered with Spot's payload service, which should include the newly registered payload created in the example.
 

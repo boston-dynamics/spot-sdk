@@ -32,15 +32,20 @@ message DescriptorBlock {
 // A DataDescriptor describes a data block which immediately follows it in the file.
 // A corresponding SeriesDescriptor with a matching series_index must precede this in the file.
 message DataDescriptor {
+    // The series_index references the SeriesDescriptor to which the data following is associated.
     uint32 series_index = 1;
+
+    // The time at which the data is considered to be captured/sampled.
+    // E.g., the shutter-close time of a captured image.
     google.protobuf.Timestamp timestamp = 2;
+
     // Sometimes a visualizer will want to organize message by data timestamp, sometimes by
     //  the time messages were published or logged.
-    // This allows additional indexes or timestamps to be associated with each data block
-    //  for this purpose.
-    // Additionally, we might want to know something like the PID of the process which
-    //  originated the data so it is clear if a process has been restarted.
-    // The values here should correspond to the labels defined in "additional_index_names"
+    // The additional_indexes field allows extra indexes or timestamps to be associated with
+    //  each data block for this purpose.
+    // Other identifying information may also be used here, such as the PID of the process which
+    //  originated the data (e.g., for detecting if and when that process restarted).
+    // The values in this field should correspond to the labels defined in "additional_index_names"
     //  in the corresponding SeriesDescriptor.
     repeated int64 additional_indexes = 3;
 }
@@ -94,8 +99,10 @@ message FileFormatVersion {
 message SeriesDescriptor {
     // This index for the series is unique within the data file.
     uint32 series_index = 1;
+
     // This is the globally unique {key -> value} mapping to identify the series.
     SeriesIdentifier series_identifier = 2;
+
     // This is a hash of the series_identifier.
     // The hash is the first 64 bits (read as a big-endian encoded uint64_t) of
     //  SHA1(S K1 V1 K2 V2 ...) where,
@@ -110,6 +117,7 @@ message SeriesDescriptor {
         PodTypeDescriptor pod_type = 5;
         StructTypeDescriptor struct_type = 6;
     };
+
     // Annotations are a {key -> value} mapping for associating additional information with
     //  the series.
     // The format of annotation keys should be
@@ -118,6 +126,7 @@ message SeriesDescriptor {
     // Annotation keys without a '/' are reserved.
     // The only current key in the reserved namespace is 'units': e.g., {'units': 'm/s2'}.
     map<string, string> annotations = 7;
+
     // Labels for additional index values which should be attached to each DataDescriptor
     //  in the series.
     // See the description of "additional_indexes" in DataDescriptor.
@@ -131,8 +140,10 @@ message MessageTypeDescriptor {
     // Description of the content type.
     // E.g., "application/protobuf", "image/jpeg", "text/csv", ...
     string content_type = 1;
+
     // If content_type is "application/protobuf", this is the full-name of the protobuf type.
     string type_name = 2;
+
     // If true, message contents are necessary for interpreting other messages.
     // If the content of this file is split into multiple output files, these messages should be
     //  copied into each.
@@ -144,7 +155,9 @@ message MessageTypeDescriptor {
 // All POD data stored in data blocks is stored in little-endian byte order.
 // Any number of samples may be stored within a given data block.
 message PodTypeDescriptor {
+    // The type of machine-readable values stored.
     PodTypeEnum pod_type = 1;
+
     // If empty, indicates a single POD per sample.
     // If one-element, indicates a vector of the given size per sample.
     // If two-elements, indicates a matrix of the given size, and so on.
@@ -183,26 +196,44 @@ enum PodTypeEnum {
 // As a file is closed, a DescriptorBlock containing a FileIndex should be written.
 // The FileIndex summarizes the data series stored in the file and the location of the
 //  block-indexes for each type in the file.
+// Each series is assigned a "series_index" within the file, and this index may be used to
+//  index into the repeated fields in this message.
+// E.g., for the series with series_index N, you can access its SeriesIdentifier by accessing
+//  element N the of the series_identifiers repeated field.
 message FileIndex {
+    // SeriesIdentifer for each series in this file.
     repeated SeriesIdentifier series_identifiers = 1;
-    // type_index -> offset in file of the type's SeriesBlockIndex block.
+
+    // The offset from the start of the file of the SeriesBlockIndex block for each series.
     repeated uint64 series_block_index_offsets = 2;
-    // Hash of the series_identifiers.
+
+    // The hash of the series_identifier for each series.
     repeated uint64 series_identifier_hashes = 3;
 }
 
 // This describes the location of the SeriesDescriptor DescriptorBlock for the series, and
 //  the timestamp and location in the file of every data block in the series.
 message SeriesBlockIndex {
+    // The series_index for the series described by this index block.
     uint32 series_index = 1;
+
     // Offset of type descriptor block from start of file.
     uint64 descriptor_file_offset = 2;
+
     message BlockEntry {
+        // The timestamp of data in this block.
         google.protobuf.Timestamp timestamp = 1;
+
+        // The offset of the data block from the start of the file.
         uint64 file_offset = 2;
+
+        // Values of the additional indexes for describing this block.
         repeated int64 additional_indexes = 3;
     }
+    // The timestamp and location of each data block for this series.
     repeated BlockEntry block_entries = 3;
+
+    // The total size of the data stored in the data blocks of this series.
     uint64 total_bytes = 4;
 }
 
@@ -220,6 +251,7 @@ message SeriesIdentifier {
     // This is the kind of spec, which should correspond to a set of keys which are expected
     //  in the spec.
     string series_type = 1;
+
     // This is the "key" for naming the series within the file.
     // A key->value description which should be unique for this series within the file
     //  with this series_type.

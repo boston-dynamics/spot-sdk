@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Mission Recorder
+# Mission Recorder
 
 This example creates an interface for operating Spot with your keyboard, recording a mission, and saving it.
 

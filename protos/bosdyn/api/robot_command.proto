@@ -27,9 +27,8 @@ message RobotCommand {
         SynchronizedCommand.Request synchronized_command = 3;
 
         // *** Deprecation Warning ***
+        // DEPRECATED as of 2.1.0: A mobility command for a robot to execute.
         // The following fields will be deprecated and moved to 'reserved' in a future release.
-
-        // A mobility command for a robot to execute.
         MobilityCommand.Request mobility_command = 2 [deprecated=true];
     }
 }
@@ -45,9 +44,8 @@ message RobotCommandFeedback {
         SynchronizedCommand.Feedback synchronized_feedback = 3;
 
         // *** Deprecation Warning ***
+        // DEPRECATED as of 2.1.0: Command to control mobility system of a robot.
         // The following fields will be deprecated and moved to 'reserved' in a future release.
-
-        // Command to control mobility system of a robot.
         MobilityCommand.Feedback mobility_feedback = 1 [deprecated=true];
     }
 }
@@ -121,25 +119,25 @@ message RobotCommandFeedbackResponse {
     ResponseHeader header = 1;
 
     enum Status {
-        // Behavior execution is in an unknown / unexpected state.
+        // Status enum is DEPRECATED as of 2.1.0. Behavior execution is in an unknown / unexpected state.
         STATUS_UNKNOWN = 0;
 
-        // The robot is actively working on the command
+        // Status enum is DEPRECATED as of 2.1.0. The robot is actively working on the command
         STATUS_PROCESSING = 1;
 
-        // The command was replaced by a new command
+        // Status enum is DEPRECATED as of 2.1.0. The command was replaced by a new command
         STATUS_COMMAND_OVERRIDDEN = 2;
 
-        // The command expired
+        // Status enum is DEPRECATED as of 2.1.0. The command expired
         STATUS_COMMAND_TIMED_OUT = 3;
 
-        // The robot is in an unsafe state, and will only respond to known safe commands.
+        // Status enum is DEPRECATED as of 2.1.0. The robot is in an unsafe state, and will only respond to known safe commands.
         STATUS_ROBOT_FROZEN = 4;
     }
-    // General status whether or not command is still processing.
+    // DEPRECATED as of 2.1.0: General status whether or not command is still processing.
     Status status = 2 [deprecated=true];
 
-    // Human-readable status message.  Not for programmatic analysis.
+    // DEPRECATED as of 2.1.0: Human-readable status message.  Not for programmatic analysis.
     string message = 3 [deprecated=true];
 
     // Command specific feedback.

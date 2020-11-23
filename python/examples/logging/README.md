@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Logging
+# Logging Through the API
 
 This example program demonstrates the different methods of logging for Spot that application programs can use. It uses the annotation logging service to log text messages, operator comments, and blob logs (serialized protobuf messages).
 

@@ -27,7 +27,7 @@ All the information necessary to write a basic gRPC service is outlined in the [
 ### Infrastructure
 There are two components of establishing a service: starting the server and registering the service with the robot.
 
-#### Starting a Server 
+#### Starting a Server
 The server itself can be spun up with the Python `grpc` library. The Spot Python SDK provides helpers that wrap the library and make it easier to manage a server. An example of the code to run a gRPC service is shown below.
 ```
 # Proto service specific function used to attach a servicer to a server.
@@ -42,7 +42,7 @@ service_runner.run_until_interrupt()
 ```
 The `image_service_pb2_grpc.add_ImageServiceServicer_to_server` is a function auto generated from a protobuf service definition. The function links a servicer to a server and is generated for every protobuf server compiled. The `WebCamImageServicer` is a custom class that inherits from the servicer class auto generated from the protobuf service definition. It defines methods for responding to all possible service requests. The [`GrpcServiceRunner`](../../python/bosdyn-client/src/bosdyn/client/util.py) class will create and run a server object associated with the passed in servicer. It will monitor for requests at the given port. The `run_until_interrupt()` method can be used to keep a server alive until it receives a SIGINT.
 
-#### Registering a Service 
+#### Registering a Service
 Registering a service requires communication with the robot. A service can register itself via the Directory Registration Client provided with the Python SDK. Each service instance should have a unique service name, service authority, and service type associated with it that are provided at registration time. These details will enable Spot to route client requests to the proper service. The preferred method of registering a service is shown below. Note that it registers with a directory keep alive and will have liveness monitoring enabled.
 ```
 dir_reg_client = robot.ensure_client(DirectoryRegistrationClient.default_service_name)
@@ -55,7 +55,7 @@ with keep_alive:
 
 ## Examples
 The Spot SDK provides a myriad of examples showing how an off-robot Python gRPC service can be developed.
-- [web_cam_image_service](../../python/examples/web_cam_image_service/README.md)
-- [ricoh_theta_image_service](../../python/examples/ricoh_theta/README.md)
+- [Web Cam Image Service](../../python/examples/web_cam_image_service/README.md)
+- [Ricoh Theta Image Service](../../python/examples/ricoh_theta/README.md)
 - [Remote Mission Services](../../python/examples/remote_mission_service/README.md)
 - [Data Acquisition Plugins](../../python/examples/data_acquisition_service/README.md)

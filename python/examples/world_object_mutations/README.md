@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - World Object Mutations
+# World Object Mutations
 
 These examples demonstrate how to use the world object service to add, change, and delete world objects.
 

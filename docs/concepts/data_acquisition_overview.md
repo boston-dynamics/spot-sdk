@@ -7,7 +7,7 @@ Development Kit License (20191101-BDSDK-SL).
 -->
 
 # Data Acquisition Overview
-Spot 2.1 release features a new system for acquiring, storing, and retrieving sensor data. These features are available in teleop mode, where users are controlling the robot from a client, such as the tablet, and in `Autowalk` mode, where the tablet is controlling the robot by replaying a recorded mission. This data acquisition functionality comprises of several new services and their associated clients. 
+Spot 2.1 release features a new system for acquiring, storing, and retrieving sensor data. These features are available in teleop mode, where users are controlling the robot from a client, such as the tablet, and in `Autowalk` mode, where the tablet is controlling the robot by replaying a recorded mission. This data acquisition functionality comprises of several new services and their associated clients.
 
 * `Data Acquisition` service: The coordinating service that will capture images, robot metadata, and delegate to plugins to capture custom sensor data.
 * `Data Acquisition Plugin` services: User-implemented services that can capture data from sensors and save it into the store.
@@ -19,7 +19,7 @@ Spot 2.1 release features a new system for acquiring, storing, and retrieving se
 ### Capture capabilities
 Capture capabilities are human-readable identifiers for the type of data captured by `Data Acquisition Plugin` services or `Image` services. The `Data Acquisition` service compiles this list of capture capabilities from all the `Data Acquisition Plugin` services and `Image` services registered in the system.
 Each `Data Acquisition Plugin` service reports the capture capabilities it provides. For example, a plugin that captures `GPS` data can report a capture capability named “GPS”. The `Data Acquisition` service requests this information from a plugin when the plugin registers with the directory service. The `Data Acquisition` service also reports all image sources listed by the `Image` services registered in the system as capture capabilities.
-The tablet requests this complete list of capture capabilities from the `Data Acquisition Plugin` services and the `Image` services from the `Data Acquisition` service. 
+The tablet requests this complete list of capture capabilities from the `Data Acquisition Plugin` services and the `Image` services from the `Data Acquisition` service.
 
 ### Actions
 To simplify the data acquisition process, the tablet contains functionality to combine the capture capabilities described above into actions with unique names. So, actions are combinations of capture capabilities, configured with a specific timeout to wait for the capture completion. These capture actions can then be triggered programmatically through the SDK or by the tablet during teleop of the robot or mission recording using the Red Plus button on the tablet, shown in the screenshot below.
@@ -39,7 +39,7 @@ During teleop or `Autowalk`, a triggered action sends an acquisition request, wh
 The outcome of an acquisition request is `Image` services and `Data Acquisition Plugin` services collecting the requested data and storing it in the robot for downloading at a later time.
 
 ### Groups
-Groups are a set of acquisition requests, such as a mission or a teleop capture session. They simplify the organization of the captured data. For example, all the captured data for a specific group is stored in the same folder in the downloaded data. The `Data Store` client interface also provides methods for listing actions for a specific group. 
+Groups are a set of acquisition requests, such as a mission or a teleop capture session. They simplify the organization of the captured data. For example, all the captured data for a specific group is stored in the same folder in the downloaded data. The `Data Store` client interface also provides methods for listing actions for a specific group.
 
 ### Data Channels
 Each type of data is stored in different channels in the system. In the case of `Data Acquisition Plugin` services, the plugin determines what the channel name is when storing the data in the system. In the case of `Image` services, the channel used to store an image is specified as {image service name}_{camera source name}. The system uses the channel name together with the action and group name to organize the data as shown in the diagram below.
@@ -54,4 +54,4 @@ The functionality described above is architected in the system as shown in the d
 ![Data Acquisition Architecture](./images/data_acquisition_architecture.png)
 
 ## Implementing Data Acquisition services
-Please refer to [this document](developing_api_services.md) on how to implement services in general and [this document](writing_services_for_data_acquisition.md) on how to implement `Data Acquisition Plugin` or `Image` services.
+Please refer to [this document](developing_api_services.md) on how to implement services in general and [this document](writing_services_for_data_acquisition.md) on how to implement `DataAcquisitionPluginService` or `ImageService` to integrate a payload with the data acquisition capabilities of the robot.

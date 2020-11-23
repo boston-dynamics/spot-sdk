@@ -6,11 +6,11 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - GraphNav and Recording Service Command Line Interfaces
+# GraphNav and Recording Service Command Line Interfaces
 
 These example programs demonstrate how to use the GraphNav API by creating command line interfaces to record maps and then localize and navigate these maps.
 
-## Prerequisites
+## Setup Dependencies
 
 These examples require the bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:
 

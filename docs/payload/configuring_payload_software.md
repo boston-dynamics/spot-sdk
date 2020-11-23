@@ -35,6 +35,7 @@ The Fault Service enables external clients to raise service faults, which can be
 
 Service faults enable services and payloads to easily display information about current systems health to operators. The faults should assist operators in effective debugging and resolution of any off-robot issues that arise during operation.
 
+The [Fault documentation](../concepts/faults.md) provides more context on the different types of faults that may be used with Spot.
 
 ### DirectoryService RPCs
 
@@ -43,8 +44,6 @@ Service faults enable services and payloads to easily display information about 
 | ----- | ----------- |
 | GetServiceEntry |	Get information about a specific service.
 | ListServiceEntries |	List all known services at the time of the request.
-
-
 
 
 ### DirectoryRegistrationService RPCs
@@ -57,13 +56,11 @@ Service faults enable services and payloads to easily display information about 
 | UpdateService |	Update the ServiceEntry for a system hosting a service.
 
 
-
 ### PayloadService RPCs
 
 | RPC   | Description |
 | ----- | ----------- |
 | ListPayloads |	Query the robot for a list of currently-registered payloads. |
-
 
 
 ### PayloadRegistrationService RPCs
@@ -73,7 +70,6 @@ Service faults enable services and payloads to easily display information about 
 | ----- | ----------- |
 | RegisterPayload |	Register a new payload with the robot.
 | GetPayloadAuthToken |	Get an auth token to enable the payload.
-
 
 
 ## Registering payloads
@@ -128,7 +124,7 @@ The payload registration process completes after an admin operator accepts the p
 Once a payload has been authorized, its unique GUID and secret combination can be used as credentials to request a limited-access user token that will grant permission to the auth, directory, robot-state, and directory-registration services. The granted user token will be valid for 12 hours.
 
 
-### Payload and service registration examples
+### Registration examples
 
 The Spot SDK Python code examples includes payload registration and service registration examples that provide sample scripts, protos, and a list of dependencies: [Self-registration Python code examples in the Spot SDK](../../python/examples/self_registration/README.md).
 
@@ -138,8 +134,6 @@ The Spot SDK Python code examples includes payload registration and service regi
 A payload, like any software client, can access the API by using login credentials. However, for self-registration, payloads can complete basic registration and get access to host services without needing to pass hardcoded user credentials.
 
 Instead, a payload is manually authorized by an operator on the admin console Payloads page. To ensure that the payload authorization is not used by malicious payloads, each payload must provide a unique GUID and secret (password) at registration time. The GUID and secret can then be used to request a user token that grants access to the basic components of the API (directory, directory registration, robot-state).
-
-Payload Services must periodically register with the Directory service in order to be used by the UI and the Autonomy Module. For example, during autonomous navigation, the robot may instruct the payload to store an image. It will address the payload service via the standard Directory service.
 
 
 ## Payload device network configuration
@@ -233,7 +227,7 @@ This table provides a reference when developing a client application using the t
 | YZ |	0 |	kg-m2
 | ZZ |	0.0166667 |	kg-m2
 
-### Bounding boxes: \ Center (m)
+### Bounding boxes: Center (m)
 
 | Item | Value | Units |
 | ---- | ----- | ----- |
@@ -243,7 +237,7 @@ This table provides a reference when developing a client application using the t
 
 
 
-### Bounding boxes: \ Orientation (radians) ZXY
+### Bounding boxes: Orientation (radians) ZXY
 
 | Item | Value | Units |
 | ---- | ----- | ----- |
@@ -252,15 +246,13 @@ This table provides a reference when developing a client application using the t
 | Pitch |	0 |	rad.
 
 
-### Bounding boxes: \ XYZ extent (m)
+### Bounding boxes: XYZ extent (m)
 
 | Item | Value | Units |
 | ---- | ----- | ----- |
 | X |	0.13 |	m
 | Y |	0.095 |	m
 | Z |	0.045 |	m
-
-
 
 
 The [payload.proto](../../protos/bosdyn/api/payload.proto) file in the Spot SDK provides details about fields and data types.

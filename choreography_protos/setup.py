@@ -116,7 +116,11 @@ setuptools.setup(
     install_requires=["protobuf>=3.3.0"],
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://www.bostondynamics.com/",
+    url="https://dev.bostondynamics.com/",
+    project_urls={
+        "Documentation": "https://dev.bostondynamics.com/",
+        "Source": "https://github.com/boston-dynamics/spot-sdk/",
+    },
     # Walk the immediate subdir 'bosdyn' and build python package names out of the result.
     packages=[subdir[0].replace(os.path.sep, '.') for subdir in os.walk('bosdyn')],
     # Gets populated in our BuildPy.

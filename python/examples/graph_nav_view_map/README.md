@@ -6,11 +6,11 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - GraphNav Map Viewer
+# GraphNav Map Viewer
 
 This is an example program for opening, parsing, and viewing a GraphNav map. This example may be used with GraphNav maps generated using Autowalk or the command line interface to GraphNav.
 
-## Prerequisites
+## Setup Dependencies
 
 This example requires VTK (visualization toolkit) and Numpy, and requires python 3. Using pip, these dependencies can be installed using:
 

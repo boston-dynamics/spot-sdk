@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Answer a Mission question.
+# Answering a Mission Question
 
 This example program demonstrates how to periodically check the robot's Mission state for a question, then answer that question.
 

@@ -10,7 +10,13 @@ Development Kit License (20191101-BDSDK-SL).
 
 The 2.1 release focuses on simplifying the integration of sensing payloads with the robot by creating the data acquisition pipeline. This document provides an overview of how a developer can write the necessary API services to integrate their sensor. The data acquisition pipeline will work with any payload, however different development steps are taken for a payload which collects image data (e.g. a 360 camera) and a payload which collects other data types and formats (e.g. a lidar or gas sensor).
 
+To fully integrate the sensor, a payload needs to implement either the Boston Dynamics API `ImageService` or the `DataAcquisitionPluginService`, based on the type of data that will be collected and stored. These services will register with the directory service on robot, and the data acquisition service will automatically detect the new services and communicate with them for data acquisition requests. The following diagram shows the expected communication map.
+
+![Communication Map Screenshot](./images/payload_communication_map.png)
+
+
 ## Camera Payloads
+
 To integrate a camera payload which outputs image data in a known format (e.g. raw bytes or JPEG) with the data acquisition pipeline, a developer needs to implement an [ImageService](../../protos/bosdyn/api/image_service.proto).
 
 The data acquisition service will automatically recognize any directory-registered image services, create `ImageAcquistionCapabilities` for the image sources, and be able to collect image data for each service using the standard `ImageService` RPCs. For a camera payload, a developer will need to implement an image servicer class, which will inherit from `image_service_pb2_grpc.ImageServiceservicer` and must include the following RPCs:
@@ -29,6 +35,7 @@ There are two SDK examples showing `ImageService` implementations: a [USB web ca
 To integrate a payload which outputs a different, non-image format of data with the data acquisition pipeline, a developer needs to implement a [DataAcquisitionPluginService](../../protos/bosdyn/api/data_acquisition_plugin_service.proto).
 
 A directory-registered DataAcquisitionPluginService will be automatically recognized by the data acquisition service on robot. The plugin service will collect the necessary payload data to respond to requests for its specific data captures from the data acquisition service. To simplify the implementation of a plugin service, a set of base plugin service helper functions are provided in [data_acquisition_plugin_service.py](../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.py).
+
 The plugin service can be created with the `DataAcquisitionPluginService` class, which is a helper class that will manage state and respond to the RPCs required of a plugin service. The constructor of the plugin service helper class requires a developer to provide 1) a list of the data capabilities that the service can collect data, and 2) a function to collect this data.
 
 ### Data Capabilities List
@@ -85,10 +92,7 @@ Note, the `DataAcquisitionPluginService` class will wait to respond to the `Acqu
 
 ### Example Plugins
 
-There are a couple example plugin services which show data collection, creating associated metadata, and storing the data:
-- `python/examples/data_acquisition_service/plugins/piksi_metadata_plugin_service.py`
-- `python/examples/data_acquisition_service/plugins/pointcloud_plugin_service.py`
-- `python/examples/data_acquisition_service/plugins/gps_metadata_plugin_service.py`
+There are a couple [example plugin services](../../python/examples/data_acquisition_service/README.md) which show data collection, creating associated metadata, and storing the data for the following types of payloads: Piksi GPS, PointCloud services, and generic GPS metadata.
 
 ### Error Reporting
 
@@ -127,6 +131,19 @@ If the plugin service encounters an error that is unrelated to a specific piece 
 The new service, either a data acquisition plugin service or an image service, must be running and registered with the directory to communicate with the robot and the data acquisition service. This requires a unique service name, service type (“bosdyn.api.DataAcquisitionPluginService” or “bosdyn.api.ImageService”), and a service authority.
 
 The payload computer running the new service should perform payload authentication using the GUID/secret of the payload before registering the service with the directory.
+
+## Attaching Metadata with other Data or Images
+
+Additional metadata, such as the robot state or sensor configuration information, can be stored in association with external data collected by a plugin or images from image services. To save metadata linked with each piece of data, a DataAcquisitionPluginService can be created to collect and save this metadata. This plugin will list capture actions representing each piece of additional metadata. The plugin will recieve an `AcquirePluginData` request from the data acquisition service on robot, which will contain a repeated list of `DataIdentifiers` that the metadata plugin can use to store metadata associated to these identified pieces of data.
+
+The metadata will be configured as JSON data, and can be stored as an `AssociatedMetadata` proto. This proto contains a `reference_id` field, which will be the `DataIdentifier` from the data it should be associated with; if only the `action_id` of that identifier is filled out, than the metadata is associated with the entire action (all of the repeated data identifiers).
+
+A plugin can store this associated metadata using the store helper with the `AssociatedMetadata` proto and a new `DataIdentifier` which uniquely identifies the associated metadata (and not what the metadata is referencing):
+```
+store_helper.store_metadata(associated_metadata_proto, data_id)
+```
+
+When downloading or retrieving the data from the data acquisition store, the metadata saved with each action will also be retrieved and can easily be linked back to the data it is stored with.
 
 ## Testing the New Service
 

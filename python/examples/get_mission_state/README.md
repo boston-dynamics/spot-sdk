@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Retrieve Mission state.
+# Retrieving Mission state
 
 This example program demonstrates how to retrieve information about the state of the currently-running mission.
 

@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Basic Streaming Visualizer for API Messages
+# Basic Streaming Visualizer for API Messages
 This example program visualizes Spot's perception scene in a consistent coordinate frame. It demonstrates:
  * How to convert API objects, such as local grids and world objects, into the vision world frame.
  * Create a basic rendering of these objects using python VTK.
@@ -21,14 +21,15 @@ This example requires the bosdyn API and client to be installed, and must be run
 ```
 python3 -m pip install -r requirements.txt
 ```
-As well, the example program takes an optional command line argument of `--local-grid` to specify which local grid sources to be visualized. The argument must be one of `{terrain, obstacle-distance, no-step}`. By default, the program will visualize the terrain map, which shows the estimated heights of objects near Spot. To visualize more than one grid source at a time, you must repeat the command line argument for each grid source; for example, `--local-grid terrain --local-grid no-step`.
 
 ## Running the Example
 To run the example:
 
 ```
-python3 -m basic_streaming_visualizer --username USER --password PASSWORD ROBOT_IP
+python3 -m basic_streaming_visualizer --username USER --password PASSWORD ROBOT_IP [--local-grid {no-step,obstacle-distance,terrain}]
 ```
+As well, the example program takes an optional command line argument of `--local-grid` to specify which local grid sources to be visualized. The argument must be one of `{terrain, obstacle-distance, no-step}`. By default, the program will visualize the terrain map, which shows the estimated heights of objects near Spot. To visualize more than one grid source at a time, you must repeat the command line argument for each grid source; for example, `--local-grid terrain --local-grid no-step`.
+
 ### Camera Controls
 
 The controls to interact with the visualization screen while the example is running:

@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# Ricoh Theta
+# Interacting with a Ricoh Theta Camera
 In the 2.1.0 release, we have provided a **new** Ricoh Theta example for developers to learn how to create a standard Boston Dynamics API image service that communicates with the Ricoh Theta camera.
 
 This example assumes you are using the default settings of a Ricoh Theta camera and mounted/registered Spot CORE.
@@ -45,9 +45,9 @@ python3 test_driver.py
 Perform the following steps on your PC to setup Ricoh Theta client mode, which means the Ricoh Theta will be connected to a different network (in this case, Spot's WiFI) instead of broadcasting its own network (which is the direct mode). The python script below is required for this example to set the static ip, which the App does not allow.
 
 1. Enable wireless connection on the Ricoh Theta and connect your PC to the Ricoh Theta via WiFi.
-1. Run `ricoh_client_mode.py` on your PC via the CLI. Replace the capitilized letters in the command below with your Ricoh Theta SSID **with the .OSC removed from the end**, Spot's WiFi SSID, and Spot's WiFi password.
+1. Run `ricoh_client_mode.py` on your PC via the CLI. Replace the capitilized letters in the command below with your Ricoh Theta SSID **with the .OSC removed from the end**, Spot's WiFi SSID, and Spot's WiFi password. The `disable-sleep-mode` will disable the Ricoh Theta's automatic sleep with inactivity mode. Note, this can also be done through the Ricoh Theta's phone application, in which case this argument does not need to be provided when running the client mode script.
     ```
-    python ricoh_client_mode.py --theta-ssid THETAYL00196843 --wifi-ssid WIFI_SSID --wifi-password WIFI_PASSWORD
+    python ricoh_client_mode.py --theta-ssid THETAYL00196843 --wifi-ssid WIFI_SSID --wifi-password WIFI_PASSWORD --disable-sleep-mode
     ```
     If all goes well, you should see a positive response that shows the new static ip:
     ```
@@ -67,14 +67,13 @@ Perform the following steps on your PC to setup Ricoh Theta client mode, which m
 
 1. Enable client mode on your Ricoh Theta (press the wireless button on the camera) and confirm connection with Spot's access point. The wireless indicator should stop blinking and become solid green in client mode for Ricoh Theta V. On a Ricoh Theta Z, on the OLED display screen of the camera, there will be a 'CL' icon next to the wireless indicator. **Often a Ricoh Theta power cycle is required.** Note, the new static IP for the Ricoh Theta in client mode will be persistent across reboots of the camera.
 
-
 ## Run Image Service
 
 The image service script creates a standard Boston Dyanmics API image service that communicates with the Ricoh Theta camera.
 
 To launch the GRPC image service from a registered payload computer (such as the Spot CORE), authenticate the robot connection using the payload's authentication, and ultimately register the service with the directory **with the service name 'ricoh-theta-image-service'**, issue the following command:
 ```
-python3 ricoh_theta_image_service.py --theta-ssid THETA_SSID --theta-client --host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET ROBOT_IP
+python3 ricoh_theta_image_service.py --theta-ssid THETA_SSID --theta-client --host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET --port PORT_NUMBER ROBOT_IP
 ```
 
 The `hostname` ("ROBOT_IP") argument should be the IP address of the robot which is hosting the directory service. The `--host-ip` argument is the IP address for the computer running the script. For example, in the example where we run the image service on the Spot CORE, the default IP address of 192.168.50.5 can be provided for the `--host-ip` argument.
@@ -85,63 +84,44 @@ If the `--theta-client` argument is provided, the Ricoh Theta will be connected 
 
 The `--theta-ssid` argument is used to pass the SSID for the Ricoh Theta camera that will take the images and **should have the .OSC removed**. This will be set as the image source name for the service. Additionally, if the password for the Ricoh Theta is different from the default password of the camera, this can be provided using the `--theta-password` argument.
 
-Lastly, a port number for the image service can be specified using the `--port` argument, however the script will choose a random default port number if nothing is provided. This port number will be used with the host-ip (HOST_COMPUTER_IP) to fully specify where the image service is running. This port number must be open and cannot be blocked by a local firewall, otherwise the ricoh-theta image service will be unreachable from the robot and the directory registration service.
+Lastly, a port number for the image service can be specified using the `--port` argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a service listening on the old port. This port number will be used with the host-ip (HOST_COMPUTER_IP) to fully specify where the image service is running. This port number must be open and cannot be blocked by a local firewall, otherwise the ricoh-theta image service will be unreachable from the robot and the directory registration service.
 
-### Querying the Ricoh Theta Image Service
+### Ricoh Theta Image Service Configuration
+
+The Ricoh Theta image service is configured to prevent directory registration if communication cannot be established with the Ricoh Theta camera. This means the image service will not show up in the directory listing, the data acquisition service's known captures, or the tablet's set of avaialble camera sources.
+
+Additionally, the service will throw [Service Faults](../../../docs/concepts/faults.md) for both failure to communicate at start up with the camera and also if a capture attempt fails for a different reason than networking. These faults will be visible in the robot state, and will show warning indicators on the tablet.
+
+Note, the Ricoh Theta image requests can be slow due to the time it takes to stitch the two fisheye images together on the camera.
+
+## Querying the Ricoh Theta Image Service
 
 To validate the ricoh-theta image service is working, the [`get_image` example](../get_image/README.md) has an argument `--image-service` which can be used to specify the service name of the Ricoh Theta service: `'ricoh-theta-image-service'`. This example can be used to list the different image sources or request and save an image from a specified image source. By default, this example will try to query the standard image service on-robot that communicates with the robot's built-in cameras, but can be redirected to any implementation of the API image service using the `--image-service` argument.
 
 Since the ricoh-theta service is registered with the robot's directory service, the get_image example can be run from any computer and just needs an API SDK connection to the robot to be able to access the ricoh-theta service and its images.
 
-### Run the Ricoh Theta Image Service using Docker
+### Debugging Tips
 
-With docker installed and setup, the Ricoh Theta image service can be created into a docker container, saved as a tar file, and then run on the Spot CORE using Portainer.
+Here are a couple suggestions for debugging the Ricoh Theta image service:
 
-The docker file, which will run the Ricoh Theta image service, can be built and saved to a tar file using the following commands:
-```
-sudo docker build -t ricoh_theta_image_service .
-sudo docker save ricoh_theta_image_service > ricoh_theta_image_service.tar
-```
+- Check that the Ricoh Theta is configured properly. If running the image service locally, the Ricoh Theta can be in direct-ip mode and the local computer can connect to the Ricoh Theta's network. If running on the Spot CORE or a different spot payload computer, the Ricoh Theta should be in client mode. For the Ricoh Theta V, the wireless indicator should be solid green; for the Ricoh Theta Z, the OLED display will have a 'CL' icon near the wireless indicator. It may help to just rerun the `ricoh_client_mode.py` script to fully ensure that it is setup for communicating on Spot's network.
+- Check that the image service appears in the directory using the command line tool: `python3 -m bosdyn.client --username {USER} --password {PWD} {ROBOT_IP} dir list`
+- Check that no faults appear from the image service using the command line tool: `python3 -m bosdyn.client --username {USER} --password {PWD} {ROBOT_IP} fault watch`
+- Check for any error spew in the terminal where the image service is running while attempting to make requests to the service. If the image service is running as a docker container with Portainer, check the logs page on the Ricoh Theta service's container for any error spew.
+- Check that the image service responds with a complete list of its image sources using the command line tool: `python3 -m bosdyn.client --username {USER} --password {PWD} {ROBOT_IP} image list-sources --service-name ricoh-theta-image-service`
+- Check that retrieving and saving each image is successful, and opening the saved image reveals the correct/expected image.
+    - For source names that are plain strings (with no special characters like "/"), use the command line tool: `python3 -m bosdyn.client --username {USER} --password {PWD} {ROBOT_IP} image get-image SRC_NAME --service-name ricoh-theta-image-service`
+    - For complicated source names, use the `get_image.py` example from the `get_image/` directory. This example will convert the source name when saving the image file to a "saveable" string: `python3 get_image.py --image-service ricoh-theta-image-service --image-source {IMG_SRC}  --username {USER} --password {PWD} {ROBOT_IP}`
+- Check that the tablet is detecting the Ricoh Theta image service by looking in the camera sources drop down menu (top-left of the status bar) and then check that the images are appearing by selecting the Ricoh Theta.
 
-The dockerfile can now be run locally or run directly on the Spot CORE.
+## Run the Ricoh Theta Image Service using Docker
 
-#### Run On Local Computer
+Please refer to this [document](../../../docs/payload/docker_containers.md) for general instructions on how to run software applications on computation payloads as docker containers.
 
-To run locally, your computer must be registered as a weightless payload (and authorized on the admin console web server for the robot). This can be done using the [payloads example](../payloads/README.md), which registers the payload with the name 'Client Registered Payload Ex #1' and a default GUID and secret.
+Follow the instructions on how to build and use the docker image from [this section](../../../docs/payload/docker_containers.md#build-docker-images). The application arguments needed to run the Ricoh Theta application in this example are `--theta-ssid THETA_SSID --theta-client --host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET --port PORT_NUMBER ROBOT_IP`.
 
-To start the dockerfile and the Ricoh Theta image service, run:
-```
-sudo docker run -it --network=host ricoh_theta_image_service --theta-ssid THETA_SSID --theta-client --host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET ROBOT_IP
-```
-** Note, all the arguments are the same as when running the python script `ricoh_theta_image_service.py`.
-
-#### Run On Spot CORE
-To run the dockerfile and Ricoh Theta image service on the Spot CORE, first ensure that you have a 2.1 release on the Spot CORE. This can be checked by ssh-ing onto the Spot CORE and running `cat /etc/spotcore-release`.
-
-If it is not up to date, upgrade to the latest Spot CORE release following the instructions to upgrade: https://support.bostondynamics.com/s/article/How-to-update-Spot-CORE-software.
-
-Once the Spot CORE is updated, the docker file can be deployed using Portainer. Upload the `ricoh_theta_image_service.tar` as an "Image" on Portainer. If the upload fails, try changing the permissions of the tar file using the command:
-```
-sudo chmod a+r ricoh_theta_image_service.tar
-```
-Once the upload completes, go to the "Containers" tab in Portainer and add a container. Set the follow fields:
-```
-"Name" = ricoh_theta_image_service
-"Image" = ricoh_theta_image_service:latest
-"Publish all exposed network ports to random host ports" = True
-```
-
-Under the "Command & logging" tab in the container configuration page, add all of the arguments in the "Command" field. Specifically, these arguments:
-```
---theta-ssid THETA_SSID --theta-client --host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET ROBOT_IP
-```
-** Make sure the `HOST_COMPUTER_IP` matches the Spot CORE's IP (by default, this is 192.168.50.5 for the rear-mounted Spot CORE), `ROBOT_IP` matches the robot IP from the perspective of the Spot CORE (by default, this is 192.168.50.3), and that `THETA_SSID` has the .OSC removed.
-
-Under the "Network" tab in the container configuration page, set the "Network" field to "host".
-
-Under the "Restart policy" tab in the container configuration page, set the policy to "Unless stopped". This will allow the docker container to continue to keep running all the time (even after rebooting the spot core) unless it is manually stopped by a user in Portainer.
-
-Once all the necessary fields are configured, select "Deploy the container" to run the Ricoh Theta image service using the docker container on Spot CORE.
+**Reminder:** the Ricoh Theta needs to be in client mode when running the image service on a payload computer. Follow the initial instructions above to setup client mode.
 
 ## Developer Comments
-For Ricoh Theta API Documentation, visit [https://api.ricoh/products/theta-api/](https://api.ricoh/products/theta-api/)
+
+For Ricoh Theta API Documentation, visit [https://api.ricoh/products/theta-api/](https://api.ricoh/products/theta-api/).

@@ -6,11 +6,17 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Stance In Place
+# Adjusting Robot Stance In Place
 
 This example will exercise the stance function to reposition the robot's feet.
 
-## Setup
+## Setup Dependencies
+These examples need to be run with python3, and have the Spot SDK installed. See the requirements.txt file for a list of dependencies which can be installed with pip.
+```
+python3 -m pip install -r requirements.txt
+```
+
+## Setup Robot
 
 To properly setup for this example:
 1. Have the robot in an area with ~1m space all around

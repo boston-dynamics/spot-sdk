@@ -35,3 +35,6 @@ The complexity of payload integration with the Spot platform ranges from:
 * [Guidelines for robust payload design](guidelines_for_robust_payload_design.md)
 * [Robot electrical interface](robot_electrical_interface.md)
 * [Configuring payload software](configuring_payload_software.md)
+* [Configuring Docker containers in SpotCORE](docker_containers.md)
+* [Spot CORE system management tool: Cockpit](spot_core_cockpit.md)
+* [Spot CORE VNC](spot_core_vnc.md)

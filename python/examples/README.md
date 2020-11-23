@@ -12,45 +12,32 @@ The programming examples included in this directory cover various aspects of the
 
 Boston Dynamics recommends completing the [QuickStart guide](../../docs/python/quickstart.md) before running examples in order to learn essential concepts for using the SDK.
 
+## Recommended Examples
+
+Developers getting acquainted with the SDK may find it easier to start with certain introductory examples before progressing to more advanced ones. Here we group some of the most fundamental SDK examples by their complexity. In addition to these highlighted examples, the complete set of examples can be found below, grouped based on which parts of the API the example code is featuring, in the table of contents.
+
+### Introductory Examples
+* [Hello Spot](hello_spot/README.md)
+* [Directory](directory/README.md)
+* [Get Robot State](get_robot_state/README.md)
+
+### Intermediate Examples
+* [Frame Trajectory](frame_trajectory_command/README.md)
+* [Data Acquisition Service](data_acquisition_service/README.md)
+* [Self Registration](self_registration/README.md)
+* [Graph Nav View Map](graph_nav_view_map/README.md)
+
+### Advanced Examples
+* [Spot Detect and Follow](spot_detect_and_follow/README.md)
+* [Mission Recorder](mission_recorder/README.md)
+* [Xbox Controller](xbox_controller/README.md)
 
 ## Contents
 
-* [Comms Test](comms_test/README.md)
-* [Data Acquisition Service](data_acquisition_service/README.md)
-* [Data Service](data_service/README.md)
-* [Directory](directory/README.md)
-* [Cloud Upload](cloud_upload/README.md)
-* [E-Stop](estop/README.md)
-* [Fault](service_faults/README.md)
-* [Fiducial Follow](fiducial_follow/README.md)
-* [Frame Trajectory](frame_trajectory_command/README.md)
-* [Get Image](get_image/README.md)
-* [Get Mission State](get_mission_state/README.md)
-* [Get Robot State](get_robot_state/README.md)
-* [Get Robot State Async](get_robot_state_async/README.md)
-* [Get World Objects](get_world_objects/README.md)
-* [Graph Nav Command Line](graph_nav_command_line/README.md)
-* [Graph Nav View Map](graph_nav_view_map/README.md)
-* [Hello Spot](hello_spot/README.md)
-* [Logging](logging/README.md)
-* [Mission Question Anwerer](mission_question_answerer/README.md)
-* [Mission Recorder](mission_recorder/README.md)
-* [Payloads](payloads/README.md)
-* [Remote Mission Service](remote_mission_service/README.md)
-* [Replay Mission](replay_mission/README.md)
-* [Ricoh Theta](ricoh_theta/README.md)
-* [Self Registration](self_registration/README.md)
-* [Spot CAM](spot_cam/README.md)
-* [Spot Detect and Follow](spot_detect_and_follow/README.md)
-* [Spot Light](spot_light/README.md)
-* [Stance](stance/README.md)
-* [Tensorflow Detector](spot_tensorflow_detector/README.md)
-* [Time Sync](time_sync/README.md)
-* [Upload Choreographed Sequence](upload_choreographed_sequence/README.md)
-* [Velodyne](velodyne_client/README.md)
-* [Visualizer](visualizer/README.md)
-* [WASD](wasd/README.md)
-* [Web Cam Service](web_cam_image_service/README.md)
-* [World Object Mutations](world_object_mutations/README.md)
-* [World Object With Image Coordinates](world_object_with_image_coordinates/README.md)
-* [Xbox Controller](xbox_controller/README.md)
+* [Basic Service Examples](docs/basic_service_examples.md)
+* [Robot Behavior and Commands Examples](docs/robot_behavior_examples.md)
+* [Payloads and Registration Examples](docs/payloads_examples.md)
+* [Perception and World Objects Examples](docs/perception_world_objects_examples.md)
+* [Logging Examples](docs/logging_examples.md)
+* [Data Acquisition Examples](docs/data_acquisition_examples.md)
+* [Autonomy and Missions Examples](docs/autonomy_and_missions_examples.md)

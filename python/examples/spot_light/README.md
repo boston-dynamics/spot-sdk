@@ -6,16 +6,16 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Creating a Custom User Interaction
+# Responding to User Interaction via Light
 
 This example will allow Spot to respond to a light shining in its front
-left camera.  The following describes what to expect:
+left camera. The following describes what to expect:
 
-  - with the robot sitting, shine a light into the front left camera, Spot should stand up
-  - shine a light into the front left camera again, Spot should start tilting to follow the light
-  - remove the light, Spot should sit down
+- with the robot sitting, shine a light into the front left camera, Spot should stand up
+- shine a light into the front left camera again, Spot should start tilting to follow the light
+- remove the light, Spot should sit down
 
-NOTE: Both the light detection and controller are very crude.  One needs to have a very steady
+NOTE: Both the light detection and controller are very crude. One needs to have a very steady
 hand to prevent the robot from "seeing" other bright lights in the front left camera.
 
 ## Setup Dependencies

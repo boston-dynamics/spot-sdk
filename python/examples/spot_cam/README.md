@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Spot CAM Services
+# Spot CAM Services
 
 These examples demonstrate how to interact with the Spot CAM.
 

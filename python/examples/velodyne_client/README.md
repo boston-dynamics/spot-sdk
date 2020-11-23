@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Using the Velodyne Point Cloud Service
+# Using the Velodyne Point Cloud Service
 
 This example demonstrates how to use the Velodyne service to query for point clouds. It authenticates with the robot and sets up a PointCloudClient. Once the client is set up, it polls the service for updated point clouds and displays them using Pyplot.
 

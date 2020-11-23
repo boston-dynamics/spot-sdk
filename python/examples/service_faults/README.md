@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Service Faults
+# Handling Service Faults
 
 This example program demonstrates how to trigger, clear, and display service faults. Additionally, it shows how to take advantage of the directory liveness
 system to enable automatic faulting when a service crashes or fails to maintain liveness.

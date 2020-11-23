@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Data Acquisition Plugin Services
+# Data Acquisition Plugin Services
 
 The example programs demonstrate how to create a data acquisition plugin service and run the service such that it can communicate with the data acquisition service on-robot. A data acquisition plugin service is used to communicate with external payloads and hardware, retrieve the data from these sensors, and save the data in the data acquisition store service.
 
@@ -40,7 +40,7 @@ For the Spot CORE, this information by default will be located in the file `/opt
 
 Note, you can run the example plugins locally on your PC by registering it as a weightless payload using [the payloads example](../payloads/README.md) and creating a GUID and secret for your computer.
 
-Lastly, port numbers for the example plugin services can be specified using the `--port` ("PORT_THE_PLUGIN_WILL_MONITOR") argument. If nothing is provided, a random default port number will be used. The port numbers will be used with the `--host-ip` ("IP_WHERE_PLUGIN_WILL_RUN") to fully specify where the two services are running on the payload computer. The port numbers of different plugins cannot be the same, they must be open, and they must not be blocked by a local firewall, otherwise the service will be unreachable from the robot and other applications.
+Lastly, port numbers for the example plugin services can be specified using the `--port` ("PORT_THE_PLUGIN_WILL_MONITOR") argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a services listening port. The port numbers will be used with the `--host-ip` ("IP_WHERE_PLUGIN_WILL_RUN") to fully specify where the two services are running on the payload computer. The port numbers of different plugins cannot be the same, they must be open, and they must not be blocked by a local firewall, otherwise the service will be unreachable from the robot and other applications.
 
 The network ports used by the services can be opened by running this command on the host computer (Linux):
 ```
@@ -87,6 +87,7 @@ python3 data_acquisition_download.py --username {USER} --password {PASSWORD} {RO
 Note, by default, the download script will save the data to the current directory, however the `--destination-folder` argument can be used to change where the downloaded data is saved.
 
 ## Run a Data Acquisition Plugin Service using Docker
+Please refer to this [document](../../../docs/payload/docker_containers.md) for general instructions on how to run software applications on computation payloads as docker containers.
 
 With docker installed and setup, any of the data acquisition plugin services can be created into a docker container, saved as a tar file, and then run on the Spot CORE using Portainer. The Dockerfile *must* be updated to specify which plugin service should run -- change the filename `gps_metadata_plugin_service` to whichever plugin should be launched in the following line in the Dockerfile:
 
@@ -100,48 +101,4 @@ Additionally, the docker-requirements.txt file *must* be updated to be installin
 COPY docker_requirements_files/gps-metadata-plugin-requirements.txt ./docker-requirements.txt
 ```
 
-The docker container, which will run the plugin service, can be built and saved to a tar file using the following commands, where `data_acquisition_plugin_service` is the name for the built docker container and can be changed to be specific for the plugin service within the container:
-```
-sudo docker build -t data_acquisition_plugin_service .
-sudo docker save data_acquisition_plugin_service > data_acquisition_plugin_service.tar
-```
-
-The dockerfile can now be run locally or run directly on the Spot CORE.
-
-### Run On Local Computer
-
-To run locally, your computer must be registered as a weightless payload (and authorized on the admin console web server for the robot). This can be done using the [payloads example](../payloads/README.md), which registers the payload with the name 'Client Registered Payload Ex #1' and a default GUID and secret.
-
-To start the docker container and the data acquisition plugin service, run:
-```
-sudo docker run -it --network=host data_acquisition_plugin_service --host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET ROBOT_IP
-```
-** Note, all the arguments are the same as when running the python scripts for the plugins.
-
-### Run On Spot CORE
-To run the docker container and the data acquisition plugin service on the Spot CORE, first ensure that you have a 2.1 release on the Spot CORE. This can be checked by ssh-ing onto the Spot CORE and running `cat /etc/spotcore-release`.
-
-If it is not up to date, upgrade to the latest Spot CORE release following the instructions to upgrade: https://support.bostondynamics.com/s/article/How-to-update-Spot-CORE-software.
-
-Once the Spot CORE is updated, the docker file can be deployed using Portainer. Upload the `data_acquisition_plugin_service.tar` as an "Image" on Portainer. If the upload fails, try changing the permissions of the tar file using the command:
-```
-sudo chmod a+r data_acquisition_plugin_service.tar
-```
-Once the upload completes, go to the "Containers" tab in Portainer and add a container. Set the follow fields:
-```
-"Name" = data_acquisition_plugin_service
-"Image" = data_acquisition_plugin_service:latest
-"Publish all exposed network ports to random host ports" = True
-```
-
-Under the "Command & logging" tab in the container configuration page, add all of the arguments in the "Command" field. Specifically, these arguments:
-```
- --host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET ROBOT_IP
-```
-** Make sure the `HOST_COMPUTER_IP` matches the Spot CORE's IP (by default, this is 192.168.50.5 for the rear-mounted Spot CORE), and `ROBOT_IP` matches the robot IP from the perspective of the Spot CORE (by default, this is 192.168.50.3).
-
-Under the "Network" tab in the container configuration page, set the "Network" field to "host".
-
-Under the "Restart policy" tab in the container configuration page, set the policy to "Unless stopped". This will allow the docker container to continue to keep running all the time (even after rebooting the spot core) unless it is manually stopped by a user in Portainer.
-
-Once all the necessary fields are configured, select "Deploy the container" to run the data acquisition plugin service using the docker container on Spot CORE.
+Then, follow the instructions on how to build and use the docker image from [this section](../../../docs/payload/docker_containers.md#build-docker-images) on. The application arguments needed to run the plugins included in this example are `--host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET ROBOT_IP`.

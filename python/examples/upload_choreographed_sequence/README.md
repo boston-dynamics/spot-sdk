@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Upload and Execute Choreography Sequence
+# Upload and Execute Choreography Sequence
 
 This example shows how to use the Choreography service to upload an existing choreographed sequence to the robot, and have the robot execute that uploaded routine. The terminology and the api for the choreography service is described further in the [Choreography Service documentation](../../../docs/concepts/choreography/choreography_service.md).
 

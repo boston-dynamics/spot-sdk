@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Using the Timesync Service
+# Using the Timesync Service
 
 This example demonstrates how to use the timesync service to establish time sync between your computer and the robot's clock. Specifically, it creates a TimeSyncEndpoint, which can be used to establish timesync as well as determine the clock skew or round trip time.
 

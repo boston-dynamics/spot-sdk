@@ -39,7 +39,9 @@
 
     
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Data Buffer Overview" href="data_buffer_overview.html" />
+    <link rel="prev" title="Data Acquisition Output" href="data_acquisition_output.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -91,17 +93,16 @@
               
             
             
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="README.html">Concepts</a><ul>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="README.html">Concepts</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="about_spot.html">About Spot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="base_services.html">Base services</a></li>
-<li class="toctree-l2"><a class="reference internal" href="developing_api_services.html">Developing API Services</a></li>
-<li class="toctree-l2"><a class="reference internal" href="data_acquisition_overview.html">Data Acquisition Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
@@ -119,6 +120,15 @@
 <li class="toctree-l2"><a class="reference internal" href="choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="choreography/choreographer_setup.html">Choreographer Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="data.html">Spot Data</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="data_acquisition_overview.html">Data Acquisition Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_acquisition_output.html">Data Acquisition Output</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Integrate Payloads with the API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_buffer_overview.html">Data Buffer Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bddf.html">BDDF file format</a></li>
 </ul>
 </li>
 </ul>
@@ -127,45 +137,77 @@
 <li class="toctree-l2"><a class="reference internal" href="../python/quickstart.html">Quickstart</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../python/understanding_spot_programming.html">Understanding Spot Programming</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../python/examples/README.html">Examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/comms_test/README.html">Comms Test</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/data_acquisition_service/README.html">Data Acquisition Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/data_service/README.html">Data Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/directory/README.html">Directory</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/estop/README.html">E-Stop</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/service_faults/README.html">Fault</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_image/README.html">Get Image</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_robot_state/README.html">Get Robot State</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/hello_spot/README.html">Hello Spot</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/logging/README.html">Logging</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/mission_question_answerer/README.html">Mission Question Anwerer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/payloads/README.html">Payloads</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/replay_mission/README.html">Replay Mission</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/self_registration/README.html">Self Registration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/spot_cam/README.html">Spot CAM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/spot_light/README.html">Spot Light</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/stance/README.html">Stance</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/time_sync/README.html">Time Sync</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/upload_choreographed_sequence/README.html">Upload Choreographed Sequence</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/velodyne_client/README.html">Velodyne</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/visualizer/README.html">Visualizer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/wasd/README.html">WASD</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/world_object_with_image_coordinates/README.html">World Object With Image Coordinates</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/examples/xbox_controller/README.html">Xbox Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/basic_service_examples.html">Basic Service Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/directory/README.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/estop/README.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/comms_test/README.html">Comms Test</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/robot_behavior_examples.html">Robot Behavior and Commands Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/stance/README.html">Stance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/upload_choreographed_sequence/README.html">Upload Choreographed Sequence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/xbox_controller/README.html">Xbox Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/wasd/README.html">WASD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/payloads/README.html">Payloads</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/world_object_with_image_coordinates/README.html">World Object With Image Coordinates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/stitch_front_images/README.html">Stitch front images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/bddf_download/README.html">BDDF Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/data_service/README.html">Data Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/logging/README.html">Logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/bddf_download/README.html">BDDF Download</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/data_acquisition_examples.html">Data Acquisition Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/data_acquisition_service/README.html">Data Acquisition Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/autonomy_and_missions_examples.html">Autonomy and Missions Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/mission_question_answerer/README.html">Mission Question Anwerer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/replay_mission/README.html">Replay Mission</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../python/README.html">Python Reference Guide</a><ul>
@@ -257,6 +299,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../payload/robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../payload/configuring_payload_software.html">Configuring payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/spot_core_vnc.html">Spot CORE VNC</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../protos/README.html">API Protocol</a><ul>
@@ -409,6 +454,10 @@
     
       <li><a href="../../README.html" class="icon icon-home"></a> &raquo;</li>
         
+          <li><a href="README.html">Concepts</a> &raquo;</li>
+        
+          <li><a href="data.html">Spot Data</a> &raquo;</li>
+        
       <li>Integrate a Payload with the Data Acquisition Pipeline</li>
     
     
@@ -435,6 +484,8 @@ Development Kit License (20191101-BDSDK-SL).
 --><div class="section" id="integrate-a-payload-with-the-data-acquisition-pipeline">
 <h1>Integrate a Payload with the Data Acquisition Pipeline<a class="headerlink" href="#integrate-a-payload-with-the-data-acquisition-pipeline" title="Permalink to this headline">¶</a></h1>
 <p>The 2.1 release focuses on simplifying the integration of sensing payloads with the robot by creating the data acquisition pipeline. This document provides an overview of how a developer can write the necessary API services to integrate their sensor. The data acquisition pipeline will work with any payload, however different development steps are taken for a payload which collects image data (e.g. a 360 camera) and a payload which collects other data types and formats (e.g. a lidar or gas sensor).</p>
+<p>To fully integrate the sensor, a payload needs to implement either the Boston Dynamics API <code class="docutils literal notranslate"><span class="pre">ImageService</span></code> or the <code class="docutils literal notranslate"><span class="pre">DataAcquisitionPluginService</span></code>, based on the type of data that will be collected and stored. These services will register with the directory service on robot, and the data acquisition service will automatically detect the new services and communicate with them for data acquisition requests. The following diagram shows the expected communication map.</p>
+<p><img alt="Communication Map Screenshot" src="../../_images/payload_communication_map.png" /></p>
 <div class="section" id="camera-payloads">
 <h2>Camera Payloads<a class="headerlink" href="#camera-payloads" title="Permalink to this headline">¶</a></h2>
 <p>To integrate a camera payload which outputs image data in a known format (e.g. raw bytes or JPEG) with the data acquisition pipeline, a developer needs to implement an <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#image-service-proto">ImageService</a>.</p>
@@ -456,8 +507,8 @@ Development Kit License (20191101-BDSDK-SL).
 <div class="section" id="non-image-payloads">
 <h2>Non-image Payloads<a class="headerlink" href="#non-image-payloads" title="Permalink to this headline">¶</a></h2>
 <p>To integrate a payload which outputs a different, non-image format of data with the data acquisition pipeline, a developer needs to implement a <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#data-acquisition-plugin-service-proto">DataAcquisitionPluginService</a>.</p>
-<p>A directory-registered DataAcquisitionPluginService will be automatically recognized by the data acquisition service on robot. The plugin service will collect the necessary payload data to respond to requests for its specific data captures from the data acquisition service. To simplify the implementation of a plugin service, a set of base plugin service helper functions are provided in <a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html"><span class="doc">data_acquisition_plugin_service.py</span></a>.
-The plugin service can be created with the <code class="docutils literal notranslate"><span class="pre">DataAcquisitionPluginService</span></code> class, which is a helper class that will manage state and respond to the RPCs required of a plugin service. The constructor of the plugin service helper class requires a developer to provide 1) a list of the data capabilities that the service can collect data, and 2) a function to collect this data.</p>
+<p>A directory-registered DataAcquisitionPluginService will be automatically recognized by the data acquisition service on robot. The plugin service will collect the necessary payload data to respond to requests for its specific data captures from the data acquisition service. To simplify the implementation of a plugin service, a set of base plugin service helper functions are provided in <a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html"><span class="doc">data_acquisition_plugin_service.py</span></a>.</p>
+<p>The plugin service can be created with the <code class="docutils literal notranslate"><span class="pre">DataAcquisitionPluginService</span></code> class, which is a helper class that will manage state and respond to the RPCs required of a plugin service. The constructor of the plugin service helper class requires a developer to provide 1) a list of the data capabilities that the service can collect data, and 2) a function to collect this data.</p>
 <div class="section" id="data-capabilities-list">
 <h3>Data Capabilities List<a class="headerlink" href="#data-capabilities-list" title="Permalink to this headline">¶</a></h3>
 <p>For each piece of data that will be collected from the payload, the plugin service must specify:</p>
@@ -520,12 +571,7 @@ store_helper.store_metadata(message, data_id)
 </div>
 <div class="section" id="example-plugins">
 <h3>Example Plugins<a class="headerlink" href="#example-plugins" title="Permalink to this headline">¶</a></h3>
-<p>There are a couple example plugin services which show data collection, creating associated metadata, and storing the data:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">python/examples/data_acquisition_service/plugins/piksi_metadata_plugin_service.py</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">python/examples/data_acquisition_service/plugins/pointcloud_plugin_service.py</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">python/examples/data_acquisition_service/plugins/gps_metadata_plugin_service.py</span></code></p></li>
-</ul>
+<p>There are a couple <a class="reference internal" href="../../python/examples/data_acquisition_service/README.html"><span class="doc">example plugin services</span></a> which show data collection, creating associated metadata, and storing the data for the following types of payloads: Piksi GPS, PointCloud services, and generic GPS metadata.</p>
 </div>
 <div class="section" id="error-reporting">
 <h3>Error Reporting<a class="headerlink" href="#error-reporting" title="Permalink to this headline">¶</a></h3>
@@ -564,6 +610,16 @@ store_helper.store_metadata(message, data_id)
 <h2>Directory Registration and Running the New Service<a class="headerlink" href="#directory-registration-and-running-the-new-service" title="Permalink to this headline">¶</a></h2>
 <p>The new service, either a data acquisition plugin service or an image service, must be running and registered with the directory to communicate with the robot and the data acquisition service. This requires a unique service name, service type (“bosdyn.api.DataAcquisitionPluginService” or “bosdyn.api.ImageService”), and a service authority.</p>
 <p>The payload computer running the new service should perform payload authentication using the GUID/secret of the payload before registering the service with the directory.</p>
+</div>
+<div class="section" id="attaching-metadata-with-other-data-or-images">
+<h2>Attaching Metadata with other Data or Images<a class="headerlink" href="#attaching-metadata-with-other-data-or-images" title="Permalink to this headline">¶</a></h2>
+<p>Additional metadata, such as the robot state or sensor configuration information, can be stored in association with external data collected by a plugin or images from image services. To save metadata linked with each piece of data, a DataAcquisitionPluginService can be created to collect and save this metadata. This plugin will list capture actions representing each piece of additional metadata. The plugin will recieve an <code class="docutils literal notranslate"><span class="pre">AcquirePluginData</span></code> request from the data acquisition service on robot, which will contain a repeated list of <code class="docutils literal notranslate"><span class="pre">DataIdentifiers</span></code> that the metadata plugin can use to store metadata associated to these identified pieces of data.</p>
+<p>The metadata will be configured as JSON data, and can be stored as an <code class="docutils literal notranslate"><span class="pre">AssociatedMetadata</span></code> proto. This proto contains a <code class="docutils literal notranslate"><span class="pre">reference_id</span></code> field, which will be the <code class="docutils literal notranslate"><span class="pre">DataIdentifier</span></code> from the data it should be associated with; if only the <code class="docutils literal notranslate"><span class="pre">action_id</span></code> of that identifier is filled out, than the metadata is associated with the entire action (all of the repeated data identifiers).</p>
+<p>A plugin can store this associated metadata using the store helper with the <code class="docutils literal notranslate"><span class="pre">AssociatedMetadata</span></code> proto and a new <code class="docutils literal notranslate"><span class="pre">DataIdentifier</span></code> which uniquely identifies the associated metadata (and not what the metadata is referencing):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">store_helper</span><span class="o">.</span><span class="n">store_metadata</span><span class="p">(</span><span class="n">associated_metadata_proto</span><span class="p">,</span> <span class="n">data_id</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When downloading or retrieving the data from the data acquisition store, the metadata saved with each action will also be retrieved and can easily be linked back to the data it is stored with.</p>
 </div>
 <div class="section" id="testing-the-new-service">
 <h2>Testing the New Service<a class="headerlink" href="#testing-the-new-service" title="Permalink to this headline">¶</a></h2>

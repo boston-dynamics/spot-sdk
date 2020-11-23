@@ -8,6 +8,8 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Choreography Moves Reference
 
+This provides a guide describing each move at a high level, any parameters used by the move, and a gif demonstrating the move with default parameters (for most moves). More information about the moves can be found in the [proto definitions](../../../choreography_protos/bosdyn/api/README).
+
 ## Whole-Robot Moves
 
 ### self_right
@@ -54,7 +56,7 @@ translation | Distance and direction the robot should jump.
 
 ![](gif_images/image3.gif)
 
-Transitions from a standing to a kneeling on the hind legs.  Requires 2 seconds.
+Transitions from standing to kneeling on the hind legs.  Requires 2 seconds.
 
 ***No Parameters***
 
@@ -72,13 +74,13 @@ Transitions from kneeling on the hind legs to a stand.  Requires 2.4 seconds.
 
 ![](gif_images/image16.gif)
 
-Spot’s version of the “running man” dance move.  Is extendable to run for for an arbitrary duration.
+Spot’s version of the “running man” dance move.  Is extendable to run for an arbitrary duration.
 
 Parameter | Effect
 --|--
 velocity | By default, it will dance in place, but can move around in the world.
 pre_move_cycles | How many slices to dance in place before moving at the specified velocity.
-swing_height | how high to pick up the feet.
+swing_height | How high to pick up the feet.
 spread | How far to slide the feet backward from where they’re initially placed.
 reverse | If true, will step backwards and slide forward, the reverse of the normal motion.
 
@@ -87,7 +89,7 @@ reverse | If true, will step backwards and slide forward, the reverse of the nor
 ![](gif_images/image13.gif)
 
 
-Runs the hop gait. Is extendable to run for for an arbitrary duration.
+Runs the hop gait. Is extendable to run for an arbitrary duration.
 
 Parameter | Effect
 --|--
@@ -152,7 +154,7 @@ Stand the robot up from a seated position.   Requires at least 2 seconds.
 
 ![](gif_images/image12.gif)
 
-Starting from a seated position, rolls the robot onto its side/back.  Intended to prep the robot for self-right.
+Starting from a seated position, rolls the robot onto its side/back.  Intended to prep the robot for a more "dramatic" self-right.
 
 Parameter | Effect
 --|--
@@ -164,7 +166,7 @@ side | Which side to roll to.
 
 ![](gif_images/image18.gif)
 
-Take a single step with one or two feet.  Nominally requires one beat (4 slices), but can be extended somewhat to step slower.  If stepping with two feet, especially both front or both hind feet, longer steps will be unreliable.  Lifts off one slice after the move begins and touches down one slice before it ends.
+Take a single step with one or two feet.  Nominally requires one beat (4 slices), but can be extended to step slower.  If stepping with two feet, especially both front or both hind feet, longer steps will be unreliable.  Lifts off one slice after the move begins and touches down one slice before it ends.
 
 Parameter | Effect
 --|--
@@ -295,7 +297,7 @@ height | How much to lower the robutt.
 
 ![](gif_images/image23.gif)
 
-Move the robutt (or head, or both) in a circle.  Extendable to the desired duration.
+Move the robutt, head, or both head and robutt in a circle.  Extendable to the desired duration.
 
 Parameter | Effect
 --|--
@@ -348,7 +350,7 @@ angles | The specified joint angles, including the gripper angle.
 
 ### gripper
 
-Moves the gripper to the specified angle, whole holding the rest of the arm still.  Duration can be set to any number of slices, but speed will be determined by parameter.  Once it reaches the specified angle it will stop.  If the selected duration is too short to complete the move given the configured speed, the robot will remain at whatever angle it got to when the move ends.
+Moves the gripper to the specified angle, while holding the rest of the arm still.  Duration can be set to any number of slices, but speed will be determined by parameter.  Once it reaches the specified angle it will stop.  If the selected duration is too short to complete the move given the configured speed, the robot will remain at whatever angle it got to when the move ends.
 
 Parameter | Effect
 --|--

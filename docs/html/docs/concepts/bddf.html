@@ -1,0 +1,636 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>BDDF data format &mdash; Spot 2.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https:://dev.bostondynamics.com/docs/concepts/bddf.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Python Library" href="../python/README.html" />
+    <link rel="prev" title="Data Buffer Overview" href="data_buffer_overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../README.html">
+          
+
+          
+            
+            <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="README.html">Concepts</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base_services.html">Base services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometry_and_frames.html">Geometry and Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robot_services.html">Robot services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faults.html">Faults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="autonomy/README.html">Autonomy services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autonomy/components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autonomy/graphnav_service.html">GraphNav service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autonomy/initialization.html">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autonomy/localization.html">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autonomy/missions_service.html">Missions service</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="choreography/README.html">Choreography</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="choreography/choreography_service.html">Choreography Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="choreography/choreographer_setup.html">Choreographer Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="data.html">Spot Data</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="data_acquisition_overview.html">Data Acquisition Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_acquisition_output.html">Data Acquisition Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_buffer_overview.html">Data Buffer Overview</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">BDDF file format</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../python/README.html">Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python/quickstart.html">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python/understanding_spot_programming.html">Understanding Spot Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/examples/README.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/basic_service_examples.html">Basic Service Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/directory/README.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/estop/README.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/comms_test/README.html">Comms Test</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/robot_behavior_examples.html">Robot Behavior and Commands Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/stance/README.html">Stance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/upload_choreographed_sequence/README.html">Upload Choreographed Sequence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/xbox_controller/README.html">Xbox Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/wasd/README.html">WASD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/payloads/README.html">Payloads</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/world_object_with_image_coordinates/README.html">World Object With Image Coordinates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/stitch_front_images/README.html">Stitch front images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/bddf_download/README.html">BDDF Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/data_service/README.html">Data Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/logging/README.html">Logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/bddf_download/README.html">BDDF Download</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/data_acquisition_examples.html">Data Acquisition Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/data_acquisition_service/README.html">Data Acquisition Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/autonomy_and_missions_examples.html">Autonomy and Missions Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/mission_question_answerer/README.html">Mission Question Anwerer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/replay_mission/README.html">Replay Mission</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/README.html">Python Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/command_line.html">Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/common.html">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html">Data Acquisition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin.html">Data Acquisition Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/docking.html">Docking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/processors.html">Processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/recording.html">Recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot_command.html">Robot Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot_id.html">Robot ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html">PTZ</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/streamquality.html">Stream Quality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html">Version</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_check.html">Spot Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/time_sync.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/bosdyn-core/src/bosdyn/README.html">Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-core/src/bosdyn/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/README.html">Choreography</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreogrpahy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../payload/README.html">Payloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../payload/payload_configuration_requirements.html">Payload configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/mechanical_interfaces.html">Mechanical interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/robot_mounting_rails.html">Robot mounting rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/configuring_payload_software.html">Configuring payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../protos/README.html">API Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../protos/style_guide.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html">auth.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#data-acquisition-plugin-service-proto">data_acquisition_plugin_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#data-acquisition-service-proto">data_acquisition_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#data-acquisition-store-proto">data_acquisition_store.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#data-acquisition-store-service-proto">data_acquisition_store_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#data-buffer-proto">data_buffer.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#data-buffer-service-proto">data_buffer_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#data-chunk-proto">data_chunk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#data-index-proto">data_index.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#data-service-proto">data_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#directory-proto">directory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#directory-registration-proto">directory_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#directory-registration-service-proto">directory_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#directory-service-proto">directory_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#docking-docking-proto">docking/docking.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#docking-docking-service-proto">docking/docking_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#estop-proto">estop.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#estop-service-proto">estop_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#license-service-proto">license_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#local-grid-proto">local_grid.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-mission-service-proto">mission/mission_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-nodes-proto">mission/nodes.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-remote-proto">mission/remote.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-remote-service-proto">mission/remote_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-util-proto">mission/util.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#payload-registration-proto">payload_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#payload-registration-service-proto">payload_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#payload-service-proto">payload_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#point-cloud-proto">point_cloud.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#point-cloud-service-proto">point_cloud_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#power-proto">power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#power-service-proto">power_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-command-service-proto">robot_command_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-id-proto">robot_id.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-led-proto">spot_cam/LED.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-health-proto">spot_cam/health.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-network-proto">spot_cam/network.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-power-proto">spot_cam/power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-ptz-proto">spot_cam/ptz.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-service-proto">spot_cam/service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-streamquality-proto">spot_cam/streamquality.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-cam-version-proto">spot_cam/version.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#synchronized-command-proto">synchronized_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#time-range-proto">time_range.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../choreography_protos/bosdyn/api/README.html">Choreography Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../choreography_protos/bosdyn/api/choreography_reference.html">spot/choreography_params.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../choreography_protos/bosdyn/api/choreography_reference.html#spot-choreography-sequence-proto">spot/choreography_sequence.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../choreography_protos/bosdyn/api/choreography_reference.html#spot-choreography-service-proto">spot/choreography_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../choreography_protos/bosdyn/api/choreography_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../README.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../README.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="README.html">Concepts</a> &raquo;</li>
+        
+          <li><a href="data.html">Spot Data</a> &raquo;</li>
+        
+      <li>BDDF data format</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!--
+Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+
+Downloading, reproducing, distributing or otherwise using the SDK Software
+is subject to the terms and conditions of the Boston Dynamics Software
+Development Kit License (20191101-BDSDK-SL).
+--><div class="section" id="bddf-data-format">
+<h1>BDDF data format<a class="headerlink" href="#bddf-data-format" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>Data stored on Spot robots is downloaded in the BDDF format. BDDF is a file format created by Boston Dynamics for storing timestamped data, along with metadata.  It supports both binary blobs and POD (“plain old data”) such as integers or floating point numbers.</p>
+<p>BDDF was created to satisfy the following set of requirements:</p>
+<ul class="simple">
+<li><p><strong>Safe and cheap to write</strong>.  This format is used internally on the robot as well as externally.  Thus, it was designed for minimal, predictable disk and CPU usage while saving data to disk.  Additionally, it is designed so that all data that is written into the file is recoverable (e.g., for when software dies or computer power is cut while the file is being written).</p></li>
+<li><p><strong>No additional processing required.</strong> BDDF is meant to be usable by user tools without processing into other formats.  Thus, it contains an index so that arbitrary data may be accessed efficiently.  The index:</p>
+<ul>
+<li><p>Can be used to determine the kinds and time spans of data contained in the file.</p></li>
+<li><p>Supports efficiently extracting data by kind and time span.</p></li>
+</ul>
+</li>
+<li><p><strong>Secure</strong>.  Little or no parsing logic.  Reading a BDDF requires only handling simple framing, and parsing a few protobuf messages.</p></li>
+<li><p><strong>General</strong>.  BDDF can store data with any encoding.</p></li>
+<li><p><strong>Streamable.</strong>  Data is streamed from the robot in this format based on queries, so it is designed such that the format can be written without seeking backwards in the stream.  This is why the index and checksums are at the end of the file.</p></li>
+</ul>
+</div>
+<div class="section" id="organization">
+<h2>Organization<a class="headerlink" href="#organization" title="Permalink to this headline">¶</a></h2>
+<p>The structure of the file is a sequence of “blocks” with simple framing.  Some blocks store descriptive information about the file and its contents, and some blocks store data.</p>
+<p>BDDF can store both binary “blobs” and “plain old data” (POD) values such as integers or floating point numbers.</p>
+<p>Stored data is organized into “data series”.  A data series:</p>
+<ul class="simple">
+<li><p>Is either of message type or POD type.</p></li>
+<li><p>Consists of a sequence of timestamped data blocks.</p></li>
+<li><p>Has a series description explaining the content of the data blocks.</p></li>
+<li><p>Has a series identifier to “name” the data series within the file.</p></li>
+<li><p>Has a set of index-names for a list of index-values (int64) attached to each data block in the series.</p></li>
+</ul>
+<p>Within a data file, a data series is addressed with a series-index.  Within a data series, a data block is addressed by an integer index-in-series.  At the end of the BDDF file, a file index lists all the data series and locations of the series indexes in the file.</p>
+</div>
+<div class="section" id="identifying-data-series">
+<h2>Identifying data series<a class="headerlink" href="#identifying-data-series" title="Permalink to this headline">¶</a></h2>
+<p>Depending on the broad class of content which may be stored in a data series, the series might be described in different ways.  For this reason, instead of requiring a unique string name to identify a series, we use a slightly more flexible identifier: a unique mapping of {key -&gt; value}.</p>
+<p>A BDDF SeriesIdentifier has a <code class="docutils literal notranslate"><span class="pre">series_type</span></code>, which describes the kind of series, and a <code class="docutils literal notranslate"><span class="pre">spec</span></code> which is a mapping of {key -&gt; value} further identifying the series.  The <code class="docutils literal notranslate"><span class="pre">series_type</span></code> implies the set of keys which should be used in the <code class="docutils literal notranslate"><span class="pre">spec</span></code>.</p>
+<p>For example:</p>
+<ul class="simple">
+<li><p>A series containing GRPC robot-id request messages might thus be specified as: <code class="docutils literal notranslate"><span class="pre">series_type=&quot;bosdyn:grpc:requests&quot;</span></code> and
+<code class="docutils literal notranslate"><span class="pre">spec={&quot;bosdyn:grpc:service&quot;:</span> <span class="pre">&quot;robot_id&quot;,</span> <span class="pre">&quot;bosdyn:message-type&quot;:</span> <span class="pre">&quot;bosdyn.api.RobotIdRequest&quot;}</span></code>.</p></li>
+<li><p>A series containing OperatorComment messages might be specified as <code class="docutils literal notranslate"><span class="pre">series_type=&quot;bosdyn:message-channel&quot;</span></code> with <code class="docutils literal notranslate"><span class="pre">spec={&quot;bosdyn:channel&quot;:</span> <span class="pre">&quot;bosdyn.api.OperatorComment&quot;}</span></code></p></li>
+</ul>
+<p>Because BDDF SeriesIdentifier is a structure, the BDDF format provides a method to hash this structure to make it easier to index.  The hash is the first 64 bits of <code class="docutils literal notranslate"><span class="pre">SHA1(S</span> <span class="pre">K1</span> <span class="pre">V1</span> <span class="pre">K2</span> <span class="pre">V2</span> <span class="pre">...)</span></code> where <code class="docutils literal notranslate"><span class="pre">S</span></code> is series identifier text, <code class="docutils literal notranslate"><span class="pre">K1</span></code> and <code class="docutils literal notranslate"><span class="pre">V1</span></code> are the key and value of the first key and value of the <code class="docutils literal notranslate"><span class="pre">spec</span></code>, <code class="docutils literal notranslate"><span class="pre">K2</span></code> and <code class="docutils literal notranslate"><span class="pre">V2</span></code> are the second key and value of the spec, etc…  Here, all strings are encoded as utf-8, and keys are sorted least-to-greatest using this encoding.</p>
+</div>
+<div class="section" id="data-series-annotations">
+<h2>Data series annotations<a class="headerlink" href="#data-series-annotations" title="Permalink to this headline">¶</a></h2>
+<p>Annotations, in the form of a set of string key -&gt; value mappings, should be used to express further information about a data series.  The format of annotation keys should be {project-or-organization}:{annotation-name}.  For example, ‘bosdyn:channel-name’, ‘bosdyn:protobuf-type’.  Annotation keys without a ‘:’ or starting with ‘:’ are reserved.  The only current key in the reserved namespace is <code class="docutils literal notranslate"><span class="pre">units</span></code>: e.g., <code class="docutils literal notranslate"><span class="pre">{'units':</span> <span class="pre">'m/s2'}</span></code>.</p>
+<p>Units should be specified using the <a class="reference external" href="https://unitsofmeasure.org/ucum.html">Unified Code for Units of Measure</a>.</p>
+</div>
+<div class="section" id="file-structure">
+<h2>File structure<a class="headerlink" href="#file-structure" title="Permalink to this headline">¶</a></h2>
+<p>There are three basic kinds of blocks in the file:</p>
+<ul class="simple">
+<li><p><strong>DescriptorBlocks</strong>.  These describe either the file as a whole, a data series or a file index.</p></li>
+<li><p><strong>DataDescriptors</strong>.  These describe a following block of data, including its timestamp and which series it belongs to.</p></li>
+<li><p><strong>Data</strong>.  These are blocks of raw binary message data.</p></li>
+</ul>
+<p>All binary values are little-endian.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">File</span><span class="o">&gt;</span>     <span class="p">:</span><span class="o">:=</span> <span class="o">&lt;</span><span class="n">Magic</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">FileFormatDescriptor</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">blocks</span><span class="o">&gt;</span> \
+               <span class="o">&lt;</span><span class="n">FileIndex</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">end</span><span class="o">-</span><span class="n">header</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">Offset</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">CheckSum</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">EndMagic</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">Magic</span><span class="o">&gt;</span>    <span class="p">:</span><span class="o">:=</span> <span class="mi">4</span> <span class="nb">bytes</span><span class="p">:</span> <span class="s2">&quot;BDDF&quot;</span>
+<span class="o">&lt;</span><span class="n">Offset</span><span class="o">&gt;</span>   <span class="p">:</span><span class="o">:=</span> <span class="mi">64</span><span class="o">-</span><span class="n">bits</span><span class="p">:</span> <span class="n">unsigned</span> <span class="nb">int</span>
+<span class="o">&lt;</span><span class="n">EndMagic</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">:=</span> <span class="mi">4</span> <span class="nb">bytes</span><span class="p">:</span> <span class="s2">&quot;FDDB&quot;</span>
+<span class="o">&lt;</span><span class="n">CheckSum</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">:=</span> <span class="mi">160</span><span class="o">-</span><span class="n">bits</span><span class="p">:</span> <span class="n">SHA1</span> <span class="n">digest</span> <span class="n">of</span> <span class="nb">all</span> <span class="n">data</span> <span class="n">up</span> <span class="n">until</span> <span class="n">this</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">file</span><span class="o">/</span><span class="n">stream</span><span class="o">.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">blocks</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">:=</span> <span class="o">&lt;</span><span class="n">block</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">blocks</span><span class="o">&gt;</span> <span class="o">|</span> <span class="s2">&quot;&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">block</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">:=</span> <span class="o">&lt;</span><span class="n">block</span><span class="o">-</span><span class="n">header</span><span class="o">&gt;&lt;</span><span class="n">block</span><span class="o">-</span><span class="n">body</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">block</span><span class="o">-</span><span class="n">header</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">:=</span> <span class="o">&lt;</span><span class="n">block</span><span class="o">-</span><span class="nb">type</span><span class="o">&gt;&lt;</span><span class="n">block</span><span class="o">-</span><span class="n">size</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">block</span><span class="o">-</span><span class="nb">type</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">:=</span> <span class="mi">8</span> <span class="n">bit</span> <span class="n">unsigned</span> <span class="n">integer</span>
+<span class="o">&lt;</span><span class="n">block</span><span class="o">-</span><span class="n">size</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">:=</span> <span class="mi">56</span> <span class="n">bit</span> <span class="n">unsigned</span> <span class="n">integer</span>
+<span class="o">&lt;</span><span class="n">block</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">:=</span> <span class="o">&lt;</span><span class="n">block</span><span class="o">-</span><span class="n">header</span> <span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="mh">0x00</span><span class="p">)</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">DescriptorBlock</span><span class="o">&gt;</span>
+           <span class="o">|</span> <span class="o">&lt;</span><span class="n">block</span><span class="o">-</span><span class="n">header</span> <span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="mh">0x01</span><span class="p">)</span><span class="n">r</span><span class="o">&gt;&lt;</span><span class="n">desciptor</span><span class="o">-</span><span class="n">size</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">DataDescriptor</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">Data</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">end</span><span class="o">-</span><span class="n">header</span><span class="o">&gt;</span> <span class="p">::</span> <span class="o">&lt;</span><span class="n">block</span><span class="o">-</span><span class="n">header</span> <span class="p">(</span><span class="n">block</span><span class="o">-</span><span class="nb">type</span><span class="o">=</span><span class="mh">0x02</span><span class="p">,</span> <span class="n">block</span><span class="o">-</span><span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;DescriptorBlock&gt;</span></code> is a serialized <code class="docutils literal notranslate"><span class="pre">bosdyn.api.data.DescriptorBlock</span></code> protobuf, of size <code class="docutils literal notranslate"><span class="pre">&lt;block-size&gt;</span></code> bytes.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;FileFormatDescriptor&gt;</span></code> is a serialized <code class="docutils literal notranslate"><span class="pre">bosdyn.api.data.DescriptorBlock</span></code> protobuf containing a <code class="docutils literal notranslate"><span class="pre">bosdyn.api.data.FileFormatDescriptor</span></code> submessage.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;FileIndex&gt;</span></code> is a serialized <code class="docutils literal notranslate"><span class="pre">bosdyn.api.data.DescriptorBlock</span></code> protobuf containing a <code class="docutils literal notranslate"><span class="pre">bosdyn.api.data.FileIndex</span></code> submessage.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;DataDescriptor&gt;</span></code> is a serialized <code class="docutils literal notranslate"><span class="pre">bosdyn.api.data.DataDescriptor</span></code> protobuf, of size <code class="docutils literal notranslate"><span class="pre">&lt;descriptor-size&gt;</span></code> bytes.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;Data&gt;</span></code> is binary data representing the data content of the block, of size <code class="docutils literal notranslate"><span class="pre">&lt;block-size&gt;</span> <span class="pre">-</span> <span class="pre">&lt;descriptor-size&gt;</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">block-types</span></code> 0x02 through 0xFF are reserved.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">bit</span><span class="o">-</span><span class="n">zero</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">:=</span> <span class="mi">1</span> <span class="n">bit</span><span class="p">:</span> <span class="mi">0</span>
+<span class="o">&lt;</span><span class="n">bit</span><span class="o">-</span><span class="n">one</span><span class="o">&gt;</span>  <span class="p">:</span><span class="o">:=</span> <span class="mi">1</span> <span class="n">bit</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">block</span><span class="o">-</span><span class="n">size</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">:=</span> <span class="mi">63</span><span class="o">-</span><span class="n">bit</span> <span class="n">unsigned</span> <span class="nb">int</span>
+<span class="o">&lt;</span><span class="n">descriptor</span><span class="o">-</span><span class="n">size</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">:=</span> <span class="mi">32</span><span class="o">-</span><span class="n">bit</span> <span class="n">unsigned</span> <span class="nb">int</span>
+</pre></div>
+</div>
+<p>The first <code class="docutils literal notranslate"><span class="pre">&lt;block&gt;</span></code> in the file should be a <code class="docutils literal notranslate"><span class="pre">DescriptorBlock</span></code> containing a <code class="docutils literal notranslate"><span class="pre">FileFormatDescriptor</span></code>.  This specifies the file format version (currently 1.0.0) and a list of <code class="docutils literal notranslate"><span class="pre">{key</span> <span class="pre">-&gt;</span> <span class="pre">value}</span></code> (<code class="docutils literal notranslate"><span class="pre">string</span> <span class="pre">-&gt;</span> <span class="pre">string</span></code>) which for a robot log could be used to specify from which robot the log came from, the release running, etc….   The format of annotation keys should be {project-or-organization}:{annotation-name}.  For example, <code class="docutils literal notranslate"><span class="pre">bosdyn:robot-serial-number</span></code>.</p>
+<p>The final <code class="docutils literal notranslate"><span class="pre">&lt;block&gt;</span></code> in the file should be a <code class="docutils literal notranslate"><span class="pre">DescriptorBlock</span></code> containing a <code class="docutils literal notranslate"><span class="pre">FileIndex</span></code>.  This structure lists the <code class="docutils literal notranslate"><span class="pre">SeriesIdentifier</span></code> for each series of messages and a list of <code class="docutils literal notranslate"><span class="pre">(timestamp_nsec,</span> <span class="pre">file_offset)</span></code> pairs for each message in the series.  If  <code class="docutils literal notranslate"><span class="pre">&lt;Offset&gt;</span></code> is zero, this means that the file does not have an index block.</p>
+<p>The index helps make it easier to find data in the file.  The offset at the end of the file shows where start of the index block is. So you can seek 20 bytes from the end of the file, read the index offset, seek to the index block and read it, and then you have a map to the rest of the data in the file. The index offset is at the end of the file to allow the file to be written purely as a stream. You thus never need to seek to the beginning to insert the offset.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      
+      &copy; Copyright 2020 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

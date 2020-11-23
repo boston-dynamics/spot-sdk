@@ -72,7 +72,7 @@ python3 announce_service.py --port <endpoint_port>
 ```
 
 ### Register the announce service
-self_register_service.py can be used to register the announce service with the robot. Registering the servie will tell the robot where to route Announce requests. In this case, we want these requests to be routed to the payload.
+self_register_service.py can be used to register the announce service with the robot. Registering the service will tell the robot where to route Announce requests. In this case, we want these requests to be routed to the payload.
 ```
 python3 self_register_service.py --guid <payload_guid> --secret <payload_secret> --host-ip <endpoint_ip> --port <endpoint_port> ROBOT_IP
 ```

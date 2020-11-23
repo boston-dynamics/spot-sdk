@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Using the Robot Data Service
+# Using the Robot Data Service
 
 The data service tracks data logged to the robot via the API.  This includes:
 - Text messages: Info/Warning/Error/Debug messages, typically logged by API services.

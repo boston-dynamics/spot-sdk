@@ -35,7 +35,7 @@ This release features a new system for acquiring, storing, and retrieving sensor
 #### Arm Control Preparation
 Several changes have been made in preparation for the release of Spot’s arm. These represent new ways to accomplish the same control as before, but in a way that will be compatible with also controlling the robot’s arm in a future release.
 
-**Synchronized commands and feedback**: A new synchronized_command for combining mobility control with arm and gripper control. This deprecates the mobility_command in the `RobotCommand` message. Additionally, the top-level command status has been moved into the individual full-body and mobility command feedback messages so that mobility and arm commands can individually report their state.
+**Synchronized commands and feedback**: A new synchronized_command for combining mobility control with arm and gripper control. This deprecates the `mobility_command` in the `RobotCommand` message. Additionally, the top-level command status has been moved into the individual full-body and mobility command feedback messages so that mobility and arm commands can individually report their state.
 
 **Stop**: The existing full-body `Stop` command still exists, but there is an additional mobility-only `Stop` command that can be used to only stop the mobility without affecting any separate arm control.
 
@@ -49,16 +49,16 @@ To simplify the development of reliable services and report when problems arise,
 **Directory and Payload Liveness faults**: New options for directory and payload registration enable liveness monitoring. When this feature is implemented, alongside directory or payload keep alives, service faults will be automatically raised when a service crashes or a payload disconnects.
 
 **Integrations**: Boston Dynamics supported payloads incorporate service faults and liveness monitoring out of the box.
-Spot CORE will report service faults if it experiences issues during startup, fails to communicate with the robot, detects an invalid payload configuration, or fails to communicate to an expected LiDAR.
-Spot CAM will report service faults if it is disconnected from Spot or if any of its internal services crash.
-The `bosdyn.client` command line interface can show and monitor reported faults.
+- Spot CORE will report service faults if it experiences issues during startup, fails to communicate with the robot, detects an invalid payload configuration, or fails to communicate to an expected LiDAR.
+- Spot CAM will report service faults if it is disconnected from Spot or if any of its internal services crash.
+- The `bosdyn.client` command line interface can show and monitor reported faults.
 
 #### Data Logging
 The robot now dedicates some internal storage space to user data and logging. In addition to the data acquisition system, the user can store messages, events, time-series data, or arbitrary binary blobs.
 
-**Data Buffer**: New service interface for storing various kinds of data onto the robot.
+**Data Buffer**: New service interface for storing various kinds of data on the robot.
 
-**Data Service**: Retrieval service that can be return the data stored to the data buffer
+**Data Service**: Retrieval service that can be used to return the data stored in the data buffer.
 
 **BDDF**: File format for large downloads of stored data, and tools for reading the file.
 
@@ -67,29 +67,29 @@ The robot now dedicates some internal storage space to user data and logging. In
 #### Point Clouds
 Point cloud service definitions are provided for retrieving point cloud data from LiDAR sensors, such as from the EAP payload.
 
-#### Spot Cam
-Congestion control now available for WebRTC streaming.
-External microphones supported, with control for selecting microphones and setting gain levels individually.
+#### Spot CAM
+Congestion control is now available for WebRTC streaming.
+External microphones supported, with control for selecting microphones and setting gain levels individually. Note: External microphone support only available on Spot CAM + IR.
 
 #### Graph Nav
 The localization data now includes a transform to a "seed" frame, providing a consistent global frame for use across multiple runs on the same map.
 
 Localization data can be requested relative to a particular waypoint, rather than only the waypoint that the robot is currently localized to.
 
-Additional control for whether the robot will navigate through areas with poor quality features.
+Additional control for determining whether the robot will navigate through areas with poor quality features.
 
 #### Missions
-Added nodes to support new functionality
-* Point the SpotCAM PTZ to a specified orientation.
+Additional mission nodes which support new functionality:
+* Point the Spot CAM PTZ to a specified orientation.
 * Dock the robot at a charging station.
-* Capture data through the data acquisition functionality.
+* Capture data through the data acquisition service.
 * Manipulate strings in the blackboard.
 
 #### Choreography (License-dependent)
 Play advanced choreographed routines for Spot. The choreography service requires a special license to use.
 
 #### Docking (Beta, License-dependent)
-The new Docking Service provides a way to autonomously dock at a charging station. It is currently in beta, and requires a special license to use.
+The new docking service provides a way to autonomously dock at a charging station. It is currently in beta, and requires a special license to use.
 
 
 ### Bug Fixes and Improvements
@@ -107,15 +107,15 @@ The new Docking Service provides a way to autonomously dock at a charging statio
 * The `BosdynGraphNavState` node can specify the id of the waypoint to use for the reported localization.
 
 **Spot Check**
-* Added status field in `SpotCheckCommandResponse`
-* Improved the list of errors in `SpotCheckFeedbackResponse` message
-* Spot Check now checks and reports results on hip range of motion
+* Added status field in `SpotCheckCommandResponse`.
+* Improved the list of errors in `SpotCheckFeedbackResponse` message.
+* Spot Check now checks and reports results on hip range of motion.
 
 **Python client**
 * Blocking “power on” and “power off” helpers report errors correctly, rather than always raising `CommandTimedOutError` if the robot could not power on or off.
 * Added helper classes for registering and launching services.
 * Added the ability to authenticate the robot instance from payload credentials.
-* Printing the Spot sdk exceptions now provides more information.
+* Printing the Spot SDK exceptions now provides more information.
 * Increased default message size limit for receiving and sending messages to 100 MB
 * Command line interface supports the new 2.1 functionality
     - Payload commands.
@@ -133,12 +133,15 @@ The new Docking Service provides a way to autonomously dock at a charging statio
 
 ### Breaking changes
 **Robot Control**
+
 A behavior fault (`CAUSE_LEASE_TIMEOUT`) is raised when the usage of a lease times out, and must be cleared before the robot can be commanded again.  This should have minimal effect on current clients, as this happens near the same time that the robot powers off from comms loss (which clears behavior faults).
 
 **Graph Nav**
+
 When GraphNav reports `STATUS_STUCK` while navigating, the robot will stop walking. It will need to be re-commanded to navigate in order to continue. Previous behavior was that the robot would continue walking when stuck until commanded to stop by a client.
 
 **Missions**
+
 Autowalk mission callback nodes only wait 10 seconds for a response.  When a mission calls `Tick()` on a mission callback service, it expects a quick response. In 2.0 it would wait up to 60 seconds for a response before retrying. This has been reduced to 10 seconds in version 2.1. Callbacks that do any significant work should be written to return with `STATUS_RUNNING` quickly, and then continue to do their work on another thread rather than trying to fit in all of their work before returning a response. The service can then base their response to subsequent `Tick()` requests on the status of that thread.
 
 
@@ -146,11 +149,13 @@ Autowalk mission callback nodes only wait 10 seconds for a response.  When a mis
 
 **When a network transport failure occurs,** depending on the particular operating system and version of gRPC installed, the error from the python SDK may not always be the most specific error possible, such as `UnknownDnsNameError`.  It may instead be raised as either a generic `RpcError`, or another generic failure type such as `UnableToConnectToRobotError`.
 
-**SpotCAM LED illumination levels** are not currently recorded or played back in Autowalk missions.
+**Spot CAM LED illumination levels** are not currently recorded or played back in Autowalk missions.
 
 **When capturing both a PTZ and Panoramic image** in the same action, there may occasionally be two PTZ images captures along with the Panoramic image, rather than just one.
 
-**If you write a custom data acquisition plugin or image service,** do not change its `DataAcquisitionCapability` or `ImageSource` set once it is running and registered. New capabilities may not be detected, and old capababilities may still be listed as available in the Data Acquisition service.  To change the capabilities of a service: unregister it from the directory, wait until its capabilities are no longer listed in the Data Acquisition service, and then re-register it. This waiting also applies to restarting a service if its capabilities will be different upon restart.
+**If you write a custom data acquisition plugin or image service,** do not change its `DataAcquisitionCapability` or `ImageSource` set once it is running and registered. New capabilities may not be detected, and old capababilities may still be listed as available in the Data Acquisition service. To change the capabilities of a service: unregister it from the directory, wait until its capabilities are no longer listed in the Data Acquisition service, and then re-register it. This waiting also applies to restarting a service if its capabilities will be different upon restart.
+
+Furthermore, always specify the port that it should run on via the `--port` flag, and do not change it between restarts of your plugin or image service. If you must change the port, then you must reboot the robot.
 
 **If you write a custom data acquisition plugin without using our helper class,** its `GetStatus()` rpc is expected to complete immediately. If it takes too long to complete it can cause timeouts when requesting `GetStatus()` of the data acquisition service.
 
@@ -176,7 +181,7 @@ The representation of `SE3Covariance` has changed to a matrix. The individual el
 In the map edge annotations, the `ground_mu_hint` and `grated_floor` fields have moved into the `mobility_params` message.
 
 #### Client changes
-The helper functions in RobotCommandBuilder have new versions that use the new SynchronizedCommand.
+The helper functions in `RobotCommandBuilder` have new versions that use the new `SynchronizedCommand`.
 
 `sit_command()` → `synchro_sit_command()`
 
@@ -186,7 +191,7 @@ The helper functions in RobotCommandBuilder have new versions that use the new S
 
 `trajectory_command()` → `synchro_se2_trajectory_point_command()`
 
-The non-synchro versions are deprecated, and will be removed at the time that the mobility commands are removed from RobotCommand.
+The non-synchro versions are deprecated, and will be removed at the time that the mobility commands are removed from `RobotCommand`.
 
 ### Sample Code
 
@@ -203,16 +208,19 @@ Demonstrates how to use the SDK to perform comms testing.
 Get comments and data index information from the robot.
 
 [**Ricoh theta image service (new)**](../python/examples/ricoh_theta/README.md)
-Create a standard Boston Dynamics API image service that communicates with the Ricoh Theta camera.
+Create a standard Boston Dynamics API `ImageService` that communicates with the Ricoh Theta camera.
 
 [**Service faults (new)**](../python/examples/service_faults/README.md)
 Demonstrates raising service faults, clearing service faults, and implementation of directory liveness checks.
 
 [**Spot detect and follow (new)**](../python/examples/spot_detect_and_follow/README.md)
-Collects images from the two front Spot cameras and performs object detection on a specified class
+Collects images from the two front Spot cameras and performs object detection on a specified class.
 
 [**Stance (new)**](../python/examples/stance/README.md)
 Exercises the stance function to reposition the robots feet.
+
+[**Stitch front images**](../python/examples/stitch_front_images/README.md)
+Demonstrate how to stitch the front camera images together into a single image in an OpenGL shader.
 
 [**Upload choreographed sequence (new)**](../python/examples/upload_choreographed_sequence/README.md)
 Shows how to use the Choreography service to upload an existing choreographed sequence to the robot, and have the robot execute that uploaded routine.
@@ -221,17 +229,17 @@ Shows how to use the Choreography service to upload an existing choreographed se
 Demonstrates how to use the Velodyne service to query for point clouds.
 
 [**Web cam image service (new)**](../python/examples/web_cam_image_service/README.md)
-Implements the standard Boston Dynamics API image service and communicates to common web cameras using OpenCV.
+Implements the standard Boston Dynamics API `ImageService` and communicates to common web cameras using OpenCV.
 
 [**World object with image coords (new)**](../python/examples/world_object_with_image_coordinates/README.md)
 Demonstrates adding a world object that exists only in image coordinates, rather than having a full transform.
 
 #### Updated
 [**Fiducial follow (updated)**](../python/examples/fiducial_follow/README.md)
-* Uses synchro commands
+* Uses the new `SynchronizedCommand` for robot commands.
 
 [**Frame trajectory command (updated)**](../python/examples/frame_trajectory_command/README.md)
-* Uses synchro commands
+* Uses the new `SynchronizedCommand` for robot commands.
 
 [**Get image (updated)**](../python/examples/get_image/README.md)
 * Added an option to auto-rotate images to be rightside-up.
@@ -243,7 +251,7 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 * Waypoints sorted by creation time.
 
 [**Hello spot (updated)**](../python/examples/hello_spot/README.md)
-* Uses synchro commands
+* Uses the new `SynchronizedCommand` for robot commands.
 
 [**Logging (updated)**](../python/examples/logging/README.md)
 * Switched to use Data Buffer for logging instead of the deprecated
@@ -259,7 +267,7 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 * Uses the new payload keep-alive.
 
 [**Remote mission service (updated)**](../python/examples/remote_mission_service/README.md)
-* Separated example_servicers.py into separate hello_world_mission_service.py and power_off_mission_service.py
+* Separated example_servicers.py into separate hello_world_mission_service.py and power_off_mission_service.py files.
 
 [**Replay mission (updated)**](../python/examples/replay_mission/README.md)
 * Added an option to skip the initial localization.
@@ -272,15 +280,15 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 * Support for the IR camera.
 
 [**Spot light (updated)**](../python/examples/spot_light/README.md)
-* Uses synchro commands
+* Uses the new `SynchronizedCommand` for robot commands.
 
 [**Wasd (updated)**](../python/examples/wasd/README.md)
-* Uses synchro commands
-* Supports battery change pose
+* Uses the new `SynchronizedCommand` for robot commands.
+* Supports battery change pose command.
 
 [**Xbox controller (updated)**](../python/examples/xbox_controller/README.md)
-* Uses synchro commands
-* Supports battery change pose
+* Uses the new `SynchronizedCommand` for robot commands.
+* Supports battery change pose command.
 
 #### Removed
 
@@ -344,8 +352,8 @@ There is a new LicenseClient which can be used to query the license information 
   * If the fiducials are not visible, the action will fail with `STATUS_MISSING_FIDUCIALS`. When starting recording or creating a manual waypoint in the GraphNavRecordingService, the client can require certain fiducials to be visible.  If the fiducials are not visible, the action will fail with `STATUS_MISSING_FIDUCIALS`.
   * When recording a map, grated floor mode and ground friction hints that are set in the recording environment are now correctly recorded into the map and used during playback.
 
-#### SpotCam
-  * Added an option to the SpotCam MediaLogService to retrieve the raw (unstitched) images for a log point.
+#### Spot CAM
+  * Added an option to the Spot CAM MediaLogService to retrieve the raw (unstitched) images for a log point.
 
 #### Payload Integration
   * When a payload is authorized, it is given full access to the services on the robot, rather than a limited set. For example, a payload could now operate Spot.
@@ -384,7 +392,7 @@ Release 2.0.1 contains the same issues as release 2.0.0, listed below.
 [**WASD**](../python/examples/wasd/README.md)
   * Updated to account for the additional state metrics that are reported.  Older versions of this example may fail when connecting to updated robots.
 
-[**Spot Cam**](../python/examples/spot_cam/README.md)
+[**Spot CAM**](../python/examples/spot_cam/README.md)
   * Added support for viewing the WebRTC stream.
 
 [**Replay Mission**](../python/examples/replay_mission/README.md)
@@ -421,7 +429,7 @@ Control and query all hardware features of the Spot CAM.  For examples of using 
   * **PtzService**: Direct PTZ cameras to desired poses.
   * **LightingService**: Control the individual brightness of the illuminator LEDs.
   * **MediaLogService**: Save and retrieve high-resolution images to and from the internal USB drive for later processing.
-  * **AudioService**: Upload and play sounds over the SpotCAM speakers.
+  * **AudioService**: Upload and play sounds over the Spot CAM speakers.
   * **NetworkService**: Adjust networking settings.
   * **HealthService**, **VersionService**, **PowerService**: Query the status of the hardware and software, and power components on and off.
 

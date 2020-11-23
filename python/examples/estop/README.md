@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Creating an E-Stop endpoint
+# Creating an E-Stop endpoint
 
 This example is an E-Stop controller for a Spot robot. The example registers as an E-Stop endpoint
 with a Spot robot, and it provides an easy-to-use interface for users to trigger the E-Stop in the

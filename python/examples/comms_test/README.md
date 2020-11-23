@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Comms Testing
+# Comms Testing
 This example demonstrates how to use the SDK to perform comms testing.
 This is meant to be run on a Spot CORE during an Autowalk mission.
 

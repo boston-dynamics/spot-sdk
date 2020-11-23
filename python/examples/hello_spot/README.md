@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Hello Spot
+# Hello Spot
 
 This example program is the introductory programming example for Spot.  It demonstrates how to initialize the SDK to talk to robot and how to command Spot to stand up, strike a pose, stand tall, sit down, and capture an image from a camera.
 

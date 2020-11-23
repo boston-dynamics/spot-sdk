@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Using the Image Service
+# Using the Image Service
 
 This example program demonstrates how to list the different image sources available to query. Additionally, this example program shows how to capture an image from one or more different image sources, decode the response data, and save each image locally in a file named after the image source.
 

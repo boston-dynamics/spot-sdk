@@ -62,6 +62,7 @@ Action nodes take some action, such as making the robot do something or triggeri
 | RemoteGrpc |	Customize the behavior of missions. Example: trigger a remote sensor payload to take a reading during an autonomous mission.
 | Sleep |	Sleep for a specified number of seconds.
 | Prompt |	Prompt a supervisor with a question, such as "Is it safe to cross the street?" The supervisor can be a robot operator responding to a UI prompt or an automated process running anywhere that can communicate with the robot.
+| PTZ |	Aim the Spot CAM PTZ at a specified pan, tilt, and zoom. Optionally, automatically adjust aim to offset differences in Spot positioning and orientation between playbacks.
 | SpotCamStoreMedia |	Issue a request to write images to the Spot CAM USB stick. Note that an installed Spot CAM payload is required and the USB stick must be inserted before booting the robot.
 | Dock |    Issue a command to dock the robot at the specified station.
 | DefineBlackboard |	Specify a blackboard variable for this node's children to use.

@@ -12,7 +12,7 @@ The protobuf messages and service definitions are the primary interface definiti
 
 **Proto3 only**. All services and messages must use proto3 only. This lets us reach the widest possible set of target platforms, and gives consistency.
 
-**Follow Google protobuf style guide**. Their style guide is very thin, our APIs support it, with a few exceptions. https://developers.google.com/protocol-buffers/docs/style 
+**Follow [Google protobuf style guide](https://developers.google.com/protocol-buffers/docs/style)**. Their style guide is very thin, our APIs support it, with a few exceptions.
 
 * Line lengths shall be 100 characters.
 * Indentation shall be 4 spaces.

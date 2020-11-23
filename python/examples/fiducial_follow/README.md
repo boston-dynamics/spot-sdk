@@ -6,7 +6,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# API Example - Follow a Fiducial
+# Follow a Fiducial
 
 This example program demonstrates how to make Spot interactively walk to fiducial markers (april tags) it sees with its built-in cameras.  The robot will iteratively:
   * Detects fiducials in any of Spot's cameras, choosing the first fiducial detection it recieves if there are multiple detections.
