@@ -122,17 +122,30 @@ async def monitor_shutdown(shutdown_flag, client):
     await client.pc.close()
     asyncio.get_event_loop().stop()
 
-def get_sdp_offer_from_spot_cam(options):
+def get_sdp_token_from_spot_cam(options):
+    server_url = f'https://{options.hostname}:{options.sdp_port}/auth'
+    payload = {
+        'username': options.username,
+        'password': options.password
+    }
+    r = requests.post(server_url, verify=options.cam_ssl_cert, json=payload)
+    if r.status_code != 200:
+        raise ValueError(r)
+    result = r.json()
+    return result['token']
+
+def get_sdp_offer_from_spot_cam(options, token):
     server_url = f'https://{options.hostname}:{options.sdp_port}/{options.filename}'
-    r = requests.get(server_url, verify=options.cam_ssl_cert)
+    headers = {'Authorization': 'Bearer {}'.format(token)}
+    r = requests.get(server_url, verify=options.cam_ssl_cert, headers=headers)
     result = r.json()
     return result['id'], base64.b64decode(result['sdp']).decode()
 
-def send_sdp_answer_to_spot_cam(options, offer_id, sdp_answer):
+def send_sdp_answer_to_spot_cam(options, offer_id, sdp_answer, token):
     server_url = f'https://{options.hostname}:{options.sdp_port}/{options.filename}'
-
+    headers = {'Authorization': 'Bearer {}'.format(token)}
     payload = {'id': offer_id, 'sdp': base64.b64encode(sdp_answer).decode('utf8')}
-    r = requests.post(server_url, verify=options.cam_ssl_cert, json=payload)
+    r = requests.post(server_url, verify=options.cam_ssl_cert, json=payload, headers=headers)
     if r.status_code != 200:
         raise ValueError(r)
 
@@ -160,8 +173,11 @@ class SpotCAMWebRTCClient:
         self.options = options
 
     async def start(self):
+
+        token = get_sdp_token_from_spot_cam(self.options)
+
         #offer_id = None
-        offer_id, sdp_offer = get_sdp_offer_from_spot_cam(self.options)
+        offer_id, sdp_offer = get_sdp_offer_from_spot_cam(self.options, token)
 
         @self.pc.on('icegatheringstatechange')
         def _on_ice_gathering_state_change():
@@ -180,7 +196,7 @@ class SpotCAMWebRTCClient:
             print(f'ICE connection state changed to: {self.pc.iceConnectionState}')
 
             if self.pc.iceConnectionState == 'checking':
-                send_sdp_answer_to_spot_cam(self.options, offer_id, self.pc.localDescription.sdp.encode())
+                send_sdp_answer_to_spot_cam(self.options, offer_id, self.pc.localDescription.sdp.encode(), token)
 
         @self.pc.on('track')
         def _on_track(track):
