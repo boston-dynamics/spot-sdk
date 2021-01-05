@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -6,33 +6,21 @@
 
 """Simple robot command capture tutorial."""
 
-import sys
+import argparse
 import math
+import sys
 import time
 import bosdyn.client
 import bosdyn.client.util
 from bosdyn.client.robot_state import RobotStateClient
 from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder, blocking_stand
-from bosdyn.api import estop_pb2
 from bosdyn.api import geometry_pb2 as geo
 from bosdyn.client import math_helpers
-from bosdyn.client.estop import EstopClient, EstopEndpoint, EstopKeepAlive
 from bosdyn.client.frame_helpers import ODOM_FRAME_NAME, VISION_FRAME_NAME, get_odom_tform_body, get_vision_tform_body
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 
 
-def verify_estop(robot):
-    """Verify the robot is not estopped"""
-
-    client = robot.ensure_client(EstopClient.default_service_name)
-    if client.get_status().stop_level != estop_pb2.ESTOP_LEVEL_NONE:
-        error_message = "Robot is estopped. Please use an external E-Stop client, such as the" \
-        " estop SDK example, to configure E-Stop."
-        robot.logger.error(error_message)
-        raise Exception(error_message)
-
 def main():
-    import argparse
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
     options = parser.parse_args()
@@ -43,7 +31,8 @@ def main():
     robot.authenticate(options.username, options.password)
 
     # Check that an estop is connected with the robot so that the robot commands can be executed.
-    verify_estop(robot)
+    assert not robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client, " \
+                                    "such as the estop SDK example, to configure E-Stop."
 
     # Create the lease client.
     lease_client = robot.ensure_client(LeaseClient.default_service_name)

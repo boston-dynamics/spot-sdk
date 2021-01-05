@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -52,6 +52,12 @@ Users can download acquired data using the tablet or any other client through a 
 The functionality described above is architected in the system as shown in the diagram below. During system initialization, the `Data Acquisition` service aggregates the list of capture capabilities from `Image` services and `Data Acquisition Plugin` services, and the users configure actions in the tablet. The tablet or the mission service sends acquisition requests to the `Data Acquisition` service to acquire data. The `Data Acquisition` service farms out the acquisition requests to the right `Image` service and `Data Acquisition Plugin` service to collect the data. The collected data is then sent to the `Data Buffer` service through the `Data Store` service. The `Data Buffer` service writes the collected data to files so they are available for download from the `REST` interface.
 
 ![Data Acquisition Architecture](./images/data_acquisition_architecture.png)
+
+The Data Acquisition service provides the following RPCs:
+1. `GetServiceInfo` - This RPC is defined in Data Acquisition services, as well as Data Acquisition Plugin services. It reports a full list of acquisition capabilities provided by a Data Acquisition or Data Acquisition Plugin service. On startup, the Data Acquisition service pings all registered Image services and Data Acquisition Plugin services for their capabilities. It does that through `ListImageSources` RPC for Image services and `GetServiceInfo` for Data Acquisition Plugin services. The Data Acquisition service then aggregates all those capabilities into the list that it reports through this RPC. The tablet uses this RPC to determine the acquisition capabilities
+2. `AcquireData` - This RPC commands the Data Acquisition service to acquire and store data. It contains a subset of the capabilities reported by the `GetServiceInfo` RPC. The Data Acquisition service breaks down the request into `GetImage` RPC requests to the corresponding Image services and `AcquirePluginData` RPC requests to the corresponding Data Acquisition Plugin services. The `AcquirePluginData` Data Acquisition Plugin RPC is very similar to this RPC.
+3. `GetStatus` - This RPC is defined in Data Acquisition services, as well as Data Acquisition Plugin services. It reports the status of a particular `AcquireData` or `AcquirePluginData` request.
+4. `CancelAcquisition` - This RPC is defined in Data Acquisition services, as well as Data Acquisition Plugin services. It cancels a particular `AcquireData` request or `AcquirePluginData` request.
 
 ## Implementing Data Acquisition services
 Please refer to [this document](developing_api_services.md) on how to implement services in general and [this document](writing_services_for_data_acquisition.md) on how to implement `DataAcquisitionPluginService` or `ImageService` to integrate a payload with the data acquisition capabilities of the robot.

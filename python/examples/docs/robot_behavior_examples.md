@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -18,3 +18,4 @@ The following examples show how to command the robot to complete different behav
 * [Upload Choreographed Sequence](../upload_choreographed_sequence/README.md)
 * [Xbox Controller](../xbox_controller/README.md)
 * [WASD](../wasd/README.md)
+* [Docking](../docking/README.md)

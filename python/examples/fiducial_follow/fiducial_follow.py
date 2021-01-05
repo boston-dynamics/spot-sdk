@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -17,7 +17,6 @@ import threading
 import time
 
 from bosdyn import geometry
-from bosdyn.api import estop_pb2
 from bosdyn.api import image_pb2
 from bosdyn.api import geometry_pb2, trajectory_pb2
 from bosdyn.api import world_object_pb2
@@ -25,9 +24,7 @@ from bosdyn.api.geometry_pb2 import SE2Velocity, SE2VelocityLimit, Vec2
 from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
 import bosdyn.client
 from bosdyn.client import create_standard_sdk, RpcError, ResponseError
-from bosdyn.client.estop import EstopClient
 from bosdyn.client.frame_helpers import get_a_tform_b, get_vision_tform_body, BODY_FRAME_NAME, VISION_FRAME_NAME
-from bosdyn.client.estop import EstopClient
 from bosdyn.client.image import ImageClient, build_image_request
 from bosdyn.client.lease import LeaseClient
 from bosdyn.client.math_helpers import Quat, SE3Pose
@@ -584,16 +581,6 @@ class Exit(object):
         return self._kill_now
 
 
-def verify_estop(robot):
-    """Verify the robot is not estopped"""
-    client = robot.ensure_client(EstopClient.default_service_name)
-    if client.get_status().stop_level != estop_pb2.ESTOP_LEVEL_NONE:
-        error_message = "Robot is estopped. Please use an external E-Stop client, such as the" \
-        " estop SDK example, to configure E-Stop."
-        robot.logger.error(error_message)
-        raise Exception(error_message)
-
-
 def main():
     """Command-line interface."""
     import argparse
@@ -633,7 +620,9 @@ def main():
             robot.start_time_sync()
 
             # Verify the robot is not estopped.
-            verify_estop(robot)
+            assert not robot.is_estopped(), "Robot is estopped. " \
+                                            "Please use an external E-Stop client, " \
+                                            "such as the estop SDK example, to configure E-Stop."
 
             fiducial_follower = FollowFiducial(robot, options)
             time.sleep(.1)

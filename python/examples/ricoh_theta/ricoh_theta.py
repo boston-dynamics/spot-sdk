@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -182,12 +182,17 @@ class Theta:
         saveto = self.downloadImage(image_url, directory, print_to_screen)
         return saveto
 
-    def getLastImage(self, print_to_screen=True):
+    def getLastImage(self, wait_for_latest=False, print_to_screen=True):
         """Downloads the last picture taken using the absolute url to local memory.
 
         Returns:
             Returns the complete image entry's json data in addition to the HTTP bytes result.
         """
+        if wait_for_latest:
+            # ensure image processing is complete for the last picture to be taken.
+            if not self.waitUntilImageIsProcessed(print_to_screen):
+                return None, None
+
         res = self.listFiles(1, print_to_screen)
         json_file_res = res.json()
         if not ("results" in json_file_res and "entries" in json_file_res["results"]):

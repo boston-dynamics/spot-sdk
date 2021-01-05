@@ -1,0 +1,1107 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bosdyn.client.image_service_helpers &mdash; Spot 2.2.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https:://dev.bostondynamics.com/_modules/bosdyn/client/image_service_helpers.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../README.html">
+          
+
+          
+            
+            <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/robot_services.html">Robot services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/faults.html">Faults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/auto_return.html">AutoReturn service</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/data.html">Spot Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_overview.html">Data Acquisition Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_output.html">Data Acquisition Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_buffer_overview.html">Data Buffer Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF file format</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/python/README.html">Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/quickstart.html">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/understanding_spot_programming.html">Understanding Spot Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../python/examples/README.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/basic_service_examples.html">Basic Service Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/directory/README.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/estop/README.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/comms_test/README.html">Comms Test</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/robot_behavior_examples.html">Robot Behavior and Commands Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stance/README.html">Stance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/upload_choreographed_sequence/README.html">Upload Choreographed Sequence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/xbox_controller/README.html">Xbox Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/wasd/README.html">WASD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/docking/README.html">Docking</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/payloads/README.html">Payloads</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_with_image_coordinates/README.html">World Object With Image Coordinates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch front images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/bddf_download/README.html">BDDF Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_service/README.html">Data Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/logging/README.html">Logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/bddf_download/README.html">BDDF Download</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/data_acquisition_examples.html">Data Acquisition Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_acquisition_service/README.html">Data Acquisition Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/tester_programs/README.html">Tester Programs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/autonomy_and_missions_examples.html">Autonomy and Missions Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_question_answerer/README.html">Mission Question Anwerer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html">Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/common.html">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html">Data Acquisition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_helpers.html">Data Acquisition Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin.html">Data Acquisition Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html">Docking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/processors.html">Processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html">Recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html">Robot Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_id.html">Robot ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html">PTZ</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/streamquality.html">Stream Quality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html">Version</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html">Spot Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/time_sync.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/README.html">Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/README.html">BDDF</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/base_data_reader.html">Base Data Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/block_writer.html">Block Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/bosdyn.html">BDDF Conventions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/common.html">Common</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/data_reader.html">Data Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/data_writer.html">Data Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/file_indexer.html">File Indexer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_proto_reader.html">GRPC Proto Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_reader.html">GRPC Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_service_reader.html">GRPC Service Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_service_writer.html">GRPC Service Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/pod_series_reader.html">POD Series Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/pod_series_writer.html">POD Series Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/protobuf_channel_reader.html">Protobuf Channel Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/protobuf_reader.html">Protobuf Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/protobuf_series_writer.html">Protobuf Series Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/stream_data_reader.html">Stream Data Reader</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/README.html">Choreography</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreogrpahy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/payload_configuration_requirements.html">Payload configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/mechanical_interfaces.html">Mechanical interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_mounting_rails.html">Robot mounting rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/protos/style_guide.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html">auth.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-plugin-service-proto">data_acquisition_plugin_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-service-proto">data_acquisition_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-store-proto">data_acquisition_store.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-store-service-proto">data_acquisition_store_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-buffer-proto">data_buffer.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-buffer-service-proto">data_buffer_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-chunk-proto">data_chunk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-index-proto">data_index.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-service-proto">data_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-proto">directory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-registration-proto">directory_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-registration-service-proto">directory_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#directory-service-proto">directory_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#docking-docking-proto">docking/docking.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#docking-docking-service-proto">docking/docking_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#estop-proto">estop.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#estop-service-proto">estop_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#license-service-proto">license_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-proto">local_grid.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-service-proto">mission/mission_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-nodes-proto">mission/nodes.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-remote-proto">mission/remote.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-remote-service-proto">mission/remote_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-util-proto">mission/util.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-registration-proto">payload_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-registration-service-proto">payload_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-service-proto">payload_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#point-cloud-proto">point_cloud.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#point-cloud-service-proto">point_cloud_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#power-proto">power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#power-service-proto">power_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-command-service-proto">robot_command_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-proto">robot_id.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-led-proto">spot_cam/LED.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-health-proto">spot_cam/health.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-network-proto">spot_cam/network.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-power-proto">spot_cam/power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-ptz-proto">spot_cam/ptz.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-service-proto">spot_cam/service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-streamquality-proto">spot_cam/streamquality.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-version-proto">spot_cam/version.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#synchronized-command-proto">synchronized_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-range-proto">time_range.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../choreography_protos/bosdyn/api/README.html">Choreography Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../choreography_protos/bosdyn/api/choreography_reference.html">spot/choreography_params.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../choreography_protos/bosdyn/api/choreography_reference.html#spot-choreography-sequence-proto">spot/choreography_sequence.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../choreography_protos/bosdyn/api/choreography_reference.html#spot-choreography-service-proto">spot/choreography_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../choreography_protos/bosdyn/api/choreography_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../README.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../README.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bosdyn.client.image_service_helpers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bosdyn.client.image_service_helpers</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="kn">import</span> <span class="nn">bosdyn.util</span>
+<span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">seconds_to_duration</span><span class="p">,</span> <span class="n">sec_to_nsec</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.fault</span> <span class="kn">import</span> <span class="n">FaultClient</span><span class="p">,</span> <span class="n">ServiceFaultDoesNotExistError</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.util</span> <span class="kn">import</span> <span class="n">populate_response_header</span><span class="p">,</span> <span class="n">setup_logging</span>
+
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">service_fault_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">header_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">image_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">image_service_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">image_service_pb2_grpc</span>
+
+<span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CameraInterface"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.CameraInterface">[docs]</a><span class="k">class</span> <span class="nc">CameraInterface</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Abstract class interface for capturing and decoding images from a camera.</span>
+
+<span class="sd">    This interface is used by the VisualImageSource to ensure that each image source</span>
+<span class="sd">    has the expected capture and decoding methods with the right specification.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="CameraInterface.blocking_capture"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.CameraInterface.blocking_capture">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">blocking_capture</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Communicates with the camera payload to collect the image data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A tuple with image data (in any format), and the capture timestamp in seconds (float) in the</span>
+<span class="sd">            service computer&#39;s clock.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="CameraInterface.image_decode"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.CameraInterface.image_decode">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">image_decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_data</span><span class="p">,</span> <span class="n">image_proto</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">quality_percent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Decode the image data into an Image proto based on the requested format and quality.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            image_data (Same format as the output of blocking_capture): The image data output from a capture.</span>
+<span class="sd">            image_proto (image_pb2.Image): The proto message to populate with decoded image data.</span>
+<span class="sd">            image_format (image_pb2.Image.Format): Requested image format (e.g. raw, jpeg) for the decoded data. Note,</span>
+<span class="sd">                                                   if the image_format is None, the image service should</span>
+<span class="sd">                                                   return the appropriate format for the requested image.</span>
+<span class="sd">            quality_percent (int): The desired quality percent for decoding the data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None.  Mutates the image_proto message with the decoded data. This function should set the image data,</span>
+<span class="sd">            pixel format, image format, and potentially the transform snapshot fields within the image_proto</span>
+<span class="sd">            protobuf message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="VisualImageSource"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.VisualImageSource">[docs]</a><span class="k">class</span> <span class="nc">VisualImageSource</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Helper class to represent a single image source.</span>
+
+<span class="sd">    This helper class can be used to track state associated with an image source. It can capture</span>
+<span class="sd">    images and decode image data for an image service.</span>
+<span class="sd">    It can be configured to:</span>
+<span class="sd">    - throw faults for capture or decode failures</span>
+<span class="sd">    - request images continuously on a background thread to allow image services to respond more</span>
+<span class="sd">    rapidly to GetImage requests.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        image_name (string): The name of the image source.</span>
+<span class="sd">        camera_interface (subclass of CameraInterface): A camera class which inherits from and implements</span>
+<span class="sd">                                                        the abstract methods of the CameraInterface class.</span>
+<span class="sd">        rows (int): The number of rows of pixels in the image.</span>
+<span class="sd">        cols (int): The number of cols of pixels in the image.</span>
+<span class="sd">        gain (float | function): The sensor&#39;s gain in dB. This can be a fixed value or a function</span>
+<span class="sd">                                 which returns the gain as a float.</span>
+<span class="sd">        exposure (float | function): The exposure time for an image in seconds. This can be a fixed</span>
+<span class="sd">                                     value or a function which returns the exposure time as a float.</span>
+<span class="sd">        logger (logging.Logger): Logger for debug and warning messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_name</span><span class="p">,</span> <span class="n">camera_interface</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exposure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_source_name</span> <span class="o">=</span> <span class="n">image_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_source_proto</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_image_source</span><span class="p">(</span><span class="n">image_name</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_image_capture_params</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_capture_parameters</span><span class="p">(</span><span class="n">gain</span><span class="p">,</span> <span class="n">exposure</span><span class="p">)</span>
+
+        <span class="c1"># Ensure the camera_interface is a subclass of CameraInterface and has the defined capture and</span>
+        <span class="c1"># decode methods.</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">camera_interface</span><span class="p">,</span> <span class="n">CameraInterface</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera_interface</span> <span class="o">=</span> <span class="n">camera_interface</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">capture_function</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_capture_with_error_checking</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camera_interface</span><span class="o">.</span>
+                                                                             <span class="n">blocking_capture</span><span class="p">)</span>
+
+        <span class="c1"># Optional background thread to continuously capture image data. This will help an image</span>
+        <span class="c1"># service to respond quickly to a GetImage request, since it can use the last captured image.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">capture_thread</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Fault client to report errors. Requires the image service name to</span>
+        <span class="c1"># properly create the fault id.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fault_client</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Create fault to throw if a failure occurs when calling the blocking_capture function.</span>
+        <span class="n">camera_capture_fault_id</span> <span class="o">=</span> <span class="n">service_fault_pb2</span><span class="o">.</span><span class="n">ServiceFaultId</span><span class="p">(</span>
+            <span class="n">fault_name</span><span class="o">=</span><span class="s2">&quot;Image Capture Failure for </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_source_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera_capture_fault</span> <span class="o">=</span> <span class="n">service_fault_pb2</span><span class="o">.</span><span class="n">ServiceFault</span><span class="p">(</span>
+            <span class="n">fault_id</span><span class="o">=</span><span class="n">camera_capture_fault_id</span><span class="p">,</span> <span class="n">severity</span><span class="o">=</span><span class="n">service_fault_pb2</span><span class="o">.</span><span class="n">ServiceFault</span><span class="o">.</span><span class="n">SEVERITY_WARN</span><span class="p">)</span>
+        <span class="c1"># Create a fault to throw if a failure occurs when calling the image_decode function.</span>
+        <span class="n">decode_data_fault_id</span> <span class="o">=</span> <span class="n">service_fault_pb2</span><span class="o">.</span><span class="n">ServiceFaultId</span><span class="p">(</span>
+            <span class="n">fault_name</span><span class="o">=</span><span class="s2">&quot;Decoding Image </span><span class="si">%s</span><span class="s2"> Failure&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_source_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decode_data_fault</span> <span class="o">=</span> <span class="n">service_fault_pb2</span><span class="o">.</span><span class="n">ServiceFault</span><span class="p">(</span>
+            <span class="n">fault_id</span><span class="o">=</span><span class="n">decode_data_fault_id</span><span class="p">,</span> <span class="n">severity</span><span class="o">=</span><span class="n">service_fault_pb2</span><span class="o">.</span><span class="n">ServiceFault</span><span class="o">.</span><span class="n">SEVERITY_WARN</span><span class="p">)</span>
+
+        <span class="c1"># Logger for warning messages and the last error message (used only when the background thread</span>
+        <span class="c1"># is capturing such that error messages from the last capture can be shown still).</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span> <span class="ow">or</span> <span class="n">_LOGGER</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_error_message</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="VisualImageSource.set_logger"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.VisualImageSource.set_logger">[docs]</a>    <span class="k">def</span> <span class="nf">set_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Override the existing logger for the VisualImageSource class.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span></div>
+
+<div class="viewcode-block" id="VisualImageSource.create_capture_thread"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.VisualImageSource.create_capture_thread">[docs]</a>    <span class="k">def</span> <span class="nf">create_capture_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">capture_period</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize a background thread to continuously capture images.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            capture_period (int): Amount of time (in seconds) between captures to wait</span>
+<span class="sd">                                  before triggering the next capture. Defaults to</span>
+<span class="sd">                                  &quot;no wait&quot; between captures.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">capture_thread</span> <span class="o">=</span> <span class="n">ImageCaptureThread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_source_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">capture_function</span><span class="p">,</span>
+                                                 <span class="n">capture_period</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">capture_thread</span><span class="o">.</span><span class="n">start_capturing</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="VisualImageSource.initialize_faults"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.VisualImageSource.initialize_faults">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_faults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fault_client</span><span class="p">,</span> <span class="n">image_service</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initailize a fault client and faults for the image source (linked to the image service).</span>
+
+<span class="sd">        The fault client can be used to throw faults for capture and decode errors. All faults</span>
+<span class="sd">        associated with the image service name provided will be cleared.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fault_client (FaultClient): The fault client to communicate with the robot.</span>
+<span class="sd">            image_service (string): The image service name to associate faults with.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fault_client</span> <span class="o">=</span> <span class="n">fault_client</span>
+
+        <span class="c1"># Update the fault ids to include the correct image service name.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera_capture_fault</span><span class="o">.</span><span class="n">fault_id</span><span class="o">.</span><span class="n">service_name</span> <span class="o">=</span> <span class="n">image_service</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decode_data_fault</span><span class="o">.</span><span class="n">fault_id</span><span class="o">.</span><span class="n">service_name</span> <span class="o">=</span> <span class="n">image_service</span>
+
+        <span class="c1"># Attempt to clear any previous faults for the image service.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fault_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fault_client</span><span class="o">.</span><span class="n">clear_service_fault_async</span><span class="p">(</span>
+                <span class="n">service_fault_pb2</span><span class="o">.</span><span class="n">ServiceFaultId</span><span class="p">(</span><span class="n">service_name</span><span class="o">=</span><span class="n">image_service</span><span class="p">),</span>
+                <span class="n">clear_all_service_faults</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="VisualImageSource.trigger_fault"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.VisualImageSource.trigger_fault">[docs]</a>    <span class="k">def</span> <span class="nf">trigger_fault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error_message</span><span class="p">,</span> <span class="n">fault</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Trigger a service fault for a failure to the fault service.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            error_message (string): The error message to provide in the camera capture fault.</span>
+<span class="sd">            fault (service_fault_pb2.ServiceFault): The complete service fault to be issued.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fault_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fault</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fault</span><span class="o">.</span><span class="n">error_message</span> <span class="o">=</span> <span class="n">error_message</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fault_client</span><span class="o">.</span><span class="n">trigger_service_fault_async</span><span class="p">(</span><span class="n">fault</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="VisualImageSource.clear_fault"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.VisualImageSource.clear_fault">[docs]</a>    <span class="k">def</span> <span class="nf">clear_fault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fault</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Attempts to clear the camera capture fault from the fault service.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fault (service_fault_pb2.ServiceFault): The fault (which contains an ID) to be cleared.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fault_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fault</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fault_client</span><span class="o">.</span><span class="n">clear_service_fault_async</span><span class="p">(</span><span class="n">fault</span><span class="o">.</span><span class="n">fault_id</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_maybe_log_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_last_error</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Logs the error message if it is new (to prevent spam).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            error_message (string): The new error message.</span>
+<span class="sd">            show_last_error (Boolean): If true, the error message will be logged even if it is not new.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None. Logs messages to the logger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">error_message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_error_message</span> <span class="o">=</span> <span class="n">error_message</span>
+        <span class="k">if</span> <span class="n">show_last_error</span><span class="p">:</span>
+            <span class="c1"># force the printout of the last error message by sending the log message at a logger level</span>
+            <span class="c1"># high enough to not be filtered out.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_error_message</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_do_capture_with_error_checking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">capture_func</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calls the blocking capture function and checks for any exceptions.</span>
+
+<span class="sd">        This function will print warning messages and trigger a camera capture fault if an</span>
+<span class="sd">        exception is thrown by the camera interface&#39;s blocking capture function.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            capture_func (CameraInterface.blocking_capture): The function capturing the image</span>
+<span class="sd">                                                              data and timestamp.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">img</span><span class="p">,</span> <span class="n">timestamp</span> <span class="o">=</span> <span class="n">capture_func</span><span class="p">()</span>
+            <span class="c1"># Clear out any old error messages if the capture succeeds.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_error_message</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="c1"># Clear any previous camera capture faults after a successful image capture for</span>
+            <span class="c1"># this image source.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clear_fault</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camera_capture_fault</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">img</span><span class="p">,</span> <span class="n">timestamp</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;Failed to capture an image from </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_source_name</span><span class="p">,</span>
+                                                                           <span class="nb">type</span><span class="p">(</span><span class="n">err</span><span class="p">),</span> <span class="n">err</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_maybe_log_error</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trigger_fault</span><span class="p">(</span><span class="n">error_message</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera_capture_fault</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="VisualImageSource.get_image_and_timestamp"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.VisualImageSource.get_image_and_timestamp">[docs]</a>    <span class="k">def</span> <span class="nf">get_image_and_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the latest captured image and timestamp.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The latest captured image and the time (in seconds) associated with that image capture.</span>
+<span class="sd">            Throws a camera capture fault and returns None if the image cannot be retrieved.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">capture_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">image</span><span class="p">,</span> <span class="n">timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">capture_thread</span><span class="o">.</span><span class="n">get_latest_captured_image</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">image</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">timestamp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Force the printout of the last error message since the capture failed.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_maybe_log_error</span><span class="p">(</span><span class="n">show_last_error</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">timestamp</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Call the capture function (which is wrapped with an error checker) to block and get the data.</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">capture_function</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="VisualImageSource.image_decode_with_error_checking"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.VisualImageSource.image_decode_with_error_checking">[docs]</a>    <span class="k">def</span> <span class="nf">image_decode_with_error_checking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_data</span><span class="p">,</span> <span class="n">image_proto</span><span class="p">,</span> <span class="n">decode_format</span><span class="p">,</span>
+                                         <span class="n">quality_percent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Decode the image data into an Image proto based on the requested format and quality.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            image_data(any format): The image data returned by the camera interface&#39;s</span>
+<span class="sd">                                    blocking_capture function.</span>
+<span class="sd">            image_proto (image_pb2.Image): The image proto to be muated with the decoded data.</span>
+<span class="sd">            decode_format (image_pb2.Image.Format): The requested image format (e.g. jpeg, raw)</span>
+<span class="sd">            quality_percent (int): The decode quality percent.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Boolean indicating if the decode succeeds. Throws a decode data fault if the image cannot be</span>
+<span class="sd">            decoded to the desired format. Mutates the image_proto Image proto with the decoded data</span>
+<span class="sd">            if successful.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">decode_format</span> <span class="o">==</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">FORMAT_UNKNOWN</span><span class="p">:</span>
+                <span class="n">decode_format</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">camera_interface</span><span class="o">.</span><span class="n">image_decode</span><span class="p">(</span><span class="n">image_data</span><span class="p">,</span> <span class="n">image_proto</span><span class="p">,</span> <span class="n">decode_format</span><span class="p">,</span>
+                                               <span class="n">quality_percent</span><span class="p">)</span>
+            <span class="c1"># Clear any previous decode data faults after a successful decoding by this image source.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clear_fault</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decode_data_fault</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">decode_format_str</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">decode_format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">decode_format_str</span> <span class="o">=</span> <span class="s2">&quot;unknown format&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">decode_format_str</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">decode_format</span><span class="p">)</span>
+            <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;Failed to decode image </span><span class="si">%s</span><span class="s2"> to format </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">image_source_name</span><span class="p">,</span> <span class="n">decode_format_str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">err</span><span class="p">),</span> <span class="n">err</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_maybe_log_error</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trigger_fault</span><span class="p">(</span><span class="n">error_message</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode_data_fault</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="VisualImageSource.stop_capturing"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.VisualImageSource.stop_capturing">[docs]</a>    <span class="k">def</span> <span class="nf">stop_capturing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Stop the image capture thread if one exists.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timeout_secs(int): The timeout [seconds] for attempting to join and destroy the capture thread.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">capture_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">capture_thread</span><span class="o">.</span><span class="n">stop_capturing</span><span class="p">(</span><span class="n">timeout_secs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="VisualImageSource.make_image_source"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.VisualImageSource.make_image_source">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">make_image_source</span><span class="p">(</span><span class="n">source_name</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">image_type</span><span class="o">=</span><span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageSource</span><span class="o">.</span><span class="n">IMAGE_TYPE_VISUAL</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create an instance of the image_pb2.ImageSource for a given source name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (string): The name for the camera source.</span>
+<span class="sd">            rows (int): The number of rows of pixels in the image.</span>
+<span class="sd">            cols (int): The number of cols of pixels in the image.</span>
+<span class="sd">            image_type (image_pb2.ImageType): The type of image (e.g. visual, depth).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An ImageSource with the cols, rows, and image type populated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageSource</span><span class="p">()</span>
+        <span class="n">source</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">source_name</span>
+
+        <span class="k">if</span> <span class="n">rows</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">cols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">source</span><span class="o">.</span><span class="n">rows</span> <span class="o">=</span> <span class="n">rows</span>
+            <span class="n">source</span><span class="o">.</span><span class="n">cols</span> <span class="o">=</span> <span class="n">cols</span>
+
+        <span class="c1"># Image from the ricoh theta is a JPEG, which is considered a visual image source (no depth data).</span>
+        <span class="n">source</span><span class="o">.</span><span class="n">image_type</span> <span class="o">=</span> <span class="n">image_type</span>
+        <span class="k">return</span> <span class="n">source</span></div>
+
+<div class="viewcode-block" id="VisualImageSource.make_capture_parameters"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.VisualImageSource.make_capture_parameters">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">make_capture_parameters</span><span class="p">(</span><span class="n">gain</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exposure</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates an instance of the image_pb2.CaptureParameters protobuf message.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            gain (float | function): The sensor&#39;s gain in dB. This can be a fixed value or a function</span>
+<span class="sd">                                     which returns the gain as a float.</span>
+<span class="sd">            exposure (float | function): The exposure time for an image in seconds. This can be a fixed</span>
+<span class="sd">                              value or a function which returns the exposure time as a float.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An instance of the protobuf CaptureParameters message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">CaptureParameters</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">gain</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">gain</span><span class="p">):</span>
+                <span class="n">params</span><span class="o">.</span><span class="n">gain</span> <span class="o">=</span> <span class="n">gain</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">params</span><span class="o">.</span><span class="n">gain</span> <span class="o">=</span> <span class="n">gain</span>
+        <span class="k">if</span> <span class="n">exposure</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">exposure</span><span class="p">):</span>
+                <span class="n">params</span><span class="o">.</span><span class="n">exposure_duration</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">exposure</span><span class="p">()))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">params</span><span class="o">.</span><span class="n">exposure_duration</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">exposure</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">params</span></div></div>
+
+
+<div class="viewcode-block" id="ImageCaptureThread"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.ImageCaptureThread">[docs]</a><span class="k">class</span> <span class="nc">ImageCaptureThread</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Continuously query and store the last successfully captured image and it&#39;s</span>
+<span class="sd">    associated timestamp for a single camera device.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        image_source_name(string): The image source name.</span>
+<span class="sd">        capture_func (CameraInterface.blocking_capture): The function capturing the image</span>
+<span class="sd">                                                         data and timestamp.</span>
+<span class="sd">        capture_period_secs (int): Amount of time (in seconds) between captures to wait</span>
+<span class="sd">                                   before triggering the next capture. Defaults to</span>
+<span class="sd">                                   &quot;no wait&quot; between captures.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_source_name</span><span class="p">,</span> <span class="n">capture_func</span><span class="p">,</span> <span class="n">capture_period_secs</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="c1"># Name of the image source that is being requested from.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_source_name</span> <span class="o">=</span> <span class="n">image_source_name</span>
+
+        <span class="c1"># Indicate if the image capture thread is alive.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_capturing_event</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+
+        <span class="c1"># Track the last image and timestamp for this image source.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_captured_image</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_captured_time</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Lock for the thread.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># The wait time between captures.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">capture_period_secs</span> <span class="o">=</span> <span class="n">capture_period_secs</span>
+
+        <span class="c1"># Function that completes the capture</span>
+        <span class="c1"># expected function signature: blocking_capture_function(): returns (image data[numpy bytes array], time[float])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">capture_function</span> <span class="o">=</span> <span class="n">capture_func</span>
+
+<div class="viewcode-block" id="ImageCaptureThread.start_capturing"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.ImageCaptureThread.start_capturing">[docs]</a>    <span class="k">def</span> <span class="nf">start_capturing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Start the background thread for the image captures.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting the thread for </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_source_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_do_image_capture</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ImageCaptureThread.set_last_captured_image"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.ImageCaptureThread.set_last_captured_image">[docs]</a>    <span class="k">def</span> <span class="nf">set_last_captured_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_frame</span><span class="p">,</span> <span class="n">capture_time</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the last image capture and timestamp.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_captured_image</span> <span class="o">=</span> <span class="n">image_frame</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_captured_time</span> <span class="o">=</span> <span class="n">capture_time</span></div>
+
+<div class="viewcode-block" id="ImageCaptureThread.get_latest_captured_image"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.ImageCaptureThread.get_latest_captured_image">[docs]</a>    <span class="k">def</span> <span class="nf">get_latest_captured_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the last found image and the timestamp it was acquired at.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread_lock</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_captured_image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_captured_time</span></div>
+
+    <span class="k">def</span> <span class="nf">_do_image_capture</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Main loop for the image capture thread, which requests and saves images.&quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop_capturing_event</span><span class="o">.</span><span class="n">isSet</span><span class="p">():</span>
+            <span class="c1"># Get the image by calling the blocking capture function.</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">capture</span><span class="p">,</span> <span class="n">capture_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">capture_function</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_last_captured_image</span><span class="p">(</span><span class="n">capture</span><span class="p">,</span> <span class="n">capture_time</span><span class="p">)</span>
+
+            <span class="c1"># Wait for the total capture period (where the wait time is adjusted based on how</span>
+            <span class="c1"># long the capture took).</span>
+            <span class="n">wait_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">capture_period_secs</span> <span class="o">-</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop_capturing_event</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">wait_time</span><span class="p">):</span>
+                <span class="c1"># If stop_capturing_event is set, then break from the capture loop now.</span>
+                <span class="k">break</span>
+
+<div class="viewcode-block" id="ImageCaptureThread.stop_capturing"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.ImageCaptureThread.stop_capturing">[docs]</a>    <span class="k">def</span> <span class="nf">stop_capturing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Stop the image capture thread.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_capturing_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout_secs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="CameraBaseImageServicer"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.CameraBaseImageServicer">[docs]</a><span class="k">class</span> <span class="nc">CameraBaseImageServicer</span><span class="p">(</span><span class="n">image_service_pb2_grpc</span><span class="o">.</span><span class="n">ImageServiceServicer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;GRPC service to provide access to multiple different image sources.</span>
+
+<span class="sd">    The service can list the available image (device) sources and query each source for image data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        bosdyn_sdk_robot (Robot): The robot instance for the service to connect to.</span>
+<span class="sd">        service_name (string): The name of the image service.</span>
+<span class="sd">        image_sources(List[VisualImageSource]): The list of image sources (provided as a VisualImageSource).</span>
+<span class="sd">        logger (logging.Logger): Logger for debug and warning messages.</span>
+<span class="sd">        use_background_capture_thread (bool): If true, the image service will create a thread that continuously</span>
+<span class="sd">            captures images so the image service can respond rapidly to the GetImage request. If false,</span>
+<span class="sd">            the image service will call an image sources&#39; blocking_capture_function during the GetImage request.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bosdyn_sdk_robot</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">image_sources</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">use_background_capture_thread</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CameraBaseImageServicer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Setup the logger to remove duplicated messages and use a specific logging format.</span>
+            <span class="n">setup_logging</span><span class="p">(</span><span class="n">include_dedup_filter</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">_LOGGER</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bosdyn_sdk_robot</span> <span class="o">=</span> <span class="n">bosdyn_sdk_robot</span>
+
+        <span class="c1"># Service name this servicer is associated with in the robot directory.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_name</span> <span class="o">=</span> <span class="n">service_name</span>
+
+        <span class="c1"># Fault client to report service faults</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fault_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bosdyn_sdk_robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">FaultClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+
+        <span class="c1"># Get a timesync endpoint from the robot instance such that the image timestamps can be</span>
+        <span class="c1"># reported in the robot&#39;s time.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bosdyn_sdk_robot</span><span class="o">.</span><span class="n">time_sync</span><span class="o">.</span><span class="n">wait_for_sync</span><span class="p">()</span>
+
+        <span class="c1"># A list of all the image sources available by this service. List[VisualImageSource]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>  <span class="c1"># Key: source name (string), Value: VisulImageSource</span>
+        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">image_sources</span><span class="p">:</span>
+            <span class="c1"># Set the logger for each visual image source to be the logger of the camera service class.</span>
+            <span class="n">source</span><span class="o">.</span><span class="n">set_logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+            <span class="c1"># Setup the fault client so service faults can be created.</span>
+            <span class="n">source</span><span class="o">.</span><span class="n">initialize_faults</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fault_client</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_name</span><span class="p">)</span>
+            <span class="c1"># Potentially start the capture threads in the background.</span>
+            <span class="k">if</span> <span class="n">use_background_capture_thread</span><span class="p">:</span>
+                <span class="n">source</span><span class="o">.</span><span class="n">create_capture_thread</span><span class="p">()</span>
+            <span class="c1"># Save the visual image source class associated with the image source name.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span><span class="n">source</span><span class="o">.</span><span class="n">image_source_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">source</span>
+
+<div class="viewcode-block" id="CameraBaseImageServicer.ListImageSources"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.CameraBaseImageServicer.ListImageSources">[docs]</a>    <span class="k">def</span> <span class="nf">ListImageSources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Obtain the list of ImageSources for this given service.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (image_pb2.ListImageSourcesRequest): The list images request.</span>
+<span class="sd">            context (GRPC ClientContext): tracks internal grpc statuses and information.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of all image sources known to this image service. Note, there could be multiple image</span>
+<span class="sd">            services registered with the robot&#39;s directory service that can have different image sources.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ListImageSourcesResponse</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">image_sources</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">image_source_proto</span><span class="p">)</span>
+        <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+    <span class="k">def</span> <span class="nf">_set_format_and_decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_data</span><span class="p">,</span> <span class="n">img_proto</span><span class="p">,</span> <span class="n">img_format</span><span class="p">,</span> <span class="n">quality_percent</span><span class="p">,</span>
+                               <span class="n">image_source_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calls the image_decode_with_error_checking function, which returns a bool if the decode succeeds.&quot;&quot;&quot;</span>
+        <span class="c1"># This function should set the image data, pixel format, image format, and transform snapshot fields.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span><span class="n">image_source_name</span><span class="p">]</span><span class="o">.</span><span class="n">image_decode_with_error_checking</span><span class="p">(</span>
+            <span class="n">image_data</span><span class="p">,</span> <span class="n">img_proto</span><span class="p">,</span> <span class="n">img_format</span><span class="p">,</span> <span class="n">quality_percent</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CameraBaseImageServicer.GetImage"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.CameraBaseImageServicer.GetImage">[docs]</a>    <span class="k">def</span> <span class="nf">GetImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the latest image capture from all the image sources specified in the request.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (image_pb2.GetImageRequest): The image request, which specifies the image sources to</span>
+<span class="sd">                                                 query, and other format parameters.</span>
+<span class="sd">            context (GRPC ClientContext): tracks internal grpc statuses and information.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The ImageSource and Image data for the last captured image from each image source name</span>
+<span class="sd">            specified in the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">GetImageResponse</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">img_req</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">image_requests</span><span class="p">:</span>
+            <span class="n">img_resp</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">image_responses</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
+            <span class="n">src_name</span> <span class="o">=</span> <span class="n">img_req</span><span class="o">.</span><span class="n">image_source_name</span>
+            <span class="k">if</span> <span class="n">src_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">:</span>
+                <span class="c1"># The requested camera source does not match the name of the Ricoh Theta camera, so if cannot</span>
+                <span class="c1"># be completed and will have a failure status in the response message.</span>
+                <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_UNKNOWN_CAMERA</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Camera source &#39;</span><span class="si">%s</span><span class="s2">&#39; is unknown.&quot;</span><span class="p">,</span> <span class="n">src_name</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Set the image source information in the response.</span>
+            <span class="n">img_resp</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span><span class="n">src_name</span><span class="p">]</span><span class="o">.</span><span class="n">image_source_proto</span><span class="p">)</span>
+
+            <span class="c1"># Set the image capture parameters in the response.</span>
+            <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">capture_params</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span><span class="n">src_name</span><span class="p">]</span><span class="o">.</span><span class="n">get_image_capture_params</span><span class="p">())</span>
+
+            <span class="n">captured_image</span><span class="p">,</span> <span class="n">img_time_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span>
+                <span class="n">src_name</span><span class="p">]</span><span class="o">.</span><span class="n">get_image_and_timestamp</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">captured_image</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">img_time_seconds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_IMAGE_DATA_ERROR</span>
+                <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;Failed to capture an image from </span><span class="si">%s</span><span class="s2"> on the server.&quot;</span> <span class="o">%</span> <span class="n">src_name</span>
+                <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">error_message</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Convert the image capture time from the local clock time into the robot&#39;s time. Then set it as</span>
+            <span class="c1"># the acquisition timestamp for the image data.</span>
+            <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">acquisition_time</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bosdyn_sdk_robot</span><span class="o">.</span><span class="n">time_sync</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span>
+                    <span class="n">sec_to_nsec</span><span class="p">(</span><span class="n">img_time_seconds</span><span class="p">)))</span>
+
+            <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">rows</span> <span class="o">=</span> <span class="n">img_resp</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">rows</span>
+            <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">cols</span> <span class="o">=</span> <span class="n">img_resp</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">cols</span>
+
+            <span class="c1"># Set the image data.</span>
+            <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">img_req</span><span class="o">.</span><span class="n">image_format</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_format_and_decode</span><span class="p">(</span><span class="n">captured_image</span><span class="p">,</span> <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                                                  <span class="n">img_req</span><span class="o">.</span><span class="n">image_format</span><span class="p">,</span> <span class="n">img_req</span><span class="o">.</span><span class="n">quality_percent</span><span class="p">,</span>
+                                                  <span class="n">src_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
+                <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED</span>
+
+            <span class="c1"># Set that we successfully got the image.</span>
+            <span class="k">if</span> <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_UNKNOWN</span><span class="p">:</span>
+                <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_OK</span>
+
+        <span class="c1"># No header error codes, so set the response header as CODE_OK.</span>
+        <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">source</span><span class="o">.</span><span class="n">stop_capturing</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__del__</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      
+      &copy; Copyright 2021 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Util &mdash; Spot 2.1.0 documentation</title>
+  <title>Util &mdash; Spot 2.2.0 documentation</title>
   
 
   
@@ -33,7 +33,6 @@
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -68,7 +67,7 @@
             
             
               <div class="version">
-                2.1.0
+                2.2.0
               </div>
             
           
@@ -115,6 +114,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/auto_return.html">AutoReturn service</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/choreography/README.html">Choreography</a><ul>
@@ -157,6 +157,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../examples/upload_choreographed_sequence/README.html">Upload Choreographed Sequence</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../examples/xbox_controller/README.html">Xbox Controller</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../examples/wasd/README.html">WASD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/docking/README.html">Docking</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -196,6 +197,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../examples/web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../examples/cloud_upload/README.html">Cloud Upload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/tester_programs/README.html">Tester Programs</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../examples/docs/autonomy_and_missions_examples.html">Autonomy and Missions Examples</a><ul>
@@ -215,10 +217,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/command_line.html">Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/common.html">Common</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/data_acquisition.html">Data Acquisition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/data_acquisition_helpers.html">Data Acquisition Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/data_acquisition_plugin.html">Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
@@ -233,6 +237,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
@@ -271,6 +276,26 @@
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="README.html">Core</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="bddf/README.html">BDDF</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="bddf/base_data_reader.html">Base Data Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bddf/block_writer.html">Block Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bddf/bosdyn.html">BDDF Conventions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bddf/common.html">Common</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bddf/data_reader.html">Data Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bddf/data_writer.html">Data Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bddf/file_indexer.html">File Indexer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bddf/grpc_proto_reader.html">GRPC Proto Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bddf/grpc_reader.html">GRPC Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bddf/grpc_service_reader.html">GRPC Service Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bddf/grpc_service_writer.html">GRPC Service Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bddf/pod_series_reader.html">POD Series Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bddf/pod_series_writer.html">POD Series Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bddf/protobuf_channel_reader.html">Protobuf Channel Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bddf/protobuf_reader.html">Protobuf Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bddf/protobuf_series_writer.html">Protobuf Series Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bddf/stream_data_reader.html">Stream Data Reader</a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="geometry.html">Geometry</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Util</a></li>
 </ul>
@@ -585,12 +610,26 @@
 <dl class="py function">
 <dt id="bosdyn.util.set_timestamp_from_nsec">
 <code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">set_timestamp_from_nsec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timestamp_proto</span></em>, <em class="sig-param"><span class="n">time_nsec</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/bosdyn/util.html#set_timestamp_from_nsec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.set_timestamp_from_nsec" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes a timestamp as an integer of nanoseconds from the unix epoch into a Timestamp proto</p>
+<dd><p>Sets a Timestamp protobuf from an integer of nanoseconds since the unix epoch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>timestamp_proto</strong><strong>[</strong><strong>out</strong><strong>]</strong> (<em>google.protobuf.Timestamp</em>) – timestamp into which the time will be written</p></li>
+<li><p><strong>timestamp_proto</strong><strong>[</strong><strong>out</strong><strong>]</strong> (<em>google.protobuf.Timestamp</em>) – timestamp into which time will be written</p></li>
 <li><p><strong>time_nsec</strong><strong>[</strong><strong>in</strong><strong>]</strong> – the time, as an integer of nanoseconds from the unix epoch</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.util.set_timestamp_from_datetime">
+<code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">set_timestamp_from_datetime</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timestamp_proto</span></em>, <em class="sig-param"><span class="n">date_time</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/bosdyn/util.html#set_timestamp_from_datetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.set_timestamp_from_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a Timestamp protobuf from datetime.datetime value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timestamp_proto</strong><strong>[</strong><strong>out</strong><strong>]</strong> (<em>google.protobuf.Timestamp</em>) – timestamp into which time will be written</p></li>
+<li><p><strong>date_time</strong><strong>[</strong><strong>in</strong><strong>]</strong> (<em>datetime.datetime</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -599,7 +638,7 @@
 <dl class="py function">
 <dt id="bosdyn.util.nsec_to_timestamp">
 <code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">nsec_to_timestamp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time_nsec</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/bosdyn/util.html#nsec_to_timestamp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.nsec_to_timestamp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a google.protobuf.Timestamp for a time from nanoseconds from the unix epoch.</p>
+<dd><p>Returns a google.protobuf.Timestamp for an integer value of nanoseconds since the unix epoch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>time_nsec</strong> (<em>int</em>) – the time, as an integer of nanoseconds from the unix epoch</p>
@@ -610,7 +649,7 @@
 <dl class="py function">
 <dt id="bosdyn.util.timestamp_to_sec">
 <code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">timestamp_to_sec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timestamp_proto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/bosdyn/util.html#timestamp_to_sec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.timestamp_to_sec" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns floating point of seconds from the unix epoch from a Timestamp proto.</p>
+<dd><p>From a Timestamp proto, return a floating point value of seconds from the unix epoch .</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>timestamp_proto</strong> (<em>google.protobuf.Timestamp</em>) – input time</p>
@@ -621,7 +660,7 @@
 <dl class="py function">
 <dt id="bosdyn.util.timestamp_to_nsec">
 <code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">timestamp_to_nsec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timestamp_proto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/bosdyn/util.html#timestamp_to_nsec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.timestamp_to_nsec" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns integer of nanoseconds from the unix epoch from a Timestamp proto.</p>
+<dd><p>From a Timestamp proto, return an integer of nanoseconds from the unix epoch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>timestamp_proto</strong> (<em>google.protobuf.Timestamp</em>) – input time</p>
@@ -679,6 +718,32 @@
 </dl>
 </dd></dl>
 
+<dl class="py exception">
+<dt id="bosdyn.util.DatetimeParseError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">DatetimeParseError</code><a class="reference internal" href="../../../../_modules/bosdyn/util.html#DatetimeParseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.DatetimeParseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Failed to parse any datetime formats known to parse_datetime()</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.util.parse_datetime">
+<code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">parse_datetime</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/bosdyn/util.html#parse_datetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.parse_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse datetime from string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val</strong> – string with format like as described by TIME_FORMAT_DESC.</p>
+</dd>
+</dl>
+<p>Returns: datetime.datetime.</p>
+<p>Raises: DatetimeParseError if format of val is not recognized.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.util.parse_timespan">
+<code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">parse_timespan</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timespan_spec</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/bosdyn/util.html#parse_timespan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.parse_timespan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the timespan.</p>
+</dd></dl>
+
 <dl class="py class">
 <dt id="bosdyn.util.RobotTimeConverter">
 <em class="property">class </em><code class="sig-prename descclassname">bosdyn.util.</code><code class="sig-name descname">RobotTimeConverter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">robot_clock_skew_nsec</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/bosdyn/util.html#RobotTimeConverter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.RobotTimeConverter" title="Permalink to this definition">¶</a></dt>
@@ -703,6 +768,17 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>local_time_secs</strong> – Local system time time, in seconds from the unix epoch.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.util.RobotTimeConverter.robot_timestamp_from_local">
+<code class="sig-name descname">robot_timestamp_from_local</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">local_timestamp_proto</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/bosdyn/util.html#RobotTimeConverter.robot_timestamp_from_local"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.util.RobotTimeConverter.robot_timestamp_from_local" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a Timestamp proto is local time and returns one in robot time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>local_timestamp_proto</strong> (<em>google.protobuf.Timestamp</em>) – timestamp in system clock</p>
 </dd>
 </dl>
 </dd></dl>
@@ -734,7 +810,7 @@
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2020 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2021 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

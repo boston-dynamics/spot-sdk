@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -18,7 +18,7 @@ from bosdyn.api import data_acquisition_pb2
 from bosdyn.api import data_acquisition_store_pb2
 from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
 from bosdyn.client.exceptions import ResponseError
-from data_acquisition_helpers import download_data_REST
+from bosdyn.client.data_acquisition_helpers import download_data_REST
 
 from google.protobuf.timestamp_pb2 import Timestamp
 

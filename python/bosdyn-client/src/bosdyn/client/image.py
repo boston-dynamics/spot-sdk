@@ -1,11 +1,12 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """For clients to use the image service."""
-
+import os
+import numpy as np
 import collections
 from bosdyn.client.common import BaseClient
 from bosdyn.client.common import (error_factory, error_pair, common_header_errors, handle_common_header_errors)
@@ -28,10 +29,10 @@ class SourceDataError(ImageResponseError):
 
 
 class ImageDataError(ImageResponseError):
-    """System cannot generate image data at this time."""
+    """System cannot generate image data for the ImageCapture at this time."""
 
 class UnsupportedImageFormatRequestedError(ImageResponseError):
-    """The image service cannot return data in this format."""
+    """The image service cannot return data in the requested format."""
 
 _STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _STATUS_TO_ERROR.update({
@@ -142,12 +143,12 @@ class ImageClient(BaseClient):
 
 
 def build_image_request(image_source_name, quality_percent=75,
-                        image_format=image_pb2.Image.FORMAT_UNKNOWN):
+                        image_format=None):
     """Helper function which builds an ImageRequest from an image source name.
 
-    By default the robot will choose an appropriate format - such as JPEG for
-    visual images, or RAW for depth images. Clients can override image_format
-    in those cases.
+    By default the robot will choose an appropriate format when no image format
+    is provided. For example, it will choose JPEG for visual images, or RAW for
+    depth images. Clients can provide an image_format for other cases.
 
     Args:
         image_source_name (string): The image source to query.
@@ -168,3 +169,109 @@ def _list_image_sources_value(response):
 
 def _get_image_value(response):
     return response.image_responses
+
+
+def write_pgm_or_ppm(image_response, filename="", filepath="."):
+    """Write raw data from image_response to a PGM file.
+
+    Args:
+        image_response (image_pb2.ImageResponse): The ImageResponse proto to parse.
+        filename (string): Name of the output file, if None is passed, then "image-{SOURCENAME}.pgm" is used.
+        filepath(string): The directory to save the image.
+    """
+    # Determine the data type to decode the image.
+    if image_response.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_DEPTH_U16:
+        dtype = np.uint16
+    else:
+        dtype = np.uint8
+
+    num_channels = 1
+    pgm_header_number = 'P5'
+    file_extension = ".pgm"
+    # Determine the pixel format to get the number of channels the data comes in.
+    if image_response.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_RGB_U8:
+        num_channels = 3
+        pgm_header_number = 'P6'
+        file_extension = ".ppm"
+    elif image_response.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_RGBA_U8:
+        print("PGM/PPM format does not support RGBA encodings.")
+        return
+    elif (image_response.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8
+        or image_response.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_DEPTH_U16):
+        num_channels = 1
+    else:
+        print("Unsupported pixel format for PGM/PPM: %s." %
+            image_pb2.Image.PixelFormat.Name(image_response.shot.image.pixel_format))
+        return
+
+    img = np.frombuffer(image_response.shot.image.data, dtype=dtype)
+    height = image_response.shot.image.rows
+    width = image_response.shot.image.cols
+    try:
+        img = img.reshape((height, width, num_channels))
+    except ValueError as err:
+        print("Cannot convert raw image into expected shape (rows %d, cols %d, color channels %d)." % (height, width, num_channels))
+        print(err)
+        return
+    if not filename:
+        image_source_filename = "image-%s%s" % (image_response.source.name, file_extension)
+        filename = image_source_filename
+    filename = os.path.join(filepath, filename)
+    try:
+        fd_out = open(filename, 'w')
+    except IOError as err:
+        print("Cannot open file %s. Exception thrown: %s" % (filename, err))
+        return
+
+    max_val = np.amax(img)
+    pgm_header = pgm_header_number + ' ' + str(width) + ' ' + str(height) + ' ' + str(max_val) + '\n'
+    fd_out.write(pgm_header)
+    img.tofile(fd_out)
+    print('Saved matrix with pixel values from camera "%s" to file "%s".' % (
+        image_response.source.name, filename))
+
+def write_image_data(image_response, filename="", filepath="."):
+    """Write image data from image_response to a file.
+
+    Args:
+        image_response (image_pb2.ImageResponse): The ImageResponse proto to parse.
+        filename (string): Name of the output file (including the file extension), if None is
+                           passed, then "image-{SOURCENAME}.jpg" is used.
+        filepath(string): The directory to save the image.
+    """
+    if not filename:
+        image_source_filename = 'image-{}.jpg'.format(image_response.source.name)
+        filename = image_source_filename
+    filename = os.path.join(filepath, filename)
+    try:
+        with open(filename, 'wb') as outfile:
+            outfile.write(image_response.shot.image.data)
+        print('Saved "{}" to "{}".'.format(image_response.source.name, filename))
+    except IOError as err:
+        print('Failed to save "{}".'.format(image_response.source.name))
+        print(err)
+
+def save_images_as_files(image_responses, filename="", filepath="."):
+    """Write image responses to files.
+
+    Args:
+        image_responses (List[image_pb2.ImageResponse]): The list of image responses to save.
+        filename (string): Name prefix of the output files (made unique by an integer suffix), if None
+                           is passed the image source name is used.
+        filepath(string): The directory to save the image files.
+    """
+    for index, image in enumerate(image_responses):
+        save_file_name = ""
+        if filename:
+            # Add a suffix of the index of the image to ensure the filename is unique.
+            save_file_name = filename + str(index)
+        if image.shot.image.format == image_pb2.Image.FORMAT_UNKNOWN:
+            # Don't save an image with no format.
+            continue
+        elif not image.shot.image.format == image_pb2.Image.FORMAT_JPEG:
+            # Save raw and rle sources as text files with the full matrix saved as text values. The matrix will
+            # be of size: rows X cols X color channels. Color channels is determined through the pixel format.
+            write_pgm_or_ppm(image, save_file_name, filepath)
+        else:
+            # Save jpeg format as a jpeg image.
+            write_image_data(image, save_file_name, filepath)

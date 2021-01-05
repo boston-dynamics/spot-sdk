@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -10,11 +10,16 @@ Development Kit License (20191101-BDSDK-SL).
 
 Cockpit is an interactive Linux server admin interface, licensed under: GNU LGPL version 2.1. More details can be found at https://cockpit-project.org/.
 
-We have installed this tool on Spot CORE to make system management a little bit easier for developers and end users. 
+We have installed this tool **on** the Spot CORE to make system management a little bit easier for developers and end users. 
+
+## Prerequisites
+- Spot CORE must be powered on.
+- Spot CORE should be connected to the robot with a working Ethernet connection.
+- Spot CORE Software Release 2.1.0 or above must be installed.
 
 ## Setup
 
-This document will quickly cover the recommended features for Spot CORE users. Cockpit is readily available on forwarded port 21443. In the future, a direct link will be provided on the Admin Console Spot CORE Payloads page. In 2.1.0, to access this port through the robot, use the following address: https://INSERT_ROBOT_IP:21443/. If a PC is connected to the robot over WiFi, go to https://192.168.80.3:21443/. Click "Advanced" and "Proceed ..." to reach the login page.
+This document will quickly cover the recommended features for Spot CORE users. Cockpit is readily available on forwarded port 21443. In the future, a direct link will be provided on the Admin Console Spot CORE Payloads page. Since 2.1.0, to access this port through the robot, use the following address: https://INSERT_ROBOT_IP:21443/. If a PC is connected to the robot over WiFi, go to https://192.168.80.3:21443/. Click "Advanced" and "Proceed ..." to reach the login page.
 
 
 ![login](./images/cockpit/login.png)
@@ -38,7 +43,7 @@ Jumping down to the bottom option, take a quick look at the Cockpit Terminal pag
 ![login](./images/cockpit/terminal.png)
 
 ### Check Spot CORE Software Version
-Our support team may ask you what Spot CORE version you are running. This can be found by running the following command in the Cockpit Terminal.
+Our support team may ask you what Spot CORE version you are running. This information can be found on the registered payload page of the admin console or the settings page of the tablet app. This information can also be found with more detail by running the following command on the Spot CORE. An example is included below using the Cockpit Terminal.
 
 ```
 cat /etc/spotcore-release
@@ -47,12 +52,12 @@ cat /etc/spotcore-release
 ![login](./images/cockpit/terminal_check_release.png)
 
 ## Networking
-The Networking page will likely be the most frequently used interface for Spot CORE users. The default base image for the 2.1.0 Spot CORE now uses NetworkManager for configuring network settings which provides a clean interface with Cockpit. 
+The Networking page will likely be the most frequently used interface for Spot CORE users. The default base image for the release 2.1.0 or later Spot CORE now uses NetworkManager for configuring network settings which provides a clean interface with Cockpit. 
 
 ![login](./images/cockpit/networking.png)
 
 ### Spot CORE WiFi Network Settings
-Below is the recommended procedure for 2.1.0 of how to connect Spot CORE to the internet with a WiFi adapter.
+Below is the recommended procedure for release 2.1.0 or later of how to connect Spot CORE to the internet with a WiFi adapter.
 
 1. Insert Ubuntu 18.04 compatible USB WiFi adapter.
 2. Connect WiFi adapter to an access point.
@@ -99,10 +104,10 @@ In order to connect to the internet, remove the IPv4 default route of enp2s0. Se
 
 **IMPORTANT NOTES:**
 
-1. By default, Boston Dynamics has included 2 pre-defined Routes which will route outbound communication from the Spot CORE to Spot's Access Point and to Spot's Ethernet port. 
+1. By default, Boston Dynamics has included 2 pre-defined Routes which will route outbound communication from the Spot CORE to the explicity defined gateways, Spot's Access Point `192.168.80.0` and Spot's Ethernet port `10.0.0.0`, rather than the default gateway.
 1. These routes are only required if the default gateway is removed for internet access. 
 1. The route to `10.0.0.0` is only valid if the user has not adjusted the Ethernet network settings on the robot admin console.
-1. To access the internet, remove the default gateway under Addresses as pictured below and Apply these changes. Instead of routing all traffic to the robot, we will instead route to the internet.
+1. To access the internet, remove the default gateway (the third field) under Addresses as pictured below and Apply these changes. Instead of routing all traffic to the robot, we will instead route to the internet.
 1. Making the above change may affect Boston Dynamics integrations or Customer integrations. Adjust additional network settings if necessary.
 
 ![login](./images/cockpit/networking_enp2s0_no_gateway.png)

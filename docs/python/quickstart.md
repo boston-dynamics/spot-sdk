@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -95,7 +95,7 @@ pip 19.2.1 from <PATH_ON_YOUR_COMPUTER>
 **Windows users:**
 
 ```shell
-> py.exe -3 -m pip --version.
+> py.exe -3 -m pip --version
 ```
 
 If pip is not found, you'll need to install it. There are a few options:
@@ -166,10 +166,10 @@ $ python3 -m pip install --upgrade bosdyn-client bosdyn-mission bosdyn-choreogra
 Installing the `bosdyn-client`, `bosdyn-choreography-client` and `bosdyn-mission` packages will also
 install `bosdyn-api` and `bosdyn-core` packages with the same version. The command above installs
 the latest version of the packages. To install a different version of the packages from PyPI, for
-example 2.1.0, use the following command.
+example 2.2.0, use the following command.
 
 ```shell
-$ python3 -m pip install bosdyn-client==2.1.0 bosdyn-mission==2.1.0 bosdyn-choreography-client==2.1.0
+$ python3 -m pip install bosdyn-client==2.2.0 bosdyn-mission==2.2.0 bosdyn-choreography-client==2.2.0
 ```
 
 **Version incompatibility:**
@@ -178,7 +178,7 @@ If you see a version incompatibility error during pip install such as:
 
 ```shell
 ERROR: bosdyn-core <VERSION_STRING> has requirement bosdyn-api==<VERSION_STRING>, but you
-have bosdyn-api 2.1.0 which is incompatible.
+have bosdyn-api 2.2.0 which is incompatible.
 ```
 
 Try uninstalling the bosdyn packages (Note: unlike install, you will need to explicitly list all 4 packages) and then reinstalling:
@@ -193,12 +193,12 @@ Make sure that the packages have been installed.
 
 ```shell
 $ python3 -m pip list --format=columns | grep bosdyn
-bosdyn-api                    2.1.0
-bosdyn-choreography-client    2.1.0
-bosdyn-choreography-protos    2.1.0
-bosdyn-client                 2.1.0
-bosdyn-core                   2.1.0
-bosdyn-mission                2.1.0
+bosdyn-api                    2.2.0
+bosdyn-choreography-client    2.2.0
+bosdyn-choreography-protos    2.2.0
+bosdyn-client                 2.2.0
+bosdyn-core                   2.2.0
+bosdyn-mission                2.2.0
 ```
 **Windows users:**
 ```shell
@@ -278,8 +278,8 @@ Issue the following command to get your Spot robot's ID:
 ```shell
 $ python3 -m bosdyn.client 192.168.80.3 id
 beta-BD-90490007     02-19904-9903   beta29     spot (V3)
-Software: 2.1.0 (b11205d698e 2020-03-11 11:53:12)
-Installed: 2020-03-11 15:06:57
+Software: 2.2.0 (b11205d698e 2020-12-11 11:53:12)
+Installed: 2020-12-11 15:06:57
 ```
 
 If this worked for you, SUCCESS!  You are now successfully communicating with Spot via Python!  Note that the output returned shows your Spot robot's unique serial number, its nickname and robot type (Boston Dynamics has multiple robots), the software version, and install date.

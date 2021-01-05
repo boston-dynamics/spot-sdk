@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -145,14 +145,30 @@ message SE2TrajectoryCommand {
             // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
             STATUS_UNKNOWN = 0;
 
-            // The robot has arrived at the goal.
+            // The robot has arrived and is standing at the goal.
             STATUS_AT_GOAL = 1;
 
+            // The robot has arrived at the goal and is doing final positioning.
+            STATUS_NEAR_GOAL = 3;
+            
             // The robot is attempting to go to a goal.
             STATUS_GOING_TO_GOAL = 2;
         }
         // Current status of the command.
         Status status = 1;
+
+        enum BodyMovementStatus {
+            // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
+            BODY_STATUS_UNKNOWN = 0;
+            // The robot body is not settled at the goal.
+            BODY_STATUS_MOVING = 1;
+            // The robot is at the goal and the body has stopped moving.
+            BODY_STATUS_SETTLED = 2;
+
+        }
+        // Current status of how the body is moving
+        BodyMovementStatus body_movement_status = 2;
+
     }
 }
 

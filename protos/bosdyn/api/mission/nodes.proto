@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,6 +13,7 @@ option java_outer_classname = "NodesProto";
 import "google/protobuf/any.proto";
 import "google/protobuf/duration.proto";
 
+import "bosdyn/api/docking/docking.proto";
 import "bosdyn/api/geometry.proto";
 import "bosdyn/api/spot_cam/camera.proto";
 import "bosdyn/api/spot_cam/logging.proto";
@@ -162,6 +163,16 @@ message Condition {
     }
     // Comparison operator to compare lhs and rhs.
     Compare operation = 5;
+
+    // When comparing runtime values in the blackboard, some values might be "stale" (i.e too old).
+    // This defines how the comparator should behave when a read value is stale.
+    enum HandleStaleness {
+       HANDLE_STALE_UNKNOWN = 0; // acts like READ_ANYWAY for backwards compatibility.
+       HANDLE_STALE_READ_ANYWAY = 1; // ignore how stale this data is.
+       HANDLE_STALE_RUN_UNTIL_FRESH = 2;// return the RUNNING status until the data being read is not stale.
+       HANDLE_STALE_FAIL = 3; // return FAILURE status if stale data is read.
+    }
+    HandleStaleness handle_staleness = 6;
 }
 
 
@@ -175,6 +186,19 @@ message BosdynRobotState {
     Node child = 3;
     // Name of the bosdyn.api.RobotState object in the blackboard. For example, if this is set to
     // "robot", children can look up "robot.power_state.motor_power_state" in the blackboard.
+    string state_name = 4;
+}
+
+// Get the state of the docking service from the robot.
+message BosdynDockState {
+    // Name of the service to use.
+    string service_name = 1;
+    // Host machine the service is running on.
+    string host = 2;
+    // Child node. Children will have access to the state gathered by this node.
+    Node child = 3;
+    // Name of the bosdyn.api.DockState object in the blackboard. For example, if this is set to
+    // "power_status", children can look up "power_status" in the blackboard.
     string state_name = 4;
 }
 
@@ -238,12 +262,18 @@ message BosdynGraphNavState {
     string waypoint_id = 5;
 }
 
-// Tell GraphNav to re-localize the robot to the nearest visible fiducial.
+// Tell GraphNav to re-localize the robot using a SetLocalizationRequest. This overrides whatever
+// the current localization is. This can be useful to reinitialize the system at a known state.
 message BosdynGraphNavLocalize {
     // Name of the service to use.
     string service_name = 1;
     // Host machine the service is running on.
     string host = 2;
+    // If no localization_request is provided, the default options used
+    // are FIDUCIAL_INIT_NEAREST (the system will initialize to the nearest fiducial).
+    // Otherwise, the options inside the set_localization_request will be used.
+    // Note that ko_tform_body in the request will be ignored (it will be recalculated at runtime).
+    bosdyn.api.graph_nav.SetLocalizationRequest localization_request = 3;
 }
 
 // Call out to another system using the RemoteMission service.
@@ -385,6 +415,9 @@ message Dock {
     // for a list of possible status values.  Children can use this name to look up docking status
     // in the blackboard. If no name is provided, status will not be available.
     string feedback_status_name = 6;
+
+    // Defines how we use the "pre-docking" behavior.
+    docking.PrepPoseBehavior prep_pose_behavior = 7;
 }
 
 // Trigger the acquisition and storage of data.

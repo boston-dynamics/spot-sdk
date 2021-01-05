@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -605,6 +605,14 @@ class EstopKeepAlive(object):
         ERROR = 1
         DISABLED = 2
 
+def is_estopped(estop_client, **kwargs):
+    """Returns true if robot is estopped, false otherwise.
+
+    Raises:
+        RpcError: Problem communicating with the robot
+    """
+    response = estop_client.get_status(**kwargs)
+    return response.stop_level != estop_pb2.ESTOP_LEVEL_NONE
 
 def response_from_challenge(challenge):
     return ctypes.c_ulonglong(~challenge).value

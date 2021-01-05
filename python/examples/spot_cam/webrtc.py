@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -20,6 +20,7 @@ from aiortc import (
 import requests
 
 from bosdyn.client.command_line import (Command, Subcommands)
+from webrtc_client import WebRTCClient
 
 logging.basicConfig(level=logging.DEBUG, filename='webrtc.log', filemode='a+')
 STDERR = logging.getLogger('stderr')
@@ -55,7 +56,7 @@ class WebRTCSaveCommand(Command):
         super(WebRTCSaveCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('track', default='video', const='video', nargs='?',
                                   choices=['video'])
-        self._parser.add_argument('--filename', default='h264.sdp', help='File being streamed from WebRTC server')
+        self._parser.add_argument('--sdp-filename', default='h264.sdp', help='File being streamed from WebRTC server')
         self._parser.add_argument('--sdp-port', default=31102, help='SDP port of WebRTC server')
         self._parser.add_argument('--cam-ssl-cert', default=None, help="Path to Spot CAM's client cert to verify against Spot CAM server")
         self._parser.add_argument('--dst-prefix', default='h264.sdp', help='Filename prefix to prepend to all output data')
@@ -86,7 +87,13 @@ def start_webrtc(shutdown_flag, options):
     asyncio.set_event_loop(loop)
 
     config = RTCConfiguration(iceServers=[])
-    client = SpotCAMWebRTCClient(options, config)
+    client = WebRTCClient(options.hostname,
+                          options.username,
+                          options.password,
+                          options.sdp_port,
+                          options.sdp_filename,
+                          options.cam_ssl_cert,
+                          config)
 
     asyncio.gather(client.start(),
                    process_frame(client, options, shutdown_flag),
@@ -121,83 +128,3 @@ async def monitor_shutdown(shutdown_flag, client):
 
     await client.pc.close()
     asyncio.get_event_loop().stop()
-
-def get_sdp_offer_from_spot_cam(options):
-    server_url = f'https://{options.hostname}:{options.sdp_port}/{options.filename}'
-    r = requests.get(server_url, verify=options.cam_ssl_cert)
-    result = r.json()
-    return result['id'], base64.b64decode(result['sdp']).decode()
-
-def send_sdp_answer_to_spot_cam(options, offer_id, sdp_answer):
-    server_url = f'https://{options.hostname}:{options.sdp_port}/{options.filename}'
-
-    payload = {'id': offer_id, 'sdp': base64.b64encode(sdp_answer).decode('utf8')}
-    r = requests.post(server_url, verify=options.cam_ssl_cert, json=payload)
-    if r.status_code != 200:
-        raise ValueError(r)
-
-class SpotCAMMediaStreamTrack(MediaStreamTrack):
-    def __init__(self, track, queue):
-        super().__init__()
-
-        self.track = track
-        self.queue = queue
-
-    async def recv(self):
-        frame = await self.track.recv()
-
-        await self.queue.put(frame)
-
-        return frame
-
-class SpotCAMWebRTCClient:
-    def __init__(self, options, rtc_config):
-        self.pc = RTCPeerConnection(configuration=rtc_config)
-
-        self.video_frame_queue = asyncio.Queue()
-        self.audio_frame_queue = asyncio.Queue()
-
-        self.options = options
-
-    async def start(self):
-        #offer_id = None
-        offer_id, sdp_offer = get_sdp_offer_from_spot_cam(self.options)
-
-        @self.pc.on('icegatheringstatechange')
-        def _on_ice_gathering_state_change():
-            print(f'ICE gathering state changed to {self.pc.iceGatheringState}')
-
-        @self.pc.on('signalingstatechange')
-        def _on_signaling_state_change():
-            print(f'Signaling state changed to: {self.pc.signalingState}')
-
-        @self.pc.on('icecandidate')
-        def _on_ice_candidate(event):
-            print(f'Received candidate: {event.candidate}')
-
-        @self.pc.on('iceconnectionstatechange')
-        async def _on_ice_connection_state_change():
-            print(f'ICE connection state changed to: {self.pc.iceConnectionState}')
-
-            if self.pc.iceConnectionState == 'checking':
-                send_sdp_answer_to_spot_cam(self.options, offer_id, self.pc.localDescription.sdp.encode())
-
-        @self.pc.on('track')
-        def _on_track(track):
-            print(f'Received track: {track.kind}')
-
-            if track.kind == 'video':
-                video_track = SpotCAMMediaStreamTrack(track, self.video_frame_queue)
-                video_track.kind = 'video'
-                self.pc.addTrack(video_track)
-            elif track.kind == 'audio':
-                audio_track = SpotCAMMediaStreamTrack(track, self.audio_frame_queue)
-                audio_track.kind = 'audio'
-                self.pc.addTrack(audio_track)
-
-        desc = RTCSessionDescription(sdp_offer, 'offer')
-        await self.pc.setRemoteDescription(desc)
-
-        sdp_answer = await self.pc.createAnswer()
-        await self.pc.setLocalDescription(sdp_answer)
-

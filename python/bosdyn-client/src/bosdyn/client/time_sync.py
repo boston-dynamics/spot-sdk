@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -11,21 +11,16 @@ system clock of clients, and sends an estimate of this difference to the client.
 uses this information when it needs to send a timestamp to the robot in a request proto.
 Timestamps in request protos generally need to be specified relative to the robot's system clock.
 """
-
 import time
 
 from threading import Event, Lock, Thread
 
-from bosdyn.api import time_sync_pb2
-from bosdyn.api import time_sync_service_pb2_grpc
+from bosdyn.api import time_sync_pb2, time_sync_service_pb2_grpc
+from bosdyn.api.time_range_pb2 import TimeRange
+from bosdyn.util import (RobotTimeConverter, now_nsec, parse_timespan, nsec_to_timestamp,
+                         set_timestamp_from_nsec, timestamp_to_nsec)
 
-from bosdyn.util import RobotTimeConverter
-from bosdyn.util import now_nsec
-from bosdyn.util import set_timestamp_from_nsec
-from bosdyn.util import timestamp_to_nsec
-
-from .common import BaseClient
-from .common import common_header_errors
+from .common import BaseClient, common_header_errors
 from .exceptions import Error
 
 
@@ -84,7 +79,86 @@ def _get_time_sync_status_value(response):
     return response.time_sync_status_map
 
 
-class TimeSyncEndpoint(object):
+def robot_time_range_from_nanoseconds(start_nsec, end_nsec, time_sync_endpoint=None):
+    """Generate timespan as a TimeRange proto, in robot time.
+
+    If time_sync_endpoint is a TimeSyncEndpoint, the time_spec is in the local clock and will
+     be converted to robot_time.
+    If the input times are already in the robot clock, do not specify time_sync_endpoint and
+     the times will not be converted.
+
+    Args:
+      start_nsec            nanoseconds since the Unix epoch or None
+      end_nsec              nanoseconds since the Unix epoch or None
+      time_sync_endpoint    Either TimeSyncEndpoint or None.
+
+    Returns:
+      return bosdyn.api.TimeRange  time range in robot time
+    """
+    time_range = TimeRange()
+    converter = time_sync_endpoint.get_robot_time_converter() if time_sync_endpoint else None
+
+    def _convert_nsec(nsec):
+        timestamp_proto = nsec_to_timestamp(int(nsec))
+        if not time_sync_endpoint:
+            return timestamp_proto
+        return converter.robot_timestamp_from_local(timestamp_proto)
+
+    # pylint: disable=no-member
+    if start_nsec:
+        time_range.start.CopyFrom(_convert_nsec(start_nsec))
+    if end_nsec:
+        time_range.end.CopyFrom(_convert_nsec(end_nsec))
+
+    return time_range
+
+
+def robot_time_range_from_datetimes(start_datetime, end_datetime, time_sync_endpoint=None):
+    """Generate timespan as a TimeRange proto, in robot time.
+
+    If time_sync_endpoint is a TimeSyncEndpoint, the time_spec is in the local clock and will
+     be converted to robot_time.
+    If the input times are already in the robot clock, do not specify time_sync_endpoint and
+     the times will not be converted.
+
+    Args:
+      start_datetime        timestamp.timestamp or None
+      end_datetime          timestamp.timestamp or None
+      time_sync_endpoint    Either TimeSyncEndpoint or None.
+
+    Returns:
+      return bosdyn.api.TimeRange  time range in robot time
+    """
+
+    def _datetime_to_nsec(date_time):
+        if date_time:
+            return date_time.timestamp() * 1e9
+        return None
+
+    return robot_time_range_from_nanoseconds(
+        _datetime_to_nsec(start_datetime), _datetime_to_nsec(end_datetime), time_sync_endpoint)
+
+
+def timespec_to_robot_timespan(timespan_spec, time_sync_endpoint=None):
+    """Generate timespan as TimeRange proto, in robot time.
+
+    If time_sync_endpoint is a TimeSyncEndpoint, the time_spec is in the local clock and will
+     be converted to robot_time.
+    If the input times are already in the robot clock, do not specify time_sync_endpoint and
+     the times will not be converted.
+
+    Args:
+      timespan_spec        '{val}-{val}' or '{val}' time spec string
+      time_sync_endpoint    Either TimeSyncEndpoint or None.
+
+    Returns:
+      return bosdyn.api.TimeRange  time range in robot time
+    """
+    start_datetime, end_datetime = parse_timespan(timespan_spec)
+    return robot_time_range_from_datetimes(start_datetime, end_datetime, time_sync_endpoint)
+
+
+class TimeSyncEndpoint:
     """A wrapper that uses a TimeSyncClient object to establish and maintain timesync with a robot.
 
     This class manages internal state, including a clock identifier and previous best time sync
@@ -122,6 +196,7 @@ class TimeSyncEndpoint(object):
             Boolean true if the previous time-sync update returned that time sync is OK.
         """
         response = self.response
+        # pylint: disable=no-member
         return response and response.state.status == time_sync_pb2.TimeSyncState.STATUS_OK
 
     @property
@@ -157,6 +232,7 @@ class TimeSyncEndpoint(object):
             NotEstablishedError: Time sync has not yet been established.
         """
         response = self.response
+        # pylint: disable=no-member
         if not response or response.state.status != time_sync_pb2.TimeSyncState.STATUS_OK:
             raise NotEstablishedError
         return response.state.best_estimate.clock_skew
@@ -207,6 +283,7 @@ class TimeSyncEndpoint(object):
 
         # Record the timing information for this GRPC call to pass to the next update
         round_trip = time_sync_pb2.TimeSyncRoundTrip()
+        # pylint: disable=no-member
         round_trip.client_tx.CopyFrom(response.header.request_header.request_timestamp)
         round_trip.server_rx.CopyFrom(response.header.request_received_timestamp)
         round_trip.server_tx.CopyFrom(response.header.response_timestamp)
@@ -251,7 +328,7 @@ class TimeSyncEndpoint(object):
         return converter.robot_timestamp_from_local_secs(local_time_secs)
 
 
-class TimeSyncThread(object):
+class TimeSyncThread:
     """Background thread for achieving and maintaining time-sync to the robot."""
 
     # After achieving time sync, update estimate every minute.
@@ -430,6 +507,7 @@ class TimeSyncThread(object):
         try:
             while not self.should_exit:
                 response = self._time_sync_endpoint.response
+                # pylint: disable=no-member
                 if (not response or response.state.status ==
                         time_sync_pb2.TimeSyncState.STATUS_MORE_SAMPLES_NEEDED):
                     # No wait between updates while time-sync is not established.

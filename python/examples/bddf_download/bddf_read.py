@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -9,9 +9,8 @@ import datetime
 import logging
 import sys
 
-from bosdyn.client.bddf import DataReader, ProtobufReader, ProtobufChannelReader
+from bosdyn.bddf import (DataReader, GrpcReader, ProtobufReader, ProtobufChannelReader)
 from bosdyn.api.data_buffer_pb2 import Event, OperatorComment
-
 
 LOGGER = logging.getLogger()
 
@@ -34,7 +33,7 @@ def get_grpc_data(proto_name, filename):
     """Iterator for message of the given protobuf type stored in bddf file 'filename'."""
     with open(filename, 'rb') as infile:
         data_reader = DataReader(infile)
-        grpc_reader = GrpcReader(data_reader)
+        grpc_reader = GrpcReader(data_reader, MessageLister.PROTO_CLASSES)
         proto_reader = grpc_reader.get_proto_reader(proto_name)
         for i in range(proto_reader.num_messages):
             yield proto_reader.get_message(i)
@@ -43,10 +42,12 @@ def get_grpc_data(proto_name, filename):
 class MessageLister:
     """A class for printing messages of a given kind of protobuf."""
 
+    PROTO_CLASSES = []
     INSTANCES = {}
 
     def __init__(self, proto_type):
         self._proto_type = proto_type
+        self.PROTO_CLASSES.append(proto_type)
         self.INSTANCES[proto_type.DESCRIPTOR.full_name] = self
 
     @property
@@ -102,7 +103,8 @@ class EventLister(MessageLister):
 class GrpcProtoReader:
     """Reads a particular series of GRPC request or response messages from a bddf file."""
 
-    def __init__(self, service_reader, series_index, series_type, proto_type, series_descriptor):
+    def __init__(  # pylint: disable=too-many-arguments
+            self, service_reader, series_index, series_type, proto_type, series_descriptor):
         self._service_reader = service_reader
         self._series_index = series_index
         self._series_type = series_type
@@ -125,85 +127,6 @@ class GrpcProtoReader:
         protobuf = self._proto_type()
         protobuf.ParseFromString(data)
         return timestamp_nsec, protobuf
-
-
-class GrpcServiceReader:
-    """A container for the GrpcProtoReaders associated with a given service in a bddf file."""
-
-    def __init__(self, grpc_reader, service_name):
-        self._grpc_reader = grpc_reader
-        self._service_name = service_name
-        self._type_name_to_reader = {}
-
-    @property
-    def data_reader(self):
-        return self._grpc_reader.data_reader
-
-    def get_proto_reader(self, type_name):
-        """Returns a GrpcProtoReader for messages with the specified protobuf type name."""
-        return self._type_name_to_reader[type_name]
-
-    def add_proto_reader(self, series_index, proto_type, series_type, series_descriptor):
-        """Create and return a GrpcProtoReader for the given series in the bddf file."""
-        reader = GrpcProtoReader(self, series_index, series_type, proto_type, series_descriptor)
-        self._type_name_to_reader[proto_type.DESCRIPTOR.full_name] = reader
-        return reader
-
-
-class GrpcReader:
-    """A class for reading GRPC data from a DataFile.
-
-    Methods raise ParseError if there is a problem with the format of the file.
-    """
-
-    def __init__(self, data_reader):
-        self._data_reader = data_reader
-        self._service_name_to_reader = {}
-        self._series_index_to_reader = {}
-        self._proto_name_to_reader = {}
-        for series_index, series_identifier in enumerate(data_reader.file_index.series_identifiers):
-            if series_identifier.series_type in ('bosdyn:grpc:requests', 'bosdyn:grpc:responses'):
-                service_name = series_identifier.spec['bosdyn:grpc:service']
-                message_type = series_identifier.spec['bosdyn:message-type']
-                try:
-                    lister = MessageLister.INSTANCES[message_type]
-                except KeyError:
-                    LOGGER.debug("No lister for %s", message_type)
-                    continue
-                try:
-                    service_reader = self._service_name_to_reader[service_name]
-                except KeyError:
-                    service_reader = GrpcServiceReader(self, service_name)
-                    self._service_name_to_reader[service_name] = service_reader
-                series_descriptor = self._data_reader.series_descriptor(series_index)
-                reader = service_reader.add_proto_reader(series_index, lister.proto_type,
-                                                         series_identifier.series_type,
-                                                         series_descriptor)
-                proto_name = lister.proto_type.DESCRIPTOR.full_name
-                if proto_name not in self._proto_name_to_reader:
-                    self._proto_name_to_reader[proto_name] = reader
-                self._series_index_to_reader[series_index] = reader
-
-    @property
-    def data_reader(self):
-        """Return underlying DataReader this object is using."""
-        return self._data_reader
-
-    def get_proto_reader(self, proto_name):
-        """Return the GrpcProtoReader for protobuf messages with the specified type name."""
-        return self._proto_name_to_reader[proto_name]
-
-    def get_message(self, series_index, index_in_series):
-        """Return a deserialized protobuf from bytes stored in the file.
-
-        Args:
-         series_index:     index (int) from the series_index() call
-         index_in_series:  the index of the message within the series
-
-        Returns: timestamp_nsec (int), deserialized protobuf object
-        """
-        reader = self._series_index_to_reader[series_index]
-        return reader.get_message(index_in_series)
 
 
 def index_protos(package):

@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,7 +13,7 @@ from google.protobuf.timestamp_pb2 import Timestamp
 import pytest
 
 import bosdyn.api.bddf_pb2 as bddf
-from bosdyn.api.log_annotation_pb2 import LogAnnotationOperatorMessage
+from bosdyn.api.data_buffer_pb2 import OperatorComment
 from bosdyn.client.bddf import (DataReader, DataWriter, PodSeriesReader, PodSeriesWriter,
                                 ProtoSeriesWriter, ProtobufChannelReader, ProtobufReader,
                                 StreamDataReader)
@@ -31,8 +31,7 @@ def test_write_read():
     series1_additional_indexes = ['idxa', 'idxb']
     timestamp_nsec = now_nsec()
     msg_data = b'This is some data'
-    operator_message = LogAnnotationOperatorMessage(message="End of test",
-                                                    timestamp=now_timestamp())
+    operator_comment = OperatorComment(message="End of test", timestamp=now_timestamp())
     pod_series_type = 'bosdyn/test/pod'
     pod_spec = {'varname': 'test_var'}
 
@@ -46,8 +45,8 @@ def test_write_read():
         data_writer.write_data(series1_index, timestamp_nsec, msg_data, [1, 2])
 
         # Write a protobuf to the file.
-        proto_writer = ProtoSeriesWriter(data_writer, LogAnnotationOperatorMessage)
-        proto_writer.write(timestamp_to_nsec(operator_message.timestamp), operator_message)
+        proto_writer = ProtoSeriesWriter(data_writer, OperatorComment)
+        proto_writer.write(timestamp_to_nsec(operator_comment.timestamp), operator_comment)
 
         # Write POD data (floats) to the file.
         pod_writer = PodSeriesWriter(data_writer, pod_series_type, pod_spec, bddf.TYPE_FLOAT32,
@@ -88,11 +87,11 @@ def test_write_read():
 
         # Read a protobuf from the file.
         proto_reader = ProtobufReader(data_reader)
-        operator_message_reader = ProtobufChannelReader(proto_reader, LogAnnotationOperatorMessage)
-        assert operator_message_reader.num_messages == 1
-        timestamp_, protobuf = operator_message_reader.get_message(0)
-        assert protobuf == operator_message
-        assert timestamp_ == timestamp_to_nsec(operator_message.timestamp)
+        operator_comment_reader = ProtobufChannelReader(proto_reader, OperatorComment)
+        assert operator_comment_reader.num_messages == 1
+        timestamp_, protobuf = operator_comment_reader.get_message(0)
+        assert protobuf == operator_comment
+        assert timestamp_ == timestamp_to_nsec(operator_comment.timestamp)
 
         # Read POD (float) data from the file.
         with pytest.raises(ValueError):
@@ -122,12 +121,12 @@ def test_write_read():
         assert data_ == msg_data
 
         desc_, sdesc_, data_ = data_reader.read_data_block()
-        assert desc_.timestamp == operator_message.timestamp
+        assert desc_.timestamp == operator_comment.timestamp
         assert sdesc_.message_type.content_type == 'application/protobuf'
-        assert sdesc_.message_type.type_name == LogAnnotationOperatorMessage.DESCRIPTOR.full_name
-        dec_msg = LogAnnotationOperatorMessage()
+        assert sdesc_.message_type.type_name == OperatorComment.DESCRIPTOR.full_name
+        dec_msg = OperatorComment()
         dec_msg.ParseFromString(data_)
-        assert dec_msg == operator_message
+        assert dec_msg == operator_comment
 
         desc_, sdesc_, data_ = data_reader.read_data_block()
         assert desc_.timestamp == expected_timestamp

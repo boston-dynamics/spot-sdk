@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -47,26 +47,9 @@ The network ports used by the services can be opened by running this command on 
 sudo ufw allow {PORT_NUMBER}
 ```
 
-## Testing a Data Acquisition Plugin
+## Testing the Data Acquisition Plugin
 
-The plugin tester script can be used while developing a new data acquisition plugin service to help ensure that the service can be communicated with and behaves as expected. The script runs through a series of tests checking:
-- The data acquisition plugin service is registered with the robot's directory service.
-- The data acquisition plugin service can be communicated with using gRPC calls.
-- The data acquisition plugin has no active service faults when first starting the service, as well as after all tests are run.
-- All data sources advertised by the plugin service are available in the data acquisition service on robot.
-- All data sources can be acquired using the AcquireData RPC without errors.
-- All data sources eventually respond with STATUS_COMPLETE to the GetStatus RPC.
-- All data sources are saved in the data acquisition store service.
-- All acquisitions can be cancelled successfully using the CancelAcquisition RPC.
-
-To use the plugin tester script, the data acquisition plugin service must be running. Follow the directions above to run the plugin service. Then, the plugin tester script can be run using the following command:
-```
-python3 plugin_tester.py --username {USER} --password {PASSWORD} {ROBOT_IP} --service-name {SERVICE_NAME}
-```
-
-The command line argument `--service-name` is the name for the data acquisition plugin service that is used for directory registration. In the example plugins, the service name is defined near the top of each plugin file by the variable `DIRECTORY_NAME`.
-
-All data collected during the test will be downloaded through the REST endpoint and saved to a directory, which can be specified through the command line argument `--destination-folder` and defaults to the current working directory.
+There is a [plugin tester script](../tester_programs/README.md) that can be used while developing a new data acquisition plugin service to help ensure that the service can be communicated with and behaves as expected. The script runs through a series of tests checking the networking and the functionality of each of the plugin's RPCs.
 
 ## Communicating with the Data Acquisition Service
 

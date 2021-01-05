@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -11,6 +11,102 @@ Development Kit License (20191101-BDSDK-SL).
 </p>
 
 # Spot Release Notes
+
+## 2.2.0
+
+### New Features
+
+#### Docking (license dependent)
+Automated docking at charging stations is out of beta and available for enterprise customers.  There have been a few updates to the protos regarding status reporting and handling "prep" poses.
+
+#### Payload Authorization Faults
+Payloads that have been registered with the robot but have not yet been authorized will automatically have service faults raised on their behalf indicating their status. This will help prevent operators from forgetting to authorize payloads after attaching them to the robot.
+
+#### Service and plugin development
+
+**Image Services**
+Helper functions for creating image services that reduce the amount of boiler plate code required for creating an image service and ensure the necessary fields of the response RPCs will be populated by the service.
+
+**Data Acquisition Service**
+Helper functions for communicating with the on robot data acquisition service to acquire data, monitor the status of the acquisition, cancel requests, and download the data using the REST endpoint. These functions originally were in the data_acquisition_service example, but are now part of the `bosdyn-client` wheel.
+
+#### `SE2TrajectoryCommand` Feedback
+Added new status `STATUS_NEAR_GOAL` as well as a new `BodyMovementStatus` to help differentiate between different kinds of states the robot can be in at the end of its trajectory.
+
+#### Missions
+The `BosdynGraphNavLocalize` node can now specify a full `SetLocalizationRequest`, rather than only localizing to the nearest fiducial.
+
+When comparing blackboard values, there is a new `HandleStaleness` option to specify what the node should do if the blackboard value is stale.
+
+#### Other Helper Functions**
+- `is_estopped()` helper for the estop client and robot.
+- Helper functions to create time ranges in the robot’s time.
+- Downloader script for bddf log files.
+
+### Bug fixes and improvements
+**Data Acquisition**
+Data Acquisition Service on robots is now robust to port number changes. The previous work around to this problem was to always specify the same port when starting/restarting a service. Now, the port argument for external api services can use the default, which will choose an available ephemeral port.
+
+**Image Services**
+Robot Cameras image service will respond to GetImage requests with incorrect format (e.g requesting a depth image as format JPEG) using the `STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED`. Previously, this was returned as `STATUS_IMAGE_DATA_ERROR`.
+
+**The Ricoh Theta image service example improvements**
+- Automatically disables sleep mode when putting the ricoh theta into client mode (using `ricoh_client_mode.py`).
+- By default, it now runs a background thread capturing images continuously to minimize the delays waiting for an image to appear when viewing from the camera.
+- It will wait for the capture to be completely processed before returning an image. This fixes issues where a very old image would be displayed, since it would trigger a take picture, but just return the most recent processed image.
+
+**Command line client**
+The "log" and "textmsg" commands now go through the DataBuffer service, and so can be read back by downloading bddf files from the robot.
+
+**EstopService timeout**
+The maximum timeout on the EstopService (aka the motor cut authority) has been raised from 65 seconds to just over 18 hours and 10 minutes.  The estop service also correctly reports an error if given an invalid timeout.
+
+### Deprecations
+
+BDDF code has moved to the `bosdyn-core` package, so that it can be used separately from the client code.  The new import location is `bosdyn.bddf`.  The old import path via `bosdyn.client.bddf` is deprecated.
+
+### Dependency Changes
+
+`bosdyn-client` now depends on the `requests` library for making http requests to download data acquisition results and bddf logs.
+
+### Known issues
+
+**When a network transport failure occurs,** depending on the particular operating system and version of gRPC installed, the error from the python SDK may not always be the most specific error possible, such as `UnknownDnsNameError`.  It may instead be raised as either a generic `RpcError`, or another generic failure type such as `UnableToConnectToRobotError`.
+
+**Spot CAM LED illumination levels** are not currently recorded or played back in Autowalk missions.
+
+**When capturing both a PTZ and Panoramic image** in the same action, there may occasionally be two PTZ images captured along with the Panoramic image, rather than just one.
+
+**If you write a custom data acquisition plugin or image service,** do not change its `DataAcquisitionCapability` or `ImageSource` set once it is running and registered. New capabilities may not be detected, and old capababilities may still be listed as available in the Data Acquisition service. To change the capabilities of a service: unregister it from the directory, wait until its capabilities are no longer listed in the Data Acquisition service, and then re-register it. This waiting also applies to restarting a service if its capabilities will be different upon restart.
+
+**If you write a custom data acquisition plugin without using our helper class,** its `GetStatus()` rpc is expected to complete immediately. If it takes too long to complete it can cause timeouts when requesting `GetStatus()` of the data acquisition service.
+
+**If you register a new service with the robot**, calling `robot.ensure_client()` to create a client for that service may result in a `UnregisteredServiceNameError`.
+
+  * Workaround: call `robot.sync_with_directory()` before `robot.ensure_client()`
+
+**SE2VelocityLimits require care**.  Correct usage of the `SE2VelocityLimit` message requires the user to fully fill out all the fields, setting unlimited values to a large number, say 1e6.
+
+
+### Sample Code
+
+[**Image service test program (new)**](../python/examples/tester_programs/README.md)
+A new tester program for image services is available to help with the development and debugging of new image service implementations.
+
+[**Docking (new)**](../python/examples/docking/README.md)
+Shows how to trigger the docking service to safely dock the robot on a charger.
+
+[**Web Cam Image Service (updated)**](../python/examples/web_cam_image_service/README.md)
+The web cam example now uses the new image service helpers.
+
+[**Ricoh Theta Image Service (updated)**](../python/examples/ricoh_theta/README.md)
+Uses the new image service helpers.  A few extra bug fixes as described above.
+
+[**Data Service (updated)**](../python/examples/data_service/README.md)
+Added options to specify a time range, and automatically converts times to robot time.
+
+[**Data acquisition (updated)**](../python/examples/data_acquisition_service/README.md)
+Uses the new data acquisition helpers.  The data acquisition tester program has been moved to a common [`tester_programs`](../python/examples/tester_programs/README.md) directory.
 
 ## 2.1.0
 
@@ -151,7 +247,7 @@ Autowalk mission callback nodes only wait 10 seconds for a response.  When a mis
 
 **Spot CAM LED illumination levels** are not currently recorded or played back in Autowalk missions.
 
-**When capturing both a PTZ and Panoramic image** in the same action, there may occasionally be two PTZ images captures along with the Panoramic image, rather than just one.
+**When capturing both a PTZ and Panoramic image** in the same action, there may occasionally be two PTZ images captured along with the Panoramic image, rather than just one.
 
 **If you write a custom data acquisition plugin or image service,** do not change its `DataAcquisitionCapability` or `ImageSource` set once it is running and registered. New capabilities may not be detected, and old capababilities may still be listed as available in the Data Acquisition service. To change the capabilities of a service: unregister it from the directory, wait until its capabilities are no longer listed in the Data Acquisition service, and then re-register it. This waiting also applies to restarting a service if its capabilities will be different upon restart.
 

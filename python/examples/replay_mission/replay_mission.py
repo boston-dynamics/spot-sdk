@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -8,6 +8,7 @@
 Mission Replay Script.  Command-line utility to replay stored missions, including Autowalk missions.
 """
 
+import argparse
 import os
 import sys
 import time
@@ -15,13 +16,11 @@ import time
 from bosdyn.api.graph_nav import map_pb2, nav_pb2
 from bosdyn.api.mission import mission_pb2
 from bosdyn.api.mission import nodes_pb2
-from bosdyn.api import estop_pb2
 
 import bosdyn.client
 import bosdyn.client.lease
 import bosdyn.client.util
 
-from bosdyn.client.estop import EstopClient
 from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient
 from bosdyn.client.robot_state import RobotStateClient
 
@@ -33,8 +32,6 @@ import bosdyn.util
 
 def main():
     '''Replay stored mission'''
-
-    import argparse
 
     body_lease = None
 
@@ -96,7 +93,9 @@ def main():
             robot_state_client, command_client, mission_client, graph_nav_client = init_clients(
                 robot, body_lease, args.mission_file, args.map_directory, do_map_load)
 
-            verify_estop(robot)
+            assert not robot.is_estopped(), "Robot is estopped. " \
+                                            "Please use an external E-Stop client, " \
+                                            "such as the estop SDK example, to configure E-Stop."
 
             # Ensure robot is powered on
             assert ensure_power_on(robot), 'Robot power on failed.'
@@ -382,16 +381,6 @@ def ensure_power_on(robot):
 
     robot.logger.error('Error powering on robot.')
     return False
-
-
-def verify_estop(robot):
-    """Verify the robot is not estopped"""
-    client = robot.ensure_client(EstopClient.default_service_name)
-    if client.get_status().stop_level != estop_pb2.ESTOP_LEVEL_NONE:
-        error_message = "Robot is estopped. Please use an external E-Stop client, such as the" \
-        " estop SDK example, to configure E-Stop."
-        robot.logger.error(error_message)
-        raise Exception(error_message)
 
 
 if __name__ == '__main__':

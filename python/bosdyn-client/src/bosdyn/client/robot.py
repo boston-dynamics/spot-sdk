@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -17,6 +17,8 @@ from .data_buffer import DataBufferClient
 from .data_service import DataServiceClient
 from .directory import DirectoryClient
 from .directory_registration import DirectoryRegistrationClient
+from .estop import EstopClient
+from .estop import is_estopped as pkg_is_estopped
 from .exceptions import Error
 from .lease import LeaseWallet
 from .payload_registration import PayloadRegistrationClient, PayloadAlreadyExistsError, PayloadNotAuthorizedError
@@ -580,6 +582,22 @@ class Robot(object):
         """
         state_client = self.ensure_client(RobotStateClient.default_service_name)
         return pkg_is_powered_on(state_client, timeout=timeout)
+
+    def is_estopped(self, timeout=None):
+        """Check if the robot is estopped, usually indicating if an external application has not
+           registered and held an estop endpoint.
+
+        Args:
+            timeout: Number of seconds to wait for RPC response.
+
+        Returns:
+            bool: Returns True if robot is estopped, False otherwise.
+
+        Raises:
+            RpcError: A problem occurred trying to communicate with the robot.
+        """
+        estop_client = self.ensure_client(EstopClient.default_service_name)
+        return pkg_is_estopped(estop_client, timeout=timeout)
 
     def get_frame_tree_snapshot(self, timeout=None):
         """Get the current frame tree snapshot from the robot state client.

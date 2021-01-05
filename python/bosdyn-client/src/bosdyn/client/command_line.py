@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -20,7 +20,6 @@ import six
 from bosdyn.api import image_pb2
 from bosdyn.api.data_buffer_pb2 import TextMessage
 from bosdyn.api.data_index_pb2 import EventsCommentsSpec
-from bosdyn.api.log_annotation_pb2 import LogAnnotationTextMessage
 from bosdyn.api import data_acquisition_pb2
 import bosdyn.client
 from bosdyn.util import (duration_str, timestamp_to_datetime)
@@ -28,6 +27,7 @@ from bosdyn.util import (duration_str, timestamp_to_datetime)
 from .auth import InvalidLoginError
 from .exceptions import Error, InvalidAppTokenError, InvalidRequestError, ProxyConnectionError, ResponseError
 from .data_acquisition import DataAcquisitionClient
+from .data_acquisition_helpers import acquire_and_process_request
 from .data_buffer import DataBufferClient
 from .data_service import DataServiceClient
 from .directory import DirectoryClient, NonexistentServiceError
@@ -35,10 +35,10 @@ from .directory_registration import DirectoryRegistrationClient, DirectoryRegist
 from .estop import EstopClient, EstopEndpoint, EstopKeepAlive
 from .payload import PayloadClient
 from .payload_registration import PayloadRegistrationClient, PayloadAlreadyExistsError
-from .image import (ImageClient, UnknownImageSourceError, ImageResponseError, build_image_request)
+from .image import (ImageClient, UnknownImageSourceError, ImageResponseError,
+                    build_image_request, save_images_as_files)
 from .lease import LeaseClient
 from .license import LicenseClient
-from .log_annotation import LogAnnotationClient
 from .local_grid import LocalGridClient
 from .robot_id import RobotIdClient
 from .robot_state import RobotStateClient
@@ -689,27 +689,27 @@ class RobotIdCommand(Command):
         return True
 
 
-class LogAnnotationCommands(Subcommands):
-    """Commands related to the log-annotation service."""
+class DataBufferCommands(Subcommands):
+    """Commands related to the data-buffer service."""
 
     NAME = 'log'
 
     def __init__(self, subparsers, command_dict):
-        """Commands related to the log-annotation service.
+        """Commands related to the data-buffer service.
 
         Args:
             subparsers: List of argument parsers.
             command_dict: Dictionary of command names which take parsed options.
         """
-        super(LogAnnotationCommands, self).__init__(
+        super(DataBufferCommands, self).__init__(
             subparsers, command_dict,
-            [DataBufferTextMsgCommand, LogTextMsgCommand, LogOperatorCommentCommand])
+            [TextMsgCommand, OperatorCommentCommand])
 
 
-class DataBufferTextMsgCommand(Command):
+class TextMsgCommand(Command):
     """Send a text-message to the data buffer to be logged."""
 
-    NAME = 'buffertext'
+    NAME = 'textmsg'
 
     def __init__(self, subparsers, command_dict):
         """Send a text-message to the data buffer to be logged.
@@ -718,7 +718,7 @@ class DataBufferTextMsgCommand(Command):
             subparsers: List of argument parsers.
             command_dict: DIctionary of command names which take parsed options.
         """
-        super(DataBufferTextMsgCommand, self).__init__(subparsers, command_dict)
+        super(TextMsgCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--timestamp', action='store_true',
                                   help='achieve time-sync and send timestamp')
         self._parser.add_argument('--tag', help='Tag for message')
@@ -768,73 +768,7 @@ class DataBufferTextMsgCommand(Command):
         return True
 
 
-class LogTextMsgCommand(Command):
-    """Send a text-message to the robot to be logged."""
-
-    NAME = 'textmsg'
-
-    def __init__(self, subparsers, command_dict):
-        """Send a text-message to the robot to be logged.
-
-        Args:
-            subparsers: List of argument parsers.
-            command_dict: Dictionary of command names which take parsed options.
-        """
-        super(LogTextMsgCommand, self).__init__(subparsers, command_dict)
-        self._parser.add_argument('--timestamp', action='store_true',
-                                  help='achieve time-sync and send timestamp')
-        self._parser.add_argument('--service', default='bosdyn.client',
-                                  help='Name of service for message')
-        self._parser.add_argument('--tag', help='Tag for message')
-        parser_log_level = self._parser.add_mutually_exclusive_group()
-        parser_log_level.add_argument('--debug', '-D', action='store_true',
-                                      help='Log at debug-level')
-        parser_log_level.add_argument('--info', '-I', action='store_true', help='Log at info-level')
-        parser_log_level.add_argument('--warn', '-W', action='store_true', help='Log at warn-level')
-        parser_log_level.add_argument('--error', '-E', action='store_true',
-                                      help='Log at error-level')
-        self._parser.add_argument('message', help='Message to log')
-
-    def _run(self, robot, options):
-        """Implementation of the command.
-
-        Args:
-            robot: Robot object on which to run the command.
-            options: Parsed command-line arguments.
-
-        Returns:
-            False if TimeSyncError is caught, True otherwise.
-        """
-        robot_timestamp = None
-        if options.timestamp:
-            try:
-                robot_timestamp = robot.time_sync.robot_timestamp_from_local_secs(
-                    time.time(), timesync_timeout_sec=1.0)
-            except TimeSyncError as err:
-                print("Failed to send message with timestamp: {}.".format(err))
-                return False
-        msg_proto = LogAnnotationTextMessage(message=options.message, timestamp=robot_timestamp)
-        if options.debug:
-            msg_proto.level = LogAnnotationTextMessage.LEVEL_DEBUG
-        elif options.warn:
-            msg_proto.level = LogAnnotationTextMessage.LEVEL_WARN
-        elif options.error:
-            msg_proto.level = LogAnnotationTextMessage.LEVEL_ERROR
-        else:
-            msg_proto.level = LogAnnotationTextMessage.LEVEL_INFO
-
-        if options.service:
-            msg_proto.service = options.service
-        if options.tag:
-            msg_proto.tag = options.tag
-
-        log_client = robot.ensure_client(LogAnnotationClient.default_service_name)
-        log_client.add_text_messages([msg_proto])
-
-        return True
-
-
-class LogOperatorCommentCommand(Command):
+class OperatorCommentCommand(Command):
     """Send an operator comment to the robot to be logged."""
 
     NAME = 'comment'
@@ -846,7 +780,7 @@ class LogOperatorCommentCommand(Command):
             subparsers: List of argument parsers.
             command_dict: Dictionary of command names which take parsed options.
         """
-        super(LogOperatorCommentCommand, self).__init__(subparsers, command_dict)
+        super(OperatorCommentCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--timestamp', action='store_true',
                                   help='achieve time-sync and send timestamp')
         self._parser.add_argument('message', help='operator comment text')
@@ -1472,41 +1406,6 @@ class ListImageSourcesCommand(Command):
         return True
 
 
-def write_pgm(image_response, outfile):
-    """Write raw data from image_response to a PGM file.
-
-    Args:
-        image_response: ImageResponse object to parse.
-        outfile: Name of the output file, if None is passed, then "image-{SOURCENAME}.pgm" is used.
-    """
-
-    if image_response.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_DEPTH_U16:
-        dtype = np.uint16
-    else:
-        dtype = np.uint8
-
-    img = np.frombuffer(image_response.shot.image.data, dtype=dtype)
-    height = image_response.shot.image.rows
-    width = image_response.shot.image.cols
-    img = img.reshape(height, width)
-    image_source_filename = 'image-{}.pgm'.format(image_response.source.name)
-    filename = outfile or image_source_filename
-
-    try:
-        fd_out = open(filename, 'w')
-    except IOError as err:
-        print("Cannot open file " + filename + "Exception: ")
-        print(err)
-        return
-
-    max_val = np.amax(img)
-    pgm_header = 'P5' + ' ' + str(width) + ' ' + str(height) + ' ' + str(max_val) + '\n'
-    fd_out.write(pgm_header)
-    img.tofile(fd_out)
-    print('Saved matrix with pixel values from camera "{}" to file "{}".'.format(
-        image_response.source.name, filename))
-
-
 class GetImageCommand(Command):
     """Get an image from the robot and write it to an image file."""
 
@@ -1554,21 +1453,9 @@ class GetImageCommand(Command):
                 options.source_name))
             return False
 
-        for image_response in response:
-            # Save raw sources as text files with the full matrix saved as text values. Each row in
-            # the file represents a raw in the matrix. All other formats are saved as JPEG files.
-            if not image_response.shot.image.format == image_pb2.Image.FORMAT_JPEG:
-                write_pgm(image_response, options.outfile)
-            else:
-                image_source_filename = 'image-{}.jpg'.format(image_response.source.name)
-                filename = options.outfile or image_source_filename
-                try:
-                    with open(filename, 'wb') as outfile:
-                        outfile.write(image_response.shot.image.data)
-                    print('Saved "{}" to "{}".'.format(image_response.source.name, filename))
-                except IOError as err:
-                    print('Failed to save "{}".'.format(image_response.source.name))
-                    print(err)
+        # Save the image files in the correct format (jpeg, pgm for raw/rle).
+        save_images_as_files(response)
+
         return True
 
 
@@ -1748,38 +1635,10 @@ class DataAcquisitionRequestCommand(Command):
 
         robot.time_sync.wait_for_sync(timeout_sec=1.0)
         data_acquisition_client = robot.ensure_client(DataAcquisitionClient.default_service_name)
-        acquisition_id = None
-        try:
-            acquisition_id = data_acquisition_client.acquire_data(captures, options.action_name, options.group_name)
-            print("Request ID: "+str(acquisition_id))
-        except ResponseError as err:
-            print("RPC error occurred: " + str(err))
-            return False
-        if options.non_blocking_request:
-            # Won't check the status and wait for a success/failure if the user specified
-            # this should not be a blocking command.
-            return True
-
-        while True:
-            print("Waiting for acquisition (id: " + str(acquisition_id) + ") to complete.")
-            get_status_response = None
-            try:
-                get_status_response = data_acquisition_client.get_status(acquisition_id)
-            except ResponseError as err:
-                print("Exception: " + str(err))
-                return False
-            print("Current status is: " +
-                data_acquisition_pb2.GetStatusResponse.Status.Name(get_status_response.status))
-            if get_status_response.status == data_acquisition_pb2.GetStatusResponse.STATUS_COMPLETE:
-                return True
-            if get_status_response.status == data_acquisition_pb2.GetStatusResponse.STATUS_TIMEDOUT:
-                print("Unrecoverable request timeout: {}".format(get_status_response))
-                return False
-            if get_status_response.status == data_acquisition_pb2.GetStatusResponse.STATUS_DATA_ERROR:
-                print("Data error was recieved: {}".format(get_status_response))
-                return False
-            time.sleep(0.2)
-        return True
+        success = acquire_and_process_request(data_acquisition_client, captures, options.group_name,
+                                              options.action_name,
+                                              block_until_complete=not options.non_blocking_request)
+        return success
 
 
 class DataAcquisitionServiceCommand(Command):
@@ -1879,7 +1738,7 @@ def main(args=None):
     RobotIdCommand(subparsers, command_dict)
     LicenseCommand(subparsers, command_dict)
     RobotStateCommands(subparsers, command_dict)
-    LogAnnotationCommands(subparsers, command_dict)
+    DataBufferCommands(subparsers, command_dict)
     DataServiceCommands(subparsers, command_dict)
     TimeSyncCommand(subparsers, command_dict)
     LeaseCommands(subparsers, command_dict)

@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -9,26 +9,13 @@ import argparse
 import sys
 import time
 
-from bosdyn.api import estop_pb2
-
 import bosdyn.client
 import bosdyn.client.util
 from bosdyn.client import create_standard_sdk, RpcError, ResponseError
-from bosdyn.client.estop import EstopClient
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 from bosdyn.choreography.client.choreography import ChoreographyClient, load_choreography_sequence_from_txt_file
 
 DEFAULT_DANCE = "default_dance.csq"
-
-def verify_estop(robot):
-    """Verify the robot is not estopped"""
-
-    client = robot.ensure_client(EstopClient.default_service_name)
-    if client.get_status().stop_level != estop_pb2.ESTOP_LEVEL_NONE:
-        error_message = "Robot is estopped. Please use an external E-Stop client, such as the" \
-        " estop SDK example, to configure E-Stop."
-        robot.logger.error(error_message)
-        raise Exception(error_message)
 
 def main(argv):
     # Parse args
@@ -45,7 +32,8 @@ def main(argv):
     robot.authenticate(options.username, options.password)
 
     # Check that an estop is connected with the robot so that the robot commands can be executed.
-    verify_estop(robot)
+    assert not robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client, " \
+                                    "such as the estop SDK example, to configure E-Stop."
 
     # Create a lease and lease keepalive so we can issue commands. A lease is required to execute
     # a choreographed sequence.

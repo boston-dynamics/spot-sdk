@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -7,7 +7,7 @@ Development Kit License (20191101-BDSDK-SL).
 -->
 
 # Interacting with a Ricoh Theta Camera
-In the 2.1.0 release, we have provided a **new** Ricoh Theta example for developers to learn how to create a standard Boston Dynamics API image service that communicates with the Ricoh Theta camera.
+Since the 2.1.0 release, we have provided a **new** Ricoh Theta example for developers to learn how to create a standard Boston Dynamics API image service that communicates with the Ricoh Theta camera.
 
 This example assumes you are using the default settings of a Ricoh Theta camera and mounted/registered Spot CORE.
 
@@ -23,7 +23,7 @@ The following installation steps assume you:
 - familiar with SSH and using a Command Line Interface (CLI)
 
 ### Install Packages on PC
-Navigate via the CLI on your PC to the ricoh_theta directory and review the requirements.txt document for this example before continuing. Several python packages will need to be installed along with the standard SDK:
+Navigate via the CLI on your PC to the python examples [ricoh_theta](https://github.com/boston-dynamics/spot-sdk/tree/master/python/examples/ricoh_theta) directory and review the requirements.txt document for this example before continuing. Several python packages will need to be installed along with the standard SDK:
 
 ```
 python3 -m pip install -r requirements.txt
@@ -94,25 +94,14 @@ Additionally, the service will throw [Service Faults](../../../docs/concepts/fau
 
 Note, the Ricoh Theta image requests can be slow due to the time it takes to stitch the two fisheye images together on the camera.
 
-## Querying the Ricoh Theta Image Service
-
-To validate the ricoh-theta image service is working, the [`get_image` example](../get_image/README.md) has an argument `--image-service` which can be used to specify the service name of the Ricoh Theta service: `'ricoh-theta-image-service'`. This example can be used to list the different image sources or request and save an image from a specified image source. By default, this example will try to query the standard image service on-robot that communicates with the robot's built-in cameras, but can be redirected to any implementation of the API image service using the `--image-service` argument.
-
-Since the ricoh-theta service is registered with the robot's directory service, the get_image example can be run from any computer and just needs an API SDK connection to the robot to be able to access the ricoh-theta service and its images.
-
 ### Debugging Tips
 
 Here are a couple suggestions for debugging the Ricoh Theta image service:
 
 - Check that the Ricoh Theta is configured properly. If running the image service locally, the Ricoh Theta can be in direct-ip mode and the local computer can connect to the Ricoh Theta's network. If running on the Spot CORE or a different spot payload computer, the Ricoh Theta should be in client mode. For the Ricoh Theta V, the wireless indicator should be solid green; for the Ricoh Theta Z, the OLED display will have a 'CL' icon near the wireless indicator. It may help to just rerun the `ricoh_client_mode.py` script to fully ensure that it is setup for communicating on Spot's network.
 - Check that the image service appears in the directory using the command line tool: `python3 -m bosdyn.client --username {USER} --password {PWD} {ROBOT_IP} dir list`
-- Check that no faults appear from the image service using the command line tool: `python3 -m bosdyn.client --username {USER} --password {PWD} {ROBOT_IP} fault watch`
-- Check for any error spew in the terminal where the image service is running while attempting to make requests to the service. If the image service is running as a docker container with Portainer, check the logs page on the Ricoh Theta service's container for any error spew.
-- Check that the image service responds with a complete list of its image sources using the command line tool: `python3 -m bosdyn.client --username {USER} --password {PWD} {ROBOT_IP} image list-sources --service-name ricoh-theta-image-service`
-- Check that retrieving and saving each image is successful, and opening the saved image reveals the correct/expected image.
-    - For source names that are plain strings (with no special characters like "/"), use the command line tool: `python3 -m bosdyn.client --username {USER} --password {PWD} {ROBOT_IP} image get-image SRC_NAME --service-name ricoh-theta-image-service`
-    - For complicated source names, use the `get_image.py` example from the `get_image/` directory. This example will convert the source name when saving the image file to a "saveable" string: `python3 get_image.py --image-service ricoh-theta-image-service --image-source {IMG_SRC}  --username {USER} --password {PWD} {ROBOT_IP}`
-- Check that the tablet is detecting the Ricoh Theta image service by looking in the camera sources drop down menu (top-left of the status bar) and then check that the images are appearing by selecting the Ricoh Theta.
+- Use the [image service tester program](../tester_programs/README.md) to ensure the service can successfully be communicated with and that each RPC will complete correctly.
+- When all tests pass for the image service tester program, check that the tablet is detecting the Ricoh Theta image service by looking in the camera sources drop down menu (top-left of the status bar) and then check that the images are appearing by selecting the Ricoh Theta.
 
 ## Run the Ricoh Theta Image Service using Docker
 

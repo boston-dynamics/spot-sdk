@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -34,6 +34,9 @@ message DockingCommandRequest {
     google.protobuf.Timestamp end_time = 5;
 
     
+
+    // [Optional] Specify the prep pose behavior
+    PrepPoseBehavior prep_pose_behavior = 9;
 }
 
 message DockingCommandResponse {
@@ -85,6 +88,12 @@ message DockingCommandFeedbackResponse {
         // Docking command succeeded and valid.
         STATUS_DOCKED = 2;
 
+        // Dock was detected as misaligned and aborted to save an unrecoverable state, please try again.
+        STATUS_MISALIGNED = 10;
+         
+        // The robot is at the prep pose for a `PREP_POSE_ONLY_POSE` command
+        STATUS_AT_PREP_POSE = 11;
+
         // Docking Command overridden by new docking command
         STATUS_OLD_DOCKING_COMMAND = 3;
 
@@ -106,7 +115,6 @@ message DockingCommandFeedbackResponse {
         // ERROR: Internal system error during execution
         // This error cannot be resolved by issuing a new DockingCommand
         // Check the returned message for details
-        // eg internal services or robot not in a state to accept docking commands
         STATUS_ERROR_SYSTEM = 9;
     }
 
@@ -126,7 +134,7 @@ enum DockType {
 
 
     DOCK_TYPE_CONTACT_PROTOTYPE = 2;
-
+    DOCK_TYPE_SPOT_DOCK = 3;
 }
 
 // The configuration of a range of dock ID's
@@ -151,13 +159,21 @@ message GetDockingConfigResponse {
     repeated ConfigRange dock_configs = 2;
 }
 
+// Defines how and whether we use the "pre-docking" pose.
+enum PrepPoseBehavior {
+    PREP_POSE_UNKNOWN = 0; // Default behavior, equivalent to PREP_POSE_USE_POSE.
+    PREP_POSE_USE_POSE = 1; // Goes to the pre-docking pose before docking.
+    PREP_POSE_SKIP_POSE = 2; // Docks before going to the pre-docking pose.
+    PREP_POSE_ONLY_POSE = 3; // Goes to the pre-docking pose, and then returns SUCCESS without docking.
+}
+
 // Overall Docking state of the robot, including power & comms connections
 message DockState {
     enum DockedStatus {
         DOCK_STATUS_UNKNOWN = 0;
         // Robot is detected as on a dock
         DOCK_STATUS_DOCKED = 1;
-        // Robot is currenting running a docking command
+        // Robot is currently running a docking command
         DOCK_STATUS_DOCKING = 2;
         // Robot is not detected as on dock
         DOCK_STATUS_UNDOCKED = 3;

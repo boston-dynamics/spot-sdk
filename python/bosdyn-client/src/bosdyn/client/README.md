@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -15,10 +15,12 @@ Client code and interfaces for the Boston Dynamics robot API.
 * [Async Tasks](async_tasks)
 * [Auth](auth)
 * [BDDF](bddf)
+* [BDDF Download](bddf_download)
 * [Channel](channel)
 * [Command ](command_line)
 * [Common](common)
 * [Data Acquisition](data_acquisition)
+* [Data Acquisition Helpers](data_acquisition_helpers)
 * [Data Acquisition Plugin](data_acquisition_plugin)
 * [Data Acquisition Plugin Service](data_acquisition_plugin_service)
 * [Data Acquisition Store](data_acquisition_store)
@@ -33,6 +35,7 @@ Client code and interfaces for the Boston Dynamics robot API.
 * [Frame Helpers](frame_helpers)
 * [Graph Nav](graph_nav)
 * [Image](image)
+* [Image Service Helpers](image_service_helpers)
 * [Lease](lease)
 * [License](license)
 * [Local Grid](local_grid)

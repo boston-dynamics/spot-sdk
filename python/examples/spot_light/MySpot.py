@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -9,12 +9,9 @@ import cv2
 import numpy
 
 import bosdyn.client
-import bosdyn.client.util
-import bosdyn.client.estop
 import bosdyn.client.lease
+import bosdyn.client.util
 
-from bosdyn.api import estop_pb2
-from bosdyn.client.estop import EstopClient
 from bosdyn.client.image import ImageClient
 from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder, blocking_stand
 from bosdyn import geometry
@@ -122,16 +119,6 @@ class MySpot(object):
             cmd = RobotCommandBuilder.synchro_stand_command(footprint_R_body=rotation)
             command_client.robot_command(cmd)
 
-    def _verify_estop(self):
-        """Verify the robot is not estopped"""
-
-        client = self._robot.ensure_client(EstopClient.default_service_name)
-        if client.get_status().stop_level != estop_pb2.ESTOP_LEVEL_NONE:
-            error_message = "Robot is estopped. Please use an external E-Stop client, such as " \
-            "the estop SDK example, to configure E-Stop."
-            self._robot.logger.error(error_message)
-            raise Exception(error_message)
-
     def _prep_for_motion(self):
         """
         Prepare the robot for motion
@@ -145,7 +132,9 @@ class MySpot(object):
         self._robot.time_sync.wait_for_sync()
 
         # Verify the robot is not estopped
-        self._verify_estop()
+        assert not self._robot.is_estopped(), "Robot is estopped. " \
+                                              "Please use an external E-Stop client, " \
+                                              "such as the estop SDK example, to configure E-Stop."
 
         # Acquire a lease to indicate that we want to control the robot
         if self._lease_client is None:

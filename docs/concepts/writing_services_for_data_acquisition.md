@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -19,16 +19,57 @@ To fully integrate the sensor, a payload needs to implement either the Boston Dy
 
 To integrate a camera payload which outputs image data in a known format (e.g. raw bytes or JPEG) with the data acquisition pipeline, a developer needs to implement an [ImageService](../../protos/bosdyn/api/image_service.proto).
 
-The data acquisition service will automatically recognize any directory-registered image services, create `ImageAcquistionCapabilities` for the image sources, and be able to collect image data for each service using the standard `ImageService` RPCs. For a camera payload, a developer will need to implement an image servicer class, which will inherit from `image_service_pb2_grpc.ImageServiceservicer` and must include the following RPCs:
+The data acquisition service will automatically recognize any directory-registered image services, create `ImageAcquistionCapabilities` for the image sources, and be able to collect image data for each service using the standard `ImageService` RPCs. For a camera payload, a developer will need to implement an image servicer class. To simplify the implementation of an image service, a set of base image service helper functions are provided in [image_service_helpers.py](../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.py).
 
-- `ListImageSources` RPC: Outputs the image source names available and different parameters associated with each image source. For example, if a camera has a fisheye image and an undistorted image, then both can be listed as image sources in the service and queried for separately.
-- `GetImage` RPC: retrieves images, based on the image source requested, from the payload using the camera’s API (e.g. OpenCV) and converts them into the `bosdyn.api.Image` proto message to be returned by the service. This RPC is meant to complete “quickly” when communicating with the payload and returning the collected images. If the RPC cannot complete quickly, it is recommended that a data acquisition plugin service is used to communicate with the camera payload and collect data as a `DataAcquisitionCapability`.
-  - Tip:  Create a second class which fetches images from the payload and keeps a buffer of these images to reduce latency when responding to the RPC.
-  - Tip: The tablet makes requests for JPEG formatted images, so this RPC must at least respond to a jpeg format request to ensure the camera payload can be viewed on the tablet.
+For each image source that will be available in the image service, a `VisualImageSource` helper class should be created to create the necessary protos for responding to gRPC requests from an image service, request and decode image data from the specific image source, and create or clear faults specific to the image source. The constructor requires the image source name to be provided (as a string), and then a class inheriting from the `CameraInterface` and overriding the functions for capturing image data and decoding the data. Optionally, the number of pixel rows and columns in the image can be provided as integer values in the `VisualImageSource` constructor. The gain and exposure time can be provided as either a function which dynamically determines the values or fixed float values in the `VisualImageSource` constructor as well.
+
+The image service can be created with the `CameraBaseImageServicer` class, which is a helper class that will manage state and respond to the RPCs required of an image service (`ListImageSources` RPC and `GetImage` RPC). The constructor of the image service helper class requires a developer to provide the sdk robot instance, the service name, and a list of `VisualImageSource`'s which will represent the image sources avaialble for capture from this image service.
+
+### CameraInterface
+
+Each image source should implement a class which inherits the parent class `CameraInterface` and overrides the virtual functions `blocking_capture` and `image_decode`.
+
+The `blocking_capture` interface function should be a blocking function which calls out to a camera using the hardware's api, and collects then returns the image data. The virtual function has the following signature:
+```
+def blocking_capture(self): returns (image_data: "Any Data Format", acquisition_time_seconds: float)
+```
+The `image_data` returned can be any type, but must be consistent across the capture function's output and the decode function's input. The `acquisition_time_seconds` should be a float, in the service computer's clock, which represents the time the image data was acquired.
+**The `blocking_capture` function must not return until the image_data has been acquired.**
+
+The `image_decode` interface function should decode the image data into bytes in the desired format and populate an image proto message with the decoded data. The virtual function has the following signature:
+```
+def image_decode(self, image_data : "Any Data Format", image_proto: image_pb2.Image, image_format : image_pb2.Image.Format, quality_percent : int)
+```
+The input image data will always be the same format (and contents) as the image data returned by the `blocking_capture` function. The `image_proto` is an Image protobuf message which will be mutated within the decode function to include: 1) the image data, 2) the pixel format, 3) the image format, and 4) optionally the transform snapshot fields. The decoding function does not need to return anything, but it must mutate the image protobuf message.
+
+The `image_format` is the requested format (e.g. jpeg, raw); if the image data cannot be decoded into a specific format, an Exception should be raised within the `image_decode` function providing an error message (e.x. `raise Exception("Unable to decode to FORMAT_RAW for the web cam")`). If the requested image format is `None`, then the `image_decode` function should choose the best/preferred format for the image data and decode it into that format.
+
+Lastly, the `quality_percent` may be provided as a parameter for decoding the image data.
+
+**Note:** The tablet and the on-robot data acquisition service makes requests for JPEG formatted images, so the `image_decode` function must at least be able to respond to a `image_format=image_pb2.Image.FORMAT_JPEG` to ensure that the camera payload can be viewed on the tablet.
+
+### Using Background Capture Threads
+
+The image service's `GetImage` RPC retrieves images, based on the image source requested, from the payload using the camera’s API (e.g. OpenCV) and converts them into the `bosdyn.api.Image` proto message to be returned by the service. This RPC is meant to complete “quickly” when communicating with the payload and returning the collected images. To enable a fast response to the RPC for slower captures, the `CameraBaseImageServicer` image service constructor has the argument `use_background_capture_thread`, which when set to True will create a background thread for each image source that will continuously fetch images from the camera payloads and keep a buffer of these images to reduce the latency when responding to the RPC. The `CameraBaseImageServicer` will then respond to a `GetImage` RPC with the most recent image stored in the buffer from the capture thread, instead of calling out to the service. By default, an image service will have `use_background_capture_thread` set to True and create threads for each image source.
+
+When `use_background_capture_thread` is set to False, the `CameraBaseImageServicer` will make the call to the `blocking_capture` function during the completion of the RPC.
 
 ### Example Image Services
 
-There are two SDK examples showing `ImageService` implementations: a [USB web camera](../../python/examples/web_cam_image_service/README.md), and the [Ricoh Theta camera](../../python/examples/ricoh_theta/README.md).
+There are two SDK examples showing `ImageService` implementations using the helper functions: a [USB web camera](../../python/examples/web_cam_image_service/README.md), and the [Ricoh Theta camera](../../python/examples/ricoh_theta/README.md).
+
+### Tips for Creating an Image Service
+- The `image_decode` function should attempt to accurately fill out the PixelFormat and ImageFormat fields for the image proto in addition to the image data. This allows for end-user applications to more accurately decode the image data.
+- The `image_decode` function should handle an input argument of `image_format=None`. Therefore, if the `image_format` is `None`, the `image_decode` function should choose the best/preferred format and respond with image data decoded into that format and set the ImageFormat field to the choosen format in the image proto.
+- To have a specific camera source run a background thread, but other sources in the same service run the `blocking_capture` function at RPC time, provide `use_background_capture_thread` as False to the `CameraBaseImageServicer` constructor. Separately, for the `VisualImageSource` object, start the thread using the `create_capture_thread()` function before passing the list of sources to the image service constructor. The following is pseudo code demonstrating the process:
+    ```
+    visual_source1 = VisualImageSource("source1", camera_interface_object)
+    visual_source2_not_threaded = VisualImageSource2("source2", camera_interface_object)
+    visual_source1.create_capture_thread()
+    CameraBaseImageServicer(robot, "image-service-name", [visual_source1, visual_source2_not_threaded], use_background_capture_thread=False)
+
+    ```
+- While developing an image service, if the service is not behaving as expected or failing unexpectedly, a image service tester program (`python/examples/tester_progams/image_service_tester.py`) is available to help test and debug common failure modes through detailed display of the system's outputs.
 
 ## Non-image Payloads
 
@@ -110,7 +151,7 @@ If the plugin service encounters an error that is unrelated to a specific piece 
     ```
     store_helper.state.set_status(data_acquisition_pb2.GetStatusResponse.STATUS_SAVING)
     ```
-- While developing a data acquisition plugin service, if the service is not behaving as expected or failing unexpectedly, a plugin tester program (`python/examples/data_acquisition_service/plugin_tester.py`) is available to help test and debug common failure modes through detailed display of the system's outputs.
+- While developing a data acquisition plugin service, if the service is not behaving as expected or failing unexpectedly, a plugin tester program (`python/examples/tester_progams/plugin_tester.py`) is available to help test and debug common failure modes through detailed display of the system's outputs.
 - The data collection function can be part of its own class that manages state specific to the payload. Additionally, if an individual class is created for the data collection and management, it can use background threads to collect and buffer data to speed up the response to the `AcquirePluginData` RPC.
 - The data acquisition service will mark acquisition requests as `STATUS_TIMEDOUT` if they take longer than 30 seconds. A plugin can extend the timeout used by providing an additional function following this signature:
 
@@ -126,13 +167,7 @@ If the plugin service encounters an error that is unrelated to a specific piece 
     ```
 - Be careful using async functions within the data collection function for communicating with the payload. The service architecture expects the data collection process to block until all data is completely collected and stored.
 
-## Directory Registration and Running the New Service
-
-The new service, either a data acquisition plugin service or an image service, must be running and registered with the directory to communicate with the robot and the data acquisition service. This requires a unique service name, service type (“bosdyn.api.DataAcquisitionPluginService” or “bosdyn.api.ImageService”), and a service authority.
-
-The payload computer running the new service should perform payload authentication using the GUID/secret of the payload before registering the service with the directory.
-
-## Attaching Metadata with other Data or Images
+### Attaching Metadata with other Data or Images
 
 Additional metadata, such as the robot state or sensor configuration information, can be stored in association with external data collected by a plugin or images from image services. To save metadata linked with each piece of data, a DataAcquisitionPluginService can be created to collect and save this metadata. This plugin will list capture actions representing each piece of additional metadata. The plugin will recieve an `AcquirePluginData` request from the data acquisition service on robot, which will contain a repeated list of `DataIdentifiers` that the metadata plugin can use to store metadata associated to these identified pieces of data.
 
@@ -145,34 +180,18 @@ store_helper.store_metadata(associated_metadata_proto, data_id)
 
 When downloading or retrieving the data from the data acquisition store, the metadata saved with each action will also be retrieved and can easily be linked back to the data it is stored with.
 
+## Directory Registration and Running the New Service
+
+The new service, either a data acquisition plugin service or an image service, must be running and registered with the directory to communicate with the robot and the data acquisition service. This requires a unique service name, service type (“bosdyn.api.DataAcquisitionPluginService” or “bosdyn.api.ImageService”), and a service authority.
+
+The payload computer running the new service should perform payload authentication using the GUID/secret of the payload before registering the service with the directory.
+
 ## Testing the New Service
 
-First, a developer can check that the service is successfully registered with the robot’s directory. The output to the following command should show the new service name:
+For DataAcquisitionPluginService and ImageService services, there are [tester programs](../../python/examples/tester_programs/README.md) available which will check the communication and directory registration of the new service, as well as the API service's specific functionalities. The plugin tester scripts should be run while the new service is also running and will print output to the terminal about any errors or warnings that occurred while running the tests.
+
+For other types of services, the general service checking helper functions are available within the tester_programs example and can be used to check directory registration, gRPC communication with the service, and if there are active service faults for the service. Other debugging tools include the different API examples that exercise a specific service type (e.g. the [get_image example](../../python/examples/get_image/README.md)) or the command line, which can list the full set of options and actions available by running the command:
 
 ```
-python3 -m bosdyn.client --username {USERNAME}  --password {PASSWORD} {ROBOT_IP} dir list
+python3 -m bosdyn.client --username {USERNAME}  --password {PASSWORD} {ROBOT_IP} --help
 ```
-
-Next, to test the integration with the data acquisition service on robot, the command line client can be used to communicate with the robot and make requests for the plugin’s data sources or the image sources. Try the following command for more information:
-
-```
-python3 -m bosdyn.client {USERNAME}  --password {PASSWORD} {ROBOT_IP}  acquire --help
-```
-
-### Testing an ImageService
-
-The [get_image example](../../python/examples/get_image/README.md) can be used to test that the two RPCs can complete successfully for the new `ImageService`. The image service’s service name needs to be provided as an argument on the command line.
-
-To test the `ListImageSources` RPC, run the command:
-```
-python3 -m get_image  --username {USERNAME}  --password {PASSWORD} {ROBOT_IP}  --image-service {SERVICE_NAME} list
-```
-
-To test the `GetImage` RPC, run the command:
-```
-python3 -m get_image  --username {USERNAME}  --password {PASSWORD} {ROBOT_IP}  --image-service {SERVICE_NAME} --image-sources {SOURCE_NAME}
-```
-
-### Testing a DataAcquisitionPluginService
-
-To test the plugin service and ensure everything is implemented correctly and working, there is a [plugin tester script](../../python/examples/data_acquisition_service/README.md). The script checks the communication and registration of the new plugin service, as well as acquiring all advertised pieces of data and ensuring they get saved properly.

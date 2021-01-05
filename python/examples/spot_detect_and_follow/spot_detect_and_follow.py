@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -25,16 +25,13 @@ from PIL import Image
 from scipy import ndimage
 
 import bosdyn.client
-import bosdyn.client.estop
 import bosdyn.client.util
 from bosdyn import geometry
-from bosdyn.api import estop_pb2
 from bosdyn.api import geometry_pb2 as geo
 from bosdyn.api import image_pb2, trajectory_pb2
 from bosdyn.api.image_pb2 import ImageSource
 from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
 from bosdyn.client.async_tasks import AsyncPeriodicQuery, AsyncTasks
-from bosdyn.client.estop import EstopClient
 from bosdyn.client.frame_helpers import *
 from bosdyn.client.image import ImageClient
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
@@ -148,16 +145,6 @@ def get_source_list(image_client):
                 source_list.append(source.name)
                 source_list.append(VISUAL_SOURCE_TO_DEPTH_MAP_SOURCE[source.name])
     return source_list
-
-def verify_estop(robot):
-    """Verify the robot is not estopped"""
-
-    client = robot.ensure_client(EstopClient.default_service_name)
-    if client.get_status().stop_level != estop_pb2.ESTOP_LEVEL_NONE:
-        error_message = "Robot is estopped. Please use an external E-Stop client, such as the" \
-        " estop SDK example, to configure E-Stop."
-        robot.logger.error(error_message)
-        raise Exception(error_message)
 
 def capture_images(image_task, sleep_between_capture):
     """ Captures images and places them on the queue
@@ -590,7 +577,8 @@ def main(argv):
 
         # Verify the robot is not estopped and that an external application has registered and holds
         # an estop endpoint.
-        verify_estop(robot)
+        assert not robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client," \
+                                        " such as the estop SDK example, to configure E-Stop."
 
         # Create the sdk clients
         robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)

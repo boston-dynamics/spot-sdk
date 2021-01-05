@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -42,7 +42,7 @@ The data service is a gRPC service that allows clients to query for information 
 ## Data Download
 
 ### Raw Data Download
-Data may be downloaded as BDDF files by querying the robot's HTTPS REST interface with a GET request at the URL `/v1/data-buffer/bddf/`.  By default, all data is returned, but the following optional filter parameters may be applied.  The `from_sec` and `from_nsec` parameters are mutually exclusive and can only be specified once, the same being true of `to_sec` and `to_nsec`.  The `event_level_min` parameter can only be specified once.  All other parameters may be specified zero or more times in combination.
+Data may be downloaded as BDDF files by querying the robot's HTTPS REST interface with a GET request at the URL `/v1/data-buffer/bddf/`.  Queries are limited to one hour.  A single start time must be specified in either the `from_sec` or `from_nsec` parameters.  Likewise, a single end time must be specified in either the `to_sec` or `to_nsec` parameters.  If the time range is unspecified or exceeds 3600 seconds, the query fails and HTTP 403 (Bad Request) is returned.  The `event_level_min` parameter can only be specified once.  All other parameters may be specified zero or more times in combination.
 - `from_sec` or `from_nsec`: Download data after the specified epoch time if set, in seconds and nanoseconds respectively.
 - `to_sec` or `to_nsec`: Download data before the specified epoch time if set, in seconds and nanoseconds respectively.
 - `type`: Filter on the `type_id` of blobs.

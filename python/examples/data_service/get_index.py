@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -12,6 +12,8 @@ import sys
 import bosdyn.api.data_index_pb2 as data_index_protos
 import bosdyn.client
 from bosdyn.client.data_service import DataServiceClient
+from bosdyn.client.time_sync import (TimeSyncEndpoint, TimeSyncClient, NotEstablishedError,
+                                     timespec_to_robot_timespan)
 import bosdyn.client.util
 
 
@@ -23,11 +25,26 @@ def run_query(options, query):
     robot = sdk.create_robot(options.hostname)
     robot.authenticate(options.username, options.password)
     service_client = robot.ensure_client(DataServiceClient.default_service_name)
+
+    time_sync_endpoint = None
+    if not options.robot_time:
+        # Establish time sync with robot to obtain skew.
+        time_sync_client = robot.ensure_client(TimeSyncClient.default_service_name)
+        time_sync_endpoint = TimeSyncEndpoint(time_sync_client)
+        if not time_sync_endpoint.establish_timesync():
+            raise NotEstablishedError("time sync not established")
+
+    # Now assemble the query to obtain a bddf file.
+
+    # Get the parameters for limiting the timespan of the response.
+    # pylint: disable=no-member
+    query.time_range.CopyFrom(timespec_to_robot_timespan(options.timespan, time_sync_endpoint))
     return service_client.get_data_index(query)
 
 def get_blobs(options):
     """Get pages with message blobs from robot"""
     query = data_index_protos.DataQuery()
+    # pylint: disable=no-member
     blobspec = query.blobs.add()
     if options.channel:
         blobspec.channel = options.channel
@@ -58,14 +75,24 @@ def main(argv):
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
 
+    def _add_common_args(subparser):
+        subparser.add_argument('-T', '--timespan', default='5m',
+                               help='Time span (default last 5 minutes)')
+        subparser.add_argument('-R', '--robot-time', action='store_true',
+                               help='Specified timespan is in robot time')
+
     subparsers = parser.add_subparsers(help='commands', dest='command')
     blob_parser = subparsers.add_parser('blob', help='Get blob pages')
+    _add_common_args(blob_parser)
     blob_parser.add_argument('--message-type', help='limit to message-type')
     blob_parser.add_argument('--channel', help='limit to channel')
 
-    _text_parser = subparsers.add_parser('text', help='Get text-message pages')
-    _event_parser = subparsers.add_parser('event', help='Get event pages')
-    _comment_parser = subparsers.add_parser('comment', help='Get operator-comment pages')
+    text_parser = subparsers.add_parser('text', help='Get text-message pages')
+    _add_common_args(text_parser)
+    event_parser = subparsers.add_parser('event', help='Get event pages')
+    _add_common_args(event_parser)
+    comment_parser = subparsers.add_parser('comment', help='Get operator-comment pages')
+    _add_common_args(comment_parser)
 
     options = parser.parse_args(argv)
     print(options)
@@ -85,7 +112,7 @@ def main(argv):
         return True
     except Exception as exc:  # pylint: disable=broad-except
         logger = bosdyn.client.util.get_logger()
-        logger.error("get_index threw an exception: %r", exc)
+        logger.error("get_index threw an exception: %s", exc)
         return False
 
 

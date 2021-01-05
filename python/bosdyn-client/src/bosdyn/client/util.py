@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -59,29 +59,96 @@ def cli_auth(robot, username=None, password=None):
             _LOGGER.exception(e)
 
 
-def setup_logging(verbose=False):
+class DedupLoggingMessages(logging.Filter):
+    """Logger filter to prevent duplicated messages from being logged.
+
+    Args:
+        always_print_logger_levels (set[logging.Level]): A set of logging levels which
+                                                    any logged message at that level will
+                                                    always be logged.
+    """
+
+    def __init__(self, always_print_logger_levels={logging.CRITICAL, logging.ERROR}):
+        # Warning level mapped to last message logged.
+        self.last_error_message = None
+        self.always_print_logger_levels = always_print_logger_levels
+
+    def filter(self, record):
+        warning_level = record.levelno
+        # Always allow messages above a certain warning level to be logged.
+        if warning_level in self.always_print_logger_levels:
+            return True
+
+        error_message = record.getMessage()
+        # Deduplicate logged messages by preventing a message that was just logged to be sent again.
+        if self.last_error_message != error_message and error_message is not None:
+            self.last_error_message = error_message
+            return True
+
+        return False
+
+
+def setup_logging(verbose=False, include_dedup_filter=False,
+                  always_print_logger_levels={logging.CRITICAL, logging.ERROR}):
     """Setup a basic streaming console handler at the root logger.
 
     Args:
-       verbose: if False (default) show messages at INFO level and above,
-                if True show messages at DEBUG level and above.
+        verbose (boolean): if False (default) show messages at INFO level and above,
+                           if True show messages at DEBUG level and above.
+        include_dedup_filter (boolean): If true, the logger includes a filter which
+                                        will prevent repeated duplicated messages
+                                        from being logged.
+        always_print_logger_levels (set[logging.Level]): A set of logging levels which
+                                                        any logged message at that level will
+                                                        always be logged.
     """
-
     logger = get_logger()
-    if logger.handlers:
-        return  # Avoid duplicate formatters.
 
     if verbose:
         level = logging.DEBUG
     else:
         level = logging.INFO
 
-    streamlog = logging.StreamHandler()
-    streamlog.setLevel(level)
-    streamlog.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-    logger = logging.getLogger()
-    logger.addHandler(streamlog)
+    if not logger.handlers:
+        streamlog = logging.StreamHandler()
+        streamlog.setLevel(level)
+        streamlog.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+        if include_dedup_filter:
+            # Propagate the filter through the handler. logging.Filter does not propagate to other
+            # child loggers on its own, and must be attached to the handler.
+            streamlog.addFilter(DedupLoggingMessages(always_print_logger_levels))
+        logger.addHandler(streamlog)
+
+    if logger.handlers and include_dedup_filter:
+        # If a logger has exisiting handlers, check if the filter is there already. Also check if it is part of the
+        # main log already. If not, add it to a new handler.
+        filter_exists = None
+        for handler in logger.handlers:
+            filter_exists = filter_exists or does_dedup_filter_exist(handler, always_print_logger_levels)
+        if not filter_exists:
+            dedupFilterLog = logging.StreamHandler()
+            # Propagate the filter through the handler. logging.Filter does not propagate to other
+            # child loggers on its own, and must be attached to the handler.
+            dedupFilterLog.addFilter(DedupLoggingMessages(always_print_logger_levels))
+            logger.addHandler(dedupFilterLog)
+
+    # Add the level and filter onto just the regular logger as well.
     logger.setLevel(level)
+    if include_dedup_filter:
+        if not does_dedup_filter_exist(logger, always_print_logger_levels):
+            logger.addFilter(DedupLoggingMessages(always_print_logger_levels))
+
+
+def does_dedup_filter_exist(logger, always_print_logger_levels):
+    """Check if the DedupLoggingMessages filter exists for a logger.
+
+    Returns:
+        Boolean indicating if the DedupLoggingMessages filter already exists and matches the new parameters.
+    """
+    for filt in logger.filters:
+        if type(filt) == DedupLoggingMessages and filt.always_print_logger_levels == always_print_logger_levels:
+            return True
+    return False
 
 
 def get_logger():
@@ -245,7 +312,7 @@ def strip_large_bytes_fields(proto_message):
 
 def get_bytes_field_whitelist():
     whitelist_map = {
-        image_pb2.GetImageResponse : strip_image_response,
+        image_pb2.GetImageResponse : strip_get_image_response,
         local_grid_pb2.GetLocalGridsResponse : strip_local_grid_responses,
         data_acquisition_store_pb2.StoreDataRequest : strip_store_data_request,
         data_acquisition_store_pb2.StoreImageRequest : strip_store_image_request,
@@ -257,8 +324,11 @@ def get_bytes_field_whitelist():
 
 
 def strip_image_response(proto_message):
+    proto_message.shot.image.ClearField("data")
+
+def strip_get_image_response(proto_message):
     for img_resp in proto_message.image_responses:
-        img_resp.shot.image.ClearField("data")
+        strip_image_response(img_resp)
 
 
 def strip_local_grid_responses(proto_message):

@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -9,9 +9,6 @@ Development Kit License (20191101-BDSDK-SL).
 # GraphNav Localization
 
 Once the robot’s location has been initialized in GraphNav, clients can use the `GetLocalizationState` RPC. The response message will contain a localization object which reports the pose of the robot relative to a particular waypoint on the map.
-
-
-Note that this localization is NOT relative to any global frame. Though you can use the structure of the map to compute the pose of the robot relative to any other connected waypoint in the graph, the pose is not guaranteed to be metrically accurate.
 
 A map's waypoints are combined with the cumulative point cloud data captured at each waypoint. It's important to understand that this point cloud data does not result in global consistency.
 
@@ -67,6 +64,21 @@ Edges may also be annotated with related constraints to maintain direction. For 
 
 The robot must have enough space to turn around in between up- and down- stairs, otherwise the robot will report a navigation status of `STATUS_CONSTRAINT_FAULT`.
 
+## GraphNav Origin
+The localization object includes an additional field `seed_tform_body` since the 2.1.0 release. This field returns the pose of the robot body with respect to the starting fiducial frame as an SE3Pose, which can be considered the "origin" or "seed" of the GraphNav map.
+
+Please reference this [document](https://support.bostondynamics.com/s/article/Site-inspection-with-teleoperation) for how to initialize and define a custom origin using the Tablet App outside of Autowalk since the 2.1.0 release. 
+
+An example of how to access this field with the Spot API is available below. Please remember to initialize the GraphNav map first or the SE3Pose will be not be populated.
+
+```python
+def get_graphnav_origin(self):
+    """ Returns seed_tform_body. """
+    graph_nav_client = self.bosdyn_sdk_robot.ensure_client(GraphNavClient.default_service_name)
+    state = graph_nav_client.get_localization_state()
+    gn_origin_tform_body = state.localization.seed_tform_body
+    return math_helpers.SE3Pose.from_obj(gn_origin_tform_body)
+```
 
 <!--- image and page reference link definitions --->
 [autonomous-top]: Readme.md "Spot SDK: Autonomy, GraphNav, and Missions"

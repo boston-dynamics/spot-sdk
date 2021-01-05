@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -11,26 +11,12 @@ import sys
 import time
 
 import bosdyn.client
-import bosdyn.client.estop
 import bosdyn.client.lease
 import bosdyn.client.util
 import bosdyn.geometry
 
-from bosdyn.api import estop_pb2
-from bosdyn.client.estop import EstopClient
 from bosdyn.client.image import ImageClient
 from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient, blocking_stand
-
-
-def verify_estop(robot):
-    """Verify the robot is not estopped"""
-
-    client = robot.ensure_client(EstopClient.default_service_name)
-    if client.get_status().stop_level != estop_pb2.ESTOP_LEVEL_NONE:
-        error_message = "Robot is estopped. Please use an external E-Stop client, such as the" \
-        " estop SDK example, to configure E-Stop."
-        robot.logger.error(error_message)
-        raise Exception(error_message)
 
 
 def hello_spot(config):
@@ -63,7 +49,8 @@ def hello_spot(config):
 
     # Verify the robot is not estopped and that an external application has registered and holds
     # an estop endpoint.
-    verify_estop(robot)
+    assert not robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client, " \
+                                    "such as the estop SDK example, to configure E-Stop."
 
     # Only one client at a time can operate a robot. Clients acquire a lease to
     # indicate that they want to control a robot. Acquiring may fail if another
@@ -74,7 +61,7 @@ def hello_spot(config):
     lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
     lease = lease_client.acquire()
     try:
-        with bosdyn.client.lease.LeaseKeepAlive(lease_client): 
+        with bosdyn.client.lease.LeaseKeepAlive(lease_client):
             # Now, we are ready to power on the robot. This call will block until the power
             # is on. Commands would fail if this did not happen. We can also check that the robot is
             # powered at any point.

@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -6,6 +6,7 @@
 
 """Common utilities for API Python code."""
 from __future__ import division
+import re
 import sys
 import time
 import datetime
@@ -67,6 +68,7 @@ def seconds_to_duration(seconds):
     duration_nanos = int((seconds - duration_seconds) * NSEC_PER_SEC)
     return Duration(seconds=duration_seconds, nanos=duration_nanos)
 
+
 def seconds_to_timestamp(seconds):
     """Return a protobuf Timestamps from number of seconds, as a float.
 
@@ -125,18 +127,28 @@ def now_timestamp():
 
 
 def set_timestamp_from_nsec(timestamp_proto, time_nsec):
-    """Writes a timestamp as an integer of nanoseconds from the unix epoch into a Timestamp proto
+    """Sets a Timestamp protobuf from an integer of nanoseconds since the unix epoch.
 
     Args:
-     timestamp_proto[out] (google.protobuf.Timestamp):  timestamp into which the time will be written
+     timestamp_proto[out] (google.protobuf.Timestamp):  timestamp into which time will be written
      time_nsec[in]:         the time, as an integer of nanoseconds from the unix epoch
     """
     timestamp_proto.seconds = int(time_nsec / NSEC_PER_SEC)
     timestamp_proto.nanos = int(time_nsec % NSEC_PER_SEC)
 
 
+def set_timestamp_from_datetime(timestamp_proto, date_time):
+    """Sets a Timestamp protobuf from datetime.datetime value.
+
+    Args:
+     timestamp_proto[out] (google.protobuf.Timestamp):  timestamp into which time will be written
+     date_time[in] (datetime.datetime)                  the time to convert
+    """
+    set_timestamp_from_nsec(timestamp_proto, int(date_time.timestamp() * 1e9))
+
+
 def nsec_to_timestamp(time_nsec):
-    """Returns a google.protobuf.Timestamp for a time from nanoseconds from the unix epoch.
+    """Returns a google.protobuf.Timestamp for an integer value of nanoseconds since the unix epoch.
 
     Args:
      time_nsec (int): the time, as an integer of nanoseconds from the unix epoch
@@ -147,7 +159,7 @@ def nsec_to_timestamp(time_nsec):
 
 
 def timestamp_to_sec(timestamp_proto):
-    """Returns floating point of seconds from the unix epoch from a Timestamp proto.
+    """From a Timestamp proto, return a floating point value of seconds from the unix epoch .
 
     Args:
      timestamp_proto (google.protobuf.Timestamp): input time
@@ -156,7 +168,7 @@ def timestamp_to_sec(timestamp_proto):
 
 
 def timestamp_to_nsec(timestamp_proto):
-    """Returns integer of nanoseconds from the unix epoch from a Timestamp proto.
+    """From a Timestamp proto, return an integer of nanoseconds from the unix epoch.
 
     Args:
      timestamp_proto (google.protobuf.Timestamp):  input time
@@ -224,7 +236,66 @@ def format_metric(metric):
     return '{:20} {} {}'.format(metric.label, metric.value, metric.units)
 
 
-class RobotTimeConverter(object):
+def _before_now(strval, delta_t):
+    now = datetime.datetime.now()
+    val = int(strval)
+    return now - val * delta_t
+
+
+_TIME_FORMATS = (
+    (re.compile(r'^\d{8}_\d{6}$'), lambda val: datetime.datetime.strptime(val, '%Y%m%d_%H%M%S')),
+    (re.compile(r'^\d{8}$'), lambda val: datetime.datetime.strptime(val, '%Y%m%d')),
+    (re.compile(r'^\d+[hH]$'), lambda val: _before_now(val[:-1], datetime.timedelta(hours=1))),
+    (re.compile(r'^\d+s$'), lambda val: _before_now(val[:-1], datetime.timedelta(seconds=1))),
+    (re.compile(r'^\d+m$'), lambda val: _before_now(val[:-1], datetime.timedelta(minutes=1))),
+    (re.compile(r'^\d+d$'), lambda val: _before_now(val[:-1], datetime.timedelta(days=1))),
+    (re.compile(r'^\d{10}?$'), lambda val: datetime.datetime.fromtimestamp(int(val))),
+    (re.compile(r'^\d{10}(\.\d{0-9)?$'), lambda val: datetime.datetime.fromtimestamp(float(val))),
+    (re.compile(r'^\d{19}$'), lambda val: datetime.datetime.fromtimestamp(int(1e-9 * int(val)))),
+)
+
+
+class DatetimeParseError(Exception):
+    """Failed to parse any datetime formats known to parse_datetime()"""
+
+
+TIME_FORMAT_DESC = """\
+Time values have one of these formats:
+ - yyyymmdd_hhmmss  (e.g., 20200120_120000)
+ - yyyymmdd         (e.g., 20200120)
+ -  {n}d    {n} days ago     (e.g., 2d)
+ -  {n}h    {n} hours ago
+ -  {n}m    {n} minutes ago
+ -  {n}s    {n} seconds ago
+ - nnnnnnnnnn[.nn]       (e.g., 1581869515.256)  Seconds since epoch
+ - nnnnnnnnnnnnnnnnnnnn  Nanoseconds since epoch"""
+
+
+def parse_datetime(val):
+    """Parse datetime from string
+
+    Args:
+     val: string with format like as described by TIME_FORMAT_DESC.
+
+    Returns: datetime.datetime.
+
+    Raises: DatetimeParseError if format of val is not recognized.
+    """
+    for fmt, function in _TIME_FORMATS:
+        if fmt.match(val):
+            return function(val)
+    raise DatetimeParseError("Could not parse time from '{}'".format(val))
+
+
+def parse_timespan(timespan_spec):
+    """Parse the timespan."""
+    dash_idx = timespan_spec.find('-')
+    if dash_idx < 0:
+        return parse_datetime(timespan_spec), None
+    return (parse_datetime(timespan_spec[0:dash_idx]), parse_datetime(timespan_spec[dash_idx + 1:]))
+
+
+class RobotTimeConverter:
     """Converts times in the local system clock to times in the robot clock.
 
     Conversions are made given an estimate of clock skew from the local clock to the robot clock.
@@ -249,11 +320,19 @@ class RobotTimeConverter(object):
         """
         return self.robot_timestamp_from_local_nsecs(sec_to_nsec(local_time_secs))
 
+    def robot_timestamp_from_local(self, local_timestamp_proto):
+        """Takes a Timestamp proto is local time and returns one in robot time.
+
+        Args:
+          local_timestamp_proto (google.protobuf.Timestamp): timestamp in system clock
+        """
+        local_nsecs = timestamp_to_nsec(local_timestamp_proto)
+        return self.robot_timestamp_from_local_nsecs(local_nsecs)
+
     def convert_timestamp_from_local_to_robot(self, timestamp_proto):
         """Edits timestamp_proto in place to convert it from the local clock to the robot_clock.
 
         Args:
           timestamp_proto[in/out] (google.protobuf.Timestamp): local system time time
         """
-        local_nsecs = timestamp_to_nsec(timestamp_proto)
-        timestamp_proto.CopyFrom(self.robot_timestamp_from_local_nsecs(local_nsecs))
+        timestamp_proto.CopyFrom(self.robot_timestamp_from_local(timestamp_proto))
