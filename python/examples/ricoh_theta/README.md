@@ -45,7 +45,7 @@ python3 test_driver.py
 Perform the following steps on your PC to setup Ricoh Theta client mode, which means the Ricoh Theta will be connected to a different network (in this case, Spot's WiFI) instead of broadcasting its own network (which is the direct mode). The python script below is required for this example to set the static ip, which the App does not allow.
 
 1. Enable wireless connection on the Ricoh Theta and connect your PC to the Ricoh Theta via WiFi.
-1. Run `ricoh_client_mode.py` on your PC via the CLI. Replace the capitilized letters in the command below with your Ricoh Theta SSID **with the .OSC removed from the end**, Spot's WiFi SSID, and Spot's WiFi password. The `disable-sleep-mode` will disable the Ricoh Theta's automatic sleep with inactivity mode. Note, this can also be done through the Ricoh Theta's phone application, in which case this argument does not need to be provided when running the client mode script.
+1. Run `ricoh_client_mode.py` on your PC via the CLI. Replace the capitalized letters in the command below with your Ricoh Theta SSID **with the .OSC removed from the end**, Spot's WiFi SSID, and Spot's WiFi password. The `disable-sleep-mode` will disable the Ricoh Theta's automatic sleep with inactivity mode. Note, this can also be done through the Ricoh Theta's phone application, in which case this argument does not need to be provided when running the client mode script.
     ```
     python ricoh_client_mode.py --theta-ssid THETAYL00196843 --wifi-ssid WIFI_SSID --wifi-password WIFI_PASSWORD --disable-sleep-mode
     ```
@@ -69,14 +69,18 @@ Perform the following steps on your PC to setup Ricoh Theta client mode, which m
 
 ## Run Image Service
 
-The image service script creates a standard Boston Dyanmics API image service that communicates with the Ricoh Theta camera.
+The image service script creates a standard Boston Dynamics API image service that communicates with the Ricoh Theta camera.
 
 To launch the GRPC image service from a registered payload computer (such as the Spot CORE), authenticate the robot connection using the payload's authentication, and ultimately register the service with the directory **with the service name 'ricoh-theta-image-service'**, issue the following command:
 ```
 python3 ricoh_theta_image_service.py --theta-ssid THETA_SSID --theta-client --host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET --port PORT_NUMBER ROBOT_IP
 ```
 
-The `hostname` ("ROBOT_IP") argument should be the IP address of the robot which is hosting the directory service. The `--host-ip` argument is the IP address for the computer running the script. For example, in the example where we run the image service on the Spot CORE, the default IP address of 192.168.50.5 can be provided for the `--host-ip` argument.
+This example takes two different IP addresses as arguments. The `--host-ip` argument describes the IP address for the computer that will be running the web cam image service. A helper exists to try to determine the correct IP address. This command must be run on the same computer that will be running the ricoh theta image service:
+```
+python3 -m bosdyn.client --username {USER} --password {PASSWORD} {ROBOT_IP} self-ip
+```
+The other IP address is the traditional robot hostname ("ROBOT_IP") argument, which describes the IP address of the robot hosting the directory service.
 
 Since the example is created to run off of a payload computer, it requires the input arguments `--guid` (uniquely generated payload specifier) and `--secret` (private string associated with a payload) for the registered payload computer that will be running the Ricoh Theta image service. For the Spot CORE, this information by default will be located in the file `/opt/payload_credentials/payload_guid_and_secret`. Note, you can run the Ricoh Theta image service locally on your PC by registering it as a weightless payload using [the payloads example](../payloads/README.md) and creating a GUID and secret for your computer. See documentation on [configuration of payload software](../../../docs/payload/configuring_payload_software.md#Configuring-and-authorizing-payloads) for more information.
 
@@ -88,7 +92,7 @@ Lastly, a port number for the image service can be specified using the `--port` 
 
 ### Ricoh Theta Image Service Configuration
 
-The Ricoh Theta image service is configured to prevent directory registration if communication cannot be established with the Ricoh Theta camera. This means the image service will not show up in the directory listing, the data acquisition service's known captures, or the tablet's set of avaialble camera sources.
+The Ricoh Theta image service is configured to prevent directory registration if communication cannot be established with the Ricoh Theta camera. This means the image service will not show up in the directory listing, the data acquisition service's known captures, or the tablet's set of available camera sources.
 
 Additionally, the service will throw [Service Faults](../../../docs/concepts/faults.md) for both failure to communicate at start up with the camera and also if a capture attempt fails for a different reason than networking. These faults will be visible in the robot state, and will show warning indicators on the tablet.
 

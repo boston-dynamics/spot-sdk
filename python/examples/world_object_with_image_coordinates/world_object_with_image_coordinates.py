@@ -9,15 +9,13 @@
 from __future__ import print_function
 import argparse
 import sys
-import time
 
 import bosdyn.client
 import bosdyn.client.util
 from bosdyn.client.world_object import WorldObjectClient
-from bosdyn.client.world_object import make_add_world_object_req, make_change_world_object_req, make_delete_world_object_req
+from bosdyn.client.world_object import make_add_world_object_req
 from bosdyn.api import world_object_pb2 as wo
 from bosdyn.api import geometry_pb2 as geom
-from google.protobuf.timestamp_pb2 import Timestamp
 from bosdyn.util import now_timestamp
 
 

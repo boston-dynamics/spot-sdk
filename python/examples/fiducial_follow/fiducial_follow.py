@@ -430,7 +430,7 @@ class FollowFiducial(object):
         return goto_rt_world, heading
 
     def set_mobility_params(self):
-        """Set robot mobility params to disable obstacle aworldidance."""
+        """Set robot mobility params to disable obstacle avoidance."""
         obstacles = spot_command_pb2.ObstacleParams(disable_vision_body_obstacle_avoidance=True,
                                                     disable_vision_foot_obstacle_avoidance=True,
                                                     disable_vision_foot_constraint_avoidance=True,
@@ -493,7 +493,7 @@ class FollowFiducial(object):
         if self._powered_on:
             self.power_off()
 
-        #Stop the lease keepalive
+        #Stop the lease keep-alive
         if self._lease_keepalive is not None:
             if self._lease_keepalive.is_alive():
                 self._lease_keepalive.shutdown()
@@ -560,7 +560,7 @@ class DisplayImagesAsync(object):
 
 
 class Exit(object):
-    """Handle exitting on SIGTERM."""
+    """Handle exiting on SIGTERM."""
 
     def __init__(self):
         self._kill_now = False
@@ -577,7 +577,7 @@ class Exit(object):
 
     @property
     def kill_now(self):
-        """Return if sigterm recieved and program should end."""
+        """Return if sigterm received and program should end."""
         return self._kill_now
 
 

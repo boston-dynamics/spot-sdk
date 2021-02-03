@@ -26,9 +26,14 @@ message Logpoint {
     // Possible stages of data acquisition.
     enum LogStatus {
         FAILED = 0;
-        QUEUED = 1;
-        COMPLETE = 2;
+        QUEUED = 1; //the logpoint has been queued to be downloaded from the renderer
+        COMPLETE = 2; // the logpoint is written to the disk
         UNKNOWN = -1;
+    }
+    enum QueueStatus{
+        QUEUED_UNKNOWN = 0;
+        QUEUED_RENDER = 1; // The logpoint has been queued to be downloaded from the renderer
+        QUEUED_DISK = 2;   // The logpoint is in general ram, and will be written to the disk when resources allow
     }
     // Unique identifier for a data acquisition event.
     string name = 1;
@@ -36,6 +41,8 @@ message Logpoint {
     RecordType type = 2;
     // Current stage of acquisition.
     LogStatus status = 3;
+    // Only filled out when status == QUEUED
+    QueueStatus queue_status = 8;
     // An arbitrary string to be stored with the log data.
     string tag = 4;
     // Time of acquisition.

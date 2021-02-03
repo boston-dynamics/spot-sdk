@@ -27,7 +27,7 @@ from bosdyn.util import now_timestamp
 
 
 class DataAcquisitionStoreClient(BaseClient):
-    """A client for triggering data acquision store methods."""
+    """A client for triggering data acquisition store methods."""
 
     default_service_name = 'data-acquisition-store'
     service_type = 'bosdyn.api.DataAcquisitionStoreService'
@@ -48,7 +48,7 @@ class DataAcquisitionStoreClient(BaseClient):
 
 
     def list_capture_actions(self, query, **kwargs):
-        """List capture actions that safisfy the query parameters.
+        """List capture actions that satisfy the query parameters.
 
         Args:
              query (bosdyn.api.DataQueryParams) : Query parameters.
@@ -71,7 +71,7 @@ class DataAcquisitionStoreClient(BaseClient):
 
 
     def list_stored_images(self, query, **kwargs):
-        """List images that safisfy the query parameters.
+        """List images that satisfy the query parameters.
 
         Args:
              query (bosdyn.api.DataQueryParams) : Query parameters.
@@ -93,7 +93,7 @@ class DataAcquisitionStoreClient(BaseClient):
 
 
     def list_stored_metadata(self, query, **kwargs):
-        """List metadata that safisfy the query parameters.
+        """List metadata that satisfy the query parameters.
 
         Args:
              query (bosdyn.api.DataQueryParams) : Query parameters.
@@ -115,7 +115,7 @@ class DataAcquisitionStoreClient(BaseClient):
 
 
     def list_stored_data(self, query, **kwargs):
-        """List data that safisfy the query parameters.
+        """List data that satisfy the query parameters.
 
         Args:
              query (bosdyn.api.DataQueryParams) : Query parameters.

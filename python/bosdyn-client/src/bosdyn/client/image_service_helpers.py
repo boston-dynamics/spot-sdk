@@ -139,7 +139,7 @@ class VisualImageSource():
         self.capture_thread.start_capturing()
 
     def initialize_faults(self, fault_client, image_service):
-        """Initailize a fault client and faults for the image source (linked to the image service).
+        """Initialize a fault client and faults for the image source (linked to the image service).
 
         The fault client can be used to throw faults for capture and decode errors. All faults
         associated with the image service name provided will be cleared.
@@ -248,7 +248,7 @@ class VisualImageSource():
         Args:
             image_data(any format): The image data returned by the camera interface's
                                     blocking_capture function.
-            image_proto (image_pb2.Image): The image proto to be muated with the decoded data.
+            image_proto (image_pb2.Image): The image proto to be mutated with the decoded data.
             decode_format (image_pb2.Image.Format): The requested image format (e.g. jpeg, raw)
             quality_percent (int): The decode quality percent.
 
@@ -450,7 +450,7 @@ class CameraBaseImageServicer(image_service_pb2_grpc.ImageServiceServicer):
         self.bosdyn_sdk_robot.time_sync.wait_for_sync()
 
         # A list of all the image sources available by this service. List[VisualImageSource]
-        self.image_sources_mapped = dict()  # Key: source name (string), Value: VisulImageSource
+        self.image_sources_mapped = dict()  # Key: source name (string), Value: VisualImageSource
         for source in image_sources:
             # Set the logger for each visual image source to be the logger of the camera service class.
             source.set_logger(self.logger)

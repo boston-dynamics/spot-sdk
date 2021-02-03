@@ -104,7 +104,7 @@ def data_acquisition(config):
                                 "PartialAcquisitions")
 
 
-    # Request #4 shows how to issue and then cancel different data acquistion requests (one on-robot
+    # Request #4 shows how to issue and then cancel different data acquisition requests (one on-robot
     # data source and one off-robot plugin data source).
     print("\n-----------------------------------")
     acquisition_requests = data_acquisition_pb2.AcquisitionRequestList()

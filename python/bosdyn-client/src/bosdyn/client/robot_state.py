@@ -146,3 +146,18 @@ def _get_robot_hardware_configuration_value(response):
 def _get_robot_link_model_value(response):
     return response.link_model
 
+def has_arm(state_client, timeout=None):
+    """Check if the robot has an arm attached.
+
+    Args:
+        state_client: RobotStateClient to query for robot state.
+        timeout: Number of seconds to wait for RPC response.
+
+    Returns:
+        bool: Returns True if robot has an arm, False otherwise.
+
+    Raises:
+        RpcError: A problem occurred trying to communicate with the robot.
+    """
+    state = state_client.get_robot_state(timeout=timeout)
+    return state.HasField("manipulator_state")

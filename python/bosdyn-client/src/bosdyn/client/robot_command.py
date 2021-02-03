@@ -8,16 +8,19 @@
 import collections
 import time
 
+from deprecated.sphinx import deprecated
 from google.protobuf import any_pb2
 from bosdyn import geometry
 
 from bosdyn.api import geometry_pb2
 
+from bosdyn.api import arm_command_pb2
 from bosdyn.api import robot_command_pb2
 from bosdyn.api import full_body_command_pb2
 from bosdyn.api import mobility_command_pb2
 from bosdyn.api import synchronized_command_pb2
 from bosdyn.api import basic_command_pb2
+from bosdyn.api import gripper_command_pb2
 from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
 from bosdyn.api import robot_command_service_pb2_grpc
 from bosdyn.api import trajectory_pb2
@@ -31,6 +34,10 @@ from .exceptions import Error as BaseError
 from .frame_helpers import BODY_FRAME_NAME, ODOM_FRAME_NAME, get_se2_a_tform_b
 from .math_helpers import SE2Pose
 from .lease import add_lease_wallet_processors
+
+# The angles (in radians) that represent the claw gripper open and closed positions.
+_CLAW_GRIPPER_OPEN_ANGLE = -1.5708
+_CLAW_GRIPPER_CLOSED_ANGLE = 0
 
 
 class RobotCommandResponseError(ResponseError):
@@ -126,9 +133,19 @@ END_TIME_EDIT_TREE = {
                 },
                 'se2_trajectory_request': {
                     'end_time': None
+                },
+                'stance_request': {
+                    'end_time': None
                 }
             }
         },
+        'arm_command': {
+            '@command': {  # 'command' is a oneof submessage
+                'arm_velocity_command': {
+                    'end_time': None
+                }
+            }
+        }
     },
     'mobility_command': {
         '@command': {  # 'command' is a oneof submessage
@@ -137,6 +154,9 @@ END_TIME_EDIT_TREE = {
             },
             'se2_trajectory_request': {
                 'end_time': None
+            },
+            'stance_request': {
+                'end_time': None
             }
         }
     }
@@ -144,12 +164,48 @@ END_TIME_EDIT_TREE = {
 
 # Tree of proto fields leading to Timestamp protos which need to be converted from
 #  client clock to robot clock values using timesync information from the robot.
+# Note, the "@" sign indicates a oneof field. The "None" indicates the field which
+# contains the timestamp to be updated.
 EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME = {
     'synchronized_command': {
         'mobility_command': {
             '@command': {
                 'se2_trajectory_request': {
                     'trajectory': {
+                        'reference_time': None
+                    }
+                }
+            }
+        },
+        'gripper_command':{
+            '@command': {
+                'claw_gripper_command': {
+                    'trajectory': {
+                        'reference_time': None
+                    }
+                }
+            }
+        },
+        'arm_command': {
+            '@command': {
+                'arm_cartesian_command': {
+                    'pose_trajectory_in_task': {
+                        'reference_time': None
+                    },
+                    'wrench_trajectory_in_task': {
+                        'reference_time': None
+                    }
+                },
+                'arm_joint_move_command': {
+                    'trajectory': {
+                        'reference_time': None
+                    }
+                },
+                'arm_gaze_command': {
+                    'target_trajectory_in_frame1': {
+                        'reference_time': None
+                    },
+                    'tool_trajectory_in_frame2': {
                         'reference_time': None
                     }
                 }
@@ -487,7 +543,9 @@ def _robot_command_feedback_error(response):
     code = getattr(response, 'STATUS_UNKNOWN')
     if ((getattr(response, field) != code) or
         (getattr(response.feedback.full_body_feedback, field)) or
-        (getattr(response.feedback.synchronized_feedback.mobility_command_feedback, field))):
+        (getattr(response.feedback.synchronized_feedback.mobility_command_feedback, field)) or
+        (getattr(response.feedback.synchronized_feedback.arm_command_feedback, field)) or
+        (getattr(response.feedback.synchronized_feedback.gripper_command_feedback, field))):
         return None
     else:
         return UnsetStatusError(response)
@@ -622,8 +680,6 @@ class RobotCommandBuilder(object):
     def trajectory_command(goal_x, goal_y, goal_heading, frame_name, params=None, body_height=0.0,
                            locomotion_hint=spot_command_pb2.HINT_AUTO):
         """
-        DEPRECATED - do not use. Instead, use synchro_se2_trajectory_point_command.
-
         Command robot to move to pose along a 2D plane. Pose can specified in the world
         (kinematic odometry) frame or the robot body frame. The arguments body_height and
         locomotion_hint are ignored if params argument is passed.
@@ -660,11 +716,14 @@ class RobotCommandBuilder(object):
         return command
 
     @staticmethod
+    @deprecated(
+        reason='Mobility commands are now sent as a part of synchronized commands. '\
+               'Use synchro_velocity_command instead.',
+        version='2.1.0',
+        action="always")
     def velocity_command(v_x, v_y, v_rot, params=None, body_height=0.0,
                          locomotion_hint=spot_command_pb2.HINT_AUTO, frame_name=BODY_FRAME_NAME):
         """
-        DEPRECATED - do not use. Instead, use synchro_velocity_command.
-
         Command robot to move along 2D plane. Velocity should be specified in the robot body
         frame. Other frames are currently not supported. The arguments body_height and
         locomotion_hint are ignored if params argument is passed.
@@ -698,10 +757,13 @@ class RobotCommandBuilder(object):
         return command
 
     @staticmethod
+    @deprecated(
+        reason='Mobility commands are now sent as a part of synchronized commands. '\
+               'Use synchro_stand_command instead.',
+        version='2.1.0',
+        action="always")
     def stand_command(params=None, body_height=0.0, footprint_R_body=geometry.EulerZXY()):
         """
-        DEPRECATED - do not use. Instead, use synchro_stand_command.
-
         Command robot to stand. If the robot is sitting, it will stand up. If the robot is
         moving, it will come to a stop. Params can specify a trajectory for the body to follow
         while standing. In the simplest case, this can be a specific position+orientation which the
@@ -728,10 +790,13 @@ class RobotCommandBuilder(object):
         return command
 
     @staticmethod
+    @deprecated(
+        reason='Mobility commands are now sent as a part of synchronized commands. '\
+               'Use synchro_sit_command instead.',
+        version='2.1.0',
+        action="always")
     def sit_command(params=None):
         """
-        DEPRECATED - do not use. Instead, use synchro_sit_command.
-
         Command the robot to sit.
 
         Args:
@@ -756,7 +821,8 @@ class RobotCommandBuilder(object):
     @staticmethod
     def synchro_se2_trajectory_point_command(goal_x, goal_y, goal_heading, frame_name, params=None,
                                              body_height=0.0,
-                                             locomotion_hint=spot_command_pb2.HINT_AUTO):
+                                             locomotion_hint=spot_command_pb2.HINT_AUTO,
+                                             build_on_command=None):
         """
         Command robot to move to pose along a 2D plane. Pose can specified in the world
         (kinematic odometry) frame or the robot body frame. The arguments body_height and
@@ -774,6 +840,9 @@ class RobotCommandBuilder(object):
                 this will be constructed using other args.
             body_height: Body height in meters.
             locomotion_hint: Locomotion hint to use for the trajectory command.
+            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An
+                arm_command and gripper_command from this incoming RobotCommand will be added
+                to the returned RobotCommand.
 
         Returns:
             RobotCommand, which can be issued to the robot command service.
@@ -781,11 +850,13 @@ class RobotCommandBuilder(object):
         position = geometry_pb2.Vec2(x=goal_x, y=goal_y)
         pose = geometry_pb2.SE2Pose(position=position, angle=goal_heading)
         return RobotCommandBuilder.synchro_se2_trajectory_command(pose, frame_name, params,
-                                                                  body_height, locomotion_hint)
+                                                                  body_height, locomotion_hint,
+                                                                  build_on_command)
 
     @staticmethod
     def synchro_se2_trajectory_command(goal_se2, frame_name, params=None, body_height=0.0,
-                                       locomotion_hint=spot_command_pb2.HINT_AUTO):
+                                       locomotion_hint=spot_command_pb2.HINT_AUTO,
+                                       build_on_command=None):
         """Command robot to move to pose along a 2D plane. Pose can specified in the world
         (kinematic odometry or vision world) frames. The arguments body_height and
         locomotion_hint are ignored if params argument is passed.
@@ -800,6 +871,9 @@ class RobotCommandBuilder(object):
                 this will be constructed using other args.
             body_height: Body height in meters.
             locomotion_hint: Locomotion hint to use for the trajectory command.
+            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An
+                arm_command and gripper_command from this incoming RobotCommand will be added
+                to the returned RobotCommand.
 
         Returns:
             RobotCommand, which can be issued to the robot command service.
@@ -817,7 +891,8 @@ class RobotCommandBuilder(object):
         synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
             mobility_command=mobility_command)
         robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
-
+        if build_on_command:
+            return RobotCommandBuilder.build_synchro_command(build_on_command, robot_command)
         return robot_command
 
     @staticmethod
@@ -860,7 +935,7 @@ class RobotCommandBuilder(object):
     @staticmethod
     def synchro_velocity_command(v_x, v_y, v_rot, params=None, body_height=0.0,
                                  locomotion_hint=spot_command_pb2.HINT_AUTO,
-                                 frame_name=BODY_FRAME_NAME):
+                                 frame_name=BODY_FRAME_NAME, build_on_command=None):
         """Command robot to move along 2D plane. Velocity should be specified in the robot body
         frame. Other frames are currently not supported. The arguments body_height and
         locomotion_hint are ignored if params argument is passed.
@@ -877,6 +952,9 @@ class RobotCommandBuilder(object):
             body_height: Body height in meters.
             locomotion_hint: Locomotion hint to use for the velocity command.
             frame_name: Name of the frame to use.
+            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An
+                arm_command and gripper_command from this incoming RobotCommand will be added
+                to the returned RobotCommand.
 
         Returns:
             RobotCommand, which can be issued to the robot command service.
@@ -896,10 +974,13 @@ class RobotCommandBuilder(object):
         synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
             mobility_command=mobility_command)
         robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
+        if build_on_command:
+            return RobotCommandBuilder.build_synchro_command(build_on_command, robot_command)
         return robot_command
 
     @staticmethod
-    def synchro_stand_command(params=None, body_height=0.0, footprint_R_body=geometry.EulerZXY()):
+    def synchro_stand_command(params=None, body_height=0.0, footprint_R_body=geometry.EulerZXY(),
+                              build_on_command=None):
         """Command robot to stand. If the robot is sitting, it will stand up. If the robot is
         moving, it will come to a stop. Params can specify a trajectory for the body to follow
         while standing. In the simplest case, this can be a specific position+orientation which the
@@ -912,6 +993,9 @@ class RobotCommandBuilder(object):
             body_height(float): Height, meters, to stand at relative to a nominal stand height.
             footprint_R_body(EulerZXY): The orientation of the body frame with respect to the
                 footprint frame (gravity aligned framed with yaw computed from the stance feet)
+            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An
+                arm_command and gripper_command from this incoming RobotCommand will be added
+                to the returned RobotCommand.
 
         Returns:
             RobotCommand, which can be issued to the robot command service.
@@ -925,14 +1009,19 @@ class RobotCommandBuilder(object):
         synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
             mobility_command=mobility_command)
         robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
+        if build_on_command:
+            return RobotCommandBuilder.build_synchro_command(build_on_command, robot_command)
         return robot_command
 
     @staticmethod
-    def synchro_sit_command(params=None):
+    def synchro_sit_command(params=None, build_on_command=None):
         """Command the robot to sit.
 
         Args:
             params(spot.MobilityParams): Spot specific parameters for mobility commands.
+            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An
+                arm_command and gripper_command from this incoming RobotCommand will be added
+                to the returned RobotCommand.
 
         Returns:
             RobotCommand, which can be issued to the robot command service.
@@ -945,12 +1034,14 @@ class RobotCommandBuilder(object):
         synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
             mobility_command=mobility_command)
         robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
+        if build_on_command:
+            return RobotCommandBuilder.build_synchro_command(build_on_command, robot_command)
         return robot_command
 
     @staticmethod
     def stance_command(se2_frame_name, pos_fl_rt_frame, pos_fr_rt_frame, pos_hl_rt_frame,
                        pos_hr_rt_frame, accuracy=0.05, params=None, body_height=0.0,
-                       footprint_R_body=geometry.EulerZXY()):
+                       footprint_R_body=geometry.EulerZXY(), build_on_command=None):
         """Command robot to stance with the feet at specified positions.
         This will cause the robot to reposition it's feet. This is not intended to be a mobility
         command and will reject commands where the foot position is out of reach without locomoting.
@@ -974,6 +1065,9 @@ class RobotCommandBuilder(object):
             body_height(float): Height, meters, to stand at relative to a nominal stand height.
             footprint_R_body(EulerZXY): The orientation of the body frame with respect to the
                 footprint frame (gravity aligned framed with yaw computed from the stance feet)
+            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An
+                arm_command and gripper_command from this incoming RobotCommand will be added
+                to the returned RobotCommand.
         Returns:
             RobotCommand, which can be issued to the robot command service.
         """
@@ -995,7 +1089,182 @@ class RobotCommandBuilder(object):
         synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
             mobility_command=mobility_command)
         robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
+        if build_on_command:
+            return RobotCommandBuilder.build_synchro_command(build_on_command, robot_command)
         return robot_command
+
+    @staticmethod
+    def follow_arm_command():
+        """Command robot's body to follow the arm around.
+
+        Args:
+            params(spot.MobilityParams): Spot specific parameters for mobility commands.
+        Returns:
+            RobotCommand, which can be issued to the robot command service.
+        """
+        mobility_command = mobility_command_pb2.MobilityCommand.Request(
+            follow_arm_request=basic_command_pb2.FollowArmCommand.Request())
+        synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
+            mobility_command=mobility_command)
+        command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
+        return command
+
+    @staticmethod
+    def arm_stow_command(build_on_command=None):
+        return RobotCommandBuilder._arm_named_command(
+            arm_command_pb2.NamedArmPositionsCommand.POSITIONS_STOW, build_on_command)
+
+    @staticmethod
+    def arm_ready_command(build_on_command=None):
+        return RobotCommandBuilder._arm_named_command(
+            arm_command_pb2.NamedArmPositionsCommand.POSITIONS_READY, build_on_command)
+
+    @staticmethod
+    def arm_carry_command(build_on_command=None):
+        return RobotCommandBuilder._arm_named_command(
+            arm_command_pb2.NamedArmPositionsCommand.POSITIONS_CARRY, build_on_command)
+
+    @staticmethod
+    def _arm_named_command(position, build_on_command=None):
+        stow_arm_position_command = arm_command_pb2.NamedArmPositionsCommand.Request(
+            position=position)
+        arm_command = arm_command_pb2.ArmCommand.Request(
+            named_arm_position_command=stow_arm_position_command)
+        synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
+            arm_command=arm_command)
+        robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
+        if build_on_command:
+            return RobotCommandBuilder.build_synchro_command(build_on_command, robot_command)
+        return robot_command
+
+    @staticmethod
+    def arm_gaze_command(x, y, z, frame_name, build_on_command=None):
+        """ Builds a Vec3Trajectory to tell the robot arm to gaze at a point in 3D space.
+        Returns:
+            RobotCommand, which can be issued to the robot command service
+        """
+        pos = geometry_pb2.Vec3(x=x, y=y, z=z)
+        point1 = trajectory_pb2.Vec3TrajectoryPoint(point=pos)
+
+        traj = trajectory_pb2.Vec3Trajectory(points=[point1])
+
+        # Build the proto
+        gaze_cmd = arm_command_pb2.GazeCommand.Request(target_trajectory_in_frame1=traj,
+                                                       frame1_name=frame_name)
+        arm_command = arm_command_pb2.ArmCommand.Request(arm_gaze_command=gaze_cmd)
+        synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
+            arm_command=arm_command)
+        robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
+        if build_on_command:
+            return RobotCommandBuilder.build_synchro_command(build_on_command, robot_command)
+        return robot_command
+
+    @staticmethod
+    def arm_pose_command(x, y, z, qw, qx, qy, qz, frame_name, seconds=5, build_on_command=None):
+        """ Builds an SE3Trajectory Point to tell robot arm to move to a pose in space
+        relative to the frame specified. Wraps it in SynchronizedCommand.
+
+        Returns:
+            RobotCommand, which can be issued to the robot command service."""
+        position = geometry_pb2.Vec3(x=x, y=y, z=z)
+        rotation = geometry_pb2.Quaternion(w=qw, x=qx, y=qy, z=qz)
+        hand_pose = geometry_pb2.SE3Pose(position=position, rotation=rotation)
+
+        duration = seconds_to_duration(seconds)
+        hand_pose_traj_point = trajectory_pb2.SE3TrajectoryPoint(pose=hand_pose,
+                                                                 time_since_reference=duration)
+        hand_trajectory = trajectory_pb2.SE3Trajectory(points=[hand_pose_traj_point])
+
+        arm_cartesian_command = arm_command_pb2.ArmCartesianCommand.Request(
+            root_frame_name=frame_name, pose_trajectory_in_task=hand_trajectory)
+        arm_command = arm_command_pb2.ArmCommand.Request(
+            arm_cartesian_command=arm_cartesian_command)
+        synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
+            arm_command=arm_command)
+        robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
+        if build_on_command:
+            return RobotCommandBuilder.build_synchro_command(build_on_command, robot_command)
+        return robot_command
+
+    @staticmethod
+    def arm_wrench_command(force_x, force_y, force_z, torque_x, torque_y, torque_z, frame_name, seconds=5, build_on_command=None):
+        """ Builds a command to tell robot arm to exhibit a wrench.
+            Wraps it in a SynchronizedCommand.
+
+        Returns:
+            RobotCommand, which can be issued to the robot command service."""
+        force = geometry_pb2.Vec3(x=force_x, y=force_y, z=force_z)
+        torque = geometry_pb2.Vec3(x=torque_x, y=torque_y, z=torque_z)
+
+        wrench = geometry_pb2.Wrench(force=force, torque=torque)
+        duration = seconds_to_duration(seconds)
+        traj_point = trajectory_pb2.WrenchTrajectoryPoint(wrench=wrench,
+                                                          time_since_reference=duration)
+        trajectory = trajectory_pb2.WrenchTrajectory(points=[traj_point])
+
+
+        arm_cartesian_command = arm_command_pb2.ArmCartesianCommand.Request(
+            root_frame_name=frame_name, wrench_trajectory_in_task=trajectory,
+            x_axis=arm_command_pb2.ArmCartesianCommand.Request.AXIS_MODE_FORCE,
+            y_axis=arm_command_pb2.ArmCartesianCommand.Request.AXIS_MODE_FORCE,
+            z_axis=arm_command_pb2.ArmCartesianCommand.Request.AXIS_MODE_FORCE,
+            rx_axis=arm_command_pb2.ArmCartesianCommand.Request.AXIS_MODE_FORCE,
+            ry_axis=arm_command_pb2.ArmCartesianCommand.Request.AXIS_MODE_FORCE,
+            rz_axis=arm_command_pb2.ArmCartesianCommand.Request.AXIS_MODE_FORCE
+            )
+        arm_command = arm_command_pb2.ArmCommand.Request(
+            arm_cartesian_command=arm_cartesian_command)
+        synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
+            arm_command=arm_command)
+        robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
+        if build_on_command:
+            return RobotCommandBuilder.build_synchro_command(build_on_command, robot_command)
+        return robot_command
+
+    @staticmethod
+    def claw_gripper_open_command(build_on_command=None):
+        command = robot_command_pb2.RobotCommand()
+        command.synchronized_command.gripper_command.claw_gripper_command.trajectory.points.add(
+        ).point = _CLAW_GRIPPER_OPEN_ANGLE
+        if build_on_command:
+            return RobotCommandBuilder.build_synchro_command(build_on_command, command)
+        return command
+
+    @staticmethod
+    def claw_gripper_close_command(build_on_command=None):
+        command = robot_command_pb2.RobotCommand()
+        command.synchronized_command.gripper_command.claw_gripper_command.trajectory.points.add(
+        ).point = _CLAW_GRIPPER_CLOSED_ANGLE
+        if build_on_command:
+            return RobotCommandBuilder.build_synchro_command(build_on_command, command)
+        return command
+
+    @staticmethod
+    def claw_gripper_open_fraction_command(open_fraction, build_on_command=None):
+        gripper_q = 0
+        if open_fraction <= 0:
+            gripper_q = _CLAW_GRIPPER_CLOSED_ANGLE
+        elif open_fraction >= 1:
+            gripper_q = _CLAW_GRIPPER_OPEN_ANGLE
+        else:
+            gripper_q = ((_CLAW_GRIPPER_OPEN_ANGLE - _CLAW_GRIPPER_CLOSED_ANGLE) *
+                         open_fraction) + _CLAW_GRIPPER_CLOSED_ANGLE
+
+        command = robot_command_pb2.RobotCommand()
+        command.synchronized_command.gripper_command.claw_gripper_command.trajectory.points.add(
+        ).point = gripper_q
+        if build_on_command:
+            return RobotCommandBuilder.build_synchro_command(build_on_command, command)
+        return command
+
+    @staticmethod
+    def claw_gripper_open_angle_command(gripper_q, build_on_command=None):
+        command = robot_command_pb2.RobotCommand()
+        command.synchronized_command.gripper_command.claw_gripper_command.trajectory.points.add(
+        ).point = gripper_q
+        if build_on_command:
+            return RobotCommandBuilder.build_synchro_command(build_on_command, command)
+        return command
 
 
     ########################
@@ -1091,6 +1360,8 @@ class RobotCommandBuilder(object):
         Args: RobotCommand containing only either mobility commands or synchro commands
         Returns: RobotCommand containing a synchro command """
         mobility_request = None
+        arm_request = None
+        gripper_request = None
 
         for command in args:
             if command.HasField('full_body_command'):
@@ -1101,12 +1372,17 @@ class RobotCommandBuilder(object):
             elif command.HasField('synchronized_command'):
                 if command.synchronized_command.HasField('mobility_command'):
                     mobility_request = command.synchronized_command.mobility_command
+                if command.synchronized_command.HasField('arm_command'):
+                    arm_request = command.synchronized_command.arm_command
+                if command.synchronized_command.HasField('gripper_command'):
+                    gripper_request = command.synchronized_command.gripper_command
             else:
                 print('skipping empty robot command')
 
-        if (mobility_request):
+        if (mobility_request or arm_request or gripper_request):
             synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
-                mobility_command=mobility_request)
+                mobility_command=mobility_request, arm_command=arm_request,
+                gripper_command=gripper_request)
             robot_command = robot_command_pb2.RobotCommand(
                 synchronized_command=synchronized_command)
         else:
@@ -1163,3 +1439,33 @@ def blocking_stand(command_client, timeout_sec=10, update_frequency=1.0):
 
     raise CommandTimedOutError(
         "Took longer than {:.1f} seconds to assure the robot stood.".format(now - start_time))
+
+def block_until_arm_arrives(command_client, cmd_id, timeout_sec=None):
+    """Helper that blocks until the arm arrives at the end of its current trajectory.
+
+       Args:
+        command_client: robot command client, used to request feedback
+        cmd_id: command ID returned by the robot when the arm movement command was sent.
+        timeout_sec: optional number of seconds after which we'll return no matter what
+                     the robot's state is.
+
+       Return values:
+        True if successfully got to the end of the trajectory, False if the arm stalled or
+        the move was canceled (the arm failed to reach the goal).
+    """
+    if timeout_sec is not None:
+        start_time = time.time()
+        end_time = start_time + timeout_sec
+        now = time.time()
+
+    while timeout_sec is None or now < end_time:
+        feedback_resp = command_client.robot_command_feedback(cmd_id)
+
+        if feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_cartesian_feedback.status == arm_command_pb2.ArmCartesianCommand.Feedback.STATUS_TRAJECTORY_COMPLETE:
+            return True
+        elif feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_cartesian_feedback.status == arm_command_pb2.ArmCartesianCommand.Feedback.STATUS_TRAJECTORY_STALLED or feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_cartesian_feedback.status == arm_command_pb2.ArmCartesianCommand.Feedback.STATUS_TRAJECTORY_CANCELLED:
+            return False
+
+        time.sleep(0.1)
+        now = time.time()
+    return False

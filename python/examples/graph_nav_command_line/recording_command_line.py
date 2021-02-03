@@ -16,7 +16,7 @@ from bosdyn.api.graph_nav import map_pb2, recording_pb2
 from bosdyn.client import create_standard_sdk, ResponseError, RpcError
 import bosdyn.client.channel
 from bosdyn.client.graph_nav import GraphNavClient
-from bosdyn.client.lease import LeaseClient
+from bosdyn.client.lease import LeaseClient, LeaseKeepAlive, LeaseWallet
 from bosdyn.client.math_helpers import SE3Pose, Quat
 from bosdyn.client.recording import GraphNavRecordingServiceClient
 import bosdyn.client.util
@@ -55,13 +55,15 @@ class RecordingInterface(object):
 
         # Add recording service properties to the command line dictionary.
         self._command_dictionary = {
+            '0': self._clear_map,
             '1': self._start_recording,
             '2': self._stop_recording,
             '3': self._get_recording_status,
             '4': self._create_default_waypoint,
             '5': self._download_full_graph,
             '6': self._list_graph_waypoint_and_edge_ids,
-            '7': self._create_new_edge
+            '7': self._create_new_edge,
+            '8': self._create_loop
         }
 
     def should_we_start_recording(self):
@@ -81,6 +83,12 @@ class RecordingInterface(object):
         # If there is no graph or there exists a graph that we are localized to, then it is fine to
         # start recording, so we return True.
         return True
+
+    def _clear_map(self, *args):
+        """Clear the state of the map on the robot, removing all waypoints and edges."""
+        self._lease_client = self._robot.ensure_client(LeaseClient.default_service_name)
+        self._lease = self._lease_client.acquire()
+        return self._graph_nav_client.clear_graph(lease=self._lease.lease_proto)
 
     def _start_recording(self, *args):
         """Start recording a map."""
@@ -189,7 +197,7 @@ class RecordingInterface(object):
         self._current_graph = graph
 
         localization_id = self._graph_nav_client.get_localization_state().localization.waypoint_id
-        
+
         # Update and print waypoints and edges
         self._current_annotation_name_to_wp_id, self._current_edges = graph_nav_util.update_waypoints_and_edges(
             graph, localization_id)
@@ -197,10 +205,12 @@ class RecordingInterface(object):
     def _create_new_edge(self, *args):
         """Create new edge between existing waypoints in map."""
 
-        print('args = {} : len = {}'.format(args[0], len(args[0])))
         if len(args[0]) != 2:
             print("ERROR: Specify the two waypoints to connect (short code or annotation).")
             return
+
+        if self._current_graph is None:
+            self._current_graph = self._graph_nav_client.download_graph()
 
         from_id = graph_nav_util.find_unique_waypoint_id(args[0][0], self._current_graph,
                                                          self._current_annotation_name_to_wp_id)
@@ -226,8 +236,27 @@ class RecordingInterface(object):
         new_edge.id.to_waypoint = to_id
         new_edge.from_tform_to.CopyFrom(edge_transform)
 
+        print("edge transform =", new_edge.from_tform_to)
+
         # Send request to add edge to map
         self._recording_client.create_edge(edge=new_edge)
+
+    def _create_loop(self, *args):
+        """Create edge from last waypoint to first waypoint."""
+
+        if self._current_graph is None:
+            self._current_graph = self._graph_nav_client.download_graph()
+
+        if len(self._current_graph.waypoints) < 2:
+            self._add_message(
+                "Graph contains {} waypoints -- at least two are needed to create loop.".format(
+                    len(self._current_graph.waypoints)))
+            return False
+
+        sorted_waypoints = graph_nav_util.sort_waypoints_chrono(self._current_graph)
+        edge_waypoints = [sorted_waypoints[-1][0], sorted_waypoints[0][0]]
+
+        self._create_new_edge(edge_waypoints)
 
     def _get_waypoint(self, id):
         '''Get waypoint from graph (return None if waypoint not found)'''
@@ -243,7 +272,7 @@ class RecordingInterface(object):
         return None
 
     def _get_transform(self, from_wp, to_wp):
-        '''Get transfrom from from-waypoint to to-waypoint.'''
+        '''Get transform from from-waypoint to to-waypoint.'''
 
         from_se3 = from_wp.waypoint_tform_ko
         from_tf = SE3Pose(from_se3.position.x, from_se3.position.y, from_se3.position.z,
@@ -262,6 +291,7 @@ class RecordingInterface(object):
         while True:
             print("""
             Options:
+            (0) Clear map.
             (1) Start recording a map.
             (2) Stop recording a map.
             (3) Get the recording service's status.
@@ -269,6 +299,7 @@ class RecordingInterface(object):
             (5) Download the map after recording.
             (6) List the waypoint ids and edge ids of the map on the robot.
             (7) Create new edge between existing waypoints using odometry.
+            (8) Create new edge from last waypoint to first waypoint using odometry.
             (q) Exit.
             """)
             try:

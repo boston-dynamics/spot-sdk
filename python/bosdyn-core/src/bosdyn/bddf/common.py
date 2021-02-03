@@ -88,7 +88,7 @@ class ParseError(DataError):
 
 
 class SeriesIdentifier:
-    """Base class for series identifer names."""
+    """Base class for series identifier names."""
 
     SERIES_TYPE = ''
     KEYS = ()

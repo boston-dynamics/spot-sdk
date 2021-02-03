@@ -31,8 +31,8 @@ def issue_acquire_data_request(data_acq_client, acquisition_requests, group_name
     Args:
         data_acq_client: DataAcquisition client for send the acquisition requests.
         acquisition_requests: Acquisition requests to include in request message.
-        group_name: Group name for the acquitions.
-        action_name: Action name for the acquitions.
+        group_name: Group name for the acquisitions.
+        action_name: Action name for the acquisitions.
         metadata: Metadata to include in the request message.
 
     Returns:
@@ -43,7 +43,7 @@ def issue_acquire_data_request(data_acq_client, acquisition_requests, group_name
     action_id = data_acquisition_pb2.CaptureActionId(action_name=action_name,
                                                      group_name=group_name)
 
-    # Send an AquireData request
+    # Send an AcquireData request
     request_id = None
     try:
         request_id = data_acq_client.acquire_data(acquisition_requests=acquisition_requests,
@@ -63,8 +63,8 @@ def acquire_and_process_request(data_acquisition_client, acquisition_requests, g
         data_acquisition_client (DataAcquisitionClient): The client for send the acquisition requests.
         acquisition_requests(data_acquisition_pb2.AcquisitionRequestList): Acquisition requests
             to include in request message.
-        group_name(string): Group name for the acquitions.
-        action_name(string): Action name for the acquitions.
+        group_name(string): Group name for the acquisitions.
+        action_name(string): Action name for the acquisitions.
         metadata(data_acquisition_pb2.Metadata): Metadata to include in the request message.
         block_until_complete(Boolean): If true, don't return until the GetStatus completes.
 
@@ -100,7 +100,7 @@ def acquire_and_process_request(data_acquisition_client, acquisition_requests, g
             print("Unrecoverable request timeout: %s" % get_status_response)
             return False
         if get_status_response.status == data_acquisition_pb2.GetStatusResponse.STATUS_DATA_ERROR:
-            print("Data error was recieved: %s" % get_status_response)
+            print("Data error was received: %s" % get_status_response)
             return False
         if get_status_response.status == data_acquisition_pb2.GetStatusResponse.STATUS_REQUEST_ID_DOES_NOT_EXIST:
             print("The acquisition request id %s is unknown: %s" % (request_id, get_status_response))
@@ -165,7 +165,7 @@ def make_time_query_params(start_time_secs, end_time_secs, robot):
     Args:
         start_time_secs(float): The start time for the download data range.
         end_time_secs(float): The end time for the download range.
-        robot (Robot): The robot object, used to acquire timesync and conver the
+        robot (Robot): The robot object, used to acquire timesync and convert the
                        times to robot time.
     Returns:
         The query params (data_acquisition_store_pb2.DataQueryParams) for the time-range download.
@@ -267,7 +267,7 @@ def download_data_REST(query_params, hostname, token, destination_folder='.',
             print("Download request HTTPS status code: %s" % resp.status_code)
             # This is the default file name used to download data, updated from response.
             if resp.status_code == 204:
-                print("No content avaialble for the specified download time range (in seconds): "
+                print("No content available for the specified download time range (in seconds): "
                 "[%d, %d]"% (query_params.time_range.from_timestamp.ToNanoseconds()/1.0e9,
                 query_params.time_range.to_timestamp.ToNanoseconds()/1.0e9))
                 return False

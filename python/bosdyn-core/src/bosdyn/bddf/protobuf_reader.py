@@ -42,7 +42,7 @@ class ProtobufReader:
         """Return the series index (int) by which SeriesDescriptors and messages can be accessed.
 
         Args:
-         channel_name: name of the channel of messsages.
+         channel_name: name of the channel of messages.
         """
         return self._channel_name_to_series_index[channel_name]
 

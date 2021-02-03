@@ -186,11 +186,10 @@ def test_keep_alive(default_service_entry, default_service_endpoint):
     keepalive = DirectoryRegistrationKeepAlive(client)
     name = default_service_entry.name
     assert name not in service.service_entries
-    keepalive.start(name, default_service_entry.type, default_service_entry.authority,
-                    default_service_endpoint.host_ip, default_service_endpoint.port)
-    assert name in service.service_entries
+    with keepalive.start(name, default_service_entry.type, default_service_entry.authority,
+                    default_service_endpoint.host_ip, default_service_endpoint.port):
+        assert name in service.service_entries
 
-    with keepalive:
         # Just have some statement inside the "with" context.
         assert service.service_entries[name] == default_service_entry
 
@@ -212,10 +211,10 @@ def test_keep_alive_update(default_service_entry, default_service_endpoint):
                     default_service_endpoint.port)
 
     new_authority = default_service_entry.authority + 'woo-hoo'
-    keepalive.start(name, default_service_entry.type, new_authority,
-                    default_service_endpoint.host_ip, default_service_endpoint.port)
-    assert service.service_entries[name].authority == new_authority
+    with keepalive.start(name, default_service_entry.type, new_authority,
+                    default_service_endpoint.host_ip, default_service_endpoint.port):
+        assert service.service_entries[name].authority == new_authority
 
-    # Make sure the thread is still alive after a few loops.
-    time.sleep(interval_seconds * 3)
-    assert keepalive.is_alive()
+        # Make sure the thread is still alive after a few loops.
+        time.sleep(interval_seconds * 3)
+        assert keepalive.is_alive()

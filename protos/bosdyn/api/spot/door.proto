@@ -1,0 +1,151 @@
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.spot;
+option java_outer_classname = "DoorCommandProto";
+
+import "bosdyn/api/basic_command.proto";
+import "bosdyn/api/geometry.proto";
+import "bosdyn/api/header.proto";
+import "bosdyn/api/lease.proto";
+
+// A door command for the robot to execute plus a lease.
+message OpenDoorCommandRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The Lease to show ownership of the robot.
+    Lease lease = 2;
+
+    // The command to execute.
+    DoorCommand.Request door_command = 4;
+}
+
+// Response to the door command request.
+message OpenDoorCommandResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Details about how the lease was used.
+    LeaseUseResult lease_use_result = 2;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;             // An unknown / unexpected error occurred.
+        STATUS_OK = 1;                  // Request was accepted.
+        STATUS_ROBOT_COMMAND_ERROR = 2; // Error sending command to RobotCommandService.
+    }
+    // Return status for a request.
+    Status status = 3;
+
+    // Human-readable error description.  Not for programmatic analysis.
+    string message = 4;
+
+    // Unique identifier for the command, If empty, command was not accepted.
+    uint32 door_command_id = 5;
+}
+
+// A request for feedback of a specific door command.
+message OpenDoorFeedbackRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Unique identifier for the command, provided by OpenDoorResponse.
+    uint32 door_command_id = 2;
+}
+
+// Feedback for a specific door command. This RPC reports the robot's progress opening a door.
+message OpenDoorFeedbackResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Generic robot command feedback.
+    RobotCommandFeedbackStatus.Status status = 100;
+
+    // Specific door full body command feedback.
+    DoorCommand.Feedback feedback = 2;
+}
+
+//  Door Command specific request and Feedback.
+message DoorCommand {
+
+    // Specify if the hinge is on the left or right side of the door, when looking at the door,
+    // relative to the door handle.
+    enum HingeSide {
+        HINGE_SIDE_UNKNOWN = 0;
+        HINGE_SIDE_LEFT = 1;
+        HINGE_SIDE_RIGHT = 2;
+    }
+
+    // Specify if the door is push or pull, when looking at the door.
+    enum SwingDirection {
+        SWING_DIRECTION_UNKNOWN = 0;
+        SWING_DIRECTION_INSWING = 1;
+        SWING_DIRECTION_OUTSWING = 2;
+    }
+
+    // Specify type of door handle.
+    enum HandleType {
+        HANDLE_TYPE_UNKNOWN = 0;
+        HANDLE_TYPE_LEVER = 1;
+        HANDLE_TYPE_KNOB = 2;
+        HANDLE_TYPE_FIXED_GRASP = 3;
+    }
+
+    // The robot searches along a ray for the door handle and automatically grasp it before
+    // executing door opening.
+    message AutoGraspCommand {
+        // The name of the frame that the following fields are expressed in.
+        string frame_name = 1;
+
+        // The start of the ray the robot searches along for the door handle.
+        Vec3 search_ray_start_in_frame = 2;
+
+        // The end of the ray the robot searches along for the door handle.
+        Vec3 search_ray_end_in_frame = 3;
+
+        // The side of the hinge with respect to the robot when facing the door.
+        HingeSide hinge_side = 4;
+
+        // The direction the door moves with respect to the robot.
+        SwingDirection swing_direction = 5;
+    }
+
+    // The robot is already grasping the door handle and will continue opening the door based on
+    // user specified params.
+    message WarmstartCommand {
+        // The side of the hinge with respect to the robot when facing the door.
+        HingeSide hinge_side = 1;
+
+        // The direction the door moves with respect to the robot.
+        SwingDirection swing_direction = 2;
+
+        // The type of handle on the door.
+        HandleType handle_type = 3;
+    }
+
+    message Request {
+        oneof command {
+            AutoGraspCommand auto_grasp_command = 10;
+
+            WarmstartCommand warmstart_command = 11;
+        }
+    }
+
+    message Feedback {
+        enum Status {
+            // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
+            STATUS_UNKNOWN = 0;
+            // Robot has finished opening the door.
+            STATUS_COMPLETED = 1;
+            // Robot is attempting to open the door.
+            STATUS_IN_PROGRESS = 2;
+        }
+        // Current status of the command.
+        Status status = 1;
+    }
+}

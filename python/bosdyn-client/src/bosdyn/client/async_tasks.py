@@ -62,7 +62,7 @@ class AsyncGRPCTask(object):
         Args:
             now_sec: Time now in seconds.
 
-        Overrride to return True when a new query should be started.
+        Override to return True when a new query should be started.
         """
 
     @abc.abstractmethod

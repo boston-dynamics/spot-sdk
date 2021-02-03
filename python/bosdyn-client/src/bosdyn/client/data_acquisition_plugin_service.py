@@ -16,7 +16,7 @@ This function is responsible for collecting all of your plugin's data, and stori
 the store_helper. The store_helper (DataAcquisitionStoreHelper) kicks off asynchronous data store calls
 for each piece of data, metadata, or images. The plugin service class has an internal helper function
 which calls DataAcquisitionStoreHelper.wait_for_Stores_complete method that blocks until all saving
-to the data acquistion store is finished. The helper class will monitor the futures for completion and
+to the data acquisition store is finished. The helper class will monitor the futures for completion and
 update the state status and errors appropriately.
 
 If errors occur during the data collection+saving process, use state.add_errors to report which
@@ -100,7 +100,7 @@ class RequestState(object):
 
     def __init__(self):
         self._lock = threading.Lock()
-        # Boolean indicating if a CancelAcquisition RPC has been recieved for this acquisition request.
+        # Boolean indicating if a CancelAcquisition RPC has been received for this acquisition request.
         self._cancelled = False
         # The current status of the request, including any data errors.
         self._status_proto = data_acquisition_pb2.GetStatusResponse(
@@ -298,7 +298,7 @@ class DataAcquisitionPluginService(
             each acquisition RPC.
         executor (ThreadPoolExecutor): Thread pool to run the plugin service on.
         robot (Robot): Authenticated robot object.
-        store_client (DataAcqusitionStoreClient): Client for the data acquisition store service.
+        store_client (DataAcquisitionStoreClient): Client for the data acquisition store service.
     """
     service_type = 'bosdyn.api.DataAcquisitionPluginService'
 

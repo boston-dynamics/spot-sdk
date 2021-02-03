@@ -51,19 +51,42 @@ Get a list of data pages currently on the robot.
 python3 get_pages.py --username USER --password PASSWORD ROBOT_IP
 ```
 
-You may optionally specify a time range of pages to return. Times are specified in RFC3339 format. For example:
+You may optionally specify a time range of pages to return.
+
+For example:
 ```
-python3 get_pages.py --username USER --password PASSWORD --start 2020-10-01T00:00:01Z --end 2020-10-31T11:59:59Z ROBOT_IP
+python3 get_pages.py --username USER --password PASSWORD \
+    --timespan 20201030-20201031 ROBOT_IP
 ```
-You may specify only one start or only end time if preferred.
+See the description of time range specifications below.
 
 ### delete_pages.py
 Delete data pages from the robot. Running this without a time range will delete all data pages on the robot.
 ```
 python3 delete_pages.py --username USER --password PASSWORD ROBOT_IP
 ```
-You may optionally specify a time range of pages to delete. Times are specified in RFC3339 format. For example:
+You may optionally specify a time range of pages to delete. For example:
 ```
-python3 get_pages.py --username USER --password PASSWORD --start 2020-10-01T00:00:01Z --end 2020-10-31T11:59:59Z ROBOT_IP
+python3 delete_pages.py --username USER --password PASSWORD \
+    --timespan 20201031_115000-20201031_115950 --robot-time ROBOT_IP
 ```
 You may specify only one start or only end time if preferred.
+
+
+### Time ranges
+
+Times in the command-line arguments are of the format _val_or _val_-_val_ where _val_ has one of these formats:
+ - _yyyymmdd_hhmmss_  (e.g., `20200120_120000`)
+ - _yyyymmdd_         (e.g., `20200120`)
+ -  *n*d    _n_ days ago
+ -  *n*h    _n_ hours ago
+ -  *n*m    _n_ minutes ago
+ -  *n*s    _n_ seconds ago
+ - _nnnnnnnnnn[.nn]_       (e.g., `1581869515.256`)  Seconds since epoch
+ - _nnnnnnnnnnnnnnnnnnnn_  Nanoseconds since epoch
+
+So:
+- `5m` means from 5 minutes ago until now.
+- `20201107-20201108` means all of 2020/11/07.
+
+Adding `--robot-time` indicates that the specified time range is in the robot clock, so the specified value should _not_ be converted from client time to robot time.

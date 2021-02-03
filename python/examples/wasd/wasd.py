@@ -220,6 +220,8 @@ class WasdInterface(object):
             ord('e'): self._turn_right,
             ord('I'): self._image_task.take_image,
             ord('O'): self._image_task.toggle_video_mode,
+            ord('u'): self._unstow,
+            ord('j'): self._stow,
             ord('l'): self._toggle_lease
         }
         self._locked_messages = ['', '', '']  # string: displayed message for user
@@ -449,6 +451,12 @@ class WasdInterface(object):
                                   RobotCommandBuilder.synchro_velocity_command(
                                       v_x=v_x, v_y=v_y, v_rot=v_rot),
                                   end_time_secs=time.time() + VELOCITY_CMD_DURATION)
+
+    def _stow(self):
+        self._start_robot_command('stow', RobotCommandBuilder.arm_stow_command())
+
+    def _unstow(self):
+        self._start_robot_command('stow', RobotCommandBuilder.arm_ready_command())
 
     def _return_to_origin(self):
         self._start_robot_command('fwd_and_rotate',

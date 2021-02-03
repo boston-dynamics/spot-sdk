@@ -128,7 +128,7 @@ class GraphNavClient(BaseClient):
                                **kwargs)
 
     def navigate_route(self, route, cmd_duration, travel_params=None, leases=None,
-                       timesync_endpoint=None, **kwargs):
+                       timesync_endpoint=None, command_id=None, **kwargs):
         """Navigate the given route.
 
         Args:
@@ -137,6 +137,8 @@ class GraphNavClient(BaseClient):
             cmd_duration: Number of seconds the command can run for.
             leases: Leases to show ownership of necessary resources. Will use the client's leases by default.
             timesync_endpoint: Use this endpoint for timesync fields. Will use the client's endpoint by default.
+            command_id: If not None, this continues an existing navigate_route command with the given ID. If None,
+            a new command_id will be used.
             kwargs: Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
         Returns:
             Command ID to use in feedback lookup.
@@ -158,24 +160,24 @@ class GraphNavClient(BaseClient):
         if not used_endpoint:
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
         request = self._build_navigate_route_request(route, travel_params, cmd_duration, leases,
-                                                     used_endpoint)
+                                                     used_endpoint, command_id)
         return self.call(self._stub.NavigateRoute, request,
                          _command_id_from_navigate_route_response, _navigate_route_error, **kwargs)
 
     def navigate_route_async(self, route, cmd_duration, travel_params=None, leases=None,
-                             timesync_endpoint=None, **kwargs):
+                             timesync_endpoint=None, command_id=None, **kwargs):
         """Async version of navigate_route()"""
         used_endpoint = timesync_endpoint or self._timesync_endpoint
         if not used_endpoint:
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
         request = self._build_navigate_route_request(route, travel_params, cmd_duration, leases,
-                                                     used_endpoint)
+                                                     used_endpoint, command_id)
         return self.call_async(self._stub.NavigateRoute, request,
                                _command_id_from_navigate_route_response, _navigate_route_error,
                                **kwargs)
 
     def navigate_to(self, destination_waypoint_id, cmd_duration, route_params=None,
-                    travel_params=None, leases=None, timesync_endpoint=None, **kwargs):
+                    travel_params=None, leases=None, timesync_endpoint=None, command_id=None, **kwargs):
         """Navigate to a specific waypoint along a route chosen by the GraphNav service.
 
         Args:
@@ -185,6 +187,8 @@ class GraphNavClient(BaseClient):
             travel_params: API TravelParams for the route.
             leases: Leases to show ownership of necessary resources. Will use the client's leases by default.
             timesync_endpoint: Use this endpoint for timesync fields. Will use the client's endpoint by default.
+            command_id: If not None, this continues an existing navigate_to command with the given ID. If None,
+            a new command_id will be used.
         Returns:
             int: Command ID to use in feedback lookup.
         Raises:
@@ -204,19 +208,19 @@ class GraphNavClient(BaseClient):
         if not used_endpoint:
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
         request = self._build_navigate_to_request(destination_waypoint_id, travel_params,
-                                                  route_params, cmd_duration, leases, used_endpoint)
+                                                  route_params, cmd_duration, leases, used_endpoint, command_id)
         return self.call(self._stub.NavigateTo, request,
                          value_from_response=_command_id_from_navigate_route_response,
                          error_from_response=_navigate_to_error, **kwargs)
 
     def navigate_to_async(self, destination_waypoint_id, cmd_duration, route_params=None,
-                          travel_params=None, leases=None, timesync_endpoint=None, **kwargs):
+                          travel_params=None, leases=None, timesync_endpoint=None, command_id=None, **kwargs):
         """Async version of navigate_to()."""
         used_endpoint = timesync_endpoint or self._timesync_endpoint
         if not used_endpoint:
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
         request = self._build_navigate_to_request(destination_waypoint_id, travel_params,
-                                                  route_params, cmd_duration, leases, used_endpoint)
+                                                  route_params, cmd_duration, leases, used_endpoint, command_id)
         return self.call_async(self._stub.NavigateTo, request,
                                value_from_response=_command_id_from_navigate_route_response,
                                error_from_response=_navigate_to_error, **kwargs)
@@ -437,7 +441,7 @@ class GraphNavClient(BaseClient):
 
     @staticmethod
     def _build_navigate_route_request(route, travel_params, end_time_secs, leases,
-                                      timesync_endpoint):
+                                      timesync_endpoint, command_id):
         converter = timesync_endpoint.get_robot_time_converter()
         request = graph_nav_pb2.NavigateRouteRequest(
             route=route, clock_identifier=timesync_endpoint.clock_identifier)
@@ -445,11 +449,13 @@ class GraphNavClient(BaseClient):
             request.travel_params.CopyFrom(travel_params)
         request.end_time.CopyFrom(
             converter.robot_timestamp_from_local_secs(time.time() + end_time_secs))
+        if command_id is not None:
+            request.command_id = command_id
         return request
 
     @staticmethod
     def _build_navigate_to_request(destination_waypoint_id, travel_params, route_params,
-                                   end_time_secs, leases, timesync_endpoint):
+                                   end_time_secs, leases, timesync_endpoint, command_id):
         converter = timesync_endpoint.get_robot_time_converter()
         request = graph_nav_pb2.NavigateToRequest(
             destination_waypoint_id=destination_waypoint_id,
@@ -460,6 +466,8 @@ class GraphNavClient(BaseClient):
             request.travel_params.CopyFrom(travel_params)
         if route_params is not None:
             request.route_params.CopyFrom(route_params)
+        if command_id is not None:
+            request.command_id = command_id
         return request
 
     @staticmethod
@@ -634,7 +642,10 @@ class RobotLostError(RouteNavigationError):
     """Cannot issue a navigation request when the robot is already lost."""
 class RobotNotLocalizedToRouteError(RouteNavigationError):
     """The current localization doesn't refer to any waypoint in the route (possibly uninitialized localization)."""
-
+class RobotStuckError(RouteNavigationError):
+    """The robot is stuck or unable to find a way forward. Resend the command with a new ID, or send a different command to try again."""
+class UnrecongizedCommandError(RouteNavigationError):
+    """Happens when you try to continue a command that was either expired, or had an unrecognized id."""
 
 def _localization_from_response(response):
     """Return the localization state from the response."""
@@ -741,7 +752,11 @@ _NAVIGATE_ROUTE_STATUS_TO_ERROR.update({
     graph_nav_pb2.NavigateRouteResponse.STATUS_NOT_LOCALIZED_TO_ROUTE:
         error_pair(RobotNotLocalizedToRouteError),
     graph_nav_pb2.NavigateRouteResponse.STATUS_COULD_NOT_UPDATE_ROUTE:
-        error_pair(RouteNotUpdatingError)
+        error_pair(RouteNotUpdatingError),
+    graph_nav_pb2.NavigateRouteResponse.STATUS_STUCK:
+        error_pair(RobotStuckError),
+    graph_nav_pb2.NavigateRouteResponse.STATUS_UNRECOGNIZED_COMMAND:
+        error_pair(UnrecongizedCommandError)
 })
 
 
@@ -779,7 +794,9 @@ _NAVIGATE_TO_STATUS_TO_ERROR.update({
     graph_nav_pb2.NavigateToResponse.STATUS_NOT_LOCALIZED_TO_MAP:
         error_pair(RobotNotLocalizedToRouteError),
     graph_nav_pb2.NavigateToResponse.STATUS_COULD_NOT_UPDATE_ROUTE:
-        error_pair(RouteNotUpdatingError)
+        error_pair(RouteNotUpdatingError),
+    graph_nav_pb2.NavigateToResponse.STATUS_STUCK:
+        error_pair(RobotStuckError)
 })
 
 

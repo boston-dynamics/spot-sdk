@@ -33,19 +33,19 @@ The proto definition files need to be compiled into python files before they can
 ## Demo
 The files in this directory can be used to set up the current computer as a payload, start up an announce service, register the announce service, and run a client to access the announce service through the robot. This section will walk the user through that process.
 
-The explanation will follow the process laid out programatically in the initialize_payload script, which automates this process. It is recommended that you go through the process manually first to gain an understanding of the proces.
+The explanation will follow the process laid out programmatically in the initialize_payload script, which automates this process. It is recommended that you go through the process manually first to gain an understanding of the process.
 
 ### Select values
-Setting up a payload and onboard services requires defining at least one payload, service, and endpoint. These definitons require multiple pieces of information properly represent the concept. Before beginning, select and record what values you want to use to populate these objects. Examples of valid values can be seen in the initialize_payload script.
+Setting up a payload and onboard services requires defining at least one payload, service, and endpoint. These definitions require multiple pieces of information properly represent the concept. Before beginning, select and record what values you want to use to populate these objects. Examples of valid values can be seen in the initialize_payload script.
 
 **Robot**
-- IP - IP address the robot can be reached at.
+- ROBOT_IP - IP address the robot can be reached at.
 
 **Payload**
-- GUID - GUID should be a uniquely generated [GUID](https://www.guidgenerator.com/) specefic to a payload instance.
+- GUID - GUID should be a uniquely generated [GUID](https://www.guidgenerator.com/) specific to a payload instance.
 - Secret - Secret should be an arbitrary string. Human readability is not necessary.
 - Name - Name is a human-readable string used to identify a payload.
-- Description - Description is humand-readable explanation of a payload.
+- Description - Description is human-readable explanation of a payload.
 - Label_prefix - Label prefix is used to identify the type(s) of payload.
 
 **Service**
@@ -55,7 +55,10 @@ Setting up a payload and onboard services requires defining at least one payload
 - User_token_required - Whether access to this service requires the user to have a token.
 
 **Endpoint**
-- IP - IP address of the system running the service.
+- ENDPOINT_IP - IP address of the system running the service. Note, the command line utility provides a helper function for determining the correct IP address. This command must be run on the same computer that will be running the service:
+```
+python3 -m bosdyn.client --username {USER} --password {PASSWORD} {ROBOT_IP} self-ip
+```
 - Port - A free port on the system to access to the service through.
 
 ### Register the payload

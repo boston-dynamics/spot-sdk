@@ -4,7 +4,7 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""This script sends https requests to a Richo Theta."""
+"""This script sends https requests to a Ricoh Theta."""
 
 # Ricoh Theta API Documentation
 # https://api.ricoh/products/theta-api/

@@ -1,0 +1,33 @@
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "ArmSurfaceContactServiceProto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/lease.proto";
+import "bosdyn/api/arm_surface_contact.proto";
+
+service ArmSurfaceContactService {
+    rpc ArmSurfaceContact(ArmSurfaceContactCommand) returns (ArmSurfaceContactResponse) {}
+}
+
+message ArmSurfaceContactCommand {
+    RequestHeader header = 1;  // Common request header.
+
+    // The Lease to show ownership of the robot.
+    Lease lease = 2;
+
+    ArmSurfaceContact.Request request = 4;
+}
+
+message ArmSurfaceContactResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+}

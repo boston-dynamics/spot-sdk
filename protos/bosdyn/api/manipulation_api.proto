@@ -1,0 +1,376 @@
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "ManipulationApiProto";
+
+import "bosdyn/api/geometry.proto";
+import "bosdyn/api/header.proto";
+import "bosdyn/api/image.proto";
+import "bosdyn/api/lease.proto";
+import "google/protobuf/wrappers.proto";
+
+message WalkToObjectRayInWorld {
+    // Walks the robot up to an object.  Useful to prepare to grasp or manipulate something.
+
+    // Position of the start of the ray (see PickObjectRayInWorld for detailed comments.)
+    Vec3 ray_start_rt_frame = 1;
+
+    // Position of the end of the ray.
+    Vec3 ray_end_rt_frame = 2;
+
+    // Name of the frame that the above parameters are expressed in.
+    string frame_name = 3;
+
+    // Optional offset distance for the robot to stand from the object's location.  The robot will
+    // walk forwards or backwards from where it is so that its center of mass is this distance from
+    // the object. \
+    // If unset, we use a reasonable default value.
+    google.protobuf.FloatValue offset_distance = 4;
+}
+
+message WalkToObjectInImage {
+    // Walk to an object that is at a pixel location in an image.
+    Vec2 pixel_xy = 1;
+
+    // A tree-based collection of transformations, which will include the transformations to each image's
+    // sensor in addition to transformations to the common frames ("vision", "body", "odom").
+    // All transforms within the snapshot are at the acquistion time of the image.
+    FrameTreeSnapshot transforms_snapshot_for_camera = 2;
+
+    // The frame name for the image's sensor source. This will be included in the transform snapshot.
+    string frame_name_image_sensor = 3;
+
+    // Camera model.
+    ImageSource.PinholeModel camera_model = 4;
+
+    // Optional offset distance for the robot to stand from the object's location.  The robot will
+    // walk forwards or backwards from where it is so that its center of mass is this distance from
+    // the object. \
+    // If unset, we use a reasonable default value.
+    google.protobuf.FloatValue offset_distance = 5;
+}
+
+message PickObjectRayInWorld {
+    // Cast a ray in the world and pick the first object found along the ray. \
+    // This is the lowest-level grasping message; all other grasp options internally use this
+    // message to trigger a grasp. \
+    // Example:
+    //  You see the object you are interested in with the gripper's camera.  To grasp it, you
+    //  cast a ray from the camera out to 4 meters (well past the object). \
+    //  To do this you'd set: \
+    //      ray_start_rt_frame: camera's position \
+    //      ray_end_rt_frame: camera's position + unit vector along ray of interest * 4 meters \
+    Vec3 ray_start_rt_frame = 1;
+    Vec3 ray_end_rt_frame = 2;
+
+    // Name of the frame the above parameters are represented in.
+    string frame_name = 6;
+
+    // Optional parameters for the grasp.
+    GraspParams grasp_params = 10;
+
+    // Configure if the robot should automatically walk and/or gaze at the target object before
+    // performing the grasp. \
+    // 1. If you haven't moved the robot or deployed the arm, use PICK_AUTO_WALK_AND_GAZE \
+    // 2. If you have moved to the location you want to pick from, but haven't yet deployed the arm,
+    //    use PICK_AUTO_GAZE. \
+    // 3. If you have already moved the robot and have the hand looking at your target object, use
+    //    PICK_NO_AUTO_WALK_OR_GAZE. \
+    // If you are seeing issues with "MANIP_STATE_GRASP_FAILED_TO_RAYCAST_INTO_MAP," that means that
+    // the automatic system cannot find your object when trying to automatically walk to it, so
+    // consider using PICK_AUTO_GAZE or PICK_NO_AUTO_WALK_OR_GAZE.
+    WalkGazeMode walk_gaze_mode = 4;
+
+    reserved 3, 5, 7, 8, 9;
+}
+
+message PickObjectExecutePlan {
+    // No data
+}
+
+message PickObject {
+    // Name of the frame you want to give your input in.
+    string frame_name = 1;
+
+    // Pickup an object at the location, given in the frame named above.
+    Vec3 object_rt_frame = 2;
+
+    // Optional parameters for the grasp.
+    GraspParams grasp_params = 3;
+
+    reserved 4, 5, 6, 7;
+}
+
+message PickObjectInImage {
+    // Pickup an object that is at a pixel location in an image.
+    Vec2 pixel_xy = 1;
+
+    // A tree-based collection of transformations, which will include the transformations to each image's
+    // sensor in addition to transformations to the common frames ("vision", "body", "odom").
+    // All transforms within the snapshot are at the acquistion time of the image.
+    FrameTreeSnapshot transforms_snapshot_for_camera = 2;
+
+    // The frame name for the image's sensor source. This must be included in the transform snapshot.
+    string frame_name_image_sensor = 3;
+
+    // Camera model.
+    ImageSource.PinholeModel camera_model = 4;
+
+    // Optional parameters for the grasp.
+    GraspParams grasp_params = 10;
+
+    // Automatic walking / gazing configuration.
+    // See detailed comment in the PickObjectRayInWorld message.
+    WalkGazeMode walk_gaze_mode = 9;
+
+    reserved 5, 6, 7, 8;
+}
+
+message GraspParams {
+    // Where the grasp is on the hand.  Set to 0 to be a (default) palm grasp, where the object will
+    // be pressed against the gripper's palm plate.  Set to 1.0 to be a fingertip grasp, where the
+    // robot will try to pick up the target with just the tip of its fingers. \
+    // Intermediate values move the grasp location between the two extremes.
+    float grasp_palm_to_fingertip = 1;
+
+    // Frame name for the frame that the constraints in allowable_orientation are expressed in.
+    string grasp_params_frame_name = 2;
+
+    // Optional constraints about the orientation of the grasp.  This field lets you specify things
+    // like "only do a top down grasp," "grasp only from this direction," or "grasp with the gripper
+    // upside-down."  If you don't pass anything, the robot will automatically search for a good
+    // grasp orientation.
+    repeated AllowableOrientation allowable_orientation = 3;
+
+    // Optional parameter on how much the robot is allowed to move the grasp from where the user
+    // requested.  Set this to be GRASP_POSITION_CONSTRAINT_FIXED_AT_USER_POSITION to get a grasp
+    // that is at the exact position you requested, but has less or no automatic grasp selection
+    // help in position.
+    GraspPositionConstraint position_constraint = 4;
+
+    // Optional hint about which camera was used to generate the target points.  The robot will
+    // attempt to correct for calibration error between the arm and the body cameras.
+    ManipulationCameraSource manipulation_camera_source = 5;
+}
+
+enum GraspPositionConstraint {
+    GRASP_POSITION_CONSTRAINT_UNKNOWN = 0;
+    GRASP_POSITION_CONSTRAINT_NORMAL = 1;
+    GRASP_POSITION_CONSTRAINT_FIXED_AT_USER_POSITION = 2;
+}
+
+// Allowable orientation allow you to specify vectors that the different axes of the robot's
+// gripper will be aligned with in the final grasp pose. \
+//
+// Frame: \
+//  In stow position, +X is to the front of the gripper, pointing forward. \
+//                    +Y is out of the side of the gripper going to the robot's left \
+//                    +Z is straight up towards the sky \
+//
+// Here, you can supply vectors that you want the gripper to be aligned with at the final grasp
+// position.  For example, if you wanted to grasp a cup, you'd wouldn't want a top-down grasp.
+// So you might specify: \
+//      frame_name = "vision" (so that Z is gravity aligned) \
+//       VectorAlignmentWithTolerance: \
+//          axis_to_on_gripper_ewrt_gripper = Vec3(0, 0, 1)  <--- we want to control the
+//                                                                gripper's z-axis. \
+//
+//          axis_to_align_with_ewrt_frame = Vec3(0, 0, 1)  <--- ...and we want that axis to be
+//                                                                 straight up \
+//          tolerance_z = 0.52  <--- 30 degrees \
+//    This will ensure that the z-axis of the gripper is pointed within 30 degrees of vertical
+//    so that your grasp won't be top-down (which would need the z-axis of the gripper to be
+//    pointed at the horizon). \
+//
+// You can also specify more than one AllowableOrientation to give the system multiple options.
+// For example, you could specify that you're OK with either a z-up or z-down version of the cup
+// grasp, allowing the gripper roll 180 from the stow position to grasp the cup.
+message AllowableOrientation {
+    oneof constraint {
+        RotationWithTolerance rotation_with_tolerance = 1;
+        VectorAlignmentWithTolerance vector_alignment_with_tolerance = 2;
+        SqueezeGrasp squeeze_grasp = 3;
+    }
+}
+
+message RotationWithTolerance {
+    Quaternion rotation_ewrt_frame = 1;
+    float threshold_radians = 2;
+}
+
+message VectorAlignmentWithTolerance {
+    // Axis on the gripper that you want to align.  For example, to align the front of the gripper
+    // to be straight down, you'd use: \
+    //      axis_on_gripper_ewrt_gripper = Vec3(1, 0, 0) \
+    //      axis_to_align_with_ewrt_frame = Vec3(0, 0, -1)   (in the "vision" frame) \
+    Vec3 axis_on_gripper_ewrt_gripper = 1;
+    Vec3 axis_to_align_with_ewrt_frame = 2;
+    float threshold_radians = 3;
+}
+
+message SqueezeGrasp {
+    // A "squeeze grasp" is a top-down grasp where we try to keep both jaws of the gripper in
+    // contact with the ground and bring the jaws together.  This can allow the robot to pick up
+    // small objects on the ground. \
+    // If you specify a SqueezeGrasp with no other allowable orientations, then the robot
+    // will perform this grasp.  If you specify it will at least one other allowable orientation,
+    // the robot will attempt to find a normal grasp with that orientation and if it fails, will
+    // try a compliant grasp.
+}
+
+message ManipulationApiFeedbackRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Unique identifier for the command, provided by ManipulationApiResponse.
+    int32 manipulation_cmd_id = 2;
+}
+
+message ManipulationApiFeedbackResponse {
+    /// Common response header.
+    ResponseHeader header = 1;
+
+    // The unique identifier for the ManipulationApiFeedbackRequest.
+    int32 manipulation_cmd_id = 4;
+
+    ManipulationFeedbackState current_state = 2;
+
+    // Data from the manipulation system: \
+    // "walkto_raycast_intersection": \
+    //      If you sent a WalkToObject request, we raycast in the world to intersect your pixel/ray
+    //      with the world.  The point of intersection is included in this transform snapshot
+    //      with the name "walkto_raycast_intersection". \
+    // "grasp_planning_solution": \
+    //      If you requested a grasp plan, this frame will contain the planning solution if
+    //      available.  This will be the pose of the "hand" frame at the completion of the grasp. \
+    // "gripper_nearest_object": \
+    //      If the range camera in the hand senses an object, this frame will have the position of
+    //      the nearest object.  This is useful for getting a ballpark range measurement.
+    FrameTreeSnapshot transforms_snapshot_manipulation_data = 3;
+ }
+
+message ManipulationApiResponse {
+    /// Common response header.
+    ResponseHeader header = 1;
+
+    // ID of the manipulation command either just issued or that we are providing feedback for.
+    int32 manipulation_cmd_id = 5;
+
+    reserved 2, 3, 4;
+}
+
+enum ManipulationFeedbackState {
+    MANIP_STATE_UNKNOWN = 0;
+    MANIP_STATE_DONE = 1;
+
+    MANIP_STATE_SEARCHING_FOR_GRASP = 2;
+    MANIP_STATE_MOVING_TO_GRASP = 3;
+    MANIP_STATE_GRASPING_OBJECT = 4;
+    MANIP_STATE_PLACING_OBJECT = 5;
+    MANIP_STATE_GRASP_SUCCEEDED = 6;
+    MANIP_STATE_GRASP_FAILED = 7;
+    MANIP_STATE_GRASP_PLANNING_SUCCEEDED = 11;
+    MANIP_STATE_GRASP_PLANNING_NO_SOLUTION = 8;
+
+    // Note: if you are experiencing raycast failures during grasping, consider using a different
+    // grasping call that does not require the robot to automatically walk up to the grasp.
+    MANIP_STATE_GRASP_FAILED_TO_RAYCAST_INTO_MAP = 9;
+
+    // The grasp planner is waiting for the gaze to have the target object not on the edge of the
+    // camera view.  If you are seeing this in an automatic mode, the robot will soon retarget the
+    // grasp for you.  If you are seeing this in a non-auto mode, you'll need to change your gaze
+    // to have the target object more in the center of the hand-camera's view.
+    MANIP_STATE_GRASP_PLANNING_WAITING_DATA_AT_EDGE = 13;
+    MANIP_STATE_WALKING_TO_OBJECT = 10;
+    MANIP_STATE_ATTEMPTING_RAYCASTING = 12;
+}
+
+enum ManipulationCameraSource {
+    MANIPULATION_CAMERA_SOURCE_UNKNOWN = 0;
+    MANIPULATION_CAMERA_SOURCE_STEREO = 1;
+    MANIPULATION_CAMERA_SOURCE_HAND = 2;
+}
+
+// Configure automatic walking and gazing at the target.
+enum WalkGazeMode {
+    PICK_WALK_GAZE_UNKNOWN = 0;
+    // Default, walk to the target and gaze at it automatically
+    PICK_AUTO_WALK_AND_GAZE = 1;
+
+    // Don't move the robot base, but automatically look at the grasp target.
+    PICK_AUTO_GAZE = 2;
+
+    // No automatic gazing or walking. Note: if you choose this option, the target location
+    // must not be near the edges or off the screen on the hand camera's view.
+    PICK_NO_AUTO_WALK_OR_GAZE = 3;
+
+    // Only plan for the grasp, don't move the robot.  Since we won't move
+    // the robot, the target location must not be near the edges or out of
+    // the hand camera's view.  The robot must be located near the object.
+    // (Equivalent conditions as for success with PICK_NO_AUTO_WALK_OR_GAZE)
+    PICK_PLAN_ONLY = 4;
+}
+
+message ManipulationApiRequest {
+    RequestHeader header = 1;  // Common request header.
+
+    // The Lease to show ownership of the robot.
+    Lease lease = 2;
+
+    oneof manipulation_cmd {
+        // Walk to an object with a raycast in to the world
+        WalkToObjectRayInWorld walk_to_object_ray_in_world = 12;
+
+        // Walk to an object at a pixel location in an image.
+        WalkToObjectInImage walk_to_object_in_image = 13;
+
+        // Pick up an object.
+        PickObject pick_object = 10;
+
+        // Pick up an object at a pixel location in an image.
+        PickObjectInImage pick_object_in_image = 11;
+
+        // Pick up an object based on a ray in 3D space.  This is the lowest-level, most
+        // configurable object picking command.
+        PickObjectRayInWorld pick_object_ray_in_world = 4;
+
+        // Execute a previously planned pick.
+        PickObjectExecutePlan pick_object_execute_plan = 14;
+    }
+
+    reserved 3, 6, 9;
+}
+
+// Use this message to assert the ground truth about grasping.
+// Grasping is usually detected automatically by the robot. If the client wishes to override the
+// robot's determination of grasp status, send an ApiGraspOverride message with either:
+// OVERRIDE_HOLDING, indicating the gripper is holding something, or
+// OVERRIDE_NOT_HOLDING, indicating the gripper is not holding
+// anything.
+message ApiGraspOverride {
+    enum Override {
+        OVERRIDE_UNKNOWN = 0;
+        OVERRIDE_HOLDING = 1;
+        OVERRIDE_NOT_HOLDING = 2;
+    }
+    Override override_request = 1;
+}
+
+message ApiGraspOverrideRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    ApiGraspOverride api_grasp_override = 4;
+}
+
+message ApiGraspOverrideResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+}

@@ -31,6 +31,12 @@ service CompositorService {
     rpc ListScreens (ListScreensRequest) returns (ListScreensResponse);
     //GetVisibleCameras returns a list of currently visible windows, with any available metadata
     rpc GetVisibleCameras (GetVisibleCamerasRequest) returns (GetVisibleCamerasResponse);
+    //set the mapping between radiometric IR samples to color, for video
+    rpc SetIrColormap (SetIrColormapRequest) returns (SetIrColormapResponse);
+    //get the mapping between radiometric IR samples to color, for video
+    rpc GetIrColormap (GetIrColormapRequest) returns (GetIrColormapResponse);
+    //apply settings for the 'ir meter overlay'
+    rpc SetIrMeterOverlay (SetIrMeterOverlayRequest) returns (SetIrMeterOverlayResponse);
 }
 
 // Set quality parameters for the stream, such as compression and image postprocessing settings.

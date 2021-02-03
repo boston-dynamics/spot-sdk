@@ -211,7 +211,7 @@ class RecorderInterface(object):
         self._graph_nav_client.clear_graph()
 
     def shutdown(self):
-        """Release control of robot as gracefully as posssible."""
+        """Release control of robot as gracefully as possible."""
         LOGGER.info("Shutting down WasdInterface.")
         if self._estop_keepalive:
             # This stops the check-in thread but does not stop the robot.
@@ -736,7 +736,10 @@ class RecorderInterface(object):
         """Make localization node."""
         loc = nodes_pb2.Node()
         loc.name = "localize robot"
+
         impl = nodes_pb2.BosdynGraphNavLocalize()
+        impl.localization_request.fiducial_init = graph_nav_pb2.SetLocalizationRequest.FIDUCIAL_INIT_NEAREST
+
         loc.impl.Pack(impl)
         return loc
 
@@ -788,6 +791,9 @@ def main():
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
     parser.add_argument('directory', help='Output directory for graph map and mission file.')
+    parser.add_argument('--time-sync-interval-sec',
+                        help='The interval (seconds) that time-sync estimate should be updated.',
+                        type=float)
 
     options = parser.parse_args()
 
@@ -798,7 +804,7 @@ def main():
     robot = sdk.create_robot(options.hostname)
     try:
         robot.authenticate(options.username, options.password)
-        robot.start_time_sync()
+        robot.start_time_sync(options.time_sync_interval_sec)
     except RpcError as err:
         LOGGER.error("Failed to communicate with robot: %s" % err)
         return False

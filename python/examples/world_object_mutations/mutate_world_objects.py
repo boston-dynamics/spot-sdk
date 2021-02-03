@@ -33,7 +33,7 @@ def create_drawable_sphere_object():
     edges = add_edge_to_tree(edges, vision_tform_drawable, VISION_FRAME_NAME, drawable_frame_name)
     snapshot = geom.FrameTreeSnapshot(child_to_parent_edge_map=edges)
 
-    # Set the acqusition time for the sphere using a function to get google.protobuf.Timestamp of the current system time.
+    # Set the acquisition time for the sphere using a function to get google.protobuf.Timestamp of the current system time.
     time_now = now_timestamp()
 
     # Create the sphere drawable object
@@ -53,7 +53,7 @@ def create_drawable_sphere_object():
 
 def create_apriltag_object():
     """Create an apriltag world object that can be added through a mutation request."""
-    # Set the acqusition time for the additional april tag in robot time using a function to
+    # Set the acquisition time for the additional april tag in robot time using a function to
     # get google.protobuf.Timestamp of the current system time.
     time_now = now_timestamp()
 

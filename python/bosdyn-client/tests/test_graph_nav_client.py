@@ -31,6 +31,8 @@ class MockGraphNavServicer(graph_nav_service_pb2_grpc.GraphNavServiceServicer):
         self.upload_waypoint_resp = graph_nav_pb2.UploadWaypointSnapshotResponse()
         self.upload_edge_resp = graph_nav_pb2.UploadEdgeSnapshotResponse()
         self.set_loc_resp = graph_nav_pb2.SetLocalizationResponse(status=graph_nav_pb2.SetLocalizationResponse.STATUS_OK)
+        self.download_wp_snapshot_status = graph_nav_pb2.DownloadWaypointSnapshotResponse.STATUS_OK
+        self.download_edge_snapshot_status = graph_nav_pb2.DownloadEdgeSnapshotResponse.STATUS_OK
         self.lease_use_result = None
 
     def SetLocalization(self, request, context):
@@ -85,8 +87,6 @@ class MockGraphNavServicer(graph_nav_service_pb2_grpc.GraphNavServiceServicer):
             resp.lease_use_result.CopyFrom(self.lease_use_result)
         return resp
 
-
-
     def NavigationFeedback(self, request, context):
         """Specific NavigationFeedback responses."""
         resp = graph_nav_pb2.NavigationFeedbackResponse()
@@ -94,6 +94,17 @@ class MockGraphNavServicer(graph_nav_service_pb2_grpc.GraphNavServiceServicer):
         resp.status = self.nav_feedback_status
         return resp
 
+    def DownloadWaypointSnapshot(self, request, context):
+        resp = graph_nav_pb2.DownloadWaypointSnapshotResponse()
+        resp.header.error.code = self.common_header_code
+        resp.status = self.download_wp_snapshot_status
+        yield resp
+
+    def DownloadEdgeSnapshot(self, request, context):
+        resp = graph_nav_pb2.DownloadEdgeSnapshotResponse()
+        resp.header.error.code = self.common_header_code
+        resp.status = self.download_edge_snapshot_status
+        yield resp
 
 @pytest.fixture
 def client(time_sync):
@@ -308,8 +319,6 @@ def test_upload_edge_exceptions(client, service, server):
     with pytest.raises(bosdyn.client.LeaseUseError):
         make_call()
 
-
-
 def test_set_localization_exceptions(client, service, server):
     make_call = lambda: client.set_localization(nav_pb2.Localization())
     make_call()
@@ -335,4 +344,30 @@ def test_set_localization_exceptions(client, service, server):
 
     service.set_loc_resp.status = service.set_loc_resp.STATUS_FAILED
     with pytest.raises(bosdyn.client.graph_nav.RequestFailedError):
+        make_call()
+
+def test_download_waypoint_snapshot(client, service, server):
+    make_call = lambda: client.download_waypoint_snapshot(waypoint_snapshot_id="mywaypoint")
+    make_call()
+
+    service.common_header_code = header_pb2.CommonError.CODE_INTERNAL_SERVER_ERROR
+    with pytest.raises(InternalServerError):
+        make_call()
+
+    service.common_header_code = header_pb2.CommonError.CODE_OK
+    service.download_wp_snapshot_status = graph_nav_pb2.DownloadWaypointSnapshotResponse.STATUS_SNAPSHOT_DOES_NOT_EXIST
+    with pytest.raises(bosdyn.client.graph_nav.UnknownMapInformationError):
+        make_call()
+
+def test_download_edge_snapshot(client, service, server):
+    make_call = lambda: client.download_edge_snapshot(edge_snapshot_id="myedge")
+    make_call()
+
+    service.common_header_code = header_pb2.CommonError.CODE_INTERNAL_SERVER_ERROR
+    with pytest.raises(InternalServerError):
+        make_call()
+
+    service.common_header_code = header_pb2.CommonError.CODE_OK
+    service.download_edge_snapshot_status = graph_nav_pb2.DownloadEdgeSnapshotResponse.STATUS_SNAPSHOT_DOES_NOT_EXIST
+    with pytest.raises(bosdyn.client.graph_nav.UnknownMapInformationError):
         make_call()

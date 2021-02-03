@@ -12,6 +12,7 @@ Client code and interfaces for the Boston Dynamics robot API.
 
 ## Contents
 
+* [Arm Surface Contact](arm_surface_contact)
 * [Async Tasks](async_tasks)
 * [Auth](auth)
 * [BDDF](bddf)
@@ -29,6 +30,7 @@ Client code and interfaces for the Boston Dynamics robot API.
 * [Directory Registration](directory_registration)
 * [Directory](directory)
 * [Docking](docking)
+* [Door](door)
 * [E-Stop](estop)
 * [Exceptions](exceptions)
 * [Fault](fault)
@@ -41,6 +43,8 @@ Client code and interfaces for the Boston Dynamics robot API.
 * [Local Grid](local_grid)
 * [Log Annotation](log_annotation)
 * [Math Helpers](math_helpers)
+* [Manipulation API](manipulation_api_client)
+* [Network Compute Bridge](network_compute_bridge_client)
 * [Payload Registration](payload_registration)
 * [Payload](payload)
 * [Point Cloud](point_cloud)
@@ -67,16 +71,20 @@ The table below specifies the protobuf service definitions supported by each cli
 
 | Client | RPCs Supported |
 |:------:|:-------------:|
+| [**Arm Surface Contact**](./arm_surface_contact.py) | [arm_surface_contact_service.proto](../../../../../protos/bosdyn/api/arm_surface_contact_service.proto) |
 | [**Auth**](./auth.py) | [auth_service.proto](../../../../../protos/bosdyn/api/auth_service.proto) |
 | [**DirectoryRegistration**](./directory_registration.py) | [directory_registration_service.proto](../../../../../protos/bosdyn/api/directory_registration_service.proto) |
 | [**Directory**](./directory.py) | [directory_service.proto](../../../../../protos/bosdyn/api/directory_service.proto) |
 | [**Docking**](./docking.py) | [docking/docking_service.proto](../../../../../protos/bosdyn/api/docking/docking_service.proto) |
+| [**Door**](./door.py) | [door_service.proto](../../../../../protos/bosdyn/api/spot/door_service.proto) |
 | [**Estop**](./estop.py) | [estop_service.proto](../../../../../protos/bosdyn/api/estop_service.proto) |
 | [**GraphNav**](./graph_nav.py) | [graph_nav/graph_nav_service.proto](../../../../../protos/bosdyn/api/graph_nav/graph_nav_service.proto) |
 | [**Image**](./image.py) | [image_service.proto](../../../../../protos/bosdyn/api/image_service.proto) |
 | [**Lease**](./lease.py) | [lease_service.proto](../../../../../protos/bosdyn/api/lease_service.proto) |
 | [**LocalGrid**](./local_grid.py) | [local_grid_service.proto](../../../../../protos/bosdyn/api/local_grid_service.proto) |
 | [**LogAnnotation**](./log_annotation.py) | [log_annotation_service.proto](../../../../../protos/bosdyn/api/log_annotation_service.proto) |
+| [**Manipulation API**](./manipulation_api_client.py) | [manipulation_api_service.proto](../../../../../protos/bosdyn/api/manipulation_api_service.proto) |
+| [**Network Compute Bridge**](./network_compute_bridge_client.py) | [network_compute_bridge_service.proto](../../../../../protos/bosdyn/api/network_compute_bridge_service.proto) |
 | [**PayloadRegistration**](./payload_registration.py) | [payload_registration_service.proto](../../../../../protos/bosdyn/api/payload_registration_service.proto) |
 | [**Payload**](./payload.py) | [payload_service.proto](../../../../../protos/bosdyn/api/payload_service.proto) |
 | [**Power**](./power.py) | [power_service.proto](../../../../../protos/bosdyn/api/power_service.proto) |

@@ -21,7 +21,14 @@ import "bosdyn/api/robot_state.proto";
 
 import "google/protobuf/timestamp.proto";
 
-// The SetLocalization request message can trigger a manumal localization.
+// The SetLocalization request is used to initialize or reset the localization of GraphNav
+// to a map. A localization consists of a waypoint ID, and a pose of the robot relative to that waypoint.
+// GraphNav uses the localization to decide how to navigate through a map.
+// The SetLocalizationRequest contains parameters to help find a correct localization. For example,
+// AprilTags (fiducials) may be used to set the localization, or the caller can provide an explicit
+// guess of the localization.
+// Once the SetLocalizationRequest completes, the current localization to the map
+// will be modified, and can be retrieved using a GetLocalizationStateRequest.
 message SetLocalizationRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -48,14 +55,16 @@ message SetLocalizationRequest {
         FIDUCIAL_INIT_UNKNOWN = 0;  // It is a programming error to use this one.
         FIDUCIAL_INIT_NO_FIDUCIAL = 1; // Ignore fiducials during initialization.
         FIDUCIAL_INIT_NEAREST = 2; // Localize to the nearest fiducial in any waypoint.
-        FIDUCIAL_INIT_NEAREST_AT_TARGET = 3; // Localize to nearest fiducial at the target waypoint.
-        FIDUCIAL_INIT_SPECIFIC = 4; // Localize to the given fiducial at the target waypoint.
+        FIDUCIAL_INIT_NEAREST_AT_TARGET = 3; // Localize to nearest fiducial at the target waypoint (from initial_guess).
+        FIDUCIAL_INIT_SPECIFIC = 4; // Localize to the given fiducial at the target waypoint (from initial_guess) if it exists, or any waypoint otherwise.
     }
 
     // Tells the initializer whether to use fiducials, and how to use them.
     FiducialInit fiducial_init = 7;
 
     // If using FIDUCIAL_INIT_SPECIFIC, this is the specific fiducial ID to use for initialization.
+    // If no detection of this fiducial exists, the service will return STATUS_NO_MATCHING_FIDUCIAL.
+    // If detections exist, but are low quality, STATUS_FIDUCIAL_TOO_FAR_AWAY, FIDUCIAL_TOO_OLD, or FIDUCIAL_POSE_UNCERTAIN will be returned.
     int32 use_fiducial_id = 8;
 
     // If true, and we are using fiducials during initialization, will run ICP after the fiducial
@@ -64,9 +73,15 @@ message SetLocalizationRequest {
 
     // If true, consider how nearby localizations appear (like turned 180).
     bool do_ambiguity_check = 10;
+
+    // If using FIDUCIAL_INIT_SPECIFIC and this is true, the initializer will only consider
+    // fiducial detections from the target waypoint (from initial_guess). Otherwise, if the
+    // target waypoint does not contain a good measurement of the desired fiducial, nearby waypoints
+    // may be used to infer the robot's location.
+    bool restrict_fiducial_detections_to_target_waypoint = 11;
 }
 
-// The SetLocalization response message contains the resulting localization of the robot.
+// The SetLocalization response message contains the resulting localization to the map.
 message SetLocalizationResponse {
     // Common response header.
     ResponseHeader header = 1;
@@ -100,7 +115,11 @@ message SetLocalizationResponse {
         // the required location.
         STATUS_NO_MATCHING_FIDUCIAL = 8;
         // Failed to localize because the fiducial requested by 'use_fiducial_id' had an unreliable
-        // pose estimation.
+        // pose estimation, either in the current detection of that fiducial, or in detections that
+        // were saved in the map. Note that when using FIDUCIAL_INIT_SPECIFIC, fiducial detections at
+        // the target waypoint will be used so long as they are not uncertain -- otherwise, detections
+        // at adjacent waypoints may be used. If there exists no uncertain detection of the fiducial
+        // near the target waypoint in the map, the service returns this status.
         STATUS_FIDUCIAL_POSE_UNCERTAIN = 9;
     }
     // Return status for the request.
@@ -154,6 +173,12 @@ message TravelParams {
     FeatureQualityTolerance feature_quality_tolerance = 5;
 }
 
+// The NavigateToRequest can be used to command GraphNav to drive the robot to a specific waypoint.
+// GraphNav will plan a path through the map which most efficiently gets the robot to the specified goal waypoint.
+// Parameters are provided which influence how GraphNav will generate and follow the path.
+// This RPC returns immediately after the request is processed. It does not block until GraphNav completes the path
+// to the goal waypoint. The user is expected to periodically check the status of the NavigateTo command using
+// the NavigationFeedbackRequest RPC.
 message NavigateToRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -174,10 +199,21 @@ message NavigateToRequest {
 
     // Identifier provided by the time sync service to verify time sync between robot and client.
     string clock_identifier = 7;
+
+    // If provided, graph_nav will move the robot to an SE2 pose relative to the waypoint.
+    // Note that the robot will treat this as a simple goto request. It will first arrive at the
+    // destination waypoint, and then travel in a straight line from the destination waypoint to the
+    // offset goal, attempting to avoid obstacles along the way.
+    SE2Pose destination_waypoint_tform_body_goal = 8;
+
+    // Unique identifier for the command. If 0, this is a new command, otherwise it is a continuation
+    // of an existing command. If this is a continuation of an existing command, all parameters will be
+    // ignored, and the old parameters will be preserved.
+    uint32 command_id = 9;
 }
 
-// A NavigateTo response message returns a command_id which can be used to request the graph nav
-// service for feedback the navigation request.
+// Response to a NavigateToRequest. This is returned immediately after the request is processed. A command_id
+// is provided to specify the ID that the user may use to poll the system for feedback on the NavigateTo command.
 message NavigateToResponse {
     // Common response header.
     ResponseHeader header = 1;
@@ -218,20 +254,27 @@ message NavigateToResponse {
 
         // [Wrestling error] Happens when graph nav refuses to follow the route you specified.
         STATUS_COULD_NOT_UPDATE_ROUTE = 12;
+        // [Route Error] Happens when you try to issue a navigate to while the robot is stuck. Navigate to a different
+        // waypoint, or clear the route and try again.
+        STATUS_STUCK                  = 14;
+        // [Request Error] Happens when you try to continue a command that was either expired, or had an unrecognized id.
+        STATUS_UNRECOGNIZED_COMMAND   = 15;
 
     }
     // Return status for the request.
     Status status = 3;
 
-    // Unique identifier for the command, If empty, command was not accepted.
+    // Unique identifier for the command, If 0, command was not accepted.
     uint32 command_id = 4;
 
     // On a relevant error status code, these fields contain the waypoint/edge IDs that caused the error.
     repeated string error_waypoint_ids = 5;
 }
 
-// A NavigateRoute request message specifies a route of waypoints and parameters
-// about how to get there.
+// A NavigateRoute request message specifies a route of waypoints/edges and parameters
+// about how to get there. Like NavigateTo, this command returns immediately upon
+// processing and provides a command_id that the user can use along with a NavigationFeedbackRequest RPC to
+// poll the system for feedback on this command. The RPC does not block until the route is completed.
 message NavigateRouteRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -250,10 +293,21 @@ message NavigateRouteRequest {
 
     // Identifier provided by the time sync service to verify time sync between robot and client.
     string clock_identifier = 6;
+
+    // If provided, graph_nav will move the robot to an SE2 pose relative to the final waypoint
+    // in the route.
+    // Note that the robot will treat this as a simple goto request. It will first arrive at the
+    // destination waypoint, and then travel in a straight line from the destination waypoint to the
+    // offset goal, attempting to avoid obstacles along the way.
+    SE2Pose destination_waypoint_tform_body_goal = 7;
+
+    // Unique identifier for the command. If 0, this is a new command, otherwise it is a continuation
+    // of an existing command.
+    uint32 command_id = 8;
 }
 
-// A NavigateRoute response message returns a command_id which can be used to request the graph nav
-// service for feedback the navigation request.
+// Response to a NavigateRouteRequest. This is returned immediately after the request is processed. A command_id
+// is provided to specify the ID that the user may use to poll the system for feedback on the NavigateRoute command.
 message NavigateRouteResponse {
     // Common response header.
     ResponseHeader header = 1;
@@ -296,11 +350,16 @@ message NavigateRouteResponse {
         // [Wrestling Errors] Happens when graph nav refuses to follow the route you specified.  Try saying please?
         STATUS_COULD_NOT_UPDATE_ROUTE = 15;
 
+        // [Route Error] Happens when you try to issue a navigate to while the robot is stuck. Navigate a different
+        // route, or clear the route and try again.
+        STATUS_STUCK = 17;
+        // [Request Error] Happens when you try to continue a command that was either expired, or had an unrecognized id.
+        STATUS_UNRECOGNIZED_COMMAND   = 18;
     }
     // Return status for the request.
     Status status = 3;
 
-    // Unique identifier for the command, If empty, command was not accepted.
+    // Unique identifier for the command, If 0, command was not accepted.
     uint32 command_id = 4;
 
     // On a relevant error status code, these fields contain the waypoint/edge IDs that caused the error.
@@ -310,7 +369,9 @@ message NavigateRouteResponse {
 }
 
 // The NavigationFeedback request message uses the command_id of a navigation request to get
-// the robot's progress and current status for the command.
+// the robot's progress and current status for the command. Note that all commands return immediately
+// after they are processed, and the robot will continue to execute the command asynchronously until
+// it times out or completes. New commands override old ones.
 message NavigationFeedbackRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -371,7 +432,8 @@ message NavigationFeedbackResponse {
 }
 
 // The GetLocalizationState request message requests the current localization state and any other
-// live data from the robot if desired.
+// live data from the robot if desired. The localization consists of a waypoint ID and the relative
+// pose of the robot with respect to that waypoint.
 message GetLocalizationStateRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -448,7 +510,9 @@ message GetLocalizationStateResponse {
 }
 
 
-// Clears the graph on the server.
+// Clears the graph on the server. Also clears GraphNav's localization to the graph.
+// Note that waypoint and edge snapshots may still be cached on the server after this
+// operation.
 message ClearGraphRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -476,8 +540,10 @@ message UploadGraphRequest {
     Lease lease = 3;
 }
 
-// The UploadGraph response message returns mappings for the edge and waypoint ids for
-// which id's it had cached or not.
+// Response to the UploadGraphRequest. After uploading a graph, the user is expected
+// to upload large data at waypoints and edges (called snapshots). The response provides
+// a list of snapshot IDs which are not yet cached on the server. Snapshots with these IDs should
+// be uploaded by the client.
 message UploadGraphResponse {
     // Common response header.
     ResponseHeader header = 1;
@@ -503,7 +569,11 @@ message UploadGraphResponse {
     LicenseInfo.Status license_status = 7;
 }
 
-// The DownloadGraph request message requests for the current graph nav map to be downloaded.
+// The DownloadGraphRequest requests that the server send the graph (waypoints and edges)
+// to the client. Note that the returned Graph message contains only the topological
+// structure of the map, and not any large sensor data. Large sensor data should be downloaded
+// using DownloadWaypointSnapshotRequest and DownloadEdgeSnapshotRequest. Both snapshots and
+// the graph are required to exist on the server for GraphNav to localize and navigate.
 message DownloadGraphRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -517,12 +587,16 @@ message DownloadGraphResponse {
     Graph graph = 2;
 }
 
-// Used to upload waypoint snapshot in chunks for a specific waypoint.
-// Chunks will be streamed one at a time to the server.
+// Used to upload waypoint snapshot in chunks for a specific waypoint snapshot. Waypoint
+// snapshots consist of the large sensor data at each waypoint.
+// Chunks will be streamed one at a time to the server. Chunk streaming is required to prevent
+// overwhelming gRPC with large http requests.
 message UploadWaypointSnapshotRequest {
     // Common response header.
     RequestHeader header = 1;
-    // Serialized bytes of a WaypointSnapshot message.
+    // Serialized bytes of a WaypointSnapshot message, restricted to a chunk no larger than 4MB in size.
+    // To break the data into chunks, first serialize it to bytes. Then, send the bytes in order as DataChunk objects.
+    // The chunks will be concatenated together on the server, and deserialized.
     DataChunk chunk = 3;
     // The Leases to show ownership of the graph-nav service.
     Lease lease = 4;
@@ -537,18 +611,22 @@ message UploadWaypointSnapshotResponse {
     LeaseUseResult lease_use_result = 2;
 }
 
-// Used to upload waypoint data in chunks for a specific waypoint.
-// Chunks will be streamed one at a time to the server.
+// Used to upload edge data in chunks for a specific edge snapshot. Edge snapshots contain
+// large sensor data associated with each edge.
+// Chunks will be streamed one at a time to the server. Chunk streaming is required to prevent
+// overwhelming gRPC with large http requests.
 message UploadEdgeSnapshotRequest {
     // Common response header.
     RequestHeader header = 1;
-    // Serialized bytes of a Edge.Data message.
+    // Serialized bytes of a EdgeSnapshot message, restricted to a chunk no larger than 4MB in size.
+    // To break the data into chunks, first serialize it to bytes. Then, send the bytes in order as DataChunk objects.
+    // The chunks will be concatenated together on the server, and deserialized
     DataChunk chunk = 4;
     // The Leases to show ownership of the graph-nav service.
     Lease lease = 5;
 }
 
-// One response for the entire Edge.Data after all chunks have
+// One response for the entire EdgeSnapshot after all chunks have
 // been concatenated and deserialized.
 message UploadEdgeSnapshotResponse {
     // Common response header.
@@ -558,7 +636,9 @@ message UploadEdgeSnapshotResponse {
 }
 
 // The DownloadWaypointSnapshot request asks for a specific waypoint snapshot id to
-// be downloaded and has parameters to decrease the amount of data downloaded.
+// be downloaded and has parameters to decrease the amount of data downloaded. After
+// recording a map, first call the DownloadGraph RPC. Then, for each waypoint snapshot id,
+// request the waypoint snapshot from the server using the DownloadWaypointSnapshot RPC.
 message DownloadWaypointSnapshotRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -576,7 +656,8 @@ message DownloadWaypointSnapshotRequest {
 }
 
 // The DownloadWaypointSnapshot response streams the data of the waypoint snapshot id
-// currently being downloaded
+// currently being downloaded in data chunks no larger than 4MB in size. It is necessary
+// to stream these data to avoid overwhelming gRPC with large http requests.
 message DownloadWaypointSnapshotResponse {
     // Common response header.
     ResponseHeader header = 1;
@@ -591,12 +672,14 @@ message DownloadWaypointSnapshotResponse {
     // ID of the snapshot associated with a waypoint.
     string waypoint_snapshot_id = 4;
     // Chunk of data to download. Responses are sent in sequence until the
-    // data chunk is complete.
+    // data chunk is complete. After receiving all chunks, concatenate them
+    // into a single byte string. Then, deserialize the byte string into a
+    // WaypointSnapshot object.
     DataChunk chunk = 5;
 }
 
 // The DownloadEdgeSnapshot request asks for a specific edge snapshot id to
-// be downloaded.
+// be downloaded. Edge snapshots contain the large sensor data stored in each edge.
 message DownloadEdgeSnapshotRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -605,7 +688,8 @@ message DownloadEdgeSnapshotRequest {
 }
 
 // The DownloadEdgeSnapshot response streams the data of the edge snapshot id
-// currently being downloaded
+// currently being downloaded in data chunks no larger than 4MB in size. It is necessary
+// to stream these data to avoid overwhelming gRPC with large http requests.
 message DownloadEdgeSnapshotResponse {
     // Common response header.
     ResponseHeader header = 1;
@@ -619,6 +703,9 @@ message DownloadEdgeSnapshotResponse {
     Status status = 2;
     // ID of the snapshot associated with an edge.
     string edge_snapshot_id = 4;
-    // Chunk of data to download.
+    // Chunk of data to download. Responses are sent in sequence until the
+    // data chunk is complete. After receiving all chunks, concatenate them
+    // into a single byte string. Then, deserialize the byte string into an
+    // EdgeSnapshot object.
     DataChunk chunk = 5;
 }

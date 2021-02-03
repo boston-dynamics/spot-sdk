@@ -12,4 +12,4 @@ Choreography client code and interfaces for the Boston Dynamics robot API.
 
 ## Contents
 
-* [Choreogrpahy](choreography)
+* [Choreography](choreography)

@@ -13,6 +13,7 @@ import io
 import sys
 import json
 from PIL import Image
+import time
 
 import bosdyn.client
 import bosdyn.client.util
@@ -150,7 +151,7 @@ class RicohThetaServiceHelper(CameraInterface):
             # the size to allow for the larger raw images.
             pil_image = Image.open(io.BytesIO(img_bytes_read))
             compressed_byte_buffer = io.BytesIO()
-            # PIL will not do any JPEG compression if the quality is specifed as 100. It effectively treats
+            # PIL will not do any JPEG compression if the quality is specified as 100. It effectively treats
             # requests with quality > 95 as a request for a raw image.
             pil_image.save(compressed_byte_buffer, format=pil_image.format, quality=100)
             image_proto.data = compressed_byte_buffer.getvalue()
@@ -166,7 +167,7 @@ class RicohThetaServiceHelper(CameraInterface):
                 # A valid image quality percentage was passed with the image request,
                 # so use this value instead of the service's default.
                 if quality_percent > 95:
-                    # PIL will not do any JPEG compression if the quality is specifed as 100. It effectively treats
+                    # PIL will not do any JPEG compression if the quality is specified as 100. It effectively treats
                     # requests with quality > 95 as a request for a raw image.
                     checked_quality = 95
                 else:
@@ -243,8 +244,8 @@ def add_ricoh_theta_arguments(parser):
         help='Run the Ricoh Theta in client mode (camera connects to specified network).')
     parser.add_argument(
         '--capture-when-requested', action='store_true', help=
-        "Only request images from the Ricoh Theta when a GetImage RPC is recieved. Otherwise, use "
-        "a background thread to request images continuosuly.")
+        "Only request images from the Ricoh Theta when a GetImage RPC is received. Otherwise, use "
+        "a background thread to request images continuously.")
 
 
 if __name__ == '__main__':

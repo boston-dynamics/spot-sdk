@@ -50,7 +50,7 @@ class DataReader(BaseDataReader):  # pylint: disable=too-many-instance-attribute
         return self.series_block_index(series_index).total_bytes
 
     def read(self, series_index, index_in_series):
-        """Retreives a message and related information from the file.
+        """Retrieves a message and related information from the file.
 
         Args:
          series_index: int selecting from which series to read the message.

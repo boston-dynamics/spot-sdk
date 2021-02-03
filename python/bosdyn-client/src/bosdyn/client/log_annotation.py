@@ -20,6 +20,7 @@ import threading
 import time
 import traceback
 
+from deprecated import deprecated
 from six.moves.queue import Queue
 
 from bosdyn import util as core_util
@@ -29,17 +30,15 @@ from bosdyn.client import time_sync
 import bosdyn.api.log_annotation_pb2 as log_annotation_protos
 import bosdyn.api.log_annotation_service_pb2_grpc as log_annotation_service
 
-
 class InvalidArgument(Error):
     """A given argument could not be used."""
 
-
+@deprecated(
+    reason='The log-annotation client and service have been replaced by data_buffer.',
+    version='2.1.0',
+    action="always")
 class LogAnnotationClient(BaseClient):
-    """A client for adding annotations to robot logs (DEPRECATED).
-
-    The log-annotation service is deprecated and will be removed in a later release.
-    Instead, please use the data_buffer service going forward.
-    """
+    """A client for adding annotations to robot logs."""
 
     default_service_name = 'log-annotation'
     service_type = 'bosdyn.api.LogAnnotationService'
@@ -166,6 +165,10 @@ class LogAnnotationClient(BaseClient):
         return None
 
 
+@deprecated(
+    reason='The log-annotation client and service have been replaced by data_buffer.',
+    version='2.1.0',
+    action="always")
 class LogAnnotationHandler(logging.Handler):
     """A logging system Handler that will publish text to a bosdyn.api.LogAnnotationService.
 

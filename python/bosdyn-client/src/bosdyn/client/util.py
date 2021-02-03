@@ -6,26 +6,25 @@
 
 from concurrent import futures
 import copy
+from deprecated.sphinx import deprecated
 import getpass
 import glob
 import grpc
 import logging
 import os
-import warnings
 import six
 import signal
 import time
 import threading
-import bosdyn.util
 
 from bosdyn.api import header_pb2
-from bosdyn.client.channel import generate_channel_options
-
 from bosdyn.api import data_acquisition_store_pb2
 from bosdyn.api import data_buffer_pb2
 from bosdyn.api import image_pb2
 from bosdyn.api import local_grid_pb2
 from bosdyn.api import log_annotation_pb2
+from bosdyn.client.channel import generate_channel_options
+import bosdyn.util
 
 from .auth import InvalidLoginError
 from .exceptions import Error
@@ -120,7 +119,7 @@ def setup_logging(verbose=False, include_dedup_filter=False,
         logger.addHandler(streamlog)
 
     if logger.handlers and include_dedup_filter:
-        # If a logger has exisiting handlers, check if the filter is there already. Also check if it is part of the
+        # If a logger has existing handlers, check if the filter is there already. Also check if it is part of the
         # main log already. If not, add it to a new handler.
         filter_exists = None
         for handler in logger.handlers:
@@ -155,12 +154,13 @@ def get_logger():
     return logging.getLogger()
 
 
+@deprecated(
+    reason='App tokens are no longer in use. Authorization is now handled via licenses.',
+    version='2.0.1',
+    action="always")
 def default_app_token_path():
-    """Deprecated method to get app token, no longer necessary.
-    """
-    warnings.warn(
-        "App tokens are deprecated as of 2.0.1.  default_app_token_path is no longer necessary",
-        DeprecationWarning)
+    """Do nothing, this method is kept only to maintain backwards compatibility."""
+    return
 
 def add_base_arguments(parser):
     """Add hostname argument to parser.
@@ -229,7 +229,7 @@ class GrpcServiceRunner(object):
             Defaults to 0, which will assign an ephemeral port.
         max_send_message_length (int): Max message length (bytes) allowed for messages sent.
         max_receive_message_length (int): Max message length (bytes) allowed for messages received.
-        timout_secs (int): Number of seconds to wait for a clean server shutdown.
+        timeout_secs (int): Number of seconds to wait for a clean server shutdown.
         force_sigint_capture (bool): Re-assign the SIGINT handler to default in order to prevent
             other scripts from blocking a clean exit. Defaults to True.
         logger (logging.Logger): Logger to log with.

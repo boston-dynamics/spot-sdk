@@ -193,7 +193,7 @@ def monitor_status_until_complete_or_failed(request_id, client, capability_name,
         verbose (boolean): Print additional logging information on failure.
 
     Returns:
-        A boolean indicating that the GetStatus RPC eventually recieved a "complete" status.
+        A boolean indicating that the GetStatus RPC eventually received a "complete" status.
     """
     start_time = time.time()
     should_continue = time.time() - start_time < kMonitorStatusTimeoutSecs
@@ -220,7 +220,7 @@ def monitor_status_until_complete_or_failed(request_id, client, capability_name,
                 _LOGGER.info("The full GetStatus response: %s", get_status_response)
             return False
         elif get_status_response.status in kAcquisitionContinuesStatuses:
-            # Sleep breifly, then re-attempt to make a GetStatus RPC to see if the acquisition has completed.
+            # Sleep briefly, then re-attempt to make a GetStatus RPC to see if the acquisition has completed.
             time.sleep(0.2)
             should_continue = time.time() - start_time < kMonitorStatusTimeoutSecs
             continue
@@ -254,7 +254,7 @@ def test_capabilities_acquires_and_saves(capabilities, data_acq_client, data_sto
         verbose (boolean): Print additional logging information on failure.
 
     Returns:
-        A boolean indicating that every capability recieved a "complete" status for the GetStatus RPC and an action id for
+        A boolean indicating that every capability received a "complete" status for the GetStatus RPC and an action id for
         the acquisition can be found in the data store.
     """
     success = True
@@ -299,7 +299,7 @@ def acquire_get_status_and_save(acquisition_request, capability_name, action_nam
         verbose (boolean): Print additional logging information on failure.
 
     Returns:
-        A boolean indicating that the acquisition request recieved a "complete" status for the GetStatus RPC and
+        A boolean indicating that the acquisition request received a "complete" status for the GetStatus RPC and
         an action id for the acquisition can be found in the data store.
     """
     # Make a request for this data capability and check that it completes successfully.
@@ -346,7 +346,7 @@ def acquire_get_status_and_save(acquisition_request, capability_name, action_nam
 
 def cancel_request_and_monitor_status(request_id, client, capability_name, action_name, verbose):
     """Helper status that monitors the status (using the GetStatus RPC) for the acquisition request after it
-    is cancelled until it recieves a "cancellation complete" status, or fails and times out.
+    is cancelled until it receives a "cancellation complete" status, or fails and times out.
 
     Args:
         request_id (int): The request_id for the acquisition request (returned by the AcquireData RPC).
@@ -356,7 +356,7 @@ def cancel_request_and_monitor_status(request_id, client, capability_name, actio
         verbose (boolean): Print additional logging information on failure.
 
     Returns:
-        A boolean indicating that the GetStatus RPC eventually recieved a "cancellation complete" status.
+        A boolean indicating that the GetStatus RPC eventually received a "cancellation complete" status.
     """
     try:
         cancel_res = client.cancel_acquisition(request_id)
@@ -402,13 +402,13 @@ def cancel_request_and_monitor_status(request_id, client, capability_name, actio
         if get_status_response.status in kAcquisitionCancellationSucceededStatuses:
             return True
         elif get_status_response.status in kAcquisitionCancellationContinuesStatuses:
-            # Sleep breifly, then re-attempt to make a GetStatus RPC to see if the acquisition has cancelled.
+            # Sleep briefly, then re-attempt to make a GetStatus RPC to see if the acquisition has cancelled.
             time.sleep(0.2)
         elif get_status_response.status in kAcquisitionContinuesStatuses:
-            # Warning that plugin did not update status to reflect that cancel rpc was recieved.
+            # Warning that plugin did not update status to reflect that cancel rpc was received.
             if first_time_warning:
                 _LOGGER.warning(
-                    "The plugin did not update the status to reflect that a CancelAcquisition RPC was recieved. Try "
+                    "The plugin did not update the status to reflect that a CancelAcquisition RPC was received. Try "
                     "setting the status as STATUS_CANCEL_IN_PROGRESS after responding to the RPC.")
                 _LOGGER.info("Request %s for data '%s' with action_name '%s", request_id,
                              capability_name, action_name)
@@ -417,7 +417,7 @@ def cancel_request_and_monitor_status(request_id, client, capability_name, actio
                                  capability_name, action_name)
                     _LOGGER.info("The full GetStatus response: %s", get_status_response)
                 first_time_warning = False
-            # Sleep breifly, then re-attempt to make a GetStatus RPC to see if the acquisition has cancelled.
+            # Sleep briefly, then re-attempt to make a GetStatus RPC to see if the acquisition has cancelled.
             time.sleep(0.2)
         elif get_status_response.status in kAcquisitionCancellationFailedStatuses:
             # Cancellation-specific failure.
@@ -466,7 +466,7 @@ def test_cancelling(capabilities, data_acq_client, group_name, verbose):
         verbose (boolean): Print additional logging information on failure.
 
     Returns:
-        A boolean indicating that every capability responds to the CancelAcquisition RPC and recieved a "cancellation
+        A boolean indicating that every capability responds to the CancelAcquisition RPC and received a "cancellation
         complete" status for the GetStatus RPC.
     """
     all_cancels_succeed = True

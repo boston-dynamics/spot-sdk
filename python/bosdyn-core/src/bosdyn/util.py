@@ -194,7 +194,7 @@ def secs_to_hms(seconds):
     """Format a time in seconds as 'H:MM:SS'
 
     Args:
-     seconds:   number of seconds (will be truncted to integer value)
+     seconds:   number of seconds (will be truncated to integer value)
     """
     isecs = int(seconds)
     seconds = isecs % 60

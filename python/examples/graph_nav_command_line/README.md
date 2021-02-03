@@ -31,7 +31,7 @@ To run the example:
 python3 -m recording_command_line --username USER --password PASSWORD --download-filepath <path_to_downloaded_map> ROBOT_IP
 ```
 
-Note that the `download-filepath` command line argument must be a full path. This argument is optional; if not provided, then the current working direcory will be used. When a map is downloaded, it will be downloaded into a subfolder called `downloaded_graph` in the specified folder the layout is:
+Note that the `download-filepath` command line argument must be a full path. This argument is optional; if not provided, then the current working directory will be used. When a map is downloaded, it will be downloaded into a subfolder called `downloaded_graph` in the specified folder the layout is:
 
 ```
 download-filepath
@@ -62,7 +62,7 @@ To run the example (with example filepath):
 python3 -m graph_nav_command_line --username USER --password PASSWORD --upload-filepath ~/Downloads/my_graph_folder ROBOT_IP
 ```
 
-Before the robot can complete any navigation commands, a map must be uploaded to the robot or recorded on the robot recently without powering off the robot. Additionally, the localization must be set: it will automatically be localized to the map if it was just recorded on the robot without any power cycles; otherwise, the localization must manually be initalized when the robot is standing near a fiducial in the recorded map. 
+Before the robot can complete any navigation commands, a map must be uploaded to the robot or recorded on the robot recently without powering off the robot. Additionally, the localization must be set: it will automatically be localized to the map if it was just recorded on the robot without any power cycles; otherwise, the localization must manually be initialized when the robot is standing near a fiducial in the recorded map. 
 
 The navigation commands will power on and stand the robot up, execute the desired route, and then sit down and power off the robot when the navigation is complete. Use the E-Stop or quit the command line to stop navigation.
 

@@ -27,7 +27,7 @@ To properly setup for this example:
 When run, this script will
 * Power on and stand up the robot.
 * Move the robot onto the dock and engage the dock.
-* Will retry if the first attemp fails.
+* Will retry if the first attempt fails.
 * Power Off once engaged with the dock
 
 ```

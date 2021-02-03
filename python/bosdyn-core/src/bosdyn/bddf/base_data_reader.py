@@ -116,7 +116,7 @@ class BaseDataReader:  # pylint: disable=too-many-instance-attributes
         elif checksum_type != bddf.FileFormatDescriptor.CHECKSUM_TYPE_SHA1:
             raise DataFormatError("Unknown checksum type {}".format(checksum_type))
         if self._file_descriptor.checksum_num_bytes != SHA1_DIGEST_NBYTES:
-            raise DataFormatError("Uexpected checksm num_bytes ({} != {}).".format(
+            raise DataFormatError("Unexpected checksm num_bytes ({} != {}).".format(
                 self._file_descriptor.checksum_num_bytes, SHA1_DIGEST_NBYTES))
 
     def _read_proto(self, proto_type, nbytes):

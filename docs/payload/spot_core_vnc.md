@@ -9,7 +9,7 @@ Development Kit License (20191101-BDSDK-SL).
 # Spot CORE VNC
 VNC allows users to launch and interact with graphical applications on remote machines.
 
-This document details how to setup TigerVNC on the Spot CORE. We will also use the XFCE desktop environment, port forwarding, and systemd .service files in the content below.
+This document details how to setup TigerVNC on the Spot CORE. We will also use the GNOME desktop environment, port forwarding, and systemd .service files in the content below.
 
 ## Overview
 Spot CORE now comes preconfigured with TigerVNC. The following sections outline the steps necessary for enabling the service before use. 
@@ -20,14 +20,14 @@ Spot CORE now comes preconfigured with TigerVNC. The following sections outline 
   - Not required if the Spot CORE is on any software version greater than 2.0.1.
 
 ## TigerVNC Server Enable
-SSH into the Spot CORE. Wirelessly connect a PC to the Spot Robot and open a Command Line Interface (CLI) to run the following.
-
+First, access a terminal on the Spot CORE. To do this, you can either log in to Cockpit at https://192.168.80.3:21443 and go to the Terminal tab, or you can connect through the command line:
 ```
 ssh -p 20022 spot@192.168.80.3
 ```
 
 ### Create a VNC password
-Create a VNC password. A view-only password is not required.
+A default password "password" will be created for you. This password is used to access the VNC session from a client, after which you need to log in with the standard username and password for the Spot CORE.
+You may also choose to create a new VNC password with the following command (a view-only password is not required):
 ```
 vncpasswd
 ```
@@ -63,37 +63,50 @@ Start VNC Viewer and pass the IP address and port number.
 vncviewer localhost:21000
 ```
 
-An XFCE desktop environment should now be available.
+After entering the password set using `vncpasswd` earlier, a GNOME desktop environment should now be available.
 
 ## TigerVNC Server Installation
-This section is not required if the Spot CORE is on any software version greater than 2.0.1.
+This section is not required if the Spot CORE is on any software version greater than or equal to 2.3.0.
 
 ### Install software
 Install software required for the TigerVNC server on the Spot CORE using apt:
 ```
-sudo apt install xfce4
 sudo apt install tigervnc-standalone-server tigervnc-common tigervnc-xorg-extension tigervnc-viewer
 ```
 
 If the user has not setup a VNC password, please see the earlier instructions on how to [create a vnc password](#create-a-vnc-password).
 
 ### Prepare vncserver
-To configure the XFCE desktop, create a xstartup file in `~/.vnc/xstartup` and add the following contents.
+To configure the GNOME desktop, create a xstartup file in `~/.vnc/xstartup` and add the following contents.
 ```
 #!/bin/sh
-
-# Uncomment the following two lines for normal desktop:
-# unset SESSION_MANAGER
-# exec /etc/X11/xinit/xinitrc
-
 [ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
 [ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
-xsetroot -solid grey
 vncconfig -iconic &
-x-terminal-emulator -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &
-x-window-manager &
+dbus-launch --exit-with-session gnome-session &
+```
 
-exec /usr/bin/startxfce4 &
+To enable permissions for remote sessions (such as VNC) to edit certain system settings, create the following files in `/etc/polkit-1/localauthority/50-local.d/`:
+
+*10-network-manager.pkla*
+```
+[Let user spot modify system settings for network]
+Identity=unix-user:spot
+Action=org.freedesktop.NetworkManager.*
+ResultAny=auth_admin_keep
+ResultInactive=no
+ResultActive=yes
+
+```
+
+*46-user-admin.pkla*
+```
+[control center administration]
+Identity=unix-user:*
+Action=org.gnome.controlcenter.*
+ResultAny=auth_admin_keep
+ResultInactive=no
+ResultActive=yes
 ```
 
 ### Start vncserver
@@ -124,19 +137,18 @@ In order for vncserver to automatically run on Spot CORE whenever Spot is turned
 
 ```
 [Unit]
-Description=Start TigerVNC server at startup
-After=syslog.target network.target
+Description=TigerVNC server
+After=network.target
 
 [Service]
-Type=forking
-User=spot
-Group=spot
-WorkingDirectory=/home/spot
+Type=simple
+RemainAfterExit=yes
+SuccessExitStatus=0
 
 PIDFile=/home/spot/.vnc/%H:%i.pid
-ExecStartPre=-/usr/bin/vncserver -kill :%i > /dev/null 2>&1
-ExecStart=/usr/bin/vncserver -depth 24 -localhost no :%i
-ExecStop=/usr/bin/vncserver -kill :%i
+ExecStartPre=/bin/su -l spot -c "/usr/bin/vncserver -kill :%i > /dev/null"
+ExecStart=/bin/su -l spot -c "/usr/bin/vncserver :%i -localhost no"
+ExecStop=/bin/su -l spot -c "/usr/bin/vncserver -kill :%i"
 
 [Install]
 WantedBy=multi-user.target

@@ -29,7 +29,7 @@ When run, this script will
 * Leave the tablet with cut motor power authority.
 * Power on and stand up the robot. 
 
-Once standing, you will see the robot reposition its feet at the current body location to the foot offsets specied in the script.
+Once standing, you will see the robot reposition its feet at the current body location to the foot offsets specified in the script.
 
 
 ```

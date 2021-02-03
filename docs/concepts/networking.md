@@ -25,7 +25,7 @@ While the application-layer protocol for the Spot API works across any IP-based 
 
 [gRPC](https://grpc.io) is the application-level protocol used by the majority of the Spot API. gRPC was chosen because it provides a secure, performant protocol with support for a broad set of programming languages and environments.
 
-gRPC specifies the service interfaces and remote procedure calls (RPC's) supported by the service. For example, the Spot API has an authentication service with the following definition:
+gRPC specifies the service interfaces and remote procedure calls (RPCs) supported by the service. For example, the Spot API has an authentication service with the following definition:
 
 ```protobuf
 service AuthService {

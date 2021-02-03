@@ -74,10 +74,14 @@ message RobotState {
     // The foot states (and contact information).
     repeated FootState foot_state = 8;
 
+    /// State of the manipulator, only populated if an arm is attached to the robot.
+    ManipulatorState manipulator_state = 11;
 
     // Service faults for services registered with the robot.
     ServiceFaultState service_fault_state = 10;
 
+
+    reserved 9;
 }
 
 // The power state for the robot.
@@ -448,6 +452,36 @@ message FootState {
     Contact contact = 2;
 }
 
+/// Additional state published if an arm is attached to the robot.
+message ManipulatorState {
+    // How open the gripper is, measured in percent.
+    // 0 = fully closed, 100 = fully open.
+    double gripper_open_percentage = 12;
+
+    /// Will be true if the gripper is holding an item, false otherwise.
+    bool is_gripper_holding_item = 6;
+
+    // The estimated force on the end-effector expressed in the hand frame.
+    Vec3 estimated_end_effector_force_in_hand = 13;
+
+    enum StowState {
+        STOWSTATE_UNKNOWN = 0;
+        STOWSTATE_STOWED = 1;
+        STOWSTATE_DEPLOYED = 2;
+    }
+    /// Information on if the arm is stowed, or deployed.
+    StowState stow_state = 9;
+
+    // Velocity of the hand frame with respect to vision frame and expressed in vision frame.
+    // The linear velocity is applied at the origin of the hand frame.
+    SE3Velocity velocity_of_hand_in_vision = 14;
+    // Velocity of the hand frame with respect to odom frame and expressed in odom frame.
+    // Again, the linear velocity is applied at the origin of the hand frame.
+    SE3Velocity velocity_of_hand_in_odom = 15;
+
+    // Previous fields in the protobuf that are now reserved.
+    reserved 1, 2, 3, 4, 5, 7, 8, 10, 11;
+}
 
 // The current state of each service fault the robot is experiencing.
 // An "active" fault indicates a fault currently in a service.
@@ -465,7 +499,6 @@ message ServiceFaultState {
     // "vision" faults above a certain severity level.
     map<string, ServiceFault.Severity> aggregated = 3;
 }
-
 
 // The RobotState request message to get the current state of the robot.
 message RobotStateRequest {

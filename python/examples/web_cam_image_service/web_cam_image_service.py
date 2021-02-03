@@ -30,7 +30,26 @@ _LOGGER = logging.getLogger(__name__)
 class WebCam(CameraInterface):
     """Provide access to the latest web cam data using openCV's VideoCapture."""
 
-    def __init__(self, device_name, fps=30):
+    def __init__(self, device_name, fps=30, show_debug_information=False):
+        self.show_debug_images = show_debug_information
+
+        # Check if the user is passing an index to a camera port, i.e. "0" to get the first
+        # camera in the operating system's enumeration of available devices. The VideoCapture
+        # takes either a filepath to the device (as a string), or a index to the device (as an
+        # int). Attempt to see if the device name can be cast to an integer before initializing
+        # the video capture instance.
+        # Someone may pass just the index because on certain operating systems (like Windows),
+        # it is difficult to find the path to the device. In contrast, on linux the video
+        # devices are all found at /dev/videoXXX locations and it is easier.
+        try:
+            device_name = int(device_name)
+        except ValueError as err:
+            # No action if the device cannot be converted. This likely means the device name
+            # is some sort of string input -- for example, linux uses the default device ports
+            # for cameras as the strings "/dev/video0"
+            pass
+
+        # Create the image source name from the device name.
         self.image_source_name = device_name_to_source_name(device_name)
 
         # OpenCV VideoCapture instance.
@@ -60,6 +79,14 @@ class WebCam(CameraInterface):
         # Get the image from the video capture.
         capture_time = time.time()
         success, image = self.capture.read()
+        if self.show_debug_images:
+            print("Image Capture Result: %s" % str(success))
+            try:
+                cv2.imshow("WebCam Image Capture", image)
+                cv2.waitKey(1)
+            except Exception:
+                print("Unable to display the webcam image captured.")
+                pass
         if success:
             return image, capture_time
         else:
@@ -106,13 +133,17 @@ class WebCam(CameraInterface):
 
 
 def device_name_to_source_name(device_name):
-    return os.path.basename(device_name)
+    if type(device_name) == int:
+        return "video"+str(device_name)
+    else:
+        return os.path.basename(device_name)
 
 
-def make_webcam_image_service(bosdyn_sdk_robot, service_name, device_names, logger=None):
+def make_webcam_image_service(bosdyn_sdk_robot, service_name, device_names,
+                              show_debug_information=False, logger=None):
     image_sources = []
     for device in device_names:
-        web_cam = WebCam(device)
+        web_cam = WebCam(device, show_debug_information=show_debug_information)
         img_src = VisualImageSource(web_cam.image_source_name, web_cam, rows=web_cam.rows,
                                     cols=web_cam.cols, gain=web_cam.camera_gain,
                                     exposure=web_cam.camera_exposure)
@@ -120,13 +151,14 @@ def make_webcam_image_service(bosdyn_sdk_robot, service_name, device_names, logg
     return CameraBaseImageServicer(bosdyn_sdk_robot, service_name, image_sources, logger)
 
 
-def run_service(bosdyn_sdk_robot, port, service_name, device_names, logger=None):
+def run_service(bosdyn_sdk_robot, port, service_name, device_names,
+                show_debug_information=False, logger=None):
     # Proto service specific function used to attach a servicer to a server.
     add_servicer_to_server_fn = image_service_pb2_grpc.add_ImageServiceServicer_to_server
 
     # Instance of the servicer to be run.
     service_servicer = make_webcam_image_service(bosdyn_sdk_robot, service_name, device_names,
-                                                 logger=logger)
+                                                 show_debug_information, logger=logger)
     return GrpcServiceRunner(service_servicer, add_servicer_to_server_fn, port, logger=logger)
 
 
@@ -135,7 +167,9 @@ def add_web_cam_arguments(parser):
         '--device-name',
         help=('Image source to query. If none are passed, it will default to the first available '
               'source.'), action='append', required=False, default=[])
-
+    parser.add_argument(
+        '--show-debug-info', action='store_true', required=False,
+        help="If passed, openCV will try to display the captured web cam images.")
 
 if __name__ == '__main__':
     # Define all arguments used by this service.
@@ -149,8 +183,9 @@ if __name__ == '__main__':
 
     devices = options.device_name
     if not devices:
-        # No sources were provided. Use the default source of the first video port.
-        devices = ["/dev/video0"]
+        # No sources were provided. Set the default source as index 0 to point to the first
+        # available device found by the operating system.
+        devices = ["0"]
 
     # Setup logging to use either INFO level or DEBUG level.
     setup_logging(options.verbose, include_dedup_filter=True)
@@ -162,7 +197,7 @@ if __name__ == '__main__':
 
     # Create a service runner to start and maintain the service on background thread.
     service_runner = run_service(robot, options.port, DIRECTORY_NAME, devices,
-                                 logger=_LOGGER)
+                                 options.show_debug_info, logger=_LOGGER)
 
     # Use a keep alive to register the service with the robot directory.
     dir_reg_client = robot.ensure_client(DirectoryRegistrationClient.default_service_name)

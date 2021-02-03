@@ -9,15 +9,14 @@
 from __future__ import print_function, division
 import abc
 import argparse
+import datetime
 import signal
 import threading
 import time
 import os
 
-import numpy as np
 import six
 
-from bosdyn.api import image_pb2
 from bosdyn.api.data_buffer_pb2 import TextMessage
 from bosdyn.api.data_index_pb2 import EventsCommentsSpec
 from bosdyn.api import data_acquisition_pb2
@@ -25,7 +24,7 @@ import bosdyn.client
 from bosdyn.util import (duration_str, timestamp_to_datetime)
 
 from .auth import InvalidLoginError
-from .exceptions import Error, InvalidAppTokenError, InvalidRequestError, ProxyConnectionError, ResponseError
+from .exceptions import Error, InvalidAppTokenError, InvalidRequestError, ProxyConnectionError
 from .data_acquisition import DataAcquisitionClient
 from .data_acquisition_helpers import acquire_and_process_request
 from .data_buffer import DataBufferClient
@@ -35,16 +34,17 @@ from .directory_registration import DirectoryRegistrationClient, DirectoryRegist
 from .estop import EstopClient, EstopEndpoint, EstopKeepAlive
 from .payload import PayloadClient
 from .payload_registration import PayloadRegistrationClient, PayloadAlreadyExistsError
-from .image import (ImageClient, UnknownImageSourceError, ImageResponseError,
-                    build_image_request, save_images_as_files)
+from .image import (ImageClient, UnknownImageSourceError, ImageResponseError, build_image_request,
+                    save_images_as_files)
 from .lease import LeaseClient
 from .license import LicenseClient
 from .local_grid import LocalGridClient
 from .robot_id import RobotIdClient
 from .robot_state import RobotStateClient
-from .sdk import SdkError
-from .time_sync import (TimeSyncClient, TimeSyncEndpoint, TimeSyncError)
+from .time_sync import TimeSyncClient, TimeSyncEndpoint, TimeSyncError, timespec_to_robot_timespan
+
 from .util import (add_common_arguments, setup_logging)
+
 
 # pylint: disable=too-few-public-methods
 class Command(object, six.with_metaclass(abc.ABCMeta)):
@@ -77,7 +77,7 @@ class Command(object, six.with_metaclass(abc.ABCMeta)):
         try:
             if self.NEED_AUTHENTICATION:
                 robot.authenticate(options.username, options.password)
-                robot.sync_with_directory() # Make sure that we can use all registered services.
+                robot.sync_with_directory()  # Make sure that we can use all registered services.
             return self._run(robot, options)
         except ProxyConnectionError:
             print('Could not contact robot with hostname "{}".'.format(options.hostname))
@@ -150,8 +150,8 @@ class DirectoryCommands(Subcommands):
         ])
 
 
-def _format_dir_entry(name, service_type, authority, tokens, name_width=23, type_width=31,
-                      authority_width=27):
+def _format_dir_entry(  # pylint: disable=too-many-arguments
+        name, service_type, authority, tokens, name_width=23, type_width=31, authority_width=27):
     """Prints the passed values as "name service_type authority tokens", with the first three using
     the specified width.
 
@@ -358,13 +358,14 @@ class DirectoryRegisterCommand(Command):
                                                    options.service_hostname, options.service_port,
                                                    user_token_required=not options.no_user_token)
         except DirectoryRegistrationResponseError as exc:
+            # pylint: disable=no-member
             print("Failed to register service {}.\nResponse Status: {}".format(
                 options.service_name,
                 bosdyn.api.directory_registration_pb2.RegisterServiceResponse.Status.Name(
                     exc.response.status)))
             return False
         else:
-            print("Succesfully registered service {}".format(options.service_name))
+            print("Successfully registered service {}".format(options.service_name))
             return True
 
 
@@ -399,13 +400,14 @@ class DirectoryUnregisterCommand(Command):
         try:
             directory_registration_client.unregister(options.service_name)
         except DirectoryRegistrationResponseError as exc:
+            # pylint: disable=no-member
             print("Failed to unregister service {}.\nResponse Status: {}".format(
                 options.service_name,
                 bosdyn.api.directory_registration_pb2.UnregisterServiceResponse.Status.Name(
                     exc.response.status)))
             return False
         else:
-            print("Succesfully unregistered service {}".format(options.service_name))
+            print("Successfully unregistered service {}".format(options.service_name))
             return True
 
 
@@ -421,7 +423,9 @@ class PayloadCommands(Subcommands):
             subparsers: List of argument parsers.
             command_dict: Dictionary of command names which take parsed options.
         """
-        super(PayloadCommands, self).__init__(subparsers, command_dict, [PayloadListCommand, PayloadRegisterCommand])
+        super(PayloadCommands, self).__init__(subparsers, command_dict,
+                                              [PayloadListCommand, PayloadRegisterCommand])
+
 
 def _show_payload_list(robot, as_proto=False):
     """Print payload list for robot.
@@ -495,7 +499,7 @@ def _register_payload(robot, name, guid, secret):
         robot: Robot object used to register the payload.
         name: The name that will be assigned to the registered payload.
         guid: The GUID that will be assigned to the registered payload.
-        secret: The secret that the pyaload will be registed with.
+        secret: The secret that the payload will be registered with.
     Returns:
         True
     """
@@ -505,7 +509,7 @@ def _register_payload(robot, name, guid, secret):
     try:
         payload_registration_client.register_payload(payload, secret)
     except PayloadAlreadyExistsError:
-        print('\nA payload with this GUID is already registed. Check the robot Admin Console.')
+        print('\nA payload with this GUID is already registered. Check the robot Admin Console.')
     else:
         print('\nPayload successfully registered with the robot.\n'
               'Before it can be used, the payload must be authorized in the Admin Console.')
@@ -569,7 +573,7 @@ def _show_service_faults(robot):
     service_fault_state = robot_state_client.get_robot_state().service_fault_state
 
     print("\n\n\n" + "-" * 80)
-    if (len(service_fault_state.faults) == 0):
+    if len(service_fault_state.faults) == 0:
         print("No active service faults.")
         return
 
@@ -701,9 +705,8 @@ class DataBufferCommands(Subcommands):
             subparsers: List of argument parsers.
             command_dict: Dictionary of command names which take parsed options.
         """
-        super(DataBufferCommands, self).__init__(
-            subparsers, command_dict,
-            [TextMsgCommand, OperatorCommentCommand])
+        super(DataBufferCommands, self).__init__(subparsers, command_dict,
+                                                 [TextMsgCommand, OperatorCommentCommand])
 
 
 class TextMsgCommand(Command):
@@ -750,6 +753,7 @@ class TextMsgCommand(Command):
                 print("Failed to send message with timestamp: {}.".format(err))
                 return False
         msg_proto = TextMessage(message=options.message, timestamp=robot_timestamp)
+        # pylint: disable=no-member
         if options.debug:
             msg_proto.level = TextMessage.LEVEL_DEBUG
         elif options.warn:
@@ -819,16 +823,13 @@ class DataServiceCommands(Subcommands):
             subparsers: List of argument parsers.
             command_dict: Dictionary of command names which take parsed options.
         """
-        super(DataServiceCommands,
-              self).__init__(subparsers, command_dict,
-                             [GetDataBufferCommentsCommand, GetDataBufferEventsCommand,
-                              GetDataBufferStatusCommand])
+        super(DataServiceCommands, self).__init__(
+            subparsers, command_dict,
+            [GetDataBufferCommentsCommand, GetDataBufferEventsCommand, GetDataBufferStatusCommand])
 
 
-class GetDataBufferCommentsCommand(Command):
-    """Get operator comments from the robot."""
-
-    NAME = 'comments'
+class GetDataBufferEventsCommentsCommand(Command):
+    """Parent class for commands grabbing operator comment and events."""
 
     def __init__(self, subparsers, command_dict):
         """Get operator comments from the robot.
@@ -837,7 +838,48 @@ class GetDataBufferCommentsCommand(Command):
             subparsers: List of argument parsers.
             command_dict: Dictionary of command names which take parsed options.
         """
-        super(GetDataBufferCommentsCommand, self).__init__(subparsers, command_dict)
+        super(GetDataBufferEventsCommentsCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('--proto', action='store_true', help='print in proto format')
+        self._parser.add_argument(
+            '-T', '--timespan',
+            help='Time span (default all).  "1h" (last hour), "10m-5m" (from 10 to 5 minutes ago).')
+        self._parser.add_argument('-R', '--robot-time', action='store_true',
+                                  help='Specified timespan is in robot time')
+
+    @abc.abstractmethod
+    def _run(self, robot, options):
+        pass
+
+    @abc.abstractmethod
+    def pretty_print(self, values):
+        """Print output of request in a human-friendly way."""
+
+    def _get_result(self, request_spec, robot, options, get_values_fn):
+        client = robot.ensure_client(DataServiceClient.default_service_name)
+        if options.timespan:
+            if options.robot_time:
+                time_sync_endpoint = None
+            else:
+                time_sync_client = robot.ensure_client(TimeSyncClient.default_service_name)
+                time_sync_endpoint = TimeSyncEndpoint(time_sync_client)
+                if not time_sync_endpoint.establish_timesync():
+                    print("Failed to get timesync for requesting comments.")
+                    return False
+            time_range = timespec_to_robot_timespan(options.timespan, time_sync_endpoint)
+            # pylint: disable=no-member
+            request_spec.time_range.CopyFrom(time_range)
+        values = get_values_fn(client.get_events_comments(request_spec))
+        if options.proto:
+            print(values)
+        else:
+            self.pretty_print(values)
+        return True
+
+
+class GetDataBufferCommentsCommand(GetDataBufferEventsCommentsCommand):
+    """Get operator comments from the robot."""
+
+    NAME = 'comments'
 
     def _run(self, robot, options):
         """Implementation of the command.
@@ -849,26 +891,29 @@ class GetDataBufferCommentsCommand(Command):
         Returns:
             True
         """
-        client = robot.ensure_client(DataServiceClient.default_service_name)
-        print(client.get_events_comments(EventsCommentsSpec(
-            comments=True)).events_comments.operator_comments)
-        return True
+        request_spec = EventsCommentsSpec(comments=True)
+
+        def _get_comments(response):
+            return response.events_comments.operator_comments
+
+        return self._get_result(request_spec, robot, options, _get_comments)
+
+    def pretty_print(self, values):  # pylint: disable=no-self-use
+        last_date_shown = None
+        for comment in values:
+            dtm = datetime.datetime.fromtimestamp(
+                comment.timestamp.seconds + comment.timestamp.seconds * 1e-9)
+            if dtm.date() != last_date_shown:
+                print("\n[{}]".format(dtm.date()))
+                last_date_shown = dtm.date()
+            print(" {}  {}".format(dtm.time(), comment.message.strip()))
 
 
-class GetDataBufferEventsCommand(Command):
+class GetDataBufferEventsCommand(GetDataBufferEventsCommentsCommand):
     """Get events from the robot."""
 
     NAME = 'events'
 
-    def __init__(self, subparsers, command_dict):
-        """Get events from the robot.
-
-        Args:
-            subparsers: List of argument parsers.
-            command_dict: Dictionary of command names which take parsed options.
-        """
-        super(GetDataBufferEventsCommand, self).__init__(subparsers, command_dict)
-
     def _run(self, robot, options):
         """Implementation of the command.
 
@@ -879,11 +924,44 @@ class GetDataBufferEventsCommand(Command):
         Returns:
             True
         """
-        client = robot.ensure_client(DataServiceClient.default_service_name)
-        spec = EventsCommentsSpec()
-        spec.events.add()
-        print(client.get_events_comments(spec).events_comments.events)
-        return True
+
+        request_spec = EventsCommentsSpec()
+        request_spec.events.add()  # pylint: disable=no-member
+
+        def _get_events(response):
+            return response.events_comments.events
+
+        return self._get_result(request_spec, robot, options, _get_events)
+
+    @staticmethod
+    def _level_name(event):
+        prefix = 'LEVEL_'
+        # pylint: disable=no-member
+        name = event.Level.Name(event.level)
+        if name.startswith(prefix):
+            return name[len(prefix):]
+        return name
+
+    def pretty_print(self, values):  # pylint: disable=no-self-use
+        last_date_shown = None
+        for event in values:
+            start_secs = event.start_time.seconds + event.start_time.seconds * 1e-9
+            start_dt = datetime.datetime.fromtimestamp(start_secs)
+            if start_dt.date() != last_date_shown:
+                print("\n[{}]".format(start_dt.date()))
+                last_date_shown = start_dt.date()
+            if event.end_time and event.end_time != event.start_time:
+                end_secs = event.end_time.seconds + event.end_time.seconds * 1e-9
+                end_dt = datetime.datetime.fromtimestamp(end_secs)
+                print(" {}-{} (END) ({:16}) {:16}  {:16} <{}> ".format(
+                    start_dt.time(), end_dt.time(), end_secs - start_secs, event.type,
+                    self._level_name(event), event.source))
+            else:
+                timing = '' if event.end_time else '(START)'
+                print(" {} {} {:16}  {:16}  <{}> ".format(start_dt.time(), timing, event.type,
+                                                          self._level_name(event), event.source))
+            if event.description:
+                print("\t{}".format(event.description))
 
 
 class GetDataBufferStatusCommand(Command):
@@ -1574,11 +1652,10 @@ class DataAcquisitionCommand(Subcommands):
             subparsers: List of argument parsers.
             command_dict: Dictionary of command names which take parsed options.
         """
-        super(DataAcquisitionCommand,
-              self).__init__(subparsers, command_dict,
-                             [DataAcquisitionServiceCommand,
-                             DataAcquisitionRequestCommand,
-                             DataAcquisitionStatusCommand])
+        super(DataAcquisitionCommand, self).__init__(subparsers, command_dict, [
+            DataAcquisitionServiceCommand, DataAcquisitionRequestCommand,
+            DataAcquisitionStatusCommand
+        ])
 
 
 class DataAcquisitionRequestCommand(Command):
@@ -1593,8 +1670,7 @@ class DataAcquisitionRequestCommand(Command):
             subparsers: List of argument parsers.
             command_dict: Dictionary of command names which take parsed options.
         """
-        super(DataAcquisitionRequestCommand, self).__init__(
-            subparsers, command_dict)
+        super(DataAcquisitionRequestCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--image-source', metavar='IMG_SRC', default=[],
                                   help='Image source name', action='append')
         self._parser.add_argument('--image-service', metavar='SERVICE_NAME', default=[],
@@ -1622,15 +1698,18 @@ class DataAcquisitionRequestCommand(Command):
                 'A request requires either a data source name or an image source+service name.')
         if len(options.image_source) != len(options.image_service):
             self._parser.error(
-                'A request must have a 1:1 correspondence between image source and image service arguments.')
+                'A request must have a 1:1 correspondence between image source and image service arguments.'
+            )
 
         captures = data_acquisition_pb2.AcquisitionRequestList()
-        captures.data_captures.extend([data_acquisition_pb2.DataCapture(name=data_name) for data_name in options.data_source])
+        captures.data_captures.extend(
+            [data_acquisition_pb2.DataCapture(name=data_name) for data_name in options.data_source])
         img_captures = []
         for i, src_name in enumerate(options.image_source):
             img_service = options.image_service[i]
-            img_captures.append(data_acquisition_pb2.ImageSourceCapture(
-                image_service=img_service, image_source=src_name))
+            img_captures.append(
+                data_acquisition_pb2.ImageSourceCapture(image_service=img_service,
+                                                        image_source=src_name))
         captures.image_captures.extend(img_captures)
 
         robot.time_sync.wait_for_sync(timeout_sec=1.0)
@@ -1645,7 +1724,6 @@ class DataAcquisitionServiceCommand(Command):
     """Get list of different data acquisition capabilities."""
 
     NAME = 'info'
-
 
     def __init__(self, subparsers, command_dict):
         """Get list of different data acquisition capabilities.
@@ -1667,10 +1745,10 @@ class DataAcquisitionServiceCommand(Command):
         Args:
             data_type (string): Either image or data capabilities.
             data_name (string): The name of the data acquisition capability
-            service_name(string): For image capabilites, a service name is required.
+            service_name(string): For image capabilities, a service name is required.
         """
-        print(('{:' + str(self._data_type_width) + '} {:' + str(self._data_name_width) + '} {:' + str(self._service_name_width) +
-               '}').format(data_type, data_name, service_name))
+        print(('{:' + str(self._data_type_width) + '} {:' + str(self._data_name_width) + '} {:' +
+               str(self._service_name_width) + '}').format(data_type, data_name, service_name))
 
     def _run(self, robot, options):
         """Implementation of the 'info' command.
@@ -1679,17 +1757,17 @@ class DataAcquisitionServiceCommand(Command):
             robot: Robot object on which to run the command.
             options: Parsed command-line arguments.
         """
-        capabilities = robot.ensure_client(DataAcquisitionClient.default_service_name).get_service_info()
+        capabilities = robot.ensure_client(
+            DataAcquisitionClient.default_service_name).get_service_info()
         print("Data Acquisition Service's Available Capabilities\n")
         self._format_and_print_capability("Data Type", "Data Name", "(optional) Service Name")
-        print("-"*(self._data_type_width+self._data_name_width+self._service_name_width))
+        print("-" * (self._data_type_width + self._data_name_width + self._service_name_width))
         for data_name in capabilities.data_sources:
-            self._format_and_print_capability("data",data_name.name)
+            self._format_and_print_capability("data", data_name.name)
         for img_service in capabilities.image_sources:
             for img in img_service.image_source_names:
                 self._format_and_print_capability("image", img, img_service.service_name)
         return True
-
 
 
 class DataAcquisitionStatusCommand(Command):
@@ -1722,6 +1800,32 @@ class DataAcquisitionStatusCommand(Command):
         print(response)
         return True
 
+class HostComputerIPCommand(Command):
+    """Determine a computer's IP address."""
+
+    NAME = 'self-ip'
+    NEED_AUTHENTICATION = False
+
+    def __init__(self, subparsers, command_dict):
+        """Determine the IP address of the current computer used to talk to the robot.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(HostComputerIPCommand, self).__init__(subparsers, command_dict)
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True
+        """
+        print("The IP address of the computer used to talk to the robot is: %s" %(bosdyn.client.common.get_self_ip(robot._name)))
 
 def main(args=None):
     """Command-line interface for interacting with robot services."""
@@ -1746,6 +1850,7 @@ def main(args=None):
     ImageCommands(subparsers, command_dict)
     LocalGridCommands(subparsers, command_dict)
     DataAcquisitionCommand(subparsers, command_dict)
+    HostComputerIPCommand(subparsers, command_dict)
 
     options = parser.parse_args(args=args)
 

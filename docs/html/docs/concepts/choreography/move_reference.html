@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Choreography Moves Reference &mdash; Spot 2.2.0 documentation</title>
+  <title>Choreography Moves Reference &mdash; Spot 2.3.0 documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                2.2.0
+                2.3.0
               </div>
             
           
@@ -107,6 +107,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autonomy/docking.html">Docking</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_service.html">GraphNav service</a></li>
@@ -115,6 +116,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/auto_return.html">AutoReturn service</a></li>
 </ul>
 </li>
@@ -122,6 +124,13 @@
 <li class="toctree-l3"><a class="reference internal" href="choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Move Reference Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreographer_setup.html">Choreographer Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="choreographer.html">Choreographer Overview</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../arm/README.html">Spot Arm</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../arm/arm_specification.html">Arm and Gripper Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../arm/arm_concepts.html">Concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../arm/arm_services.html">Services</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../data.html">Spot Data</a><ul>
@@ -159,6 +168,22 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/xbox_controller/README.html">Xbox Controller</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/wasd/README.html">WASD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/docking/README.html">Docking</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_simple/README.html">Simple Arm Motion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_stow_unstow/README.html">Stow/unstow Arm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_and_mobility_command/README.html">Arm and Mobility Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_with_body_follow/README.html">Arm Command with Body Following</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_trajectory/README.html">Arm Trajectory Motion Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -206,15 +231,17 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_question_answerer/README.html">Mission Question Anwerer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_question_answerer/README.html">Mission Question Answerer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
@@ -232,6 +259,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html">Docking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/door.html">Door</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/estop.html">E-Stop</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/exceptions.html">Exceptions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
@@ -244,6 +272,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
@@ -311,7 +341,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/README.html">Choreography</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreogrpahy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 </ul>
 </li>
 </ul>
@@ -333,7 +363,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../protos/README.html">API Protocol</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../protos/style_guide.html">Style Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html">auth.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html">arm_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#arm-surface-contact-proto">arm_surface_contact.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#arm-surface-contact-service-proto">arm_surface_contact_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-proto">auth.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
@@ -364,6 +397,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
@@ -375,6 +409,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-service-proto">mission/mission_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-nodes-proto">mission/nodes.proto</a></li>
@@ -382,8 +418,11 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-remote-service-proto">mission/remote_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-util-proto">mission/util.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#network-compute-bridge-proto">network_compute_bridge.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#network-compute-bridge-service-proto">network_compute_bridge_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-estimation-proto">payload_estimation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-registration-proto">payload_registration.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-registration-service-proto">payload_registration_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-service-proto">payload_service.proto</a></li>
@@ -398,6 +437,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -510,401 +551,6 @@ Development Kit License (20191101-BDSDK-SL).
 --><div class="section" id="choreography-moves-reference">
 <h1>Choreography Moves Reference<a class="headerlink" href="#choreography-moves-reference" title="Permalink to this headline">¶</a></h1>
 <p>This provides a guide describing each move at a high level, any parameters used by the move, and a gif demonstrating the move with default parameters (for most moves). More information about the moves can be found in the <a class="reference internal" href="../../../choreography_protos/bosdyn/api/README.html"><span class="doc">proto definitions</span></a>.</p>
-<div class="section" id="whole-robot-moves">
-<h2>Whole-Robot Moves<a class="headerlink" href="#whole-robot-moves" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="self-right">
-<h3>self_right<a class="headerlink" href="#self-right" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../../../_images/image22.gif" src="../../../_images/image22.gif" /></p>
-<p>Activate the self-right behavior.  Primarily useful as the first move in a dance if you wish to start from a non-standard posture.  Nominally requires 5 seconds, but can be extended to ensure that it completes.</p>
-<p><em><strong>No Parameters</strong></em></p>
-</div>
-<div class="section" id="random-stretch">
-<h3>random_stretch<a class="headerlink" href="#random-stretch" title="Permalink to this headline">¶</a></h3>
-<p>Extends any extendable moves immediately prior to it by a random number of slices between 0 and the duration of the stretch move.  Then immediately jumps to the end of this move.  Note that this will change the duration of a choreography sequence.</p>
-<p><em><strong>No Parameters</strong></em></p>
-</div>
-<div class="section" id="front-up">
-<h3>front_up<a class="headerlink" href="#front-up" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../../../_images/image19.gif" src="../../../_images/image19.gif" /></p>
-<p>Lifts the front feet, then returns to a stand. Can be extended to adjust that duration of the hind-feet-only stance, but longer durations will be unreliable.  Lifts off 2 slices from the start of the move and touches down one slice from the end of the move.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>mirror</td>
-<td>If true, raises the hind legs instead of the front legs.</td>
-</tr>
-</tbody>
-</table></div>
-<div class="section" id="jump">
-<h3>jump<a class="headerlink" href="#jump" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../../../_images/image17.gif" src="../../../_images/image17.gif" /></p>
-<p>Jumps in place.  Nominally lasts one beat, but may take more slices at faster tempos.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>yaw</td>
-<td>What orientation to land in.</td>
-</tr>
-<tr>
-<td>absolute</td>
-<td>If true, yaw is interpreted relative to the orientation the choreography sequence began in.  If false, yaw is interpreted relative to the orientation before entering the move.</td>
-</tr>
-<tr>
-<td>flight_slices</td>
-<td>How long the jump should last with all feet off the ground measured in slices.  Depending on tempo, higher values will be unreliable.</td>
-</tr>
-<tr>
-<td>stance_width/stance_length</td>
-<td>The footprint the robot should land its jump in.</td>
-</tr>
-<tr>
-<td>split_fraction</td>
-<td>Splits the liftoff and touchdown into two pairs of two legs.  In fraction of of swing with two legs in flight, so 0 means all legs fully synchronized.</td>
-</tr>
-<tr>
-<td>lead_pair</td>
-<td>If split_fraction is not 0, indicates which legs lift off first. Default AUTO mode will select a pair based on the forward and left parameters.</td>
-</tr>
-<tr>
-<td>translation</td>
-<td>Distance and direction the robot should jump.</td>
-</tr>
-</tbody>
-</table></div>
-<div class="section" id="stand-to-kneel">
-<h3>stand_to_kneel<a class="headerlink" href="#stand-to-kneel" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../../../_images/image3.gif" src="../../../_images/image3.gif" /></p>
-<p>Transitions from standing to kneeling on the hind legs.  Requires 2 seconds.</p>
-<p><em><strong>No Parameters</strong></em></p>
-</div>
-<div class="section" id="kneel-to-stand">
-<h3>kneel_to_stand<a class="headerlink" href="#kneel-to-stand" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../../../_images/image5.gif" src="../../../_images/image5.gif" /></p>
-<p>Transitions from kneeling on the hind legs to a stand.  Requires 2.4 seconds.</p>
-<p><em><strong>No Parameters</strong></em></p>
-</div>
-</div>
-<div class="section" id="legs-body-moves">
-<h2>Legs &amp; Body Moves<a class="headerlink" href="#legs-body-moves" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="running-man">
-<h3>running_man<a class="headerlink" href="#running-man" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../../../_images/image16.gif" src="../../../_images/image16.gif" /></p>
-<p>Spot’s version of the “running man” dance move.  Is extendable to run for an arbitrary duration.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>velocity</td>
-<td>By default, it will dance in place, but can move around in the world.</td>
-</tr>
-<tr>
-<td>pre_move_cycles</td>
-<td>How many slices to dance in place before moving at the specified velocity.</td>
-</tr>
-<tr>
-<td>swing_height</td>
-<td>How high to pick up the feet.</td>
-</tr>
-<tr>
-<td>spread</td>
-<td>How far to slide the feet backward from where they’re initially placed.</td>
-</tr>
-<tr>
-<td>reverse</td>
-<td>If true, will step backwards and slide forward, the reverse of the normal motion.</td>
-</tr>
-</tbody>
-</table></div>
-<div class="section" id="hop">
-<h3>hop<a class="headerlink" href="#hop" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../../../_images/image13.gif" src="../../../_images/image13.gif" /></p>
-<p>Runs the hop gait. Is extendable to run for an arbitrary duration.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>velocity/yaw_rate</td>
-<td>The steering command.</td>
-</tr>
-<tr>
-<td>stand_time</td>
-<td>How much before the end of the nominal move to start going to a stand.</td>
-</tr>
-</tbody>
-</table></div>
-<div class="section" id="kneel-leg-move">
-<h3>kneel_leg_move<a class="headerlink" href="#kneel-leg-move" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../../../_images/image8.gif" src="../../../_images/image8.gif" /></p>
-<p>While kneeling, move the front legs to a specified joint configuration.  Nominally takes one beat (4 slices), but can be extended to go slower.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>hip_x, hip_y, knee</td>
-<td>Joint angles for the front-left leg.</td>
-</tr>
-<tr>
-<td>mirror</td>
-<td>Should the left and right legs move in a mirrored manner.  If false, front-right leg will move to the same joint configuration as the front-left.  If true, the front-right hip_x angle will have the opposite sign as the front-left leg and the other joint angles will be the same.</td>
-</tr>
-<tr>
-<td>easing</td>
-<td>Controls the velocity profile of the motion.</td>
-</tr>
-</tbody>
-</table></div>
-<div class="section" id="kneel-clap">
-<h3>kneel_clap<a class="headerlink" href="#kneel-clap" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../../../_images/image2.gif" src="../../../_images/image2.gif" /></p>
-<p>While kneeling, clap the front feet together.  Takes one beat (4 slices).</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>direction</td>
-<td>The movement direction of the clap in the flat_body frame (z is up, x is direction the robot faces).</td>
-</tr>
-<tr>
-<td>location</td>
-<td>The location of the clap in body frame.</td>
-</tr>
-<tr>
-<td>speed</td>
-<td>The speed of the clap.</td>
-</tr>
-<tr>
-<td>clap_distance</td>
-<td>How far apart the feet will be prior to clapping.</td>
-</tr>
-</tbody>
-</table></div>
-<div class="section" id="kneel-circles">
-<h3>kneel_circles<a class="headerlink" href="#kneel-circles" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../../../_images/image6.gif" src="../../../_images/image6.gif" /></p>
-<p>While kneeling, move the front feet in circles in the body-XZ (sagittal) plane.  The two feet will be 180 degrees out of phase. Can be extended for any desired duration.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>location</td>
-<td>The location of the center of the circles in body frame.</td>
-</tr>
-<tr>
-<td>beats_per_circle</td>
-<td>The duration of a full circle in beats.  Ignored unless number_of_circles = 0.</td>
-</tr>
-<tr>
-<td>number_of_circles</td>
-<td>Number of circles to perform.  If 0, then use beats_per_circle.</td>
-</tr>
-<tr>
-<td>offset</td>
-<td>Distance between the circle plane and the body centerline.</td>
-</tr>
-<tr>
-<td>radius</td>
-<td>Size of the circles that the feet move in.</td>
-</tr>
-<tr>
-<td>reverse</td>
-<td>Reverses the circle direction.  Nominal direction is away from the body on top.</td>
-</tr>
-</tbody>
-</table></div>
-<div class="section" id="sit">
-<h3>sit<a class="headerlink" href="#sit" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../../../_images/image10.gif" src="../../../_images/image10.gif" /></p>
-<p>Sit the robot down.  Requires at least 3 seconds.</p>
-<p><em><strong>No Parameters</strong></em></p>
-</div>
-<div class="section" id="stand-up">
-<h3>stand_up<a class="headerlink" href="#stand-up" title="Permalink to this headline">¶</a></h3>
-<p>Stand the robot up from a seated position.   Requires at least 2 seconds.</p>
-<p><em><strong>No Parameters</strong></em></p>
-</div>
-<div class="section" id="sit-to-sprawl">
-<h3>sit_to_sprawl<a class="headerlink" href="#sit-to-sprawl" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../../../_images/image12.gif" src="../../../_images/image12.gif" /></p>
-<p>Starting from a seated position, rolls the robot onto its side/back.  Intended to prep the robot for a more “dramatic” self-right.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>side</td>
-<td>Which side to roll to.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<div class="section" id="legs-moves">
-<h2>Legs Moves<a class="headerlink" href="#legs-moves" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="step">
-<h3>step<a class="headerlink" href="#step" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../../../_images/image18.gif" src="../../../_images/image18.gif" /></p>
-<p>Take a single step with one or two feet.  Nominally requires one beat (4 slices), but can be extended to step slower.  If stepping with two feet, especially both front or both hind feet, longer steps will be unreliable.  Lifts off one slice after the move begins and touches down one slice before it ends.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>foot/second_foot</td>
-<td>Which feet to step with.  If only a single foot is desired, second_foot should be set to LEG_NO_LEG.</td>
-</tr>
-<tr>
-<td>offset</td>
-<td>Where to step to relative to a nominal stance for the first foot.</td>
-</tr>
-<tr>
-<td>mirror</td>
-<td>Determines whether the second_foot (if there is one) should have the same offset as the first foot (false) or the opposite offset (true).</td>
-</tr>
-<tr>
-<td>swing_waypoint</td>
-<td>Defines a waypoint that the swing leg must go through between liftoff and touchdown.  If left at {0,0,0}, no waypoint will be added, and the system will take a normal swing.</td>
-</tr>
-<tr>
-<td>swing_height</td>
-<td>How high to lift the foot/feet.  Does nothing if a swing_waypoint is specified.</td>
-</tr>
-<tr>
-<td>liftoff_velocity</td>
-<td>How quickly to raise the foot/feet. Does nothing if a swing_waypoint is specified.</td>
-</tr>
-<tr>
-<td>touchdown_velocity</td>
-<td>How quickly to lower the foot/feet. Does nothing if a swing_waypoint is specified.</td>
-</tr>
-</tbody>
-</table></div>
-<div class="section" id="turn-2step">
-<h3>turn_2step<a class="headerlink" href="#turn-2step" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../../../_images/image14.gif" src="../../../_images/image14.gif" /></p>
-<p>Take two steps to turn in place.  Requires 2 beats (8 slices).</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>yaw</td>
-<td>How far to turn.</td>
-</tr>
-<tr>
-<td>absolute</td>
-<td>If true, yaw is interpreted relative to the orientation the choreography sequence began in.  If false, yaw is interpreted relative to the orientation before entering/ro the move.</td>
-</tr>
-<tr>
-<td>swing_height</td>
-<td>How how to pick up the feet.  Zero indicates to use a default swing.</td>
-</tr>
-<tr>
-<td>swing_velocity</td>
-<td>How quickly to lift off and touch down the feet</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<div class="section" id="pace-2step">
-<h2>pace_2step<a class="headerlink" href="#pace-2step" title="Permalink to this headline">¶</a></h2>
-<p><img alt="../../../_images/image21.gif" src="../../../_images/image21.gif" /></p>
-<p>Take two steps to translate using a pace gait (legs on the same side of the robot move together).  Requires 2 beats (8 slices).  Caution: Large lateral steps require a high-traction floor.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>motion</td>
-<td>How far to move.</td>
-</tr>
-<tr>
-<td>swing_height</td>
-<td>How how to pick up the feet.  Zero indicates to use a default swing.</td>
-</tr>
-<tr>
-<td>swing_velocity</td>
-<td>How quickly to lift off and touch down the feet</td>
-</tr>
-<tr>
-<td>absolute</td>
-<td>motion is measured relative to the dance’s starting location rather than the current location.  May not be accurate for longer dances with lots of stepping.</td>
-</tr>
-</tbody>
-</table><div class="section" id="crawl">
-<h3>crawl<a class="headerlink" href="#crawl" title="Permalink to this headline">¶</a></h3>
-<p><img alt="../../../_images/image11.gif" src="../../../_images/image11.gif" /></p>
-<p>Locomotes, taking one step every beat.  Can be extended for any desired duration.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>velocity</td>
-<td>Desired velocity of the robot.</td>
-</tr>
-<tr>
-<td>swing_slices</td>
-<td>Duration of a swing in slices.  An entire gait cycle takes 4 beats (16 slices), so at the maximum value of 8 slices, there will always be two feet on the ground, as in the Amble gait.  With a value of 4, there will always be one foot on the ground, as in the crawl gait.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
 <div class="section" id="body-moves">
 <h2>Body Moves<a class="headerlink" href="#body-moves" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="rotate-body">
@@ -938,7 +584,7 @@ Development Kit License (20191101-BDSDK-SL).
 <div class="section" id="body-hold">
 <h3>body_hold<a class="headerlink" href="#body-hold" title="Permalink to this headline">¶</a></h3>
 <p><img alt="../../../_images/image4.gif" src="../../../_images/image4.gif" /></p>
-<p>Moves the body to a specified position/orientation and holds it steady there for the specified duration.</p>
+<p>Moves the body to a specified position/orientation and holds it steady there for the specified duration, then optionally returns to a neutral pose.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1037,8 +683,7 @@ Development Kit License (20191101-BDSDK-SL).
 <div class="section" id="twerk">
 <h3>twerk<a class="headerlink" href="#twerk" title="Permalink to this headline">¶</a></h3>
 <p><img alt="../../../_images/image9.gif" src="../../../_images/image9.gif" /></p>
-<p>Lowers the robutt down and back up once.  Lasts for one beat (4 slices).
-Author’s note: I’m sorry.</p>
+<p>Lowers the robutt down and back up once.  Lasts for one beat (4 slices).</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1056,7 +701,7 @@ Author’s note: I’m sorry.</p>
 <div class="section" id="butt-circle">
 <h3>butt_circle<a class="headerlink" href="#butt-circle" title="Permalink to this headline">¶</a></h3>
 <p><img alt="../../../_images/image23.gif" src="../../../_images/image23.gif" /></p>
-<p>Move the robutt, head, or both head and robutt in a circle.  Extendable to the desired duration.</p>
+<p>Move the robutt, head, or both head and robutt in a circle.  Extendable to the desired duration.  Rotates about the previous pose.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1070,8 +715,8 @@ Author’s note: I’m sorry.</p>
 <td>How large a circle to move in.</td>
 </tr>
 <tr>
-<td>beats_per_circle: The duration of a circle in beats (4 slices each).  Mutually exclusive with number_of_circles.  Will be ignored unless number_of_circles = 0.</td>
-<td></td>
+<td>beats_per_circle</td>
+<td>The duration of a circle in beats (4 slices each).  Mutually exclusive with number_of_circles.  Will be ignored unless number_of_circles = 0.</td>
 </tr>
 <tr>
 <td>number_of_circles</td>
@@ -1081,44 +726,625 @@ Author’s note: I’m sorry.</p>
 <td>pivot</td>
 <td>What part of the robot to pivot around.  Pivoting around the front means the robutt will be moving in circles.</td>
 </tr>
+<tr>
+<td>clockwise</td>
+<td>Which direction to rotate.</td>
+</tr>
+<tr>
+<td>starting_angle</td>
+<td>Where in the circle to start rotation.  Since it spirals outwards, it may not be obvious exactly where it starts.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" id="step-moves">
+<h2>Step Moves<a class="headerlink" href="#step-moves" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="step">
+<h3>step<a class="headerlink" href="#step" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/image18.gif" src="../../../_images/image18.gif" /></p>
+<p>Take a single step with one or two feet.  Nominally requires one beat (4 slices), but can be extended to step slower.  If stepping with two feet, especially both front or both hind feet, longer steps will be unreliable.  Lifts off one slice after the move begins and touches down one slice before it ends.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>foot/second_foot</td>
+<td>Which feet to step with.  If only a single foot is desired, second_foot should be set to LEG_NO_LEG.</td>
+</tr>
+<tr>
+<td>offset</td>
+<td>Where to step to relative to a nominal stance for the first foot.</td>
+</tr>
+<tr>
+<td>touch</td>
+<td>Should the foot tap near the ground midway through swing.</td>
+</tr>
+<tr>
+<td>touch_offset</td>
+<td>If touch is set to true, where the touch should occur, relative to the nominal stance location.</td>
+</tr>
+<tr>
+<td>mirror_x, mirror_y</td>
+<td>Determines whether the second_foot (if there is one) should have the same offset and touch_offset as the first foot (false) or the opposite offset (true).  Specified independently for the x and y axis.</td>
+</tr>
+<tr>
+<td>swing_waypoint</td>
+<td>Defines a waypoint that the swing leg must go through between liftoff and touchdown.  If left at {0,0,0}, no waypoint will be added, and the system will take a normal swing.</td>
+</tr>
+<tr>
+<td>waypoint_dwell</td>
+<td>What fraction of the swing should be spent near the waypoint.</td>
+</tr>
+<tr>
+<td>swing_height</td>
+<td>How high to lift the foot/feet.  Does nothing if a swing_waypoint is specified.</td>
+</tr>
+<tr>
+<td>liftoff_velocity</td>
+<td>How quickly to raise the foot/feet. Does nothing if a swing_waypoint is specified.</td>
+</tr>
+<tr>
+<td>touchdown_velocity</td>
+<td>How quickly to lower the foot/feet. Does nothing if a swing_waypoint is specified.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="trot">
+<h3>trot<a class="headerlink" href="#trot" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/trot.gif" src="../../../_images/trot.gif" /></p>
+<p>Runs the trot gait. Is extendable to run for an arbitrary duration.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>velocity/yaw_rate</td>
+<td>The steering command.</td>
+</tr>
+<tr>
+<td>stand_time</td>
+<td>How much before the end of the nominal move to start going to a stand.  If set too short, it may not finish transitioning and could fall.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="pace">
+<h3>pace<a class="headerlink" href="#pace" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/pace.gif" src="../../../_images/pace.gif" /></p>
+<p>Runs the pace gait. Is extendable to run for an arbitrary duration.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>velocity/yaw_rate</td>
+<td>The steering command.</td>
+</tr>
+<tr>
+<td>stand_time</td>
+<td>How much before the end of the nominal move to start going to a stand.  If set too short, it may not finish transitioning and could fall.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="turn-2step">
+<h3>turn_2step<a class="headerlink" href="#turn-2step" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/image14.gif" src="../../../_images/image14.gif" /></p>
+<p>Take two steps to turn in place.  Requires 2 beats (8 slices).</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>yaw</td>
+<td>How far to turn.</td>
+</tr>
+<tr>
+<td>absolute</td>
+<td>If true, yaw is interpreted relative to the orientation the choreography sequence began in.  If false, yaw is interpreted relative to the orientation before entering the move.</td>
+</tr>
+<tr>
+<td>swing_height</td>
+<td>How how to pick up the feet.  Zero indicates to use a default swing.</td>
+</tr>
+<tr>
+<td>swing_velocity</td>
+<td>How quickly to lift off and touch down the feet</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" id="pace-2step">
+<h2>pace_2step<a class="headerlink" href="#pace-2step" title="Permalink to this headline">¶</a></h2>
+<p><img alt="../../../_images/image21.gif" src="../../../_images/image21.gif" /></p>
+<p>Take two steps to translate using a pace gait (legs on the same side of the robot move together).  Requires 2 beats (8 slices).  Caution: Large lateral steps require a high-traction floor.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>motion</td>
+<td>How far and what direction to move.</td>
+</tr>
+<tr>
+<td>swing_height</td>
+<td>How how to pick up the feet.  Zero indicates to use a default swing.</td>
+</tr>
+<tr>
+<td>swing_velocity</td>
+<td>How quickly to lift off and touch down the feet</td>
+</tr>
+<tr>
+<td>absolute</td>
+<td>Motion is measured relative to the dance’s starting location rather than the current location.  May not be accurate for longer dances with lots of stepping.</td>
+</tr>
+</tbody>
+</table><div class="section" id="crawl">
+<h3>crawl<a class="headerlink" href="#crawl" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/image11.gif" src="../../../_images/image11.gif" /></p>
+<p>Locomotes, taking one step every beat.  Can be extended for any desired duration.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>velocity</td>
+<td>Desired velocity of the robot.</td>
+</tr>
+<tr>
+<td>swing_slices</td>
+<td>Duration of a swing in slices.  An entire gait cycle takes 4 beats (16 slices), so at the maximum value of 8 slices, there will always be two feet on the ground, as in the Amble gait.  With a value of 4, there will always be one foot on the ground, as in the crawl gait.</td>
+</tr>
+<tr>
+<td>stance_width, stance_length</td>
+<td>The shape of the rectangle the stance feet make.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" id="dynamic-moves">
+<h2>Dynamic Moves<a class="headerlink" href="#dynamic-moves" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="running-man">
+<h3>running_man<a class="headerlink" href="#running-man" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/image16.gif" src="../../../_images/image16.gif" /></p>
+<p>Spot’s version of the “running man” dance move.  Is extendable to run for an arbitrary duration.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>velocity</td>
+<td>By default, it will dance in place, but can move around in the world.</td>
+</tr>
+<tr>
+<td>pre_move_cycles</td>
+<td>How many slices to dance in place before moving at the specified velocity.</td>
+</tr>
+<tr>
+<td>swing_height</td>
+<td>How high to pick up the feet.</td>
+</tr>
+<tr>
+<td>spread</td>
+<td>How far to slide the feet backward from where they’re initially placed.</td>
+</tr>
+<tr>
+<td>reverse</td>
+<td>If true, will step backwards and slide forward, the reverse of the normal motion.</td>
+</tr>
+<tr>
+<td>speed_multiplier</td>
+<td>Run the move at something other than the song's overall beats-per-minute.</td>
+</tr>
+<tr>
+<td>duty_cycle</td>
+<td>What fraction of the time legs are in stance.</td>
+</tr>
+<tr>
+<td>com_height</td>
+<td>Desired height of the center-of-mass.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="bourree">
+<h3>bourree<a class="headerlink" href="#bourree" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/bourree.gif" src="../../../_images/bourree.gif" /></p>
+<p>Cross-legged tippy-taps like the ballet move.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>velocity, yaw_rate</td>
+<td>Steering command.</td>
+</tr>
+<tr>
+<td>stance_length</td>
+<td>Distance between front and hind legs.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="hop">
+<h3>hop<a class="headerlink" href="#hop" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/image13.gif" src="../../../_images/image13.gif" /></p>
+<p>Runs the hop gait. Is extendable to run for an arbitrary duration.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>velocity/yaw_rate</td>
+<td>The steering command.</td>
+</tr>
+<tr>
+<td>stand_time</td>
+<td>How much before the end of the nominal move to start going to a stand.  If set too short, it may not finish transitioning and could fall.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="jog">
+<h3>jog<a class="headerlink" href="#jog" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/jog.gif" src="../../../_images/jog.gif" /></p>
+<p>Runs the jog gait. Is extendable to run for an arbitrary duration.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>velocity/yaw_rate</td>
+<td>The steering command.</td>
+</tr>
+<tr>
+<td>stand_time</td>
+<td>How much before the end of the nominal move to start going to a stand.  If set too short, it may not finish transitioning and could fall.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="skip">
+<h3>skip<a class="headerlink" href="#skip" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/skip.gif" src="../../../_images/skip.gif" /></p>
+<p>Runs the skip gait. Is extendable to run for an arbitrary duration.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>velocity/yaw_rate</td>
+<td>The steering command.</td>
+</tr>
+<tr>
+<td>stand_time</td>
+<td>How much before the end of the nominal move to start going to a stand.  If set too short, it may not finish transitioning and could fall.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="front-up">
+<h3>front_up<a class="headerlink" href="#front-up" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/image19.gif" src="../../../_images/image19.gif" /></p>
+<p>Lifts the front feet, then returns to a stand. Can be extended to adjust that duration of the hind-feet-only stance, but longer durations will be unreliable.  Lifts off 2 slices from the start of the move and touches down one slice from the end of the move.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mirror</td>
+<td>If true, raises the hind legs instead of the front legs.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="jump">
+<h3>jump<a class="headerlink" href="#jump" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/image17.gif" src="../../../_images/image17.gif" /></p>
+<p>Jumps in place.  Nominally lasts one beat, but may take more slices at faster tempos.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>yaw</td>
+<td>What orientation to land in.</td>
+</tr>
+<tr>
+<td>absolute</td>
+<td>If true, yaw is interpreted relative to the orientation the choreography sequence began in.  If false, yaw is interpreted relative to the orientation before entering the move.</td>
+</tr>
+<tr>
+<td>flight_slices</td>
+<td>How long the jump should last with all feet off the ground measured in slices.  Depending on tempo, higher values will be unreliable.</td>
+</tr>
+<tr>
+<td>stance_width/stance_length</td>
+<td>The footprint the robot should land its jump in.</td>
+</tr>
+<tr>
+<td>split_fraction</td>
+<td>Splits the liftoff and touchdown into two pairs of two legs.  In fraction of of swing with two legs in flight, so 0 means all legs fully synchronized.</td>
+</tr>
+<tr>
+<td>lead_leg_pair</td>
+<td>If split_fraction is not 0, indicates which legs lift off first. Default AUTO mode will select a pair based on the translation vector.</td>
+</tr>
+<tr>
+<td>translation</td>
+<td>Distance and direction the robot should jump.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" id="transition-moves">
+<h2>Transition Moves<a class="headerlink" href="#transition-moves" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sit">
+<h3>sit<a class="headerlink" href="#sit" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/image10.gif" src="../../../_images/image10.gif" /></p>
+<p>Sit the robot down.  Requires at least 3 seconds.</p>
+<p><em><strong>No Parameters</strong></em></p>
+</div>
+<div class="section" id="stand-up">
+<h3>stand_up<a class="headerlink" href="#stand-up" title="Permalink to this headline">¶</a></h3>
+<p>Stand the robot up from a seated position.   Requires at least 2 seconds.</p>
+<p><em><strong>No Parameters</strong></em></p>
+</div>
+<div class="section" id="sit-to-sprawl">
+<h3>sit_to_sprawl<a class="headerlink" href="#sit-to-sprawl" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/image12.gif" src="../../../_images/image12.gif" /></p>
+<p>Starting from a seated position, rolls the robot onto its side/back.  Intended to prep the robot for a more “dramatic” self-right.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>side</td>
+<td>Which side to roll to.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="random-stretch">
+<h3>random_stretch<a class="headerlink" href="#random-stretch" title="Permalink to this headline">¶</a></h3>
+<p>Extends any extendable moves immediately prior to it by a random number of slices between 0 and the duration of the stretch move.  Then immediately jumps to the end of this move.  Note that this will change the duration of a choreography sequence.</p>
+<p><em><strong>No Parameters</strong></em></p>
+</div>
+<div class="section" id="stand-to-kneel">
+<h3>stand_to_kneel<a class="headerlink" href="#stand-to-kneel" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/image3.gif" src="../../../_images/image3.gif" /></p>
+<p>Transitions from standing to kneeling on the hind legs.  Requires 2 seconds.</p>
+<p><em><strong>No Parameters</strong></em></p>
+</div>
+<div class="section" id="kneel-to-stand">
+<h3>kneel_to_stand<a class="headerlink" href="#kneel-to-stand" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/image5.gif" src="../../../_images/image5.gif" /></p>
+<p>Transitions from kneeling on the hind legs to a stand.  Requires 2.4 seconds.</p>
+<p><em><strong>No Parameters</strong></em></p>
+</div>
+<div class="section" id="kneel-to-stand-fast">
+<h3>kneel_to_stand_fast<a class="headerlink" href="#kneel-to-stand-fast" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/kneel2standFast.gif" src="../../../_images/kneel2standFast.gif" /></p>
+<p>Transitions from kneeling on the hind legs to a stand.  Faster and smoother than kneel_To_stand, but may be less reliable in some combinations.</p>
+<p><em><strong>No Parameters</strong></em></p>
+</div>
+<div class="section" id="self-right">
+<h3>self_right<a class="headerlink" href="#self-right" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/image22.gif" src="../../../_images/image22.gif" /></p>
+<p>Activate the self-right behavior.  Primarily useful as the first move in a dance if you wish to start from a non-standard posture.  Nominally requires 5 seconds, but can be extended to ensure that it completes.</p>
+<p><em><strong>No Parameters</strong></em></p>
+</div>
+</div>
+<div class="section" id="kneel-moves">
+<h2>Kneel moves<a class="headerlink" href="#kneel-moves" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="kneel-leg-move">
+<h3>kneel_leg_move<a class="headerlink" href="#kneel-leg-move" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/image8.gif" src="../../../_images/image8.gif" /></p>
+<p>While kneeling, move the front legs to a specified joint configuration.  Nominally takes one beat (4 slices), but can be extended to go slower.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hip_x, hip_y, knee</td>
+<td>Joint angles for the front-left leg.</td>
+</tr>
+<tr>
+<td>mirror</td>
+<td>Should the left and right legs move in a mirrored manner.  If false, front-right leg will move to the same joint configuration as the front-left.  If true, the front-right hip_x angle will have the opposite sign as the front-left leg and the other joint angles will be the same.</td>
+</tr>
+<tr>
+<td>easing</td>
+<td>Controls the velocity profile of the motion.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="kneel-leg-move2">
+<h3>kneel_leg_move2<a class="headerlink" href="#kneel-leg-move2" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/image8.gif" src="../../../_images/image8.gif" /></p>
+<p>Similar to kneel_leg_move, but allows you to independently set the front-left and front-right leg joint angles.  Additionally allows linking for smoother transitions between multiple consecutive moves.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>left_hip_x, left_hip_y, left_knee</td>
+<td>Joint angles for the front-left leg.</td>
+</tr>
+<tr>
+<td>right_hip_x, right_hip_y, right_knee</td>
+<td>Joint angles for the front-left leg.</td>
+</tr>
+<tr>
+<td>easing</td>
+<td>Controls the velocity profile of the motion.  Does nothing for linked moves.</td>
+</tr>
+<tr>
+<td>link_to_next</td>
+<td>Links this move to a second kneel_leg_move2 that immediately follows it if there is one.  Multiple moves can be linked in this way.  Linked moves will form a combined trajectory where the joints will travel through each waypoint but not necessarily come to a zero-velocity stop at the end of each move.</td>
+</tr>
+<tr>
+<td>### kneel_clap</td>
+<td></td>
+</tr>
+</tbody>
+</table><p><img alt="../../../_images/image2.gif" src="../../../_images/image2.gif" /></p>
+<p>While kneeling, clap the front feet together.  Takes one beat (4 slices).</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>direction</td>
+<td>The movement direction of the clap in the flat_body frame (z is up, x is direction the robot faces).</td>
+</tr>
+<tr>
+<td>location</td>
+<td>The location of the clap in body frame.</td>
+</tr>
+<tr>
+<td>speed</td>
+<td>The speed of the clap.</td>
+</tr>
+<tr>
+<td>clap_distance</td>
+<td>How far apart the feet will be prior to clapping.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="kneel-circles">
+<h3>kneel_circles<a class="headerlink" href="#kneel-circles" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/image6.gif" src="../../../_images/image6.gif" /></p>
+<p>While kneeling, move the front feet in circles in the body-XZ (sagittal) plane.  The two feet will be 180 degrees out of phase. Can be extended for any desired duration.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>location</td>
+<td>The location of the center of the circles in body frame.</td>
+</tr>
+<tr>
+<td>beats_per_circle</td>
+<td>The duration of a full circle in beats.  Ignored unless number_of_circles = 0.</td>
+</tr>
+<tr>
+<td>number_of_circles</td>
+<td>Number of circles to perform.  If 0, then use beats_per_circle.</td>
+</tr>
+<tr>
+<td>offset</td>
+<td>Distance between the circle plane and the body centerline.</td>
+</tr>
+<tr>
+<td>radius</td>
+<td>Size of the circles that the feet move in.</td>
+</tr>
+<tr>
+<td>reverse</td>
+<td>Reverses the circle direction.  Nominal direction is away from the body on top.</td>
+</tr>
 </tbody>
 </table></div>
 </div>
 <div class="section" id="arm-moves">
-<h2>Arm Moves<a class="headerlink" href="#arm-moves" title="Permalink to this headline">¶</a></h2>
+<h2>Arm moves<a class="headerlink" href="#arm-moves" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="nod">
 <h3>nod<a class="headerlink" href="#nod" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/nod.gif" src="../../../_images/nod.gif" /></p>
 <p>Moves the WR0 joint up and back down for one beat (4 slices).  If done from a stow pose, will raise the hand.</p>
 <p><em><strong>No Parameters</strong></em></p>
 </div>
 <div class="section" id="stow">
 <h3>stow<a class="headerlink" href="#stow" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/stow.gif" src="../../../_images/stow.gif" /></p>
 <p>Returns the arm to a stowed configuration.  Nominally takes one beat (4 slices), but can be extended to go slower.</p>
 <p><em><strong>No Parameters</strong></em></p>
 </div>
 <div class="section" id="unstow">
 <h3>unstow<a class="headerlink" href="#unstow" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/unstow.gif" src="../../../_images/unstow.gif" /></p>
 <p>Moves the arm to a deployed configuration. Nominally takes one beat (4 slices), but can be extended to go slower.</p>
 <p><em><strong>No Parameters</strong></em></p>
 </div>
 <div class="section" id="shoulder-left">
 <h3>shoulder_left<a class="headerlink" href="#shoulder-left" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/shoulder-lft.gif" src="../../../_images/shoulder-lft.gif" /></p>
 <p>Rotate the SH0 joint to move the gripper to the left.   Nominally takes one beat (4 slices), but can be extended to go slower.</p>
 <p><em><strong>No Parameters</strong></em></p>
 </div>
 <div class="section" id="shoulder-right">
 <h3>shoulder_right<a class="headerlink" href="#shoulder-right" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/shoulder-rt.gif" src="../../../_images/shoulder-rt.gif" /></p>
 <p>Rotate the SH0 joint to move the gripper to the right.   Nominally takes one beat (4 slices), but can be extended to go slower.</p>
-<p><em><strong>No Parameters</strong></em></p>
-</div>
-<div class="section" id="double-elbow-out">
-<h3>double_elbow_out<a class="headerlink" href="#double-elbow-out" title="Permalink to this headline">¶</a></h3>
-<p>Intended for use from a stowed configuration.  Rotates the SH0 joint to move the elbow to the right twice in one beat.</p>
 <p><em><strong>No Parameters</strong></em></p>
 </div>
 <div class="section" id="arm-move">
 <h3>arm_move<a class="headerlink" href="#arm-move" title="Permalink to this headline">¶</a></h3>
-<p>Moves the arm to the specified joint angles.   Nominally takes one beat (4 slices), but can be extended to go slower.</p>
+<p>Moves the arm to the specified joint angles.   Nominally takes one beat (4 slices), but can be adjusted to go faster or slower.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1131,11 +1357,88 @@ Author’s note: I’m sorry.</p>
 <td>angles</td>
 <td>The specified joint angles, including the gripper angle.</td>
 </tr>
+<tr>
+<td>easing</td>
+<td>Controls the velocity profile of the motion.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="arm-move-relative">
+<h3>arm_move_relative<a class="headerlink" href="#arm-move-relative" title="Permalink to this headline">¶</a></h3>
+<p>Moves the arm incrementally relative to the previous pose.   Nominally takes one beat (4 slices), but can be adjusted to go faster or slower.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>angles</td>
+<td>The specified joint angles, including the gripper angle.</td>
+</tr>
+<tr>
+<td>easing</td>
+<td>Controls the velocity profile of the motion.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="workspace-arm-move">
+<h3>workspace_arm_move<a class="headerlink" href="#workspace-arm-move" title="Permalink to this headline">¶</a></h3>
+<p>Moves the gripper to a location specified in the world (not joint angles).</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>frame</td>
+<td>What frame the motion is specified in.</td>
+</tr>
+<tr>
+<td>absolute</td>
+<td>If true goes to a position/orientation relative to the origin of the given frame.  If false, direction is defined by the specified frame, but motion is relative to previous pose.</td>
+</tr>
+<tr>
+<td>rotation, translation</td>
+<td>The pose to move to.</td>
+</tr>
+<tr>
+<td>easing</td>
+<td>Controls the velocity profile of the motion.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="section" id="figure8-move">
+<h3>figure8_move<a class="headerlink" href="#figure8-move" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/fig8.gif" src="../../../_images/fig8.gif" /></p>
+<p>Moves the gripper in a figure-8 pattern centered on the previous pose.  Repeats for the specified duration.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>height, width</td>
+<td>The size and shape of the figure-8 pattern.</td>
+</tr>
+<tr>
+<td>beats_per_cycle</td>
+<td>How long to complete one cycle of the figure-8 pattern.</td>
+</tr>
 </tbody>
 </table></div>
 <div class="section" id="gripper">
 <h3>gripper<a class="headerlink" href="#gripper" title="Permalink to this headline">¶</a></h3>
-<p>Moves the gripper to the specified angle, while holding the rest of the arm still.  Duration can be set to any number of slices, but speed will be determined by parameter.  Once it reaches the specified angle it will stop.  If the selected duration is too short to complete the move given the configured speed, the robot will remain at whatever angle it got to when the move ends.</p>
+<p><img alt="../../../_images/gripper.gif" src="../../../_images/gripper.gif" /></p>
+<p>Moves the gripper to the specified angle.  Duration can be set to any number of slices, but speed will be determined by parameter.  Once it reaches the specified angle it will stop.  If the selected duration is too short to complete the move given the configured speed, the robot will remain at whatever angle it got to when the move ends.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1156,6 +1459,7 @@ Author’s note: I’m sorry.</p>
 </table></div>
 <div class="section" id="chicken-head">
 <h3>chicken_head<a class="headerlink" href="#chicken-head" title="Permalink to this headline">¶</a></h3>
+<p><img alt="../../../_images/chickenhead-opt.gif" src="../../../_images/chickenhead-opt.gif" /></p>
 <p>Holds the arm stationary in the world regardless of how the body is moving.  Can also be configured to move in a fixed oscillation in the world.</p>
 <table border="1" class="docutils">
 <thead>
@@ -1167,15 +1471,15 @@ Author’s note: I’m sorry.</p>
 <tbody>
 <tr>
 <td>bob_magnitude</td>
-<td>A vector for how to move in the world.  Zero vector means remain stationary.</td>
+<td>A vector describing the amplitude and direction of a periodic motion of the gripper in the world.</td>
 </tr>
 <tr>
-<td>bob_frequency</td>
-<td>The period of the oscillation in slices.  Negative value indicates no oscillation.</td>
+<td>beats_per_cycle</td>
+<td>How long it takes to complete 1 cycle of the motion described by bob_magnitude</td>
 </tr>
 <tr>
-<td>bounce</td>
-<td>Adds an asymmetric vertical oscillation to the gripper position.  Also at bob_frequency.</td>
+<td>follow</td>
+<td>If set to true, the gripper position will adjust if the robot steps to a new location.</td>
 </tr>
 </tbody>
 </table></div>

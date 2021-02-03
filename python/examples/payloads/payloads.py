@@ -100,7 +100,7 @@ def payload_spot(config):
     print('\n\nPayload Listing\n' + '-' * 40)
     print(payloads)
 
-    print('\n\n\nDont forget to clean up these registrations in the Spot payloads webpage!')
+    print('\n\n\nDon\'t forget to clean up these registrations in the Spot payloads webpage!')
 
 def main(argv):
     """Command line interface."""

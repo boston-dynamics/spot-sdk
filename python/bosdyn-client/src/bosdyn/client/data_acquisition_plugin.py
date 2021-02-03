@@ -19,7 +19,7 @@ from bosdyn.util import now_timestamp
 
 
 class DataAcquisitionPluginClient(BaseClient):
-    """A client for triggering data acquision plugin and logging. This client is not intended for
+    """A client for triggering data acquisition plugin and logging. This client is not intended for
     use directly by users or applications. All acquisition requests should go to the data
     acquisition service first, which is responsible for forwarding the requests to the right data
     acquisition plugin services through this client."""

@@ -31,10 +31,25 @@ Running:
 iperf3 -s
 ```
 
-On the Spot CORE running the client:
+On the Spot CORE running the client (from the Spot CORE, ROBOT_IP will always be 192.168.50.3):
 Run:
 ```
-python3 client.py --username USER --password PASSWORD 192.168.50.3 --protocol tcp --server-port 5201 --server-hostname 127.0.0.1
+python3 client.py --username ROBOT_USER --password ROBOT_PASSWORD ROBOT_IP --server-hostname SERVER_IP
+```
+
+Specifying a UDP test:
+```
+python3 client.py --username ROBOT_USER --password ROBOT_PASSWORD ROBOT_IP --protocol udp --server-hostname SERVER_IP
+```
+
+Specifying a different iperf3 server port:
+```
+python3 client.py --username ROBOT_USER --password ROBOT_PASSWORD ROBOT_IP --server-port 1234 --server-hostname SERVER_IP
+```
+
+Running the test without running an Autowalk mission:
+```
+python3 client.py --username ROBOT_USER --password ROBOT_PASSWORD ROBOT_IP --server-hostname SERVER_IP --run-without-mission
 ```
 
 ### Running with Docker
@@ -48,5 +63,7 @@ sudo docker build -t comms_test .
 
 Run the image:
 ```
-sudo docker run comms_test --username USER --password PASSWORD 192.168.50.3 --protocol tcp --server-port 5201 --server-hostname 127.0.0.1
+sudo docker run -v $(pwd):/comms_out/ comms_test --username ROBOT_USER --password ROBOT_PASSWORD ROBOT_IP --server-hostname SERVER_IP
 ```
+
+The argument `-v $(pwd):/comms_out/` allows the Docker container to save files to the current directory, so the resulting csv output file will be in the directory you just ran from. For different configurations of the comms test, see above.

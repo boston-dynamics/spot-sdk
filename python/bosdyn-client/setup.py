@@ -36,7 +36,7 @@ setuptools.setup(
     package_data={'': ['*.pem']},
     install_requires=[
         'bosdyn-api=={}'.format(SDK_VERSION), 'bosdyn-core=={}'.format(SDK_VERSION), 'grpcio',
-        'pyjwt', 'numpy', 'requests'
+        'pyjwt', 'numpy', 'requests', 'Deprecated~=1.2.10'
     ],
     classifiers=[
         "Programming Language :: Python :: 3.6",

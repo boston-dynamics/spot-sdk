@@ -70,7 +70,7 @@ Found credentials in shared credentials file: ~/.aws/credentials (credentials.py
 Upload of file requirements.txt as requirements.txt to aws-imagedemo successful (cloud_upload.py:45)
 ```
 
-And this reponse for a successful GCP upload.
+And this response for a successful GCP upload.
 ```
 Upload of file requirements.txt as requirements.txt to c-imagedemo successful (cloud_upload.py:26)
 ```

@@ -34,17 +34,18 @@ We divide time up into slices.  In the context of Choreographer, a slice is ¼ b
 
 Moves always run for an integer number of slices.  Some moves require a fixed number of slices, and some are extendable.  See the Config Files section for more details.
 
-Note that any number of slices per minute can be selected, very fast or very slow slices will cause some moves to be unreliable.  Many moves will be most reliable in the range of 250-450 slices per minute.
+Note that any number of slices per minute can be selected, however very fast or very slow slices will cause some moves to be unreliable.  Many moves will be most reliable in the range of 250-450 slices per minute.
 
 ### Tracks/Layering
 
-We divide the robot’s motion into three distinct tracks:
+We divide the robot’s motion into four distinct tracks:
 
 * Legs
 * Body
 * Arm
+* Gripper
 
-Each dance move requires one or more of these tracks.  Moves that use different tracks can be run simultaneously in any combination. In Choreographer, a track is represented as a horizontal section in the timeline view.  For example, here is a screenshot from Choreographer of a script that combines moves in all three tracks:
+Each dance move requires one or more of these tracks.  Moves that use different tracks can be run simultaneously in any combination. In Choreographer, a track is represented as a horizontal section in the timeline view.  For example, here is a screenshot from Choreographer of a script that combines moves in all three of the four tracks:
 
 ![](images/main_image1.png)
 
@@ -52,16 +53,15 @@ And the resulting behavior looks like this:
 
 ![](gif_images/main_image3.gif)
 
-Some moves require multiple tracks such as in this example:
+Some moves require multiple tracks, such as the "Skip" move which uses the Body and Legs track or the "Arm Move Relative" which uses the Arm and Gripper tracks, as shown in this example:
 
 ![](images/main_image4.png)
 
-The various kneel moves require the legs and body tracks, while the stand_to_kneel move requires all three tracks, and cannot be run simultaneously with any other moves.
 
 ### Entry/Exit conditions
 
 
-All moves that use the legs track will have logical entry and exit positions that the body must be in before/after the move. This is to prevent non-sensical choreographies; for example, completing a kneel-to-stand transition if you are not kneeling, or going directly from a step move to a kneeling-clap move without a stand-to-knee transition in between.
+All moves that use the legs track will have logical entry and exit positions that the body must be in before/after the move. This is to prevent nonsensical choreographies; for example, completing a kneel-to-stand transition if you are not kneeling, or going directly from a step move to a kneeling-clap move without a stand-to-knee transition in between.
 
 To represent and enforce these requirements, all moves that use the legs track have an exit transition state and an entry transition state.  The options for transition state are:
 
@@ -100,6 +100,7 @@ The `MoveInfoConfig` can be parsed by a protobuf parser into each moves field of
 
 * name: The name of this move.
 * move_length_slices: The default duration of this move in slices.
+* min_move_length_slices: The absolute minimum number of slices this move can complete in.
 * is_extendable: Whether this move can be extended to last longer than it normally would.  If is_extendable is true, the desired duration can be specified in the requested_slices field in the MoveParams proto.
 * entrance_state: Which transition state the robot must be in prior to entering this move.  Only applicable if controls_legs=true.  Structure can support multiple allowed entry states, but all current moves only accept a single entry state.
 * exit_state: Which transition state the robot will be in after completing this move.  Only applicable if controls_legs=true.  The next legs-track move must have the same entrance_state.
@@ -108,11 +109,13 @@ The `MoveInfoConfig` can be parsed by a protobuf parser into each moves field of
 * controls_arm: Does this move require the arm track.
 * controls_legs: Does this move require the legs track.
 * controls_body: Does this move require the body track.
+* controls_gripper: Does this move require the gripper track.
 * display: Information for how Choreographer should display the move.
    * color: The color to draw the box for the move in the timeline tracks.
    * markers: The slices to draw the small grey vertical lines.  These usually correspond to events such as touchdown and liftoff, and help the user line those events up as desired (e.g. on the beat).  Negative values here indicate slices before the end of the move.
    * description: A text description of the move.
    * image: The location of an image to display for the move.
+   * category: The category name that the move will be sorted into in the move selector in Choreographer.
 
 ### MoveParamsConfig.txt
 

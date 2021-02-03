@@ -248,6 +248,8 @@ def test_visual_source_with_thread():
         barrier.wait(timeout=1)
     except threading.BrokenBarrierError:
         pytest.fail("Barrier reached the timeout, therefore blocking_capture is not called.")
+    finally:
+        visual_src.stop_capturing()
 
 def test_not_camera_interface():
     class WrongFakeCamera():

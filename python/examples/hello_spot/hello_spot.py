@@ -9,7 +9,7 @@ from __future__ import print_function
 import argparse
 import sys
 import time
-
+import os
 import bosdyn.client
 import bosdyn.client.lease
 import bosdyn.client.util
@@ -65,7 +65,7 @@ def hello_spot(config):
             # Now, we are ready to power on the robot. This call will block until the power
             # is on. Commands would fail if this did not happen. We can also check that the robot is
             # powered at any point.
-            robot.logger.info("Powering on robot... This may take a several seconds.")
+            robot.logger.info("Powering on robot... This may take several seconds.")
             robot.power_on(timeout_sec=20)
             assert robot.is_powered_on(), "Robot power on failed."
             robot.logger.info("Robot powered on.")
@@ -114,6 +114,8 @@ def hello_spot(config):
             sources = image_client.list_image_sources()
             image_response = image_client.get_image_from_sources(['frontleft_fisheye_image'])
             _maybe_display_image(image_response[0].shot.image)
+            if config.save or config.save_path is not None:
+                _maybe_save_image(image_response[0].shot.image, config.save_path)
 
             # Log a comment.
             # Comments logged via this API are written to the robots test log. This is the best way
@@ -150,11 +152,36 @@ def _maybe_display_image(image, display_time=3.0):
         logger = bosdyn.client.util.get_logger()
         logger.warning("Exception thrown displaying image. %r", exc)
 
+def _maybe_save_image(image, path):
+    """Try to save image, if client has correct deps."""
+    logger = bosdyn.client.util.get_logger()
+    try:
+        from PIL import Image
+        import io
+    except ImportError:
+        logger.warning("Missing dependencies. Can't save image.")
+        return
+    name = "hello-spot-img.jpg"
+    if path is not None and os.path.exists(path):
+        path = os.path.join(os.getcwd(), path)
+        name = os.path.join(path, name)
+        logger.info("Saving image to: {}".format(name))
+    else:
+        logger.info("Saving image to working directory as {}".format(name))
+    try:
+        image = Image.open(io.BytesIO(image.data))
+        image.save(name)
+    except Exception as exc:
+        logger = bosdyn.client.util.get_logger()
+        logger.warning("Exception thrown saving image. %r", exc)
+
 
 def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
+    parser.add_argument('-s', '--save', action='store_true', help='Save the image captured by Spot to the working directory. To chose the save location, use --save_path instead.')
+    parser.add_argument('--save-path', default=None, nargs='?', help='Save the image captured by Spot to the provided directory. Invalid path saves to working directory.')
     options = parser.parse_args(argv)
     try:
         hello_spot(options)

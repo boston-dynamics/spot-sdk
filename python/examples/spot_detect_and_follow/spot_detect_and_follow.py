@@ -192,7 +192,7 @@ def capture_images(image_task, sleep_between_capture):
                         'system_cap_time': time.time()
                     }
                 except Exception as exc: # pylint: disable=broad-except
-                    print(f'Exception occured during image capture {exc}')
+                    print(f'Exception occurred during image capture {exc}')
         try:
             RAW_IMAGES_QUEUE.put_nowait(entry)
         except Full as exc:
@@ -209,7 +209,7 @@ def start_tensorflow_processes(num_processes, model_path, detection_class, detec
     Args:
         num_processes (int): Number of Tensorflow processes to start in parallel.
         model_path (str): Filepath to the Tensorflow model to use.
-        detection_class (int): Detection classe to detect
+        detection_class (int): Detection class to detect
         detection_threshold (float): Detection threshold to apply to all Tensorflow detections.
         max_processing_delay (float): Allowed delay before processing an incoming image.
     """
@@ -229,7 +229,7 @@ def process_images(model_path, detection_class, detection_threshold, max_process
 
     Args:
         model_path (str): Filepath to the Tensorflow model to use.
-        detection_class (int): Detection classe to detect
+        detection_class (int): Detection class to detect
         detection_threshold (float): Detection threshold to apply to all Tensorflow detections.
         max_processing_delay (float): Allowed delay before processing an incoming image.
     """
@@ -592,7 +592,7 @@ def main(argv):
         _async_tasks = AsyncTasks(task_list)
         print('Detect and follow client connected.')
 
-        lease = lease_client.take()
+        lease = lease_client.acquire()
         lease_keep = LeaseKeepAlive(lease_client)
         # Power on the robot and stand it up
         resp = robot.power_on()
@@ -655,9 +655,16 @@ def main(argv):
                 robot_command_client.robot_command(lease=None, command=tag_cmd,
                                                    end_time_secs=time.time() + end_time)
 
+        # Shutdown lease keep-alive and return lease gracefully.
+        lease_keep.shutdown()
+        lease_client.return_lease(lease)
+
         return True
     except Exception as exc:  # pylint: disable=broad-except
         LOGGER.error("Spot Tensorflow Detector threw an exception: %s", exc)
+        # Shutdown lease keep-alive and return lease gracefully.
+        lease_keep.shutdown()
+        lease_client.return_lease(lease)
         return False
 
 

@@ -24,7 +24,7 @@ class XboxJoystickFactory:
         """Static method to instantiate the right XboxJoystick object.
 
         Returns:
-            XboxJoystick object correspondingto the operating system where the program is running.
+            XboxJoystick object corresponding to the operating system where the program is running.
         """
 
         op_system = platform.system()

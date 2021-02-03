@@ -12,6 +12,177 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 2.3.0
+
+### New Features
+
+#### Arm and Gripper Control
+One of the main features of the 2.3 release is control and support of Spot's arm and gripper. Arm and gripper commands are included in the `SynchronizedCommand` message, and can be commanded in addition to mobility commands.  The `RobotCommandBuilder` in the SDK provides many new helpers for building new arm and gripper commands.  The synchro command builder functions now have an optional `build_on_command` argument, which is used to build a mobility/arm/gripper command onto an existing command, merging them correctly.
+The arm and gripper state are reported in the new `manipulator_state` field of the robot state.  The Python SDK `Robot` class now has a `has_arm()` helper to determine if the robot has an arm or not.
+For more information about controlling the arm, see the [arm documentation](concepts/arm/README.md).
+
+**Manipulation API (beta)**
+This new API provides some high-level control options for walking to and picking up objects in the world.
+
+**Arm Surface Contact (beta)**
+ArmSurfaceContactService lets you accurately move the robot's arm in the world while having some ability to perform force control.  This mode is useful for drawing, wiping, and other similar behaviors.
+
+**Doors (beta)**
+DoorService will automatically open and move through doors, once provided some information about handles and hinges.
+
+#### Network Compute Bridge
+An interface for integrating real-time image processing and machine learning for identifying objects and aiding grasping.
+For more information, see the [network compute bridge documentation](concepts/network_compute_bridge.md).
+
+#### Payload Estimation
+A new `PayloadEstimationCommand` is available to have Spot try to estimate the mass properties of a payload itself.  After moving about to perform its estimation, the mass properties will be reported in the command feedback.
+
+#### SpotCAM
+Some SpotCAMs now include an IR camera.  There are additional cameras and screens available for those versions, and a new pixel format `PIXEL_FORMAT_GREYSCALE_U16` used to represent those IR images.  There are additional rpcs used to set colormaps and overlays of the IR images for live display.
+
+Logpoint `QUEUED` status is now broken up further with the `queue_status` field, which differentiates between when the image has or has not been captured.
+Arm Support in Choreographer
+The new Choreographer executable now includes two new tracks, gripper and arm, and includes new dance moves which control the arm.
+
+#### Docking
+A new `PREP_POSE_UNDOCK` command option can be used to undock a docked robot. It will return the new `STATUS_ERROR_NOT_DOCKED` if the robot was not already docked. When successful the status will be `STATUS_AT_PREP_POSE`.
+
+#### Graph Nav
+When localizing the robot using `FIDUICIAL_INIT_SPECIFIC`, if the target waypoint does not contain a good measurement of the desired fiducial, nearby waypoints may be used to infer the robot's location. This behavior can be disabled with the new `restrict_fiducial_detections_to_target_waypoint` field to only use the waypoint’s own data.
+
+A new `destination_waypoint_tform_body_goal` is provided for the `NavigateTo` and `NavigateRoute` rpcs.  This allows the user to specify a goal position that is offset from the destination waypoint, rather than exactly on the waypoint.
+
+A new `command_id` field can be specified on the `NavigateTo` and `NavigateRoute` rpcs.  This is used to continue a previous command without needing to re-specify all the data.  An important difference between specifying the `command_id` versus sending a new command is that if the robot has reported itself stuck, continuing a command will result in a `STATUS_STUCK` error, rather than trying again. A new `STATUS_UNRECOGNIZED_COMMAND` will be returned if the `command_id` does not match the currently executing command.
+
+The map representation now tracks the “source” of waypoints and edges. It is possible to override the cost of an edge used when planning paths and to disable the alternate route finding for a particular edge.
+
+#### Leases
+Leases now include client names alongside the sequence number for help in debugging.  If you are writing a custom client, make sure to append your client name any time that you create a sub-lease.
+
+ListLeases can optionally request to have the full lease information of the latest lease, rather than only the root lease information that was previously reported.
+
+### Bug Fixes and Improvements
+In the seconds following modifications to the robot directory to the robot directories existing clients may experience a one time request failure. This failure is transient and can be resolved by retrying the request. This has been an expected failure case and a new error (RetryableUnavailableError) has been put in to better reflect the failure.
+
+`SE3Pose` and `Quat` math helpers have `transform_vec3` members to simplify rotating vectors.
+
+There is a new `get_self_ip()` helper in `common.py` for determining the ip address your client will use to talk to the robot.  This is useful for determining the correct registration information for a service, particularly on a machine with multiple network interfaces.  This is also available via the python command line program `python3 -m bosdyn.client <robot host> self-ip`.
+
+When listing events from the python command line program, you can now filter by event level and by event type.
+
+### Dependencies
+The python SDK now depends on the `Deprecated` package, which is used to mark functions and classes that are deprecated and provide warnings, so that users are made aware that features that they are using may be removed in the future.
+
+### Deprecations
+The Deprecated package has been implemented across the SDK so that deprecated features will print out a warning when they are called. Documentation surrounding deprecated features has also been updated.
+
+
+### Breaking Changes
+Spot Check no longer computes the `foot_height_results` or `leg_pair_results` fields.
+
+All rpcs in the Python SDK have a default timeout of 30s.  The global timeout can be changed by assigning a new value to `bosdyn.client.common.DEFAULT_RPC_TIMEOUT`, and individual rpc calls can still set their own timeout via a `timeout=sec` optional parameter at any call site.
+
+### Known Issues
+
+**When a network transport failure occurs,** depending on the particular operating system and version of gRPC installed, the error from the python SDK may not always be the most specific error possible, such as `UnknownDnsNameError`.  It may instead be raised as either a generic `RpcError`, or another generic failure type such as `UnableToConnectToRobotError`.
+
+**Spot CAM LED illumination levels** are not currently recorded or played back in Autowalk missions.
+
+**When capturing both a PTZ and Panoramic image** in the same action, there may occasionally be two PTZ images captured along with the Panoramic image, rather than just one.
+
+**If you write a custom data acquisition plugin or image service,** do not change its `DataAcquisitionCapability` or `ImageSource` set once it is running and registered. New capabilities may not be detected, and old capababilities may still be listed as available in the Data Acquisition service. To change the capabilities of a service: unregister it from the directory, wait until its capabilities are no longer listed in the Data Acquisition service, and then re-register it. This waiting also applies to restarting a service if its capabilities will be different upon restart.
+
+**If you write a custom data acquisition plugin without using our helper class,** its `GetStatus()` rpc is expected to complete immediately. If it takes too long to complete it can cause timeouts when requesting `GetStatus()` of the data acquisition service.
+
+**If you register a new service with the robot**, calling `robot.ensure_client()` to create a client for that service may result in a `UnregisteredServiceNameError`.
+
+  * Workaround: call `robot.sync_with_directory()` before `robot.ensure_client()`
+
+**SE2VelocityLimits require care**.  Correct usage of the `SE2VelocityLimit` message requires the user to fully fill out all the fields, setting unlimited values to a large number, say 1e6.
+
+
+### Sample Code
+
+[**Arm and Mobility Command (new)**](../python/examples/arm_and_mobility_command/README.md)
+Demonstrates how to issue both mobility and arm commands to the robot at the same time.
+
+[**Arm Door (new)**](../python/examples/arm_door/README.md)
+Demonstrates how to use the door service to have Spot autonomously open a door. It opens an image display and requires the same use input as when opening a door with the tablet.
+
+[**Arm Force Control (new)**](../python/examples/arm_force_control/README.md)
+Demonstrates how to create force controlled trajectories for the arm and gripper.
+
+[**Arm Gaze (new)**](../python/examples/arm_gaze/README.md)
+Shows how to command multiple different types of gaze requests.
+
+[**Arm GCode (new)**](../python/examples/arm_gcode/README.md)
+Uses the arm surface contact API to write GCode on the ground using sidewalk chalk.
+
+[**Arm Grasp (new)**](../python/examples/arm_grasp/README.md)
+Shows how to use the manipulation API to autonomously grasp an object based on the object’s image coordinates in pixel space. It opens an image view and lets a user select an object by clicking on the image, similar to grasping with the tablet.
+
+[**Arm Joint Move (new)**](../python/examples/arm_joint_move/README.md)
+Shows how to create and command a joint move trajectory.
+
+[**Arm Simple (new)**](../python/examples/arm_simple/README.md)
+A starter example which shows how to issue the robot command RPC with a basic arm command which moves the end effector to a couple different positions.
+
+[**Arm Stow Unstow (new)**](../python/examples/arm_stow_unstow/README.md)
+Shows how to issue API commands to stow and unstow the arm.
+
+[**Arm Surface Contact (new)**](../python/examples/arm_surface_contact/README.md)
+Uses the arm surface contact API to request a end effector trajectory move which applies some force to the ground.
+
+[**Arm Trajectory (new)**](../python/examples/arm_trajectory/README.md)
+Demonstrates how to create an arm command with a position-based trajectory.
+
+[**Arm Walk to Object (new)**](../python/examples/arm_walk_to_object/README.md)
+This example shows how to use the manipulation api to command the robot to walk towards an object and prepare to grasp it. The example opens an image view and lets a user select an object by clicking in the image.
+
+[**Arm With Body Follow (new)**](../python/examples/arm_with_body_follow/README.md)
+Shows how to issue arm commands that allow the body to move to a good position to achieve the desired arm command.
+
+[**Comms Test (updated)**](../python/examples/comms_test/README.md)
+The comms test example can now successfully be run with Docker.
+
+[**Data Acquisition Service Plugins (updated)**](../python/examples/data_acquisition_service/README.md)
+The directory structure has changed to create individual directories for each plugin (and the plugin’s Dockerfile and requirements files).
+
+[**Data Service (updated)**](../python/examples/data_service/README.md)
+A new example script, delete_pages.py, has been added to remove log pages from robots.
+
+[**Estop (updated)**](../python/examples/estop/README.md)
+The estop no-gui example’s logging statements have been improved.
+
+[**GraphNav Command Line (updated)**](../python/examples/graph_nav_command_line/README.md)
+Has commands to clear the map on the robot, and to manually close the loop in a map. Updated to properly return the lease when exiting the script. Optimized to only upload snapshots to the robot that are not already present.
+
+[**Mission Recorder (updated)**](../python/examples/mission_recorder/README.md)
+Fixed the localization node to use the nearest fiducial.
+
+[**Network Compute Bridge (new)**](../python/examples/network_compute_bridge/README.md)
+The example has a network compute bridge work service example, which runs a tensorflow model and registers the service with the robot.
+Additionally, the example contains a client-side example that queries the network compute bridge service to identify objects in the robot camera images using the server’s tensorflow model.
+
+[**Replay Mission (updated)**](../python/examples/replay_mission/README.md)
+Optimized to only upload snapshots to the robot that are not already present. Has an option to disable alternate route finding when running a mission.
+
+[**Ricoh Theta (updated)**](../python/examples/ricoh_theta/README.md)
+Fixes a missing import required to run the continuous capture thread.
+
+[**Self Registration (updated)**](../python/examples/self_registration/README.md)
+Updated to create a payload with more realistic sample values.
+
+[**Spot CAM (updated)**](../python/examples/spot_cam/README.md)
+The WebRTC example now records audio. The compositor example now includes Spot CAM IR support.
+
+[**Upload Choreographed Sequence (updated)**](../python/examples/upload_choreographed_sequence/README.md)
+Returns a clearer error message if being used with an incorrect license.
+
+[**Web Cam Image Service (updated)**](../python/examples/web_cam_image_service/README.md)
+The web cam example now has better support for Windows, and has a debug mode which will show a popup image window of the camera image.
+
+
 ## 2.2.0
 
 ### New Features
@@ -77,7 +248,7 @@ BDDF code has moved to the `bosdyn-core` package, so that it can be used separat
 
 **When capturing both a PTZ and Panoramic image** in the same action, there may occasionally be two PTZ images captured along with the Panoramic image, rather than just one.
 
-**If you write a custom data acquisition plugin or image service,** do not change its `DataAcquisitionCapability` or `ImageSource` set once it is running and registered. New capabilities may not be detected, and old capababilities may still be listed as available in the Data Acquisition service. To change the capabilities of a service: unregister it from the directory, wait until its capabilities are no longer listed in the Data Acquisition service, and then re-register it. This waiting also applies to restarting a service if its capabilities will be different upon restart.
+**If you write a custom data acquisition plugin or image service,** do not change its `DataAcquisitionCapability` or `ImageSource` set once it is running and registered. New capabilities may not be detected, and old capabilities may still be listed as available in the Data Acquisition service. To change the capabilities of a service: unregister it from the directory, wait until its capabilities are no longer listed in the Data Acquisition service, and then re-register it. This waiting also applies to restarting a service if its capabilities will be different upon restart.
 
 **If you write a custom data acquisition plugin without using our helper class,** its `GetStatus()` rpc is expected to complete immediately. If it takes too long to complete it can cause timeouts when requesting `GetStatus()` of the data acquisition service.
 
@@ -142,7 +313,7 @@ To simplify the development of reliable services and report when problems arise,
 
 **ServiceFaultState in RobotState**: All reported service faults will be included in the `RobotState` message. Clearing active faults will move them into historical faults. All service faults will automatically be displayed in the tablet interface to inform users.
 
-**Directory and Payload Liveness faults**: New options for directory and payload registration enable liveness monitoring. When this feature is implemented, alongside directory or payload keep alives, service faults will be automatically raised when a service crashes or a payload disconnects.
+**Directory and Payload Liveness faults**: New options for directory and payload registration enable liveness monitoring. When this feature is implemented, alongside directory or payload keep-alives, service faults will be automatically raised when a service crashes or a payload disconnects.
 
 **Integrations**: Boston Dynamics supported payloads incorporate service faults and liveness monitoring out of the box.
 - Spot CORE will report service faults if it experiences issues during startup, fails to communicate with the robot, detects an invalid payload configuration, or fails to communicate to an expected LiDAR.
@@ -249,7 +420,7 @@ Autowalk mission callback nodes only wait 10 seconds for a response.  When a mis
 
 **When capturing both a PTZ and Panoramic image** in the same action, there may occasionally be two PTZ images captured along with the Panoramic image, rather than just one.
 
-**If you write a custom data acquisition plugin or image service,** do not change its `DataAcquisitionCapability` or `ImageSource` set once it is running and registered. New capabilities may not be detected, and old capababilities may still be listed as available in the Data Acquisition service. To change the capabilities of a service: unregister it from the directory, wait until its capabilities are no longer listed in the Data Acquisition service, and then re-register it. This waiting also applies to restarting a service if its capabilities will be different upon restart.
+**If you write a custom data acquisition plugin or image service,** do not change its `DataAcquisitionCapability` or `ImageSource` set once it is running and registered. New capabilities may not be detected, and old capabilities may still be listed as available in the Data Acquisition service. To change the capabilities of a service: unregister it from the directory, wait until its capabilities are no longer listed in the Data Acquisition service, and then re-register it. This waiting also applies to restarting a service if its capabilities will be different upon restart.
 
 Furthermore, always specify the port that it should run on via the `--port` flag, and do not change it between restarts of your plugin or image service. If you must change the port, then you must reboot the robot.
 

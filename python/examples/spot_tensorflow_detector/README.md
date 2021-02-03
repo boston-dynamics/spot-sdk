@@ -18,10 +18,10 @@ another set of those 5 images with boxes around the detections reported by the T
 
 The program is organized as three sets of Python processes communicating with the Spot robot. The 
 process diagram is shown below. The main process communicates with the Spot robot over GRPC and 
-constanty receives images.These images are pushed into the RAW_IMAGES_QUEUE and read by the 
+constantly receives images.These images are pushed into the RAW_IMAGES_QUEUE and read by the 
 Tensorflow processes.Those processes detect objects in the images, draw the bounding boxes around 
 the detections, and push those processed images into the PROCESSED_IMAGES_QUEUE. The Display 
-process then pulls images from the PROCESSED_IMAGES_QUEUE and displayes them to the screen.
+process then pulls images from the PROCESSED_IMAGES_QUEUE and displays them to the screen.
 
 <img src="documentation/process_diagram.png" alt="Process Diagram" style="width:250px;"/>
 

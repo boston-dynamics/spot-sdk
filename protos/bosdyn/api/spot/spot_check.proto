@@ -122,13 +122,13 @@ message SpotCheckFeedbackResponse {
     // Result from the payload check
     PayloadCheckResult payload_result = 8;
 
-    // Results of foot height validation.
+    // Deprecated. Results of foot height validation.
     // The key string is the name of the leg (e.g. fl, fr, hl, ...)
-    map<string, FootHeightCheckResult> foot_height_results = 10;
+    map<string, FootHeightCheckResult> foot_height_results = 10 [deprecated = true];
 
-    // Results of leg pair validation.
+    // Deprecated. Results of leg pair validation.
     // The key string is the name of the leg pair (e.g. fl-fr, fl-hl, ...)
-    map<string, LegPairCheckResult> leg_pair_results = 11;
+    map<string, LegPairCheckResult> leg_pair_results = 11 [deprecated = true];
 
     // Results of the hip range of motion check
     // The key string is the name of the leg (e.g. fl, fr, hl, ...)
@@ -216,6 +216,7 @@ message JointKinematicCheckResult {
     // 1 indicates a perfect kinematic joint calibration
     // Typically, values greater than 0.8 should be expected.
     float health_score = 5;
+
 }
 
 // Results from foot height checks.

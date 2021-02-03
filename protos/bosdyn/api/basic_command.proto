@@ -30,6 +30,11 @@ message RobotCommandFeedbackStatus {
 
         /// The robot is in an unsafe state, and will only respond to known safe commands.
         STATUS_ROBOT_FROZEN = 4;
+
+        /// The request cannot be executed because the required hardware is missing.
+        /// For example, an armless robot receiving a synchronized command with an arm_command
+        /// request will return this value in the arm_command_feedback status.
+        STATUS_INCOMPATIBLE_HARDWARE = 5;
     }
 }
 
@@ -288,3 +293,49 @@ message Stance {
     float accuracy = 4;
 }
 
+// The base will move in response to the hand's location, allow the arm to reach beyond
+// its current workspace.  If the hand is moved forward, the body will begin walking
+// forward to keep the base at the desired offset from the hand.
+message FollowArmCommand {
+    message Request {
+
+        // Optional body offset from the hand.
+        // For example, to have the body 0.75 meters behind the hand, use (0.75, 0, 0)
+        Vec3 body_offset_from_hand = 1;
+
+        // Optional. If true, the body will be restricted to body orientation offsets only.
+        bool disable_walking = 2;
+    }
+
+    message Feedback {
+        // FollowArmCommand commands provide no feedback.
+    }
+}
+
+message ArmDragCommand {
+    message Request {
+    }
+
+    message Feedback {
+        enum Status {
+            // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
+            STATUS_UNKNOWN = 0;
+            // Robot is dragging.
+            STATUS_DRAGGING = 1;
+            // Robot is not dragging because grasp failed.
+            // This could be due to a lost grasp during a drag, or because the gripper isn't in a good
+            // position at the time of request. You'll have to reposition or regrasp and then send a
+            // new drag request to overcome this type of error.
+            // Note: When requesting drag, make sure the gripper is positioned in front of the robot (not to the side of or
+            // above the robot body).
+            STATUS_GRASP_FAILED = 2;
+            // Robot is not dragging for another reason.
+            // This might be because the gripper isn't holding an item.
+            // You can continue dragging once you resolve this type of error (i.e. by sending an ApiGraspOverride request).
+            // Note: When requesting drag, be sure to that the robot knows it's holding something (or use APIGraspOverride to
+            // OVERRIDE_HOLDING).
+            STATUS_OTHER_FAILURE = 3;
+        }
+        Status status = 1;
+    }
+}

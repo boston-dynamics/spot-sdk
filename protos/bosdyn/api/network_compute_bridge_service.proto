@@ -1,0 +1,30 @@
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+import "bosdyn/api/network_compute_bridge.proto";
+
+// RPCs for sending images or other data to networked server for computation.
+service NetworkComputeBridge {
+    rpc NetworkCompute(NetworkComputeRequest) returns (NetworkComputeResponse) {
+    }
+    rpc ListAvailableModels(ListAvailableModelsRequest) returns (ListAvailableModelsResponse) {
+    }
+}
+
+// Set of RPCs for workers of the network compute bridge.  This is seperate from the RPCs for the
+// on-robot network compute bridge so that if they need to diverge in the future it is possible
+// to do so.
+service NetworkComputeBridgeWorker {
+    rpc NetworkCompute(NetworkComputeRequest) returns (NetworkComputeResponse) {
+    }
+    rpc ListAvailableModels(ListAvailableModelsRequest) returns (ListAvailableModelsResponse) {
+    }
+}
+

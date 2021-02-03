@@ -23,7 +23,7 @@ The data acquisition service will automatically recognize any directory-register
 
 For each image source that will be available in the image service, a `VisualImageSource` helper class should be created to create the necessary protos for responding to gRPC requests from an image service, request and decode image data from the specific image source, and create or clear faults specific to the image source. The constructor requires the image source name to be provided (as a string), and then a class inheriting from the `CameraInterface` and overriding the functions for capturing image data and decoding the data. Optionally, the number of pixel rows and columns in the image can be provided as integer values in the `VisualImageSource` constructor. The gain and exposure time can be provided as either a function which dynamically determines the values or fixed float values in the `VisualImageSource` constructor as well.
 
-The image service can be created with the `CameraBaseImageServicer` class, which is a helper class that will manage state and respond to the RPCs required of an image service (`ListImageSources` RPC and `GetImage` RPC). The constructor of the image service helper class requires a developer to provide the sdk robot instance, the service name, and a list of `VisualImageSource`'s which will represent the image sources avaialble for capture from this image service.
+The image service can be created with the `CameraBaseImageServicer` class, which is a helper class that will manage state and respond to the RPCs required of an image service (`ListImageSources` RPC and `GetImage` RPC). The constructor of the image service helper class requires a developer to provide the sdk robot instance, the service name, and a list of `VisualImageSource`'s which will represent the image sources available for capture from this image service.
 
 ### CameraInterface
 
@@ -60,7 +60,7 @@ There are two SDK examples showing `ImageService` implementations using the help
 
 ### Tips for Creating an Image Service
 - The `image_decode` function should attempt to accurately fill out the PixelFormat and ImageFormat fields for the image proto in addition to the image data. This allows for end-user applications to more accurately decode the image data.
-- The `image_decode` function should handle an input argument of `image_format=None`. Therefore, if the `image_format` is `None`, the `image_decode` function should choose the best/preferred format and respond with image data decoded into that format and set the ImageFormat field to the choosen format in the image proto.
+- The `image_decode` function should handle an input argument of `image_format=None`. Therefore, if the `image_format` is `None`, the `image_decode` function should choose the best/preferred format and respond with image data decoded into that format and set the ImageFormat field to the chosen format in the image proto.
 - To have a specific camera source run a background thread, but other sources in the same service run the `blocking_capture` function at RPC time, provide `use_background_capture_thread` as False to the `CameraBaseImageServicer` constructor. Separately, for the `VisualImageSource` object, start the thread using the `create_capture_thread()` function before passing the list of sources to the image service constructor. The following is pseudo code demonstrating the process:
     ```
     visual_source1 = VisualImageSource("source1", camera_interface_object)
@@ -69,7 +69,7 @@ There are two SDK examples showing `ImageService` implementations using the help
     CameraBaseImageServicer(robot, "image-service-name", [visual_source1, visual_source2_not_threaded], use_background_capture_thread=False)
 
     ```
-- While developing an image service, if the service is not behaving as expected or failing unexpectedly, a image service tester program (`python/examples/tester_progams/image_service_tester.py`) is available to help test and debug common failure modes through detailed display of the system's outputs.
+- While developing an image service, if the service is not behaving as expected or failing unexpectedly, a image service tester program (`python/examples/tester_programs/image_service_tester.py`) is available to help test and debug common failure modes through detailed display of the system's outputs.
 
 ## Non-image Payloads
 
@@ -151,7 +151,7 @@ If the plugin service encounters an error that is unrelated to a specific piece 
     ```
     store_helper.state.set_status(data_acquisition_pb2.GetStatusResponse.STATUS_SAVING)
     ```
-- While developing a data acquisition plugin service, if the service is not behaving as expected or failing unexpectedly, a plugin tester program (`python/examples/tester_progams/plugin_tester.py`) is available to help test and debug common failure modes through detailed display of the system's outputs.
+- While developing a data acquisition plugin service, if the service is not behaving as expected or failing unexpectedly, a plugin tester program (`python/examples/tester_programs/plugin_tester.py`) is available to help test and debug common failure modes through detailed display of the system's outputs.
 - The data collection function can be part of its own class that manages state specific to the payload. Additionally, if an individual class is created for the data collection and management, it can use background threads to collect and buffer data to speed up the response to the `AcquirePluginData` RPC.
 - The data acquisition service will mark acquisition requests as `STATUS_TIMEDOUT` if they take longer than 30 seconds. A plugin can extend the timeout used by providing an additional function following this signature:
 
@@ -169,7 +169,7 @@ If the plugin service encounters an error that is unrelated to a specific piece 
 
 ### Attaching Metadata with other Data or Images
 
-Additional metadata, such as the robot state or sensor configuration information, can be stored in association with external data collected by a plugin or images from image services. To save metadata linked with each piece of data, a DataAcquisitionPluginService can be created to collect and save this metadata. This plugin will list capture actions representing each piece of additional metadata. The plugin will recieve an `AcquirePluginData` request from the data acquisition service on robot, which will contain a repeated list of `DataIdentifiers` that the metadata plugin can use to store metadata associated to these identified pieces of data.
+Additional metadata, such as the robot state or sensor configuration information, can be stored in association with external data collected by a plugin or images from image services. To save metadata linked with each piece of data, a DataAcquisitionPluginService can be created to collect and save this metadata. This plugin will list capture actions representing each piece of additional metadata. The plugin will receive an `AcquirePluginData` request from the data acquisition service on robot, which will contain a repeated list of `DataIdentifiers` that the metadata plugin can use to store metadata associated to these identified pieces of data.
 
 The metadata will be configured as JSON data, and can be stored as an `AssociatedMetadata` proto. This proto contains a `reference_id` field, which will be the `DataIdentifier` from the data it should be associated with; if only the `action_id` of that identifier is filled out, than the metadata is associated with the entire action (all of the repeated data identifiers).
 

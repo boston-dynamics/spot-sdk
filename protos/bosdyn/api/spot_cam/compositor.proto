@@ -12,6 +12,7 @@ option java_outer_classname = "CompositorProto";
 
 import "bosdyn/api/header.proto";
 import "bosdyn/api/spot_cam/camera.proto";
+import "google/protobuf/wrappers.proto";
 
 // A "Screen" represents a particular layout of camera images
 // used by the video stream.
@@ -96,11 +97,76 @@ message SetScreenRequest {
     string name = 2;
 }
 
-
 // Result of setting the camera layout.
 message SetScreenResponse {
     // Common response header.
     bosdyn.api.ResponseHeader header = 1;
     // Identifier of the screen used.
     string name = 2;
+}
+
+//the colormap is a mapping of radiometric data to color, to make the images easier for people to look at in real time.
+message IrColorMap {
+    enum ColorMap {
+	 COLORMAP_UNKNOWN = 0;
+	 //the greyscale colormap maps the minimum value (defined below) to black and the maximum value (defined below) to white
+	 COLORMAP_GREYSCALE = 1;
+	 //the jet colormap uses blues for values closer to the minimum, and red values for values closer to the maximum.
+	 COLORMAP_JET = 2;
+    }
+    ColorMap colormap = 1;
+
+    message ScalingPair {
+        //the minimum value to do color mapping, in degrees Celsius
+        double min = 1;
+        //the maximum value to do color mapping, in degrees Celsius
+        double max = 2;
+    }
+    ScalingPair scale = 2;
+
+    //if auto_scale is true, then the min and max values are derived from the data itself, and the settings
+    //above are ignored
+    google.protobuf.BoolValue auto_scale = 3;
+}
+
+message SetIrColormapRequest {
+    bosdyn.api.RequestHeader header = 1;
+    IrColorMap map = 2;
+}
+
+message SetIrColormapResponse {
+    bosdyn.api.ResponseHeader header = 1;
+}
+
+message GetIrColormapRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message GetIrColormapResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    IrColorMap map = 2;
+}
+
+//the ir meter overlay allows for pixel-accurate measurements to be taken and displayed to the user
+message IrMeterOverlay {
+    //If enable isn't true, don't overlay any IR meter
+    bool enable = 1;
+
+    //these coordinates, normalized from 0-1, are within the ir camera 'window'
+    //note: if the coordinates lie within an 'invalid' region of the window, then
+    //the meter will be disabled.
+    message NormalizedCoordinates {
+        double x = 1;
+        double y = 2;
+    }
+    NormalizedCoordinates coords = 2;
+}
+
+message SetIrMeterOverlayRequest {
+    bosdyn.api.RequestHeader header = 1;
+    IrMeterOverlay overlay = 2;
+}
+
+message SetIrMeterOverlayResponse {
+    bosdyn.api.ResponseHeader header = 1;
 }

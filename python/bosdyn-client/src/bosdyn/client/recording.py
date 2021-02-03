@@ -21,7 +21,7 @@ from bosdyn.client.exceptions import ResponseError
 
 
 class WaypointRegion(Enum):
-    """Helper enum to descibe the localization region type for a waypoint."""
+    """Helper enum to describe the localization region type for a waypoint."""
     DEFAULT_REGION = 1
     EMPTY_REGION = 2
     CIRCLE_REGION = 3
@@ -95,7 +95,7 @@ class GraphNavRecordingServiceClient(BaseClient):
                                error_from_response=common_header_errors, **kwargs)
 
     def set_recording_environment(self, lease=None, recording_environment=None, **kwargs):
-        """Set the persistent recording enviornment.
+        """Set the persistent recording environment.
 
         Args:
             lease: Leases to show ownership of necessary resources. Will use the client's leases by default.
@@ -353,7 +353,7 @@ def _get_status(response):
 
 
 def _get_response(response):
-    # Return full response for RecordStatus to get enviornment and is_recording information.
+    # Return full response for RecordStatus to get environment and is_recording information.
     return response
 
 

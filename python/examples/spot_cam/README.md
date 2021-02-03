@@ -16,6 +16,11 @@ These examples need to be run with python3, and have the Spot SDK installed. See
 python3 -m pip install -r requirements.txt
 ```
 
+Older versions of pip may have trouble installing all of the requirements.  If you run into a problem, upgrade pip by running
+```
+python3 -m pip install --upgrade pip
+```
+
 ## Running the Example
 To run the examples:
 ```
@@ -34,6 +39,14 @@ python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio play autonomous_robot_en
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio delete autonomous_robot_en
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio list
+
+# Compositor Service
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP compositor list
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP compositor get
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP compositor set mech
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP compositor visible
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP compositor get_colormap
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP compositor set_colormap color jet
 
 # Lighting Service
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP lighting set 0.1 0.2 0.3 0.4
@@ -62,6 +75,11 @@ python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz g
 # You should see a ptz jpeg image
 python -m command_line --username=$USERNAME --password=$PASSWORD -$ROBOT_IP media_log store_retrieve ptz
 
-# webRTC Service
+# WebRTC Service
+# Save images to .jpg files
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP webrtc save
+# Save 10 seconds of video (no audio)
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP webrtc record --time 10
+# Save 10 seconds of audio
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP webrtc record audio --time 10
 ```

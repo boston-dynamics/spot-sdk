@@ -10,6 +10,7 @@ import functools
 import logging
 import types
 import grpc
+import socket
 
 from .channel import TransportError, translate_exception
 from .exceptions import Error, InternalServerError, InvalidRequestError, LicenseError, LeaseUseError, UnsetStatusError
@@ -18,6 +19,7 @@ _LOGGER = logging.getLogger(__name__)
 
 from bosdyn.api import license_pb2
 
+DEFAULT_RPC_TIMEOUT = 30  # seconds
 
 def common_header_errors(response):
     """Return an exception based on common response header. None if no error."""
@@ -141,7 +143,7 @@ def handle_unset_status_error(unset, field='status', statustype=None):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             # See if the given field is the given "unset" value.
-            if isinstance(args[0], types.GeneratorType):
+            if isinstance(args[0], list):
                 for resp in args[0]:
                     _statustype = statustype if statustype else resp
                     if getattr(resp, field) == getattr(_statustype, unset):
@@ -164,7 +166,7 @@ def handle_common_header_errors(func):
     def wrapper(*args, **kwargs):
         # Look for errors in the common response, before looking for specific errors.
         # pylint: disable=no-value-for-parameter
-        if isinstance(args[0], types.GeneratorType):
+        if isinstance(args[0], list):
             return streaming_common_header_errors(*args) or func(*args, **kwargs)
         else:
             return common_header_errors(*args) or func(*args, **kwargs)
@@ -178,7 +180,7 @@ def handle_lease_use_result_errors(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         # pylint: disable=no-value-for-parameter
-        if isinstance(args[0], types.GeneratorType):
+        if isinstance(args[0], list):
             return streaming_common_lease_errors(*args) or func(*args, **kwargs)
         else:
             return common_lease_errors(*args) or func(*args, **kwargs)
@@ -247,6 +249,7 @@ class BaseClient(object):
         self.request_processors = []
         self.response_processors = []
         self.lease_wallet = None
+        self.client_name = None
 
     @staticmethod
     def request_trim_for_log(req):
@@ -273,6 +276,7 @@ class BaseClient(object):
         self.response_processors = other.response_processors + self.response_processors
         self.logger = other.logger.getChild(self._name or self._service_type_short)
         self.lease_wallet = other.lease_wallet
+        self.client_name = other.client_name
 
     def update_request_iterator(self, request_iterator, logger, rpc_method, is_blocking):
         for request in request_iterator:
@@ -323,7 +327,8 @@ class BaseClient(object):
                          self.request_trim_for_log(request))
 
         try:
-            response = rpc_method(request, **kwargs)
+            timeout = kwargs.pop('timeout', DEFAULT_RPC_TIMEOUT)
+            response = rpc_method(request, timeout=timeout, **kwargs)
         except TransportError as e:
             raise translate_exception(e)
 
@@ -352,14 +357,14 @@ class BaseClient(object):
 
     def handle_response_streaming(self, response, error_from_response, value_from_response):
         if error_from_response is not None:
-            exc = error_from_response((resp for resp in response))
+            exc = error_from_response(response)
         else:
             exc = None
         if exc is not None:
             raise exc
         if value_from_response is None:
             return response
-        return value_from_response((resp for resp in response))
+        return value_from_response(response)
 
     @process_kwargs
     def call_async(self, rpc_method, request, value_from_response=None, error_from_response=None,
@@ -373,7 +378,8 @@ class BaseClient(object):
         request = self._apply_request_processors(copy.deepcopy(request))
         logger = self._get_logger(rpc_method)
         logger.debug('async request: %s %s', rpc_method._method, self.request_trim_for_log(request))
-        response_future = rpc_method.future(request, **kwargs)
+        timeout = kwargs.pop('timeout', DEFAULT_RPC_TIMEOUT)
+        response_future = rpc_method.future(request, timeout=timeout, **kwargs)
 
         def on_finish(fut):
             try:
@@ -468,3 +474,17 @@ class FutureWrapper():
             return self._error_from_response(self.original_future.result())
 
         return translate_exception(error)
+
+
+def get_self_ip(robot_hostname):
+    """ Get the IP address of the ethernet or WiFi interface used to talk to the robot."""
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # doesn't even have to be reachable
+        s.connect((robot_hostname, 1))
+        ip = s.getsockname()[0]
+    except socket.error:
+        ip = '127.0.0.1'
+    finally:
+        s.close()
+    return ip

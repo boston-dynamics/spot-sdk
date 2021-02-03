@@ -9,11 +9,10 @@ from __future__ import print_function
 import argparse
 import sys
 
-from google.protobuf.timestamp_pb2 import Timestamp
-import bosdyn.api.data_index_pb2 as data_index_protos
-from bosdyn.api.time_range_pb2 import TimeRange
 import bosdyn.client
 from bosdyn.client.data_service import DataServiceClient
+from bosdyn.client.time_sync import (TimeSyncEndpoint, TimeSyncClient, NotEstablishedError,
+                                     timespec_to_robot_timespan)
 import bosdyn.client.util
 
 
@@ -30,15 +29,16 @@ def delete_pages(config):
     end_timestamp = None
     time_range = None
 
-    if config.start:
-        start_timestamp = Timestamp()
-        start_timestamp.FromJsonString(config.start)
-    if config.end:
-        end_timestamp = Timestamp()
-        end_timestamp.FromJsonString(config.end)
+    time_sync_endpoint = None
+    if not config.robot_time:
+        # Establish time sync with robot to obtain skew.
+        time_sync_client = robot.ensure_client(TimeSyncClient.default_service_name)
+        time_sync_endpoint = TimeSyncEndpoint(time_sync_client)
+        if not time_sync_endpoint.establish_timesync():
+            raise NotEstablishedError("time sync not established")
 
-    if end_timestamp or start_timestamp:
-        time_range = TimeRange(start=start_timestamp, end=end_timestamp)
+    if config.timespan:
+        time_range = timespec_to_robot_timespan(config.timespan, time_sync_endpoint)
 
     print(service_client.delete_data_pages(time_range, config.id))
 
@@ -47,11 +47,10 @@ def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
-    parser.add_argument(
-        "--start", help="delete pages after this time (in RFC3339 format: YYYY-MM-DDTHH:MM:SSTZ)")
-    parser.add_argument(
-        "--end", help="delete pages before this time (in RFC3339 format: YYYY-MM-DDTHH:MM:SSTZ)")
-
+    parser.add_argument('-T', '--timespan', default='5m',
+                        help='Time span (default last 5 minutes)')
+    parser.add_argument('-R', '--robot-time', action='store_true',
+                        help='Specified timespan is in robot time')
     parser.add_argument("--id", nargs="+", help="delete pages by page id")
 
     options = parser.parse_args(argv)

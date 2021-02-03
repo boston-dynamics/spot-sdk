@@ -154,7 +154,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-T', '--timespan', default='5m', help='Time span (default last 5 minutes)')
     parser.add_argument('--help-timespan', action='store_true',
-                        help='Print time span formating options')
+                        help='Print time span formatting options')
     parser.add_argument('-c', '--channel', help='Specify channel for data (default=all)')
     parser.add_argument('-t', '--type', help='Specify message type (default=all)')
     parser.add_argument('-s', '--service', help='Specify service name (default=all)')

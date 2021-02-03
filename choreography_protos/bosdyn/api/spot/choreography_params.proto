@@ -112,11 +112,43 @@ message ArmMoveParams {
     google.protobuf.DoubleValue wrist_0 = 5;
     google.protobuf.DoubleValue wrist_1 = 6;
 
-    // The easing pattern for how the "slices" (beats/sub-beats) should be spaced.
+    // How the motion should be paced.
     Easing easing = 7;
 
     // Movement for the gripper.
     google.protobuf.DoubleValue gripper = 8;
+}
+
+enum ArmMoveFrame {
+    ARM_MOVE_FRAME_UNKNOWN = 0;
+    ARM_MOVE_FRAME_CENTER_OF_FOOTPRINT = 1;
+    ARM_MOVE_FRAME_HAND = 2;
+    ARM_MOVE_FRAME_BODY = 3;
+    ARM_MOVE_FRAME_SHOULDER = 4;
+    ARM_MOVE_FRAME_SHADOW = 5;
+}
+
+message WorkspaceArmMoveParams {
+    // The robot will rotate its body to the specified orientation (roll/pitch/yaw) [rad].
+    EulerZYXValue rotation = 1;
+
+    // The positional offset to the robot's current location [m].
+    Vec3Value translation = 2;
+
+    // Go to an absolute position/orientation?  Otherwise, relative to starting pose.
+    google.protobuf.BoolValue absolute = 3;
+
+    // What frame is the motion specified in.
+    ArmMoveFrame frame = 4;
+
+    // How the motion should be paced.
+    Easing easing = 5;
+}
+
+message Figure8Params {
+    google.protobuf.DoubleValue height = 1;
+    google.protobuf.DoubleValue width = 2;
+    google.protobuf.DoubleValue beats_per_cycle = 3;
 }
 
 // Parameters for open/close of gripper.
@@ -149,8 +181,27 @@ message KneelLegMoveParams {
     // If mirrored is true, the joints will be flipped for the leg on the other side (right vs left) of the body.
     google.protobuf.BoolValue mirror = 4;
 
-    // The easing pattern for how the "slices" (beats/sub-beats) should be spaced.
+    // How the motion should be paced.
     Easing easing = 5;
+}
+
+// Parameters specific to KneelLegMove2 move.
+message KneelLegMove2Params {
+    // Joint angles of the front left leg in radians.
+    google.protobuf.DoubleValue left_hip_x = 1;
+    google.protobuf.DoubleValue left_hip_y = 2;
+    google.protobuf.DoubleValue left_knee = 3;
+
+    // Joint angles of the front right leg in radians.
+    google.protobuf.DoubleValue right_hip_x = 4;
+    google.protobuf.DoubleValue right_hip_y = 5;
+    google.protobuf.DoubleValue right_knee = 6;
+
+    // How the motion should be paced.
+    Easing easing = 7;
+
+    // Should we combine with the next move into a smooth trajectory.
+    google.protobuf.BoolValue link_to_next = 8;
 }
 
 // Parameters specific to RunningMan move.
@@ -164,6 +215,12 @@ message RunningManParams {
     google.protobuf.BoolValue reverse = 4;
     // How many full running man cycles should the robot complete in place before starting to move with the desired velocity.
     google.protobuf.Int32Value pre_move_cycles = 5;
+    // Do the move at some multiple of the dance cadence.
+    google.protobuf.DoubleValue speed_multiplier = 6;
+    // What fraction of the time to have feet on the ground.
+    google.protobuf.DoubleValue duty_cycle = 7;
+    // How high to hold the center of mass above the ground on average.
+    google.protobuf.DoubleValue com_height = 8;
 }
 
 // Parameters specific to Hop move.
@@ -203,6 +260,20 @@ message CrawlParams {
     google.protobuf.DoubleValue swing_slices = 1;
     // The speed at which we should crawl [m/s].  X is forward.  Y is left.
     Vec2Value velocity = 2;
+    // The distance between the robot's left and right feet [m].
+    google.protobuf.DoubleValue stance_width = 3;
+    // The distance between the robot's front and back feet [m].
+    google.protobuf.DoubleValue stance_length = 4;
+}
+
+// Parameters for the Bourree move.
+message BourreeParams {
+    // The speed at which we should bourree [m/s].  X is forward.  Y is left.
+    Vec2Value velocity = 1;
+    // How fast the bourree should turn [rad/s].
+    google.protobuf.DoubleValue yaw_rate = 2;
+    // How far apart front and hind feet should be. [m]
+    google.protobuf.DoubleValue stance_length = 3;
 }
 
 // Parameters for moves that can go to either side.
@@ -250,21 +321,31 @@ message StepParams {
     Vec2Value offset = 2;
     // Should we use a second foot?  (None = 0, FL = 1, FR = 2, HL = 3, HR = 4).
     Leg second_foot = 3;
-    // Should we mirror the offset for the second foot?
-    // Ignored if second_foot is set to None
-    google.protobuf.BoolValue mirror = 4;
     // Where should the swing foot go?  This vector should be described in a gravity-aligned body frame
     // relative to the centerpoint of the swing. If set to {0,0,0}, uses the default swing path.
     Vec3Value swing_waypoint = 5;
-    // Parameter for altering the swing height [meters]. Will not have an effect if swing_waypoint is specified.
-    // As well, a zero (or nearly zero) value will be considered as an unspecified parameter.
-    google.protobuf.DoubleValue swing_height = 6;
-    // Parameter for altering the liftoff velocity [m/s]. Will not have an effect if swing_waypoint is specified.
-    // As well, a zero (or nearly zero) value will be considered as an unspecified parameter.
-    google.protobuf.DoubleValue liftoff_velocity = 7;
-    // Parameter for altering the touchdown velocity [m/s]. Will not have an effect if swing_waypoint is specified.
-    // As well, a zero (or nearly zero) value will be considered as an unspecified parameter.
-    google.protobuf.DoubleValue touchdown_velocity = 8;
+    // Parameters for altering swing.
+    // Note that these will have no effect if swing_waypoint is specified. As well, a zero (or nearly zero)
+    // value will be considered as an unspecified parameter.
+    google.protobuf.DoubleValue swing_height = 6; // meters
+    google.protobuf.DoubleValue liftoff_velocity = 7; // m/s
+    google.protobuf.DoubleValue touchdown_velocity = 8; // m/s
+    // Should we mirror the offset for the second foot?
+    // Ignored if second_foot is set to None
+    google.protobuf.BoolValue mirror_x = 9;
+    google.protobuf.BoolValue mirror_y = 10;
+
+    // *** Deprecation Warning ***
+    // DEPRECATED as of 2.3.0: The mirror field has been deprecated in favor for a more descriptive
+    //  break down to mirror_x and mirror_y.
+    // The following field will be deprecated and moved to 'reserved' in a future release.
+    google.protobuf.BoolValue mirror = 4 [deprecated = true];
+
+    // What fraction of the swing should be spent near the waypoint.
+    google.protobuf.DoubleValue waypoint_dwell = 11;
+    // Should we touch the ground and come back rather than stepping to a new place?
+    google.protobuf.BoolValue touch = 12;
+    Vec2Value touch_offset = 13;
 }
 
 // Parameters for the robot rotating the body.
@@ -286,6 +367,10 @@ message ButtCircleParams {
     google.protobuf.DoubleValue number_of_circles = 3;
     // The pivot point the butt circles should be centered around.
     Pivot pivot = 4;
+    // Which way to rotate.
+    google.protobuf.BoolValue clockwise = 5;
+    // Where to start.  Zero is up.
+    google.protobuf.DoubleValue starting_angle = 6;
 }
 
 // Parameters specific to twerking
@@ -324,11 +409,10 @@ message Pace2StepParams {
 message ChickenHeadParams {
     // Bobs the head in this direction in the robot footprint frame.
     Vec3Value bob_magnitude = 1;
-    // Bobs with this frequency such that each bob falls on this many slices. If negative,
-    // does not bob.
-    google.protobuf.DoubleValue bob_frequency = 2;
-    // In the middle of the trajectory, add this much z height [m].
-    google.protobuf.DoubleValue bounce = 3;
+    // How fast to bob the head.
+    google.protobuf.Int32Value beats_per_cycle = 2;
+    // Should we move the frame when the robot steps?
+    google.protobuf.BoolValue follow = 3;
 }
 // Parameters specific to clapping.
 message ClapParams {
@@ -363,3 +447,4 @@ message FrontUpParams {
     // Should we raise the hind feet instead.
     google.protobuf.BoolValue mirror = 1;
 }
+

@@ -16,6 +16,9 @@ import "google/protobuf/timestamp.proto";
 
 
 
+// Message to command the robot to dock. \
+// Note: If the robot is docked, you can undock the robot by issuing a command with
+// `prep_pose_behavior=PREP_POSE_UNDOCK`. If undocking, `docking_station_id` is not required.
 message DockingCommandRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -24,6 +27,7 @@ message DockingCommandRequest {
     Lease lease = 2;
 
     // ID of docking station to dock at.
+    // This is ignored if undocking the robot, the current dock is used.
     uint32 docking_station_id = 3;
 
     // Identifier provided by the time sync service to verify time sync between robot and client.
@@ -39,6 +43,7 @@ message DockingCommandRequest {
     PrepPoseBehavior prep_pose_behavior = 9;
 }
 
+// Response to a DockingCommandRequest
 message DockingCommandResponse {
 
     enum Status {
@@ -53,6 +58,9 @@ message DockingCommandResponse {
 
         // ERROR: Dock fiducial not found.
         STATUS_ERROR_DOCK_NOT_FOUND = 5;
+
+        // ERROR: Trying to undock while not docked
+        STATUS_ERROR_NOT_DOCKED = 6;
     }
 
     // Common response header.
@@ -61,21 +69,23 @@ message DockingCommandResponse {
     // Details about how the lease was used.
     LeaseUseResult lease_use_result = 2;
 
-    // Current feedback of specified command.
+    // Result of issued command.
     Status status = 3;
 
-    // Unique identifier for the command (if accepted).
+    // Unique identifier for the command (if accepted, `status=STATUS_OK`).
     uint32 docking_command_id = 5;
 }
 
+// Message to get the status of a previously issued DockingCommand
 message DockingCommandFeedbackRequest {
     // Common request header.
     RequestHeader header = 1;
 
-    // Unique identifier for the command to get feedback for
+    // Unique identifier of the command to get feedback for.
     uint32 docking_command_id = 2;
 }
 
+// Response to a DockingCommandFeedbackRequest for a particualar docking command ID
 message DockingCommandFeedbackResponse {
 
     enum Status {
@@ -85,31 +95,32 @@ message DockingCommandFeedbackResponse {
         // Docking command is executing.
         STATUS_IN_PROGRESS = 1;
 
-        // Docking command succeeded and valid.
+        // Docking command succeeded, the robot is docked.
         STATUS_DOCKED = 2;
 
-        // Dock was detected as misaligned and aborted to save an unrecoverable state, please try again.
-        STATUS_MISALIGNED = 10;
-         
-        // The robot is at the prep pose for a `PREP_POSE_ONLY_POSE` command
+        // Final success state for `PREP_POSE_ONLY_POSE` or `PREP_POSE_UNDOCK`.
         STATUS_AT_PREP_POSE = 11;
 
-        // Docking Command overridden by new docking command
+        // Misaligned was detected between the robot and the dock.
+        // The docking command was aborted to save an ending up in an unrecoverable state, please try again.
+        STATUS_MISALIGNED = 10;
+
+        // This DockingCommand overridden by new docking command.
         STATUS_OLD_DOCKING_COMMAND = 3;
 
-        // ERROR: Dock fiducial lost
+        // ERROR: The sensed dock has been lost and is no longer found.
         STATUS_ERROR_DOCK_LOST = 4;
 
-        // ERROR: Lease rejected
+        // ERROR: Lease rejected.
         STATUS_ERROR_LEASE = 5;
 
-        // ERROR: End time has been reached
+        // ERROR: End time has been reached.
         STATUS_ERROR_COMMAND_TIMED_OUT = 6;
 
-        // ERROR: No Timesync with system
+        // ERROR: No Timesync with system.
         STATUS_ERROR_NO_TIMESYNC = 7;
 
-        // ERROR: Provided end time too far in the future
+        // ERROR: Provided end time too far in the future.
         STATUS_ERROR_TOO_DISTANT = 8;
 
         // ERROR: Internal system error during execution
@@ -124,16 +135,19 @@ message DockingCommandFeedbackResponse {
     // Details about how the lease was used (unset if unknown).
     LeaseUseResult lease_use_result = 2;
 
-    // Current feedback of specified command.
+    // Current feedback of specified command ID.
     Status status = 3;
 }
 
 // Type of dock
 enum DockType {
+    // Unknown type of dock
     DOCK_TYPE_UNKNOWN = 0;
 
 
+    // Prototype version SpotDock
     DOCK_TYPE_CONTACT_PROTOTYPE = 2;
+    // Production version SpotDock
     DOCK_TYPE_SPOT_DOCK = 3;
 }
 
@@ -156,20 +170,26 @@ message GetDockingConfigResponse {
     // Common response header.
     ResponseHeader header = 1;
 
+    // A series of `ConfigRange` specifying details for dock ID numbers.
     repeated ConfigRange dock_configs = 2;
 }
 
 // Defines how and whether we use the "pre-docking" pose.
 enum PrepPoseBehavior {
-    PREP_POSE_UNKNOWN = 0; // Default behavior, equivalent to PREP_POSE_USE_POSE.
-    PREP_POSE_USE_POSE = 1; // Goes to the pre-docking pose before docking.
-    PREP_POSE_SKIP_POSE = 2; // Docks before going to the pre-docking pose.
-    PREP_POSE_ONLY_POSE = 3; // Goes to the pre-docking pose, and then returns SUCCESS without docking.
+    PREP_POSE_UNKNOWN = 0;      // Default behavior, equivalent to PREP_POSE_USE_POSE.
+    PREP_POSE_USE_POSE = 1;     // Goes to the pre-docking pose before docking.
+    PREP_POSE_SKIP_POSE = 2;    // Docks before going to the pre-docking pose.
+    PREP_POSE_ONLY_POSE = 3;    // Goes to the pre-docking pose, and then returns SUCCESS without docking.
+    PREP_POSE_UNDOCK = 4;       // Use this enum to undock a currently docked robot.
 }
 
-// Overall Docking state of the robot, including power & comms connections
+// Message describing the overall dock state of the robot, including power & comms connections.  \
+// Not tied to any particular DockingCommand ID.  \
+// Note: [*] indicates fields which are only valid if the status is DOCK_STATUS_DOCKED or DOCK_STATUS_DOCKING  \
+// Note: [^] indicates fields which are only valid if the status is DOCK_STATUS_DOCKED  \
 message DockState {
     enum DockedStatus {
+        // Unknown
         DOCK_STATUS_UNKNOWN = 0;
         // Robot is detected as on a dock
         DOCK_STATUS_DOCKED = 1;
@@ -187,28 +207,26 @@ message DockState {
         LINK_STATUS_ERROR = 2;
    }
 
-   // Status of if the robot is on dock    
+    // Status of if the robot is on dock
     DockedStatus status = 1;
 
-    // The following fields are only valid if status is DOCK_STATUS_DOCKED or DOCK_STATUS_DOCKING
-
-    // Type of the dock
+    // [*] Type of the dock
     DockType dock_type = 2;
-    // ID of the dock
+    // [*] ID of the dock
     uint32 dock_id = 3;
     
-    // The following fields are only valid if status is DOCK_STATUS_DOCKED
-    
-    // Status of power detection from the dock
+    // [^] Status of power detection from the dock
     LinkStatus power_status = 4;
     
 }
 
+// Message to get the overall docking state
 message GetDockingStateRequest {
     // Common request header.
     RequestHeader header = 1;
 }
 
+// Response of a GetDockingStateRequest
 message GetDockingStateResponse {
     // Common response header.
     ResponseHeader header = 1;

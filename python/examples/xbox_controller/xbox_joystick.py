@@ -20,7 +20,7 @@ class XboxJoystick:
 
         Either loss of wireless signal or controller powering off will break connection. The
         controller inputs will stop updating, so the last readings will remain in effect. An
-        inital controller input, stick movement or button press, may be required before the
+        initial controller input, stick movement or button press, may be required before the
         connection status goes True.  If a connection is lost, the connection will resume
         automatically when the fault is corrected.
 
@@ -75,7 +75,7 @@ class XboxJoystick:
         return None
 
     def axis_scale(self, raw, deadzone) -> float:
-        """Returns scaled raw (-32768 to +32767) axis value with deadzone correcion. Deadzone
+        """Returns scaled raw (-32768 to +32767) axis value with deadzone correction. Deadzone
          is +/- range of values to consider to be center stick (ie. 0.0).
         """
 

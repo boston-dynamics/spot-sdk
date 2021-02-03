@@ -13,7 +13,7 @@ import os
 import sys
 import time
 
-from bosdyn.api.graph_nav import map_pb2, nav_pb2
+from bosdyn.api.graph_nav import graph_nav_pb2, map_pb2, nav_pb2
 from bosdyn.api.mission import mission_pb2
 from bosdyn.api.mission import nodes_pb2
 
@@ -21,7 +21,7 @@ import bosdyn.client
 import bosdyn.client.lease
 import bosdyn.client.util
 
-from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient
+from bosdyn.client.robot_command import blocking_stand, RobotCommandClient
 from bosdyn.client.robot_state import RobotStateClient
 
 import bosdyn.api.mission
@@ -51,6 +51,9 @@ def main():
                         help='Mission client timeout (s).')
     parser.add_argument('--noloc', action='store_true', default=False, dest='noloc',
                         help='Skip initial localization')
+    parser.add_argument('--disable_alternate_route_finding', action='store_true', default=False,
+                        dest='disable_alternate_route_finding',
+                        help='Disable creating alternate-route-finding graph structure')
 
     group = parser.add_mutually_exclusive_group()
 
@@ -91,7 +94,8 @@ def main():
 
             # Initialize clients
             robot_state_client, command_client, mission_client, graph_nav_client = init_clients(
-                robot, body_lease, args.mission_file, args.map_directory, do_map_load)
+                robot, body_lease, args.mission_file, args.map_directory, do_map_load,
+                args.disable_alternate_route_finding)
 
             assert not robot.is_estopped(), "Robot is estopped. " \
                                             "Please use an external E-Stop client, " \
@@ -100,10 +104,9 @@ def main():
             # Ensure robot is powered on
             assert ensure_power_on(robot), 'Robot power on failed.'
 
-            # Stand up
+            # Stand up and wait for the perception system to stabilize
             robot.logger.info('Commanding robot to stand...')
-            stand_command = RobotCommandBuilder.synchro_stand_command()
-            command_client.robot_command(stand_command)
+            blocking_stand(command_client, timeout_sec=10)
             countdown(5)
             robot.logger.info('Robot standing.')
 
@@ -116,9 +119,10 @@ def main():
                 localization = nav_pb2.Localization()
 
                 # Attempt to localize using any visible fiducial
-                graph_nav_client.set_localization(initial_guess_localization=localization,
-                                                  ko_tform_body=None, max_distance=None,
-                                                  max_yaw=None)
+                graph_nav_client.set_localization(
+                    initial_guess_localization=localization, ko_tform_body=None, max_distance=None,
+                    max_yaw=None,
+                    fiducial_init=graph_nav_pb2.SetLocalizationRequest.FIDUCIAL_INIT_NEAREST)
 
             # Run mission
             if not args.static_mode and not localization_error:
@@ -157,7 +161,8 @@ def init_robot(hostname, username, password):
     return robot
 
 
-def init_clients(robot, lease, mission_file, map_directory, do_map_load):
+def init_clients(robot, lease, mission_file, map_directory, do_map_load,
+                 disable_alternate_route_finding):
     '''Initialize clients'''
 
     if not os.path.isfile(mission_file):
@@ -180,7 +185,8 @@ def init_clients(robot, lease, mission_file, map_directory, do_map_load):
         graph_nav_client.clear_graph()
 
         # Upload map to robot
-        upload_graph_and_snapshots(robot, graph_nav_client, lease.lease_proto, map_directory)
+        upload_graph_and_snapshots(robot, graph_nav_client, lease.lease_proto, map_directory,
+                                   disable_alternate_route_finding)
 
     # Create mission client
     robot.logger.info('Creating mission client...')
@@ -209,7 +215,7 @@ def countdown(length):
     print(0)
 
 
-def upload_graph_and_snapshots(robot, client, lease, path):
+def upload_graph_and_snapshots(robot, client, lease, path, disable_alternate_route_finding):
     '''Upload the graph and snapshots to the robot'''
 
     # Load the graph from disk.
@@ -222,6 +228,10 @@ def upload_graph_and_snapshots(robot, client, lease, path):
         current_graph.ParseFromString(data)
         robot.logger.info('Loaded graph has {} waypoints and {} edges'.format(
             len(current_graph.waypoints), len(current_graph.edges)))
+
+    if disable_alternate_route_finding:
+        for edge in current_graph.edges:
+            edge.annotations.disable_alternate_route_finding = True
 
     # Load the waypoint snapshots from disk.
     current_waypoint_snapshots = dict()
@@ -249,15 +259,17 @@ def upload_graph_and_snapshots(robot, client, lease, path):
 
     # Upload the graph to the robot.
     robot.logger.info('Uploading the graph and snapshots to the robot...')
-    client.upload_graph(graph=current_graph, lease=lease)
+    response = client.upload_graph(graph=current_graph, lease=lease)
     robot.logger.info('Uploaded graph.')
 
     # Upload the snapshots to the robot.
-    for waypoint_snapshot in current_waypoint_snapshots.values():
+    for snapshot_id in response.unknown_waypoint_snapshot_ids:
+        waypoint_snapshot = current_waypoint_snapshots[snapshot_id]
         client.upload_waypoint_snapshot(waypoint_snapshot=waypoint_snapshot, lease=lease)
         robot.logger.info('Uploaded {}'.format(waypoint_snapshot.id))
 
-    for edge_snapshot in current_edge_snapshots.values():
+    for snapshot_id in response.unknown_edge_snapshot_ids:
+        edge_snapshot = current_edge_snapshots[snapshot_id]
         client.upload_edge_snapshot(edge_snapshot=edge_snapshot, lease=lease)
         robot.logger.info('Uploaded {}'.format(edge_snapshot.id))
 

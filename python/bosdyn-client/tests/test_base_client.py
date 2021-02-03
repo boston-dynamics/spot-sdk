@@ -11,8 +11,8 @@ from bosdyn.client.common import BaseClient
 
 def method_wrapper(func):
 
-    def _future(self):
-        partial(func, self)
+    def _future(self, **kwargs):
+        partial(func, self, **kwargs)
         return Response()
 
     def done_callback(func):

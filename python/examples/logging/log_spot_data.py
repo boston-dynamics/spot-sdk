@@ -81,7 +81,7 @@ def log_spot_data(config):
 
     # Log two blobs of data of different types to the same 'channel'
     data_buffer_client.add_protobuf(geo_proto, channel='multi-proto-channel')
-    data_buffer_client.add_protobuf(cmd_proto, channel='mulit-proto-channel')
+    data_buffer_client.add_protobuf(cmd_proto, channel='multi-proto-channel')
     robot.logger.info('Added protos of different types to the same channel.')
     time.sleep(0.1)
 

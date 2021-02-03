@@ -8,6 +8,8 @@ import os
 import shutil
 import tempfile
 
+import cv2
+import numpy as np
 from PIL import Image
 
 from bosdyn.client.command_line import (Command, Subcommands)
@@ -159,6 +161,13 @@ class MediaLogRetrieveCommand(Command):
             lp, img = robot.ensure_client(MediaLogClient.default_service_name).retrieve(lp)
         else:
             lp, img = robot.ensure_client(MediaLogClient.default_service_name).retrieve_raw_data(lp)
+
+        # case for 16 bit thermal image
+        if lp.image_params.format == image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U16:
+            np_img = np.frombuffer(img, dtype=np.uint16)
+            np_img = img.reshape((lp.image_params.height, lp.image_params.width, 1))
+            cv2.imwrite(f'{dst_filename}.pgm', np_img)
+            return lp
 
         with tempfile.NamedTemporaryFile(delete=False) as img_file:
             img_file.write(img)

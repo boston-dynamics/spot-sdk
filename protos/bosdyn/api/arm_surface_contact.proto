@@ -1,0 +1,127 @@
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option java_outer_classname = "ArmSurfaceContactProto";
+
+import "bosdyn/api/geometry.proto";
+import "bosdyn/api/gripper_command.proto";
+import "bosdyn/api/trajectory.proto";
+import "bosdyn/api/arm_command.proto";
+import "google/protobuf/wrappers.proto";
+
+
+// ArmSurfaceContact lets you accurately move the robot's arm in the world while having some ability
+// to perform force control.  This mode is useful for drawing, wiping, and other similar behaviors.
+//
+// The message is similar to the ArmCartesianCommand message, which you can look at for additional
+// details.
+message ArmSurfaceContact {
+    message Request {
+
+        // The root frame is used to set the optional task frame that all trajectories are 
+        // specified with respect to.  If the optional task frame is left un-specified it defaults
+        // to the identity transform and the root frame becomes the task frame.
+        string root_frame_name = 25;
+
+        // The tool pose relative to the parent link (wrist).
+        // Defaults to
+        //    [0.19557 0 0]
+        //    [1 0 0 0]
+        // a frame with it's origin slightly in front of the gripper's palm plate aligned with wrists orientation.
+        SE3Pose wrist_tform_tool = 6;
+
+        // The fields below are specified in this optional task frame.  If unset int defaults
+        // to the identity transform and all quantities are therefore expressed in the root_frame_name.
+        SE3Pose root_tform_task = 26;
+
+        // A 3D pose trajectory for the tool expressed in the task frame, e.g. task_T_tool.
+        // This pose trajectory is optional if requesting a pure wrench at the end-effector, 
+        // otherwise required for position or mixed force/position end-effector requests.
+        SE3Trajectory pose_trajectory_in_task = 2;
+
+        // Optional Maximum acceleration magnitude of the end-effector.
+        // Valid ranges (0, 20]
+        google.protobuf.DoubleValue maximum_acceleration = 3;
+        // Optional Maximum linear velocity magnitude of the end-effector. (m/s)
+        google.protobuf.DoubleValue max_linear_velocity = 4;
+        // Optional Maximum angular velocity magnitude of the end-effector. (rad/s)
+        google.protobuf.DoubleValue max_angular_velocity = 5;
+
+        // Maximum allowable tracking error of the tool frame from the desired trajectory
+        // before the arm will stop moving and cancel the rest of the trajectory. When this limit is exceeded, the
+        // hand will stay at the pose it was at when it exceeded the tracking error, and any other part of the
+        // trajectory specified in the rest of this message will be ignored.
+        // max position tracking error in meters
+        google.protobuf.DoubleValue max_pos_tracking_error = 18;
+        // max orientation tracking error in radians
+        google.protobuf.DoubleValue max_rot_tracking_error = 19;
+
+        // Set a "preferred joint configuration" for this trajectory. When near a singularity, the robot will move towards
+        // the specified pose. If no pose is provided (ie no value is set for this oneof), a default one will be
+        // chosen. If the user wishes to explicitly tell the robot to not prefer any pose, (useful if doing a
+        // local move, and the user wants to avoid large joint motions) they should set ignore_joint_configuration
+        // to be true. The robot's behavior around singularities will then be to simply minimize joint velocity,
+        // resulting in the robot coming in and out of the singularity with similar joint angles
+        oneof joint_configuration {
+            bool force_remain_near_current_joint_configuration = 15;
+            ArmJointPosition preferred_joint_configuration = 16;
+        }
+
+        // If an axis is set to position mode (default), read desired from SE3Trajectory command.
+        // If mode is set to force, use the "press_force_percentage" field to determine force.
+        enum AxisMode { AXIS_MODE_POSITION = 0; AXIS_MODE_FORCE = 1; }
+        AxisMode x_axis = 8;
+        AxisMode y_axis = 9;
+        AxisMode z_axis = 10;
+
+        // Amount of force to use on each axis, from 0 (no force) to 1.0 (maximum force), can also
+        // be negative.  Full range: [-1.0, 1.0]
+        Vec3 press_force_percentage = 12;
+
+
+        // Parameters for controlling admittance.  By default, the robot will
+        // stop moving the arm when it encounters resistance.  You can control that reaction to
+        // make the robot stiffer or less stiff by changing the parameters.
+        enum AdmittanceSetting {
+            ADMITTANCE_SETTING_UNKNOWN = 0;
+            ADMITTANCE_SETTING_OFF = 1;    // No admittance.
+            ADMITTANCE_SETTING_NORMAL = 2; // Normal reaction to touching things in the world
+            ADMITTANCE_SETTING_LOOSE = 3;  // Robot will not push very hard against objects
+            ADMITTANCE_SETTING_STIFF = 4;  // Robot will push hard against the world
+            ADMITTANCE_SETTING_VERY_STIFF = 5;  // Robot will push very hard against the world
+        }
+
+        // Admittance settings for each axis in the admittance frame.
+        AdmittanceSetting xy_admittance = 21;
+        AdmittanceSetting z_admittance = 22;
+
+        // Cross term, making force in the XY axis cause movement in the z-axis.
+        // By default is OFF
+        // Setting this value will make the arm move in the negative Z-axis whenever it feels force in
+        // the XY axis.
+        AdmittanceSetting xy_to_z_cross_term_admittance = 17;
+
+        // Specifies a force that the body should expect to feel.  This allows the robot to "lean into"
+        // an external force.  Be careful using this field, because if you lie to the robot, it can
+        // fall over.
+        Vec3 bias_force_ewrt_body = 20;
+
+
+        // Gripper control
+        ClawGripperCommand.Request gripper_command = 23;
+
+        // Set to true to have robot is walk around to follow the hand.
+        bool is_robot_following_hand = 24;
+
+        reserved 1, 7;
+    }
+
+    message Feedback {
+    }
+}

@@ -98,7 +98,7 @@ class SE2Pose(object):
         return SE2Pose(self.x + rotated_pos[0], self.y + rotated_pos[1], self.angle + se2pose.angle)
 
     def __mul__(self, se2pose):
-        """Overrides the '*' symbol to compute the multiplcation between two SE(2) poses."""
+        """Overrides the '*' symbol to compute the multiplication between two SE(2) poses."""
         rotation_matrix = self.to_rot_matrix()
         rotated_pos = rotation_matrix.dot((se2pose.x, se2pose.y))
         return SE2Pose(self.x + rotated_pos[0], self.y + rotated_pos[1], self.angle + se2pose.angle)
@@ -324,7 +324,7 @@ class SE3Pose(object):
         self.x = x
         self.y = y
         self.z = z
-        # Expect the declartion of math_helpers.SE3Pose to pass a math_helpers.Quat, however we will convert
+        # Expect the declaration of math_helpers.SE3Pose to pass a math_helpers.Quat, however we will convert
         # a protobuf Quaternion into the math_helpers object as well.
         if type(rot) == geometry_pb2.Quaternion:
             rot = Quat.from_obj(rot)
@@ -386,13 +386,24 @@ class SE3Pose(object):
         (out_x, out_y, out_z) = self.rot.transform_point(x, y, z)
         return (out_x + self.x, out_y + self.y, out_z + self.z)
 
+    def transform_vec3(self, vec3):
+        """
+        Compute the transformation (translation and rotation) of a (x,y,z) vector using the
+        current SE(3) pose.
+
+        Returns:
+            Vec3 representing the transformed coordinate.
+        """
+        (out_x, out_y, out_z) = self.rot.transform_point(vec3.x, vec3.y, vec3.z)
+        return geometry_pb2.Vec3(x=out_x + self.x, y=out_y + self.y, z=out_z + self.z)
+
     def transform_cloud(self, points):
         """
         Compute the transformation (translation and rotation) of multiple vector/points using the
         current math_helpers.SE3Pose.
 
         Inputs:
-            points (Nx3 numpy matrix) representing a set of (x,y,z) points to be transfromed
+            points (Nx3 numpy matrix) representing a set of (x,y,z) points to be transformed
 
         Returns:
             Nx3 numpy matrix of the points after they are transformed with the current math_helpers.SE3Pose.
@@ -407,7 +418,7 @@ class SE3Pose(object):
 
         Inputs:
             transform (4x4 numpy matrix) representing the SE3Pose to be used to transform.
-            points (Nx3 numpy matrix) representing a set of (x,y,z) points to be transfromed
+            points (Nx3 numpy matrix) representing a set of (x,y,z) points to be transformed
 
         Returns:
             Nx3 numpy matrix of the points after they are transformed.
@@ -440,7 +451,7 @@ class SE3Pose(object):
         return SE3Pose(self.x + x, self.y + y, self.z + z, self.rot.mult(se3pose.rot))
 
     def __mul__(self, se3pose):
-        """Overrides the '*' symbol to compute the multiplcation between two SE(3) poses."""
+        """Overrides the '*' symbol to compute the multiplication between two SE(3) poses."""
         (x, y, z) = self.rot.transform_point(se3pose.x, se3pose.y, se3pose.z)
         return SE3Pose(self.x + x, self.y + y, self.z + z, self.rot.mult(se3pose.rot))
 
@@ -515,13 +526,19 @@ class Quat(object):
         return Quat(self.w, -self.x, -self.y, -self.z)
 
     def transform_point(self, x, y, z):
-        """"Computes the transformation (rotation by the quaternion) of a signle (x,y,z)
+        """"Computes the transformation (rotation by the quaternion) of a single (x,y,z)
             point using the current math_helpers.Quat."""
         inv = self.inverse()
         q = Quat(0, x, y, z)
         q = q.mult(inv)
         q = self.mult(q)
         return (q.x, q.y, q.z)
+
+    def transform_vec3(self, vec3):
+        """"Computes the transformation (rotation by the quaternion) of a Vec3
+            point using the current math_helpers.Quat."""
+        x, y, z = self.transform_point(vec3.x, vec3.y, vec3.z)
+        return geometry_pb2.Vec3(x=x, y=y, z=z)
 
     def to_matrix(self):
         """Creates the 3x3 numpy rotation matrix from the current math_helpers.Quat"""
@@ -667,14 +684,14 @@ class Quat(object):
         return geometry_pb2.Quaternion(w=self.w, x=self.x, y=self.y, z=self.z)
 
     def mult(self, other_quat):
-        """Computes the multiplication of two math_helpers.Quat's."""
+        """Computes the multiplication of two math_helpers.Quats."""
         return Quat(self.w * other_quat.w - self.x * other_quat.x - self.y * other_quat.y - self.z * other_quat.z,
                     self.w * other_quat.x + self.x * other_quat.w + self.y * other_quat.z - self.z * other_quat.y,
                     self.w * other_quat.y - self.x * other_quat.z + self.y * other_quat.w + self.z * other_quat.x,
                     self.w * other_quat.z + self.x * other_quat.y - self.y * other_quat.x + self.z * other_quat.w)
 
     def __mul__(self, other_quat):
-        """Overrides the '*' symbol to compute the multiplcation between two math_helpers.Quat's."""
+        """Overrides the '*' symbol to compute the multiplication between two math_helpers.Quats."""
         return Quat(self.w * other_quat.w - self.x * other_quat.x - self.y * other_quat.y - self.z * other_quat.z,
                     self.w * other_quat.x + self.x * other_quat.w + self.y * other_quat.z - self.z * other_quat.y,
                     self.w * other_quat.y - self.x * other_quat.z + self.y * other_quat.w + self.z * other_quat.x,
@@ -741,7 +758,7 @@ def skew_matrix_2d(vec2_proto):
 
 def transform_se2velocity(a_adjoint_b_matrix, se2_velocity_in_b):
     """
-    Changes the frame that the SE(2) Velocity is expressed in. More specifcially, it converts the
+    Changes the frame that the SE(2) Velocity is expressed in. More specifically, it converts the
     SE(2) Velocity in frame b to a SE(2) Velocity in frame c using the adjoint matrix a_adjoint_b.
 
     Inputs:
@@ -763,7 +780,7 @@ def transform_se2velocity(a_adjoint_b_matrix, se2_velocity_in_b):
 
 def transform_se3velocity(a_adjoint_b_matrix, se3_velocity_in_b):
     """
-    Changes the frame that the SE(3) Velocity is expressed in. More specifcially, it converts the
+    Changes the frame that the SE(3) Velocity is expressed in. More specifically, it converts the
     SE(3) Velocity in frame b to a SE(3) Velocity in frame c using the adjoint matrix a_adjoint_b.
 
     Inputs:

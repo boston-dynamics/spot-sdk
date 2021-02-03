@@ -1,0 +1,154 @@
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option java_outer_classname = "NetworkComputeBridgeProto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/image.proto";
+import "bosdyn/api/world_object.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/duration.proto";
+
+message ListAvailableModelsRequest {
+    RequestHeader header = 1; // Common request header
+
+    // Configuration about which server to use.
+    NetworkComputeServerConfiguration server_config = 2;
+}
+
+message ListAvailableModelsResponse {
+    ResponseHeader header = 1;  // Common response header.
+
+    // Provide list of available models
+    repeated string available_models = 2;
+
+    // Command status
+    ListAvailableModelsStatus status = 5;
+}
+
+message NetworkComputeRequest {
+    RequestHeader header = 1;  // Common request header.
+
+    // Input data.
+    NetworkComputeInputData input_data = 2;
+
+    // Configuration about which server to use.
+    NetworkComputeServerConfiguration server_config = 3;
+}
+
+message ImageSourceAndService {
+    // Image source.
+    string image_source = 1;
+
+    // Image service.  If blank, it is assumed to be the robot's default image service.
+    string image_service = 2;
+}
+
+message NetworkComputeInputData {
+
+    oneof input {
+        // Image source to collect an image from.
+        ImageSourceAndService image_source_and_service = 7;
+
+        // Image to process, if you are not using an image source.
+        Image image = 2;
+
+        // Other data that isn't an image.  NetworkComputeBridge service will pass it through
+        // to the remote server so you can do computation on arbitrary data.
+        google.protobuf.Any other_data = 3;
+    }
+
+    // Name of the model to be run on the input data.
+    string model_name = 4;
+
+    // Minimum confidence [0.0 - 1.0] an object must have to be returned. Detections below this
+    // confidence threshold will be suppressed in the response.
+    float min_confidence = 5;
+
+    enum RotateImage {
+        // Unspecified rotation method. Do not use.
+        ROTATE_IMAGE_UNKNOWN = 0;
+
+        // No rotation applied.
+        ROTATE_IMAGE_NO_ROTATION = 3;
+
+        // Rotate the images so the horizon is not rolled with respect to gravity.
+        ROTATE_IMAGE_ALIGN_HORIZONTAL = 1;
+
+        // Rotate the images so that the horizon in the image is aligned with the inclination of
+        // the body. For example, when applied to the left body camera this option rotates the image
+        // so that the world does not appear upside down when the robot is standing upright, but if the
+        // body is pitched up, the image will appear rotated.
+        ROTATE_IMAGE_ALIGN_WITH_BODY = 2;
+    }
+
+    // Options for rotating the image before processing. When unset, no rotation is applied.
+    // Rotation is supported for data from image services that provide a FrameTreeSnapshot
+    // defining the sensor's frame with respect to Spot's body and vision frames.
+    // Field is ignored for non-image input.
+    RotateImage rotate_image = 6;
+    reserved 1;
+}
+
+message NetworkComputeServerConfiguration {
+
+    // Service name in the robot's Directory for the worker that will process the request.
+    string service_name = 3;
+
+    reserved 1;
+    reserved 2;
+}
+
+message NetworkComputeResponse {
+    ResponseHeader header = 1;  // Common response header.
+
+    // Detection information. May include bounding boxes, image coordinates, 3D pose information, etc.
+    repeated WorldObject object_in_image = 2;
+
+    // The image we computed the data on. If the input image itself was provided in the request,
+    // this field is not populated.  This field is not set for non-image input.
+    ImageResponse image_response = 3;
+
+    // Non image-type data that can optionally be returned by a remote server.
+    google.protobuf.Any other_data = 4;
+
+    // Command status
+    NetworkComputeStatus status = 5;
+}
+
+enum NetworkComputeStatus {
+    // Status is not specified.
+    NETWORK_COMPUTE_STATUS_UNKNOWN = 0;
+
+    // Succeeded.
+    NETWORK_COMPUTE_STATUS_SUCCESS = 1;
+
+    // External service not found in the robot's directory.
+    NETWORK_COMPUTE_STATUS_EXTERNAL_SERVICE_NOT_FOUND = 2;
+
+    // The call to the external server did not succeed.
+    NETWORK_COMPUTE_STATUS_EXTERNAL_SERVER_ERROR = 3;
+
+    // The robot failed to rotate the image as requested.
+    NETWORK_COMPUTE_STATUS_ROTATION_ERROR = 4;
+}
+
+enum ListAvailableModelsStatus {
+    // Status is not specified.
+    LIST_AVAILABLE_MODELS_STATUS_UNKNOWN = 0;
+
+    // Succeeded.
+    LIST_AVAILABLE_MODELS_STATUS_SUCCESS = 1;
+
+    // External service not found in the robot's directory.
+    LIST_AVAILABLE_MODELS_STATUS_EXTERNAL_SERVICE_NOT_FOUND = 2;
+
+    // The call to the external server did not succeed.
+    LIST_AVAILABLE_MODELS_STATUS_EXTERNAL_SERVER_ERROR = 3;
+}

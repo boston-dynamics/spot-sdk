@@ -9,14 +9,14 @@ Development Kit License (20191101-BDSDK-SL).
 # Follow a Fiducial
 
 This example program demonstrates how to make Spot interactively walk to fiducial markers (april tags) it sees with its built-in cameras.  The robot will iteratively:
-  * Detects fiducials in any of Spot's cameras, choosing the first fiducial detection it recieves if there are multiple detections.
+  * Detects fiducials in any of Spot's cameras, choosing the first fiducial detection it receives if there are multiple detections.
   * Determines the go-to position based on the fiducial's location in the world.
   * Commands the robot to walk towards the fiducial and repeat.
 
 There are two modes in which this example can operate:
 
 1. Using the world object service to detect fiducials, which are provided as a transformation in the world frame, using Spot's perception system. This mode has been added in the 1.2 software release of the spot-sdk.
-2. To detect april tags in an image source using an external AprilTag library, compute the bouding box, and then transform the pixel coordinates into world coordinates.
+2. To detect april tags in an image source using an external AprilTag library, compute the bounding box, and then transform the pixel coordinates into world coordinates.
 
 The command line argument `--use-world-objects` will toggle between these modes. By default, this argument is set to true, so the program will use the world object service (mode 1).
 

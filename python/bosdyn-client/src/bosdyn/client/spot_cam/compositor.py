@@ -10,6 +10,7 @@ from bosdyn.client.common import (BaseClient, handle_common_header_errors)
 from bosdyn.api.spot_cam import service_pb2_grpc
 from bosdyn.api.spot_cam import compositor_pb2
 
+from google.protobuf.wrappers_pb2 import BoolValue
 
 class CompositorClient(BaseClient):
     """A client calling Spot CAM Compositor services.
@@ -68,6 +69,49 @@ class CompositorClient(BaseClient):
         return self.call_async(self._stub.GetVisibleCameras, request, self._streams_from_response,
                                self._compositor_error_from_response, **kwargs)
 
+    def set_ir_colormap(self, colormap, min_temp, max_temp, auto_scale, **kwargs):
+        """Set IR colormap to use on Spot CAM
+
+        Args:
+            colormap (bosdyn.api.spot_cam.compositor_pb2.IrColorMap.ColorMap): IR display colormap
+            min_temp (Float): minimum temperature on the temperature scale
+            max_temp (Float): maximum temperature on the temperature scale
+            auto_scale (Boolean): Auto-scale the color map. This is the most human-understandable
+                option. min_temp and max_temp are ignored if this is set to True
+            kwargs: extra arguments for controlling RPC details.
+        """
+        scale = compositor_pb2.IrColorMap.ScalingPair(min=min_temp, max=max_temp)
+        auto = BoolValue(value=auto_scale)
+        ir_colormap = compositor_pb2.IrColorMap(colormap=colormap, scale=scale, auto_scale=auto)
+        request = compositor_pb2.SetIrColormapRequest(map=ir_colormap)
+        return self.call(self._stub.SetIrColormap, request, self._return_response,
+                         self._compositor_error_from_response, **kwargs)
+
+    def set_ir_colormap_async(self, colormap, min_temp, max_temp, auto_scale, **kwargs):
+        """Async version of set_ir_colormap()"""
+        scale = compositor_pb2.IrColorMap.ScalingPair(min=min_temp, max=max_temp)
+        auto = BoolValue(value=auto_scale)
+        ir_colormap = compositor_pb2.IrColorMap(colormap=colormap, scale=scale, auto_scale=auto)
+        request = compositor_pb2.SetIrColormapRequest(map=ir_colormap)
+        return self.call_async(self._stub.SetIrColormap, request, self._return_response,
+                               self._compositor_error_from_response, **kwargs)
+
+    def get_ir_colormap(self, **kwargs):
+        """Get currently selected IR colormap on Spot CAM"""
+        request = compositor_pb2.GetIrColormapRequest()
+        return self.call(self._stub.GetIrColormap, request, self._colormap_from_response,
+                         self._compositor_error_from_response, **kwargs)
+
+    def get_ir_colormap_async(self, **kwargs):
+        """Async version of get_ir_colormap()"""
+        request = compositor_pb2.GetIrColormapRequest()
+        return self.call_async(self._stub.GetIrColormap, request, self._colormap_from_response,
+                               self._compositor_error_from_response, **kwargs)
+
+    @staticmethod
+    def _return_response(response):
+        return response
+
     @staticmethod
     def _name_from_response(response):
         return response.name
@@ -79,6 +123,10 @@ class CompositorClient(BaseClient):
     @staticmethod
     def _streams_from_response(response):
         return response.streams
+
+    @staticmethod
+    def _colormap_from_response(response):
+        return response.map
 
     @staticmethod
     @handle_common_header_errors

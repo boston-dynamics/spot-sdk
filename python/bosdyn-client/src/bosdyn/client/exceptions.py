@@ -114,6 +114,10 @@ class UnableToConnectToRobotError(RpcError):
     """The robot may be offline or otherwise unreachable."""
 
 
+class RetryableUnavailableError(UnableToConnectToRobotError):
+    """gRPC service unavailable. Likely transient and can be resolved by retrying the request."""
+
+
 class UnauthenticatedError(RpcError):
     """The user needs to authenticate or does not have permission to access requested service."""
 

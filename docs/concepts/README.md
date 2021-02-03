@@ -36,4 +36,5 @@ Finally, payloads allow for expansion of services beyond those provided by Spot 
 * [Faults](faults.md)
 * [Autonomy services](autonomy/README.md)
 * [Choreography](choreography/README.md)
+* [Spot Arm](arm/README.md)
 * [Spot Data](data.md)

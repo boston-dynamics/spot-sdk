@@ -16,6 +16,7 @@ import argparse
 import csv
 import datetime
 import logging
+import os
 import subprocess
 import sys
 import time
@@ -36,12 +37,20 @@ from bosdyn.mission.client import MissionClient
 
 LOGGER = logging.getLogger(__name__)
 
+def is_docker():
+    path = '/proc/self/cgroup'
+    return (
+        os.path.exists('/.dockerenv') or
+        os.path.isfile(path) and any('docker' in line for line in open(path)))
+
 def _update_thread(async_task):
     while True:
         async_task.update()
         time.sleep(0.01)
 
 def create_csv_filename(test_protocol):
+    if is_docker():
+        return f'/comms_out/comms_test_out_{test_protocol}{time.strftime("%Y%m%d-%H%M%S")}.csv'
     return f'comms_test_out_{test_protocol}{time.strftime("%Y%m%d-%H%M%S")}.csv'
 
 def check_ping(server_hostname):
@@ -88,11 +97,14 @@ def main(argv):
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
     parser.add_argument('--protocol', default='tcp', type=str, choices=['tcp', 'udp'],
-                        help='IP Protocel to use, either tcp or udp.')
+                        help='IP Protocol to use, either tcp or udp.')
     parser.add_argument('--server-port', default=5201, type=int,
                         help='Port number of iperf3 server')
     parser.add_argument('--server-hostname', default='127.0.0.1', type=str,
-                        help='IP address of ieprf3 server')
+                        help='IP address of iperf3 server')
+    parser.add_argument('-w', '--run-without-mission',
+                        help='Run the comms test app without needing an Autowalk mission',
+                        action='store_true')
     options = parser.parse_args(argv)
 
     sdk = bosdyn.client.create_standard_sdk('CommsTestingClient', [MissionClient])
@@ -121,7 +133,7 @@ def main(argv):
     curr_fname = ''
     try:
         while True:
-            if _mission_state_task.proto.status != mission_proto.State.STATUS_RUNNING:
+            if _mission_state_task.proto.status != mission_proto.State.STATUS_RUNNING and not options.run_without_mission:
                 # Write out data if it exists
                 if len(data_list) > 0:
                     print(f'Finished a mission, data can be found in {curr_fname}')

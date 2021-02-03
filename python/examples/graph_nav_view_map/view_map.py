@@ -225,7 +225,7 @@ def load_map(path):
     :param path: Path to the root directory of the map.
     :return: the graph, waypoints, waypoint snapshots and edge snapshots.
     """
-    with open(path + "/graph", "rb") as graph_file:
+    with open(os.path.join(path, "graph"), "rb") as graph_file:
         # Load the graph file and deserialize it. The graph file is a protobuf containing only the waypoints and the
         # edges between them.
         data = graph_file.read()
@@ -242,7 +242,7 @@ def load_map(path):
             current_waypoints[waypoint.id] = waypoint
 
             # Load the snapshot. Note that snapshots contain all of the raw data in a waypoint and may be large.
-            file_name = path + "/waypoint_snapshots/{}".format(waypoint.snapshot_id)
+            file_name = os.path.join(path, "waypoint_snapshots", waypoint.snapshot_id)
             if not os.path.exists(file_name):
                 continue
             with open(file_name, "rb") as snapshot_file:
@@ -251,7 +251,7 @@ def load_map(path):
                 current_waypoint_snapshots[waypoint_snapshot.id] = waypoint_snapshot
         # Similarly, edges have snapshot data.
         for edge in current_graph.edges:
-            file_name = path + "/edge_snapshots/{}".format(edge.snapshot_id)
+            file_name = os.path.join(path, "edge_snapshots", edge.snapshot_id)
             if not os.path.exists(file_name):
                 continue
             with open(file_name, "rb") as snapshot_file:

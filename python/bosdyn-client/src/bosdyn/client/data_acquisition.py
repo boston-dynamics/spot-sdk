@@ -42,7 +42,7 @@ class CancellationFailedError(DataAcquisitionResponseError):
 
 
 class DataAcquisitionClient(BaseClient):
-    """A client for triggering data acquision and logging."""
+    """A client for triggering data acquisition and logging."""
 
     default_service_name = 'data-acquisition'
     service_type = 'bosdyn.api.DataAcquisitionService'
@@ -152,7 +152,7 @@ class DataAcquisitionClient(BaseClient):
           RpcError: Problem communicating with the robot.
 
         Returns:
-            The GetServiceInfoResponse message, which contains all the different capabilites.
+            The GetServiceInfoResponse message, which contains all the different capabilities.
         """
         request = data_acquisition.GetServiceInfoRequest()
         return self.call(self._stub.GetServiceInfo, request,

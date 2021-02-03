@@ -35,13 +35,19 @@ python3 web_cam_image_service.py --guid {PAYLOAD_GUID} --secret {SECRET} --host-
 ```
 The example can be safely exited by issuing a SIGINT (Ctrl + C) to the caller.
 
-This example takes two different IP addresses: the `--host-ip` argument describes the IP address for the computer that will be running the web cam image service, and the `hostname` ("ROBOT_IP") argument describes the IP address of the robot hosting the directory service.
+This example takes two different IP addresses as arguments. The `--host-ip` argument describes the IP address for the computer that will be running the web cam image service. A helper exists to try to determine the correct IP address. This command must be run on the same computer that will be running the web cam image service:
+```
+python3 -m bosdyn.client --username {USER} --password {PASSWORD} {ROBOT_IP} self-ip
+```
+The other IP address is the traditional robot hostname ("ROBOT_IP") argument, which describes the IP address of the robot hosting the directory service.
 
-When launching the web cam image service, the different device names should be provided. All of these sources should be queryable from the web cam image service using OpenCV. They can be specified individually by using the argument `--device-name`, and appending multiple of the argument to specify each camera source. For example, `--device-name CAMERA1 --device-name CAMERA2`. By default, the device "/dev/video0" will be used, which will connect to the first connected webcam for a linux computer.  Each device will be listed by the service as an image source using the final part of the device name (e.g. "/dev/video0" will result in an image source name "video0").
+When launching the web cam image service, the different device names should be provided. All of these sources should be queryable from the web cam image service using OpenCV. They can be specified individually by using the argument `--device-name`, and appending multiple of the argument to specify each camera source. For example, `--device-name CAMERA1 --device-name CAMERA2`. By default, the device "0" will be used, which represents the device at index 0 and will connect to the first connected video device found for each operating system. A user can provide either an index to a specific camera device, or the file path to describe the USB location of the camera. Each device will be listed by the service as an image source using the final part of the device name after the last "/" in a filepath (e.g. "/dev/video0" will result in an image source name "video0", device index "0" will also have image source name "video0"). Note for linux, by default the camera devices connected will have a filepath formatted as `/dev/videoXXX` where "XXX" is the index of the camera. However, on Windows the default locations are more difficult to determine, so providing the index number as the device name is preferred.
 
 Since the example runs off of a payload computer, it requires a GUID (uniquely generated payload specifier) and secret (private string associated with a payload) for a *registered* and *authorized* payload computer as arguments when launching the example. This "payload" can represent any type of computer capable of hosting the web cam image service. See documentation on [configuration of payload software](../../../docs/payload/configuring_payload_software.md#Configuring-and-authorizing-payloads) for more information.
 
-Lastly, a port number for the image service can be specified using the `--port` argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a services listening port. This port number will be used with the host-ip ("PAYLOAD_IP") to fully specify where the image service is running. This port number must be open and cannot be blocked by a local firewall, otherwise the web cam image service will be unreachable from the robot and the directory registration service.
+A port number for the image service can be specified using the `--port` argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a services listening port. This port number will be used with the host-ip ("PAYLOAD_IP") to fully specify where the image service is running. This port number must be open and cannot be blocked by a local firewall, otherwise the web cam image service will be unreachable from the robot and the directory registration service.
+
+Lastly, the command line argument `--show-debug-info` will allow a user to live-view the openCV output of the web cam video capture on their local computer. Only use this flag for debug purposes, as it will likely slow down the main example operation and reduce the performance of the image service.
 
 ## Debugging Tips
 
@@ -49,6 +55,7 @@ Here are a couple suggestions for debugging the web cam image service:
 
 - Ensure the camera is powered on and plugged in.
 - Check that your web cam is working separate from the api connections. For linux, the program `Cheese` allows you to stream from the camera. Run `cheese /dev/video0` (or the name of your cameras USB location) to verify the image appears.
+- Use the command line argument `--show-debug-info` which will display the openCV capture output before encoded it into the image service protobuf message. If the image is unable to show here, then the device name is likely incorrect or unreachable.
 - Check that the image service appears in the directory using the command line tool: `python3 -m bosdyn.client --username {USER} --password {PWD} {ROBOT_IP} dir list`
 - Use the [image service tester program](../tester_programs/README.md) to ensure the service can successfully be communicated with and that each RPC will complete correctly.
 - When all tests pass for the image service tester program, check that the tablet is detecting the web cam image service by looking in the camera sources drop down menu (top-left of the status bar) and then check that the images are appearing by selecting the "Web Cam" camera source.

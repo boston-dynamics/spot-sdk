@@ -89,66 +89,66 @@ message Wrench {
 
 message FrameTreeSnapshot {
 /**
- *   A frame is a named location in space.
- * For example, the following frames are defined by the API:
- *  - "body":   A frame centered on the robot's body.
+ *   A frame is a named location in space. \
+ * For example, the following frames are defined by the API: \
+ *  - "body":   A frame centered on the robot's body. \
  *  - "vision": A non-moving (inertial) frame that is the robot's best
  *              estimate of a fixed location in the world. It is based on
- *              both dead reckoning and visual analysis of the world.
+ *              both dead reckoning and visual analysis of the world. \
  *  - "odom":   A non-moving (inertial) frame that is based on the kinematic
- *              odometry of the robot only.
+ *              odometry of the robot only. \
  * Additional frames are available for robot joints, sensors, and items
- * detected in the world.
+ * detected in the world. \
  *
  * The FrameTreeSnapshot represents the relationships between the frames that the robot
  * knows about at a particular point in time. For example, with the FrameTreeSnapshot,
- * an API client can determine where the "body" is relative to the "vision".
+ * an API client can determine where the "body" is relative to the "vision". \
  *
  * To reduce data bandwidth, the FrameTreeSnapshot will typically contain
  * a small subset of all known frames. By default, all services MUST
  * include "vision", "body", and "odom" frames in the FrameTreeSnapshot, but
  * additional frames can also be included. For example, an Image service
  * would likely include the frame located at the base of the camera lens
- * where the picture was taken.
+ * where the picture was taken. \
  *
  * Frame relationships are expressed as edges between "parent" frames and
  * "child" frames, with an SE3Pose indicating the pose of the "child" frame
  * expressed in the "child" frame. These edges are included in the edge_map
  * field. For example, if frame "hand" is 1m in front of the frame "shoulder",
- * then the FrameTreeSnapshot might contain:
- *  edge_map {
- *     key: "hand"
- *     value: {
- *         parent_frame_name: "shoulder"
- *         parent_tform_child: {
- *            position: {
- *              x: 1.0
- *              y: 0.0
- *              z: 0.0
- *            }
- *         }
- *      }
- *  }
+ * then the FrameTreeSnapshot might contain: \
+ *  edge_map {                                    \
+ *     key: "hand"                                \
+ *     value: {                                   \
+ *         parent_frame_name: "shoulder"          \
+ *         parent_tform_child: {                  \
+ *            position: {                         \
+ *              x: 1.0                            \
+ *              y: 0.0                            \
+ *              z: 0.0                            \
+ *            }                                   \
+ *         }                                      \
+ *      }                                         \
+ *  }                                             \
  *
  * Frame relationships can be inverted. So, to find where the "shoulder"
  * is in relationship the "hand", the parent_tform_child pose in the edge
- * above can be inverted:
- *      hand_tform_shoulder = shoulder_tform_hand.inverse()
+ * above can be inverted: \
+ *      hand_tform_shoulder = shoulder_tform_hand.inverse() \
  * Frame relationships can also be concatenated. If there is an additional
  * edge specifying the pose of the "shoulder" relative to the "body", then
- * to find where the "hand" is relative to the "body" do:
- *      body_tform_hand = body_tform_shoulder * shoulder_tform_hand
+ * to find where the "hand" is relative to the "body" do: \
+ *      body_tform_hand = body_tform_shoulder * shoulder_tform_hand \
  *
  * The two properties above reduce data size. Instead of having to send N^2
  * edge_map entries to represent all relationships between N frames,
  * only N edge_map entries need to be sent. Clients will need to determine
  * the chain of edges to follow to get from one frame to another frame,
- * and then do inversion and concatentation to generate the appropriate pose.
+ * and then do inversion and concatentation to generate the appropriate pose. \
  *
  * Note that all FrameTreeSnapshots are expected to be a single rooted tree.
  * The syntax for FrameTreeSnapshot could also support graphs with
  * cycles, or forests of trees - but clients should treat those as invalid
- * representations.
+ * representations. \
  */
 
   // ParentEdge represents the relationship from a child frame to a parent frame.
@@ -208,17 +208,17 @@ message Matrix {
 }
 
 // Represents the translation/rotation covariance of an SE3 Pose.
-// The 6x6 matrix can be viewed as the covariance among 6 variables:
-//      rx     ry  rz    x    y    z
-// rx rxrx  rxry rxrz  rxx  rxy  rxz
-// ry ryrx  ryry ryrz  ryx  ryy  ryz
-// rz rzrx  rzry rzrz  rzx  rzy  rzz
-// x   xrx   xry  xrz   xx   xy   xz
-// y   yrx   yry  yrz   yx   yy   yz
-// z   zrx   zry  zrz   zx   zy   zz
+// The 6x6 matrix can be viewed as the covariance among 6 variables: \
+//      rx     ry  rz    x    y    z                                 \
+// rx rxrx  rxry rxrz  rxx  rxy  rxz                                 \
+// ry ryrx  ryry ryrz  ryx  ryy  ryz                                 \
+// rz rzrx  rzry rzrz  rzx  rzy  rzz                                 \
+// x   xrx   xry  xrz   xx   xy   xz                                 \
+// y   yrx   yry  yrz   yx   yy   yz                                 \
+// z   zrx   zry  zrz   zx   zy   zz                                 \
 // where x, y, z are translations in meters, and rx, ry, rz are rotations around
-// the x, y and z axes in radians.
-// The matrix is symmetric, so, for example, xy = yx.
+// the x, y and z axes in radians.                                   \
+// The matrix is symmetric, so, for example, xy = yx.                \
 message SE3Covariance {
   // Row-major order representation of the covariance matrix.
   Matrix matrix = 1;

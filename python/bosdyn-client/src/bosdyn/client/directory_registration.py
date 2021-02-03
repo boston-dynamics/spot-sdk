@@ -49,11 +49,11 @@ class DirectoryRegistrationClient(BaseClient):
 
     def register(self, name, service_type, authority, host_ip, port, user_token_required=True,
                  application_token_required=False, liveness_timeout_secs=0, **kwargs):
-        """Register a service routing with the robot. 
-        
+        """Register a service routing with the robot.
+
         If service name already registered, no change will be applied and will raise ServiceAlreadyExistsError.
         Every request received by the robot will serve as a heartbeat and update the service last_update field.
-        
+
         Args:
           name: The name of the service. Must be unique.
           service_type: The GRPC service definition defining the calls to/from this service.
@@ -106,7 +106,7 @@ class DirectoryRegistrationClient(BaseClient):
           user_token_required: If a user token should be verified to access the service.
           application_token_required Deprecated - Do not use.
           liveness_timeout_secs: Number of seconds without directory heartbeat before timeout fault.
-          
+
         Raises:
           RpcError: Problem communicating with the robot.
           ServiceDoesNotExistError: The service does not exist.
@@ -131,10 +131,10 @@ class DirectoryRegistrationClient(BaseClient):
 
     def unregister(self, name, **kwargs):
         """Remove a service routing with the robot.
-        
+
         Args:
           name: The name of the service to be removed.
-          
+
         Raises:
           RpcError: Problem communicating with the robot.
           ServiceDoesNotExistError: The service does not exist.
@@ -209,7 +209,7 @@ def reset_service_registration(directory_registration_client, name, service_type
 
     This is useful when a program wants to register a new service but there may be an old entry
     in the robot directory from a previous instance of the program. If the service
-    does not already exists, the exception will be surpressed and a new registration will
+    does not already exists, the exception will be supressed and a new registration will
     still be performed. Unregistering the service has the advantage of clearing all service
     faults, if any existed.
     """
@@ -273,9 +273,9 @@ class DirectoryRegistrationKeepAlive(object):
     def start(self, directory_name, service_type, authority, host, port, liveness_timeout_secs=None,
               user_token_required=True, reset_service=True):
         """Register, optionally update, and then kick off thread.
-        
+
         Can not be restarted with this method after a shutdown.
-        
+
         Args:
             directory_name: See directory.proto for details.
             service_type: See directory.proto for details.
@@ -316,10 +316,11 @@ class DirectoryRegistrationKeepAlive(object):
 
         # This will raise an exception if the thread has already started.
         self._thread.start()
+        return self
 
     def is_alive(self):
         """Are we still periodically re-registering?
-        
+
         Returns:
           A bool stating if still alive
         """
@@ -333,7 +334,7 @@ class DirectoryRegistrationKeepAlive(object):
 
     def unregister(self):
         """Remove service from the directory.
-        
+
         Raises:
           RpcError: Problem communicating with the robot.
           ServiceDoesNotExistError: The service does not exist.
@@ -343,7 +344,7 @@ class DirectoryRegistrationKeepAlive(object):
 
     def _periodic_reregister(self):
         """Handles an accidental removal of the service from the directory.
-        
+
         Raises:
           RpcError: Problem communicating with the robot.
         """

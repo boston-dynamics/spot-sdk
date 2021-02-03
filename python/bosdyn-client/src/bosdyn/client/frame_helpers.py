@@ -14,7 +14,9 @@ BODY_FRAME_NAME = "body"
 GRAV_ALIGNED_BODY_FRAME_NAME = "flat_body"
 ODOM_FRAME_NAME = "odom"
 GROUND_PLANE_FRAME_NAME = "gpe"
+HAND_FRAME_NAME = "hand"
 UNKNOWN_FRAME_NAME = "unknown"
+RAYCAST_FRAME_NAME = "walkto_raycast_intersection"
 
 
 class Error(Exception):

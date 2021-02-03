@@ -12,6 +12,7 @@ import time
 import bosdyn.client
 import bosdyn.client.util
 from bosdyn.client import create_standard_sdk, RpcError, ResponseError
+from bosdyn.client.exceptions import UnauthenticatedError
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 from bosdyn.choreography.client.choreography import ChoreographyClient, load_choreography_sequence_from_txt_file
 
@@ -35,7 +36,7 @@ def main(argv):
     assert not robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client, " \
                                     "such as the estop SDK example, to configure E-Stop."
 
-    # Create a lease and lease keepalive so we can issue commands. A lease is required to execute
+    # Create a lease and lease keep-alive so we can issue commands. A lease is required to execute
     # a choreographed sequence.
     lease_client = robot.ensure_client(LeaseClient.default_service_name)
     lease = lease_client.acquire()
@@ -65,6 +66,10 @@ def main(argv):
     # non_strict_parsing to true so that the robot will automatically correct any errors it find in the routine.
     try:
         upload_response = choreography_client.upload_choreography(choreography, non_strict_parsing=True)
+    except UnauthenticatedError as err:
+        print("The robot license must contain 'choreography' permissions to upload and execute dances. "
+              "Please contact Boston Dynamics Support to get the appropriate license file. ")
+        return True
     except ResponseError as err:
         # Check if the ChoreographyService considers the uploaded routine as valid. If not, then the warnings must be
         # addressed before the routine can be executed on robot.

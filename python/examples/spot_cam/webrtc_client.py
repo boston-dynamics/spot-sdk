@@ -23,7 +23,6 @@ class SpotCAMMediaStreamTrack(MediaStreamTrack):
 
     async def recv(self):
         frame = await self.track.recv()
-
         await self.queue.put(frame)
 
         return frame
@@ -36,7 +35,9 @@ class WebRTCClient:
                  sdp_port,
                  sdp_filename,
                  cam_ssl_cert,
-                 rtc_config):
+                 rtc_config,
+                 media_recorder=None,
+                 recorder_type=None):
         self.pc = RTCPeerConnection(configuration=rtc_config)
 
         self.video_frame_queue = asyncio.Queue()
@@ -46,6 +47,8 @@ class WebRTCClient:
         self.username = username
         self.password = password
         self.sdp_port = sdp_port
+        self.media_recorder = media_recorder
+        self.recorder_type = recorder_type
         self.sdp_filename = sdp_filename
         self.cam_ssl_cert = cam_ssl_cert
 
@@ -105,14 +108,14 @@ class WebRTCClient:
         def _on_track(track):
             print(f'Received track: {track.kind}')
 
+            if self.media_recorder:
+                if track.kind == self.recorder_type:
+                    self.media_recorder.addTrack(track)
+
             if track.kind == 'video':
                 video_track = SpotCAMMediaStreamTrack(track, self.video_frame_queue)
                 video_track.kind = 'video'
                 self.pc.addTrack(video_track)
-            elif track.kind == 'audio':
-                audio_track = SpotCAMMediaStreamTrack(track, self.audio_frame_queue)
-                audio_track.kind = 'audio'
-                self.pc.addTrack(audio_track)
 
         desc = RTCSessionDescription(sdp_offer, 'offer')
         await self.pc.setRemoteDescription(desc)

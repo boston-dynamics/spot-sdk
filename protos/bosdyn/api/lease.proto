@@ -29,6 +29,9 @@ message Lease {
 
     // Logical vector clock indicating when the Lease was generated.
     repeated uint32 sequence = 3;
+
+    // The set of different clients which have sent/receieved the lease.
+    repeated string client_names = 4;
 }
 
 // Details about who currently owns the Lease for a resource.
@@ -213,6 +216,9 @@ message ReturnLeaseResponse {
 message ListLeasesRequest {
     // Common request header.
     RequestHeader header = 1;
+    // Include the full data of leases in use, if available.
+    // Defaults to false to receive basic information.
+    bool include_full_lease_info = 2;
 }
 
 // Describes all information about a sepcific lease: including the resource it covers, the

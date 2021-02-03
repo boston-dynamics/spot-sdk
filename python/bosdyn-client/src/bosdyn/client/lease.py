@@ -219,8 +219,12 @@ class Lease(object):
         incr_lease_proto.sequence[-1] = self.lease_proto.sequence[-1] + 1
         return Lease(incr_lease_proto)
 
-    def create_sublease(self):
+    def create_sublease(self, client_name=None):
         """Creates a sublease of this lease.
+
+        Args:
+            client_name (string): Optional argument to pass a client name to be appended to
+                                  the new lease's set of clients which have used it.
 
         Returns:
             A new Lease object where self.compare(returned_lease) would return SUB_LEASE.
@@ -228,6 +232,8 @@ class Lease(object):
         sub_lease_proto = LeaseProto()
         sub_lease_proto.CopyFrom(self.lease_proto)
         sub_lease_proto.sequence.append(0)
+        if client_name is not None:
+            sub_lease_proto.client_names.append(client_name)
         return Lease(sub_lease_proto)
 
     @staticmethod
@@ -256,14 +262,25 @@ class LeaseState(object):
     STATUS_OTHER_OWNER = Status.OTHER_OWNER
     STATUS_NOT_MANAGED = Status.NOT_MANAGED
 
-    def __init__(self, lease_status, lease_owner=None, lease=None, lease_current=None):
+    def __init__(self, lease_status, lease_owner=None, lease=None, lease_current=None, client_name=None):
+        """
+        Args:
+            lease_status(LeaseState.Status): The ownership status of the lease.
+            lease_owner(lease_pb2.LeaseOwner): The name of the owner of the lease.
+            lease (Lease): The original lease used to initialize the LeaseState, before
+                           applying any subleasing/incrementing.
+            lease_current(Lease): The newest version of the lease (subleased, and
+                                  incremented from the original lease).
+            client_name(string): The name of the client using this lease.
+        """
         self.lease_status = lease_status
         self.lease_owner = lease_owner
         self.lease_original = lease
+        self.client_name = client_name
         if lease_current:
             self.lease_current = lease_current
         elif lease:
-            self.lease_current = self.lease_original.create_sublease()
+            self.lease_current = self.lease_original.create_sublease(self.client_name)
         else:
             self.lease_current = None
 
@@ -316,6 +333,7 @@ class LeaseWallet(object):
     def __init__(self):
         self._lease_state_map = {}
         self._lock = threading.Lock()
+        self.client_name = None
 
     def add(self, lease):
         """Add lease in the wallet.
@@ -325,7 +343,7 @@ class LeaseWallet(object):
         """
         with self._lock:
             self._lease_state_map[lease.lease_proto.resource] = LeaseState(
-                LeaseState.Status.SELF_OWNER, lease=lease)
+                LeaseState.Status.SELF_OWNER, lease=lease, client_name=self.client_name)
 
     def remove(self, lease):
         """Remove lease from the wallet.
@@ -429,6 +447,11 @@ class LeaseWallet(object):
             new_lease_state = lease_state.update_from_lease_use_result(lease_use_result)
             self._lease_state_map[resource] = new_lease_state
 
+    def set_client_name(self, client_name):
+        """Set the client name that will be issuing the leases."""
+        with self._lock:
+            self.client_name = client_name
+
 
 class LeaseClient(common.BaseClient):
     """Client to the lease service.
@@ -447,7 +470,7 @@ class LeaseClient(common.BaseClient):
         """Acquire a lease for the given resource.
 
         Args:
-            resorce: Resource for the lease.
+            resource: Resource for the lease.
 
         Returns:
             Acquired Lease object.
@@ -472,7 +495,7 @@ class LeaseClient(common.BaseClient):
         """Take the lease for the given resource.
 
         Args:
-            resorce: Resource for the lease.
+            resource: Resource for the lease.
 
         Returns:
             Taken Lease object.
@@ -535,8 +558,13 @@ class LeaseClient(common.BaseClient):
         return self.call_async(self._stub.RetainLease, req, None, common.common_lease_errors,
                                **kwargs)
 
-    def list_leases(self, **kwargs):
+    def list_leases(self, include_full_lease_info=False, **kwargs):
         """Get a list of the leases.
+
+        Args:
+            include_full_lease_info: Whether the returned list of LeaseResources should include
+                                     all of the available information about the last lease used.
+                                     Defaults to False.
 
         Returns:
             List of lease resources.
@@ -545,13 +573,13 @@ class LeaseClient(common.BaseClient):
             InternalServerError: Service experienced an unexpected error state.
             LeaseUseError: Request was rejected due to using an invalid lease.
         """
-        req = self._make_list_leases_request()
+        req = self._make_list_leases_request(include_full_lease_info)
         return self.call(self._stub.ListLeases, req, self._list_leases_success,
                          common.common_header_errors, **kwargs)
 
-    def list_leases_async(self, **kwargs):
+    def list_leases_async(self, include_full_lease_info=False, **kwargs):
         """Async version of the list_leases() function."""
-        req = self._make_list_leases_request()
+        req = self._make_list_leases_request(include_full_lease_info)
         return self.call_async(self._stub.ListLeases, req, self._list_leases_success,
                                common.common_header_errors, **kwargs)
 
@@ -606,8 +634,8 @@ class LeaseClient(common.BaseClient):
         return req
 
     @staticmethod
-    def _make_list_leases_request():
-        return ListLeasesRequest()
+    def _make_list_leases_request(include_full_lease_info):
+        return ListLeasesRequest(include_full_lease_info=include_full_lease_info)
 
     @staticmethod
     def _list_leases_success(response):
@@ -823,7 +851,7 @@ class LeaseKeepAlive(object):
         self.logger.debug('Check-in successful')
 
     def _check_in(self):
-        """Retain lease associated with the resourse in this class."""
+        """Retain lease associated with the resource in this class."""
         lease = self._lease_wallet.get_lease(self._resource)
         if not lease:
             return None

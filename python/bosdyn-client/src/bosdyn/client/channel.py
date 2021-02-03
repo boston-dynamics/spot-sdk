@@ -8,12 +8,12 @@ import logging
 
 import grpc
 
-from .exceptions import (RpcError, ClientCancelledOperationError, InvalidAppTokenError,
-                         InvalidClientCertificateError, NonexistentAuthorityError, NotFoundError,
-                         PermissionDeniedError, ProxyConnectionError, ResponseTooLargeError,
-                         ServiceFailedDuringExecutionError, ServiceUnavailableError, TimedOutError,
-                         UnableToConnectToRobotError, UnauthenticatedError, UnknownDnsNameError,
-                         UnimplementedError, TransientFailureError)
+from .exceptions import (
+    RpcError, ClientCancelledOperationError, InvalidAppTokenError, InvalidClientCertificateError,
+    RetryableUnavailableError, NonexistentAuthorityError, NotFoundError, PermissionDeniedError,
+    ProxyConnectionError, ResponseTooLargeError, ServiceFailedDuringExecutionError,
+    ServiceUnavailableError, TimedOutError, UnableToConnectToRobotError, UnauthenticatedError,
+    UnknownDnsNameError, UnimplementedError, TransientFailureError)
 
 TransportError = grpc.RpcError
 
@@ -142,7 +142,7 @@ def translate_exception(rpc_error):
             return ResponseTooLargeError(rpc_error, ResponseTooLargeError.__doc__)
     elif code is grpc.StatusCode.UNAUTHENTICATED:
         return UnauthenticatedError(rpc_error, UnauthenticatedError.__doc__)
-    
+
     debug = rpc_error.debug_error_string()
     if debug is not None:
         if 'is not in peer certificate' in debug:
@@ -164,7 +164,7 @@ def translate_exception(rpc_error):
 
     # Handle arbitrary UNAVAILABLE cases
     if code is grpc.StatusCode.UNAVAILABLE:
-        return UnableToConnectToRobotError(rpc_error, UnableToConnectToRobotError.__doc__)
+        return RetryableUnavailableError(rpc_error, RetryableUnavailableError.__doc__)
 
     _LOGGER.warning('Unclassified exception: %s', rpc_error)
 

@@ -127,6 +127,11 @@ message MoveParams {
         RandomRotateParams random_rotate_params = 29;
         CrawlParams crawl_params = 30;
         SideParams side_params = 31;
+        BourreeParams bourree_params = 32;
+        WorkspaceArmMoveParams workspace_arm_move_params = 33;
+        Figure8Params figure8_params = 34;
+        KneelLegMove2Params kneel_leg_move2_params = 35;
+
     }
 }
 
@@ -137,6 +142,9 @@ message MoveInfo {
 
     // The number of "slices" (beats or sub-beats) that this move takes up.
     int32 move_length_slices = 2;
+
+    // The minimum number of "slices" that this move can complete in.
+    int32 min_move_length_slices = 13;
 
     // If true, the user can extend the move beyond the requested length.
     bool is_extendable = 3;
@@ -162,6 +170,7 @@ message MoveInfo {
     bool controls_arm = 8;
     bool controls_legs = 9;
     bool controls_body = 10;
+    bool controls_gripper = 12;
 
     // Information for the GUI tool to visualize the sequence move info.
     ChoreographerDisplayInfo display = 11;
@@ -200,6 +209,7 @@ message ChoreographerDisplayInfo {
         CATEGORY_TRANSITION = 4;
         CATEGORY_KNEEL = 5;
         CATEGORY_ARM = 6;
+        CATEGORY_ANIMATION = 7;
     }
     Category category = 16;
 }

@@ -4,7 +4,7 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""For clients to the docking command service."""
+"""A client for the docking service."""
 
 import collections
 import time
@@ -18,10 +18,10 @@ from bosdyn.client.robot_command import CommandFailedError
 
 
 class DockingClient(BaseClient):
-    """A client docking the robot.
-    Clients are expected to issue a docking command and then periodically
-    check the status of this command.
-    This service requires ownership over the robot, in the form of a lease.
+    """A client for the docking service to help issue DockingCommand and get state.
+    Clients are expected to issue a single DockingCommand and then periodically
+    check the status of its execution.
+    This service requires ownership over the robot, in the form of a lease and timesync.
     """
     default_service_name = 'docking'
     service_type = 'bosdyn.api.docking.DockingService'
@@ -36,7 +36,21 @@ class DockingClient(BaseClient):
 
     def docking_command(self, station_id, clock_identifier, end_time, prep_pose_behavior=None,
                         lease=None, **kwargs):
-        """Issue a docking request to the robot."""
+        """Issue a DockingCommandRequest to the robot.
+
+        Args:
+            station_id: The ID of the docking station to dock at.
+            clock_identifier: Identifier provided by the time sync service.
+            end_time: Expiry time of the command in robot time.
+            prep_pose_behavior: [optional] How and if to use the pre-dock pose.
+            lease: [optional] Leave empty to have the lease filled in by the LeaseWallet
+
+        Returns:
+            DockingCommand ID
+
+        Raises:
+            ResponseError: The command was unable to be completed. See error for details.
+        """
         req = self._docking_command_request(lease, station_id, clock_identifier, end_time,
                                             prep_pose_behavior)
         return self.call(self._stub.DockingCommand, req, self._docking_id_from_response,
@@ -44,7 +58,7 @@ class DockingClient(BaseClient):
 
     def docking_command_async(self, station_id, clock_identifier, end_time, prep_pose_behavior=None,
                               lease=None, **kwargs):
-        """Async version of docking_command()."""
+        """Async version of docking_command(). """
         req = self._docking_command_request(lease, station_id, clock_identifier, end_time,
                                             prep_pose_behavior)
         return self.call_async(self._stub.DockingCommand, req, self._docking_id_from_response,
@@ -52,38 +66,53 @@ class DockingClient(BaseClient):
 
 
     def docking_command_feedback(self, command_id, **kwargs):
-        """Check the status of a previously issued docking command."""
+        """Check the status of a previously issued docking command.
+
+        Args:
+            command_id: The ID returned from a previous docking_command call.
+
+        Returns:
+            Status of type DockingCommandResponse.Status
+        """
         req = self._docking_command_feedback_request(command_id)
         return self.call(self._stub.DockingCommandFeedback, req, self._docking_status_from_response,
                          _docking_feedback_error_from_response, **kwargs)
 
     def docking_command_feedback_async(self, command_id, **kwargs):
-        """Async version of docking_command_feedback()"""
+        """Async version of docking_command_feedback()."""
         req = self._docking_command_feedback_request(command_id)
         return self.call_async(self._stub.DockingCommandFeedback, req,
                                self._docking_status_from_response,
                                _docking_feedback_error_from_response, **kwargs)
 
     def get_docking_config(self, **kwargs):
-        """Issue a docking config request to the robot."""
+        """Get the docking config stored on the robot.
+
+        Returns:
+            List of docking configs of type ConfigRange
+        """
         req = docking_pb2.GetDockingConfigRequest()
         return self.call(self._stub.GetDockingConfig, req, self._docking_config_from_response,
                          _docking_get_config_error_from_response, **kwargs)
 
     def get_docking_config_async(self, **kwargs):
-        """Issue a docking config request to the robot."""
+        """Async version of get_docking_config()."""
         req = docking_pb2.GetDockingConfigRequest()
         return self.call_async(self._stub.GetDockingConfig, req, self._docking_config_from_response,
                                _docking_get_config_error_from_response, **kwargs)
 
     def get_docking_state(self, **kwargs):
-        """Get docking state from the robot."""
+        """Get docking state from the robot.
+
+        Returns:
+            Robot dock state of type DockState
+        """
         req = docking_pb2.GetDockingStateRequest()
         return self.call(self._stub.GetDockingState, req, self._docking_state_from_response,
                          _docking_get_state_error_from_response, **kwargs)
 
     def get_docking_state_async(self, **kwargs):
-        """Get docking state from the robot."""
+        """Async version of get_docking_state()."""
         req = docking_pb2.GetDockingStateRequest()
         return self.call_async(self._stub.GetDockingState, req, self._docking_state_from_response,
                                _docking_get_state_error_from_response, **kwargs)
@@ -157,27 +186,27 @@ def blocking_dock_robot(robot, dock_id, num_retries=4):
     Args:
         robot: The instance of the robot to control.
         dock_id: The ID of the dock to dock at.
-        num_retries: Optional number of retries.
+        num_retries: Optional, number of attempts.
 
     Returns:
-        None
+        The number of retries required
 
     Raises:
         CommandFailedError: The robot was unable to be docked. See error for details.
     """
     docking_client = robot.ensure_client(DockingClient.default_service_name)
 
-    retry_number = 0
+    attempt_number = 0
     docking_success = False
 
     # Try to dock the robot
-    while retry_number < num_retries and not docking_success:
-        retry_number += 1
+    while attempt_number < num_retries and not docking_success:
+        attempt_number += 1
         cmd_end_time = time.time() + 30  # expect to finish in 30 seconds
         cmd_timeout = cmd_end_time + 10  # client side buffer
 
         prep_pose = (docking_pb2.PREP_POSE_USE_POSE if
-                     (retry_number % 2) else docking_pb2.PREP_POSE_SKIP_POSE)
+                     (attempt_number % 2) else docking_pb2.PREP_POSE_SKIP_POSE)
 
         cmd_id = docking_client.docking_command(
             dock_id, robot.time_sync.endpoint.clock_identifier,
@@ -203,12 +232,12 @@ def blocking_dock_robot(robot, dock_id, num_retries=4):
                     docking_pb2.DockingCommandFeedbackResponse.Status.Name(status))
 
     if docking_success:
-        return
+        return attempt_number - 1
 
     # Try and put the robot in a safe position
     try:
         blocking_go_to_prep_pose(robot, dock_id)
-    except CommandFailedError as error:
+    except CommandFailedError:
         pass
 
     # Raise error on original failure to dock
@@ -251,3 +280,39 @@ def blocking_go_to_prep_pose(robot, dock_id, timeout=20):
                                      docking_pb2.DockingCommandFeedbackResponse.Status.Name(status))
 
     raise CommandFailedError("Error going to the prep pose, timeout exceeded.")
+
+
+def blocking_undock(robot, timeout=20):
+    """Blocking helper that undocks the robot from the currently docked dock.
+
+    Args:
+        robot: The instance of the robot to control.
+
+    Returns:
+        None
+
+    Raises:
+        CommandFailedError: The robot was unable to undock. See error for details.
+    """
+    docking_client = robot.ensure_client(DockingClient.default_service_name)
+
+    # Try and put the robot in a safe position
+    cmd_end_time = time.time() + timeout
+    cmd_timeout = cmd_end_time + 10  # client side buffer
+
+    cmd_id = docking_client.docking_command(
+        0, robot.time_sync.endpoint.clock_identifier,
+        robot.time_sync.robot_timestamp_from_local_secs(cmd_end_time), docking_pb2.PREP_POSE_UNDOCK)
+
+    while time.time() < cmd_timeout:
+        status = docking_client.docking_command_feedback(cmd_id)
+        if status == docking_pb2.DockingCommandFeedbackResponse.STATUS_IN_PROGRESS:
+            # keep waiting/trying
+            time.sleep(1)
+        elif status == docking_pb2.DockingCommandFeedbackResponse.STATUS_AT_PREP_POSE:
+            return
+        else:
+            raise CommandFailedError("Failed to undock the robot, status: '%s'" %
+                                     docking_pb2.DockingCommandFeedbackResponse.Status.Name(status))
+
+    raise CommandFailedError("Error undocking the robot, timeout exceeded.")

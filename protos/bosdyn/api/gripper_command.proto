@@ -1,0 +1,92 @@
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option java_outer_classname = "GripperCommandProto";
+
+import "bosdyn/api/basic_command.proto";
+import "bosdyn/api/trajectory.proto";
+import "google/protobuf/wrappers.proto";
+
+// The synchronized command message for commanding the gripper to move.
+// A synchronized commands is one of the possible robot command messages for controlling the robot.
+message GripperCommand {
+    // The gripper request must be one of the basic command primitives.
+    message Request {
+        // Only one command can be requested at a time.
+        oneof command {
+            // Control opening and closing the gripper.
+            ClawGripperCommand.Request claw_gripper_command = 1;
+        }
+    }
+
+    // The feedback for the gripper command that will provide information on the progress
+    // of the command.
+    message Feedback {
+        oneof command {
+            // Feedback for the claw gripper command.
+            ClawGripperCommand.Feedback claw_gripper_feedback = 1;
+        }
+
+        RobotCommandFeedbackStatus.Status status = 2;
+    }
+}
+
+// Command to open and close the gripper.
+message ClawGripperCommand {
+    message Request {
+        // Scalar trajectory for opening/closing the gripper. If 1 point is specified
+        // with no end time, we will execute a minimum time trajectory that observes
+        // velocity and acceleration constraints. Otherwise, we will use piecewise
+        // cubic interpolation, meaning there will be a cubic polynomial between each
+        // trajectory point, with continuous position and velocity at each trajectory
+        // point. If the requested trajectory violates the velocity or acceleration
+        // constraints below, a trajectory that is as close as possible but still
+        // obeys the constraints will be executed instead.
+        // position is radians: 0 is fully closed -1.5708 (-90 degrees) is fully open
+        // velocity is radians / sec.
+        ScalarTrajectory trajectory = 5;
+
+        // If specified, the gripper will not exceed these velocity and acceleration
+        // magnitudes. Note that if a minimum time trajectory is requested, we will
+        // accelerate and decelerate at maximum_open_close_acceleration, and coast at
+        // maximum_open_close_velocity.
+
+        // If unspecified, a default value of 10 (rad/s) will be used.
+        google.protobuf.DoubleValue maximum_open_close_velocity = 2;
+
+        // If unspecified, a default value of 40 (rad/s/s) will be used.
+        google.protobuf.DoubleValue maximum_open_close_acceleration = 3;
+
+        // Maximum torque applied. If unspecified, a default value of 5.5 (Nm) will be used.
+        google.protobuf.DoubleValue maximum_torque = 4;
+
+        // By default the gripper transitions to force control when it detects an object closing.
+        // Setting this field to true disables the transition to force control on contact detection
+        // and always keeps the gripper in position control.
+        bool disable_force_on_contact = 6;
+
+        // Previous fields in the protobuf that are now reserved.
+        reserved 1;
+    }
+
+    message Feedback {
+        enum Status {
+            // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
+            STATUS_UNKNOWN = 0;
+            // The gripper is opening or closing.
+            STATUS_IN_PROGRESS = 1;
+            // The gripper is at the final point of the trajectory.
+            STATUS_AT_GOAL = 2;
+            // During a close, detected contact and transitioned to force control.
+            STATUS_APPLYING_FORCE = 3;
+        }
+        // Current status of the command.
+        Status status = 1;
+    }
+}

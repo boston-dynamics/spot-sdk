@@ -32,9 +32,9 @@ python3 hello_world_mission_service.py local --port {PORT}
 
 On success, you should see service logs appear in your terminal like this:
 ```
-2020-11-04 12:33:37,083 - INFO - Started the HelloWorldServicer server.
-2020-11-04 12:33:37,141 - INFO - hello-world-callback service registered/updated.
-2020-11-04 12:33:37,146 - INFO - Starting directory registration loop for hello-world-callback
+2021-01-27 10:29:27,602 - INFO - Started the HelloWorldServicer server.
+hello-world-callback service running.
+Ctrl + C to shutdown.
 ```
 To start the client, run
 ```
@@ -44,9 +44,10 @@ Where `PORT` matches the port number provided to the server application. The cli
 
 The server output will look like this:
 ```
-2020-11-04 12:36:37,874 - INFO - EstablishSession unimplemented!
-2020-11-04 12:36:37,875 - INFO - Hello World!
-2020-11-04 12:36:37,876 - INFO - Stop unimplemented!
+2021-01-27 10:37:23,338 - INFO - EstablishSession unimplemented!
+2021-01-27 10:37:23,339 - INFO - Hello World!
+2021-01-27 10:37:23,340 - INFO - Stop unimplemented!
+2021-01-27 10:37:23,340 - INFO - TeardownSession unimplemented!
 ```
 The client output will look like this:
 ```
@@ -67,7 +68,11 @@ python3 power_off_mission_service.py ROBOT_IP --port {PORT} --host-ip {ENDPOINT_
 ```
 A port number for the service can be specified using the --port argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a services listening port. This port number will be used with the host-ip ("ENDPOINT_IP") to fully specify where the service is running. The port must be open and cannot be blocked by a local firewall. If the port is blocked, the service will be unreachable from the robot and the directory registration service.
 
-This example takes two different IP addresses as arguments. The --host-ip argument describes the IP address for the computer that will be running the service. The hostname ("ROBOT_IP") argument describes the IP address of the robot hosting the directory service.
+This example takes two different IP addresses as arguments. The `--host-ip` argument describes the IP address for the computer that will be running the service. A helper exists to try to determine the correct IP address. This command must be run on the same computer that will be running the remote mission service:
+```
+python3 -m bosdyn.client --username {USER} --password {PASSWORD} {ROBOT_IP} self-ip
+```
+The other IP address is the traditional robot hostname ("ROBOT_IP") argument, which describes the IP address of the robot hosting the directory service.
 
 Now if you run the example client with:
 ```

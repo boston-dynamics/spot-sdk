@@ -10,6 +10,7 @@ import json
 import logging
 import sys
 import threading
+import time
 
 from aiortc import (
     RTCConfiguration,
@@ -17,6 +18,7 @@ from aiortc import (
     RTCSessionDescription,
     MediaStreamTrack,
 )
+from aiortc.contrib.media import MediaRecorder
 import requests
 
 from bosdyn.client.command_line import (Command, Subcommands)
@@ -44,6 +46,7 @@ class WebRTCCommands(Subcommands):
     def __init__(self, subparsers, command_dict):
         super(WebRTCCommands, self).__init__(subparsers, command_dict, [
             WebRTCSaveCommand,
+            WebRTCRecordCommand
         ])
 
 
@@ -56,20 +59,25 @@ class WebRTCSaveCommand(Command):
         super(WebRTCSaveCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('track', default='video', const='video', nargs='?',
                                   choices=['video'])
-        self._parser.add_argument('--sdp-filename', default='h264.sdp', help='File being streamed from WebRTC server')
-        self._parser.add_argument('--sdp-port', default=31102, help='SDP port of WebRTC server')
-        self._parser.add_argument('--cam-ssl-cert', default=None, help="Path to Spot CAM's client cert to verify against Spot CAM server")
-        self._parser.add_argument('--dst-prefix', default='h264.sdp', help='Filename prefix to prepend to all output data')
-        self._parser.add_argument('--count', type=int, default=1, help='Number of images to save.  0 is useful for streaming without saving.')
+        self._parser.add_argument('--sdp-filename', default='h264.sdp',
+                                  help='File being streamed from WebRTC server')
+        self._parser.add_argument('--sdp-port', default=31102,
+                                  help='SDP port of WebRTC server')
+        self._parser.add_argument('--cam-ssl-cert', default=None,
+                                  help="Spot CAM's client cert path to check with Spot CAM server")
+        self._parser.add_argument('--dst-prefix', default='h264.sdp',
+                                  help='Filename prefix to prepend to all output data')
+        self._parser.add_argument('--count', type=int, default=1,
+                                  help='Number of images to save. 0 to stream without saving.')
 
     def _run(self, robot, options):
         if not options.cam_ssl_cert:
-          options.cam_ssl_cert = False
+            options.cam_ssl_cert = False
 
         shutdown_flag = threading.Event()
         webrtc_thread = threading.Thread(
             target=start_webrtc,
-            args=[shutdown_flag, options],
+            args=[shutdown_flag, options, process_frame],
             daemon=True
         )
         webrtc_thread.start()
@@ -81,8 +89,70 @@ class WebRTCSaveCommand(Command):
             shutdown_flag.set()
             webrtc_thread.join(timeout=3.0)
 
+
+class WebRTCRecordCommand(Command):
+    """Save webrtc stream as video"""
+
+    NAME = 'record'
+
+    def __init__(self, subparsers, command_dict):
+        super(WebRTCRecordCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('track', default='video', const='video', nargs='?',
+                                  choices=['video', 'audio'])
+        self._parser.add_argument('--sdp-filename', default='h264.sdp',
+                                  help='File being streamed from WebRTC server')
+        self._parser.add_argument('--sdp-port', default=31102, help='SDP port of WebRTC server')
+        self._parser.add_argument('--cam-ssl-cert', default=None,
+                                  help="Spot CAM's client cert path to check with Spot CAM server")
+        self._parser.add_argument('--dst-prefix', default='h264.sdp',
+                                  help='Filename prefix to prepend to all output data')
+        self._parser.add_argument('--time', type=int, default=10,
+                                  help='Number of seconds to record.')
+
+    def _run(self, robot, options):
+        if not options.cam_ssl_cert:
+            options.cam_ssl_cert = False
+
+        if options.track == 'video':
+            recorder = MediaRecorder(f'{options.dst_prefix}.mp4')
+        else:
+            recorder = MediaRecorder(f'{options.dst_prefix}.wav')
+
+        # run event loop
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(record_webrtc(options, recorder))
+
 # WebRTC must be in its own thread with its own event loop.
-def start_webrtc(shutdown_flag, options):
+async def record_webrtc(options, recorder):
+    config = RTCConfiguration(iceServers=[])
+    client = WebRTCClient(options.hostname,
+                          options.username,
+                          options.password,
+                          options.sdp_port,
+                          options.sdp_filename,
+                          options.cam_ssl_cert,
+                          config,
+                          media_recorder=recorder,
+                          recorder_type=options.track)
+    await client.start()
+
+    # wait for connection to be established before recording
+    while client.pc.iceConnectionState != 'completed':
+        await asyncio.sleep(0.1)
+
+    # start recording
+    await recorder.start()
+    try:
+        await asyncio.sleep(options.time)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        # close everything
+        await client.pc.close()
+        await recorder.stop()
+
+# WebRTC must be in its own thread with its own event loop.
+def start_webrtc(shutdown_flag, options, process_func, recorder=None):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
@@ -93,10 +163,11 @@ def start_webrtc(shutdown_flag, options):
                           options.sdp_port,
                           options.sdp_filename,
                           options.cam_ssl_cert,
-                          config)
+                          config,
+                          media_recorder=recorder)
 
     asyncio.gather(client.start(),
-                   process_frame(client, options, shutdown_flag),
+                   process_func(client, options, shutdown_flag),
                    monitor_shutdown(shutdown_flag, client))
     loop.run_forever()
 

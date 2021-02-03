@@ -86,7 +86,7 @@ All binary values are little-endian.
 <block-type> ::= 8 bit unsigned integer
 <block-size> ::= 56 bit unsigned integer
 <block> ::= <block-header (type=0x00)> <DescriptorBlock>
-           | <block-header (type=0x01)r><desciptor-size> <DataDescriptor> <Data>
+           | <block-header (type=0x01)r><descriptor-size> <DataDescriptor> <Data>
 
 <end-header> :: <block-header (block-type=0x02, block-size=20)>
 ```

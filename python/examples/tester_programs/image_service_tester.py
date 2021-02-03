@@ -342,12 +342,12 @@ def test_images_respond_in_order(image_client, image_sources, verbose):
     """
     # Request an image source 3 times and ensure each acquisition timestamp is later.
     for image in image_sources:
-        for formatt in ALL_FORMATS:
+        for format in ALL_FORMATS:
             responses = []
             for i in range(0, 3):
                 try:
                     img_resp = image_client.get_image(
-                        [build_image_request(image, image_format=formatt)])
+                        [build_image_request(image, image_format=format)])
                     assert len(img_resp) == 1
                     responses.append(img_resp[0])
                 except Exception as err:
@@ -363,7 +363,7 @@ def test_images_respond_in_order(image_client, image_sources, verbose):
                     _LOGGER.error(
                         "Image source %s (requested as format %s) has out-of-order timestamps. Ensure only one image "
                         "service is running and the timestamps are being set properly.", image,
-                        image_pb2.Image.Format.Name(formatt))
+                        image_pb2.Image.Format.Name(format))
                     if verbose:
                         _LOGGER.info(
                             "First image responds with time: %s (%d seconds). The next image responds "
@@ -450,7 +450,7 @@ def main(argv):
                         default='.')
     parser.add_argument(
         '--check-data-acquisition', action='store_true', help=
-        "Test that the image sources are availble in the data acquisition service and can be acquired."
+        "Test that the image sources are available in the data acquisition service and can be acquired."
     )
 
     options = parser.parse_args(argv)
@@ -483,7 +483,7 @@ def main(argv):
     run_test(test_if_service_has_active_service_faults, "The image service has no active "
              "service faults in the current robot state.", robot, options.service_name)
 
-    # Test that the service has image sources listed and the source proto's are filled out properly.
+    # Test that the service has image sources listed and the source protos are filled out properly.
     _LOGGER.info(
         "TEST: Image Service contains image sources with correctly formatted source protos.")
     success, image_sources = test_list_images(image_client, options.service_name, options.verbose)
@@ -504,7 +504,7 @@ def main(argv):
 
     if options.check_data_acquisition:
         # Check that the image service has integrated with the data acquisition service, each image source
-        # is broadcasted as a image capability, and can successfully be acquired and saved.
+        # is broadcast as a image capability, and can successfully be acquired and saved.
         run_test(test_full_data_acquisition_integration,
                  "Image service is successfully integrated with "
                  "the data acquisition service.", robot, image_sources, options.service_name,

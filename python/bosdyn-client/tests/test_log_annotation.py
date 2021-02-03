@@ -52,7 +52,8 @@ SERVICE_NAME = 'my-service'
 def handler(mock_log_client):
     handler = LogAnnotationHandler(SERVICE_NAME, mock_log_client)
     handler.setLevel(logging.INFO)
-    return handler
+    yield handler
+    handler.close()
 
 
 @pytest.fixture
@@ -61,7 +62,8 @@ def logger(request, handler):
     logger = logging.getLogger(request.node.name)
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
-    return logger
+    yield logger
+    logger.removeHandler(handler)
 
 
 # Parametrize by the logger record level to use, and what we expect the proto version to be.

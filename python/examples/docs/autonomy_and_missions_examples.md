@@ -16,6 +16,7 @@ The following examples demonstrate how to use the mission service and the autono
 * [Graph Nav View Map](../graph_nav_view_map/README.md)
 * [Get Mission State](../get_mission_state/README.md)
 * [Remote Mission Service](../remote_mission_service/README.md)
-* [Mission Question Anwerer](../mission_question_answerer/README.md)
+* [Mission Question Answerer](../mission_question_answerer/README.md)
 * [Mission Recorder](../mission_recorder/README.md)
 * [Replay Mission](../replay_mission/README.md)
+* [Machine Learning with the Network Compute Bridge](../network_compute_bridge/README.md)

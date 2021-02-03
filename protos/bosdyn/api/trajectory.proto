@@ -155,6 +155,8 @@ message ScalarTrajectory {
     google.protobuf.Timestamp reference_time = 2;
 
     // Parameters for how trajectories will be interpolated on robot.
+    // (Note: ignored for ClawGripperCommand.Request, which will automatically
+    // select between cubic interpolation or a minimum time trajectory)
     PositionalInterpolation interpolation = 3;
 }
 

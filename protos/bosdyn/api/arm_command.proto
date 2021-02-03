@@ -1,0 +1,476 @@
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option java_outer_classname = "ArmCommandProto";
+
+import "bosdyn/api/basic_command.proto";
+import "bosdyn/api/geometry.proto";
+import "bosdyn/api/trajectory.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/duration.proto";
+
+// The synchronized command message for commanding the arm to move.
+// A synchronized commands is one of the possible robot command messages for controlling the robot.
+message ArmCommand {
+    // The arm request must be one of the basic command primitives.
+    message Request {
+        // Only one command can be requested at a time.
+        oneof command {
+            // Control the end-effector in Cartesian space.
+            ArmCartesianCommand.Request arm_cartesian_command = 3;
+
+            // Control joint angles of the arm.
+            ArmJointMoveCommand.Request arm_joint_move_command = 4;
+
+            // Move the arm to some predefined configurations.
+            NamedArmPositionsCommand.Request named_arm_position_command = 5;
+
+            // Velocity control of the end-effector.
+            ArmVelocityCommand.Request arm_velocity_command = 6;
+
+            // Point the gripper at a point in the world.
+            GazeCommand.Request arm_gaze_command = 8;
+
+            // Stop the arm in place with minimal motion.
+            ArmStopCommand.Request arm_stop_command = 9;
+
+            // Use the arm to drag something held in the gripper.
+            ArmDragCommand.Request arm_drag_command = 10;
+        }
+
+        // Any arm parameters to send, common across all arm commands
+        ArmParams params = 11;
+    }
+
+    // The feedback for the arm command that will provide information on the progress
+    // of the command.
+    message Feedback {
+        // The feedback message associated with the requested command. Some commands may have
+        // an empty feedback message if they do not provide any updates/progress.
+        oneof feedback {
+            // Feedback for the end-effector Cartesian command.
+            ArmCartesianCommand.Feedback arm_cartesian_feedback = 3;
+
+            // Feedback for the joint move command.
+            ArmJointMoveCommand.Feedback arm_joint_move_feedback = 4;
+
+            // Feedback for the named position move command.
+            NamedArmPositionsCommand.Feedback named_arm_position_feedback = 5;
+            ArmVelocityCommand.Feedback arm_velocity_feedback = 6;
+
+            // Feedback for the gaze command.
+            GazeCommand.Feedback arm_gaze_feedback = 8;
+            ArmStopCommand.Feedback arm_stop_feedback = 9;
+
+            // Feedback for the drag command.
+            ArmDragCommand.Feedback arm_drag_feedback = 10;
+        }
+
+        RobotCommandFeedbackStatus.Status status = 100;
+    }
+}
+
+// Parameters common across arm commands.
+message ArmParams {
+    /// Whether or not to disable the body force limiter running on the robot. By default, this is
+    /// on, and the chance that the body falls over because the arm makes contact in the world is
+    /// low. If this is purposely disabled (by setting disable_body_force_limiter to True), the arm
+    /// may be able to accelerate faster, and apply more force to the world and to objects than usual,
+    /// but there is also added risk of the robot falling over.
+    google.protobuf.BoolValue disable_body_force_limiter = 1;
+}
+
+// When controlling the arm with a joystick, because of latency it can often be better to send
+// velocity commands rather than position commands.  Both linear and angular velocity can be
+// specified.  The linear velocity can be specified in a cylindrical frame around the shoulder or
+// with a specified frame.
+message ArmVelocityCommand {
+    message CylindricalVelocity {
+        /// The linear velocities for the end-effector are specified in unitless cylindrical
+        /// coordinates. The origin of the cylindrical coordinate system is the base of the arm
+        /// (shoulder).  The Z-axis is aligned with gravity, and the X-axis is the unit vector from
+        /// the shoulder to the hand-point. This construction allows for 'Z'-axis velocities to
+        /// raise/lower the hand, 'R'-axis velocities will cause the hand to move towards/away from
+        /// the shoulder, and 'theta'-axis velocities will cause the hand to travel
+        /// clockwise/counter-clockwise around the shoulder. Lastly, the command is unitless, with
+        /// values for each axis specified in the range [-1, 1].  A value of 0 denotes no velocity
+        /// and values of +/- 1 denote maximum velocity (see max_linear_velocity).
+        CylindricalCoordinate linear_velocity = 1;
+
+        /// The maximum velocity in meters / second for the hand.
+        /// If unset and default value of 0 received, will set max_linear_velocity to 0.5 m/s.
+        google.protobuf.DoubleValue max_linear_velocity = 2;
+    }
+
+    message CartesianVelocity {
+        // The frame to express our velocities in
+        string frame_name = 1;
+
+        // The x-y-z velocity of the hand (m/s) with respect to the frame
+        Vec3 velocity_in_frame_name = 2;
+    }
+
+    message Request {
+        // Specify the linear velocity of the hand in either a cylindrical or Cartesian coordinate
+        // system.
+        oneof command {
+            CylindricalVelocity cylindrical_velocity = 1;
+            CartesianVelocity cartesian_velocity = 2;
+        }
+
+        // The angular velocity of the hand frame measured with respect to the odom frame, expressed
+        // in the hand frame. A 'X' rate will cause the hand to rotate about its x-axis, e.g. the
+        // final wrist twist joint will rotate. And similarly, 'Y' and 'Z' rates will cause the hand
+        // to rotate about its y and z axis respectively. \ 
+        // The units should be rad/sec.
+        Vec3 angular_velocity_of_hand_rt_odom_in_hand = 6;
+
+        // Optional maximum acceleration magnitude of the end-effector. (m/s^2)
+        google.protobuf.DoubleValue maximum_acceleration = 3;
+
+        // The timestamp (in robot time) by which a command must finish executing.
+        // This is a required field and used to prevent runaway commands.
+        google.protobuf.Timestamp end_time = 5;
+
+        reserved 4;
+    }
+    message Feedback {
+        // ArmVelocityCommand provides no feedback
+    }
+}
+
+// Command the arm move to a predefined configuration.
+message NamedArmPositionsCommand {
+    enum Positions {
+        // Invalid request; do not use.
+        POSITIONS_UNKNOWN = 0;
+
+        // The carry position is a damped, force limited position close to stow, with the hand
+        // slightly in front of the robot.
+        POSITIONS_CARRY = 1;
+
+        // Move arm to ready position. The ready position is defined with the hand directly in
+        // front of and slightly above the body, with the hand facing forward in the robot body +X
+        // direction.
+        POSITIONS_READY = 2;
+
+        // Stow the arm, safely. If the robot is holding something, it will freeze the arm instead
+        // of stowing.
+        POSITIONS_STOW = 3;
+    }
+
+    message Request {
+        Positions position = 1;
+    }
+
+    message Feedback {
+        enum Status {
+            // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
+            STATUS_UNKNOWN = 0;
+            // The arm is at the desired configuration.
+            STATUS_COMPLETE = 1;
+            // Robot is re-configuring arm to get to desired configuration.
+            STATUS_IN_PROGRESS = 2;
+            // Some positions may refuse to execute if the gripper is holding an item, for example
+            // stow.
+            STATUS_STALLED_HOLDING_ITEM = 3;
+        }
+        // Current status of the request.
+        Status status = 1;
+    }
+}
+
+
+// Command the end effector of the arm.  Each axis in the task frame is allowed to be set to
+// position mode (default) or Force mode.  If the axis is set to position, the desired value is read
+// from the pose_trajectory_in_task. If the axis is set to force, the desired value is read from
+// the rench_trajectory. This supports hybrid control of the arm where users can specify, for
+// example, Z to be in force control with X and Y in position control.
+message ArmCartesianCommand {
+    message Request {
+        // The root frame is used to set the optional task frame that all trajectories are
+        // specified with respect to.  If the optional task frame is left un-specified it defaults
+        // to the identity transform and the root frame becomes the task frame.
+        string root_frame_name = 19;
+
+        // The tool pose relative to the parent link (wrist).
+        // Defaults to
+        //    [0.19557 0 0]
+        //    [1 0 0 0]
+        // a frame with it's origin slightly in front of the gripper's palm plate aligned with
+        // wrist's orientation.
+        SE3Pose wrist_tform_tool = 6;
+
+        // The fields below are specified in this optional task frame.  If unset it defaults
+        // to the identity transform and all quantities are therefore expressed in the
+        // root_frame_name.
+        SE3Pose root_tform_task = 20;
+
+        // A 3D pose trajectory for the tool expressed in the task frame, e.g. task_T_tool.
+        // This pose trajectory is optional if requesting a pure wrench at the end-effector,
+        // otherwise required for position or mixed force/position end-effector requests.
+        SE3Trajectory pose_trajectory_in_task = 2;
+
+        // Optional Maximum acceleration magnitude of the end-effector.
+        // Valid ranges (0, 20]
+        google.protobuf.DoubleValue maximum_acceleration = 3;
+        // Optional Maximum linear velocity magnitude of the end-effector. (m/s)
+        google.protobuf.DoubleValue max_linear_velocity = 4;
+        // Optional Maximum angular velocity magnitude of the end-effector. (rad/s)
+        google.protobuf.DoubleValue max_angular_velocity = 5;
+
+        // Maximum allowable tracking error of the tool frame from the desired trajectory
+        // before the arm will stop moving and cancel the rest of the trajectory. When this limit is
+        // exceeded, the hand will stay at the pose it was at when it exceeded the tracking error,
+        // and any other part of the trajectory specified in the rest of this message will be
+        // ignored. max position tracking error in meters
+        google.protobuf.DoubleValue max_pos_tracking_error = 15;
+        // max orientation tracking error in radians
+        google.protobuf.DoubleValue max_rot_tracking_error = 16;
+
+        // Set a "preferred joint configuration" for this trajectory. When near a singularity, the
+        // robot will move towards the specified pose. If no pose is provided (i.e. no value is set
+        // for this oneof), a default one will be chosen. If the user wishes to explicitly tell the
+        // robot to not prefer any pose, (useful if doing a local move, and the user wants to avoid
+        // large joint motions) they should set ignore_joint_configuration to be true. The robot's
+        // behavior around singularities will then be to simply minimize joint velocity, resulting
+        // in the robot coming in and out of the singularity with similar joint angles
+        oneof joint_configuration {
+            bool force_remain_near_current_joint_configuration = 17;
+            ArmJointPosition preferred_joint_configuration = 18;
+        }
+
+
+        // If an axis is set to position mode (default), read desired from SE3Trajectory trajectory
+        // command.  If mode is set to Force, read desired from WrenchTrajectory wrench_trajectory
+        // command.  This supports hybrid control of the arm where users can specify, for example, Z
+        // to be in force control with X and Y in position control.  The elements are expressed in
+        // the same task_frame as the trajectories.
+        enum AxisMode {
+            AXIS_MODE_POSITION = 0;
+            AXIS_MODE_FORCE = 1;
+        }
+        AxisMode x_axis = 8;
+        AxisMode y_axis = 9;
+        AxisMode z_axis = 10;
+        AxisMode rx_axis = 11;
+        AxisMode ry_axis = 12;
+        AxisMode rz_axis = 13;
+
+        // A force/torque trajectory for the tool expressed in the task frame.
+        // This trajectory is optional if requesting a pure pose at the end-effector,
+        // otherwise required for force or mixed force/position end-effector requests.
+        WrenchTrajectory wrench_trajectory_in_task = 14;
+
+        reserved 1, 7;
+    }
+
+    message Feedback {
+        enum Status {
+            // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
+            STATUS_UNKNOWN = 0;
+            // Tool frame has reached the end of the trajectory within tracking error bounds.
+            STATUS_TRAJECTORY_COMPLETE = 1;
+            // Robot is attempting to reach the target.
+            STATUS_IN_PROGRESS = 2;
+            // Tool frame exceeded maximum allowable tracking error from the desired trajectory.
+            STATUS_TRAJECTORY_CANCELLED = 3;
+            // The arm has stopped making progress to the goal.  Note, this does not cancel the
+            // trajectory. For example, if the requested goal is too far away, walking the base
+            // robot closer to the goal will cause the arm to continue along the trajectory once the
+            // goal point is inside the workspace.
+            STATUS_TRAJECTORY_STALLED = 4;
+        }
+        // Current status of the pose trajectory.
+        Status status = 1;
+        // Current linear tracking error of the tool frame [meters].
+        double measured_pos_tracking_error = 2;
+        // Current rotational tracking error of the tool frame [radians].
+        double measured_rot_tracking_error = 3;
+
+        // Linear distance from the tool to the tool trajectory's end point [meters].
+        double measured_pos_distance_to_goal = 4;
+
+        // Rotational distance from the tool to the trajectory's end point [radians].
+        double measured_rot_distance_to_goal = 5;
+    }
+}
+
+// Specify a set of joint angles to move the arm.
+message ArmJointMoveCommand {
+    message Request {
+        // Note: Sending a single point empty trajectory will cause the arm to freeze in place. This
+        // is an easy way to lock the arm in its current configuration.
+        ArmJointTrajectory trajectory = 1;
+    }
+
+    message Feedback {
+        enum Status {
+            // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
+            STATUS_UNKNOWN = 0;
+            // The arm is at the desired configuration.
+            STATUS_COMPLETE = 1;
+            // Robot is re-configuring arm to get to desired configuration.
+            STATUS_IN_PROGRESS = 2;
+        }
+        // Current status of the request.
+        Status status = 1;
+    }
+}
+
+// Position of our 6 arm joints in radians. If a joint angle is not specified,
+// we will use the joint position at time the message is received on robot.
+message ArmJointPosition {
+    google.protobuf.DoubleValue sh0 = 1;
+    google.protobuf.DoubleValue sh1 = 2;
+    google.protobuf.DoubleValue el0 = 3;
+    google.protobuf.DoubleValue el1 = 4;
+    google.protobuf.DoubleValue wr0 = 5;
+    google.protobuf.DoubleValue wr1 = 6;
+}
+
+// Velocity of our 6 arm joints in radians / second. If a velocity
+// for a joint is specified, velocities for all joints we are
+// trying to move must be specified.
+message ArmJointVelocity {
+    google.protobuf.DoubleValue sh0 = 1;
+    google.protobuf.DoubleValue sh1 = 2;
+    google.protobuf.DoubleValue el0 = 3;
+    google.protobuf.DoubleValue el1 = 4;
+    google.protobuf.DoubleValue wr0 = 5;
+    google.protobuf.DoubleValue wr1 = 6;
+}
+
+// A set of joint angles and velocities that can be used as a point within a joint trajectory.
+message ArmJointTrajectoryPoint {
+    // Desired joint angles in radians
+    ArmJointPosition position = 1;
+    // Optional desired joint velocities in radians / sec
+    ArmJointVelocity velocity = 2;
+    // The time since reference at which we wish to achieve this position / velocity
+    google.protobuf.Duration time_since_reference = 3;
+}
+
+// This allows a user to move the arm's joints directly. Each of the arm's joints will never move
+// faster than maximum_velocity and never accelerate faster than maximum_acceleration. The user can
+// specify a trajectory of joint positions and optional velocities for the arm to follow. The
+// trajectory will be acted upon as follows. If a single trajectory point with no time is provided,
+// the arm will take the joint currently furthest away from the goal pose and plan a minimum time
+// trajectory such that the joint accelerates at maximum_acceleration, coasts at maximum_velocity,
+// and decelerates at maximum_acceleration. The other joints will accelerate at
+// maximum_acceleration, but then coast at a slower speed such that all joints arrive at the goal
+// pose simultaneously with zero velocity. If the user provides trajectory times, the robot will fit
+// a piece-wise cubic trajectory (continuous position and velocity) to the user's requested
+// positions and (optional) velocities. If the requested trajectory is not achievable because it
+// will violate position limits or the maximum_velocity or maximum_acceleration, the robot will pick
+// a trajectory that is as close as possible to the user requested without violating velocity or
+// acceleration limits.
+//
+// If the robot is not hitting the desired trajectory, try increasing the time between knot points,
+// increasing the max velocity and acceleration, or only specifying joint position goals without a
+// velocity
+message ArmJointTrajectory {
+    // The points in our trajectory. (positions, (optional) velocity, (optional) time)
+    repeated ArmJointTrajectoryPoint points = 1;
+
+    // All trajectory points specify times relative to this reference time. The reference
+    // time should be in robot clock. If this field is not included, this time will be
+    // the receive time of the command.
+    google.protobuf.Timestamp reference_time = 2;
+
+    // The maximum velocity in rad/s that any joint is allowed to achieve.
+    // If this field is not set, a default value will be used.
+    google.protobuf.DoubleValue maximum_velocity = 3;
+
+    // The maximum acceleration in rad/s^2 that any joint is allowed to
+    // achieve. If this field is not set, a default value will be used.
+    google.protobuf.DoubleValue maximum_acceleration = 4;
+}
+
+/// Move the hand in such a way to point it at a position in the world.
+message GazeCommand {
+    message Request {
+        // Point(s) to look at expressed in frame1.
+        Vec3Trajectory target_trajectory_in_frame1 = 1;
+        string frame1_name = 2;
+
+        // Optional desired pose of the tool expressed in frame2.  Will be constrained to 'look at'
+        // the target regardless of the requested orientation.
+        SE3Trajectory tool_trajectory_in_frame2 = 10;
+        string frame2_name = 11;
+
+        // The tool pose relative to the parent link (wrist).
+        // Defaults to the gripper's hand frame position with the gripper camera's
+        // orientation.
+        //    pos: [0.195570  0  0]
+        //    rot: [0.9969173 0 -0.0784593 0] (-9 degrees about y)
+        SE3Pose wrist_tform_tool = 9;
+
+        // Optional velocity to move the target along the shortest path from the gaze's starting
+        // position to the first point in the target trajectory.
+        google.protobuf.DoubleValue target_trajectory_initial_velocity = 5;
+
+        // Optional Maximum acceleration magnitude of the end-effector.
+        // Valid ranges (0, 20]
+        google.protobuf.DoubleValue maximum_acceleration = 6;
+        // Optional Maximum linear velocity magnitude of the end-effector. (m/s)
+        google.protobuf.DoubleValue max_linear_velocity = 7;
+        // Optional Maximum angular velocity magnitude of the end-effector. (rad/s)
+        google.protobuf.DoubleValue max_angular_velocity = 8;
+
+        reserved 3, 4;
+    }
+
+    message Feedback {
+        enum Status {
+            // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
+            STATUS_UNKNOWN = 0;
+            // Robot is gazing at the target at the end of the trajectory.
+            STATUS_TRAJECTORY_COMPLETE = 1;
+            // Robot is re-configuring arm to gaze at the target.
+            STATUS_IN_PROGRESS = 2;
+            // The arm has stopped making progress to the goal pose for the tool.
+            // Note, this does not cancel the trajectory. For example, if the requested goal is too
+            // far away, walking the base robot closer to the goal will cause the arm to continue
+            // along the trajectory once it can continue.
+            STATUS_TOOL_TRAJECTORY_STALLED = 3;
+        }
+        // Current status of the command.
+        Status status = 1;
+
+        // If we are gazing at the target
+        // Rotation from the current gaze point to the trajectory's end [radians]
+        bool gazing_at_target = 2;
+        float gaze_to_target_rotation_measured = 5;
+
+        // If the hand's position is at the goal.
+        // Distance from the hand's current position to the trajectory's end [meters]
+        bool hand_position_at_goal = 3;
+        float hand_distance_to_goal_measured = 6;
+
+        // If the hand's roll is at the goal.
+        // Rotation from the current hand position to the desired roll at the trajectory's end
+        // [radians]
+        bool hand_roll_at_goal = 4;
+        float hand_roll_to_target_roll_measured = 7;
+    }
+}
+
+// Stop the arm applying minimal forces to the world. For example, if the arm is in the  middle of
+// opening a heavy door and a stop command is sent, the arm will comply and let the door close.
+message ArmStopCommand {
+    message Request {
+        // Stop command takes no arguments.
+    }
+
+    message Feedback {
+        // Stop command provides no feedback
+    }
+}

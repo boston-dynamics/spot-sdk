@@ -8,7 +8,7 @@
 Example code demonstrating how a service can be registered from a payload.
 
 Directory access and registration requires an auth token with appropriate permissions. This
-token can be retrived via the payload registration service, without need for credentials, by
+token can be retrieved via the payload registration service, without need for credentials, by
 using an authorized payload guid & secret combination.
 """
 import argparse
@@ -28,7 +28,7 @@ SERVICE_TYPE = 'AnnounceService'  # AnnounceService protos should be available l
 
 def self_register_service(config):
     """An example of using the Boston Dynamics API to self register a service using payload auth.
-    
+
     This function represents code that would run directly on a payload to set itself up. It
     registers a single leaf service without access to a pre-existing credentials.
     """

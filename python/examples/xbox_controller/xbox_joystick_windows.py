@@ -33,7 +33,7 @@ class XboxJoystickWindows(XboxJoystick):
         """ Init method.
 
         Args:
-            refresh_rate: Determines the maximnum rate at which events are polled from xboxdrv.
+            refresh_rate: Determines the maximum rate at which events are polled from xboxdrv.
         """
 
         super()

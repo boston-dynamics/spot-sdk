@@ -143,7 +143,7 @@ def setup():
     import bosdyn.api.robot_id_pb2
     index_protos(bosdyn.api.data_buffer_pb2)
     index_protos(bosdyn.api.robot_id_pb2)
-    # Specialized listers
+    # Specialized listeners
     EventLister()
     OperatorCommentLister()
 

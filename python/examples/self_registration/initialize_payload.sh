@@ -30,7 +30,7 @@ payload_guid="f71966ec-5c0e-43c1-92d6-522f12736fe9"
 payload_secret="$4"
 # Name is a human-readable string used to identify a payload.
 payload_name="Self-Registered-Payload"
-# Description is humand-readable explanation of a payload.
+# Description is human-readable explanation of a payload.
 payload_description="This payload registered itself via the $(basename -- "$0") example."
 
 # Endpoint definition:
@@ -61,7 +61,7 @@ python3 self_register_service.py --guid $payload_guid --secret "$payload_secret"
 if [ $? -ne 0 ]; then kill -9 $announce_service_script_pid; exit; fi
 echo "Announce service registration complete."
 
-# Create a client and acccess the Announce Service through the robot.
+# Create a client and access the Announce Service through the robot.
 sleep 5 # Give the robot time to initialize the service
 python3 announce_client.py --guid $payload_guid \
                            --secret "$payload_secret" \

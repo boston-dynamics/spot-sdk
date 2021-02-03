@@ -36,6 +36,7 @@ Developers getting acquainted with the SDK may find it easier to start with cert
 
 * [Basic Service Examples](docs/basic_service_examples.md)
 * [Robot Behavior and Commands Examples](docs/robot_behavior_examples.md)
+* [Arm Command Examples](docs/arm_examples.md)
 * [Payloads and Registration Examples](docs/payloads_examples.md)
 * [Perception and World Objects Examples](docs/perception_world_objects_examples.md)
 * [Logging Examples](docs/logging_examples.md)

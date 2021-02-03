@@ -45,7 +45,7 @@ class XboxJoystickLinux(XboxJoystick):
         """ Init method.
 
         Args:
-            refresh_rate: Determines the maximnum rate at which events are polled from xboxdrv.
+            refresh_rate: Determines the maximum rate at which events are polled from xboxdrv.
         """
 
         super()
@@ -62,7 +62,7 @@ class XboxJoystickLinux(XboxJoystick):
         self.refresh_time = 0
         self.refresh_delay = 1.0 / refresh_rate
 
-        # Read responses from 'xboxdrv' for upto 2 seconds, looking for controller to respond
+        # Read responses from 'xboxdrv' for up to 2 seconds, looking for controller to respond
         found = False
         wait_time = time.time() + 2
         while wait_time > time.time() and not found:
@@ -97,7 +97,7 @@ class XboxJoystickLinux(XboxJoystick):
             # If there is text available to read from xboxdrv, then read it.
             readable, writeable, exception = select.select([self.pipe], [], [], 0)
             if readable:
-                # Read every line that is availabe. We only need to decode the last one.
+                # Read every line that is available. We only need to decode the last one.
                 while readable:
                     response = self.pipe.readline()
                     # A zero length response means controller has been unplugged.

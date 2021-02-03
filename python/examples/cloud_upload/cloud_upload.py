@@ -53,7 +53,7 @@ def upload_to_aws(bucket_name, source_file, destination_file):
 def main(argv):
     """Upload to AWS Example"""
 
-    # Setting up logger for informational print statments.
+    # Setting up logger for informational print statements.
     global logger
     level = logging.INFO # use logging.DEBUG for verbose details
     logging.basicConfig(level=level, format='%(message)s (%(filename)s:%(lineno)d)')

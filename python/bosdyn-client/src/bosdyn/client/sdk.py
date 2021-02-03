@@ -10,13 +10,14 @@ import glob
 import logging
 import os
 import platform
-import warnings
 
 import datetime
+from deprecated.sphinx import deprecated
 from enum import Enum
 import jwt
 import pkg_resources
 
+from .arm_surface_contact import ArmSurfaceContactClient
 from .auth import AuthClient
 from .channel import DEFAULT_MAX_MESSAGE_LENGTH
 from .data_acquisition import DataAcquisitionClient
@@ -26,6 +27,7 @@ from .data_service import DataServiceClient
 from .directory import DirectoryClient
 from .directory_registration import DirectoryRegistrationClient
 from .docking import DockingClient
+from .door import DoorClient
 from .estop import EstopClient
 from .fault import FaultClient
 from .exceptions import Error
@@ -35,6 +37,8 @@ from .lease import LeaseClient
 from .license import LicenseClient
 from .log_annotation import LogAnnotationClient
 from .local_grid import LocalGridClient
+from .manipulation_api_client import ManipulationApiClient
+from .network_compute_bridge_client import NetworkComputeBridgeClient
 from .payload import PayloadClient
 from .payload_registration import PayloadRegistrationClient
 from .point_cloud import PointCloudClient
@@ -48,7 +52,6 @@ from .robot_state import RobotStateClient
 from .spot_check import SpotCheckClient
 from .time_sync import TimeSyncClient
 from .world_object import WorldObjectClient
-
 
 class SdkError(Error):
     """General class of errors to handle non-response non-rpc errors."""
@@ -89,6 +92,7 @@ def generate_client_name(prefix=''):
 
 
 _DEFAULT_SERVICE_CLIENTS = [
+    ArmSurfaceContactClient,
     AuthClient,
     DataAcquisitionClient,
     DataAcquisitionStoreClient,
@@ -97,6 +101,7 @@ _DEFAULT_SERVICE_CLIENTS = [
     DirectoryClient,
     DirectoryRegistrationClient,
     DockingClient,
+    DoorClient,
     EstopClient,
     FaultClient,
     GraphNavClient,
@@ -106,6 +111,8 @@ _DEFAULT_SERVICE_CLIENTS = [
     LicenseClient,
     LogAnnotationClient,
     LocalGridClient,
+    ManipulationApiClient,
+    NetworkComputeBridgeClient,
     PayloadClient,
     PayloadRegistrationClient,
     PointCloudClient,
@@ -157,6 +164,7 @@ class Sdk(object):
 
     def __init__(self, name=None):
         self.cert = None
+        self.client_name = name
         self.logger = logging.getLogger(name or 'bosdyn.Sdk')
         self.request_processors = []
         self.response_processors = []
@@ -258,16 +266,13 @@ class Sdk(object):
                     self.cert += cert_file.read()
 
     @staticmethod
+    @deprecated(
+        reason='App tokens are no longer in use. Authorization is now handled via licenses.',
+        version='2.0.1',
+        action="always")
     def load_app_token(*_):
-        """DEPRECATED (v2.0.1) - Kept for compatibility
-        Load an app token from a file, and set it on the SDK.
-
-        Arguments:
-            resource_path: Path to app token file on file system.
-        """
-        warnings.warn(
-            "App tokens are deprecated as of 2.0.1.  load_app_token is no longer necessary",
-            DeprecationWarning)
+        """Do nothing, this method is kept only to maintain backwards compatibility."""
+        return
 
 
 def decode_token(token):
@@ -287,6 +292,15 @@ def decode_token(token):
         values = jwt.decode(token, verify=False)
         return values
     except jwt.exceptions.DecodeError as err:
+        # This error could be occurring because PyJWT 2.0.0 requires the "algorithms" argument to be provided unless
+        # the option to "verify_signature" is disabled (it is True by default). Try once more to decode the token
+        # using 2.0.0 function signature.
+        try:
+            values = jwt.decode(token, options={"verify_signature": False})
+            return values
+        except Exception as exe:
+            # If this also fails, then raise the UnableToLoadAppTokenError.
+            pass
         raise UnableToLoadAppTokenError('Incorrectly formatted token {} --- {}'.format(token, err))
     except Exception as err:
         raise UnableToLoadAppTokenError('Problem decoding token {} --- {}'.format(token, err))

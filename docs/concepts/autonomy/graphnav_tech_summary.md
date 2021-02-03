@@ -67,7 +67,7 @@ Currently, external pose inputs (such as GPS or beacons) are not supported. Howe
 
 The robot may become lost while navigating a recorded map. Recovery from this condition is a key aspect of overall system robustness. Operators monitor status messages, observing the state of the robot and checking for a self-reported LOST status. To recover from a lost condition, the robot's localization must be re-initialized. The robot will not attempt to recover from a lost condition on its own.
 
-Lost events depend largely on the environment in which the robot is operating. When the scene has few features or has changed significantly, the localization process produces inaccurate results. Operators can update the map by recoding new waypoints with new data and removing old ones.
+Lost events depend largely on the environment in which the robot is operating. When the scene has few features or has changed significantly, the localization process produces inaccurate results. Operators can update the map by recording new waypoints with new data and removing old ones.
 
 
 ## Notes on Using Localization Data

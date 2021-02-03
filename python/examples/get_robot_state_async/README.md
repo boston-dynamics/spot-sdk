@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Performing Asynchronous State Queries on Spot
 
-This example program demonstrates how to query the robot state service using wait-until-done, block-until-done, and callback-when-done. Please look at the code to see how each asyncronous query is accomplished.
+This example program demonstrates how to query the robot state service using wait-until-done, block-until-done, and callback-when-done. Please look at the code to see how each asynchronous query is accomplished.
 
 ## Setup Dependencies
 This example requires the bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:

@@ -22,3 +22,4 @@ The high-level [documentation](choreography_service.md) provides an overview of 
 * [Choreography Service](choreography_service.md)
 * [Move Reference Guide](move_reference.md)
 * [Choreographer Setup](choreographer_setup.md)
+* [Choreographer Overview](choreographer.md)

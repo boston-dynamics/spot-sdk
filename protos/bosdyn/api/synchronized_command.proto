@@ -10,14 +10,20 @@ package bosdyn.api;
 
 option java_outer_classname = "SynchronizedCommandProto";
 
+import "bosdyn/api/arm_command.proto";
+import "bosdyn/api/gripper_command.proto";
 import "bosdyn/api/mobility_command.proto";
 
 message SynchronizedCommand {
     message Request {
+        ArmCommand.Request arm_command = 1;
         MobilityCommand.Request mobility_command = 2;
+        GripperCommand.Request gripper_command = 3;
     }
 
     message Feedback {
+        ArmCommand.Feedback arm_command_feedback = 1;
         MobilityCommand.Feedback mobility_command_feedback = 2;
+        GripperCommand.Feedback gripper_command_feedback = 3;
     }
 }

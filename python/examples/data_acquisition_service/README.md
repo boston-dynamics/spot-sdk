@@ -10,16 +10,16 @@ Development Kit License (20191101-BDSDK-SL).
 
 The example programs demonstrate how to create a data acquisition plugin service and run the service such that it can communicate with the data acquisition service on-robot. A data acquisition plugin service is used to communicate with external payloads and hardware, retrieve the data from these sensors, and save the data in the data acquisition store service.
 
-The DataAcquisitionPluginService base class (defined in `data_acquisition_plugin_service.py`) can be used to create the data acquisition plugin services. The `plugins/` directory contains example plugins which use these helper functions to create plugin services which can collect data from various sensors (including a Piksi GPS or a point-cloud producing service, such as a Velodyne), or save json-formatted metadata relating to a sensor (`gps_metadata_plugin_service.py`).
+The DataAcquisitionPluginService base class (defined in `data_acquisition_plugin_service.py`) can be used to create the data acquisition plugin services. The example directory contains multiple different example plugins, each contained in their own folder, which use these helper functions to create plugin services which can collect data from various sensors (including a Piksi GPS or a point-cloud producing service, such as a Velodyne), or save json-formatted metadata relating to a sensor (`gps_metadata_plugin_service.py`).
 
 ## Setup Dependencies
-This example requires the Spot SDK to be installed, and must be run using python3. Using pip, these dependencies can be installed using:
+Each example plugin requires the Spot SDK to be installed, and must be run using python3. Within the example plugin's directory and using pip, these dependencies can be installed using:
 
 ```
 python3 -m pip install -r requirements.txt
 ```
 
-Note, specific plugin examples may have additional dependencies which will need to be installed.
+Note, this command must be run from within the directory containing the specific plugin service file that will be run.
 
 ## Running the Data Acquisition Example Plugin Services
 
@@ -28,11 +28,15 @@ Each data acquisition plugin example will run the service locally and register i
 To run a plugin service from this example directory, issue the command:
 
 ```
-python3 plugins/{PLUGIN_FILE_NAME} --guid {GUID} --secret {SECRET} --host-ip {IP_WHERE_PLUGIN_WILL_RUN} --port {PORT_THE_PLUGIN_WILL_MONITOR} {ROBOT_IP}
+python3 {PLUGIN_FILE_NAME} --guid {GUID} --secret {SECRET} --host-ip {IP_WHERE_PLUGIN_WILL_RUN} --port {PORT_THE_PLUGIN_WILL_MONITOR} {ROBOT_IP}
 ```
 Note: The pointcloud plugin will require you to pass the registered service name. You can find this by running `python -m bosdyn.client --username {USER} --password {PASSWORD} {ROBOT_IP} dir list`
 
-The `hostname` ("ROBOT_IP") argument should be the IP address of the robot which is hosting the directory service. The `--host-ip`("IP_WHERE_PLUGIN_WILL_RUN") argument is the IP address for the computer running the remote mission service and the data acquisition service. For example, if the remote mission service (and data acquisition service) were launched on a Spot CORE connected through the rear payload port, then the `--host-ip` will be `192.168.50.5` and the robot's IP will be `192.168.50.3`.
+This example takes two different IP addresses as arguments. The `--host-ip` argument describes the IP address for the computer that will be running the data acquisition plugin service. A helper exists to try to determine the correct IP address. This command must be run on the same computer that will be running the plugin service:
+```
+python3 -m bosdyn.client --username {USER} --password {PASSWORD} {ROBOT_IP} self-ip
+```
+The other IP address is the traditional robot hostname ("ROBOT_IP") argument, which describes the IP address of the robot hosting the directory service.
 
 Since the example is created to run off of a payload computer, it requires the input arguments `--guid` (uniquely generated payload specifier) and `--secret` (private string associated with a payload) for the registered payload computer that will be running the example plugins. See documentation on [configuration of payload software](../../../docs/payload/configuring_payload_software.md#Configuring-and-authorizing-payloads) for more information.
 
@@ -72,16 +76,6 @@ Note, by default, the download script will save the data to the current director
 ## Run a Data Acquisition Plugin Service using Docker
 Please refer to this [document](../../../docs/payload/docker_containers.md) for general instructions on how to run software applications on computation payloads as docker containers.
 
-With docker installed and setup, any of the data acquisition plugin services can be created into a docker container, saved as a tar file, and then run on the Spot CORE using Portainer. The Dockerfile *must* be updated to specify which plugin service should run -- change the filename `gps_metadata_plugin_service` to whichever plugin should be launched in the following line in the Dockerfile:
+With docker installed and setup, any of the data acquisition plugin services can be created into a docker container, saved as a tar file, and then run on the Spot CORE using Portainer. There are Dockerfiles for each plugin service within the plugin's specific directory. These files will create a docker container with all necessary dependencies installed, and will start the plugin service.
 
-```
-ENTRYPOINT ["python3", "/app/plugins/gps_metadata_plugin_service.py"]
-```
-
-Additionally, the docker-requirements.txt file *must* be updated to be installing the requirements.txt file for the plugin being run. Note, each provided example plugin has a matching plugin-requirements.txt file in the `docker_requirements_files/` directory. Change the filename `gps-metadata-plugin-requirements.txt` to the requirements.txt file for the plugin in the following line of the Dockerfile:
-
-```
-COPY docker_requirements_files/gps-metadata-plugin-requirements.txt ./docker-requirements.txt
-```
-
-Then, follow the instructions on how to build and use the docker image from [this section](../../../docs/payload/docker_containers.md#build-docker-images) on. The application arguments needed to run the plugins included in this example are `--host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET ROBOT_IP`.
+Follow the instructions on how to build and use the docker image from [this section](../../../docs/payload/docker_containers.md#build-docker-images) on. The application arguments needed to run the plugins included in this example are `--host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET ROBOT_IP`.

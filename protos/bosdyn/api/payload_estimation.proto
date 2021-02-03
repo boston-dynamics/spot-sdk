@@ -1,0 +1,63 @@
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "PayloadEstimationProto";
+
+import "bosdyn/api/payload.proto";
+
+// Command the robot to stand and execute a routine to estimate the mass properties of an
+// unregistered payload attached to the robot.
+message PayloadEstimationCommand {
+    message Request {
+        // PayloadEstimation command request takes no additional arguments. The estimation routine
+        // takes about ~1min to run. Subsequent PayloadEstimationCommand requests issued while the 
+        // routine is in progress are ignored until the routine is completed.
+    }
+
+    message Feedback {
+        // The PayloadEstimationCommand provides several pieces of feedback:
+        //   - If the routine is finished running (and its current progress).
+        //   - If the routine encountered any errors while running.
+        //   - The resulting payload estimated by the routine.
+
+        enum Status {
+            STATUS_UNKNOWN = 0;
+            // Completed estimation routine successfully; estimated_payload is populated.
+            STATUS_COMPLETED = 1;
+            // Completed estimation routine successfully, but estimated mass is small enough to
+            // not significantly impact mobility; estimated_payload is empty.
+            STATUS_SMALL_MASS = 2;
+            // Estimation routine is currently running; estimated_payload is empty.
+            STATUS_IN_PROGRESS = 3;
+            // Error occurred during the routine; estaimted_payload is empty.
+            STATUS_ERROR = 4;
+        }
+        // Status of the estimation routine.
+        Status status = 1;
+
+        // The approximate progress of the routine, range [0-1].
+        float progress = 2;
+
+        enum Error {
+            ERROR_UNKNOWN = 0;
+            // No error has occurred.
+            ERROR_NONE = 1;
+            // Robot failed to stand/change stance.
+            ERROR_FAILED_STAND = 2;
+            // Failed to calculate results.
+            ERROR_NO_RESULTS = 3;
+        }
+        // Error status of the estimation routine.
+        Error error = 3;
+
+        // The resulting payload estimated by the estimation routine.
+        Payload estimated_payload = 4;
+    }
+}

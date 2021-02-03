@@ -10,6 +10,7 @@ import logging
 import time
 
 import bosdyn.client.channel
+from bosdyn.util import timestamp_to_sec
 
 from .auth import AuthClient
 from .channel import DEFAULT_MAX_MESSAGE_LENGTH
@@ -30,6 +31,7 @@ from .power import is_powered_on as pkg_is_powered_on
 from .robot_command import RobotCommandClient
 from .robot_id import RobotIdClient
 from .robot_state import RobotStateClient
+from .robot_state import has_arm as pkg_has_arm
 from .time_sync import TimeSyncThread, TimeSyncClient, TimeSyncError
 from .token_manager import TokenManager
 from .token_cache import TokenCache
@@ -100,6 +102,7 @@ class Robot(object):
             name=None
     ):
         self._name = name
+        self.client_name = None
         self.address = None
         self.serial_number = None
         self.logger = logging.getLogger(self._name or 'bosdyn.Robot')
@@ -111,6 +114,7 @@ class Robot(object):
         self.channels_by_authority = {}
         self.authorities_by_name = {}
         self._robot_id = None
+        self._has_arm = None
 
 
         # Things usually updated from an Sdk object.
@@ -179,7 +183,8 @@ class Robot(object):
         self.logger = other.logger.getChild(self._name or 'Robot')
         self.max_send_message_length = other.max_send_message_length
         self.max_receive_message_length = other.max_receive_message_length
-
+        self.client_name = other.client_name
+        self.lease_wallet.set_client_name(self.client_name)
 
     def ensure_client(self, service_name, channel=None, options=[]):
         """Ensure a Client for a given service.
@@ -372,7 +377,7 @@ class Robot(object):
         This call is used to authenticate to a robot using payload credentials. If a payload is
         not yet authorized, it will block until the payload is authorized by an operator in the
         robot web page.
-        
+
         Raises:
             InvalidPayloadCredentialsError: The guid and/or secret are not valid.
             token_cache.WriteFailedError: Authentication succeeded, but failed to update the
@@ -492,6 +497,15 @@ class Robot(object):
         self.start_time_sync()
         return self._time_sync_thread
 
+    def time_sec(self):
+        """Get current robot time, seconds. Kicks off background time sync thread if not started.
+
+        Returns:
+            double: Current robot time, seconds.
+        """
+        robot_timestamp = self.time_sync.robot_timestamp_from_local_secs(time.time())
+        return timestamp_to_sec(robot_timestamp)
+
     def operator_comment(self, comment, timestamp_secs=None, timeout=None):
         """Send an operator comment to the robot for the robot's log files.
 
@@ -514,7 +528,7 @@ class Robot(object):
             try:
                 robot_timestamp = self.time_sync.robot_timestamp_from_local_secs(time.time())
             except TimeSyncError:
-                robot_timestamp = None  # Timestamp will be set when robot receives the reques msg.
+                robot_timestamp = None  # Timestamp will be set when robot receives the request msg.
         else:
             # This will raise an exception if time-sync is unavailable.
             robot_timestamp = self.time_sync.robot_timestamp_from_local_secs(timestamp_secs)
@@ -616,4 +630,21 @@ class Robot(object):
         current_state = client.get_robot_state(timeout=timeout)
         return current_state.kinematic_state.transforms_snapshot
 
+    def has_arm(self, timeout=None):
+        """Check if the robot has an arm attached.
+
+        Args:
+            timeout: Number of seconds to wait for RPC response.
+
+        Returns:
+            bool: Returns True if robot has an arm, False otherwise.
+
+        Raises:
+            RpcError: A problem occurred trying to communicate with the robot.
+        """
+        if self._has_arm:
+            return self._has_arm
+        state_client = self.ensure_client(RobotStateClient.default_service_name)
+        self._has_arm = pkg_has_arm(state_client, timeout=timeout)
+        return self._has_arm
 

@@ -17,5 +17,5 @@ defined in this wheel are used by the clients in
 [bosdyn-client](https://pypi.org/project/bosdyn-client/) and 
 [bosdyn-mission](https://pypi.org/project/bosdyn-mission/) wheels to communicate with the services 
 running on the Spot robots. The wheel contains two classes:
-* **Geometry**: Helper functions to conver between quaternions and Euler XYZ orientations.
+* **Geometry**: Helper functions to convert between quaternions and Euler XYZ orientations.
 * **Util**: Common utility functions for API Python code.

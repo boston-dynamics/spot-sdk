@@ -30,7 +30,7 @@ def connect(options):
         camera.sleepMode(enabled=False)
 
 def main(argv):
-    """Collects command line arugments to enable client mode"""
+    """Collects command line arguments to enable client mode"""
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--theta-ssid', default=None, required=True, help='ricoh theta ssid')

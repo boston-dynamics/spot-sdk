@@ -45,6 +45,16 @@ message Waypoint {
     // Transform from the KO frame (at time of recording) to the waypoint.
     SE3Pose waypoint_tform_ko = 3;
 
+    enum WaypointSource {
+        WAYPOINT_SOURCE_UNKNOWN = 0;
+        // Waypoints from the robot's location during recording.
+        WAYPOINT_SOURCE_ROBOT_PATH = 1;
+        // Waypoints with user-requested placement.
+        WAYPOINT_SOURCE_USER_REQUEST = 2;
+        // Waypoints that may help find alternate routes.
+        WAYPOINT_SOURCE_ALTERNATE_ROUTE_FINDING = 3;
+    };
+
     // Annotations understood by BostonDynamics systems.
     message Annotations {
         // Human-friendly name of the waypoint. For example, "Kitchen Fridge"
@@ -88,6 +98,9 @@ message Waypoint {
         }
         // Options for how to localize to a waypoint (if at all).
         LocalizeRegion scan_match_region = 3;
+
+        // How this waypoint was made.
+        WaypointSource waypoint_source = 5;
     }
     // Annotations specific to the current waypoint.
     Annotations annotations = 4;
@@ -147,6 +160,18 @@ message Edge {
 
     // Describes the transform between the "from" waypoint and the "to" waypoint.
     bosdyn.api.SE3Pose from_tform_to = 3;
+
+    enum EdgeSource {
+        EDGE_SOURCE_UNKNOWN = 0;
+        // Edges with transforms from odometry.
+        EDGE_SOURCE_ODOMETRY = 1;
+        // Edges with transforms from a short chain of other edges.
+        EDGE_SOURCE_SMALL_LOOP_CLOSURE = 2;
+        // Edges with transforms from multiple fiducial observations.
+        EDGE_SOURCE_FIDUCIAL_LOOP_CLOSURE = 3;
+        // Edges that may help find alternate routes.
+        EDGE_SOURCE_ALTERNATE_ROUTE_FINDING = 4;
+    };
 
     // Annotations understood by BostonDynamics systems.
     message Annotations {
@@ -239,6 +264,15 @@ message Edge {
         // Contains terrain parameters, swing height, obstacle avoidance parameters, etc.
         // When the robot crosses this edge, it will use the mobility parameters here.
         bosdyn.api.spot.MobilityParams mobility_params = 10;
+
+        // Assign edges a cost; used when finding the "shortest" (lowest cost) path.
+        google.protobuf.DoubleValue cost = 11;
+
+        // How this edge was made.
+        EdgeSource edge_source = 12;
+
+        // If true, disables alternate-route-finding for this edge.
+        bool disable_alternate_route_finding = 13;
     }
     // Annotations specific to the current edge.
     Annotations annotations = 4;
