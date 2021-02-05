@@ -88,6 +88,8 @@ If the `--theta-client` argument is provided, the Ricoh Theta will be connected 
 
 The `--theta-ssid` argument is used to pass the SSID for the Ricoh Theta camera that will take the images and **should have the .OSC removed**. This will be set as the image source name for the service. Additionally, if the password for the Ricoh Theta is different from the default password of the camera, this can be provided using the `--theta-password` argument.
 
+The Ricoh Theta image service will default to only attempting to capture an image from the Ricoh Theta camera when requested with a GetImage gRPC call. To have the Ricoh Theta attempt to continuously capture images, pass the command line argument `--capture-continuously`. This will cause the image service to create a background thread and attempt to query the ricoh theta at a high rate. Note, the Ricoh Theta images are very high resolution and the stiching process to go from the fisheye image to the processed image is time consuming, so sometimes the continuous captures will drain the camera's battery quickly or overwhelm the camera processors.
+
 Lastly, a port number for the image service can be specified using the `--port` argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a service listening on the old port. This port number will be used with the host-ip (HOST_COMPUTER_IP) to fully specify where the image service is running. This port number must be open and cannot be blocked by a local firewall, otherwise the ricoh-theta image service will be unreachable from the robot and the directory registration service.
 
 ### Ricoh Theta Image Service Configuration

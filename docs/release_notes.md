@@ -41,7 +41,8 @@ A new `PayloadEstimationCommand` is available to have Spot try to estimate the m
 Some SpotCAMs now include an IR camera.  There are additional cameras and screens available for those versions, and a new pixel format `PIXEL_FORMAT_GREYSCALE_U16` used to represent those IR images.  There are additional rpcs used to set colormaps and overlays of the IR images for live display.
 
 Logpoint `QUEUED` status is now broken up further with the `queue_status` field, which differentiates between when the image has or has not been captured.
-Arm Support in Choreographer
+
+#### Arm Support in Choreographer
 The new Choreographer executable now includes two new tracks, gripper and arm, and includes new dance moves which control the arm.
 
 #### Docking

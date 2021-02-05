@@ -109,6 +109,7 @@ class RicohThetaServiceHelper(CameraInterface):
             raise Exception("The Ricoh Theta camera instance is not initialized.")
 
         # Send the request to take a picture
+        capture_time_secs = time.time()
         self.camera.takePicture(print_to_screen=False)
         img_json, img_raw = self.camera.getLastImage(wait_for_latest=True, print_to_screen=False)
         if not (img_json and img_raw):
@@ -119,16 +120,22 @@ class RicohThetaServiceHelper(CameraInterface):
         buffer_bytes = img_raw.raw
         buffer_bytes.decode_content = True
 
-        # Determine the capture timestamp for the image.
-        # Split on the "-" to remove the timezone information from the string.
-        date_time = img_json["dateTimeZone"].split("-")[0]
-        # Shorten the year (the first value) from a four digit year to two digit value such that the format
-        # matches the datetime expectation. (Ex. 2021 --> 21).
-        date_time_str = date_time[2:]
-        # Convert from string to an actual datetime object
-        date_time_obj = datetime.strptime(date_time_str, "%y:%m:%d %H:%M:%S")
-        # Convert from a datetime object to a time object (seconds) in the local clock's time.
-        capture_time_secs = time.mktime(date_time_obj.timetuple())
+        # Attempt to determine the capture timestamp for the image using the date time zone string returned
+        # from the ricoh theta camera. If this fails, we will fall back to the timestamp saved right when
+        # the capture was triggered.
+        try:
+            # Split on the "+" and "-" to remove the timezone information from the string. Note, on python 3.6
+            # the time zome parsing in strptime does not correctly parse a timezone with a semicolon, and the
+            # ricoh theta's output includes this. So for now, we use this string splitting to just remove the
+            # timezone entirely.
+            date_time = img_json["dateTimeZone"].split("+")[0].split("-")[0]
+            # Convert from string to an actual datetime object
+            date_time_obj = time.strptime(date_time, "%Y:%m:%d %H:%M:%S")
+            # Convert from a datetime object to a time object (seconds) in the local clock's time.
+            capture_time_secs = time.mktime(date_time_obj)
+        except Exception as err:
+            # Part of the datetime string parsing failed. Therefore just use the saved capture_time_secs.
+            pass
 
         return buffer_bytes, capture_time_secs
 
@@ -155,6 +162,7 @@ class RicohThetaServiceHelper(CameraInterface):
             # requests with quality > 95 as a request for a raw image.
             pil_image.save(compressed_byte_buffer, format=pil_image.format, quality=100)
             image_proto.data = compressed_byte_buffer.getvalue()
+            image_proto.format = image_pb2.Image.FORMAT_RAW
         elif image_format == image_pb2.Image.FORMAT_JPEG or image_format is None:
             # Choose the best image format if the request does not specify the image format, which is JPEG since
             # it matches the output of the ricoh theta camera and is compact enough to transmit.
@@ -175,6 +183,9 @@ class RicohThetaServiceHelper(CameraInterface):
             pil_image.save(compressed_byte_buffer, format=pil_image.format,
                            quality=int(checked_quality))
             image_proto.data = compressed_byte_buffer.getvalue()
+            # Set the format as JPEG because the incoming requested format could've initially been None/unknown
+            # in this case.
+            image_proto.format = image_pb2.Image.FORMAT_JPEG
         else:
             # Don't support RLE for ricoh theta cameras.
             _LOGGER.info("GetImage request for unsupported format %s",
@@ -182,7 +193,7 @@ class RicohThetaServiceHelper(CameraInterface):
 
 
 def make_ricoh_theta_image_service(theta_ssid, theta_password, theta_client, robot, logger=None,
-                                   use_background_capture_thread=True):
+                                   use_background_capture_thread=False):
     # Create an theta instance, which will perform the HTTP requests to the ricoh theta
     # camera (using the Ricoh Theta API: https://api.ricoh/docs/#ricoh-theta-api).
     theta_instance = Theta(theta_ssid=theta_ssid, theta_pw=theta_password, client_mode=theta_client,
@@ -225,7 +236,7 @@ def run_service(bosdyn_sdk_robot, options, logger=None):
     # Instance of the servicer to be run.
     init_success, service_servicer = make_ricoh_theta_image_service(
         options.theta_ssid, options.theta_password, options.theta_client, bosdyn_sdk_robot, logger,
-        not options.capture_when_requested)
+        options.capture_continuously)
     if init_success and service_servicer is not None:
         service_runner = GrpcServiceRunner(service_servicer, add_servicer_to_server_fn,
                                            options.port, logger=logger)
@@ -243,10 +254,14 @@ def add_ricoh_theta_arguments(parser):
         '--theta-client', action='store_true',
         help='Run the Ricoh Theta in client mode (camera connects to specified network).')
     parser.add_argument(
-        '--capture-when-requested', action='store_true', help=
-        "Only request images from the Ricoh Theta when a GetImage RPC is received. Otherwise, use "
-        "a background thread to request images continuously.")
-
+        '--capture-continuously', action='store_true', dest='capture_continuously', help=
+        "Use a background thread to request images continuously. Otherwise, capture images only when a "
+        "GetImage RPC is recieved.")
+    parser.add_argument(
+            '--capture-when-requested', action='store_false', dest='capture_continuously',
+            help="Only request images from the Ricoh Theta when a GetImage RPC is received. Otherwise, use "
+            "a background thread to request images continuously.")
+    parser.set_defaults(capture_continuously=False)
 
 if __name__ == '__main__':
     # Define all arguments used by this service.

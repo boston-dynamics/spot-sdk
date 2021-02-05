@@ -12,7 +12,7 @@ Choreographer is a tool for authoring dances and executing them on robots. It le
 
 ## Running Choreographer
 
-Choreographer is an executable program we will provide you via a download link at https://support.bostondynamics.com/. To run the program, simply download it at the link we will provide you, and execute it. Note that the Choreographer executable is only available for Windows. If you wish to run Choreographer from Mac or Linux, we will need to provide you with Python wheels and installation instructions (advanced usage only). Please contact us if that is the case.
+Choreographer is an executable program we will provide you via a download link at the [Support Center](https://support.bostondynamics.com/). To run the program, simply download it at the link we will provide you, and execute it. Note that the Choreographer executable is only available for Windows. If you wish to run Choreographer from Mac or Linux, we will need to provide you with Python wheels and installation instructions (advanced usage only). Please contact us if that is the case.
 
 If you wish to run Choreographer connected to a Spot, please see the “Connecting Robots to Choreographer” section.
 
@@ -52,7 +52,7 @@ To add a move to the timeline, there are multiple different methods. You can sin
 
 Once the parameters are adjusted to the desired values, the move can be added to the dance timeline by either 1) pressing the Add button beneath the moves list, 2) double clicking the move name in the Moves List, or 3) entering Insert Mode (described below). If you adjust a move’s parameters and then add it to the timeline, the new Move block that appears in the timeline will have those same modified parameters.
 
-The icon ![](images/image3.png), in the upper left of the Timeline view, will enter Insert Mode when pressed. When in Insert Mode, you can click anywhere in the Timeline to add the selected move (with any of the parameter modifications you have made) to the Timeline at that point. To then exit Insert Mode and re-enter the default Choreographer mode, press the ![](images/image2.png) button or hit the escape key on the keyboard.
+The icon <img src="images/image3.png" style="width: 50px; height: 50px">, in the upper left of the Timeline view, will enter Insert Mode when pressed. When in Insert Mode, you can click anywhere in the Timeline to add the selected move (with any of the parameter modifications you have made) to the Timeline at that point. To then exit Insert Mode and re-enter the default Choreographer mode, press the <img src="images/image2.png" style="width: 50px; height: 50px"> button or hit the escape key on the keyboard.
 
 ## Modifying Move Blocks
 
