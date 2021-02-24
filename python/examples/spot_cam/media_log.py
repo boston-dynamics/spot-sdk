@@ -16,9 +16,19 @@ from bosdyn.client.command_line import (Command, Subcommands)
 
 from bosdyn.client.spot_cam.media_log import MediaLogClient
 
+from bosdyn.api import image_pb2
 from bosdyn.api.spot_cam import logging_pb2, camera_pb2
 
 from utils import add_bool_arg
+
+def write_pgm(filename, width, height, max_val, data):
+    """ Helper function to supplement PIL with writing a 16-bit PGM from the IR camera
+    """
+    with open(filename, 'wb') as f:
+        f.write('P5\n'.encode('utf-8'))
+        f.write(f'{width} {height}\n'.encode('utf-8'))
+        f.write(f'{max_val}\n'.encode('utf-8'))
+        f.write(data)
 
 class MediaLogCommands(Subcommands):
     """Commands related to the Spot CAM's Media Log service"""
@@ -157,12 +167,13 @@ class MediaLogRetrieveCommand(Command):
     @staticmethod
     def save_logpoint_as_image(robot, lp, options, dst_filename=None):
         """'options' need to have boolean arguments save-as-rgb24 and stitching."""
-        if options.stitching:
+        ir_flag = hasattr(options, 'camera_name') and options.camera_name == 'ir'
+        if options.stitching or ir_flag:
             lp, img = robot.ensure_client(MediaLogClient.default_service_name).retrieve(lp)
         else:
             lp, img = robot.ensure_client(MediaLogClient.default_service_name).retrieve_raw_data(lp)
 
-        # case for 16 bit thermal image
+        # case for 16 bit raw thermal image
         if lp.image_params.format == image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U16:
             np_img = np.frombuffer(img, dtype=np.uint16)
             np_img = img.reshape((lp.image_params.height, lp.image_params.width, 1))
@@ -176,7 +187,8 @@ class MediaLogRetrieveCommand(Command):
         if dst_filename is None:
             dst_filename = os.path.basename(src_filename)
 
-        if lp.image_params.height == 4800:
+        # Pano and IR both come in as JPEG from retrieve command
+        if lp.image_params.height == 4800 or (lp.image_params.width == 640 and lp.image_params.height == 512):
             shutil.move(src_filename, '{}.jpg'.format(dst_filename))
         else:
             target_filename = '{}-{}x{}.rgb24'.format(dst_filename, lp.image_params.width, lp.image_params.height)

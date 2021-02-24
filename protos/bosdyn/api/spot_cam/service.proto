@@ -48,8 +48,13 @@ service StreamQualityService {
 
 // Turn hardware components' power on or off.
 service PowerService {
+    // Turn components' power on or off. This should not be used to power cycle a component
+    // Turning PTZ power off for too long will cause the video stream to fail
     rpc SetPowerStatus (SetPowerStatusRequest) returns (SetPowerStatusResponse);
+    // Get current status of a component
     rpc GetPowerStatus (GetPowerStatusRequest) returns (GetPowerStatusResponse);
+    // Cycle power for a component
+    rpc CyclePower (CyclePowerRequest) returns (CyclePowerResponse);
 }
 
 // Change the brightness level of individual LEDs.

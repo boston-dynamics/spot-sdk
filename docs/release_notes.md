@@ -12,6 +12,36 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 2.3.2
+
+### New Features
+
+#### SpotCAM
+
+The SpotCAM API has been expanded to support more use cases for the SpotCAM+IR (thermal PTZ variant). This includes the following new endpoints:
+ * `SetIrColormap`/`GetIrColormap`: Set/get the mapping between radiometric IR samples to color, for video
+ * `SetIrMeterOverlay`: Set location for the "Spot Meter", which indicates temperature at a point in the thermal video stream.
+
+The SpotCAM Power API now has an additional endpoint to cycle power for any of the components that could previously be toggled using `SetPowerStatus`. `CyclePower` can be used to help the PTZ recover from adverse behavior, such as incorrect auto-focus or poor motor behavior, which can sometimes happen as the result of a robot fall. `CyclePower` will wait the appropriate amount of time between turning components off and turning on again to make sure the power is cycled correctly without the client needing to know the correct interval.
+
+### Known Issues
+
+Same as 2.3.0
+
+### Sample Code
+
+[**Get image (updated)**](../python/examples/get_image/README.md)
+Support for the new pixel format of IR images.
+
+[**Ricoh Theta (updated)**](../python/examples/ricoh_theta/README.md)
+Improved parsing of timestamp information from the camera.
+Correctly set the image proto format field.
+Defaults to not capturing continuously.  Flags `--capture-continuously` and `--capture-when-requested` can be used to specify the desired behavior.
+
+[**Spot CAM (updated)**](../python/examples/spot_cam/README.md)
+Support for IR images and power cycling functionality.
+
+
 ## 2.3.0
 
 ### New Features

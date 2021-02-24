@@ -37,22 +37,36 @@ class PowerClient(BaseClient):
         return self.call_async(self._stub.GetPowerStatus, request, self._get_power_status_from_response,
                                self._power_error_from_response, **kwargs)
 
-    def set_power_status(self, ptz=None, aux1=None, aux2=None, **kwargs):
+    def set_power_status(self, ptz=None, aux1=None, aux2=None, external_mic=None, **kwargs):
         """Turn on/off the desire device."""
-        request = self._build_SetPowerStatusRequest(ptz, aux1, aux2)
+        request = self._build_SetPowerStatusRequest(ptz, aux1, aux2, external_mic)
 
         return self.call(self._stub.SetPowerStatus, request, self._set_power_status_from_response,
                          self._power_error_from_response, **kwargs)
 
-    def set_power_status_async(self, ptz=None, aux1=None, aux2=None, **kwargs):
+    def set_power_status_async(self, ptz=None, aux1=None, aux2=None, external_mic=None, **kwargs):
         """Async version of set_power_status()"""
-        request = self._build_SetPowerStatusRequest(ptz, aux1, aux2)
+        request = self._build_SetPowerStatusRequest(ptz, aux1, aux2, external_mic)
 
         return self.call_async(self._stub.SetPowerStatus, request, self._set_power_status_from_response,
                                self._power_error_from_response, **kwargs)
 
+    def cycle_power(self, ptz=None, aux1=None, aux2=None, external_mic=None, **kwargs):
+        """Turn power off then back on for the desired devices"""
+        request = self._build_CyclePowerRequest(ptz, aux1, aux2, external_mic)
+
+        return self.call(self._stub.CyclePower, request, self._cycle_power_from_response,
+                         self._power_error_from_response, **kwargs)
+
+    def cycle_power_async(self, ptz=None, aux1=None, aux2=None, external_mic=None, **kwargs):
+        """Async version of cycle_power()"""
+        request = self._build_CyclePowerRequest(ptz, aux1, aux2, external_mic)
+
+        return self.call_async(self._stub.CyclePower, request, self._cycle_power_from_response,
+                               self._power_error_from_response, **kwargs)
+
     @staticmethod
-    def _build_SetPowerStatusRequest(ptz, aux1, aux2):
+    def _build_SetPowerStatusRequest(ptz, aux1, aux2, external_mic):
         request = power_pb2.SetPowerStatusRequest()
 
         if ptz:
@@ -64,6 +78,27 @@ class PowerClient(BaseClient):
         if aux2:
             request.status.aux2.value = aux2
 
+        if external_mic:
+            request.status.external_mic.value = external_mic
+
+        return request
+
+    @staticmethod
+    def _build_CyclePowerRequest(ptz, aux1, aux2, external_mic):
+        request = power_pb2.CyclePowerRequest()
+
+        if ptz:
+            request.status.ptz.value = ptz
+
+        if aux1:
+            request.status.aux1.value = aux1
+
+        if aux2:
+            request.status.aux2.value = aux2
+
+        if external_mic:
+            request.status.external_mic.value = external_mic
+
         return request
 
     @staticmethod
@@ -72,6 +107,10 @@ class PowerClient(BaseClient):
 
     @staticmethod
     def _set_power_status_from_response(response):
+        return response.status
+
+    @staticmethod
+    def _cycle_power_from_response(response):
         return response.status
 
     @staticmethod

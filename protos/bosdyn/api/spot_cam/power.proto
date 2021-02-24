@@ -32,7 +32,8 @@ message GetPowerStatusRequest {
 message GetPowerStatusResponse {
     // Common response header.
     bosdyn.api.ResponseHeader header = 1;
-    // Current power on or off of each component.
+    //status indicates the power status of the controllable devices
+    //'true' for power-on, 'false' for power-off
     PowerStatus status = 2;
 }
 
@@ -40,7 +41,8 @@ message GetPowerStatusResponse {
 message SetPowerStatusRequest {
     // Common request header.
     bosdyn.api.RequestHeader header = 1;
-    // Set the individual messages for the components that should be changed.
+    //status indicates the requested power status of the controllable devices
+    //'true' for power-on, 'false' for power-off
     PowerStatus status = 2;
 }
 
@@ -48,7 +50,26 @@ message SetPowerStatusRequest {
 message SetPowerStatusResponse {
     // Common response header.
     bosdyn.api.ResponseHeader header = 1;
+    //status indicates the requested changes upon success
+    //'true' for power-on, 'false' for power-off
+    PowerStatus status = 2;
+}
 
-    // Resulting power status of components.
+// Turn components off and then back on without needing two separate requests.
+message CyclePowerRequest {
+    // Common request header.
+    bosdyn.api.RequestHeader header = 1;
+    //status indicates the devices for which cycle-power is requested
+    //'true' for cycle-power, else no effect
+    //power cycle will not be performed on a given device if its state is power-off prior to this call
+    PowerStatus status = 2;
+}
+
+// Result of power cycling components.
+message CyclePowerResponse {
+    // Common response header.
+    bosdyn.api.ResponseHeader header = 1;
+    //status indicates the power status of the controllable devices after a successful power cycle
+    //'true' for power-on, 'false' for power-off
     PowerStatus status = 2;
 }

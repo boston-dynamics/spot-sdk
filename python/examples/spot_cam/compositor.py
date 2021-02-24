@@ -117,18 +117,38 @@ class CompositorSetIrColorMapCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         super(CompositorSetIrColorMapCommand, self).__init__(subparsers, command_dict)
-        self._parser.add_argument('color', default='jet', const='jet', nargs='?', choices=['jet', 'greyscale'])
-        self._parser.add_argument('--min-temp', default=0.0,
+        self._parser.add_argument('color', default='jet', const='jet', nargs='?', choices=['jet', 'greyscale', 'grayscale'])
+        self._parser.add_argument('--min-temp', default=0.0, type=float,
                                   help='minimum temperature on the temperature scale')
-        self._parser.add_argument('--max-temp', default=100.0,
+        self._parser.add_argument('--max-temp', default=100.0, type=float,
                                   help='maximum temperature on the temperature scale')
         add_bool_arg(self._parser, 'auto_scale', default=True)
 
     def _run(self, robot, options):
         color = compositor_pb2.IrColorMap.COLORMAP_GREYSCALE
-        if options.color == 'color':
+        if options.color == 'jet':
             color = compositor_pb2.IrColorMap.COLORMAP_JET
         result = robot.ensure_client(CompositorClient.default_service_name).set_ir_colormap(
             color, options.min_temp, options.max_temp, options.auto_scale)
+
+        return result
+
+class CompositorSetIrMeterOverlayCommand(Command):
+    """Set IR reticle to use on Spot CAM+IR"""
+
+    NAME = 'set_reticle'
+
+    def __init__(self, subparsers, command_dict):
+        super(CompositorSetIrMeterOverlayCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('color', default='jet', const='jet', nargs='?', choices=['jet', 'greyscale', 'grayscale'])
+        self._parser.add_argument('-x', default=0.5,
+                                  help='horizontal coordinate of reticle')
+        self._parser.add_argument('-y', default=0.5,
+                                  help='vertical coordinate of reticle')
+        add_bool_arg(self._parser, 'enable', default=True)
+
+    def _run(self, robot, options):
+        result = robot.ensure_client(CompositorClient.default_service_name).set_ir_meter_overlay(
+            options.x, options.y, options.enable)
 
         return result

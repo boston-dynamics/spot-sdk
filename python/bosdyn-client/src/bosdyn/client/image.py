@@ -196,8 +196,9 @@ def write_pgm_or_ppm(image_response, filename="", filepath="."):
     elif image_response.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_RGBA_U8:
         print("PGM/PPM format does not support RGBA encodings.")
         return
-    elif (image_response.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8
-        or image_response.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_DEPTH_U16):
+    elif image_response.shot.image.pixel_format in (image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8,
+                                                    image_pb2.Image.PIXEL_FORMAT_DEPTH_U16,
+                                                    image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U16):
         num_channels = 1
     else:
         print("Unsupported pixel format for PGM/PPM: %s." %

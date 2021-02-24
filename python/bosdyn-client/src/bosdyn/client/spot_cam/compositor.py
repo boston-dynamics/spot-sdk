@@ -108,6 +108,29 @@ class CompositorClient(BaseClient):
         return self.call_async(self._stub.GetIrColormap, request, self._colormap_from_response,
                                self._compositor_error_from_response, **kwargs)
 
+    def set_ir_meter_overlay(self, x, y, enable, **kwargs):
+        """Set IR reticle position to use on Spot CAM IR
+
+        Args:
+            x (Float): (0,1) horizontal coordinate of reticle
+            y (Float): (0,1) vertical coordinate of reticle
+            enable (Boolean): Enable the reticle on the display
+            kwargs: extra arguments for controlling RPC details.
+        """
+        coords = compositor_pb2.IrMeterOverlay.NormalizedCoordinates(x=x, y=y)
+        overlay = compositor_pb2.IrMeterOverlay(enable=enable, coords=coords)
+        request = compositor_pb2.SetIrMeterOverlayRequest(overlay=overlay)
+        return self.call(self._stub.SetIrMeterOverlay, request, self._return_response,
+                         self._compositor_error_from_response, **kwargs)
+
+    def set_ir_meter_overlay_async(self, x, y, enable, **kwargs):
+        """Async version of set_ir_meter_overlay()"""
+        coords = compositor_pb2.IrMeterOverlay.NormalizedCoordinates(x=x, y=y)
+        overlay = compositor_pb2.IrMeterOverlay(enable=enable, coords=coords)
+        request = compositor_pb2.SetIrMeterOverlayRequest(overlay=overlay)
+        return self.call_async(self._stub.SetIrMeterOverlay, request, self._return_response,
+                               self._compositor_error_from_response, **kwargs)
+
     @staticmethod
     def _return_response(response):
         return response

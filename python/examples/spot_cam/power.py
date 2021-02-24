@@ -27,7 +27,7 @@ class PowerCommands(Subcommands):
         ])
 
 class PowerGetPowerStatusCommand(Command):
-    """On/off state of specified device"""
+    """On/off state of specified devices"""
 
     NAME = 'get'
 
@@ -41,7 +41,7 @@ class PowerGetPowerStatusCommand(Command):
 
 
 class PowerSetPowerStatusCommand(Command):
-    """Turns on/off the specified device"""
+    """Turns on/off the specified devices"""
 
     NAME = 'set'
 
@@ -50,10 +50,33 @@ class PowerSetPowerStatusCommand(Command):
         add_bool_arg(self._parser, 'ptz', default=True)
         add_bool_arg(self._parser, 'aux1')
         add_bool_arg(self._parser, 'aux2')
+        add_bool_arg(self._parser, 'external_mic')
 
     def _run(self, robot, options):
         ps = robot.ensure_client(PowerClient.default_service_name).set_power_status(ptz=options.ptz,
                                                                                     aux1=options.aux1,
-                                                                                    aux2=options.aux2)
+                                                                                    aux2=options.aux2,
+                                                                                    external_mic=options.external_mic)
+
+        return ps
+
+
+class PowerCyclePowerCommand(Command):
+    """Turns power off then back on for the specified devices"""
+
+    NAME = 'cycle'
+
+    def __init__(self, subparsers, command_dict):
+        super(PowerCyclePowerCommand, self).__init__(subparsers, command_dict)
+        add_bool_arg(self._parser, 'ptz', default=True)
+        add_bool_arg(self._parser, 'aux1')
+        add_bool_arg(self._parser, 'aux2')
+        add_bool_arg(self._parser, 'external_mic')
+
+    def _run(self, robot, options):
+        ps = robot.ensure_client(PowerClient.default_service_name).cycle_power(ptz=options.ptz,
+                                                                               aux1=options.aux1,
+                                                                               aux2=options.aux2,
+                                                                               external_mic=options.external_mic)
 
         return ps

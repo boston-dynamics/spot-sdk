@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>arm_command.proto &mdash; Spot 2.3.0 documentation</title>
+  <title>arm_command.proto &mdash; Spot 2.3.2 documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                2.3.0
+                2.3.2
               </div>
             
           
@@ -27663,7 +27663,57 @@ It is <em>not</em> appended.</p>
 </div>
 <div class="section" id="spot-cam-power-proto">
 <h1>spot_cam/power.proto<a class="headerlink" href="#spot-cam-power-proto" title="Permalink to this headline">¶</a></h1>
-<p><a name="bosdyn.api.spot_cam.GetPowerStatusRequest"></a></p>
+<p><a name="bosdyn.api.spot_cam.CyclePowerRequest"></a></p>
+<div class="section" id="cyclepowerrequest">
+<h2>CyclePowerRequest<a class="headerlink" href="#cyclepowerrequest" title="Permalink to this headline">¶</a></h2>
+<p>Turn components off and then back on without needing two separate requests.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.RequestHeader">bosdyn.api.RequestHeader</a></td>
+<td>Common request header.</td>
+</tr>
+<tr>
+<td>status</td>
+<td><a href="#bosdyn.api.spot_cam.PowerStatus">PowerStatus</a></td>
+<td>status indicates the devices for which cycle-power is requested 'true' for cycle-power, else no effect power cycle will not be performed on a given device if its state is power-off prior to this call</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot_cam.CyclePowerResponse"></a></p>
+</div>
+<div class="section" id="cyclepowerresponse">
+<h2>CyclePowerResponse<a class="headerlink" href="#cyclepowerresponse" title="Permalink to this headline">¶</a></h2>
+<p>Result of power cycling components.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.ResponseHeader">bosdyn.api.ResponseHeader</a></td>
+<td>Common response header.</td>
+</tr>
+<tr>
+<td>status</td>
+<td><a href="#bosdyn.api.spot_cam.PowerStatus">PowerStatus</a></td>
+<td>status indicates the power status of the controllable devices after a successful power cycle 'true' for power-on, 'false' for power-off</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot_cam.GetPowerStatusRequest"></a></p>
+</div>
 <div class="section" id="getpowerstatusrequest">
 <h2>GetPowerStatusRequest<a class="headerlink" href="#getpowerstatusrequest" title="Permalink to this headline">¶</a></h2>
 <p>Request component power status.</p>
@@ -27704,7 +27754,7 @@ It is <em>not</em> appended.</p>
 <tr>
 <td>status</td>
 <td><a href="#bosdyn.api.spot_cam.PowerStatus">PowerStatus</a></td>
-<td>Current power on or off of each component.</td>
+<td>status indicates the power status of the controllable devices 'true' for power-on, 'false' for power-off</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.spot_cam.PowerStatus"></a></p>
@@ -27764,7 +27814,7 @@ It is <em>not</em> appended.</p>
 <tr>
 <td>status</td>
 <td><a href="#bosdyn.api.spot_cam.PowerStatus">PowerStatus</a></td>
-<td>Set the individual messages for the components that should be changed.</td>
+<td>status indicates the requested power status of the controllable devices 'true' for power-on, 'false' for power-off</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.spot_cam.SetPowerStatusResponse"></a></p>
@@ -27789,7 +27839,7 @@ It is <em>not</em> appended.</p>
 <tr>
 <td>status</td>
 <td><a href="#bosdyn.api.spot_cam.PowerStatus">PowerStatus</a></td>
-<td>Resulting power status of components.</td>
+<td>status indicates the requested changes upon success 'true' for power-on, 'false' for power-off</td>
 </tr>
 </tbody>
 </table> <!-- end messages --> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn/api/spot_cam/ptz.proto"></a></p>
@@ -28495,13 +28545,19 @@ describe a PTZ, but ListPtzResponse will include more information.</p>
 <td>SetPowerStatus</td>
 <td><a href="#bosdyn.api.spot_cam.SetPowerStatusRequest">SetPowerStatusRequest</a></td>
 <td><a href="#bosdyn.api.spot_cam.SetPowerStatusResponse">SetPowerStatusResponse</a></td>
-<td></td>
+<td>Turn components' power on or off. This should not be used to power cycle a component Turning PTZ power off for too long will cause the video stream to fail</td>
 </tr>
 <tr>
 <td>GetPowerStatus</td>
 <td><a href="#bosdyn.api.spot_cam.GetPowerStatusRequest">GetPowerStatusRequest</a></td>
 <td><a href="#bosdyn.api.spot_cam.GetPowerStatusResponse">GetPowerStatusResponse</a></td>
-<td></td>
+<td>Get current status of a component</td>
+</tr>
+<tr>
+<td>CyclePower</td>
+<td><a href="#bosdyn.api.spot_cam.CyclePowerRequest">CyclePowerRequest</a></td>
+<td><a href="#bosdyn.api.spot_cam.CyclePowerResponse">CyclePowerResponse</a></td>
+<td>Cycle power for a component</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.spot_cam.PtzService"></a></p>

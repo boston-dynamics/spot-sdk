@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.spot_cam.compositor &mdash; Spot 2.3.0 documentation</title>
+  <title>bosdyn.client.spot_cam.compositor &mdash; Spot 2.3.2 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                2.3.0
+                2.3.2
               </div>
             
           
@@ -645,6 +645,29 @@
         <span class="sd">&quot;&quot;&quot;Async version of get_ir_colormap()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">compositor_pb2</span><span class="o">.</span><span class="n">GetIrColormapRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetIrColormap</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_colormap_from_response</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">_compositor_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CompositorClient.set_ir_meter_overlay"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html#bosdyn.client.spot_cam.compositor.CompositorClient.set_ir_meter_overlay">[docs]</a>    <span class="k">def</span> <span class="nf">set_ir_meter_overlay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">enable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set IR reticle position to use on Spot CAM IR</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (Float): (0,1) horizontal coordinate of reticle</span>
+<span class="sd">            y (Float): (0,1) vertical coordinate of reticle</span>
+<span class="sd">            enable (Boolean): Enable the reticle on the display</span>
+<span class="sd">            kwargs: extra arguments for controlling RPC details.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">compositor_pb2</span><span class="o">.</span><span class="n">IrMeterOverlay</span><span class="o">.</span><span class="n">NormalizedCoordinates</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">overlay</span> <span class="o">=</span> <span class="n">compositor_pb2</span><span class="o">.</span><span class="n">IrMeterOverlay</span><span class="p">(</span><span class="n">enable</span><span class="o">=</span><span class="n">enable</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">coords</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">compositor_pb2</span><span class="o">.</span><span class="n">SetIrMeterOverlayRequest</span><span class="p">(</span><span class="n">overlay</span><span class="o">=</span><span class="n">overlay</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetIrMeterOverlay</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_return_response</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">_compositor_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CompositorClient.set_ir_meter_overlay_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html#bosdyn.client.spot_cam.compositor.CompositorClient.set_ir_meter_overlay_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_ir_meter_overlay_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">enable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Async version of set_ir_meter_overlay()&quot;&quot;&quot;</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">compositor_pb2</span><span class="o">.</span><span class="n">IrMeterOverlay</span><span class="o">.</span><span class="n">NormalizedCoordinates</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">overlay</span> <span class="o">=</span> <span class="n">compositor_pb2</span><span class="o">.</span><span class="n">IrMeterOverlay</span><span class="p">(</span><span class="n">enable</span><span class="o">=</span><span class="n">enable</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">coords</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">compositor_pb2</span><span class="o">.</span><span class="n">SetIrMeterOverlayRequest</span><span class="p">(</span><span class="n">overlay</span><span class="o">=</span><span class="n">overlay</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetIrMeterOverlay</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_return_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_compositor_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="nd">@staticmethod</span>
