@@ -326,6 +326,9 @@ class PayloadRegistrationKeepAlive(object):
             except PayloadAlreadyExistsError:
                 # Ignore "already exists" errors -- we expect those.
                 pass
+            except RetryableUnavailableError:
+                # Ignore transient availability errors and retry.
+                pass
             except TimedOutError:
                 self.logger.warning('Timed out, timeout set to "{}"'.format(self._rpc_timeout_secs))
             except Exception as exc:

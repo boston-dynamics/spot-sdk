@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.estop &mdash; Spot 2.3.2 documentation</title>
+  <title>bosdyn.client.estop &mdash; Spot 2.3.3 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                2.3.2
+                2.3.3
               </div>
             
           
@@ -591,6 +591,10 @@
 
 <div class="viewcode-block" id="InvalidIdError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/estop.html#bosdyn.client.estop.InvalidIdError">[docs]</a><span class="k">class</span> <span class="nc">InvalidIdError</span><span class="p">(</span><span class="n">EstopResponseError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Tried to replace a EstopConfig, but provided bad ID.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="MotorsOnError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/estop.html#bosdyn.client.estop.MotorsOnError">[docs]</a><span class="k">class</span> <span class="nc">MotorsOnError</span><span class="p">(</span><span class="n">EstopResponseError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The operation is not allowed while motors are on.&quot;&quot;&quot;</span></div>
 
 
 <span class="n">StopLevel</span> <span class="o">=</span> <span class="n">enum</span><span class="o">.</span><span class="n">IntEnum</span><span class="p">(</span><span class="s1">&#39;StopLevel&#39;</span><span class="p">,</span> <span class="n">estop_pb2</span><span class="o">.</span><span class="n">EstopStopLevel</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
@@ -1187,6 +1191,7 @@
 <span class="n">_SET_CONFIG_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
     <span class="n">estop_pb2</span><span class="o">.</span><span class="n">SetEstopConfigResponse</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
     <span class="n">estop_pb2</span><span class="o">.</span><span class="n">SetEstopConfigResponse</span><span class="o">.</span><span class="n">STATUS_INVALID_ID</span><span class="p">:</span> <span class="p">(</span><span class="n">InvalidIdError</span><span class="p">,</span> <span class="n">InvalidIdError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">estop_pb2</span><span class="o">.</span><span class="n">SetEstopConfigResponse</span><span class="o">.</span><span class="n">STATUS_MOTORS_ON</span><span class="p">:</span> <span class="p">(</span><span class="n">MotorsOnError</span><span class="p">,</span> <span class="n">MotorsOnError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
 <span class="p">})</span>
 
 

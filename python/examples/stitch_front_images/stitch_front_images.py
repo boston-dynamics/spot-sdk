@@ -153,7 +153,7 @@ def load_get_image_response_from_binary_file(file_path):
         data = f.read()
         _images.ParseFromString(data)
 
-    return _images 
+    return _images
 
 def proto_vec_T_numpy(vec):
     return numpy.array([vec.x, vec.y, vec.z])
@@ -169,7 +169,7 @@ def normalize(vec):
     return vec/norm
 
 def draw_geometry(plane_wrt_vo, plane_norm_wrt_vo, sz_meters):
-    """Draw as GL_TRIANGES."""
+    """Draw as GL_TRIANGLES."""
     plane_left_wrt_vo = normalize(numpy.cross(numpy.array([0, 0, 1]), plane_norm_wrt_vo))
     if plane_left_wrt_vo is None:
         return

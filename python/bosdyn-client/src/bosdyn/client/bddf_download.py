@@ -78,7 +78,7 @@ def download_data(  # pylint: disable=too-many-arguments,too-many-locals
       robot_time      if True, timespan is in robot_clock, if False, in host clock
       channel         if set, limit data to download to a specific channel
       message_type    if set, limit data by specified message-type
-      grpc_service    if set, limit GPRC log data by name of service
+      grpc_service    if set, limit GRPC log data by name of service
 
     Returns:
       output filename, or None on error

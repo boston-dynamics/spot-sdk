@@ -209,7 +209,7 @@ def reset_service_registration(directory_registration_client, name, service_type
 
     This is useful when a program wants to register a new service but there may be an old entry
     in the robot directory from a previous instance of the program. If the service
-    does not already exists, the exception will be supressed and a new registration will
+    does not already exists, the exception will be suppressed and a new registration will
     still be performed. Unregistering the service has the advantage of clearing all service
     faults, if any existed.
     """
@@ -361,6 +361,9 @@ class DirectoryRegistrationKeepAlive(object):
                 # We do not allow anyone to change the directory parameters with an "update" call,
                 # because we assume that the lifespan of this thread matches the lifespan of the
                 # service being registered.
+                pass
+            except RetryableUnavailableError:
+                # Ignore transient availability errors and retry.
                 pass
             except TimedOutError:
                 self.logger.warning('Timed out, timeout set to "{}"'.format(self._rpc_timeout))

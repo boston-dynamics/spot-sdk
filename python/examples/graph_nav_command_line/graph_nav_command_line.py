@@ -252,7 +252,7 @@ class GraphNavInterface(object):
 
     def _navigate_route(self, *args):
         """Navigate through a specific route of waypoints."""
-        if len(args) < 1:
+        if len(args) < 1 or len(args[0]) < 1:
             # If no waypoint ids are given as input, then return without requesting navigation.
             print("No waypoints provided for navigate route.")
             return

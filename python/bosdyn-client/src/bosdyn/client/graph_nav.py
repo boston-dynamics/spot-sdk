@@ -177,7 +177,8 @@ class GraphNavClient(BaseClient):
                                **kwargs)
 
     def navigate_to(self, destination_waypoint_id, cmd_duration, route_params=None,
-                    travel_params=None, leases=None, timesync_endpoint=None, command_id=None, **kwargs):
+                    travel_params=None, leases=None, timesync_endpoint=None, command_id=None,
+                    destination_waypoint_tform_body_goal=None, **kwargs):
         """Navigate to a specific waypoint along a route chosen by the GraphNav service.
 
         Args:
@@ -189,6 +190,7 @@ class GraphNavClient(BaseClient):
             timesync_endpoint: Use this endpoint for timesync fields. Will use the client's endpoint by default.
             command_id: If not None, this continues an existing navigate_to command with the given ID. If None,
             a new command_id will be used.
+            destination_waypoint_tform_body_goal: SE2Pose protobuf of an offset relative to the destination waypoint.
         Returns:
             int: Command ID to use in feedback lookup.
         Raises:
@@ -208,19 +210,22 @@ class GraphNavClient(BaseClient):
         if not used_endpoint:
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
         request = self._build_navigate_to_request(destination_waypoint_id, travel_params,
-                                                  route_params, cmd_duration, leases, used_endpoint, command_id)
+                                                  route_params, cmd_duration, leases, used_endpoint, command_id,
+                                                  destination_waypoint_tform_body_goal)
         return self.call(self._stub.NavigateTo, request,
                          value_from_response=_command_id_from_navigate_route_response,
                          error_from_response=_navigate_to_error, **kwargs)
 
     def navigate_to_async(self, destination_waypoint_id, cmd_duration, route_params=None,
-                          travel_params=None, leases=None, timesync_endpoint=None, command_id=None, **kwargs):
+                          travel_params=None, leases=None, timesync_endpoint=None, command_id=None,
+                          destination_waypoint_tform_body_goal=None, **kwargs):
         """Async version of navigate_to()."""
         used_endpoint = timesync_endpoint or self._timesync_endpoint
         if not used_endpoint:
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
         request = self._build_navigate_to_request(destination_waypoint_id, travel_params,
-                                                  route_params, cmd_duration, leases, used_endpoint, command_id)
+                                                  route_params, cmd_duration, leases, used_endpoint, command_id,
+                                                  destination_waypoint_tform_body_goal)
         return self.call_async(self._stub.NavigateTo, request,
                                value_from_response=_command_id_from_navigate_route_response,
                                error_from_response=_navigate_to_error, **kwargs)
@@ -455,10 +460,12 @@ class GraphNavClient(BaseClient):
 
     @staticmethod
     def _build_navigate_to_request(destination_waypoint_id, travel_params, route_params,
-                                   end_time_secs, leases, timesync_endpoint, command_id):
+                                   end_time_secs, leases, timesync_endpoint, command_id,
+                                   destination_waypoint_tform_body_goal):
         converter = timesync_endpoint.get_robot_time_converter()
         request = graph_nav_pb2.NavigateToRequest(
             destination_waypoint_id=destination_waypoint_id,
+            destination_waypoint_tform_body_goal=destination_waypoint_tform_body_goal,
             clock_identifier=timesync_endpoint.clock_identifier)
         request.end_time.CopyFrom(
             converter.robot_timestamp_from_local_secs(time.time() + end_time_secs))

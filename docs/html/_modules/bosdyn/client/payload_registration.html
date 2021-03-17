@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.payload_registration &mdash; Spot 2.3.2 documentation</title>
+  <title>bosdyn.client.payload_registration &mdash; Spot 2.3.3 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                2.3.2
+                2.3.3
               </div>
             
           
@@ -864,6 +864,9 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">pay_reg_client</span><span class="o">.</span><span class="n">register_payload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">PayloadAlreadyExistsError</span><span class="p">:</span>
                 <span class="c1"># Ignore &quot;already exists&quot; errors -- we expect those.</span>
+                <span class="k">pass</span>
+            <span class="k">except</span> <span class="n">RetryableUnavailableError</span><span class="p">:</span>
+                <span class="c1"># Ignore transient availability errors and retry.</span>
                 <span class="k">pass</span>
             <span class="k">except</span> <span class="n">TimedOutError</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Timed out, timeout set to &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rpc_timeout_secs</span><span class="p">))</span>

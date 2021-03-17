@@ -35,6 +35,7 @@ from bosdyn.api import network_compute_bridge_service_pb2_grpc
 from bosdyn.api import network_compute_bridge_service_pb2
 from bosdyn.api import network_compute_bridge_pb2
 from bosdyn.api import world_object_pb2
+from bosdyn.api import header_pb2
 from bosdyn.api import image_pb2
 import bosdyn.client
 import bosdyn.client.util
@@ -185,7 +186,12 @@ def process_images(options, model_extension):
 
         # Find the model
         if request.input_data.model_name not in models:
-            print('Cannot find model "' + request.input_data.model_name + '" in loaded models.')
+            err_str = 'Cannot find model "' + request.input_data.model_name + '" in loaded models.'
+            print(err_str)
+
+            # Set the error in the header.
+            out_proto.header.error.code = header_pb2.CommonError.CODE_INVALID_REQUEST
+            out_proto.header.error.message = err_str
             RESPONSE_QUEUE.put(out_proto)
             continue
 
@@ -200,7 +206,12 @@ def process_images(options, model_extension):
                 # Already in the correct format
                 image = pil_image
             else:
-                print('Error: image input in unsupported pixel format: ', request.input_data.image.pixel_format)
+                err_str = 'Error: image input in unsupported pixel format: ', request.input_data.image.pixel_format
+                print(err_str)
+
+                # Set the error in the header.
+                out_proto.header.error.code = header_pb2.CommonError.CODE_INVALID_REQUEST
+                out_proto.header.error.message = err_str
                 RESPONSE_QUEUE.put(out_proto)
                 continue
         elif request.input_data.image.format == image_pb2.Image.FORMAT_JPEG:

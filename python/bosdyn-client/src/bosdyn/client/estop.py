@@ -54,6 +54,10 @@ class InvalidIdError(EstopResponseError):
     """Tried to replace a EstopConfig, but provided bad ID."""
 
 
+class MotorsOnError(EstopResponseError):
+    """The operation is not allowed while motors are on."""
+
+
 StopLevel = enum.IntEnum('StopLevel', estop_pb2.EstopStopLevel.items())
 
 
@@ -648,6 +652,7 @@ _SET_CONFIG_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, No
 _SET_CONFIG_STATUS_TO_ERROR.update({
     estop_pb2.SetEstopConfigResponse.STATUS_SUCCESS: (None, None),
     estop_pb2.SetEstopConfigResponse.STATUS_INVALID_ID: (InvalidIdError, InvalidIdError.__doc__),
+    estop_pb2.SetEstopConfigResponse.STATUS_MOTORS_ON: (MotorsOnError, MotorsOnError.__doc__),
 })
 
 

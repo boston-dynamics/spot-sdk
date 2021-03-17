@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.directory_registration &mdash; Spot 2.3.2 documentation</title>
+  <title>bosdyn.client.directory_registration &mdash; Spot 2.3.3 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                2.3.2
+                2.3.3
               </div>
             
           
@@ -748,7 +748,7 @@
 
 <span class="sd">    This is useful when a program wants to register a new service but there may be an old entry</span>
 <span class="sd">    in the robot directory from a previous instance of the program. If the service</span>
-<span class="sd">    does not already exists, the exception will be supressed and a new registration will</span>
+<span class="sd">    does not already exists, the exception will be suppressed and a new registration will</span>
 <span class="sd">    still be performed. Unregistering the service has the advantage of clearing all service</span>
 <span class="sd">    faults, if any existed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -900,6 +900,9 @@
                 <span class="c1"># We do not allow anyone to change the directory parameters with an &quot;update&quot; call,</span>
                 <span class="c1"># because we assume that the lifespan of this thread matches the lifespan of the</span>
                 <span class="c1"># service being registered.</span>
+                <span class="k">pass</span>
+            <span class="k">except</span> <span class="n">RetryableUnavailableError</span><span class="p">:</span>
+                <span class="c1"># Ignore transient availability errors and retry.</span>
                 <span class="k">pass</span>
             <span class="k">except</span> <span class="n">TimedOutError</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Timed out, timeout set to &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rpc_timeout</span><span class="p">))</span>

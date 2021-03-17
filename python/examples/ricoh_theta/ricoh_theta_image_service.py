@@ -256,7 +256,7 @@ def add_ricoh_theta_arguments(parser):
     parser.add_argument(
         '--capture-continuously', action='store_true', dest='capture_continuously', help=
         "Use a background thread to request images continuously. Otherwise, capture images only when a "
-        "GetImage RPC is recieved.")
+        "GetImage RPC is received.")
     parser.add_argument(
             '--capture-when-requested', action='store_false', dest='capture_continuously',
             help="Only request images from the Ricoh Theta when a GetImage RPC is received. Otherwise, use "

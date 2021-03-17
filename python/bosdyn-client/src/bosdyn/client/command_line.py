@@ -719,7 +719,7 @@ class TextMsgCommand(Command):
 
         Args:
             subparsers: List of argument parsers.
-            command_dict: DIctionary of command names which take parsed options.
+            command_dict: Dictionary of command names which take parsed options.
         """
         super(TextMsgCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--timestamp', action='store_true',

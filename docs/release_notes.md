@@ -12,6 +12,40 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 2.3.3
+
+### New Features
+
+#### Graph Nav
+The python Graph Nav client now allows setting an offset to the destination, for navigating to a position relative to the final waypoint instead of exactly matching the final waypoint position and orientation.
+
+### Bug fixes and improvements
+
+Fixed issues where the data acquisition download helpers did not handle absolute paths on windows and did not clean filenames correctly. (Thanks David from Levatas!)
+
+Zip file names from the data download service no longer contain difficult characters.
+
+Fixed an issue where Graph Nav would sometimes report the robot was impaired on the first usage after restarting the robot.
+
+Errors returned from Network Compute Bridge workers will be better propagated in the Network Compute Bridge response.
+
+Updated background threads for the payload and directory registration helpers to silently ignore transient errors.
+
+Fixed an issue where requesting thermal images with PTZ/Pano images in a single data acquisition action caused thermal images to either not be collected or saved as “blank” images.
+
+### Breaking Changes
+
+The estop service will now refuse to change configuration if the robot is already powered on, returning a status of STATUS_MOTORS_ON. This prevents accidentally cutting power while the robot is in operation.
+
+### Known Issues
+
+Same as 2.3.0
+
+### Sample Code
+
+[**Network Compute Bridge**](../python/examples/network_compute_bridge/README.md)
+Updated to provide appropriate error messages from the workers.
+
 ## 2.3.2
 
 ### New Features

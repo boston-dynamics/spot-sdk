@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Interacting with a Ricoh Theta Camera &mdash; Spot 2.3.2 documentation</title>
+  <title>Interacting with a Ricoh Theta Camera &mdash; Spot 2.3.3 documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                2.3.2
+                2.3.3
               </div>
             
           
@@ -629,7 +629,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Since the example is created to run off of a payload computer, it requires the input arguments <code class="docutils literal notranslate"><span class="pre">--guid</span></code> (uniquely generated payload specifier) and <code class="docutils literal notranslate"><span class="pre">--secret</span></code> (private string associated with a payload) for the registered payload computer that will be running the Ricoh Theta image service. For the Spot CORE, this information by default will be located in the file <code class="docutils literal notranslate"><span class="pre">/opt/payload_credentials/payload_guid_and_secret</span></code>. Note, you can run the Ricoh Theta image service locally on your PC by registering it as a weightless payload using <a class="reference internal" href="../payloads/README.html"><span class="doc">the payloads example</span></a> and creating a GUID and secret for your computer. See documentation on <a class="reference external" href="../../../docs/payload/configuring_payload_software.html#Configuring-and-authorizing-payloads">configuration of payload software</a> for more information.</p>
 <p>If the <code class="docutils literal notranslate"><span class="pre">--theta-client</span></code> argument is provided, the Ricoh Theta will be connected to in client mode. Otherwise, it will default to a direct-ip mode connection, requiring the computer running the image service script to be wirelessly connected to the Ricoh Theta’s WiFi. If using the Ricoh Theta in client mode, make sure that the <code class="docutils literal notranslate"><span class="pre">ricoh_client_mode.py</span></code> script has been run to create a connection to Spot’s WiFi with the correct static ip.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">--theta-ssid</span></code> argument is used to pass the SSID for the Ricoh Theta camera that will take the images and <strong>should have the .OSC removed</strong>. This will be set as the image source name for the service. Additionally, if the password for the Ricoh Theta is different from the default password of the camera, this can be provided using the <code class="docutils literal notranslate"><span class="pre">--theta-password</span></code> argument.</p>
-<p>The Ricoh Theta image service will default to only attempting to capture an image from the Ricoh Theta camera when requested with a GetImage gRPC call. To have the Ricoh Theta attempt to continuously capture images, pass the command line argument <code class="docutils literal notranslate"><span class="pre">--capture-continuously</span></code>. This will cause the image service to create a background thread and attempt to query the ricoh theta at a high rate. Note, the Ricoh Theta images are very high resolution and the stiching process to go from the fisheye image to the processed image is time consuming, so sometimes the continuous captures will drain the camera’s battery quickly or overwhelm the camera processors.</p>
+<p>The Ricoh Theta image service will default to only attempting to capture an image from the Ricoh Theta camera when requested with a GetImage gRPC call. To have the Ricoh Theta attempt to continuously capture images, pass the command line argument <code class="docutils literal notranslate"><span class="pre">--capture-continuously</span></code>. This will cause the image service to create a background thread and attempt to query the ricoh theta at a high rate. Note, the Ricoh Theta images are very high resolution and the stitching process to go from the fisheye image to the processed image is time consuming, so sometimes the continuous captures will drain the camera’s battery quickly or overwhelm the camera processors.</p>
 <p>Lastly, a port number for the image service can be specified using the <code class="docutils literal notranslate"><span class="pre">--port</span></code> argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a service listening on the old port. This port number will be used with the host-ip (HOST_COMPUTER_IP) to fully specify where the image service is running. This port number must be open and cannot be blocked by a local firewall, otherwise the ricoh-theta image service will be unreachable from the robot and the directory registration service.</p>
 <div class="section" id="ricoh-theta-image-service-configuration">
 <h3>Ricoh Theta Image Service Configuration<a class="headerlink" href="#ricoh-theta-image-service-configuration" title="Permalink to this headline">¶</a></h3>

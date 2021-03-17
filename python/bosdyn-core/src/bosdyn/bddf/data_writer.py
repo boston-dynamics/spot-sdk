@@ -112,7 +112,7 @@ class DataWriter:
          series_index:   integer returned when series was registered with the file.
          timestamp_nsec: nsec since unix epoch to timestamp the data
          data:           binary data to store
-         additional_indexss: additional timestamps if needed for this channel
+         additional_indexes: additional timestamps if needed for this channel
 
         Raises DataFormatError if the data or additional_indexes are not valid for this series.
         """

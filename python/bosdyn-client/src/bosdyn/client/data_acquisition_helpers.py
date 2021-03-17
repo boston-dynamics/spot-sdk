@@ -11,6 +11,8 @@ import json
 import time
 import logging
 
+from pathlib import Path
+
 from bosdyn.api import data_acquisition_pb2
 from bosdyn.api import data_acquisition_store_pb2
 
@@ -252,9 +254,10 @@ def download_data_REST(query_params, hostname, token, destination_folder='.',
     import requests
     try:
         url = 'https://{}/v1/data-buffer/daq-data/'.format(hostname)
-        folder = clean_filename(os.path.join(destination_folder, 'REST'))
-        if not os.path.exists(folder):
-            os.mkdir(folder)
+        absolute_path = Path(destination_folder).absolute()
+        folder = Path(absolute_path.parent, clean_filename(absolute_path.name), 'REST')
+        folder.mkdir(parents=True, exist_ok=True)
+
         headers = {"Authorization": "Bearer {}".format(token)}
         get_params = additional_params or {}
         if query_params.HasField('time_range'):
@@ -271,7 +274,7 @@ def download_data_REST(query_params, hostname, token, destination_folder='.',
                 "[%d, %d]"% (query_params.time_range.from_timestamp.ToNanoseconds()/1.0e9,
                 query_params.time_range.to_timestamp.ToNanoseconds()/1.0e9))
                 return False
-            download_file = os.path.join(folder, "download.zip")
+            download_file = Path(folder, "download.zip")
             content = resp.headers['Content-Disposition']
             if len(content) < 2:
                 print("ERROR: Content-Disposition is not set correctly")
@@ -283,9 +286,9 @@ def download_data_REST(query_params, hostname, token, destination_folder='.',
                     return False
                 else:
                     start_ind += 1
-                    download_file = os.path.join(folder, content[start_ind:-1])
+                    download_file = Path(folder, clean_filename(content[start_ind:-1]))
 
-            with open(download_file, 'wb') as fid:
+            with open(str(download_file), 'wb') as fid:
                 for chunk in resp.iter_content(chunk_size=chunk_size):
                     print('.', end = '', flush=True)
                     fid.write(chunk)
