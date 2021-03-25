@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Configuration Requirements
 
-Spot can be configured to carry up to two payloads. The following describes considerations for designing payloads. If designing a payload to be used in conjunction with other payloads, you must keep the total weight of all payloads under 14 kg.
+Spot can be configured to carry up to two payloads. The following describes considerations for designing payloads. If designing a payload to be used in conjunction with other payloads, you must keep the total weight of all payloads under 14 kg. A urdf model of the robot and its geometry can be found [here](../../files/spot_base_urdf.zip).
 
 
 ### Payload ports

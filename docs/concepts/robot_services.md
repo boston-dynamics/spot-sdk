@@ -53,7 +53,7 @@ Clients are encouraged to send short-lived commands and continuously resend them
 ## robot-state
 The robot state service tracks all information about the measured and computed states of the robot at the current time.
 
-The hardware configuration of the robot is described through a urdf and skeleton model, which represents each joint and link of the robot, and can be accessed using the `GetRobotHardwareConfiguration` RPC. This configuration representation is fully expressive of the robot's joint states relative to each other and can be used to visualize the robot model.
+The hardware configuration of the robot is described through a urdf and skeleton model, which represents each joint and link of the robot, and can be accessed using the `GetRobotHardwareConfiguration` RPC. This configuration representation is fully expressive of the robot's joint states relative to each other and can be used to visualize the robot model. A urdf model of the base robot and its geometry can also be found [here](../../files/spot_base_urdf.zip).
 
 The full robot state includes information about the batteries and power status, the status of network communication, known E-Stop states, the foot states, system and behavior faults, and the kinematic state of the robot. The `GetRobotState` RPC can provide this state information for the current timestamp.
 *  **BatteryState, PowerState**: The battery and power information can be used to determine if the robot successfully powered on or off, the current charge of the battery, or if the battery is overheating. Applications can use this information to determine when to pause the progression of the application or if the robot needs a new battery.
