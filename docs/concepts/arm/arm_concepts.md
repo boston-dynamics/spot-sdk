@@ -124,7 +124,7 @@ y = 0 m
 z = 0 m 
 The rotation between the hand frame and the wrist is the identity matrix. When specifying trajectories using default values, the target position of the trajectory is the origin of this hand frame.
 
-![](images/hand_frame.png)
+<img src="images/hand_frame.png" alt="Hand Frame drawing" style="width:400px">
 
 ## Collision avoidance 
 The Arm has no proximity awareness of its own, so maintaining safe distance is essential. If obstacles or people are in the path of operation, the Arm has no collision avoidance capability to prevent contact. Safe Arm operation depends on the Operator and/or safety observers maintaining situational awareness and halting operations if the Arm is at risk of contacting objects or people. 

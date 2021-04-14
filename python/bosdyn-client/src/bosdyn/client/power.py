@@ -7,13 +7,14 @@
 """For clients to the power command service."""
 import collections
 from concurrent.futures import TimeoutError
+from deprecated.sphinx import deprecated
 import functools
 import time
 
 from bosdyn.client.common import BaseClient
 from bosdyn.client.common import (error_factory, handle_unset_status_error,
                                   handle_common_header_errors, handle_lease_use_result_errors)
-from bosdyn.client.exceptions import Error, ResponseError, InternalServerError, LicenseError
+from bosdyn.client.exceptions import Error, ResponseError, InternalServerError, LicenseError, TimedOutError
 
 from bosdyn.api import power_pb2
 from bosdyn.api import power_service_pb2_grpc
@@ -138,6 +139,7 @@ def _common_license_errors(response):
         return LicenseError(response)
     return None
 
+
 @handle_common_header_errors
 @handle_lease_use_result_errors
 @_handle_license_errors
@@ -159,8 +161,8 @@ _STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _STATUS_TO_ERROR.update({
     power_pb2.STATUS_SUCCESS: (None, None),
     power_pb2.STATUS_IN_PROGRESS: (None, None),
-    power_pb2.STATUS_SHORE_POWER_CONNECTED: (ShorePowerConnectedError,
-                                             ShorePowerConnectedError.__doc__),
+    power_pb2.STATUS_SHORE_POWER_CONNECTED:
+        (ShorePowerConnectedError, ShorePowerConnectedError.__doc__),
     power_pb2.STATUS_BATTERY_MISSING: (BatteryMissingError, BatteryMissingError.__doc__),
     power_pb2.STATUS_COMMAND_IN_PROGRESS: (CommandInProgressError, CommandInProgressError.__doc__),
     power_pb2.STATUS_ESTOPPED: (EstoppedError, EstoppedError.__doc__),
@@ -175,8 +177,8 @@ def _power_status_from_response(response):
 
 
 def safe_power_off(command_client, state_client, timeout_sec=30, update_frequency=1.0, **kwargs):
-    """Power off robot safely. This function blocks until robot safely powers off. This means the
-    robot will attempt to sit before powering off.
+    """Power off robot motors safely. This function blocks until robot safely powers off. This
+    means the robot will attempt to sit before powering motors off.
 
     Args:
         command_client (RobotCommandClient): client for calling RobotCommandService safe power off.
@@ -215,27 +217,40 @@ def safe_power_off(command_client, state_client, timeout_sec=30, update_frequenc
     raise CommandTimedOutError
 
 
+@deprecated(reason='Replaced by the less ambiguous power_on_motors function.', version='2.3.4',
+            action="ignore")
 def power_on(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
-    """Power on robot. This function blocks until the command returns success.
-
-    Args:
-        power_client (bosdyn.api.PowerClient): client for calling power service.
-        timeout_sec (float): Max time this function will block for.
-        update_frequency (float): The frequency with which the robot should check if the command
-                                  has succeeded.
-
-    Raises:
-        RpcError: Problem communicating with the robot.
-        power.CommandTimedOutError: Did not power off within timeout_sec
-        PowerResponseError: Something went wrong during the power off sequence.
-    """
-    request = power_pb2.PowerCommandRequest.REQUEST_ON
-    _power_command(power_client, request, timeout_sec, update_frequency, **kwargs)
+    """Power on robot motors. See power_on_motors()."""
+    power_on_motors(power_client, timeout_sec, update_frequency, **kwargs)
 
 
+@deprecated(reason='Replaced by the less ambiguous power_off_motors function.', version='2.3.4',
+            action="ignore")
 def power_off(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
-    """Power off robot immediately. This function blocks until robot powers off. This will not put
-    robot in a safe state.
+    """Power off the robot motors. See power_off_motors()."""
+    power_off_motors(power_client, timeout_sec, update_frequency, **kwargs)
+
+
+def power_on_motors(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
+    """Power on robot motors. This function blocks until the command returns success.
+
+    Args:
+        power_client (bosdyn.api.PowerClient): client for calling power service.
+        timeout_sec (float): Max time this function will block for.
+        update_frequency (float): The frequency with which the robot should check if the command
+                                  has succeeded.
+
+    Raises:
+        RpcError: Problem communicating with the robot.
+        power.CommandTimedOutError: Did not power off within timeout_sec
+        PowerResponseError: Something went wrong during the power off sequence.
+    """
+    request = power_pb2.PowerCommandRequest.REQUEST_ON_MOTORS
+    _power_command(power_client, request, timeout_sec, update_frequency, **kwargs)
+
+
+def power_off_motors(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
+    """Power off the robot motors.
 
     Args:
         power_client (bosdyn.api.PowerClient): client for calling power service.
@@ -247,17 +262,141 @@ def power_off(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
         power.CommandTimedOutError: Did not power off within timeout_sec
         PowerResponseError: Something went wrong during the power off sequence.
     """
-    request = power_pb2.PowerCommandRequest.REQUEST_OFF
+    request = power_pb2.PowerCommandRequest.REQUEST_OFF_MOTORS
     _power_command(power_client, request, timeout_sec, update_frequency, **kwargs)
 
 
-def _power_command(power_client, request, timeout_sec=30, update_frequency=1.0, **kwargs):
-    """Helper function to issue command to power client."""
+def power_off_robot(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
+    """Fully power off the robot. Powering off the robot will stop API comms.
+    
+    Args:
+        power_client (bosdyn.api.PowerClient): client for calling power service.
+        timeout_sec (float): Max time this function will block for.
+        update_frequency (float): The frequency with which the robot should check if the command
+                                  has succeeded.
+    Raises:
+        RpcError: Problem communicating with the robot.
+        power.CommandTimedOutError: Did not power off within timeout_sec
+        PowerResponseError: Something went wrong during the power off sequence.
+    """
+    request = power_pb2.PowerCommandRequest.REQUEST_OFF_ROBOT
+    _power_command(power_client, request, timeout_sec, update_frequency, expect_grpc_timeout=True,
+                   **kwargs)
+
+
+def power_cycle_robot(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
+    """Power cycle the robot. Power cycling the robot will stop API comms.
+    
+    Args:
+        power_client (bosdyn.api.PowerClient): client for calling power service.
+        timeout_sec (float): Max time this function will block for.
+        update_frequency (float): The frequency with which the robot should check if the command
+                                  has succeeded.
+    Raises:
+        RpcError: Problem communicating with the robot.
+        power.CommandTimedOutError: Did not power off within timeout_sec
+        PowerResponseError: Something went wrong during the power off sequence.
+    """
+    request = power_pb2.PowerCommandRequest.REQUEST_CYCLE_ROBOT
+    _power_command(power_client, request, timeout_sec, update_frequency, expect_grpc_timeout=True,
+                   **kwargs)
+
+
+def power_off_payload_ports(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
+    """Power off the robot payload ports.
+    
+    Args:
+        power_client (bosdyn.api.PowerClient): client for calling power service.
+        timeout_sec (float): Max time this function will block for.
+        update_frequency (float): The frequency with which the robot should check if the command
+                                  has succeeded.
+    Raises:
+        RpcError: Problem communicating with the robot.
+        power.CommandTimedOutError: Did not power off within timeout_sec
+        PowerResponseError: Something went wrong during the power off sequence.
+    """
+    request = power_pb2.PowerCommandRequest.REQUEST_OFF_PAYLOAD_PORTS
+    _power_command(power_client, request, timeout_sec, update_frequency, **kwargs)
+
+
+def power_on_payload_ports(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
+    """Power on the robot payload ports.
+    
+    Args:
+        power_client (bosdyn.api.PowerClient): client for calling power service.
+        timeout_sec (float): Max time this function will block for.
+        update_frequency (float): The frequency with which the robot should check if the command
+                                  has succeeded.
+    Raises:
+        RpcError: Problem communicating with the robot.
+        power.CommandTimedOutError: Did not power off within timeout_sec
+        PowerResponseError: Something went wrong during the power off sequence.
+    """
+    request = power_pb2.PowerCommandRequest.REQUEST_ON_PAYLOAD_PORTS
+    _power_command(power_client, request, timeout_sec, update_frequency, **kwargs)
+
+
+def power_off_wifi_radio(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
+    """Power off the robot Wi-Fi radio.
+    
+    Args:
+        power_client (bosdyn.api.PowerClient): client for calling power service.
+        timeout_sec (float): Max time this function will block for.
+        update_frequency (float): The frequency with which the robot should check if the command
+                                  has succeeded.
+    Raises:
+        RpcError: Problem communicating with the robot.
+        power.CommandTimedOutError: Did not power off within timeout_sec
+        PowerResponseError: Something went wrong during the power off sequence.
+    """
+    request = power_pb2.PowerCommandRequest.REQUEST_OFF_WIFI_RADIO
+    _power_command(power_client, request, timeout_sec, update_frequency, **kwargs)
+
+
+def power_on_wifi_radio(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
+    """Power off the robot Wi-Fi radio.
+    
+    Args:
+        power_client (bosdyn.api.PowerClient): client for calling power service.
+        timeout_sec (float): Max time this function will block for.
+        update_frequency (float): The frequency with which the robot should check if the command
+                                  has succeeded.
+    Raises:
+        RpcError: Problem communicating with the robot.
+        power.CommandTimedOutError: Did not power off within timeout_sec
+        PowerResponseError: Something went wrong during the power off sequence.
+    """
+    request = power_pb2.PowerCommandRequest.REQUEST_ON_WIFI_RADIO
+    _power_command(power_client, request, timeout_sec, update_frequency, **kwargs)
+
+
+
+
+
+
+def _power_command(power_client, request, timeout_sec=30, update_frequency=1.0,
+                   expect_grpc_timeout=False, **kwargs):
+    """Helper function to issue command to power client.
+    
+    Args:
+        power_client (bosdyn.api.PowerClient): Client for calling power service.
+        request (bosdyn.api.PowerCommandRequest): Request to make to power service.
+        timeout_sec (float): Max time this function will block for.
+        update_frequency (float): The frequency with which the robot should check if the command
+                                  has succeeded.
+        expect_timeout (bool): Expect API comms to drop on a success.
+    """
     start_time = time.time()
     end_time = start_time + timeout_sec
     update_time = 1.0 / update_frequency
 
-    response = power_client.power_command(request, **kwargs)
+    try:
+        response = power_client.power_command(request, **kwargs)
+    except TimedOutError as e:
+        if expect_grpc_timeout:
+            return
+        else:
+            raise
     if response.status == power_pb2.STATUS_SUCCESS:
         return  # Command succeeded immediately.
 
@@ -274,6 +413,11 @@ def _power_command(power_client, request, timeout_sec=30, update_frequency=1.0, 
                 error_type, message = _STATUS_TO_ERROR[response]
                 exc = error_type(response=None, error_message=message)
                 raise exc
+        except TimedOutError as e:
+            if expect_grpc_timeout:
+                return
+            else:
+                raise
         except TimeoutError:
             raise CommandTimedOutError
         call_time = time.time() - start_call_time

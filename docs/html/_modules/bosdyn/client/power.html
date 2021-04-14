@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.power &mdash; Spot 2.3.3 documentation</title>
+  <title>bosdyn.client.power &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -344,6 +344,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
@@ -546,13 +553,14 @@
 <span class="sd">&quot;&quot;&quot;For clients to the power command service.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="ne">TimeoutError</span>
+<span class="kn">from</span> <span class="nn">deprecated.sphinx</span> <span class="kn">import</span> <span class="n">deprecated</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="n">BaseClient</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">error_factory</span><span class="p">,</span> <span class="n">handle_unset_status_error</span><span class="p">,</span>
                                   <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_lease_use_result_errors</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">InternalServerError</span><span class="p">,</span> <span class="n">LicenseError</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">InternalServerError</span><span class="p">,</span> <span class="n">LicenseError</span><span class="p">,</span> <span class="n">TimedOutError</span>
 
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">power_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">power_service_pb2_grpc</span>
@@ -677,6 +685,7 @@
         <span class="k">return</span> <span class="n">LicenseError</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">None</span>
 
+
 <span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_lease_use_result_errors</span>
 <span class="nd">@_handle_license_errors</span>
@@ -698,8 +707,8 @@
 <span class="n">_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
     <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
     <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_IN_PROGRESS</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-    <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_SHORE_POWER_CONNECTED</span><span class="p">:</span> <span class="p">(</span><span class="n">ShorePowerConnectedError</span><span class="p">,</span>
-                                             <span class="n">ShorePowerConnectedError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
+    <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_SHORE_POWER_CONNECTED</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">ShorePowerConnectedError</span><span class="p">,</span> <span class="n">ShorePowerConnectedError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
     <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_BATTERY_MISSING</span><span class="p">:</span> <span class="p">(</span><span class="n">BatteryMissingError</span><span class="p">,</span> <span class="n">BatteryMissingError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
     <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_COMMAND_IN_PROGRESS</span><span class="p">:</span> <span class="p">(</span><span class="n">CommandInProgressError</span><span class="p">,</span> <span class="n">CommandInProgressError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
     <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_ESTOPPED</span><span class="p">:</span> <span class="p">(</span><span class="n">EstoppedError</span><span class="p">,</span> <span class="n">EstoppedError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">),</span>
@@ -714,8 +723,8 @@
 
 
 <div class="viewcode-block" id="safe_power_off"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/power.html#bosdyn.client.power.safe_power_off">[docs]</a><span class="k">def</span> <span class="nf">safe_power_off</span><span class="p">(</span><span class="n">command_client</span><span class="p">,</span> <span class="n">state_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Power off robot safely. This function blocks until robot safely powers off. This means the</span>
-<span class="sd">    robot will attempt to sit before powering off.</span>
+    <span class="sd">&quot;&quot;&quot;Power off robot motors safely. This function blocks until robot safely powers off. This</span>
+<span class="sd">    means the robot will attempt to sit before powering motors off.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        command_client (RobotCommandClient): client for calling RobotCommandService safe power off.</span>
@@ -754,8 +763,22 @@
     <span class="k">raise</span> <span class="n">CommandTimedOutError</span></div>
 
 
-<div class="viewcode-block" id="power_on"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/power.html#bosdyn.client.power.power_on">[docs]</a><span class="k">def</span> <span class="nf">power_on</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Power on robot. This function blocks until the command returns success.</span>
+<div class="viewcode-block" id="power_on"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/power.html#bosdyn.client.power.power_on">[docs]</a><span class="nd">@deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Replaced by the less ambiguous power_on_motors function.&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;2.3.4&#39;</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">power_on</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Power on robot motors. See power_on_motors().&quot;&quot;&quot;</span>
+    <span class="n">power_on_motors</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="power_off"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/power.html#bosdyn.client.power.power_off">[docs]</a><span class="nd">@deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Replaced by the less ambiguous power_off_motors function.&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;2.3.4&#39;</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">power_off</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Power off the robot motors. See power_off_motors().&quot;&quot;&quot;</span>
+    <span class="n">power_off_motors</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="power_on_motors"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/power.html#bosdyn.client.power.power_on_motors">[docs]</a><span class="k">def</span> <span class="nf">power_on_motors</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Power on robot motors. This function blocks until the command returns success.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        power_client (bosdyn.api.PowerClient): client for calling power service.</span>
@@ -768,13 +791,12 @@
 <span class="sd">        power.CommandTimedOutError: Did not power off within timeout_sec</span>
 <span class="sd">        PowerResponseError: Something went wrong during the power off sequence.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">request</span> <span class="o">=</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">PowerCommandRequest</span><span class="o">.</span><span class="n">REQUEST_ON</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">PowerCommandRequest</span><span class="o">.</span><span class="n">REQUEST_ON_MOTORS</span>
     <span class="n">_power_command</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="power_off"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/power.html#bosdyn.client.power.power_off">[docs]</a><span class="k">def</span> <span class="nf">power_off</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Power off robot immediately. This function blocks until robot powers off. This will not put</span>
-<span class="sd">    robot in a safe state.</span>
+<div class="viewcode-block" id="power_off_motors"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/power.html#bosdyn.client.power.power_off_motors">[docs]</a><span class="k">def</span> <span class="nf">power_off_motors</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Power off the robot motors.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        power_client (bosdyn.api.PowerClient): client for calling power service.</span>
@@ -786,17 +808,141 @@
 <span class="sd">        power.CommandTimedOutError: Did not power off within timeout_sec</span>
 <span class="sd">        PowerResponseError: Something went wrong during the power off sequence.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">request</span> <span class="o">=</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">PowerCommandRequest</span><span class="o">.</span><span class="n">REQUEST_OFF</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">PowerCommandRequest</span><span class="o">.</span><span class="n">REQUEST_OFF_MOTORS</span>
     <span class="n">_power_command</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_power_command</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Helper function to issue command to power client.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="power_off_robot"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/power.html#bosdyn.client.power.power_off_robot">[docs]</a><span class="k">def</span> <span class="nf">power_off_robot</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fully power off the robot. Powering off the robot will stop API comms.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        power_client (bosdyn.api.PowerClient): client for calling power service.</span>
+<span class="sd">        timeout_sec (float): Max time this function will block for.</span>
+<span class="sd">        update_frequency (float): The frequency with which the robot should check if the command</span>
+<span class="sd">                                  has succeeded.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        RpcError: Problem communicating with the robot.</span>
+<span class="sd">        power.CommandTimedOutError: Did not power off within timeout_sec</span>
+<span class="sd">        PowerResponseError: Something went wrong during the power off sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">PowerCommandRequest</span><span class="o">.</span><span class="n">REQUEST_OFF_ROBOT</span>
+    <span class="n">_power_command</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span> <span class="n">expect_grpc_timeout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                   <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="power_cycle_robot"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/power.html#bosdyn.client.power.power_cycle_robot">[docs]</a><span class="k">def</span> <span class="nf">power_cycle_robot</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Power cycle the robot. Power cycling the robot will stop API comms.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        power_client (bosdyn.api.PowerClient): client for calling power service.</span>
+<span class="sd">        timeout_sec (float): Max time this function will block for.</span>
+<span class="sd">        update_frequency (float): The frequency with which the robot should check if the command</span>
+<span class="sd">                                  has succeeded.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        RpcError: Problem communicating with the robot.</span>
+<span class="sd">        power.CommandTimedOutError: Did not power off within timeout_sec</span>
+<span class="sd">        PowerResponseError: Something went wrong during the power off sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">PowerCommandRequest</span><span class="o">.</span><span class="n">REQUEST_CYCLE_ROBOT</span>
+    <span class="n">_power_command</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span> <span class="n">expect_grpc_timeout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                   <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="power_off_payload_ports"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/power.html#bosdyn.client.power.power_off_payload_ports">[docs]</a><span class="k">def</span> <span class="nf">power_off_payload_ports</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Power off the robot payload ports.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        power_client (bosdyn.api.PowerClient): client for calling power service.</span>
+<span class="sd">        timeout_sec (float): Max time this function will block for.</span>
+<span class="sd">        update_frequency (float): The frequency with which the robot should check if the command</span>
+<span class="sd">                                  has succeeded.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        RpcError: Problem communicating with the robot.</span>
+<span class="sd">        power.CommandTimedOutError: Did not power off within timeout_sec</span>
+<span class="sd">        PowerResponseError: Something went wrong during the power off sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">PowerCommandRequest</span><span class="o">.</span><span class="n">REQUEST_OFF_PAYLOAD_PORTS</span>
+    <span class="n">_power_command</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="power_on_payload_ports"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/power.html#bosdyn.client.power.power_on_payload_ports">[docs]</a><span class="k">def</span> <span class="nf">power_on_payload_ports</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Power on the robot payload ports.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        power_client (bosdyn.api.PowerClient): client for calling power service.</span>
+<span class="sd">        timeout_sec (float): Max time this function will block for.</span>
+<span class="sd">        update_frequency (float): The frequency with which the robot should check if the command</span>
+<span class="sd">                                  has succeeded.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        RpcError: Problem communicating with the robot.</span>
+<span class="sd">        power.CommandTimedOutError: Did not power off within timeout_sec</span>
+<span class="sd">        PowerResponseError: Something went wrong during the power off sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">PowerCommandRequest</span><span class="o">.</span><span class="n">REQUEST_ON_PAYLOAD_PORTS</span>
+    <span class="n">_power_command</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="power_off_wifi_radio"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/power.html#bosdyn.client.power.power_off_wifi_radio">[docs]</a><span class="k">def</span> <span class="nf">power_off_wifi_radio</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Power off the robot Wi-Fi radio.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        power_client (bosdyn.api.PowerClient): client for calling power service.</span>
+<span class="sd">        timeout_sec (float): Max time this function will block for.</span>
+<span class="sd">        update_frequency (float): The frequency with which the robot should check if the command</span>
+<span class="sd">                                  has succeeded.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        RpcError: Problem communicating with the robot.</span>
+<span class="sd">        power.CommandTimedOutError: Did not power off within timeout_sec</span>
+<span class="sd">        PowerResponseError: Something went wrong during the power off sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">PowerCommandRequest</span><span class="o">.</span><span class="n">REQUEST_OFF_WIFI_RADIO</span>
+    <span class="n">_power_command</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="power_on_wifi_radio"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/power.html#bosdyn.client.power.power_on_wifi_radio">[docs]</a><span class="k">def</span> <span class="nf">power_on_wifi_radio</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Power off the robot Wi-Fi radio.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        power_client (bosdyn.api.PowerClient): client for calling power service.</span>
+<span class="sd">        timeout_sec (float): Max time this function will block for.</span>
+<span class="sd">        update_frequency (float): The frequency with which the robot should check if the command</span>
+<span class="sd">                                  has succeeded.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        RpcError: Problem communicating with the robot.</span>
+<span class="sd">        power.CommandTimedOutError: Did not power off within timeout_sec</span>
+<span class="sd">        PowerResponseError: Something went wrong during the power off sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">PowerCommandRequest</span><span class="o">.</span><span class="n">REQUEST_ON_WIFI_RADIO</span>
+    <span class="n">_power_command</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+
+
+
+<span class="k">def</span> <span class="nf">_power_command</span><span class="p">(</span><span class="n">power_client</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                   <span class="n">expect_grpc_timeout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper function to issue command to power client.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        power_client (bosdyn.api.PowerClient): Client for calling power service.</span>
+<span class="sd">        request (bosdyn.api.PowerCommandRequest): Request to make to power service.</span>
+<span class="sd">        timeout_sec (float): Max time this function will block for.</span>
+<span class="sd">        update_frequency (float): The frequency with which the robot should check if the command</span>
+<span class="sd">                                  has succeeded.</span>
+<span class="sd">        expect_timeout (bool): Expect API comms to drop on a success.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">timeout_sec</span>
     <span class="n">update_time</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">update_frequency</span>
 
-    <span class="n">response</span> <span class="o">=</span> <span class="n">power_client</span><span class="o">.</span><span class="n">power_command</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">power_client</span><span class="o">.</span><span class="n">power_command</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">TimedOutError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">expect_grpc_timeout</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span>
     <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">power_pb2</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span><span class="p">:</span>
         <span class="k">return</span>  <span class="c1"># Command succeeded immediately.</span>
 
@@ -813,6 +959,11 @@
                 <span class="n">error_type</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">_STATUS_TO_ERROR</span><span class="p">[</span><span class="n">response</span><span class="p">]</span>
                 <span class="n">exc</span> <span class="o">=</span> <span class="n">error_type</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="n">exc</span>
+        <span class="k">except</span> <span class="n">TimedOutError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">expect_grpc_timeout</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span>
         <span class="k">except</span> <span class="ne">TimeoutError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">CommandTimedOutError</span>
         <span class="n">call_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_call_time</span>

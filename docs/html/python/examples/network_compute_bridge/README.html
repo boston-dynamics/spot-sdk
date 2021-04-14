@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Network Compute Bridge &mdash; Spot 2.3.3 documentation</title>
+  <title>Network Compute Bridge &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
@@ -550,7 +558,7 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="network-compute-bridge">
+--><section id="network-compute-bridge">
 <h1>Network Compute Bridge<a class="headerlink" href="#network-compute-bridge" title="Permalink to this headline">¶</a></h1>
 <p>The network compute bridge allows you to off-load computation to another computer on the network.  For example, you might want to offload a deep neural-network call to a server in the cloud.</p>
 <p>Examples:</p>
@@ -570,13 +578,13 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </li>
 </ul>
-<div class="section" id="system-diagram">
+<section id="system-diagram">
 <h2>System Diagram<a class="headerlink" href="#system-diagram" title="Permalink to this headline">¶</a></h2>
 <p><img alt="System Diagram" src="../../../_images/system_diagram.png" /></p>
-</div>
-<div class="section" id="installation">
+</section>
+<section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="server">
+<section id="server">
 <h3>Server<a class="headerlink" href="#server" title="Permalink to this headline">¶</a></h3>
 <p>These examples require the bosdyn API and client to be installed, and must be run using python3.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">tensorflow_server.py</span></code> example requires TensorFlow to be installed.  You can install its
@@ -592,16 +600,16 @@ dependencies via:</p>
 </div>
 <p>Installation of NVIDIA drivers and CUDA is outside the scope of the document.  There are
 many tutorials available such as <a class="reference external" href="https://www.pyimagesearch.com/2019/01/30/ubuntu-18-04-install-tensorflow-and-keras-for-deep-learning/">this one</a>.</p>
-</div>
-<div class="section" id="client">
+</section>
+<section id="client">
 <h3>Client<a class="headerlink" href="#client" title="Permalink to this headline">¶</a></h3>
 <p>The client example (<code class="docutils literal notranslate"><span class="pre">identify_object.py</span></code>) does not require TensorFlow:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements_client_only</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="execution">
+</section>
+</section>
+<section id="execution">
 <h2>Execution<a class="headerlink" href="#execution" title="Permalink to this headline">¶</a></h2>
 <p>To run this example, first launch the server and direct it to your Spot:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">tensorflow_server</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">username</span> <span class="o">&lt;</span><span class="n">USERNAME</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">password</span> <span class="o">&lt;</span><span class="n">PASSWORD</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">d</span> <span class="o">&lt;</span><span class="n">MODEL</span> <span class="n">DIRECTORY</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">ROBOT</span> <span class="n">ADDRESS</span><span class="o">&gt;</span>
@@ -629,14 +637,14 @@ many tutorials available such as <a class="reference external" href="https://www
 </pre></div>
 </div>
 <p>Note, the <code class="docutils literal notranslate"><span class="pre">USERNAME</span></code> and <code class="docutils literal notranslate"><span class="pre">PASSWORD</span></code> are your user credentials for your Spot.</p>
-</div>
-<div class="section" id="troubleshooting">
+</section>
+<section id="troubleshooting">
 <h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Ensure that your firewall is allowing traffic on the specified port (default: 50051).</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

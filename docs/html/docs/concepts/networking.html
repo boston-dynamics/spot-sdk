@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Networking &mdash; Spot 2.3.3 documentation</title>
+  <title>Networking &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../payload/README.html">Payloads</a><ul>
@@ -546,10 +554,10 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="networking">
+--><section id="networking">
 <h1>Networking<a class="headerlink" href="#networking" title="Permalink to this headline">¶</a></h1>
 <p>All applications speak to Spot’s API over a network connection. Understanding networking protocols is critical to debugging issues and creating a robust, high-performant application.</p>
-<div class="section" id="network-choice">
+<section id="network-choice">
 <h2>Network Choice<a class="headerlink" href="#network-choice" title="Permalink to this headline">¶</a></h2>
 <p>Spot offers a variety of networking options to support a diverse set of applications and environments. Options include:</p>
 <ul class="simple">
@@ -559,8 +567,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><strong>Spot via custom communications links</strong>. Custom communication links such as cell modems and Persistent Systems radios can act as a bridge between Spot and applications. These can be useful when the above cases are insufficient for network design.</p></li>
 </ul>
 <p>While the application-layer protocol for the Spot API works across any IP-based network connection, the examples above show that networking choice can have a significant impact on the performance and reliability of an application as well as deployment strategies.</p>
-</div>
-<div class="section" id="grpc-and-protocol-buffers">
+</section>
+<section id="grpc-and-protocol-buffers">
 <h2>gRPC and Protocol Buffers<a class="headerlink" href="#grpc-and-protocol-buffers" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="https://grpc.io">gRPC</a> is the application-level protocol used by the majority of the Spot API. gRPC was chosen because it provides a secure, performant protocol with support for a broad set of programming languages and environments.</p>
 <p>gRPC specifies the service interfaces and remote procedure calls (RPCs) supported by the service. For example, the Spot API has an authentication service with the following definition:</p>
@@ -585,8 +593,8 @@ Development Kit License (20191101-BDSDK-SL).
 </pre></div>
 </div>
 <p>Although the <code class="docutils literal notranslate"><span class="pre">AuthService</span></code> example shows the common RPC paradigm of single request/single response, gRPC also supports more advanced RPC paradigms such as streaming requests, streaming responses, or full bidirectional streaming.  The Spot API uses some of the more advanced paradigms in select locations. For example, gRPC limits responses to 4MB by default, which is too small for large amounts of data, such as the complete GraphNav map. The GraphNav service’s upload and download requests provides a streaming response RPC to work around this limitation.</p>
-</div>
-<div class="section" id="using-grpc-and-protocol-buffers">
+</section>
+<section id="using-grpc-and-protocol-buffers">
 <h2>Using gRPC and Protocol Buffers<a class="headerlink" href="#using-grpc-and-protocol-buffers" title="Permalink to this headline">¶</a></h2>
 <p>The Python library included in the SDK hides the use of gRPC and Protocol Buffers and provides a simpler abstraction. For example, the <code class="docutils literal notranslate"><span class="pre">AuthClient</span></code> class, which speaks to the <code class="docutils literal notranslate"><span class="pre">AuthService</span></code> interface described above, has a method called <code class="docutils literal notranslate"><span class="pre">auth</span></code> demonstrated below.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">app_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -612,8 +620,8 @@ Development Kit License (20191101-BDSDK-SL).
 <p>This method takes <code class="docutils literal notranslate"><span class="pre">username</span></code>, <code class="docutils literal notranslate"><span class="pre">password</span></code>, and <code class="docutils literal notranslate"><span class="pre">app_token</span></code> strings and generates a <code class="docutils literal notranslate"><span class="pre">GetAuthTokenRequest</span></code> message from those using <code class="docutils literal notranslate"><span class="pre">_build_auth_request</span></code>. The RPC is then sent to the <code class="docutils literal notranslate"><span class="pre">AuthService</span></code> and a <code class="docutils literal notranslate"><span class="pre">GetAuthTokenResponse</span></code> is received. If the authentication attempt is valid, the session token is returned to the caller of the auth function. If there were networking issues or the username/password combination was invalid, an exception is raised.</p>
 <p>This layer of abstraction simplifies common use cases, but developers will occasionally need to interact with Protocol Buffer messages directly, even when using the Python library. For example, the <code class="docutils literal notranslate"><span class="pre">RobotState</span></code> message includes many nested sub-messages and detailed information. Rather than convert into primitive types or other data structures, developers need to directly operate on the protocol buffer itself. The message definition and comments in <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#robot-state-proto">protos/bosdyn/api/robot_state.proto</a> are key to understanding what is included and how to interpret the data.</p>
 <p>Developers who wish to support another language or environment are also able to build client libraries using the gRPC service definitions and Protocol Buffer message definitions. The Python client library may also be used as a reference implementation.</p>
-</div>
-<div class="section" id="error-handling">
+</section>
+<section id="error-handling">
 <h2>Error Handling<a class="headerlink" href="#error-handling" title="Permalink to this headline">¶</a></h2>
 <p>Robust applications need to handle errors when communicating with the Spot API. There are three general classes of errors:</p>
 <ul class="simple">
@@ -689,8 +697,8 @@ Development Kit License (20191101-BDSDK-SL).
 </pre></div>
 </div>
 <p>The Python library handles Networking, Common RPC errors, and Specific RPC errors by raising specific Exceptions, which application developers can accept.</p>
-</div>
-<div class="section" id="http-2-tls-and-tcp">
+</section>
+<section id="http-2-tls-and-tcp">
 <h2>HTTP/2, TLS, and TCP<a class="headerlink" href="#http-2-tls-and-tcp" title="Permalink to this headline">¶</a></h2>
 <p>gRPC is built on top of other networking protocols, as shown in the diagram below.</p>
 <img src="../../_images/network_protocol_stack.png" alt="Network protocol stack" style="width:350px"><p>This protocol stack has a few implications:</p>
@@ -700,8 +708,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Communication is over a reliable transport layer with TCP. Reliable transport is a good approach for non-real-time RPCs such as authenticating to Spot, and is also not problematic for real-time cases where there is a strong networking link such as through the RJ45 or DB-25 connectors. However, it can be problematic when handling real-time RPCs over a spotty network connection. There are some short-term mitigation approaches around this such as maintaining a socket pool to round-robin requests over. In the longer term, Boston Dynamics is exploring other approaches (such as gRPC over QUIC or HTTP/3) to improve communications over poor network links.</p></li>
 <li><p>The protocol stack is a very common one for the Internet at large. This has two benefits. First, Spot is able to use battle-tested implementations of the protocols which can withstand adversarial attackers. Second, there is a very high likelihood that an application can reach Spot over a diverse set of networks without being blocked by intermediate firewalls.</p></li>
 </ul>
-</div>
-<div class="section" id="robot-discovery">
+</section>
+<section id="robot-discovery">
 <h2>Robot Discovery<a class="headerlink" href="#robot-discovery" title="Permalink to this headline">¶</a></h2>
 <p>To talk to Spot, a client application needs to specify an IP address where a Spot is running. There are a number of possible options for doing this sort of robot discovery.</p>
 <ul class="simple">
@@ -711,8 +719,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><strong>Custom Discovery mechanism</strong>. Applications can develop custom approaches to map a specific Spot to an IP address, such as using a cloud-based discovery endpoint.</p></li>
 </ul>
 <p>Client applications do not use the symbolic name of the robot (if any) when verifying the certificate during the TLS handshake to the robot. This supports a variety of discovery mechanisms without requiring new certificates to be provisioned.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

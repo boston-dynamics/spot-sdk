@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Spot Detect and Follow &mdash; Spot 2.3.3 documentation</title>
+  <title>Spot Detect and Follow &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
@@ -550,14 +558,14 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="spot-detect-and-follow">
+--><section id="spot-detect-and-follow">
 <h1>Spot Detect and Follow<a class="headerlink" href="#spot-detect-and-follow" title="Permalink to this headline">¶</a></h1>
 <p>The Spot Detect and Follow example collects images from the two front Spot cameras and performs object detection on a specified class. This detection uses Tensorflow via the tensorflow_object_detector from the Spot Tensorflow Detector example. It accepts any Tensorflow model, and it allows the user to specify a subset of detection classes included in the model. It performs this set of operations for a predefined number of iterations, blocking for a predefined amount of time between each iteration. The example then determines the location of the highest confidence detection of the specified class and walks towards the object. The walking has a built-in buffer of about 3 meters.</p>
 <p>IF USING THIS EXAMPLE TO FOLLOW A PERSON, FOLLOW ALL SAFETY PROTOCOLS. KEEP AWAY FROM ALL STAIRCASES.</p>
 <p>The program is organized as three sets of Python processes communicating with the Spot robot. The process diagram is shown below. The main process communicates with the Spot robot over GRPC and constantly receives images. These images are pushed into the RAW_IMAGES_QUEUE and read by the Tensorflow processes. Those processes detect objects in the images and pushes the location onto PROCESSED_BOXES_QUEUE. The main thread then determines the location of the object and issues commands to the robot to walk towards the object.</p>
-<img src="../../../_images/Detect_and_Follow.png" alt="Process Diagram" width="800"/><div class="section" id="user-guide">
+<img src="../../../_images/Detect_and_Follow.png" alt="Process Diagram" width="800"/><section id="user-guide">
 <h2>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="installation-only-if-you-want-to-run-without-docker">
+<section id="installation-only-if-you-want-to-run-without-docker">
 <h3>Installation (Only if you want to run without Docker)<a class="headerlink" href="#installation-only-if-you-want-to-run-without-docker" title="Permalink to this headline">¶</a></h3>
 <p>To install this example on Ubuntu 18.04, follow these instructions:</p>
 <ul class="simple">
@@ -573,8 +581,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Run the example using instructions in the next section</p></li>
 <li><p>To exit the virtual environment, run <code class="docutils literal notranslate"><span class="pre">deactivate</span></code></p></li>
 </ul>
-</div>
-<div class="section" id="execution">
+</section>
+<section id="execution">
 <h3>Execution<a class="headerlink" href="#execution" title="Permalink to this headline">¶</a></h3>
 <p>Prior to running the example, you will need to acquire estop access from another source such as from a connected laptop or tablet. This allows you to to emergency stop the robot since this application does not have a GUI.
 This example follows the common pattern for expected arguments. It needs the common arguments used to configure the SDK and connect to a Spot:</p>
@@ -595,7 +603,7 @@ This example follows the common pattern for expected arguments. It needs the com
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>python3 spot_detect_and_follow.py --username USER --password PASSWORD --model-path &lt;path_to_pb&gt; --detection-class &lt;integer cladd id&gt; ROBOT_IP
 </pre></div>
 </div>
-<div class="section" id="running-in-docker">
+<section id="running-in-docker">
 <h4>Running in Docker<a class="headerlink" href="#running-in-docker" title="Permalink to this headline">¶</a></h4>
 <p>Please refer to this <a class="reference internal" href="../../../docs/payload/docker_containers.html"><span class="doc">document</span></a> for general instructions on how to run software applications on SpotCORE as docker containers.</p>
 <p>This example provides a Dockerfile for running in a container. This requires installing Nvidia Docker.
@@ -620,10 +628,10 @@ ROBOT_HOSTNAME
 </div>
 <p>As an example, the <code class="docutils literal notranslate"><span class="pre">faster_rcnn_inception_v2_coco</span></code> Tensorflow model pre-trained on COCO dataset can be obtained <a class="reference external" href="http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz">here</a>. Run the example with <code class="docutils literal notranslate"><span class="pre">--model-path</span></code> pointing to the <code class="docutils literal notranslate"><span class="pre">pb</span></code> file in that model and with <code class="docutils literal notranslate"><span class="pre">--detection-classes</span></code> argument set to <code class="docutils literal notranslate"><span class="pre">1</span></code> to detect people in the camera images. That model is not supported on Windows or MacOS.
 The pre-trained models may not be good at detecting some classes when using the robot’s cameras, as the fisheye distortion, low resolution, and black and white images affect image quality. For example, pre-trained models may not perform well at detecting “sports balls” due to the lack of color. The <a class="reference external" href="http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz">ssd_mobilenet_v2_coco</a> and <a class="reference external" href="http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz">faster_rcnn_inception_v2_coco</a> have been tested to work well at detecting humans.</p>
-</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
+</section>
 
 
            </div>

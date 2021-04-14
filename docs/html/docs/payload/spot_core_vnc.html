@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Spot CORE VNC &mdash; Spot 2.3.3 documentation</title>
+  <title>Spot CORE VNC &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="README.html">Payloads</a><ul class="current">
@@ -546,11 +554,11 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="spot-core-vnc">
+--><section id="spot-core-vnc">
 <h1>Spot CORE VNC<a class="headerlink" href="#spot-core-vnc" title="Permalink to this headline">¶</a></h1>
 <p>VNC allows users to launch and interact with graphical applications on remote machines.</p>
 <p>This document details how to setup TigerVNC on the Spot CORE. We will also use the GNOME desktop environment, port forwarding, and systemd .service files in the content below.</p>
-<div class="section" id="overview">
+<section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>Spot CORE now comes preconfigured with TigerVNC. The following sections outline the steps necessary for enabling the service before use.</p>
 <ul class="simple">
@@ -562,14 +570,14 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </li>
 </ul>
-</div>
-<div class="section" id="tigervnc-server-enable">
+</section>
+<section id="tigervnc-server-enable">
 <h2>TigerVNC Server Enable<a class="headerlink" href="#tigervnc-server-enable" title="Permalink to this headline">¶</a></h2>
 <p>First, access a terminal on the Spot CORE. To do this, you can either log in to Cockpit at https://192.168.80.3:21443 and go to the Terminal tab, or you can connect through the command line:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="o">-</span><span class="n">p</span> <span class="mi">20022</span> <span class="n">spot</span><span class="o">@</span><span class="mf">192.168</span><span class="o">.</span><span class="mf">80.3</span>
 </pre></div>
 </div>
-<div class="section" id="create-a-vnc-password">
+<section id="create-a-vnc-password">
 <h3>Create a VNC password<a class="headerlink" href="#create-a-vnc-password" title="Permalink to this headline">¶</a></h3>
 <p>A default password “password” will be created for you. This password is used to access the VNC session from a client, after which you need to log in with the standard username and password for the Spot CORE.
 You may also choose to create a new VNC password with the following command (a view-only password is not required):</p>
@@ -583,20 +591,20 @@ You may also choose to create a new VNC password with the following command (a v
 </pre></div>
 </div>
 <p>In the example commands above, the vncserver port number used is 21000 (5900 + <strong>15100</strong>). See <a class="reference external" href="#start-vncserver">start vncserver</a> for more information.</p>
-</div>
-</div>
-<div class="section" id="tigervnc-viewer">
+</section>
+</section>
+<section id="tigervnc-viewer">
 <h2>TigerVNC Viewer<a class="headerlink" href="#tigervnc-viewer" title="Permalink to this headline">¶</a></h2>
 <p>Perform the following steps on the PC to start the VNC connection.</p>
-<div class="section" id="install-vncviewer">
+<section id="install-vncviewer">
 <h3>Install vncviewer<a class="headerlink" href="#install-vncviewer" title="Permalink to this headline">¶</a></h3>
 <p>Install vncviewer for 64-bit Windows by downloading <code class="docutils literal notranslate"><span class="pre">vncviewer64-1.10.1.exe</span></code> from <a class="reference external" href="https://bintray.com/tigervnc/stable/tigervnc/">https://bintray.com/tigervnc/stable/tigervnc/</a>.</p>
 <p>Install tigervnc-viewer on Ubuntu using apt:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">tigervnc</span><span class="o">-</span><span class="n">viewer</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="start-vncviewer">
+</section>
+<section id="start-vncviewer">
 <h3>Start vncviewer<a class="headerlink" href="#start-vncviewer" title="Permalink to this headline">¶</a></h3>
 <p>We need to create a secure connection using an SSH tunnel first. The below command assumes the user is connected to Spot’s access point. Don’t forget to change the ip address or port number if required. To run this ssh session in the background without executing any commands, add <code class="docutils literal notranslate"> <span class="pre">-fN</span></code> arguments to the end of the command.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="o">-</span><span class="mi">4</span> <span class="o">-</span><span class="n">p</span> <span class="mi">20022</span> <span class="n">spot</span><span class="o">@</span><span class="mf">192.168</span><span class="o">.</span><span class="mf">80.3</span> <span class="o">-</span><span class="n">L</span> <span class="mi">21000</span><span class="p">:</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">21000</span>
@@ -607,20 +615,20 @@ You may also choose to create a new VNC password with the following command (a v
 </pre></div>
 </div>
 <p>After entering the password set using <code class="docutils literal notranslate"><span class="pre">vncpasswd</span></code> earlier, a GNOME desktop environment should now be available.</p>
-</div>
-</div>
-<div class="section" id="tigervnc-server-installation">
+</section>
+</section>
+<section id="tigervnc-server-installation">
 <h2>TigerVNC Server Installation<a class="headerlink" href="#tigervnc-server-installation" title="Permalink to this headline">¶</a></h2>
 <p>This section is not required if the Spot CORE is on any software version greater than or equal to 2.3.0.</p>
-<div class="section" id="install-software">
+<section id="install-software">
 <h3>Install software<a class="headerlink" href="#install-software" title="Permalink to this headline">¶</a></h3>
 <p>Install software required for the TigerVNC server on the Spot CORE using apt:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">tigervnc</span><span class="o">-</span><span class="n">standalone</span><span class="o">-</span><span class="n">server</span> <span class="n">tigervnc</span><span class="o">-</span><span class="n">common</span> <span class="n">tigervnc</span><span class="o">-</span><span class="n">xorg</span><span class="o">-</span><span class="n">extension</span> <span class="n">tigervnc</span><span class="o">-</span><span class="n">viewer</span>
 </pre></div>
 </div>
 <p>If the user has not setup a VNC password, please see the earlier instructions on how to <a class="reference external" href="#create-a-vnc-password">create a vnc password</a>.</p>
-</div>
-<div class="section" id="prepare-vncserver">
+</section>
+<section id="prepare-vncserver">
 <h3>Prepare vncserver<a class="headerlink" href="#prepare-vncserver" title="Permalink to this headline">¶</a></h3>
 <p>To configure the GNOME desktop, create a xstartup file in <code class="docutils literal notranslate"><span class="pre">~/.vnc/xstartup</span></code> and add the following contents.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#!/bin/sh
@@ -649,8 +657,8 @@ dbus-launch --exit-with-session gnome-session &amp;
 <span class="n">ResultActive</span><span class="o">=</span><span class="n">yes</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="start-vncserver">
+</section>
+<section id="start-vncserver">
 <h3>Start vncserver<a class="headerlink" href="#start-vncserver" title="Permalink to this headline">¶</a></h3>
 <p>TigerVNC listens to ports 5900+. The default port is 5901 (5900 + <strong>1</strong>), which can be started using the following command.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">vncserver</span> <span class="p">:</span><span class="mi">1</span>
@@ -669,8 +677,8 @@ dbus-launch --exit-with-session gnome-session &amp;
 <span class="n">vncserver</span> <span class="o">-</span><span class="n">kill</span> <span class="p">:</span><span class="mi">15100</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="enable-vncserver-on-boot">
+</section>
+<section id="enable-vncserver-on-boot">
 <h3>Enable vncserver on boot<a class="headerlink" href="#enable-vncserver-on-boot" title="Permalink to this headline">¶</a></h3>
 <p>In order for vncserver to automatically run on Spot CORE whenever Spot is turned on, use a systemd .service file. Create a servive file named <code class="docutils literal notranslate"><span class="pre">vncserver&#64;.service</span></code> and add the following contents. This file can take a port number as an argument.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Unit</span><span class="p">]</span>
@@ -696,9 +704,9 @@ dbus-launch --exit-with-session gnome-session &amp;
 <span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">daemon</span><span class="o">-</span><span class="n">reload</span> <span class="c1"># Reloads all systemd services.</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="useful-tigervnc-resources">
+</section>
+</section>
+<section id="useful-tigervnc-resources">
 <h2>Useful TigerVNC Resources<a class="headerlink" href="#useful-tigervnc-resources" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://www.tecmint.com/install-and-configure-vnc-server-on-ubuntu/">TigerVNC tutorial (primary resource used to create this document).</a></p></li>
@@ -706,8 +714,8 @@ dbus-launch --exit-with-session gnome-session &amp;
 <li><p><a class="reference external" href="https://www.freedesktop.org/software/systemd/man/systemd.service.html">How to use systemd.service files.</a></p></li>
 <li><p><a class="reference external" href="https://www.cyberciti.biz/faq/install-and-configure-tigervnc-server-on-ubuntu-18-04/">Additional TigerVNC tutorial.</a></p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

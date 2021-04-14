@@ -44,10 +44,19 @@ message Skeleton {
     string urdf = 3;
 }
 
+
 // Robot Hardware Configuration, described with the robot skeleton.
 message HardwareConfiguration {
     // Robot link and joint description.
     Skeleton skeleton = 1;
+
+    // Set of power features that are compatible with the robot hardware.
+    // See power.proto for the associated requests.
+    bool can_power_command_request_off_robot = 2;          // Turn off the robot. Same as physical switch.
+    bool can_power_command_request_cycle_robot = 3;        // Power cycle the robot. Same as physical switch.
+    bool can_power_command_request_payload_ports = 4;      // Control power to the payload ports.
+    bool can_power_command_request_wifi_radio = 5;        // Control power to the hardware Wi-Fi radio.
+
 }
 
 // The current state of the robot.
@@ -92,42 +101,98 @@ message PowerState {
     google.protobuf.Timestamp timestamp = 1;
 
     enum MotorPowerState {
+        option allow_alias = true;
+        
         // Unknown motor power state. Do not use this field.
-        STATE_UNKNOWN = 0;
+        STATE_UNKNOWN = 0 [deprecated = true];
+        MOTOR_POWER_STATE_UNKNOWN = 0;
 
         // Motors are off, the robot is safe to approach.
-        STATE_OFF = 1;
+        STATE_OFF = 1 [deprecated = true];
+        MOTOR_POWER_STATE_OFF = 1;
 
         // The motors are powered.
-        STATE_ON = 2;
+        STATE_ON = 2 [deprecated = true];
+        MOTOR_POWER_STATE_ON = 2;
 
         // The robot has received an ON command, and is turning on.
-        STATE_POWERING_ON = 3;
+        STATE_POWERING_ON = 3 [deprecated = true];
+        MOTOR_POWER_STATE_POWERING_ON = 3;
 
         // In the process of powering down, not yet safe to approach.
-        STATE_POWERING_OFF = 4;
+        STATE_POWERING_OFF = 4 [deprecated = true];
+        MOTOR_POWER_STATE_POWERING_OFF = 4;
 
         // The robot is in an error state and must be powered off before attempting to re-power.
-        STATE_ERROR = 5;
+        STATE_ERROR = 5 [deprecated = true];
+        MOTOR_POWER_STATE_ERROR = 5;
     }
     // The motor power state of the robot.
     MotorPowerState motor_power_state = 2;
-
+    
     // State describing if robot is connected to shore (wall) power. Robot can't be powered on
     // while on shore power
     enum ShorePowerState {
-        // Unknown shore power state. Do not use this field.
-        STATE_UNKNOWN_SHORE_POWER = 0;
+        option allow_alias = true;
+        
+        // Unknown shore power state. Do not use.
+        STATE_UNKNOWN_SHORE_POWER = 0 [deprecated = true];
+        SHORE_POWER_STATE_UNKNOWN = 0;
 
         // The robot is connected to shore power. The robot will not power on while connected to
         // shore power.
-        STATE_ON_SHORE_POWER = 1;
+        STATE_ON_SHORE_POWER = 1 [deprecated = true];
+        SHORE_POWER_STATE_ON = 1;
 
         // The robot is disconnected from shore power and motors can be powered up.
-        STATE_OFF_SHORE_POWER = 2;
+        STATE_OFF_SHORE_POWER = 2 [deprecated = true];
+        SHORE_POWER_STATE_OFF = 2;
     }
     // The shore power state of the robot.
     ShorePowerState shore_power_state = 3;
+
+    // State describing if the robot has power.
+    enum RobotPowerState {
+        // Unknown robot power state. Do not use this field.
+        ROBOT_POWER_STATE_UNKNOWN = 0;
+
+        // The robot is powered on.
+        ROBOT_POWER_STATE_ON = 1;
+
+        // The robot does not have power.
+        // Impossible to get this response, as the robot cannot respond if it is powered off.
+        ROBOT_POWER_STATE_OFF = 2;
+    }
+    // The payload ports power state of the robot.
+    RobotPowerState robot_power_state = 6;
+
+    // State describing if the payload port has power.
+    enum PayloadPortsPowerState {
+        // Unknown payload port power state. Do not use this field.
+        PAYLOAD_PORTS_POWER_STATE_UNKNOWN = 0;
+
+        // The payload port is powered on.
+        PAYLOAD_PORTS_POWER_STATE_ON = 1;
+
+        // The payload port does not have power.
+        PAYLOAD_PORTS_POWER_STATE_OFF = 2;
+    }
+    // The payload ports power state of the robot.
+    PayloadPortsPowerState payload_ports_power_state = 7;
+
+    // State describing if the robot Wi-Fi router has power.
+    enum WifiRadioPowerState {
+        // Unknown radio power state. Do not use this field.
+        WIFI_RADIO_POWER_STATE_UNKNOWN = 0;
+
+        // The radio is powered on.
+        WIFI_RADIO_POWER_STATE_ON = 1;
+
+        // The radio does not have power.
+        WIFI_RADIO_POWER_STATE_OFF = 2;
+    }
+    // The hardware radio power state of the robot.
+    WifiRadioPowerState wifi_radio_power_state = 9;
 
     // Number from 0 (empty) to 100 (full) indicating the estimated state of charge.
     // This field provides a summary of the BatteryStates that provide power for motor and/or
@@ -138,6 +203,7 @@ message PowerState {
     // This field provides a summary of the BatteryStates that provide power for motor and/or
     // base compute power, both of which are required for locomotion.
     google.protobuf.Duration locomotion_estimated_runtime = 5;
+
 }
 
 // The current state of each system fault the robot is experiencing.

@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Image Service for a Web Cam &mdash; Spot 2.3.3 documentation</title>
+  <title>Image Service for a Web Cam &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
@@ -550,19 +558,19 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="image-service-for-a-web-cam">
+--><section id="image-service-for-a-web-cam">
 <h1>Image Service for a Web Cam<a class="headerlink" href="#image-service-for-a-web-cam" title="Permalink to this headline">¶</a></h1>
 <p>This example implements the standard Boston Dynamics API image service and communicates to common web cameras using OpenCV. The example will run the web cam image service locally and register it with the robot’s directory service using the payload service registration procedure. The web cam image service is an implementation of the GRPC image service, which has the ListImageSources RPC and the GetImage RPC. The service can encode information from the OpenCV camera connection into a protobuf message.</p>
 <p>This example will register the service from a payload, which could be the Spot CORE or a different external computer; therefore, it will require knowing the guid, secret, and IP address of the computer the service will be running off of. See the <a class="reference internal" href="../self_registration/README.html"><span class="doc">self registration payloads example</span></a> for a higher level overview of how to setup and register a payload, as well as how to register a simple announcing service.</p>
-<div class="section" id="prerequisites">
+<section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <p>This example requires bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
 <p>In addition to the pip-installable requirements, the web cam example requires OpenCV, which must be installed separately following instructions from OpenCV. Alternatively, the example provides a Dockerfile which can be used to run the example and has a base docker image with OpenCV already installed.</p>
-</div>
-<div class="section" id="example-execution">
+</section>
+<section id="example-execution">
 <h2>Example Execution<a class="headerlink" href="#example-execution" title="Permalink to this headline">¶</a></h2>
 <p>This example will run the web cam image service locally and register it with the robot’s directory service using a directory keep alive. After running the example clients will be able to send requests to this service through the robot.</p>
 <p>(NOTE: the example may need to be run with <code class="docutils literal notranslate"><span class="pre">sudo</span></code> to enable access to the web cam.)</p>
@@ -575,13 +583,18 @@ Development Kit License (20191101-BDSDK-SL).
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span> <span class="o">--</span><span class="n">username</span> <span class="p">{</span><span class="n">USER</span><span class="p">}</span> <span class="o">--</span><span class="n">password</span> <span class="p">{</span><span class="n">PASSWORD</span><span class="p">}</span> <span class="p">{</span><span class="n">ROBOT_IP</span><span class="p">}</span> <span class="bp">self</span><span class="o">-</span><span class="n">ip</span>
 </pre></div>
 </div>
-<p>The other IP address is the traditional robot hostname (“ROBOT_IP”) argument, which describes the IP address of the robot hosting the directory service.</p>
+<p>The other IP address is the traditional robot hostname (”ROBOT_IP”) argument, which describes the IP address of the robot hosting the directory service.</p>
 <p>When launching the web cam image service, the different device names should be provided. All of these sources should be queryable from the web cam image service using OpenCV. They can be specified individually by using the argument <code class="docutils literal notranslate"><span class="pre">--device-name</span></code>, and appending multiple of the argument to specify each camera source. For example, <code class="docutils literal notranslate"><span class="pre">--device-name</span> <span class="pre">CAMERA1</span> <span class="pre">--device-name</span> <span class="pre">CAMERA2</span></code>. By default, the device “0” will be used, which represents the device at index 0 and will connect to the first connected video device found for each operating system. A user can provide either an index to a specific camera device, or the file path to describe the USB location of the camera. Each device will be listed by the service as an image source using the final part of the device name after the last “/” in a filepath (e.g. “/dev/video0” will result in an image source name “video0”, device index “0” will also have image source name “video0”). Note for linux, by default the camera devices connected will have a filepath formatted as <code class="docutils literal notranslate"><span class="pre">/dev/videoXXX</span></code> where “XXX” is the index of the camera. However, on Windows the default locations are more difficult to determine, so providing the index number as the device name is preferred.</p>
 <p>Since the example runs off of a payload computer, it requires a GUID (uniquely generated payload specifier) and secret (private string associated with a payload) for a <em>registered</em> and <em>authorized</em> payload computer as arguments when launching the example. This “payload” can represent any type of computer capable of hosting the web cam image service. See documentation on <a class="reference external" href="../../../docs/payload/configuring_payload_software.html#Configuring-and-authorizing-payloads">configuration of payload software</a> for more information.</p>
-<p>A port number for the image service can be specified using the <code class="docutils literal notranslate"><span class="pre">--port</span></code> argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a services listening port. This port number will be used with the host-ip (“PAYLOAD_IP”) to fully specify where the image service is running. This port number must be open and cannot be blocked by a local firewall, otherwise the web cam image service will be unreachable from the robot and the directory registration service.</p>
-<p>Lastly, the command line argument <code class="docutils literal notranslate"><span class="pre">--show-debug-info</span></code> will allow a user to live-view the openCV output of the web cam video capture on their local computer. Only use this flag for debug purposes, as it will likely slow down the main example operation and reduce the performance of the image service.</p>
+<p>A port number for the image service can be specified using the <code class="docutils literal notranslate"><span class="pre">--port</span></code> argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a services listening port. This port number will be used with the host-ip (”PAYLOAD_IP”) to fully specify where the image service is running. This port number must be open and cannot be blocked by a local firewall, otherwise the web cam image service will be unreachable from the robot and the directory registration service.</p>
+<p>There is an optional string argument <code class="docutils literal notranslate"><span class="pre">--codec</span></code> to specify a four character video codec describing the camera’s compression/decompression software. The video codec code is operating system dependent. For example, on a Windows computer, the video codec is commonly ‘DIVX’, and on a linux computer, the video codec is commonly ‘MJPG’. Note, the video codec does not necessarily need to be specified as OpenCV’s default selection will typically work for most web cams, however if you are seeing OpenCV errors when the image service tries to capture an image, then try specifying the video codec for your camera. An example error of this type is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="n">WARN</span><span class="p">:</span><span class="mi">0</span><span class="p">]</span> <span class="k">global</span> <span class="o">/</span><span class="n">io</span><span class="o">/</span><span class="n">opencv</span><span class="o">/</span><span class="n">modules</span><span class="o">/</span><span class="n">videoio</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">cap_v4l</span><span class="o">.</span><span class="n">cpp</span> <span class="p">(</span><span class="mi">998</span><span class="p">)</span> <span class="n">tryIoctl</span> <span class="n">VIDEOIO</span><span class="p">(</span><span class="n">V4L2</span><span class="p">:</span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">video1</span><span class="p">):</span> <span class="n">select</span><span class="p">()</span> <span class="n">timeout</span><span class="o">.</span>
+</pre></div>
 </div>
-<div class="section" id="debugging-tips">
+<p>This error was fixed for a linux experiment by providing the video codec argument as <code class="docutils literal notranslate"><span class="pre">--codec</span> <span class="pre">mjpg</span></code>.</p>
+<p>Lastly, the command line argument <code class="docutils literal notranslate"><span class="pre">--show-debug-info</span></code> will allow a user to live-view the OpenCV output of the web cam video capture on their local computer. Only use this flag for debug purposes, as it will likely slow down the main example operation and reduce the performance of the image service.</p>
+</section>
+<section id="debugging-tips">
 <h2>Debugging Tips<a class="headerlink" href="#debugging-tips" title="Permalink to this headline">¶</a></h2>
 <p>Here are a couple suggestions for debugging the web cam image service:</p>
 <ul class="simple">
@@ -592,8 +605,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Use the <a class="reference internal" href="../tester_programs/README.html"><span class="doc">image service tester program</span></a> to ensure the service can successfully be communicated with and that each RPC will complete correctly.</p></li>
 <li><p>When all tests pass for the image service tester program, check that the tablet is detecting the web cam image service by looking in the camera sources drop down menu (top-left of the status bar) and then check that the images are appearing by selecting the “Web Cam” camera source.</p></li>
 </ul>
-</div>
-<div class="section" id="run-the-web-cam-image-service-using-docker">
+</section>
+<section id="run-the-web-cam-image-service-using-docker">
 <h2>Run the Web Cam Image Service using Docker<a class="headerlink" href="#run-the-web-cam-image-service-using-docker" title="Permalink to this headline">¶</a></h2>
 <p>Please refer to this <a class="reference internal" href="../../../docs/payload/docker_containers.html"><span class="doc">document</span></a> for general instructions on how to run software applications on computation payloads as docker containers.</p>
 <p>Follow the instructions on how to build and use the docker image from <a class="reference external" href="../../../docs/payload/docker_containers.html#build-docker-images">this section</a> on. The docker container with the application in this example needs the following modifications from the general instructions:</p>
@@ -602,8 +615,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>In the <code class="docutils literal notranslate"><span class="pre">Runtime</span> <span class="pre">&amp;</span> <span class="pre">Resources</span></code> tab in the <code class="docutils literal notranslate"><span class="pre">Portainer</span></code> container configuration page , click <code class="docutils literal notranslate"><span class="pre">add</span> <span class="pre">device</span></code> and specify the camera’s communication port (e.g. <code class="docutils literal notranslate"><span class="pre">/dev/video0</span></code>) in both the <code class="docutils literal notranslate"><span class="pre">host</span></code> field as well as the <code class="docutils literal notranslate"><span class="pre">container</span></code> field before deploying the container.</p></li>
 <li><p>If running the docker container locally, the device needs to be mapped from the container to your local computer in a similar manner to how it is configured on portainer. The <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code> command needs the additional argument <code class="docutils literal notranslate"><span class="pre">--device=/dev/video0:/dev/video0</span></code>, which is mapping the host location to the container location with <code class="docutils literal notranslate"><span class="pre">/dev/video0</span></code> as an example.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Data Acquisition Plugin Services &mdash; Spot 2.3.3 documentation</title>
+  <title>Data Acquisition Plugin Services &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
@@ -550,19 +558,19 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="data-acquisition-plugin-services">
+--><section id="data-acquisition-plugin-services">
 <h1>Data Acquisition Plugin Services<a class="headerlink" href="#data-acquisition-plugin-services" title="Permalink to this headline">¶</a></h1>
 <p>The example programs demonstrate how to create a data acquisition plugin service and run the service such that it can communicate with the data acquisition service on-robot. A data acquisition plugin service is used to communicate with external payloads and hardware, retrieve the data from these sensors, and save the data in the data acquisition store service.</p>
 <p>The DataAcquisitionPluginService base class (defined in <code class="docutils literal notranslate"><span class="pre">data_acquisition_plugin_service.py</span></code>) can be used to create the data acquisition plugin services. The example directory contains multiple different example plugins, each contained in their own folder, which use these helper functions to create plugin services which can collect data from various sensors (including a Piksi GPS or a point-cloud producing service, such as a Velodyne), or save json-formatted metadata relating to a sensor (<code class="docutils literal notranslate"><span class="pre">gps_metadata_plugin_service.py</span></code>).</p>
-<div class="section" id="setup-dependencies">
+<section id="setup-dependencies">
 <h2>Setup Dependencies<a class="headerlink" href="#setup-dependencies" title="Permalink to this headline">¶</a></h2>
 <p>Each example plugin requires the Spot SDK to be installed, and must be run using python3. Within the example plugin’s directory and using pip, these dependencies can be installed using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
 <p>Note, this command must be run from within the directory containing the specific plugin service file that will be run.</p>
-</div>
-<div class="section" id="running-the-data-acquisition-example-plugin-services">
+</section>
+<section id="running-the-data-acquisition-example-plugin-services">
 <h2>Running the Data Acquisition Example Plugin Services<a class="headerlink" href="#running-the-data-acquisition-example-plugin-services" title="Permalink to this headline">¶</a></h2>
 <p>Each data acquisition plugin example will run the service locally and register it with the robot’s directory service using a directory keep alive. After running the plugin service, the data acquisition service on the robot will detect the registration and adopt the plugin capabilities. This will allow your data acquisition plugin’s capabilities to be available in the tablet or other applications communicating with the data acquisition service.</p>
 <p>To run a plugin service from this example directory, issue the command:</p>
@@ -574,43 +582,43 @@ Development Kit License (20191101-BDSDK-SL).
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span> <span class="o">--</span><span class="n">username</span> <span class="p">{</span><span class="n">USER</span><span class="p">}</span> <span class="o">--</span><span class="n">password</span> <span class="p">{</span><span class="n">PASSWORD</span><span class="p">}</span> <span class="p">{</span><span class="n">ROBOT_IP</span><span class="p">}</span> <span class="bp">self</span><span class="o">-</span><span class="n">ip</span>
 </pre></div>
 </div>
-<p>The other IP address is the traditional robot hostname (“ROBOT_IP”) argument, which describes the IP address of the robot hosting the directory service.</p>
+<p>The other IP address is the traditional robot hostname (”ROBOT_IP”) argument, which describes the IP address of the robot hosting the directory service.</p>
 <p>Since the example is created to run off of a payload computer, it requires the input arguments <code class="docutils literal notranslate"><span class="pre">--guid</span></code> (uniquely generated payload specifier) and <code class="docutils literal notranslate"><span class="pre">--secret</span></code> (private string associated with a payload) for the registered payload computer that will be running the example plugins. See documentation on <a class="reference external" href="../../../docs/payload/configuring_payload_software.html#Configuring-and-authorizing-payloads">configuration of payload software</a> for more information.</p>
 <p>For the Spot CORE, this information by default will be located in the file <code class="docutils literal notranslate"><span class="pre">/opt/payload_credentials/payload_guid_and_secret</span></code>.</p>
 <p>Note, you can run the example plugins locally on your PC by registering it as a weightless payload using <a class="reference internal" href="../payloads/README.html"><span class="doc">the payloads example</span></a> and creating a GUID and secret for your computer.</p>
-<p>Lastly, port numbers for the example plugin services can be specified using the <code class="docutils literal notranslate"><span class="pre">--port</span></code> (“PORT_THE_PLUGIN_WILL_MONITOR”) argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a services listening port. The port numbers will be used with the <code class="docutils literal notranslate"><span class="pre">--host-ip</span></code> (“IP_WHERE_PLUGIN_WILL_RUN”) to fully specify where the two services are running on the payload computer. The port numbers of different plugins cannot be the same, they must be open, and they must not be blocked by a local firewall, otherwise the service will be unreachable from the robot and other applications.</p>
+<p>Lastly, port numbers for the example plugin services can be specified using the <code class="docutils literal notranslate"><span class="pre">--port</span></code> (”PORT_THE_PLUGIN_WILL_MONITOR”) argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a services listening port. The port numbers will be used with the <code class="docutils literal notranslate"><span class="pre">--host-ip</span></code> (”IP_WHERE_PLUGIN_WILL_RUN”) to fully specify where the two services are running on the payload computer. The port numbers of different plugins cannot be the same, they must be open, and they must not be blocked by a local firewall, otherwise the service will be unreachable from the robot and other applications.</p>
 <p>The network ports used by the services can be opened by running this command on the host computer (Linux):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">ufw</span> <span class="n">allow</span> <span class="p">{</span><span class="n">PORT_NUMBER</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="testing-the-data-acquisition-plugin">
+</section>
+<section id="testing-the-data-acquisition-plugin">
 <h2>Testing the Data Acquisition Plugin<a class="headerlink" href="#testing-the-data-acquisition-plugin" title="Permalink to this headline">¶</a></h2>
 <p>There is a <a class="reference internal" href="../tester_programs/README.html"><span class="doc">plugin tester script</span></a> that can be used while developing a new data acquisition plugin service to help ensure that the service can be communicated with and behaves as expected. The script runs through a series of tests checking the networking and the functionality of each of the plugin’s RPCs.</p>
-</div>
-<div class="section" id="communicating-with-the-data-acquisition-service">
+</section>
+<section id="communicating-with-the-data-acquisition-service">
 <h2>Communicating with the Data Acquisition Service<a class="headerlink" href="#communicating-with-the-data-acquisition-service" title="Permalink to this headline">¶</a></h2>
 <p>The data acquisition example shows a program which communicates with the data acquisition service on robot and runs through the different data acquisition service RPCs. The data acquisition service will aggregate responses from each plugin service and will direct communication and requests to the specific plugins.</p>
 <p>Run the example that communicates with the data acquisition service:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">data_acquisition_example</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">username</span> <span class="p">{</span><span class="n">USER</span><span class="p">}</span> <span class="o">--</span><span class="n">password</span> <span class="p">{</span><span class="n">PASSWORD</span><span class="p">}</span> <span class="p">{</span><span class="n">ROBOT_IP</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="downloading-from-the-data-acquisition-store">
+</section>
+<section id="downloading-from-the-data-acquisition-store">
 <h2>Downloading from the Data Acquisition Store<a class="headerlink" href="#downloading-from-the-data-acquisition-store" title="Permalink to this headline">¶</a></h2>
 <p>The data acquisition download script allows users to download data from the DataAcquisitionStore service using REST calls. The script supports only time-based queries for filtering which data is downloaded and saved locally. The following command is an example of a time-based query and download. The timestamps are specified in RFC 3339 date string format (YYYY-MM-DDTHH:MM::SS.SZ, Y:year, M:month, D:day, H:hours, M:minutes, S:seconds as double, Z:zulu timezone)</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">data_acquisition_download</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">username</span> <span class="p">{</span><span class="n">USER</span><span class="p">}</span> <span class="o">--</span><span class="n">password</span> <span class="p">{</span><span class="n">PASSWORD</span><span class="p">}</span> <span class="p">{</span><span class="n">ROBOT_IP</span><span class="p">}</span> <span class="o">--</span><span class="n">query</span><span class="o">-</span><span class="n">from</span><span class="o">-</span><span class="n">timestamp</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">01</span><span class="n">T00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mf">00.0</span><span class="n">Z</span> <span class="o">--</span><span class="n">query</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">timestamp</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">04</span><span class="n">T00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mf">00.0</span><span class="n">Z</span>
 </pre></div>
 </div>
 <p>Note, by default, the download script will save the data to the current directory, however the <code class="docutils literal notranslate"><span class="pre">--destination-folder</span></code> argument can be used to change where the downloaded data is saved.</p>
-</div>
-<div class="section" id="run-a-data-acquisition-plugin-service-using-docker">
+</section>
+<section id="run-a-data-acquisition-plugin-service-using-docker">
 <h2>Run a Data Acquisition Plugin Service using Docker<a class="headerlink" href="#run-a-data-acquisition-plugin-service-using-docker" title="Permalink to this headline">¶</a></h2>
 <p>Please refer to this <a class="reference internal" href="../../../docs/payload/docker_containers.html"><span class="doc">document</span></a> for general instructions on how to run software applications on computation payloads as docker containers.</p>
 <p>With docker installed and setup, any of the data acquisition plugin services can be created into a docker container, saved as a tar file, and then run on the Spot CORE using Portainer. There are Dockerfiles for each plugin service within the plugin’s specific directory. These files will create a docker container with all necessary dependencies installed, and will start the plugin service.</p>
 <p>Follow the instructions on how to build and use the docker image from <a class="reference external" href="../../../docs/payload/docker_containers.html#build-docker-images">this section</a> on. The application arguments needed to run the plugins included in this example are <code class="docutils literal notranslate"><span class="pre">--host-ip</span> <span class="pre">HOST_COMPUTER_IP</span> <span class="pre">--guid</span> <span class="pre">GUID</span> <span class="pre">--secret</span> <span class="pre">SECRET</span> <span class="pre">ROBOT_IP</span></code>.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

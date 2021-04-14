@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Using the Image Service &mdash; Spot 2.3.3 documentation</title>
+  <title>Using the Image Service &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
@@ -550,17 +558,17 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="using-the-image-service">
+--><section id="using-the-image-service">
 <h1>Using the Image Service<a class="headerlink" href="#using-the-image-service" title="Permalink to this headline">¶</a></h1>
 <p>This example program demonstrates how to list the different image sources available to query. Additionally, this example program shows how to capture an image from one or more different image sources, decode the response data, and save each image locally in a file named after the image source.</p>
-<div class="section" id="setup-dependencies">
+<section id="setup-dependencies">
 <h2>Setup Dependencies<a class="headerlink" href="#setup-dependencies" title="Permalink to this headline">¶</a></h2>
 <p>This example requires the bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="running-the-example">
+</section>
+<section id="running-the-example">
 <h2>Running the Example<a class="headerlink" href="#running-the-example" title="Permalink to this headline">¶</a></h2>
 <p>The example can be used to list the available image sources, as well as query and save image data from each image source. By default, the example is configured to communicate with the robot cameras, however it can be updated to</p>
 <p>To run the example and query images from the base robot cameras:</p>
@@ -571,8 +579,8 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Instead of providing the argument <code class="docutils literal notranslate"><span class="pre">--image-sources</span></code>, the command line argument <code class="docutils literal notranslate"><span class="pre">--list</span></code> can be passed to print out which image sources are available from the image service.</p>
 <p>To test an image service other than the base robot cameras, the <code class="docutils literal notranslate"><span class="pre">--image-service</span></code> argument can be passed with the image service name being tested. For example, to test the <a class="reference internal" href="../web_cam_image_service/README.html"><span class="doc">web cam service</span></a>, the argument <code class="docutils literal notranslate"><span class="pre">--image-service</span> <span class="pre">web-cam-service</span></code> can be included when running the example. Since the other image services will be registered with the robot’s directory service, the get_image example can be run from any computer and just needs an API connection to the robot to be able to access the external image service and its images.</p>
 <p>Note that the front left and front right cameras on Spot are rotated 90 degrees counterclockwise from upright, and the right camera on Spot is rotated 180 degrees from upright. As a result, the corresponding images aren’t initially saved with the same orientation as is seen on the tablet. By adding the command line argument <code class="docutils literal notranslate"><span class="pre">--auto-rotate</span></code>, this example code automatically rotates all images from Spot to be saved in the orientation they are seen on the tablet screen.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

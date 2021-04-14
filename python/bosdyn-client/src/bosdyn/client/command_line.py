@@ -34,11 +34,15 @@ from .directory_registration import DirectoryRegistrationClient, DirectoryRegist
 from .estop import EstopClient, EstopEndpoint, EstopKeepAlive
 from .payload import PayloadClient
 from .payload_registration import PayloadRegistrationClient, PayloadAlreadyExistsError
+from .power import PowerClient
 from .image import (ImageClient, UnknownImageSourceError, ImageResponseError, build_image_request,
                     save_images_as_files)
 from .lease import LeaseClient
 from .license import LicenseClient
 from .local_grid import LocalGridClient
+from .power import (PowerClient, power_off_robot, power_cycle_robot, power_on_payload_ports,
+                    power_off_payload_ports, power_on_wifi_radio, power_off_wifi_radio,
+                    )
 from .robot_id import RobotIdClient
 from .robot_state import RobotStateClient
 from .time_sync import TimeSyncClient, TimeSyncEndpoint, TimeSyncError, timespec_to_robot_timespan
@@ -1008,7 +1012,8 @@ class RobotStateCommands(Subcommands):
             command_dict: Dictionary of command names which take parsed options.
         """
         super(RobotStateCommands, self).__init__(subparsers, command_dict,
-                                                 [FullStateCommand, MetricsCommand, RobotModel])
+                                                 [FullStateCommand, HardwareConfigurationCommand,
+                                                 MetricsCommand, RobotModel])
 
 
 class FullStateCommand(Command):
@@ -1036,6 +1041,30 @@ class FullStateCommand(Command):
         print(proto)
         return True
 
+class HardwareConfigurationCommand(Command):
+    """Show robot hardware configuration."""
+
+    NAME = 'hardware'
+
+    def __init__(self, subparsers, command_dict):
+        """Show robot hardware configuration.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(HardwareConfigurationCommand, self).__init__(subparsers, command_dict)
+
+    def _run(self, robot, options):
+        """Implementation of the command; prints HardwareConfiguration proto.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+        """
+        proto = robot.ensure_client(RobotStateClient.default_service_name).get_robot_hardware_configuration()
+        print(proto)
+        return True
 
 class RobotModel(Command):
     """Write robot URDF and mesh to local files."""
@@ -1827,6 +1856,127 @@ class HostComputerIPCommand(Command):
         """
         print("The IP address of the computer used to talk to the robot is: %s" %(bosdyn.client.common.get_self_ip(robot._name)))
 
+
+class PowerCommand(Subcommands):
+    """Send power commands to the robot."""
+
+    NAME = 'power'
+
+    def __init__(self, subparsers, command_dict):
+        """Send power commands to the robot.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(PowerCommand, self).__init__(subparsers, command_dict, [
+            PowerRobotCommand, PowerPayloadsCommand, PowerWifiRadioCommand,
+        ])
+
+class PowerRobotCommand(Command):
+    """Control the power of the entire robot."""
+
+    NAME = 'robot'
+
+    def __init__(self, subparsers, command_dict):
+        """Power cycle or power off robot computers.
+
+        Note that this is only compatbile with certain robots. Check HardwareConfiguration for details.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(PowerRobotCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('cmd', choices=['cycle', 'off'])
+
+
+    def _run(self, robot, options):
+        """
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+        """
+        robot.time_sync.wait_for_sync(timeout_sec=1.0)
+        lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
+        lease = lease_client.acquire()
+        with bosdyn.client.lease.LeaseKeepAlive(lease_client):
+            power_client = robot.ensure_client(PowerClient.default_service_name)
+            if options.cmd == 'cycle':
+                power_cycle_robot(power_client)
+            elif options.cmd == 'off':
+                power_off_robot(power_client)
+
+
+class PowerPayloadsCommand(Command):
+    """Control the power of robot payloads."""
+
+    NAME = 'payload'
+
+    def __init__(self, subparsers, command_dict):
+        """Power on or off robot payloads.
+
+        Note that this is only compatbile with certain robots. Check HardwareConfiguration for details.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(PowerPayloadsCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('on_off', choices=['on', 'off'])
+
+    def _run(self, robot, options):
+        """
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+        """
+
+        robot.time_sync.wait_for_sync(timeout_sec=1.0)
+        lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
+        lease = lease_client.acquire()
+        with bosdyn.client.lease.LeaseKeepAlive(lease_client):
+            power_client = robot.ensure_client(PowerClient.default_service_name)
+            if options.on_off == 'on':
+                power_on_payload_ports(power_client)
+            elif options.on_off == 'off':
+                power_off_payload_ports(power_client)
+
+class PowerWifiRadioCommand(Command):
+    """Control the power of robot wifi radio."""
+
+    NAME = 'wifi'
+
+    def __init__(self, subparsers, command_dict):
+        """Power on or off robot LTE radio.
+
+        Note that this is only compatbile with certain robots. Check HardwareConfiguration for details.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(PowerWifiRadioCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('on_off', choices=['on', 'off'])
+
+    def _run(self, robot, options):
+        """
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+        """
+
+        robot.time_sync.wait_for_sync(timeout_sec=1.0)
+        lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
+        lease = lease_client.acquire()
+        with bosdyn.client.lease.LeaseKeepAlive(lease_client):
+            power_client = robot.ensure_client(PowerClient.default_service_name)
+            if options.on_off == 'on':
+                power_on_wifi_radio(power_client)
+            elif options.on_off == 'off':
+                power_off_wifi_radio(power_client)
+
+
 def main(args=None):
     """Command-line interface for interacting with robot services."""
     parser = argparse.ArgumentParser(prog='bosdyn.client', description=main.__doc__)
@@ -1851,6 +2001,7 @@ def main(args=None):
     LocalGridCommands(subparsers, command_dict)
     DataAcquisitionCommand(subparsers, command_dict)
     HostComputerIPCommand(subparsers, command_dict)
+    PowerCommand(subparsers, command_dict)
 
     options = parser.parse_args(args=args)
 

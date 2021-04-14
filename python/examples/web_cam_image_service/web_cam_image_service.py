@@ -30,7 +30,7 @@ _LOGGER = logging.getLogger(__name__)
 class WebCam(CameraInterface):
     """Provide access to the latest web cam data using openCV's VideoCapture."""
 
-    def __init__(self, device_name, fps=30, show_debug_information=False):
+    def __init__(self, device_name, fps=30, show_debug_information=False, codec=""):
         self.show_debug_images = show_debug_information
 
         # Check if the user is passing an index to a camera port, i.e. "0" to get the first
@@ -54,19 +54,36 @@ class WebCam(CameraInterface):
 
         # OpenCV VideoCapture instance.
         self.capture = cv2.VideoCapture(device_name)
+        if not self.capture.isOpened():
+            # Unable to open a video capture connection to the specified device.
+            err = "Unable to open a cv2.VideoCapture connection to %s" % device_name
+            _LOGGER.warn(err)
+            raise Exception(err)
+
         self.capture.set(cv2.CAP_PROP_FPS, fps)
+
+        # Use the codec input argument to determine the  OpenCV 'FourCC' variable is a byte code specifying
+        # the video coedc (the compression/decompression software).
+        if len(codec) == 4:
+            # Converts the codec from a single string to a list of four capitalized characters, then
+            # creates a video writer based on those characters and sets this as a property of the
+            # main VideoCatpure for the camera.
+            self.capture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*codec.upper()))
+        elif len(codec) > 0:
+            # Non-empty codec string, but it isn't the correct four character string we expect.
+            raise Exception("The codec argument provided (%s) is the incorrect format. It should be a four character string." % codec)
 
         # Attempt to determine the gain and exposure for the camera.
         self.camera_exposure, self.camera_gain = None, None
         try:
             self.camera_gain = self.capture.get(cv2.CAP_PROP_GAIN)
         except cv2.error as e:
-            print("Unable to determine camera gain: " + str(e))
+            _LOGGER.warn("Unable to determine camera gain: %s", e)
             self.camera_gain = None
         try:
             self.camera_exposure = self.capture.get(cv2.CAP_PROP_EXPOSURE)
         except cv2.error as e:
-            print("Unable to determine camera exposure time: " + str(e))
+            _LOGGER.warn("Unable to determine camera exposure time: %s", e)
             self.camera_exposure = None
 
         # Determine the dimensions of the image.
@@ -80,12 +97,12 @@ class WebCam(CameraInterface):
         capture_time = time.time()
         success, image = self.capture.read()
         if self.show_debug_images:
-            print("Image Capture Result: %s" % str(success))
+            _LOGGER.info("Image Capture Result: %s", str(success))
             try:
                 cv2.imshow("WebCam Image Capture", image)
                 cv2.waitKey(1)
             except Exception:
-                print("Unable to display the webcam image captured.")
+                _LOGGER.warn("Unable to display the webcam image captured.")
                 pass
         if success:
             return image, capture_time
@@ -124,7 +141,7 @@ class WebCam(CameraInterface):
                 # so use this value instead of the service's default.
                 quality = quality_percent
             encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
-            image_proto.data = cv2.imencode('.jpg', image_data, encode_param)[1].tostring()
+            image_proto.data = cv2.imencode('.jpg', image_data, encode_param)[1].tobytes()
             image_proto.format = image_pb2.Image.FORMAT_JPEG
         else:
             # Unsupported format.
@@ -140,10 +157,11 @@ def device_name_to_source_name(device_name):
 
 
 def make_webcam_image_service(bosdyn_sdk_robot, service_name, device_names,
-                              show_debug_information=False, logger=None):
+                              show_debug_information=False, logger=None,
+                              codec=""):
     image_sources = []
     for device in device_names:
-        web_cam = WebCam(device, show_debug_information=show_debug_information)
+        web_cam = WebCam(device, show_debug_information=show_debug_information, codec=codec)
         img_src = VisualImageSource(web_cam.image_source_name, web_cam, rows=web_cam.rows,
                                     cols=web_cam.cols, gain=web_cam.camera_gain,
                                     exposure=web_cam.camera_exposure)
@@ -152,13 +170,14 @@ def make_webcam_image_service(bosdyn_sdk_robot, service_name, device_names,
 
 
 def run_service(bosdyn_sdk_robot, port, service_name, device_names,
-                show_debug_information=False, logger=None):
+                show_debug_information=False, logger=None,
+                codec=""):
     # Proto service specific function used to attach a servicer to a server.
     add_servicer_to_server_fn = image_service_pb2_grpc.add_ImageServiceServicer_to_server
 
     # Instance of the servicer to be run.
     service_servicer = make_webcam_image_service(bosdyn_sdk_robot, service_name, device_names,
-                                                 show_debug_information, logger=logger)
+                                                 show_debug_information, logger=logger, codec=codec)
     return GrpcServiceRunner(service_servicer, add_servicer_to_server_fn, port, logger=logger)
 
 
@@ -170,11 +189,14 @@ def add_web_cam_arguments(parser):
     parser.add_argument(
         '--show-debug-info', action='store_true', required=False,
         help="If passed, openCV will try to display the captured web cam images.")
+    parser.add_argument(
+        '--codec', required=False, help="The four character video codec (compression format). For example, " +\
+        "this is commonly 'DIVX' on windows or 'MJPG' on linux.", default="")
 
 if __name__ == '__main__':
     # Define all arguments used by this service.
     import argparse
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(allow_abbrev=False)
     bosdyn.client.util.add_base_arguments(parser)
     bosdyn.client.util.add_payload_credentials_arguments(parser)
     bosdyn.client.util.add_service_endpoint_arguments(parser)
@@ -197,7 +219,8 @@ if __name__ == '__main__':
 
     # Create a service runner to start and maintain the service on background thread.
     service_runner = run_service(robot, options.port, DIRECTORY_NAME, devices,
-                                 options.show_debug_info, logger=_LOGGER)
+                                 options.show_debug_info, logger=_LOGGER,
+                                 codec=options.codec)
 
     # Use a keep alive to register the service with the robot directory.
     dir_reg_client = robot.ensure_client(DirectoryRegistrationClient.default_service_name)

@@ -12,6 +12,29 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 2.3.4
+
+### New Features
+
+#### Power Control
+New options have been added to the Power Service to allow for power cycling the robot and powering the payload ports or wifi radios on or off. Additional fields have been added to the robot state message to check the payload and wifi power states. Support has also been been added to the `bosdyn.client` command line interface for these commands.
+
+These new options will only work on some Enterprise Spot robots. Check the HardwareConfiguration message reported by a particular robot to see if it supports them.
+
+### Bug fixes and improvements
+
+Fixed an issue that could cause payload registration or directory registraion keep-alive threads to exit early in certain cases.
+
+Fixed a couple issues with the webcam example: updated the Dockerfile to create a smaller container specifically with python 3.7, added new optional argument to specify the video codec, and programmatically prevent substring arguments other than the `--device-name` argument to avoid accidental confusion with the docker container's `--device` argument.
+
+### Known Issues
+
+Same as 2.3.0
+
+### Sample Code
+
+A new [tutorial](python/fetch_tutorial/fetch1.md) has been added to walk through using machine learning, the Network Compute Bridge, and Manipulation API to play fetch with Spot.
+
 ## 2.3.3
 
 ### New Features

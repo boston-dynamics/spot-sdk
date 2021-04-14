@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>GraphNav Localization &mdash; Spot 2.3.3 documentation</title>
+  <title>GraphNav Localization &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../payload/README.html">Payloads</a><ul>
@@ -548,11 +556,11 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="graphnav-localization">
+--><section id="graphnav-localization">
 <h1>GraphNav Localization<a class="headerlink" href="#graphnav-localization" title="Permalink to this headline">¶</a></h1>
 <p>Once the robot’s location has been initialized in GraphNav, clients can use the <code class="docutils literal notranslate"><span class="pre">GetLocalizationState</span></code> RPC. The response message will contain a localization object which reports the pose of the robot relative to a particular waypoint on the map.</p>
 <p>A map’s waypoints are combined with the cumulative point cloud data captured at each waypoint. It’s important to understand that this point cloud data does not result in global consistency.</p>
-<div class="section" id="localization-update-interval">
+<section id="localization-update-interval">
 <h2>Localization update interval<a class="headerlink" href="#localization-update-interval" title="Permalink to this headline">¶</a></h2>
 <p>GraphNav updates localization at least twice a second. Internally, GraphNav uses the localization estimate to decide whether or not to switch the localization frame to a different waypoint on the map.</p>
 <p>Localization is computed by combining prior information from the map, the robot’s odometry, and visual and geometric features in the world around the robot. The quality of the pose estimate varies depending on the environment, the sensor payload on Spot, how far away the robot is from a waypoint and how the robot got to its current position.</p>
@@ -565,31 +573,31 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>The environment is too dark</p></li>
 </ul>
 <p>A robot equipped with a LIDAR payload can operate in darker environments than a robot without such a payload.</p>
-</div>
-<div class="section" id="feature-deserts">
+</section>
+<section id="feature-deserts">
 <h2>Feature Deserts<a class="headerlink" href="#feature-deserts" title="Permalink to this headline">¶</a></h2>
 <p>GraphNav depends on features in the environment to localize. Where features are lacking, localization is more difficult or impossible.</p>
 <p>For example, every position on a snow-covered field looks the same — there isn’t enough detail for localization to succeed. Internally GraphNav estimates whether the robot’s location provides sufficient data for localization. If not, any waypoints created are annotated as feature deserts.</p>
 <p>GraphNav will not attempt to localize in feature deserts. Instead, it will rely on odometry to allow the robot to cross small feature deserts.</p>
-</div>
-<div class="section" id="lost-robots">
+</section>
+<section id="lost-robots">
 <h2>Lost robots<a class="headerlink" href="#lost-robots" title="Permalink to this headline">¶</a></h2>
 <p>The GraphNav service maintains an internal assessment of whether or not it believes the robot is lost or stuck. When lost, the service will refuse to navigate autonomously.</p>
 <p>This determination is correlated with the amount of change in the environment where the map was recorded. A site that has changed significantly since recording will look very different to the robot. For example, a map of an empty parking lot will look different when cars are parked there.</p>
 <p>When site changes cause the localization status to be <code class="docutils literal notranslate"><span class="pre">STATUS_LOST</span></code>, a new map of the site should be recorded.</p>
-</div>
-<div class="section" id="stuck-robots">
+</section>
+<section id="stuck-robots">
 <h2>Stuck robots<a class="headerlink" href="#stuck-robots" title="Permalink to this headline">¶</a></h2>
 <p>The GraphNav service uses a system of constraints to keep the robot relatively close to the recorded route (roughly within a 3m corridor).</p>
 <p>If a large object is placed in the robot’s path, the robot may not be able to get around it. If the robot takes longer than expected to get to its next destination, GraphNav will declare the robot stuck. This does NOT stop the robot, which will keep trying to return to the route. However, the API client may wish to intervene or prompt the operator.</p>
-</div>
-<div class="section" id="stairs-and-other-edge-constraints">
+</section>
+<section id="stairs-and-other-edge-constraints">
 <h2>Stairs and other edge constraints<a class="headerlink" href="#stairs-and-other-edge-constraints" title="Permalink to this headline">¶</a></h2>
 <p>When recording a map that includes stairs, annotations will be added to the relevant edges in the map. The system will orient the robot to face up the stairs (both when ascending and descending) and reduce the maximum speed. Typically this results in the robot turning in place at the top of a stairwell and carefully descending.</p>
 <p>Edges may also be annotated with related constraints to maintain direction. For example, this allows the robot to safely traverse stairs connected to a narrow hallway by turning around before entering the narrow region.</p>
 <p>The robot must have enough space to turn around in between up- and down- stairs, otherwise the robot will report a navigation status of <code class="docutils literal notranslate"><span class="pre">STATUS_CONSTRAINT_FAULT</span></code>.</p>
-</div>
-<div class="section" id="graphnav-origin">
+</section>
+<section id="graphnav-origin">
 <h2>GraphNav Origin<a class="headerlink" href="#graphnav-origin" title="Permalink to this headline">¶</a></h2>
 <p>The localization object includes an additional field <code class="docutils literal notranslate"><span class="pre">seed_tform_body</span></code> since the 2.1.0 release. This field returns the pose of the robot body with respect to the starting fiducial frame as an SE3Pose, which can be considered the “origin” or “seed” of the GraphNav map.</p>
 <p>Please reference this <a class="reference external" href="https://support.bostondynamics.com/s/article/Site-inspection-with-teleoperation">document</a> for how to initialize and define a custom origin using the Tablet App outside of Autowalk since the 2.1.0 release.</p>
@@ -602,8 +610,8 @@ Development Kit License (20191101-BDSDK-SL).
     <span class="k">return</span> <span class="n">math_helpers</span><span class="o">.</span><span class="n">SE3Pose</span><span class="o">.</span><span class="n">from_obj</span><span class="p">(</span><span class="n">gn_origin_tform_body</span><span class="p">)</span>
 </pre></div>
 </div>
-<!--- image and page reference link definitions ---></div>
-</div>
+<!--- image and page reference link definitions ---></section>
+</section>
 
 
            </div>

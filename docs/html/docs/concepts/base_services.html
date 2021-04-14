@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Base Services &mdash; Spot 2.3.3 documentation</title>
+  <title>Base Services &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../payload/README.html">Payloads</a><ul>
@@ -546,11 +554,11 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="base-services">
+--><section id="base-services">
 <h1>Base Services<a class="headerlink" href="#base-services" title="Permalink to this headline">¶</a></h1>
 <p>This document assumes knowledge of material covered in the SDK documentation on <a class="reference internal" href="networking.html"><span class="doc">networking</span></a>.</p>
 <p>Base Services provide the architectural glue used by the rest of the Spot API. These services include authentication, service discovery, and time synchronization. Many applications will use the Base Services when starting up, and before using services higher in the stack such as Robot State, Robot Commands, and Autonomy.</p>
-<div class="section" id="robot-id">
+<section id="robot-id">
 <h2>robot-id<a class="headerlink" href="#robot-id" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">robot-id</span></code> service provides metadata about the Spot robot. It is usually the first service accessed when bootstrapping a connection to Spot. The metadata is encoded in a <code class="docutils literal notranslate"><span class="pre">RobotId</span></code> message, as shown below:</p>
 <div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="c1">/// Robot identity information, which should be static while robot is powered-on.</span>
@@ -583,8 +591,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Checking the <code class="docutils literal notranslate"><span class="pre">software_release</span></code> version to determine if the application is compatible with Spot, or to change behavior depending on Spot software version.</p></li>
 </ul>
 <p>Unlike nearly all other services, the <code class="docutils literal notranslate"><span class="pre">robot-id</span></code> service does not require an authenticated user to access it. This is because the <code class="docutils literal notranslate"><span class="pre">RobotId</span></code> data includes information that can be helpful for the authentication sequence, such as the software version or a serial number that can help find user credentials.</p>
-</div>
-<div class="section" id="auth">
+</section>
+<section id="auth">
 <h2>auth<a class="headerlink" href="#auth" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">auth</span></code> service is used to authenticate a user to Spot. A successful authentication attempt returns a user token that must be included in RPCs to all services other than <code class="docutils literal notranslate"><span class="pre">robot-id</span></code> and <code class="docutils literal notranslate"><span class="pre">auth</span></code> to get access. The user token is a <a class="reference external" href="https://jwt.io">JWT</a> token that is valid for 12 hours and can only be used for accessing services on the robot that issued it. The token isn’t transferable to other robots.</p>
 <p>There are two ways to authenticate a user:</p>
@@ -593,8 +601,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>By refreshing an existing valid user token. This approach can be used to support a long-lived client application to minimize repeated prompts for username/password.</p></li>
 </ol>
 <p>The <code class="docutils literal notranslate"><span class="pre">auth</span></code> service rate-limits invalid authentication attempts to prevent a network attacker from trying to guess users or passwords. After six consecutive failed authentication attempts, authentication is locked out for 1 minute. <code class="docutils literal notranslate"><span class="pre">STATUS_TEMPORARILY_LOCKED_OUT</span></code> is returned in this case.</p>
-</div>
-<div class="section" id="directory">
+</section>
+<section id="directory">
 <h2>directory<a class="headerlink" href="#directory" title="Permalink to this headline">¶</a></h2>
 <p>Spot’s API consists of a variety of services. Some of these services ship with Spot. Some services are provided by payloads or applications running on Spot CORE. The <code class="docutils literal notranslate"><span class="pre">directory</span></code> service is used to discover which services are currently running on Spot.</p>
 <p>Note that if an application is built with the Python client library only uses built-in services, it may never need to access the <code class="docutils literal notranslate"><span class="pre">directory</span></code> service. However, the Python client library uses the <code class="docutils literal notranslate"><span class="pre">directory</span></code> service to set up connections to the built-in services.</p>
@@ -614,8 +622,8 @@ graph-nav-service           bosdyn.api.graph_nav.GraphNavService      graph-nav.
 <p>The <code class="docutils literal notranslate"><span class="pre">authority</span></code> is used to direct the RPC request to the correct service. The combination of the <code class="docutils literal notranslate"><span class="pre">authority</span></code> and the <code class="docutils literal notranslate"><span class="pre">type</span></code> of the service creates a URL. For example, the <code class="docutils literal notranslate"><span class="pre">auth</span></code> service has the URL: <code class="docutils literal notranslate"><span class="pre">https://auth.spot.robot/bosdyn.api.AuthService</span></code> This naming scheme is defined by gRPC itself. All authorities must be of the form <code class="docutils literal notranslate"><span class="pre">&lt;authority-name&gt;.spot.robot</span></code>. Multiple services of different types can share the same authority.</p>
 <p>Services specify whether a user token is needed to access the service. This is demonstrated in the <code class="docutils literal notranslate"><span class="pre">tokens</span></code> column in the example above. Most services require a signed in user, but a few do not.</p>
 <p>Note that not all services register with the <code class="docutils literal notranslate"><span class="pre">directory</span></code> service at Spot startup. Applications may need to periodically poll the <code class="docutils literal notranslate"><span class="pre">directory</span></code> service to catch changes that have been made. Built-in services may take a few seconds to register at system startup. Payload-provided services may register significantly later.</p>
-</div>
-<div class="section" id="time-sync">
+</section>
+<section id="time-sync">
 <h2>time-sync<a class="headerlink" href="#time-sync" title="Permalink to this headline">¶</a></h2>
 <p>Time is critical for both interpreting when sensor data was recorded as well as for commanding Spot. The Spot API uses a single clock known as “Robot Time” as a basis for time commands.</p>
 <p>Spot’s clock may not be the same as the application’s clock. For example, at a single point in time Spot may think it is 16:01, whereas the application’s clock may be an hour behind at 15:01. If the application treated Spot’s clock as being at the same time as its own clock, problems may result. Fresh sensor data from Spot would be interpreted as being generated in the future. Commands that are issued to expire in 10 seconds would be rejected by Spot since they would appear to have expired.</p>
@@ -627,8 +635,8 @@ graph-nav-service           bosdyn.api.graph_nav.GraphNavService      graph-nav.
 <li><p>A client may connect to multiple Spot robots that are not synchronized to each other.</p></li>
 </ul>
 <p>Clients needing high precision timing, such as a payload sensor collecting data while the robot is moving, should instead use NTP to synchronize to the robot.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

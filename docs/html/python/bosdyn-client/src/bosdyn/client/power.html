@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Power &mdash; Spot 2.3.3 documentation</title>
+  <title>Power &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/payload/README.html">Payloads</a><ul>
@@ -544,7 +552,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-bosdyn.client.power">
+  <section id="module-bosdyn.client.power">
 <span id="power"></span><h1>Power<a class="headerlink" href="#module-bosdyn.client.power" title="Permalink to this headline">¶</a></h1>
 <p>For clients to the power command service.</p>
 <dl class="py exception">
@@ -658,8 +666,8 @@ This service requires ownership over the robot, in the form of a lease.</p>
 <dl class="py function">
 <dt id="bosdyn.client.power.safe_power_off">
 <code class="sig-prename descclassname">bosdyn.client.power.</code><code class="sig-name descname">safe_power_off</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command_client</span></em>, <em class="sig-param"><span class="n">state_client</span></em>, <em class="sig-param"><span class="n">timeout_sec</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">update_frequency</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/power.html#safe_power_off"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.power.safe_power_off" title="Permalink to this definition">¶</a></dt>
-<dd><p>Power off robot safely. This function blocks until robot safely powers off. This means the
-robot will attempt to sit before powering off.</p>
+<dd><p>Power off robot motors safely. This function blocks until robot safely powers off. This
+means the robot will attempt to sit before powering motors off.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -683,7 +691,25 @@ has succeeded.</p></li>
 <dl class="py function">
 <dt id="bosdyn.client.power.power_on">
 <code class="sig-prename descclassname">bosdyn.client.power.</code><code class="sig-name descname">power_on</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">power_client</span></em>, <em class="sig-param"><span class="n">timeout_sec</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">update_frequency</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/power.html#power_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.power.power_on" title="Permalink to this definition">¶</a></dt>
-<dd><p>Power on robot. This function blocks until the command returns success.</p>
+<dd><p>Power on robot motors. See power_on_motors().</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 2.3.4: </span>Replaced by the less ambiguous power_on_motors function.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.client.power.power_off">
+<code class="sig-prename descclassname">bosdyn.client.power.</code><code class="sig-name descname">power_off</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">power_client</span></em>, <em class="sig-param"><span class="n">timeout_sec</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">update_frequency</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/power.html#power_off"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.power.power_off" title="Permalink to this definition">¶</a></dt>
+<dd><p>Power off the robot motors. See power_off_motors().</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 2.3.4: </span>Replaced by the less ambiguous power_off_motors function.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.client.power.power_on_motors">
+<code class="sig-prename descclassname">bosdyn.client.power.</code><code class="sig-name descname">power_on_motors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">power_client</span></em>, <em class="sig-param"><span class="n">timeout_sec</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">update_frequency</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/power.html#power_on_motors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.power.power_on_motors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Power on robot motors. This function blocks until the command returns success.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -704,10 +730,147 @@ has succeeded.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="bosdyn.client.power.power_off">
-<code class="sig-prename descclassname">bosdyn.client.power.</code><code class="sig-name descname">power_off</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">power_client</span></em>, <em class="sig-param"><span class="n">timeout_sec</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">update_frequency</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/power.html#power_off"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.power.power_off" title="Permalink to this definition">¶</a></dt>
-<dd><p>Power off robot immediately. This function blocks until robot powers off. This will not put
-robot in a safe state.</p>
+<dt id="bosdyn.client.power.power_off_motors">
+<code class="sig-prename descclassname">bosdyn.client.power.</code><code class="sig-name descname">power_off_motors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">power_client</span></em>, <em class="sig-param"><span class="n">timeout_sec</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">update_frequency</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/power.html#power_off_motors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.power.power_off_motors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Power off the robot motors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>power_client</strong> (<em>bosdyn.api.PowerClient</em>) – client for calling power service.</p></li>
+<li><p><strong>timeout_sec</strong> (<em>float</em>) – Max time this function will block for.</p></li>
+<li><p><strong>update_frequency</strong> (<em>float</em>) – The frequency with which the robot should check if the command
+has succeeded.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.power.CommandTimedOutError" title="bosdyn.client.power.CommandTimedOutError"><strong>power.CommandTimedOutError</strong></a> – Did not power off within timeout_sec</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.power.PowerResponseError" title="bosdyn.client.power.PowerResponseError"><strong>PowerResponseError</strong></a> – Something went wrong during the power off sequence.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.client.power.power_off_robot">
+<code class="sig-prename descclassname">bosdyn.client.power.</code><code class="sig-name descname">power_off_robot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">power_client</span></em>, <em class="sig-param"><span class="n">timeout_sec</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">update_frequency</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/power.html#power_off_robot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.power.power_off_robot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fully power off the robot. Powering off the robot will stop API comms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>power_client</strong> (<em>bosdyn.api.PowerClient</em>) – client for calling power service.</p></li>
+<li><p><strong>timeout_sec</strong> (<em>float</em>) – Max time this function will block for.</p></li>
+<li><p><strong>update_frequency</strong> (<em>float</em>) – The frequency with which the robot should check if the command
+has succeeded.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.power.CommandTimedOutError" title="bosdyn.client.power.CommandTimedOutError"><strong>power.CommandTimedOutError</strong></a> – Did not power off within timeout_sec</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.power.PowerResponseError" title="bosdyn.client.power.PowerResponseError"><strong>PowerResponseError</strong></a> – Something went wrong during the power off sequence.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.client.power.power_cycle_robot">
+<code class="sig-prename descclassname">bosdyn.client.power.</code><code class="sig-name descname">power_cycle_robot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">power_client</span></em>, <em class="sig-param"><span class="n">timeout_sec</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">update_frequency</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/power.html#power_cycle_robot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.power.power_cycle_robot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Power cycle the robot. Power cycling the robot will stop API comms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>power_client</strong> (<em>bosdyn.api.PowerClient</em>) – client for calling power service.</p></li>
+<li><p><strong>timeout_sec</strong> (<em>float</em>) – Max time this function will block for.</p></li>
+<li><p><strong>update_frequency</strong> (<em>float</em>) – The frequency with which the robot should check if the command
+has succeeded.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.power.CommandTimedOutError" title="bosdyn.client.power.CommandTimedOutError"><strong>power.CommandTimedOutError</strong></a> – Did not power off within timeout_sec</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.power.PowerResponseError" title="bosdyn.client.power.PowerResponseError"><strong>PowerResponseError</strong></a> – Something went wrong during the power off sequence.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.client.power.power_off_payload_ports">
+<code class="sig-prename descclassname">bosdyn.client.power.</code><code class="sig-name descname">power_off_payload_ports</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">power_client</span></em>, <em class="sig-param"><span class="n">timeout_sec</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">update_frequency</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/power.html#power_off_payload_ports"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.power.power_off_payload_ports" title="Permalink to this definition">¶</a></dt>
+<dd><p>Power off the robot payload ports.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>power_client</strong> (<em>bosdyn.api.PowerClient</em>) – client for calling power service.</p></li>
+<li><p><strong>timeout_sec</strong> (<em>float</em>) – Max time this function will block for.</p></li>
+<li><p><strong>update_frequency</strong> (<em>float</em>) – The frequency with which the robot should check if the command
+has succeeded.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.power.CommandTimedOutError" title="bosdyn.client.power.CommandTimedOutError"><strong>power.CommandTimedOutError</strong></a> – Did not power off within timeout_sec</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.power.PowerResponseError" title="bosdyn.client.power.PowerResponseError"><strong>PowerResponseError</strong></a> – Something went wrong during the power off sequence.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.client.power.power_on_payload_ports">
+<code class="sig-prename descclassname">bosdyn.client.power.</code><code class="sig-name descname">power_on_payload_ports</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">power_client</span></em>, <em class="sig-param"><span class="n">timeout_sec</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">update_frequency</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/power.html#power_on_payload_ports"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.power.power_on_payload_ports" title="Permalink to this definition">¶</a></dt>
+<dd><p>Power on the robot payload ports.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>power_client</strong> (<em>bosdyn.api.PowerClient</em>) – client for calling power service.</p></li>
+<li><p><strong>timeout_sec</strong> (<em>float</em>) – Max time this function will block for.</p></li>
+<li><p><strong>update_frequency</strong> (<em>float</em>) – The frequency with which the robot should check if the command
+has succeeded.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.power.CommandTimedOutError" title="bosdyn.client.power.CommandTimedOutError"><strong>power.CommandTimedOutError</strong></a> – Did not power off within timeout_sec</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.power.PowerResponseError" title="bosdyn.client.power.PowerResponseError"><strong>PowerResponseError</strong></a> – Something went wrong during the power off sequence.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.client.power.power_off_wifi_radio">
+<code class="sig-prename descclassname">bosdyn.client.power.</code><code class="sig-name descname">power_off_wifi_radio</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">power_client</span></em>, <em class="sig-param"><span class="n">timeout_sec</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">update_frequency</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/power.html#power_off_wifi_radio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.power.power_off_wifi_radio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Power off the robot Wi-Fi radio.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>power_client</strong> (<em>bosdyn.api.PowerClient</em>) – client for calling power service.</p></li>
+<li><p><strong>timeout_sec</strong> (<em>float</em>) – Max time this function will block for.</p></li>
+<li><p><strong>update_frequency</strong> (<em>float</em>) – The frequency with which the robot should check if the command
+has succeeded.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – Problem communicating with the robot.</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.power.CommandTimedOutError" title="bosdyn.client.power.CommandTimedOutError"><strong>power.CommandTimedOutError</strong></a> – Did not power off within timeout_sec</p></li>
+<li><p><a class="reference internal" href="#bosdyn.client.power.PowerResponseError" title="bosdyn.client.power.PowerResponseError"><strong>PowerResponseError</strong></a> – Something went wrong during the power off sequence.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.client.power.power_on_wifi_radio">
+<code class="sig-prename descclassname">bosdyn.client.power.</code><code class="sig-name descname">power_on_wifi_radio</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">power_client</span></em>, <em class="sig-param"><span class="n">timeout_sec</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">update_frequency</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/power.html#power_on_wifi_radio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.power.power_on_wifi_radio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Power off the robot Wi-Fi radio.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -738,7 +901,7 @@ has succeeded.</p></li>
 </dl>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

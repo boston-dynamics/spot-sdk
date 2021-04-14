@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Data Acquisition Overview &mdash; Spot 2.3.3 documentation</title>
+  <title>Data Acquisition Overview &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../payload/README.html">Payloads</a><ul>
@@ -548,7 +556,7 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="data-acquisition-overview">
+--><section id="data-acquisition-overview">
 <h1>Data Acquisition Overview<a class="headerlink" href="#data-acquisition-overview" title="Permalink to this headline">¶</a></h1>
 <p>Spot 2.1 release features a new system for acquiring, storing, and retrieving sensor data. These features are available in teleop mode, where users are controlling the robot from a client, such as the tablet, and in <code class="docutils literal notranslate"><span class="pre">Autowalk</span></code> mode, where the tablet is controlling the robot by replaying a recorded mission. This data acquisition functionality comprises of several new services and their associated clients.</p>
 <ul class="simple">
@@ -557,20 +565,20 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Store</span></code> service: Interface for saving data and metadata to disk for later retrieval.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Image</span></code> services: Existing interface used in a new way. User-implemented image services will now be displayed in the tablet for driving, and be automatically capturable by the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service.</p></li>
 </ul>
-<div class="section" id="high-level-concepts">
+<section id="high-level-concepts">
 <h2>High-level concepts<a class="headerlink" href="#high-level-concepts" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="capture-capabilities">
+<section id="capture-capabilities">
 <h3>Capture capabilities<a class="headerlink" href="#capture-capabilities" title="Permalink to this headline">¶</a></h3>
 <p>Capture capabilities are human-readable identifiers for the type of data captured by <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Plugin</span></code> services or <code class="docutils literal notranslate"><span class="pre">Image</span></code> services. The <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service compiles this list of capture capabilities from all the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Plugin</span></code> services and <code class="docutils literal notranslate"><span class="pre">Image</span></code> services registered in the system.
 Each <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Plugin</span></code> service reports the capture capabilities it provides. For example, a plugin that captures <code class="docutils literal notranslate"><span class="pre">GPS</span></code> data can report a capture capability named “GPS”. The <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service requests this information from a plugin when the plugin registers with the directory service. The <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service also reports all image sources listed by the <code class="docutils literal notranslate"><span class="pre">Image</span></code> services registered in the system as capture capabilities.
 The tablet requests this complete list of capture capabilities from the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Plugin</span></code> services and the <code class="docutils literal notranslate"><span class="pre">Image</span></code> services from the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service.</p>
-</div>
-<div class="section" id="actions">
+</section>
+<section id="actions">
 <h3>Actions<a class="headerlink" href="#actions" title="Permalink to this headline">¶</a></h3>
 <p>To simplify the data acquisition process, the tablet contains functionality to combine the capture capabilities described above into actions with unique names. So, actions are combinations of capture capabilities, configured with a specific timeout to wait for the capture completion. These capture actions can then be triggered programmatically through the SDK or by the tablet during teleop of the robot or mission recording using the Red Plus button on the tablet, shown in the screenshot below.</p>
 <p><img alt="Tablet Screenshot" src="../../_images/tablet_screenshot.png" /></p>
-</div>
-<div class="section" id="acquisition-request">
+</section>
+<section id="acquisition-request">
 <h3>Acquisition request:<a class="headerlink" href="#acquisition-request" title="Permalink to this headline">¶</a></h3>
 <p>During teleop or <code class="docutils literal notranslate"><span class="pre">Autowalk</span></code>, a triggered action sends an acquisition request, which is an <code class="docutils literal notranslate"><span class="pre">AcquireDataRequest</span></code> message, to the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service. An acquisition request contains four parts:</p>
 <ol class="simple">
@@ -586,22 +594,22 @@ The tablet requests this complete list of capture capabilities from the <code cl
 <li><p>Minimum timeout: Optional duration used to extend the amount of time that the data request may take, in the event that a plugin is incorrectly specifying its timeout. The amount of time allowed will be the maximum of this duration and any requests made to plugins or other capture sources. This is the value the user specifies when they configure an action.</p></li>
 </ol>
 <p>The outcome of an acquisition request is <code class="docutils literal notranslate"><span class="pre">Image</span></code> services and <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Plugin</span></code> services collecting the requested data and storing it in the robot for downloading at a later time.</p>
-</div>
-<div class="section" id="groups">
+</section>
+<section id="groups">
 <h3>Groups<a class="headerlink" href="#groups" title="Permalink to this headline">¶</a></h3>
 <p>Groups are a set of acquisition requests, such as a mission or a teleop capture session. They simplify the organization of the captured data. For example, all the captured data for a specific group is stored in the same folder in the downloaded data. The <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Store</span></code> client interface also provides methods for listing actions for a specific group.</p>
-</div>
-<div class="section" id="data-channels">
+</section>
+<section id="data-channels">
 <h3>Data Channels<a class="headerlink" href="#data-channels" title="Permalink to this headline">¶</a></h3>
 <p>Each type of data is stored in different channels in the system. In the case of <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Plugin</span></code> services, the plugin determines what the channel name is when storing the data in the system. In the case of <code class="docutils literal notranslate"><span class="pre">Image</span></code> services, the channel used to store an image is specified as {image service name}_{camera source name}. The system uses the channel name together with the action and group name to organize the data as shown in the diagram below.
 <img alt="Data Organization" src="../../_images/data_acquisition_data_organization.png" /></p>
-</div>
-<div class="section" id="downloaded-data">
+</section>
+<section id="downloaded-data">
 <h3>Downloaded Data<a class="headerlink" href="#downloaded-data" title="Permalink to this headline">¶</a></h3>
 <p>Users can download acquired data using the tablet or any other client through a <code class="docutils literal notranslate"><span class="pre">REST</span></code> endpoint on the robot. The <code class="docutils literal notranslate"><span class="pre">REST</span></code> endpoint takes a start and end time for the data to download, as well as a set of channel names, in case the user is interested in downloading only a specific set of data types. The data is downloaded as a zip file with separate folders for each group. Each group folder contains all metadata combined in a file called <code class="docutils literal notranslate"><span class="pre">metadata.json</span></code> and a set of files for images and non-image data.</p>
-</div>
-</div>
-<div class="section" id="system-architecture">
+</section>
+</section>
+<section id="system-architecture">
 <h2>System architecture<a class="headerlink" href="#system-architecture" title="Permalink to this headline">¶</a></h2>
 <p>The functionality described above is architected in the system as shown in the diagram below. During system initialization, the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service aggregates the list of capture capabilities from <code class="docutils literal notranslate"><span class="pre">Image</span></code> services and <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Plugin</span></code> services, and the users configure actions in the tablet. The tablet or the mission service sends acquisition requests to the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service to acquire data. The <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service farms out the acquisition requests to the right <code class="docutils literal notranslate"><span class="pre">Image</span></code> service and <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Plugin</span></code> service to collect the data. The collected data is then sent to the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Buffer</span></code> service through the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Store</span></code> service. The <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Buffer</span></code> service writes the collected data to files so they are available for download from the <code class="docutils literal notranslate"><span class="pre">REST</span></code> interface.</p>
 <p><img alt="Data Acquisition Architecture" src="../../_images/data_acquisition_architecture.png" /></p>
@@ -612,12 +620,12 @@ The tablet requests this complete list of capture capabilities from the <code cl
 <li><p><code class="docutils literal notranslate"><span class="pre">GetStatus</span></code> - This RPC is defined in Data Acquisition services, as well as Data Acquisition Plugin services. It reports the status of a particular <code class="docutils literal notranslate"><span class="pre">AcquireData</span></code> or <code class="docutils literal notranslate"><span class="pre">AcquirePluginData</span></code> request.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">CancelAcquisition</span></code> - This RPC is defined in Data Acquisition services, as well as Data Acquisition Plugin services. It cancels a particular <code class="docutils literal notranslate"><span class="pre">AcquireData</span></code> request or <code class="docutils literal notranslate"><span class="pre">AcquirePluginData</span></code> request.</p></li>
 </ol>
-</div>
-<div class="section" id="implementing-data-acquisition-services">
+</section>
+<section id="implementing-data-acquisition-services">
 <h2>Implementing Data Acquisition services<a class="headerlink" href="#implementing-data-acquisition-services" title="Permalink to this headline">¶</a></h2>
 <p>Please refer to <a class="reference internal" href="developing_api_services.html"><span class="doc">this document</span></a> on how to implement services in general and <a class="reference internal" href="writing_services_for_data_acquisition.html"><span class="doc">this document</span></a> on how to implement <code class="docutils literal notranslate"><span class="pre">DataAcquisitionPluginService</span></code> or <code class="docutils literal notranslate"><span class="pre">ImageService</span></code> to integrate a payload with the data acquisition capabilities of the robot.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

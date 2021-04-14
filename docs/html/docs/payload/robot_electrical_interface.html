@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Electrical Interface &mdash; Spot 2.3.3 documentation</title>
+  <title>Electrical Interface &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="README.html">Payloads</a><ul class="current">
@@ -546,12 +554,12 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="electrical-interface">
+--><section id="electrical-interface">
 <h1>Electrical Interface<a class="headerlink" href="#electrical-interface" title="Permalink to this headline">¶</a></h1>
 <p>The Spot robot’s two payload ports provide power and communication to the robot through a DB25 connection. The robot presents a female DB25 connector at each payload port, pictured below. Note that pin 1 is on the right looking down at the robot. The payload must include a mating DB25 male connection in the proper orientation.</p>
 <p>Robot presents db25 female</p>
 <p><img alt="db25 connector" src="../../_images/elec-image1.png" /></p>
-<div class="section" id="payload-port-pinouts-by-category">
+<section id="payload-port-pinouts-by-category">
 <h2>Payload port pinouts by category<a class="headerlink" href="#payload-port-pinouts-by-category" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
@@ -578,8 +586,8 @@ Development Kit License (20191101-BDSDK-SL).
 <td>Payload power interlock<br>Motor power interlock</td>
 </tr>
 </tbody>
-</table></div>
-<div class="section" id="payload-port-pin-specifications">
+</table></section>
+<section id="payload-port-pin-specifications">
 <h2>Payload port PIN specifications<a class="headerlink" href="#payload-port-pin-specifications" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
@@ -721,32 +729,32 @@ Development Kit License (20191101-BDSDK-SL).
 <td>Connector Shell and Mounting Hardware is connected to payload ground</td>
 </tr>
 </tbody>
-</table></div>
-<div class="section" id="payload-power-requirements">
+</table></section>
+<section id="payload-power-requirements">
 <h2>Payload power requirements<a class="headerlink" href="#payload-power-requirements" title="Permalink to this headline">¶</a></h2>
 <p>Payloads require a battery to be installed in the robot to operate. The robot is powered by a 600W-hr Lithium Ion battery pack that also provides power to payloads through a dedicated enable circuit. Battery voltage ranges from 35V for a fully discharged battery to 58.8V for a full charge.</p>
 <p>Regenerative energy from the robot’s motors can cause the robot’s bus voltage to exceed the normal battery voltage range for short durations. The robot contains a clamping circuit to ensure the battery voltage bus never exceeds 72V.</p>
 <p>Electrical components in payloads should be selected to handle a maximum payload input voltage of at least 80V.</p>
 <p>Payload power is enabled when pins 5 (PL_SAFETY_O) and 18 (PL_SAFETY_IN) are shorted together on both payload ports. Both payload ports are powered from the same bus. Power is enabled through a soft-start circuit ensuring a monotonic voltage rise. The bus can support inrush current for up to 150uF of bulk capacitance in each payload, or 300uF total.</p>
 <p>The robot includes a current limiting circuit that will disable power to the payload in the event of an unintended current spike. The average power for each payload connector must not exceed 150W. The resettable current limiting circuit in the robot will disable payload power if the total current for both payloads combined exceeds a limit ranging from 9-13A. If an overcurrent event occurs and payload power is disabled, the current limiting circuit can be reset by cycling robot power using the power button.</p>
-</div>
-<div class="section" id="motor-power-safety">
+</section>
+<section id="motor-power-safety">
 <h2>Motor power safety<a class="headerlink" href="#motor-power-safety" title="Permalink to this headline">¶</a></h2>
 <p>The payload interface contains a safety interlock connection that allows the payload to disable motor power to all motors in the robot. All payloads must therefore ensure continuity between pins 6 (MP_SAFETY_O) and 19 (MP_SAFETY_IN) at all times for the robot to operate. If electrical continuity between these pins is interrupted, the robot will immediately disable power to all actuation systems. If the robot is standing, this will cause the robot to fall to the ground.</p>
 <p><img alt="payload electrical" src="../../_images/elec-image2.png" /></p>
-<div class="section" id="payload-port-requirements">
+<section id="payload-port-requirements">
 <h3>Payload port requirements<a class="headerlink" href="#payload-port-requirements" title="Permalink to this headline">¶</a></h3>
 <p>The robot’s payload caps include circuitry that completes the circuit between the pins involved in this system. If there is no payload present, the cap(s) must be installed to allow the robot to function. If the caps are removed or become loose during operation, the robot will immediately disable motor power and sit down.</p>
-</div>
-</div>
-<div class="section" id="robot-communication-and-pulse-per-second-pps">
+</section>
+</section>
+<section id="robot-communication-and-pulse-per-second-pps">
 <h2>Robot Communication and pulse-per-second (PPS)<a class="headerlink" href="#robot-communication-and-pulse-per-second-pps" title="Permalink to this headline">¶</a></h2>
 <p>The payload connector includes pins to provide 1000Base-T Ethernet for connectivity to the payload. The robot also provides a Pulse Per Second (PPS) signal to the payloads via pin 7 (PPS) referenced to P_GND as shown below.</p>
 <p>This signal operates at 1Hz with 5ppm accuracy. The payload can use this signal for synchronization with data provided by the robot. Spot’s CPU system times are synchronized to this pulse and can be communicated to the payload through the API.</p>
 <p>Payloads must include a pull-up resistor to the appropriate logic voltage to accommodate the open collector output circuit as shown below, with a maximum current of 10mA. The pull-up resistor value must consider the series resistance on the robot (shown in the schematic below) to ensure adequate logic-low and logic-high signaling.</p>
 <p><img alt="onboard PPS" src="../../_images/elec-image3.png" /></p>
-<!--- image and page reference link definitions ---></div>
-</div>
+<!--- image and page reference link definitions ---></section>
+</section>
 
 
            </div>

@@ -46,6 +46,9 @@ enum PowerCommandStatus {
 
     // ERROR: License check failed. Check license_status field for details.
     STATUS_LICENSE_ERROR = 9;
+
+    // ERROR: The Spot hardware is not compatible with the request request.
+    INCOMPATIBLE_HARDWARE_ERROR = 10;
 }
 
 // The PowerCommand request which specifies a change in the robot's motor power.
@@ -57,10 +60,22 @@ message PowerCommandRequest {
     Lease lease = 2;
 
     // Commands for the robot to execute.
+    // Note that not all Spot robots are compatible with all these commands. Check your robot's
+    // HardwareConfiguration in bosdyn.api.robot_state.
     enum Request {
-        REQUEST_UNKNOWN = 0;    // Invalid request; do not use.
-        REQUEST_OFF = 1;        // Cut power to motors immediately.
-        REQUEST_ON = 2;         // Turn on power to the robot.
+        option allow_alias = true;
+        REQUEST_UNKNOWN = 0;                  // Invalid request; do not use.
+        REQUEST_OFF = 1 [deprecated = true];  // Cut power to motors immediately.
+        REQUEST_ON = 2 [deprecated = true];   // Turn on power to the robot motors.
+        REQUEST_OFF_MOTORS = 1;               // Cut power to motors immediately.
+        REQUEST_ON_MOTORS = 2;                // Turn on power to the robot motors.
+        REQUEST_OFF_ROBOT = 3;                // Turn off the robot. Same as physical switch.
+        REQUEST_CYCLE_ROBOT = 4;              // Power cycle the robot. Same as physical switch.
+        REQUEST_OFF_PAYLOAD_PORTS = 5;        // Cut power to the payload ports.
+        REQUEST_ON_PAYLOAD_PORTS = 6;         // Turn on power to the payload ports.
+        REQUEST_OFF_WIFI_RADIO = 7;           // Cut power to the hardware Wi-Fi radio.
+        REQUEST_ON_WIFI_RADIO = 8;           // Power on the hardware Wi-Fi radio.
+
     }
     Request request = 3;
 }

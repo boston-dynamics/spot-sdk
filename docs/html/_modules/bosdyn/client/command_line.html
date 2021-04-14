@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.command_line &mdash; Spot 2.3.3 documentation</title>
+  <title>bosdyn.client.command_line &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -344,6 +344,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
@@ -573,11 +580,15 @@
 <span class="kn">from</span> <span class="nn">.estop</span> <span class="kn">import</span> <span class="n">EstopClient</span><span class="p">,</span> <span class="n">EstopEndpoint</span><span class="p">,</span> <span class="n">EstopKeepAlive</span>
 <span class="kn">from</span> <span class="nn">.payload</span> <span class="kn">import</span> <span class="n">PayloadClient</span>
 <span class="kn">from</span> <span class="nn">.payload_registration</span> <span class="kn">import</span> <span class="n">PayloadRegistrationClient</span><span class="p">,</span> <span class="n">PayloadAlreadyExistsError</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">PowerClient</span>
 <span class="kn">from</span> <span class="nn">.image</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ImageClient</span><span class="p">,</span> <span class="n">UnknownImageSourceError</span><span class="p">,</span> <span class="n">ImageResponseError</span><span class="p">,</span> <span class="n">build_image_request</span><span class="p">,</span>
                     <span class="n">save_images_as_files</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.lease</span> <span class="kn">import</span> <span class="n">LeaseClient</span>
 <span class="kn">from</span> <span class="nn">.license</span> <span class="kn">import</span> <span class="n">LicenseClient</span>
 <span class="kn">from</span> <span class="nn">.local_grid</span> <span class="kn">import</span> <span class="n">LocalGridClient</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PowerClient</span><span class="p">,</span> <span class="n">power_off_robot</span><span class="p">,</span> <span class="n">power_cycle_robot</span><span class="p">,</span> <span class="n">power_on_payload_ports</span><span class="p">,</span>
+                    <span class="n">power_off_payload_ports</span><span class="p">,</span> <span class="n">power_on_wifi_radio</span><span class="p">,</span> <span class="n">power_off_wifi_radio</span><span class="p">,</span>
+                    <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.robot_id</span> <span class="kn">import</span> <span class="n">RobotIdClient</span>
 <span class="kn">from</span> <span class="nn">.robot_state</span> <span class="kn">import</span> <span class="n">RobotStateClient</span>
 <span class="kn">from</span> <span class="nn">.time_sync</span> <span class="kn">import</span> <span class="n">TimeSyncClient</span><span class="p">,</span> <span class="n">TimeSyncEndpoint</span><span class="p">,</span> <span class="n">TimeSyncError</span><span class="p">,</span> <span class="n">timespec_to_robot_timespan</span>
@@ -1547,7 +1558,8 @@
 <span class="sd">            command_dict: Dictionary of command names which take parsed options.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RobotStateCommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span>
-                                                 <span class="p">[</span><span class="n">FullStateCommand</span><span class="p">,</span> <span class="n">MetricsCommand</span><span class="p">,</span> <span class="n">RobotModel</span><span class="p">])</span></div>
+                                                 <span class="p">[</span><span class="n">FullStateCommand</span><span class="p">,</span> <span class="n">HardwareConfigurationCommand</span><span class="p">,</span>
+                                                 <span class="n">MetricsCommand</span><span class="p">,</span> <span class="n">RobotModel</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="FullStateCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.FullStateCommand">[docs]</a><span class="k">class</span> <span class="nc">FullStateCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
@@ -1575,6 +1587,30 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
+<div class="viewcode-block" id="HardwareConfigurationCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.HardwareConfigurationCommand">[docs]</a><span class="k">class</span> <span class="nc">HardwareConfigurationCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Show robot hardware configuration.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;hardware&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Show robot hardware configuration.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            subparsers: List of argument parsers.</span>
+<span class="sd">            command_dict: Dictionary of command names which take parsed options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">HardwareConfigurationCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Implementation of the command; prints HardwareConfiguration proto.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            robot: Robot object on which to run the command.</span>
+<span class="sd">            options: Parsed command-line arguments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">proto</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">RobotStateClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span><span class="o">.</span><span class="n">get_robot_hardware_configuration</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="RobotModel"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.RobotModel">[docs]</a><span class="k">class</span> <span class="nc">RobotModel</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Write robot URDF and mesh to local files.&quot;&quot;&quot;</span>
@@ -2366,6 +2402,127 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The IP address of the computer used to talk to the robot is: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">get_self_ip</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">_name</span><span class="p">)))</span></div>
 
+
+<div class="viewcode-block" id="PowerCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.PowerCommand">[docs]</a><span class="k">class</span> <span class="nc">PowerCommand</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Send power commands to the robot.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;power&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Send power commands to the robot.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            subparsers: List of argument parsers.</span>
+<span class="sd">            command_dict: Dictionary of command names which take parsed options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PowerCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span> <span class="p">[</span>
+            <span class="n">PowerRobotCommand</span><span class="p">,</span> <span class="n">PowerPayloadsCommand</span><span class="p">,</span> <span class="n">PowerWifiRadioCommand</span><span class="p">,</span>
+        <span class="p">])</span></div>
+
+<div class="viewcode-block" id="PowerRobotCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.PowerRobotCommand">[docs]</a><span class="k">class</span> <span class="nc">PowerRobotCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Control the power of the entire robot.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;robot&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Power cycle or power off robot computers.</span>
+
+<span class="sd">        Note that this is only compatbile with certain robots. Check HardwareConfiguration for details.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            subparsers: List of argument parsers.</span>
+<span class="sd">            command_dict: Dictionary of command names which take parsed options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PowerRobotCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;cmd&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cycle&#39;</span><span class="p">,</span> <span class="s1">&#39;off&#39;</span><span class="p">])</span>
+
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            robot: Robot object on which to run the command.</span>
+<span class="sd">            options: Parsed command-line arguments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">robot</span><span class="o">.</span><span class="n">time_sync</span><span class="o">.</span><span class="n">wait_for_sync</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">lease_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">lease</span><span class="o">.</span><span class="n">LeaseClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="n">lease</span> <span class="o">=</span> <span class="n">lease_client</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">lease</span><span class="o">.</span><span class="n">LeaseKeepAlive</span><span class="p">(</span><span class="n">lease_client</span><span class="p">):</span>
+            <span class="n">power_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">PowerClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">cmd</span> <span class="o">==</span> <span class="s1">&#39;cycle&#39;</span><span class="p">:</span>
+                <span class="n">power_cycle_robot</span><span class="p">(</span><span class="n">power_client</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">options</span><span class="o">.</span><span class="n">cmd</span> <span class="o">==</span> <span class="s1">&#39;off&#39;</span><span class="p">:</span>
+                <span class="n">power_off_robot</span><span class="p">(</span><span class="n">power_client</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PowerPayloadsCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.PowerPayloadsCommand">[docs]</a><span class="k">class</span> <span class="nc">PowerPayloadsCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Control the power of robot payloads.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;payload&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Power on or off robot payloads.</span>
+
+<span class="sd">        Note that this is only compatbile with certain robots. Check HardwareConfiguration for details.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            subparsers: List of argument parsers.</span>
+<span class="sd">            command_dict: Dictionary of command names which take parsed options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PowerPayloadsCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;on_off&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;on&#39;</span><span class="p">,</span> <span class="s1">&#39;off&#39;</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            robot: Robot object on which to run the command.</span>
+<span class="sd">            options: Parsed command-line arguments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">robot</span><span class="o">.</span><span class="n">time_sync</span><span class="o">.</span><span class="n">wait_for_sync</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">lease_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">lease</span><span class="o">.</span><span class="n">LeaseClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="n">lease</span> <span class="o">=</span> <span class="n">lease_client</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">lease</span><span class="o">.</span><span class="n">LeaseKeepAlive</span><span class="p">(</span><span class="n">lease_client</span><span class="p">):</span>
+            <span class="n">power_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">PowerClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">on_off</span> <span class="o">==</span> <span class="s1">&#39;on&#39;</span><span class="p">:</span>
+                <span class="n">power_on_payload_ports</span><span class="p">(</span><span class="n">power_client</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">options</span><span class="o">.</span><span class="n">on_off</span> <span class="o">==</span> <span class="s1">&#39;off&#39;</span><span class="p">:</span>
+                <span class="n">power_off_payload_ports</span><span class="p">(</span><span class="n">power_client</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PowerWifiRadioCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.PowerWifiRadioCommand">[docs]</a><span class="k">class</span> <span class="nc">PowerWifiRadioCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Control the power of robot wifi radio.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;wifi&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Power on or off robot LTE radio.</span>
+
+<span class="sd">        Note that this is only compatbile with certain robots. Check HardwareConfiguration for details.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            subparsers: List of argument parsers.</span>
+<span class="sd">            command_dict: Dictionary of command names which take parsed options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PowerWifiRadioCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;on_off&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;on&#39;</span><span class="p">,</span> <span class="s1">&#39;off&#39;</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            robot: Robot object on which to run the command.</span>
+<span class="sd">            options: Parsed command-line arguments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">robot</span><span class="o">.</span><span class="n">time_sync</span><span class="o">.</span><span class="n">wait_for_sync</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">lease_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">lease</span><span class="o">.</span><span class="n">LeaseClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="n">lease</span> <span class="o">=</span> <span class="n">lease_client</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">lease</span><span class="o">.</span><span class="n">LeaseKeepAlive</span><span class="p">(</span><span class="n">lease_client</span><span class="p">):</span>
+            <span class="n">power_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">PowerClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">on_off</span> <span class="o">==</span> <span class="s1">&#39;on&#39;</span><span class="p">:</span>
+                <span class="n">power_on_wifi_radio</span><span class="p">(</span><span class="n">power_client</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">options</span><span class="o">.</span><span class="n">on_off</span> <span class="o">==</span> <span class="s1">&#39;off&#39;</span><span class="p">:</span>
+                <span class="n">power_off_wifi_radio</span><span class="p">(</span><span class="n">power_client</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Command-line interface for interacting with robot services.&quot;&quot;&quot;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s1">&#39;bosdyn.client&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">main</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
@@ -2390,6 +2547,7 @@
     <span class="n">LocalGridCommands</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
     <span class="n">DataAcquisitionCommand</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
     <span class="n">HostComputerIPCommand</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+    <span class="n">PowerCommand</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
 
     <span class="n">options</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
 

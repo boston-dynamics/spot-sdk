@@ -193,12 +193,12 @@ Make sure that the packages have been installed.
 
 ```shell
 $ python3 -m pip list --format=columns | grep bosdyn
-bosdyn-api                    2.3.3
-bosdyn-choreography-client    2.3.3
-bosdyn-choreography-protos    2.3.3
-bosdyn-client                 2.3.3
-bosdyn-core                   2.3.3
-bosdyn-mission                2.3.3
+bosdyn-api                    2.3.4
+bosdyn-choreography-client    2.3.4
+bosdyn-choreography-protos    2.3.4
+bosdyn-client                 2.3.4
+bosdyn-core                   2.3.4
+bosdyn-mission                2.3.4
 ```
 **Windows users:**
 ```shell
@@ -278,7 +278,7 @@ Issue the following command to get your Spot robot's ID:
 ```shell
 $ python3 -m bosdyn.client 192.168.80.3 id
 beta-BD-90490007     02-19904-9903   beta29     spot (V3)
-Software: 2.3.3 (b11205d698e 2020-12-11 11:53:12)
+Software: 2.3.4 (b11205d698e 2020-12-11 11:53:12)
 Installed: 2020-12-11 15:06:57
 ```
 

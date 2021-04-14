@@ -47,7 +47,13 @@ Since the example runs off of a payload computer, it requires a GUID (uniquely g
 
 A port number for the image service can be specified using the `--port` argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a services listening port. This port number will be used with the host-ip ("PAYLOAD_IP") to fully specify where the image service is running. This port number must be open and cannot be blocked by a local firewall, otherwise the web cam image service will be unreachable from the robot and the directory registration service.
 
-Lastly, the command line argument `--show-debug-info` will allow a user to live-view the openCV output of the web cam video capture on their local computer. Only use this flag for debug purposes, as it will likely slow down the main example operation and reduce the performance of the image service.
+There is an optional string argument `--codec` to specify a four character video codec describing the camera's compression/decompression software. The video codec code is operating system dependent. For example, on a Windows computer, the video codec is commonly 'DIVX', and on a linux computer, the video codec is commonly 'MJPG'. Note, the video codec does not necessarily need to be specified as OpenCV's default selection will typically work for most web cams, however if you are seeing OpenCV errors when the image service tries to capture an image, then try specifying the video codec for your camera. An example error of this type is:
+```
+[ WARN:0] global /io/opencv/modules/videoio/src/cap_v4l.cpp (998) tryIoctl VIDEOIO(V4L2:/dev/video1): select() timeout.
+```
+This error was fixed for a linux experiment by providing the video codec argument as `--codec mjpg`.
+
+Lastly, the command line argument `--show-debug-info` will allow a user to live-view the OpenCV output of the web cam video capture on their local computer. Only use this flag for debug purposes, as it will likely slow down the main example operation and reduce the performance of the image service.
 
 ## Debugging Tips
 

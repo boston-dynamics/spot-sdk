@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Arm Concepts &mdash; Spot 2.3.3 documentation</title>
+  <title>Arm Concepts &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../payload/README.html">Payloads</a><ul>
@@ -548,9 +556,9 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="arm-concepts">
+--><section id="arm-concepts">
 <h1>Arm Concepts<a class="headerlink" href="#arm-concepts" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="synchronizedcommand">
+<section id="synchronizedcommand">
 <h2>SynchronizedCommand<a class="headerlink" href="#synchronizedcommand" title="Permalink to this headline">¶</a></h2>
 <p>Arm and gripper commands have been incorporated into the SynchronizedCommand message.  This top level request allows you to specify any combination of mobility, arm, and gripper command.  By packing the individual commands into a single message, we guarantee that all commands arrive to the robot at the same time.  For robots without arms, any arm_command or gripper_command will be ignored.</p>
 <div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="kd">message</span> <span class="nc">SynchronizedCommand</span> <span class="p">{</span>
@@ -576,7 +584,7 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><a class="reference external" href="#drag">Drag</a> Drag an object held in the gripper</p></li>
 <li><p><a class="reference external" href="#stop">Stop</a> Stop and hold the arm in place</p></li>
 </ul>
-<div class="section" id="requests">
+<section id="requests">
 <h3>Requests<a class="headerlink" href="#requests" title="Permalink to this headline">¶</a></h3>
 <p>If you send a <code class="docutils literal notranslate"><span class="pre">SynchronizedCommand</span></code> with only a subset of the messages filled out, only those commands will be overwritten.  For example, consider the following pseudo-code:</p>
 <div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="n">Time</span> <span class="na">t</span> <span class="o">=</span> <span class="mi">0</span>
@@ -598,16 +606,16 @@ Development Kit License (20191101-BDSDK-SL).
 </div>
 <p>After the robot receives the second request at time <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">2</span></code>, it will continue executing the arm stow command and the gripper close command, while over-writing the <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">0</span></code> mobility stand request with the new se2_trajectory_request.</p>
 <p>Similarly, if you sent a partially filled out <code class="docutils literal notranslate"><span class="pre">SynchronizedCommand</span></code> after sending a <code class="docutils literal notranslate"><span class="pre">FullBodyCommand</span></code>, the empty <code class="docutils literal notranslate"><span class="pre">SynchronizedCommand</span></code> requests will be auto filled with <code class="docutils literal notranslate"><span class="pre">safe_stop</span></code> requests.</p>
-</div>
-<div class="section" id="feedback">
+</section>
+<section id="feedback">
 <h3>Feedback<a class="headerlink" href="#feedback" title="Permalink to this headline">¶</a></h3>
 <p>With the introduction of <code class="docutils literal notranslate"><span class="pre">ArmCommand</span></code> and <code class="docutils literal notranslate"><span class="pre">GripperCommand</span></code> requests inside of the <code class="docutils literal notranslate"><span class="pre">SynchronizedCommand</span></code>, we have also modified feedback to return three messages, one feedback message for each request respectively.</p>
-</div>
-</div>
-<div class="section" id="armcommand-requests">
+</section>
+</section>
+<section id="armcommand-requests">
 <h2>ArmCommand Requests<a class="headerlink" href="#armcommand-requests" title="Permalink to this headline">¶</a></h2>
 <p>There are 7 different commands listed below that fall under the ArmCommand banner. The arm has 6 joints (+ a gripper), and can be controlled by specifying the joint angles directly, or by specifying a desired position and orientation (called a pose) where the hand should be. Joint angles are specified in radians, and Cartesian poses are specified with a 3D position in meters, and orientation is expressed with unit quaternions.</p>
-<div class="section" id="cartesian-moves">
+<section id="cartesian-moves">
 <h3>Cartesian Moves<a class="headerlink" href="#cartesian-moves" title="Permalink to this headline">¶</a></h3>
 <p>When specifying a pose for the hand to move to, the user is able to specify 2 frames, and then a transform between those 2 frames. This fully defines the position and orientation the robot will move its hand to.</p>
 <p>The first frame is the “root” frame, which is the frame that the hand moves with respect to. Common choices for this frame are the “odom”, “vision” and “flat_body” frames. The second frame is a “tool” frame. If trying to grasp something or just move the arm around, this can often be left unset, and this will default to the <a class="reference external" href="#hand-frame">hand frame</a>. However, if a pointing device or sensor is attached to the end effector of the arm, setting the tool frame to be a transform to the point of interest can allow the user to directly move the sensor to a desired pose.</p>
@@ -620,14 +628,14 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Note that users can also send sequences of poses with times, specify max velocity and acceleration, and add other options as well. See arm_command.proto for more details</p>
 <p>The Cartesian move request also allows you to specify a force/torque trajectory for the tool.  For each axis in the task frame, you select if an axis is set to position mode (input read desired from SE3Trajectory) or to force (input read from WrenchTrajectory).  This supports hybrid control of the arm where users can specify, for example, Z to be in force control with X and Y in position control.</p>
 <p>See the following examples for requesting ArmCartesianCommands:<br /><a class="reference internal" href="../../../python/examples/arm_and_mobility_command/README.html"><span class="doc">Arm and Mobility Command</span></a><br /><a class="reference internal" href="../../../python/examples/arm_force_control/README.html"><span class="doc">Arm Force Control</span></a><br /><a class="reference internal" href="../../../python/examples/arm_simple/README.html"><span class="doc">Simple</span></a><br /><a class="reference internal" href="../../../python/examples/arm_trajectory/README.html"><span class="doc">Trajectory</span></a></p>
-</div>
-<div class="section" id="joint-moves">
+</section>
+<section id="joint-moves">
 <h3>Joint Moves<a class="headerlink" href="#joint-moves" title="Permalink to this headline">¶</a></h3>
 <p>Users can specify a set of joint angles they want the arm to move to. Users can optionally set a maximum velocity and acceleration that each joint is allowed to travel at, and/or specify full trajectories with times that they want the robot to reach those joint angles.</p>
 <p>Joint moves can be especially useful when moving the arm to hard to reach places, or trying to make the arm wave through a set of predefined poses.</p>
 <p>See the <a class="reference internal" href="../../../python/examples/arm_joint_move/README.html"><span class="doc">Joint Move</span></a> example for requesting ArmJointMoveCommands.</p>
-</div>
-<div class="section" id="predefined-poses">
+</section>
+<section id="predefined-poses">
 <h3>Predefined Poses<a class="headerlink" href="#predefined-poses" title="Permalink to this headline">¶</a></h3>
 <p>Users can command the arm to move to the following poses:
 Stow (arm tucked away, ready to walk)
@@ -635,54 +643,53 @@ Carry (useful for carrying an object somewhere)
 Ready (arm out in front, ready to manipulate)</p>
 <p>The predefined stow pose will refuse to stow if the arm is holding something. You can still issue joint move commands to a stow configuration if desired, but be aware that no collision avoidance system exists.  Contact between the item and the world or the item and the robot may occur during arm motion.</p>
 <p>See the <a class="reference internal" href="../../../python/examples/arm_stow_unstow/README.html"><span class="doc">Stow/Unstow</span></a> example for requesting NamedArmPositions.</p>
-</div>
-<div class="section" id="arm-velocity">
+</section>
+<section id="arm-velocity">
 <h3>Arm Velocity<a class="headerlink" href="#arm-velocity" title="Permalink to this headline">¶</a></h3>
 <p>When controlling the arm with a joystick, because of latency, it can often be better to send velocity commands rather than position commands. Users can specify the velocity in a cylindrical frame around the body, or with their own specified frame. Both linear and angular velocity can be specified.</p>
-</div>
-<div class="section" id="gaze">
+</section>
+<section id="gaze">
 <h3>Gaze<a class="headerlink" href="#gaze" title="Permalink to this headline">¶</a></h3>
 <p>Sometimes it is useful to have the arm continuously look at something while moving between positions. The user can specify both a position / trajectory of the target and a desired trajectory of the camera. If a different camera is attached to the end effector, <code class="docutils literal notranslate"><span class="pre">wrist_tform_tool</span></code> can be used to specify the x-axis of the camera, which is the direction we look at. Note that some of the desired trajectory’s orientation will be ignored, since we will constrain the x-axis of the camera to look at the target at all times.</p>
 <p>See the <a class="reference internal" href="../../../python/examples/arm_gaze/README.html"><span class="doc">Gaze</span></a> example for requesting GazeCommands:</p>
-</div>
-<div class="section" id="stop">
+</section>
+<section id="stop">
 <h3>Stop<a class="headerlink" href="#stop" title="Permalink to this headline">¶</a></h3>
 <p>When something is going wrong, sending this command will bring the arm to a stop. It will also apply minimal forces to the world. For example, if the arm is in the middle of opening a heavy door and a stop command is sent, the arm will comply and let the door close.</p>
-</div>
-<div class="section" id="drag">
+</section>
+<section id="drag">
 <h3>Drag<a class="headerlink" href="#drag" title="Permalink to this headline">¶</a></h3>
 <p>Once the gripper is holding something, calling this command will put the arm into a compliant state that will let the robot pull a heavy object around. Drag will generally try to keep the object in front of the body for maximum pulling force. By sending the appropriate locomotion commands to move the body in a backwards direction, the robot can move heavy things around in the world.</p>
-</div>
-</div>
-<div class="section" id="mobility-request">
+</section>
+</section>
+<section id="mobility-request">
 <h2>Mobility Request<a class="headerlink" href="#mobility-request" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="followarmcommand">
+<section id="followarmcommand">
 <h3>FollowArmCommand<a class="headerlink" href="#followarmcommand" title="Permalink to this headline">¶</a></h3>
 <p>The robot’s base will move in response to the hand’s position, allowing the arm to reach beyond its current workspace.  If the hand is requested to move forward, then the base will begin walking forward.  Our chalk drawing example takes advantage of this capability, where the task is the execution of a drawing with the hand, but the entire robot is recruited to accomplish the task.</p>
 <p>See the following examples for requesting FollowArmCommands:<br /><a class="reference internal" href="../../../python/examples/arm_gcode/README.html"><span class="doc">GCode</span></a><br /><a class="reference internal" href="../../../python/examples/arm_with_body_follow/README.html"><span class="doc">Arm With Body Follow</span></a></p>
-</div>
-</div>
-<div class="section" id="hand-frame">
+</section>
+</section>
+<section id="hand-frame">
 <h2>Hand frame<a class="headerlink" href="#hand-frame" title="Permalink to this headline">¶</a></h2>
 <p>The hand frame is used by many of the ArmCommand requests available in the API. The hand frame has its origin slightly in front of the gripper’s palm plate and is aligned with the parent link’s (wrist) orientation. The position of the hand frame’s origin relative to the parent wrist frame is:
 x = 0.19557 m
 y = 0 m
 z = 0 m
 The rotation between the hand frame and the wrist is the identity matrix. When specifying trajectories using default values, the target position of the trajectory is the origin of this hand frame.</p>
-<p><img alt="../../../_images/hand_frame.png" src="../../../_images/hand_frame.png" /></p>
-</div>
-<div class="section" id="collision-avoidance">
+<img src="../../../_images/hand_frame.png" alt="Hand Frame drawing" style="width:400px"></section>
+<section id="collision-avoidance">
 <h2>Collision avoidance<a class="headerlink" href="#collision-avoidance" title="Permalink to this headline">¶</a></h2>
 <p>The Arm has no proximity awareness of its own, so maintaining safe distance is essential. If obstacles or people are in the path of operation, the Arm has no collision avoidance capability to prevent contact. Safe Arm operation depends on the Operator and/or safety observers maintaining situational awareness and halting operations if the Arm is at risk of contacting objects or people.</p>
 <p><strong>WARNING</strong>: The robot Arm does not have any obstacle avoidance capability.</p>
 <p>Even if the robot’s onboard cameras can see an obstacle, the Arm cannot avoid it without the Operator’s intervention. In tight spaces, it is possible for the gripper head to inadvertently collide with something in the world. When operating around sensitive, fragile, or other objects that should not be contacted, extra care should be taken to avoid collisions with the Arm.</p>
 <p>Note: The Arm does have the ability to avoid colliding with itself, the robot’s body, and any properly configured payloads attached to the body.</p>
-</div>
-<div class="section" id="body-force-limiter">
+</section>
+<section id="body-force-limiter">
 <h2>Body force limiter<a class="headerlink" href="#body-force-limiter" title="Permalink to this headline">¶</a></h2>
 <p>In order to prevent large forces from being applied to the body when the Arm collides with something in the world, Arm torques are automatically limited to protect the body from being disturbed.</p>
-</div>
-<div class="section" id="safety-notes">
+</section>
+<section id="safety-notes">
 <h2>Safety notes<a class="headerlink" href="#safety-notes" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Arm torque limitations will not prevent damage to the environment and should NOT be used as a safety feature. These limitations are designed to reduce the likelihood that the robot will fall over if the Arm collides with some obstacle.</p></li>
@@ -693,8 +700,8 @@ The rotation between the hand frame and the wrist is the identity matrix. When s
 </ul>
 </li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

@@ -41,3 +41,4 @@ Python 2.7 is _not_ supported, since the [Python 2 End-Of-Life](https://www.pyth
 * [Understanding Spot Programming](understanding_spot_programming.md)
 * [Examples](../../python/examples/README.md)
 * [Python Reference Guide](../../python/README.md)
+* [Fetch Tutorial](fetch_tutorial/fetch1.md)

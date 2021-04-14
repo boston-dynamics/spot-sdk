@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>GraphNav Initialization &mdash; Spot 2.3.3 documentation</title>
+  <title>GraphNav Initialization &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../payload/README.html">Payloads</a><ul>
@@ -548,14 +556,14 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="graphnav-initialization">
+--><section id="graphnav-initialization">
 <h1>GraphNav Initialization<a class="headerlink" href="#graphnav-initialization" title="Permalink to this headline">¶</a></h1>
 <p>When a map is initially loaded, GraphNav is unaware of the robot’s location relative to it. The GraphNav service provides a set of basic primitives to initialize the robot’s location to the map. Each one requires various levels of help from the user.</p>
 <ul class="simple">
 <li><p>Using fiducials to initialize the robot’s localization</p></li>
 <li><p>Using local geometry and texture around the robot to initialize the robot’s location</p></li>
 </ul>
-<div class="section" id="initializing-with-fiducials">
+<section id="initializing-with-fiducials">
 <h2>Initializing with fiducials<a class="headerlink" href="#initializing-with-fiducials" title="Permalink to this headline">¶</a></h2>
 <p>This is the easiest method of initializing the robot’s pose to the map. In the Spot SDK, the different types of fiducial initialization are represented with the <code class="docutils literal notranslate"><span class="pre">FiducialInit</span></code> enum:</p>
 <ul class="simple">
@@ -568,8 +576,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>At the beginning of every mission (Autowalk only)</p></li>
 <li><p>In “feature desert” areas where there is not enough information for Spot’s sensors to determine its location in the environment, fiducials might help prevent the robot getting lost</p></li>
 </ul>
-</div>
-<div class="section" id="about-fiducials">
+</section>
+<section id="about-fiducials">
 <h2>About fiducials<a class="headerlink" href="#about-fiducials" title="Permalink to this headline">¶</a></h2>
 <p>Fiducials are specially designed images similar to QR codes that Spot uses to match its internal map to the world around it.</p>
 <p>Spot recognizes AprilTag fiducials that meet the following requirements:</p>
@@ -581,8 +589,8 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Spot is configured to treat fiducials as 146mm squares and computes the distance based on that size. If a fiducial is printed at another size, Spot will infer the wrong position.</p>
 <p>Boston Dynamics provides a small sample of correctly sized AprilTag fiducials that are recognized by the Spot robot in <em>Spot Autowalk: Using AprilTag Fiducials</em>, part of the Spot user documentation. Printing this set at 100% scaling will produce the correctly sized fiducial images.</p>
 <p>Background information about AprilTags can be found at the University of Michigan April Robotics Lab <a class="reference external" href="https://april.eecs.umich.edu/software/apriltag">website</a>.</p>
-</div>
-<div class="section" id="placing-fiducials">
+</section>
+<section id="placing-fiducials">
 <h2>Placing fiducials<a class="headerlink" href="#placing-fiducials" title="Permalink to this headline">¶</a></h2>
 <p>When placing fiducials, be sure to:</p>
 <ul class="simple">
@@ -600,20 +608,20 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Placing fiducials where they will be blocked, damaged, moved, or removed.</p></li>
 </ul>
 <p>Note that areas with intersecting walls, corners, furniture, equipment, and other visually distinguishing features do not typically require a fiducial (unless the mission starts in that location). Using a LIDAR payload for navigation will reduce the number of fiducials required.</p>
-</div>
-<div class="section" id="initializing-with-search">
+</section>
+<section id="initializing-with-search">
 <h2>Initializing with search<a class="headerlink" href="#initializing-with-search" title="Permalink to this headline">¶</a></h2>
 <p>If fiducials aren’t available, the client program can use other methods of initialization through the <code class="docutils literal notranslate"><span class="pre">SetLocalization</span></code> RPC (available in the <a class="reference external" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto"><code class="docutils literal notranslate"><span class="pre">graph_nav.proto</span></code></a>). The client can provide an initial guess for the complete localization in the <code class="docutils literal notranslate"><span class="pre">initial_guess</span></code> field which describes the robot’s pose relative to a known waypoint and which waypoint to initialize to. Details on the algorithm that is run when a initial guess is provided are described in the next section.</p>
 <p>If the initial guess for the localization is unknown, then GraphNav can perform a brute force search. The parameters of that search are set in the <code class="docutils literal notranslate"><span class="pre">SetLocalization</span></code> RPC via <code class="docutils literal notranslate"><span class="pre">max_distance</span></code> and <code class="docutils literal notranslate"><span class="pre">max_yaw</span></code> fields. Depending on the size of these parameters, the <code class="docutils literal notranslate"><span class="pre">SetLocalization</span></code> RPC can take a long time to complete.</p>
-</div>
-<div class="section" id="initializing-with-local-geometry-and-texture">
+</section>
+<section id="initializing-with-local-geometry-and-texture">
 <h2>Initializing with local geometry and texture<a class="headerlink" href="#initializing-with-local-geometry-and-texture" title="Permalink to this headline">¶</a></h2>
 <p>Spot can run a proprietary initialization algorithm that compares local geometry and texture from where the robot is now, to similar data collected at record time. In the API, we call this a <em>Scan Match</em>. This technique is best suited in areas with unique features (e.g. corners, doorways); it will work poorly in areas with non-unique features or no features (e.g. bland hallways, big open spaces).</p>
 <p>For your reference, the Spot base platform considers anything &lt; 3 meters away “local geometry.” Spot with Lidar considers anything &lt; 100 meters away “local geometry.”</p>
 <p>The client must provide a reasonable guess as to where the robot is relative to a known waypoint on the map. If that guess is reasonably close, and the features around the robot are rich enough, scan match initialization can establish initial map pose without needing fiducials.</p>
 <p>This is accomplished by leaving <code class="docutils literal notranslate"><span class="pre">max_distance</span></code> and <code class="docutils literal notranslate"><span class="pre">max_yaw</span></code> unset in the <code class="docutils literal notranslate"><span class="pre">SetLocalization</span></code> and by specifying <code class="docutils literal notranslate"><span class="pre">FIDUCIAL_INIT_NO_FIDUCIAL</span></code> for the <code class="docutils literal notranslate"><span class="pre">FiducialInit</span></code> enum.</p>
-<!--- image and page reference link definitions ---></div>
-</div>
+<!--- image and page reference link definitions ---></section>
+</section>
 
 
            </div>

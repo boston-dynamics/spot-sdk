@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>AutoReturn Service &mdash; Spot 2.3.3 documentation</title>
+  <title>AutoReturn Service &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../payload/README.html">Payloads</a><ul>
@@ -548,17 +556,17 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="autoreturn-service">
+--><section id="autoreturn-service">
 <h1>AutoReturn Service<a class="headerlink" href="#autoreturn-service" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="what-is-autoreturn">
+<section id="what-is-autoreturn">
 <h2>What is AutoReturn?<a class="headerlink" href="#what-is-autoreturn" title="Permalink to this headline">¶</a></h2>
 <p>AutoReturn is a service that will walk Spot back along a recently traversed path. It can be configured to happen automatically when Spot stops receiving commands from a user.</p>
-</div>
-<div class="section" id="why-would-i-want-to-use-autoreturn">
+</section>
+<section id="why-would-i-want-to-use-autoreturn">
 <h2>Why would I want to use AutoReturn?<a class="headerlink" href="#why-would-i-want-to-use-autoreturn" title="Permalink to this headline">¶</a></h2>
 <p>If you are piloting Spot through an area inaccessible to people and suddenly lose the communication link to Spot, the standard behavior is for Spot to sit down and power off. It may be valuable to instead tell Spot to automatically come back along the path it walked, hopefully putting Spot back into communication range.</p>
-</div>
-<div class="section" id="why-would-i-not-want-to-use-autoreturn">
+</section>
+<section id="why-would-i-not-want-to-use-autoreturn">
 <h2>Why would I NOT want to use AutoReturn?<a class="headerlink" href="#why-would-i-not-want-to-use-autoreturn" title="Permalink to this headline">¶</a></h2>
 <p>Depending on the environment Spot is in when AutoReturn activates, Spot may make things worse by trying to autonomously navigate. It’s very likely that AutoReturn will activate when there is poor or no communication to Spot, leaving it walking around unsupervised.</p>
 <p>It’s also important to note the following:</p>
@@ -566,11 +574,11 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><strong>AutoReturn does not bypass or modify the <a class="reference internal" href="../estop_service.html"><span class="doc">E-stop Service</span></a> settings in any way.</strong> If that system’s timeout is triggered, Spot will sit down and power off, even if it is in the middle of executing AutoReturn. If you need to use a stricter E-stop timeout, AutoReturn may not work well for you.</p></li>
 <li><p><strong>AutoReturn will behave better in certain environments than others.</strong> For example, if Spot becomes trapped while executing AutoReturn, Spot will continue to try and return, possibly until the battery drops below the operation threshold, at which point Spot will sit down and power off. If the environment around Spot changes and blocks Spot’s previous path, Spot may end up in a worse location than before.</p></li>
 </ul>
-</div>
-<div class="section" id="how-do-i-use-autoreturn">
+</section>
+<section id="how-do-i-use-autoreturn">
 <h2>How do I use AutoReturn?<a class="headerlink" href="#how-do-i-use-autoreturn" title="Permalink to this headline">¶</a></h2>
 <p>AutoReturn must be explicitly enabled, and will only work for the user that is driving Spot when AutoReturn is enabled. For example, if user A enables AutoReturn and then user B takes control of Spot, AutoReturn will not automatically run. If user B wants to enable AutoReturn, they must do it themselves.</p>
-<div class="section" id="configuring-autoreturn">
+<section id="configuring-autoreturn">
 <h3>Configuring AutoReturn<a class="headerlink" href="#configuring-autoreturn" title="Permalink to this headline">¶</a></h3>
 <p>The primary AutoReturn setting to tune is the maximum displacement parameter, which tells Spot how far away it is allowed to travel. Spot may travel a number of meters more than the maximum displacement if the path it takes contains turns.</p>
 <p>For example, the distance traveled is equal to the displacement in this path:</p>
@@ -583,13 +591,13 @@ Development Kit License (20191101-BDSDK-SL).
 <p>but will only walk Spot up to or before the boundary in this example, omitting the portion of the path in red.</p>
 <p><img alt="Out-of-bounds AutoReturn Path" src="../../../_images/auto_return_outside_disp.png" /></p>
 <p>Tablet users will find AutoReturn settings under the “Comms” section of the main menu.</p>
-</div>
-</div>
-<div class="section" id="what-happens-when-autoreturn-finishes">
+</section>
+</section>
+<section id="what-happens-when-autoreturn-finishes">
 <h2>What happens when AutoReturn finishes?<a class="headerlink" href="#what-happens-when-autoreturn-finishes" title="Permalink to this headline">¶</a></h2>
 <p>It depends on whether communication to a user has been restored. If Spot does not hear from a user by the time AutoReturn finishes, Spot’s normal comms loss behavior will begin.</p>
-</div>
-<div class="section" id="using-autoreturn-safely">
+</section>
+<section id="using-autoreturn-safely">
 <h2>Using AutoReturn Safely<a class="headerlink" href="#using-autoreturn-safely" title="Permalink to this headline">¶</a></h2>
 <p><strong>AutoReturn can potentially cause the robot to operate autonomously for unexpected distances. This can be dangerous for anyone nearby.</strong></p>
 <p>Tips for safe use of AutoReturn:</p>
@@ -597,8 +605,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Set the max displacement as low as possible to minimize the potential for the robot to venture any further than necessary.</p></li>
 <li><p>Keep the E-stop Service timeout as low as possible to limit the amount of time the robot is moving without Operator control. This setting can be found under “Autowalk Replay Supervision” in the tablet, alongside the AutoReturn settings.</p></li>
 </ul>
-<!--- image and page reference link definitions ---></div>
-</div>
+<!--- image and page reference link definitions ---></section>
+</section>
 
 
            </div>

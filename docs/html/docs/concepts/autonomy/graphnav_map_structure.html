@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>GraphNav Map Structure &mdash; Spot 2.3.3 documentation</title>
+  <title>GraphNav Map Structure &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../payload/README.html">Payloads</a><ul>
@@ -548,26 +556,26 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="graphnav-map-structure">
+--><section id="graphnav-map-structure">
 <h1>GraphNav Map Structure<a class="headerlink" href="#graphnav-map-structure" title="Permalink to this headline">¶</a></h1>
 <p>GraphNav maps consist of waypoints and edges between the waypoints. A waypoint consists of a reference frame, a name, a unique ID, annotations, and sensor data. Each waypoint contains a snapshot, which bundles the various sensor data into one unit.</p>
 <ul class="simple">
 <li><p>Waypoint data includes feature clouds, AprilTag detections, imagery, terrain maps, etc.</p></li>
 <li><p>Edges consist of a directed edge from one waypoint to another and a transform that estimates the relationship in 3D space between the two waypoints.</p></li>
 </ul>
-<div class="section" id="view-map-python-example">
+<section id="view-map-python-example">
 <h2>View Map Python Example<a class="headerlink" href="#view-map-python-example" title="Permalink to this headline">¶</a></h2>
 <p>Use the <a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html"><span class="doc">view_map example</span></a> in the Spot SDK to view maps recorded using Autowalk on the controller tablet, or using the Spot GraphNav service.</p>
 <p>Point cloud data is captured at each waypoint. These data depict features that the robot encountered during the map recording process. The point clouds are colored by height, where blue is higher and red is lower.</p>
 <p>The viewer also shows fiducials that were detected during the map recording process. Fiducials are shown as blue squares labeled with the fiducial ID. If multiple fiducials with the same ID are displayed near each other, this represents multiple detections taken at different times during recording.</p>
 <p>Maps do not have a global coordinate system (like GPS coordinates, for example). Only the relative transformations between waypoints are known.</p>
-</div>
-<div class="section" id="creating-waypoints">
+</section>
+<section id="creating-waypoints">
 <h2>Creating waypoints<a class="headerlink" href="#creating-waypoints" title="Permalink to this headline">¶</a></h2>
 <p>Waypoints are created by the robot every two meters during map recording. However, they can be created in areas where the robot’s path has more curvature as it navigates around corners and obstacles.</p>
 <p>Call the <code class="docutils literal notranslate"><span class="pre">CreateWaypoint</span></code> RPC at specific locations in order to perform some action in a mission or when you want to explicitly maintain some mapping between a user event and a waypoint ID. Example: creating a waypoint at an inspection point.</p>
-</div>
-<div class="section" id="downloading-maps">
+</section>
+<section id="downloading-maps">
 <h2>Downloading maps<a class="headerlink" href="#downloading-maps" title="Permalink to this headline">¶</a></h2>
 <p>Waypoints and edges have associated snapshots that store data the robot uses to compute localization and inform the robot’s locomotion.</p>
 <ul class="simple">
@@ -584,8 +592,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Download snapshot data by calling the <code class="docutils literal notranslate"><span class="pre">DownloadWaypointSnapshot</span></code> and <code class="docutils literal notranslate"><span class="pre">DownloadEdgeSnapshot</span></code> RPCs.</p></li>
 </ol>
 <p>Two steps are needed because snapshot data is very large. Snapshots are downloaded via a streaming RPC. The request is initiated by specifying which snapshot ID to download and, for waypoint snapshots, whether or not to include full image data in the download. Note that the full image data is not needed for the robot to navigate.</p>
-</div>
-<div class="section" id="download-a-map-from-the-controller-tablet">
+</section>
+<section id="download-a-map-from-the-controller-tablet">
 <h2>Download a map from the controller tablet<a class="headerlink" href="#download-a-map-from-the-controller-tablet" title="Permalink to this headline">¶</a></h2>
 <p>To download a map recorded using Autowalk on the tablet, transfer the map to your local machine from the following location on the controller:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Documents</span><span class="o">/</span><span class="n">bosdyn</span><span class="o">/</span><span class="n">autowalk</span><span class="o">/</span><span class="n">your_map</span><span class="o">.</span><span class="n">walk</span>
@@ -598,8 +606,8 @@ Development Kit License (20191101-BDSDK-SL).
     <span class="n">edge_snapshots</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="uploading-maps">
+</section>
+<section id="uploading-maps">
 <h2>Uploading maps<a class="headerlink" href="#uploading-maps" title="Permalink to this headline">¶</a></h2>
 <p>Maps stored on client computers can be uploaded to the robot for reuse in two steps:</p>
 <ol class="simple">
@@ -607,8 +615,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Snapshot data is uploaded to the robot using the streaming <code class="docutils literal notranslate"><span class="pre">UploadWaypointSnapshot</span></code> and <code class="docutils literal notranslate"><span class="pre">UploadEdgeSnapshot</span></code> RPCs.</p></li>
 </ol>
 <p>See the <a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html"><span class="doc">graph_nav_command_line and recording_command_line examples</span></a> for details about uploading edge snapshots, waypoint snapshots, and graphs to the robot.</p>
-<!--- image and page reference link definitions ---></div>
-</div>
+<!--- image and page reference link definitions ---></section>
+</section>
 
 
            </div>

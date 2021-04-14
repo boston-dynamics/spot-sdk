@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Developing API Services &mdash; Spot 2.3.3 documentation</title>
+  <title>Developing API Services &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../payload/README.html">Payloads</a><ul>
@@ -546,31 +554,31 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="developing-api-services">
+--><section id="developing-api-services">
 <h1>Developing API Services<a class="headerlink" href="#developing-api-services" title="Permalink to this headline">¶</a></h1>
 <p>In order to expand the capabilities of Spot it may be necessary to stand up services beyond the onboard services that ship with Spot. Additional services may enable collection of data from third party sensors, trigger actions outside of the robot, or process collected data in real time.</p>
-<div class="section" id="interface">
+<section id="interface">
 <h2>Interface<a class="headerlink" href="#interface" title="Permalink to this headline">¶</a></h2>
 <p>Developed services are expected to comply with the same service interface standards that all Spot services use.</p>
-<div class="section" id="robot-directory">
+<section id="robot-directory">
 <h3>Robot Directory<a class="headerlink" href="#robot-directory" title="Permalink to this headline">¶</a></h3>
 <p>Clients can communicate with third party services by making requests through Spot. A service is expected to register itself with the robot directory, which will enable the robot to reroute any requests to the network location hosting the service. At registration time, a service will need to declare its service name, authority, type, and network location.</p>
-</div>
-<div class="section" id="grpc">
+</section>
+<section id="grpc">
 <h3>gRPC<a class="headerlink" href="#grpc" title="Permalink to this headline">¶</a></h3>
 <p>Services should be designed to handle all possible RPCs defined in a corresponding <a class="reference external" href="https://grpc.io/">gRPC</a> protobuf service definition. It is possible to use the same protobuf service definitions that are included with the Spot SDK or to define entirely new ones. Client requests of the same type will be routed to the proper service based on service name and authority, both of which must be unique per service.</p>
-</div>
-</div>
-<div class="section" id="basic-structure">
+</section>
+</section>
+<section id="basic-structure">
 <h2>Basic Structure<a class="headerlink" href="#basic-structure" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="servicers">
+<section id="servicers">
 <h3>Servicers<a class="headerlink" href="#servicers" title="Permalink to this headline">¶</a></h3>
 <p>All the information necessary to write a basic gRPC service is outlined in the <a class="reference external" href="https://grpc.io/docs/languages/python/basics/">gRPC documentation</a> and will not be repeated here.</p>
-</div>
-<div class="section" id="infrastructure">
+</section>
+<section id="infrastructure">
 <h3>Infrastructure<a class="headerlink" href="#infrastructure" title="Permalink to this headline">¶</a></h3>
 <p>There are two components of establishing a service: starting the server and registering the service with the robot.</p>
-<div class="section" id="starting-a-server">
+<section id="starting-a-server">
 <h4>Starting a Server<a class="headerlink" href="#starting-a-server" title="Permalink to this headline">¶</a></h4>
 <p>The server itself can be spun up with the Python <code class="docutils literal notranslate"><span class="pre">grpc</span></code> library. The Spot Python SDK provides helpers that wrap the library and make it easier to manage a server. An example of the code to run a gRPC service is shown below.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Proto service specific function used to attach a servicer to a server.</span>
@@ -585,8 +593,8 @@ Development Kit License (20191101-BDSDK-SL).
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">image_service_pb2_grpc.add_ImageServiceServicer_to_server</span></code> is a function auto generated from a protobuf service definition. The function links a servicer to a server and is generated for every protobuf server compiled. The <code class="docutils literal notranslate"><span class="pre">WebCamImageServicer</span></code> is a custom class that inherits from the servicer class auto generated from the protobuf service definition. It defines methods for responding to all possible service requests. The <a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/util.html"><span class="doc">GrpcServiceRunner</span></a> class will create and run a server object associated with the passed in servicer. It will monitor for requests at the given port. The <code class="docutils literal notranslate"><span class="pre">run_until_interrupt()</span></code> method can be used to keep a server alive until it receives a SIGINT.</p>
-</div>
-<div class="section" id="registering-a-service">
+</section>
+<section id="registering-a-service">
 <h4>Registering a Service<a class="headerlink" href="#registering-a-service" title="Permalink to this headline">¶</a></h4>
 <p>Registering a service requires communication with the robot. A service can register itself via the Directory Registration Client provided with the Python SDK. Each service instance should have a unique service name, service authority, and service type associated with it that are provided at registration time. These details will enable Spot to route client requests to the proper service. The preferred method of registering a service is shown below. Note that it registers with a directory keep alive and will have liveness monitoring enabled.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dir_reg_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">DirectoryRegistrationClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
@@ -597,10 +605,10 @@ Development Kit License (20191101-BDSDK-SL).
 	<span class="c1"># More code</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
-<div class="section" id="examples">
+</section>
+</section>
+</section>
+<section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>The Spot SDK provides a myriad of examples showing how an off-robot Python gRPC service can be developed.</p>
 <ul class="simple">
@@ -609,8 +617,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><a class="reference internal" href="../../python/examples/remote_mission_service/README.html"><span class="doc">Remote Mission Services</span></a></p></li>
 <li><p><a class="reference internal" href="../../python/examples/data_acquisition_service/README.html"><span class="doc">Data Acquisition Plugins</span></a></p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

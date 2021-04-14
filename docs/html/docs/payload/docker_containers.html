@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Running Custom Applications with Spot &mdash; Spot 2.3.3 documentation</title>
+  <title>Running Custom Applications with Spot &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="README.html">Payloads</a><ul class="current">
@@ -546,7 +554,7 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="running-custom-applications-with-spot">
+--><section id="running-custom-applications-with-spot">
 <h1>Running Custom Applications with Spot<a class="headerlink" href="#running-custom-applications-with-spot" title="Permalink to this headline">¶</a></h1>
 <p>Spot’s computing power can be extended through additional computation payloads mounted on the robot. Boston Dynamics offers Spot CORE and Spot CORE AI computation payloads, but users can attach other types of computation payloads as well. This document describes how to configure software to run on these computation payloads. Most instructions describe steps on how to manage custom software on the Spot CORE, but these steps are applicable to other computation payloads as well.</p>
 <p>The purpose of computation payloads is to run custom software applications on the robot that interact with the robot software system and the other payloads attached to Spot. For Spot CORE, we suggest using the provided docker framework to install, configure and run custom software. This document describes how to create docker images in the <a class="reference external" href="#create-docker-images">Create Docker Images</a> section, and how to manage docker containers in Spot CORE or other computation payloads in two different ways in the <a class="reference external" href="#manage-docker-containers-in-spot-core">Manage Docker Containers</a> section. The <a class="reference external" href="#portainer-configuration">Portainer section</a> describes how to use Portainer to manage docker containers. This feature is new in Spot release 2.1. The <a class="reference external" href="#command-line-configuration">Command-line section</a> describes how to use command-line tools, such as <code class="docutils literal notranslate"><span class="pre">scp</span></code>, <code class="docutils literal notranslate"><span class="pre">ssh</span></code> and docker CLI (Command Line Interface) to run docker containers in a computation payload.</p>
@@ -557,18 +565,18 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html"><span class="doc">Spot Detect and Follow</span></a></p></li>
 <li><p><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html"><span class="doc">Web Cam Image Service</span></a></p></li>
 </ul>
-<div class="section" id="create-docker-images">
+<section id="create-docker-images">
 <h2>Create Docker Images<a class="headerlink" href="#create-docker-images" title="Permalink to this headline">¶</a></h2>
 <p>The first step is to create a docker image with the software application and its dependencies. Docker containers are dependent on images and use them to construct a run-time environment and run an application. The instructions to create a docker image are specified in a file, usually named <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>. The <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> specifies what base docker image to start from, what additional software and libraries to install on top of the base image, and what software needs to be run when the container starts. All the Spot SDK examples listed above contain a <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>.</p>
-<div class="section" id="build-docker-images">
+<section id="build-docker-images">
 <h3>Build Docker Images<a class="headerlink" href="#build-docker-images" title="Permalink to this headline">¶</a></h3>
 <p>The docker image, which is used to run a container with the software component, can be built and saved to a tar file using the following commands, where {IMAGE_NAME} represents the desired docker image name.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span> <span class="o">.</span>
 <span class="n">sudo</span> <span class="n">docker</span> <span class="n">save</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span> <span class="o">&gt;</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span><span class="o">.</span><span class="n">tar</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="test-docker-images-locally">
+</section>
+<section id="test-docker-images-locally">
 <h3>Test Docker Images Locally<a class="headerlink" href="#test-docker-images-locally" title="Permalink to this headline">¶</a></h3>
 <p>Before configuring and running a docker container on a computation payload, we recommend to test the container on a local environment first, such as on a development laptop. To start a docker container and its configured software application, run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">network</span><span class="o">=</span><span class="n">host</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span> <span class="p">{</span><span class="n">ROBOT_IP</span><span class="p">}</span> <span class="p">{</span><span class="n">APPLICATION</span> <span class="n">ARGUMENTS</span><span class="p">}</span>
@@ -586,12 +594,12 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </li>
 </ul>
-</div>
-</div>
-<div class="section" id="manage-docker-containers-in-computation-payloads">
+</section>
+</section>
+<section id="manage-docker-containers-in-computation-payloads">
 <h2>Manage Docker Containers in Computation Payloads<a class="headerlink" href="#manage-docker-containers-in-computation-payloads" title="Permalink to this headline">¶</a></h2>
 <p>This section describes two ways to manage docker containers on a computation payload, using Portainer already included in Spot CORE as of release 2.1, or command-line tools.</p>
-<div class="section" id="portainer-configuration">
+<section id="portainer-configuration">
 <h3>Portainer Configuration<a class="headerlink" href="#portainer-configuration" title="Permalink to this headline">¶</a></h3>
 <p>In Spot release 2.1, Spot CORE comes preloaded with <a class="reference external" href="https://www.portainer.io">Portainer</a> software to manage the docker containers. Portainer is a complete software solution for container management to speed up software deployments and troubleshooting on the Spot CORE. It is the recommended method for managing docker containers on Spot CORE. We also recommend using Portainer and following these instructions with other computation payloads as well.</p>
 <p>Check the Spot CORE version to make sure it is 2.1 or higher by ssh-ing onto the Spot CORE and running <code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">/etc/spotcore-release</span></code>. If it is not up to date, upgrade to the latest Spot CORE release by following the <a class="reference external" href="https://support.bostondynamics.com/s/article/How-to-update-Spot-CORE-software">instructions to upgrade</a>.</p>
@@ -616,8 +624,8 @@ Development Kit License (20191101-BDSDK-SL).
 <img alt="Portainer Container Details" src="../../_images/portainer_container_details.png" />
 The log statements generated by the software application running in the docker container can be seen by clicking the “Logs” link, as shown in the screenshots below.
 <img alt="Portainer Container Logs" src="../../_images/portainer_container_logs.png" /></p>
-</div>
-<div class="section" id="command-line-configuration">
+</section>
+<section id="command-line-configuration">
 <h3>Command-line Configuration<a class="headerlink" href="#command-line-configuration" title="Permalink to this headline">¶</a></h3>
 <p>To run the docker container on a computation payload without using Portainer, first copy the docker image tar file and then manually run it on the computation payload. To copy the dockerfile, run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scp</span> <span class="o">-</span><span class="n">r</span> <span class="o">-</span><span class="n">P</span> <span class="mi">20022</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span><span class="o">.</span><span class="n">tar</span> <span class="n">spot</span><span class="o">@</span><span class="mf">192.168</span><span class="o">.</span><span class="mf">80.3</span><span class="p">:</span>
@@ -633,9 +641,9 @@ The log statements generated by the software application running in the docker c
 </div>
 <p>with the arguments as described in the section <a class="reference external" href="#test-docker-images-locally">Test Docker Images Locally</a>. Note, the <code class="docutils literal notranslate"><span class="pre">host-ip</span></code> in the example command is currently set for a Spot CORE attached to the rear port and the robot hostname is needed for a service running on the Spot CORE communicating with the on-board software.</p>
 <p>The manual configuration described in this section does not persist across reboots without additional configuration.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>

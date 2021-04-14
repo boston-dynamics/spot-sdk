@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Mission Service &mdash; Spot 2.3.3 documentation</title>
+  <title>Mission Service &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../payload/README.html">Payloads</a><ul>
@@ -548,26 +556,26 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="mission-service">
+--><section id="mission-service">
 <h1>Mission Service<a class="headerlink" href="#mission-service" title="Permalink to this headline">¶</a></h1>
 <p>The Mission Service is a way for API clients to specify high level autonomous behaviors for Spot using behavior trees.</p>
-<div class="section" id="behavior-trees">
+<section id="behavior-trees">
 <h2>Behavior trees<a class="headerlink" href="#behavior-trees" title="Permalink to this headline">¶</a></h2>
 <p>Behavior trees allow clients to specify behaviors as simple as executing a sequence of tasks as well as more complicated behaviors, such as returning the robot to base when the battery is low. Behavior trees are commonly used in AI to define the behavior of non-player characters in video gaming.</p>
 <p>Behavior trees consist of structural nodes that control how the tree is parsed, and action nodes, which carry out some action, such as making the robot navigate from place to place or activate a payload.</p>
 <p>Each node may have zero or more children. Each child can be thought of as a distinct behavior tree, also called subtrees. For example, you can have a behavior tree that powers the robot on, then stands the robot up. That behavior tree can then be inserted as a child of another node.</p>
-</div>
-<div class="section" id="behavior-tree-blackboard">
+</section>
+<section id="behavior-tree-blackboard">
 <h2>Behavior tree blackboard<a class="headerlink" href="#behavior-tree-blackboard" title="Permalink to this headline">¶</a></h2>
 <p>Certain action nodes depend on state that might be dynamically created by other nodes in the tree. State is written to and read from a blackboard, a messaging capability that allows nodes to share state in the behavior tree.</p>
 <p>For example, the <code class="docutils literal notranslate"><span class="pre">BosdynRobotState</span></code> action node will read state from the robot, including whether or not motor power is on, and create a blackboard entry with the value of the state. The child of <code class="docutils literal notranslate"><span class="pre">BosdynRobotState</span></code> (and all of its children’s children) can read that information. Variables in the blackboard are scoped such that only the child of a node that defines a variable can read or write that variable.</p>
 <p>If a node A defines a variable “MyVariable” and has a child node B, node B is allowed to also define “MyVariable” in the blackboard. Node B and its children will only be able to interact with Node B’s version of “MyVariable”.</p>
-</div>
-<div class="section" id="behavior-tree-node-types">
+</section>
+<section id="behavior-tree-node-types">
 <h2>Behavior tree node types<a class="headerlink" href="#behavior-tree-node-types" title="Permalink to this headline">¶</a></h2>
 <p>A behavior tree consists of a hierarchy of structural and action nodes.</p>
 <p>Structural nodes control the order in which nodes are visited in mission execution or if they are visited at all.</p>
-<div class="section" id="structural-nodes">
+<section id="structural-nodes">
 <h3>Structural nodes<a class="headerlink" href="#structural-nodes" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils">
 <thead>
@@ -602,8 +610,8 @@ Development Kit License (20191101-BDSDK-SL).
 <td>Execute two nodes or subtrees at the same time.</td>
 </tr>
 </tbody>
-</table></div>
-<div class="section" id="action-nodes">
+</table></section>
+<section id="action-nodes">
 <h3>Action nodes<a class="headerlink" href="#action-nodes" title="Permalink to this headline">¶</a></h3>
 <p>Action nodes take some action, such as making the robot do something or triggering a payload to do something.</p>
 <table border="1" class="docutils">
@@ -675,9 +683,9 @@ Development Kit License (20191101-BDSDK-SL).
 <td>Always return one of the standard status codes (SUCCESS, RUNNING, or FAILURE).</td>
 </tr>
 </tbody>
-</table></div>
-</div>
-<div class="section" id="creating-a-behavior-tree">
+</table></section>
+</section>
+<section id="creating-a-behavior-tree">
 <h2>Creating a behavior tree<a class="headerlink" href="#creating-a-behavior-tree" title="Permalink to this headline">¶</a></h2>
 <p>The following sections provide Python code that directly uses Python-compiled protocol buffers to build our behavior tree representations, also called “missions”.</p>
 <p>All of the node types described above have a corresponding protocol buffer message definition. Each one must be wrapped by a general <code class="docutils literal notranslate"><span class="pre">Node</span></code> message. For example, here is a single-node mission titled “Just power on” that will power on the robot:</p>
@@ -692,8 +700,8 @@ Development Kit License (20191101-BDSDK-SL).
 <span class="o">...</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="simple-sequence-example">
+</section>
+<section id="simple-sequence-example">
 <h2>Simple sequence example<a class="headerlink" href="#simple-sequence-example" title="Permalink to this headline">¶</a></h2>
 <p>The following behavior tree diagram depicts a simple linear sequence of actions.</p>
 <p><img alt="Simple behavior tree" src="../../../_images/simpletree.png" /></p>
@@ -730,8 +738,8 @@ Development Kit License (20191101-BDSDK-SL).
 <span class="o">...</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="more-complex-behavior-tree-example">
+</section>
+<section id="more-complex-behavior-tree-example">
 <h2>More complex behavior tree example<a class="headerlink" href="#more-complex-behavior-tree-example" title="Permalink to this headline">¶</a></h2>
 <p>The following behavior tree diagram shows the structure of a mission that repeats a task until either the designated number of iterations are completed or until the robot battery reaches a low-charge threshold.</p>
 <p><img alt="Complex behavior tree" src="../../../_images/complextree.png" /></p>
@@ -780,8 +788,8 @@ Development Kit License (20191101-BDSDK-SL).
 <span class="o">...</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="missionservice-rpcs">
+</section>
+<section id="missionservice-rpcs">
 <h2>MissionService RPCs<a class="headerlink" href="#missionservice-rpcs" title="Permalink to this headline">¶</a></h2>
 <p>The MissionService provides RPCs for clients to load and play missions recorded using the GraphNavRecordingService.</p>
 <table border="1" class="docutils">
@@ -825,8 +833,8 @@ Development Kit License (20191101-BDSDK-SL).
 <td>Specify an answer to a question asked by the mission.</td>
 </tr>
 </tbody>
-</table></div>
-<div class="section" id="remotemissionservice-rpcs">
+</table></section>
+<section id="remotemissionservice-rpcs">
 <h2>RemoteMissionService RPCs<a class="headerlink" href="#remotemissionservice-rpcs" title="Permalink to this headline">¶</a></h2>
 <p>RemoteMissionService RPCs are called by MissionService to communicate with a robot payload. The mission service uses these RPCs to communicate with a remote mission service.</p>
 <table border="1" class="docutils">
@@ -854,8 +862,8 @@ Development Kit License (20191101-BDSDK-SL).
 <td>Tells the service it can forget any data associated with the given session.</td>
 </tr>
 </tbody>
-</table><br /><!--- image and page reference link definitions ---></div>
-</div>
+</table><br /><!--- image and page reference link definitions ---></section>
+</section>
 
 
            </div>

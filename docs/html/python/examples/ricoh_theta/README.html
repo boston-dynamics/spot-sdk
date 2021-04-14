@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Interacting with a Ricoh Theta Camera &mdash; Spot 2.3.3 documentation</title>
+  <title>Interacting with a Ricoh Theta Camera &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
@@ -550,19 +558,19 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="interacting-with-a-ricoh-theta-camera">
+--><section id="interacting-with-a-ricoh-theta-camera">
 <h1>Interacting with a Ricoh Theta Camera<a class="headerlink" href="#interacting-with-a-ricoh-theta-camera" title="Permalink to this headline">¶</a></h1>
 <p>Since the 2.1.0 release, we have provided a <strong>new</strong> Ricoh Theta example for developers to learn how to create a standard Boston Dynamics API image service that communicates with the Ricoh Theta camera.</p>
 <p>This example assumes you are using the default settings of a Ricoh Theta camera and mounted/registered Spot CORE.</p>
-<div class="section" id="required-items">
+<section id="required-items">
 <h2>Required Items<a class="headerlink" href="#required-items" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Spot CORE</p></li>
 <li><p>Ricoh Theta V or Z1</p></li>
 <li><p>Personal Computer</p></li>
 </ul>
-</div>
-<div class="section" id="installation-steps">
+</section>
+<section id="installation-steps">
 <h2>Installation Steps<a class="headerlink" href="#installation-steps" title="Permalink to this headline">¶</a></h2>
 <p>The following installation steps assume you:</p>
 <ul class="simple">
@@ -570,14 +578,14 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>have the latest spot-sdk downloaded &amp; installed on your PC</p></li>
 <li><p>familiar with SSH and using a Command Line Interface (CLI)</p></li>
 </ul>
-<div class="section" id="install-packages-on-pc">
+<section id="install-packages-on-pc">
 <h3>Install Packages on PC<a class="headerlink" href="#install-packages-on-pc" title="Permalink to this headline">¶</a></h3>
 <p>Navigate via the CLI on your PC to the python examples <a class="reference external" href="https://github.com/boston-dynamics/spot-sdk/tree/master/python/examples/ricoh_theta">ricoh_theta</a> directory and review the requirements.txt document for this example before continuing. Several python packages will need to be installed along with the standard SDK:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="test-ricoh-theta">
+</section>
+<section id="test-ricoh-theta">
 <h3>Test Ricoh Theta<a class="headerlink" href="#test-ricoh-theta" title="Permalink to this headline">¶</a></h3>
 <p>A <code class="docutils literal notranslate"><span class="pre">test_driver.py</span></code> script has been included which will show the state of the camera and take a picture.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">SSID</span></code> field within the script must be updated to match your camera’s theta_ssid. Additionally, before running the example driver, you must be wirelessly connected to the Ricoh Theta camera from the computer you intend to run this example. Note that the Ricoh Theta’s wireless network may not appear or be available when the camera is plugged into a computer through its USB port. For a Ricoh Theta Z, check the OLED display for the WiFi icon to confirm the network is broadcasting. For a Ricoh Theta V, the wireless indicator should be lit up blue if in access point mode.</p>
@@ -585,8 +593,8 @@ Development Kit License (20191101-BDSDK-SL).
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">test_driver</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="connect-ricoh-theta-to-spot">
+</section>
+<section id="connect-ricoh-theta-to-spot">
 <h3>Connect Ricoh Theta to Spot<a class="headerlink" href="#connect-ricoh-theta-to-spot" title="Permalink to this headline">¶</a></h3>
 <p>Perform the following steps on your PC to setup Ricoh Theta client mode, which means the Ricoh Theta will be connected to a different network (in this case, Spot’s WiFI) instead of broadcasting its own network (which is the direct mode). The python script below is required for this example to set the static ip, which the App does not allow.</p>
 <ol>
@@ -612,9 +620,9 @@ Development Kit License (20191101-BDSDK-SL).
 </li>
 <li><p>Enable client mode on your Ricoh Theta (press the wireless button on the camera) and confirm connection with Spot’s access point. The wireless indicator should stop blinking and become solid green in client mode for Ricoh Theta V. On a Ricoh Theta Z, on the OLED display screen of the camera, there will be a ‘CL’ icon next to the wireless indicator. <strong>Often a Ricoh Theta power cycle is required.</strong> Note, the new static IP for the Ricoh Theta in client mode will be persistent across reboots of the camera.</p></li>
 </ol>
-</div>
-</div>
-<div class="section" id="run-image-service">
+</section>
+</section>
+<section id="run-image-service">
 <h2>Run Image Service<a class="headerlink" href="#run-image-service" title="Permalink to this headline">¶</a></h2>
 <p>The image service script creates a standard Boston Dynamics API image service that communicates with the Ricoh Theta camera.</p>
 <p>To launch the GRPC image service from a registered payload computer (such as the Spot CORE), authenticate the robot connection using the payload’s authentication, and ultimately register the service with the directory <strong>with the service name ‘ricoh-theta-image-service’</strong>, issue the following command:</p>
@@ -625,19 +633,19 @@ Development Kit License (20191101-BDSDK-SL).
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span> <span class="o">--</span><span class="n">username</span> <span class="p">{</span><span class="n">USER</span><span class="p">}</span> <span class="o">--</span><span class="n">password</span> <span class="p">{</span><span class="n">PASSWORD</span><span class="p">}</span> <span class="p">{</span><span class="n">ROBOT_IP</span><span class="p">}</span> <span class="bp">self</span><span class="o">-</span><span class="n">ip</span>
 </pre></div>
 </div>
-<p>The other IP address is the traditional robot hostname (“ROBOT_IP”) argument, which describes the IP address of the robot hosting the directory service.</p>
+<p>The other IP address is the traditional robot hostname (”ROBOT_IP”) argument, which describes the IP address of the robot hosting the directory service.</p>
 <p>Since the example is created to run off of a payload computer, it requires the input arguments <code class="docutils literal notranslate"><span class="pre">--guid</span></code> (uniquely generated payload specifier) and <code class="docutils literal notranslate"><span class="pre">--secret</span></code> (private string associated with a payload) for the registered payload computer that will be running the Ricoh Theta image service. For the Spot CORE, this information by default will be located in the file <code class="docutils literal notranslate"><span class="pre">/opt/payload_credentials/payload_guid_and_secret</span></code>. Note, you can run the Ricoh Theta image service locally on your PC by registering it as a weightless payload using <a class="reference internal" href="../payloads/README.html"><span class="doc">the payloads example</span></a> and creating a GUID and secret for your computer. See documentation on <a class="reference external" href="../../../docs/payload/configuring_payload_software.html#Configuring-and-authorizing-payloads">configuration of payload software</a> for more information.</p>
 <p>If the <code class="docutils literal notranslate"><span class="pre">--theta-client</span></code> argument is provided, the Ricoh Theta will be connected to in client mode. Otherwise, it will default to a direct-ip mode connection, requiring the computer running the image service script to be wirelessly connected to the Ricoh Theta’s WiFi. If using the Ricoh Theta in client mode, make sure that the <code class="docutils literal notranslate"><span class="pre">ricoh_client_mode.py</span></code> script has been run to create a connection to Spot’s WiFi with the correct static ip.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">--theta-ssid</span></code> argument is used to pass the SSID for the Ricoh Theta camera that will take the images and <strong>should have the .OSC removed</strong>. This will be set as the image source name for the service. Additionally, if the password for the Ricoh Theta is different from the default password of the camera, this can be provided using the <code class="docutils literal notranslate"><span class="pre">--theta-password</span></code> argument.</p>
 <p>The Ricoh Theta image service will default to only attempting to capture an image from the Ricoh Theta camera when requested with a GetImage gRPC call. To have the Ricoh Theta attempt to continuously capture images, pass the command line argument <code class="docutils literal notranslate"><span class="pre">--capture-continuously</span></code>. This will cause the image service to create a background thread and attempt to query the ricoh theta at a high rate. Note, the Ricoh Theta images are very high resolution and the stitching process to go from the fisheye image to the processed image is time consuming, so sometimes the continuous captures will drain the camera’s battery quickly or overwhelm the camera processors.</p>
 <p>Lastly, a port number for the image service can be specified using the <code class="docutils literal notranslate"><span class="pre">--port</span></code> argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a service listening on the old port. This port number will be used with the host-ip (HOST_COMPUTER_IP) to fully specify where the image service is running. This port number must be open and cannot be blocked by a local firewall, otherwise the ricoh-theta image service will be unreachable from the robot and the directory registration service.</p>
-<div class="section" id="ricoh-theta-image-service-configuration">
+<section id="ricoh-theta-image-service-configuration">
 <h3>Ricoh Theta Image Service Configuration<a class="headerlink" href="#ricoh-theta-image-service-configuration" title="Permalink to this headline">¶</a></h3>
 <p>The Ricoh Theta image service is configured to prevent directory registration if communication cannot be established with the Ricoh Theta camera. This means the image service will not show up in the directory listing, the data acquisition service’s known captures, or the tablet’s set of available camera sources.</p>
 <p>Additionally, the service will throw <a class="reference internal" href="../../../docs/concepts/faults.html"><span class="doc">Service Faults</span></a> for both failure to communicate at start up with the camera and also if a capture attempt fails for a different reason than networking. These faults will be visible in the robot state, and will show warning indicators on the tablet.</p>
 <p>Note, the Ricoh Theta image requests can be slow due to the time it takes to stitch the two fisheye images together on the camera.</p>
-</div>
-<div class="section" id="debugging-tips">
+</section>
+<section id="debugging-tips">
 <h3>Debugging Tips<a class="headerlink" href="#debugging-tips" title="Permalink to this headline">¶</a></h3>
 <p>Here are a couple suggestions for debugging the Ricoh Theta image service:</p>
 <ul class="simple">
@@ -646,19 +654,19 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Use the <a class="reference internal" href="../tester_programs/README.html"><span class="doc">image service tester program</span></a> to ensure the service can successfully be communicated with and that each RPC will complete correctly.</p></li>
 <li><p>When all tests pass for the image service tester program, check that the tablet is detecting the Ricoh Theta image service by looking in the camera sources drop down menu (top-left of the status bar) and then check that the images are appearing by selecting the Ricoh Theta.</p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="run-the-ricoh-theta-image-service-using-docker">
+</section>
+</section>
+<section id="run-the-ricoh-theta-image-service-using-docker">
 <h2>Run the Ricoh Theta Image Service using Docker<a class="headerlink" href="#run-the-ricoh-theta-image-service-using-docker" title="Permalink to this headline">¶</a></h2>
 <p>Please refer to this <a class="reference internal" href="../../../docs/payload/docker_containers.html"><span class="doc">document</span></a> for general instructions on how to run software applications on computation payloads as docker containers.</p>
 <p>Follow the instructions on how to build and use the docker image from <a class="reference external" href="../../../docs/payload/docker_containers.html#build-docker-images">this section</a>. The application arguments needed to run the Ricoh Theta application in this example are <code class="docutils literal notranslate"><span class="pre">--theta-ssid</span> <span class="pre">THETA_SSID</span> <span class="pre">--theta-client</span> <span class="pre">--host-ip</span> <span class="pre">HOST_COMPUTER_IP</span> <span class="pre">--guid</span> <span class="pre">GUID</span> <span class="pre">--secret</span> <span class="pre">SECRET</span> <span class="pre">--port</span> <span class="pre">PORT_NUMBER</span> <span class="pre">ROBOT_IP</span></code>.</p>
 <p><strong>Reminder:</strong> the Ricoh Theta needs to be in client mode when running the image service on a payload computer. Follow the initial instructions above to setup client mode.</p>
-</div>
-<div class="section" id="developer-comments">
+</section>
+<section id="developer-comments">
 <h2>Developer Comments<a class="headerlink" href="#developer-comments" title="Permalink to this headline">¶</a></h2>
 <p>For Ricoh Theta API Documentation, visit <a class="reference external" href="https://api.ricoh/products/theta-api/">https://api.ricoh/products/theta-api/</a>.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Data Acquisition Output &mdash; Spot 2.3.3 documentation</title>
+  <title>Data Acquisition Output &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../payload/README.html">Payloads</a><ul>
@@ -548,10 +556,10 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="data-acquisition-output">
+--><section id="data-acquisition-output">
 <h1>Data Acquisition Output<a class="headerlink" href="#data-acquisition-output" title="Permalink to this headline">¶</a></h1>
 <p>The data stored from data acquisition captures can be downloaded over a REST endpoint from the robot. When downloading the data, the result will be returned in a zip file containing all data that matches the particular query parameters sent to the endpoint.</p>
-<div class="section" id="zip-file-structure">
+<section id="zip-file-structure">
 <h2>Zip file structure<a class="headerlink" href="#zip-file-structure" title="Permalink to this headline">¶</a></h2>
 <p>An example zip file with data from both a teleoperation session and a run of an mission named “Inspection”:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>downloaded_file.zip
@@ -575,8 +583,8 @@ Development Kit License (20191101-BDSDK-SL).
 </div>
 <p>Each separate group from the stored data will be in its own directory. The directory name will be the <code class="docutils literal notranslate"><span class="pre">group_name</span></code>, formatted as <code class="docutils literal notranslate"><span class="pre">&lt;mission</span> <span class="pre">start</span> <span class="pre">timestamp&gt;_&lt;mission</span> <span class="pre">name&gt;</span></code> for Autowalk missions, or <code class="docutils literal notranslate"><span class="pre">teleop_&lt;session</span> <span class="pre">start</span> <span class="pre">timestamp&gt;</span></code> for teleop captures.</p>
 <p>Within each group’s directory the images captured as part of that group will be saved with filenames of the form <code class="docutils literal notranslate"><span class="pre">&lt;action</span> <span class="pre">name&gt;</span> <span class="pre">&lt;image</span> <span class="pre">service</span> <span class="pre">name&gt;-&lt;image</span> <span class="pre">source</span> <span class="pre">name&gt;.jpg</span></code>. There will be a <code class="docutils literal notranslate"><span class="pre">metadata.json</span></code> file with all of the associated metadata captured during that group, and optionally CSV files for basic or detailed position data (present if the data was captured during the group’s actions).</p>
-</div>
-<div class="section" id="metadata-json-structure">
+</section>
+<section id="metadata-json-structure">
 <h2>Metadata.json structure<a class="headerlink" href="#metadata-json-structure" title="Permalink to this headline">¶</a></h2>
 <p>The json data is structured around actions, and the data within those actions. Metadata is included either nested with the data it is associated with, or nested inside the action it was captured during.</p>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -732,13 +740,13 @@ Any json saved as part of the <code class="docutils literal notranslate"><span c
       <span class="p">...</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="csv-structure">
+</section>
+<section id="csv-structure">
 <h2>CSV structure<a class="headerlink" href="#csv-structure" title="Permalink to this headline">¶</a></h2>
 <p>The csv files will have one row for every file in the group. The columns of the csv file will be a flattened version of the basic-position-data or detailed-position-data metadata, as well as any custom Autowalk tags entered during recording.</p>
 <p>Entries will be left empty in a row if the data was not captured for that file.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

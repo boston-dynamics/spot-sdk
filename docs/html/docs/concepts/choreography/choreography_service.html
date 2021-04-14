@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Choreography Service &mdash; Spot 2.3.3 documentation</title>
+  <title>Choreography Service &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../payload/README.html">Payloads</a><ul>
@@ -548,11 +556,11 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="choreography-service">
+--><section id="choreography-service">
 <h1>Choreography Service<a class="headerlink" href="#choreography-service" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="overview">
+<section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="what-is-it">
+<section id="what-is-it">
 <h3>What is it?<a class="headerlink" href="#what-is-it" title="Permalink to this headline">¶</a></h3>
 <p>The Choreography service is a framework for producing precisely scripted motion, currently focused on dancing.</p>
 <p>An example script can be seen on <a class="reference external" href="https://www.youtube.com/watch?v=kHBcVlqpvZ8">YouTube</a>.</p>
@@ -561,22 +569,22 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Combining multiple moves (see the tracks/layering section).</p></li>
 <li><p>Altering move parameters to vary the behavior of the move.</p></li>
 </ol>
-</div>
-<div class="section" id="note-on-reliability">
+</section>
+<section id="note-on-reliability">
 <h3>Note on Reliability<a class="headerlink" href="#note-on-reliability" title="Permalink to this headline">¶</a></h3>
 <p>The choreography framework is much less robust than other Spot behaviors.  It should only be used on a flat floor with plenty of space and good traction.  Some combinations of moves will be incompatible and will result in the robot falling.  The same is true for some combinations of parameters for an individual move.  The robot <strong>will</strong> fall down.  It may take some trial-and-error to produce a script that looks good and succeeds reliably.</p>
 <p><em><strong>Not recommended for use with payloads.</strong></em></p>
-</div>
-</div>
-<div class="section" id="choreography-terminology">
+</section>
+</section>
+<section id="choreography-terminology">
 <h2>Choreography Terminology<a class="headerlink" href="#choreography-terminology" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="slices">
+<section id="slices">
 <h3>Slices<a class="headerlink" href="#slices" title="Permalink to this headline">¶</a></h3>
 <p>We divide time up into slices.  In the context of Choreographer, a slice is ¼ beat (also, a 1/16th note for 4/4 music). For example, a dance with a BPM of 100 beats/minute will have 400 slices per minute. The duration of a slice can be adjusted, but must remain constant throughout the entire script.</p>
 <p>Moves always run for an integer number of slices.  Some moves require a fixed number of slices, and some are extendable.  See the Config Files section for more details.</p>
 <p>Note that any number of slices per minute can be selected, however very fast or very slow slices will cause some moves to be unreliable.  Many moves will be most reliable in the range of 250-450 slices per minute.</p>
-</div>
-<div class="section" id="tracks-layering">
+</section>
+<section id="tracks-layering">
 <h3>Tracks/Layering<a class="headerlink" href="#tracks-layering" title="Permalink to this headline">¶</a></h3>
 <p>We divide the robot’s motion into four distinct tracks:</p>
 <ul class="simple">
@@ -591,8 +599,8 @@ Development Kit License (20191101-BDSDK-SL).
 <p><img alt="../../../_images/main_image3.gif" src="../../../_images/main_image3.gif" /></p>
 <p>Some moves require multiple tracks, such as the “Skip” move which uses the Body and Legs track or the “Arm Move Relative” which uses the Arm and Gripper tracks, as shown in this example:</p>
 <p><img alt="../../../_images/main_image4.png" src="../../../_images/main_image4.png" /></p>
-</div>
-<div class="section" id="entry-exit-conditions">
+</section>
+<section id="entry-exit-conditions">
 <h3>Entry/Exit conditions<a class="headerlink" href="#entry-exit-conditions" title="Permalink to this headline">¶</a></h3>
 <p>All moves that use the legs track will have logical entry and exit positions that the body must be in before/after the move. This is to prevent nonsensical choreographies; for example, completing a kneel-to-stand transition if you are not kneeling, or going directly from a step move to a kneeling-clap move without a stand-to-knee transition in between.</p>
 <p>To represent and enforce these requirements, all moves that use the legs track have an exit transition state and an entry transition state.  The options for transition state are:</p>
@@ -605,9 +613,9 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The first leg-track move can have any entry state, and the robot will automatically transition to an acceptable entry state for that move before starting the choreography sequence.  If the robot is not already in the correct starting pose, it may delay the start of the choreography sequence beyond the requested start time.</p>
 <p>All subsequent legs-track moves must have an entry state that corresponds to the previous legs-track move’s exit state.  Scripts that violate this requirement will be rejected by the API and return warnings indicating which moves violate the entry/exit states. As well, routines made in Choreographer will highlight moves red when the entry state does not match the previous leg move’s exit state, such as in this example:</p>
 <p><img alt="../../../_images/main_image2.png" src="../../../_images/main_image2.png" /></p>
-</div>
-</div>
-<div class="section" id="api">
+</section>
+</section>
+<section id="api">
 <h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
 <p>The API defines a choreography sequence by a unique name, the number of slices per minute, and a repeated list of moves. Each move consists of the move’s type, its starting slice, duration (in slices), and the actual parameters (<code class="docutils literal notranslate"><span class="pre">MoveParams</span></code> proto message). The <code class="docutils literal notranslate"><span class="pre">MoveParams</span></code> message describe how the robot should behave during each move. For example, a move parameter could specify positions for the body.  Each parameter may have specific limits/bounds that are described by the <code class="docutils literal notranslate"><span class="pre">MoveInfo</span></code> proto; this information can be found using the <code class="docutils literal notranslate"><span class="pre">ListAllMoves</span></code> RPC.</p>
 <p>Once a choreography sequence is created, the <code class="docutils literal notranslate"><span class="pre">UploadChoreography</span></code> RPC will send the routine to the robot. The choreography service will validate and check the structure of the routine to ensure it is feasible and within bounds.</p>
@@ -615,12 +623,12 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC will run the choreography sequence to completion on the robot. A choreography sequence is identified by the unique name of the sequence that was uploaded to the robot. Additionally, a starting time (in robot’s time) and a starting slice will fully specify to the robot when to start the choreography sequence and at which move.</p>
 <p>The choreography service has a python client library which provides helper functions for each RPC as well as functions that help convert the choreography sequence from a protobuf message into either a binary or text file.</p>
 <p>The <a class="reference internal" href="../../../python/examples/upload_choreographed_sequence/README.html"><span class="doc">upload_choreographed_sequence example</span></a> demonstrates how to read an existing routine from a saved text file, upload it to the robot, and then execute the uploaded choreography.</p>
-</div>
-<div class="section" id="config-files">
+</section>
+<section id="config-files">
 <h2>Config Files<a class="headerlink" href="#config-files" title="Permalink to this headline">¶</a></h2>
 <p>There are two config files that describe the individual moves that are used by the Choreographer to compose different choreography sequences.</p>
-</div>
-<div class="section" id="moveinfoconfig-txt">
+</section>
+<section id="moveinfoconfig-txt">
 <h2>MoveInfoConfig.txt<a class="headerlink" href="#moveinfoconfig-txt" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">MoveInfoConfig</span></code> can be parsed by a protobuf parser into each moves field of the <code class="docutils literal notranslate"><span class="pre">ListAllMovesResponse</span></code> proto.  Each <code class="docutils literal notranslate"><span class="pre">MoveInfo</span></code> proto provides metadata about a particular move.  The fields and their meanings are:</p>
 <ul class="simple">
@@ -646,7 +654,7 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </li>
 </ul>
-<div class="section" id="moveparamsconfig-txt">
+<section id="moveparamsconfig-txt">
 <h3>MoveParamsConfig.txt<a class="headerlink" href="#moveparamsconfig-txt" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">MoveParamsConfig</span></code> file gives the default value for each of the parameters associated with individual moves.  For moves that contain numerical parameters (e.g. double, int32), the config file will also specify the minimum and maximum values.</p>
 <p>The config file is formatted as follows. There will be a block of text separated by empty lines for each available move.</p>
@@ -663,9 +671,9 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Maximum value</p></li>
 </ol>
 <p>Default values are used if no value is specified within the proto.  Values outside of the allowable range will ordinarily result in the script being rejected.  However, if <code class="docutils literal notranslate"><span class="pre">non_strict_parsing</span></code> is enabled, the value will be forced into the required range and a warning will be thrown.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>

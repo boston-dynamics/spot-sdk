@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Boston Dynamics Choreographer User Guide &mdash; Spot 2.3.3 documentation</title>
+  <title>Boston Dynamics Choreographer User Guide &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../payload/README.html">Payloads</a><ul>
@@ -548,19 +556,19 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="boston-dynamics-choreographer-user-guide">
+--><section id="boston-dynamics-choreographer-user-guide">
 <h1>Boston Dynamics Choreographer User Guide<a class="headerlink" href="#boston-dynamics-choreographer-user-guide" title="Permalink to this headline">¶</a></h1>
 <p>Choreographer is a tool for authoring dances and executing them on robots. It lets you construct choreography sequences from a list of predetermined and customizable moves. You simply have to add moves to the choreography timeline, adjust their parameters to your liking, and press “Start Choreography”.</p>
-<div class="section" id="running-choreographer">
+<section id="running-choreographer">
 <h2>Running Choreographer<a class="headerlink" href="#running-choreographer" title="Permalink to this headline">¶</a></h2>
 <p>Choreographer is an executable program we will provide you via a download link at the <a class="reference external" href="https://support.bostondynamics.com/">Support Center</a>. To run the program, simply download it at the link we will provide you, and execute it. Note that the Choreographer executable is only available for Windows. If you wish to run Choreographer from Mac or Linux, we will need to provide you with Python wheels and installation instructions (advanced usage only). Please contact us if that is the case.</p>
 <p>If you wish to run Choreographer connected to a Spot, please see the “Connecting Robots to Choreographer” section.</p>
-</div>
-<div class="section" id="choreography-safety">
+</section>
+<section id="choreography-safety">
 <h2>Choreography Safety<a class="headerlink" href="#choreography-safety" title="Permalink to this headline">¶</a></h2>
 <p>When testing your choreography sequence on a robot, always keep in mind basic safety procedures . Make sure there is plenty of space around your Spot, keep all Spots at least two meters apart from each other, and be sure that neither you nor anyone else approach the dancing Spot. Never approach your Spot unless its motors have been powered off.</p>
-</div>
-<div class="section" id="interface-overview">
+</section>
+<section id="interface-overview">
 <h2>Interface Overview<a class="headerlink" href="#interface-overview" title="Permalink to this headline">¶</a></h2>
 <p><img alt="Interface Guide" src="../../../_images/image5.png" /></p>
 <p>The Choreographer interface consists of seven main areas. They are:</p>
@@ -573,72 +581,72 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><strong>Move Parameters</strong> - When you select a move that is customizable, its different, adjustable parameters will appear here. You can modify them to adjust how the robot will act during this move. Be sure to test to make sure the robot can handle your parameters! Sometimes more extreme parameters can be too much for the robot during high or low BPM songs, so if a combination of parameters don’t work, adjust them until they do for your situation! Near each parameter’s name, a blue question mark may appear which will provide a description of the specific parameter.</p></li>
 <li><p><strong>Music Controls</strong> - This row of controls lets you load and play a song to play during your robot’s dance, manually adjust the BPM of your robot’s moves to match that of your song or the volume of the music, and stop the music and the robot’s dancing if one is connected.</p></li>
 </ol>
-</div>
-<div class="section" id="choreography-file-basics">
+</section>
+<section id="choreography-file-basics">
 <h2>Choreography File Basics<a class="headerlink" href="#choreography-file-basics" title="Permalink to this headline">¶</a></h2>
 <p>Spot choreography files consist mainly of a sequence of predefined moves that can be arranged in the timeline of the choreographer (Interface #2). Each move can contain any combination of Gripper, Arm, Body, Legs, or multiple body parts that it affects, and will appear on the appropriate track(s) within the timeline. You can mix and match so that the legs can do a move such as Step while the body does a move such as Rotate Body. However, moves may not overlap on any tracks.</p>
 <p>All choreography files are assumed to be 4/4 signatures in the Choreographer UI. The timeline is broken up into quarter notes (thick vertical lines), each of which is broken up by four lighter vertical lines. Each of those 16th-note intervals is known as a Slice. All moves must be a whole number of slices, and each move must begin and end at a slice boundary. How many slices a move takes is dependent on the BPM (Beats Per Minute) of your song. See Loading Music for more information on how to change your BPM.</p>
 <p>All choreography files are assumed to be 4/4 signatures in the Choreographer UI. The timeline is broken up into quarter notes (thick, vertical lines labeled with the note number). Each quarter note is further divided into four beats (light grey, vertical lines). Then, each 16th-note interval is known as a slice (dotted, vertical lines). Specifically, Choreographer considers there to be 4 slices per every beat, and 4 beats per every note. All moves must be a whole number of slices, and each move must begin and end at a slice boundary. The number of slices a move will take is dependent on the BPM (beats per minute) of your song. This can be adjusted in the “Music Controls” bar; see the Loading Music section for more information.</p>
 <p>For example, this “Running Man” move has been extended from the default number of slices, and will now control the legs track for the first 12 slices of this script:</p>
 <p><img alt="Slice Diagram" src="../../../_images/image4.png" /></p>
-</div>
-<div class="section" id="adding-moves">
+</section>
+<section id="adding-moves">
 <h2>Adding Moves<a class="headerlink" href="#adding-moves" title="Permalink to this headline">¶</a></h2>
 <p>To add a move to the timeline, there are multiple different methods. You can single click the move in the Moves List, which will open the parameters of the move, but not add it to the timeline. As well, the up and down arrow keys will navigate between different moves in the Moves List once one is selected. While you have a move selected in the Moves List, you can adjust its parameters in the Move Parameters section.</p>
 <p>Once the parameters are adjusted to the desired values, the move can be added to the dance timeline by either 1) pressing the Add button beneath the moves list, 2) double clicking the move name in the Moves List, or 3) entering Insert Mode (described below). If you adjust a move’s parameters and then add it to the timeline, the new Move block that appears in the timeline will have those same modified parameters.</p>
 <p>The icon <img src="../../../_images/image3.png" style="width: 50px; height: 50px">, in the upper left of the Timeline view, will enter Insert Mode when pressed. When in Insert Mode, you can click anywhere in the Timeline to add the selected move (with any of the parameter modifications you have made) to the Timeline at that point. To then exit Insert Mode and re-enter the default Choreographer mode, press the <img src="../../../_images/image2.png" style="width: 50px; height: 50px"> button or hit the escape key on the keyboard.</p>
-</div>
-<div class="section" id="modifying-move-blocks">
+</section>
+<section id="modifying-move-blocks">
 <h2>Modifying Move Blocks<a class="headerlink" href="#modifying-move-blocks" title="Permalink to this headline">¶</a></h2>
 <p>Once a move is added to your Timeline, it can be dragged left and right to the appropriate time. Some, but not all, of the moves can be resized by clicking and dragging on the edge of the move’s block. The move will automatically enforce any requirements it has about minimum or maximum duration. Note, to help you with longer moves, the Timeline can be zoomed in/out using the Zoom bar above it.</p>
-</div>
-<div class="section" id="modifying-move-parameters">
+</section>
+<section id="modifying-move-parameters">
 <h2>Modifying Move Parameters<a class="headerlink" href="#modifying-move-parameters" title="Permalink to this headline">¶</a></h2>
 <p>To modify a move’s parameters, simply click it on the timeline to select it, and modify the parameters that appear in the Move Parameters section. Each move has different parameters, and some may not have any parameters at all. Please see the <a class="reference internal" href="move_reference.html"><span class="doc">Moves Reference Guide</span></a> for descriptions of what each parameter does for each move type. Each numerical parameter can be modified by editing its text field, adjusting its slider, or pressing the Up or Down arrow buttons. Boolean parameters can be changed by checking or unchecking the box. Enum parameters are changed by choosing new values in the drop down menu.</p>
-</div>
-<div class="section" id="robot-preview">
+</section>
+<section id="robot-preview">
 <h2>Robot Preview<a class="headerlink" href="#robot-preview" title="Permalink to this headline">¶</a></h2>
 <p>The Robot Preview pane will appear for certain applicable moves. You can adjust the camera position and angle of that pane in order to get a better view of your move. Use the scroll wheel to zoom in and out, left click and drag to pan the camera, and right click and drag to rotate it around the preview robot.</p>
-</div>
-<div class="section" id="selecting-multiple-moves">
+</section>
+<section id="selecting-multiple-moves">
 <h2>Selecting Multiple Moves<a class="headerlink" href="#selecting-multiple-moves" title="Permalink to this headline">¶</a></h2>
 <p>To select multiple moves, click on empty space in the Timeline view, and then drag over the moves that should be selected. To unselect all the moves, click in empty space on the Time view. Note that you cannot edit the parameters of multiple moves at once, but you can drag them around the timeline or copy and paste them all.</p>
-</div>
-<div class="section" id="copy-pasting-deleting-moves">
+</section>
+<section id="copy-pasting-deleting-moves">
 <h2>Copy / Pasting / Deleting Moves<a class="headerlink" href="#copy-pasting-deleting-moves" title="Permalink to this headline">¶</a></h2>
 <p>When you have any number of moves selected, you can Copy (Ctrl+C or Edit-&gt;Copy) and Paste (Ctrl+V or Edit-&gt;Paste) them as you wish. When you paste moves into your choreography sequence, the new moves will attempt to appear as close as they can to the original move’s location, moving right on the timeline until they can find a place they fit. You can also right click them and choose “Clone” to instantly create a copy of your selected moves, which will also be inserted as close as they can fit into your choreography sequence.</p>
 <p>To delete moves, simply select them and either press Delete or Backspace, or choose Edit-&gt;Delete in the menus.</p>
-</div>
-<div class="section" id="loading-music">
+</section>
+<section id="loading-music">
 <h2>Loading Music<a class="headerlink" href="#loading-music" title="Permalink to this headline">¶</a></h2>
 <p>In order to let you easily test your choreography against real songs, we have included a music player that can load and sync music to your dance. To use it, simply press the “Load Music” button in the Music Controls section of the Choreographer. This will open a music file to be played alongside the dance. Note that a reference to this file will be saved in your Choreographer Save File, so you will only need to do this process once per save.</p>
 <p>Once a dance is loaded, you can preview it by hitting the “Play Music” button, and stop it with the “Stop” button. The “Play Music” button will not initiate a dance on any connected robots. The music will play from the computer running Choreographer and the music volume can be adjusted using the slider at the bottom in the music controls section.</p>
 <p>After loading a dance, you must manually set the BPM (Beats Per Minute) of your dance to that of the song. There are many online tools to help you calculate the BPM of any song, but we also provide a metronome to help you with that process if you choose to do it manually.</p>
-</div>
-<div class="section" id="red-green-sliders">
+</section>
+<section id="red-green-sliders">
 <h2>Red+Green Sliders<a class="headerlink" href="#red-green-sliders" title="Permalink to this headline">¶</a></h2>
 <p>The red slider allows the user to start the dance at a different location than the beginning; the dance will start at the move associated with the closest slice to the slider’s location. The green slider allows the user to adjust when the music starts; the music will begin playing when the dance reaches the slice closest to the slider’s location. The picture below circles the two sliders; the lines drawn at the center of the sliders show exactly where in the timeline the slider’s location is. They can be moved by clicking on the colored boxes and dragging them to the desired location.</p>
 <p><img alt="Sliders" src="../../../_images/image6.png" /></p>
-</div>
-<div class="section" id="previewing-moves">
+</section>
+<section id="previewing-moves">
 <h2>Previewing Moves<a class="headerlink" href="#previewing-moves" title="Permalink to this headline">¶</a></h2>
 <p>If you have a robot connected to the Choreographer, you can preview moves before adding them to the Timeline. Simply select a move from the Moves List, modify its parameters however you want, and press the Preview Move button. This will cancel all current dances and actions on the robot, and it will perform the one move you have selected. This is a great way to test out parameter modifications before adding it to your move sequence.</p>
-</div>
-<div class="section" id="performing-choreography-sequences">
+</section>
+<section id="performing-choreography-sequences">
 <h2>Performing Choreography Sequences<a class="headerlink" href="#performing-choreography-sequences" title="Permalink to this headline">¶</a></h2>
 <p>The “Start Choreography” button in the Robot Controls bar will upload the choreography from the sequence viewer to the robot, and then send a command to execute the routine to the robot while beginning the music at the same starting time specified in the choreography sent to the robot. There will be at least a three second delay (programmed into the button) to ensure that the music and routine can begin at the same time on the robot. Note, if the robot is not started in the proper position (sprawl, sit, stand) and has to automatically make transitions to be ready for the first move in the routine, then the timing of the music starting and the choreography sequence starting will likely be incorrect.</p>
 <p>To stop the choreography routine or the music playing, the “Stop” button will return the robot to a standing position and stop the music. In an emergency, use E-Stop or Power Off instead.</p>
-</div>
-<div class="section" id="saving-and-loading-choreography-files">
+</section>
+<section id="saving-and-loading-choreography-files">
 <h2>Saving and Loading Choreography Files<a class="headerlink" href="#saving-and-loading-choreography-files" title="Permalink to this headline">¶</a></h2>
 <p>You can save and load Choreographer routines that you create. To save your current file, either press Ctrl+S or go to File-&gt;Save. Your routine will be saved in protobuf text format, which you can then open and easily read with your own scripts if you wish. To then load a file you’ve saved, press Ctrl+L or go to File-&gt;Load Choreography.</p>
 <p>Additionally, you can append an existing choreography sequence at the end of your current dance by going to File-&gt;Append Choreography (Ctrl+E), which will automatically add all of the move blocks from that file to the end of your current routine. This is particularly useful if you want to construct a choreography sequence from smaller premade sequences.</p>
-</div>
-<div class="section" id="connecting-robots-to-choreographer">
+</section>
+<section id="connecting-robots-to-choreographer">
 <h2>Connecting Robots to Choreographer<a class="headerlink" href="#connecting-robots-to-choreographer" title="Permalink to this headline">¶</a></h2>
 <p>Robots cannot currently be connected to or disconnected from Choreographer while it is running. In order to connect your robot to Choreographer, you must start Choreographer from the command line and pass in the arguments <code class="docutils literal notranslate"><span class="pre">--hostname</span> <span class="pre">{IP/Hostname</span> <span class="pre">of</span> <span class="pre">your</span> <span class="pre">Spot}</span> <span class="pre">--user</span> <span class="pre">{Username</span> <span class="pre">you</span> <span class="pre">use</span> <span class="pre">to</span> <span class="pre">log</span> <span class="pre">in</span> <span class="pre">to</span> <span class="pre">your</span> <span class="pre">Spot}</span> <span class="pre">--password</span> <span class="pre">{Password</span> <span class="pre">for</span> <span class="pre">your</span> <span class="pre">Spot}</span></code>. If you wish to connect to multiple Spots at once, simply add more copies of those command line arguments, one set for each Spot. Note that all Spots will do the exact routine, and the Choreographer program does not yet support individual routines for each Spot. In order to accomplish that, you can save your individual routine files and write a custom script to execute them both at the same time on each robot.</p>
-</div>
-<div class="section" id="robot-controls">
+</section>
+<section id="robot-controls">
 <h2>Robot Controls<a class="headerlink" href="#robot-controls" title="Permalink to this headline">¶</a></h2>
 <p>The Robot Controls bar is disabled if there are no robots connected to the Choreographer program. If a robot is connected, the buttons will have the following effects:</p>
 <table border="1" class="docutils">
@@ -686,8 +694,8 @@ Development Kit License (20191101-BDSDK-SL).
 <td>Sends your choreography sequence to your Spot, then starts a 3 second countdown before the robot begins dancing. Any loaded music will automatically start as soon as Spot begins to dance.</td>
 </tr>
 </tbody>
-</table></div>
-<div class="section" id="joystick-controls">
+</table></section>
+<section id="joystick-controls">
 <h2>Joystick Controls<a class="headerlink" href="#joystick-controls" title="Permalink to this headline">¶</a></h2>
 <p><img alt="../../../_images/image1.png" src="../../../_images/image1.png" /></p>
 <p>A X-Box gamepad controller can be used with the GUI for convenience of moving and positioning the robot.  The button layout is set up for X-Box 360 controllers, which are readily available, and can be connected to a computer through a USB port.  Many of the buttons in the GUI are linked to gamepad buttons, and the gamepad button will behave the same as the corresponding GUI button.  As shown in the diagram above they are:</p>
@@ -734,8 +742,8 @@ Development Kit License (20191101-BDSDK-SL).
 </tbody>
 </table><p>When the joystick is enabled (either through hitting the “B” button on the gamepad or through the GUI button), the robot will walk, and can be driven by the joysticks. As shown in the diagram above, the left joystick controls translation, and the right joystick controls yaw. When the robot is controlled through any of the other Robot Controls buttons, when WASD mode is enabled, or when a dance routine has been started, joystick driving will be disabled however other buttons will still work.</p>
 <p>While using Choreographer, the joystick controller mapping diagram can be accessed as a reminder using the menus Help-&gt;Joystick Controller Mapping.</p>
-</div>
-<div class="section" id="keyboard-controls">
+</section>
+<section id="keyboard-controls">
 <h2>Keyboard Controls<a class="headerlink" href="#keyboard-controls" title="Permalink to this headline">¶</a></h2>
 <p>Similar to the joystick control, we provide the ability to drive the robot using the WASD keys on the keyboard. When enabled (either through hitting the GUI button or by pressing “v” on the keyboard), the robot will walk and can be driven using the WASD keys. Joystick mode will be disabled while driving in WASD mode. The hotkeys are setup to mimic the joystick button key presses when applicable. When the robot is controlled through any of the other Robot Controls buttons, when joystick mode is enabled, or when a dance routine has been started, the WASD driving will be disabled, however other keypresses will still be available.</p>
 <table border="1" class="docutils">
@@ -804,13 +812,13 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 </tbody>
 </table><p>While using Choreographer, a table of available keystrokes can be accessed as a reminder using the menus Help-&gt;Hotkeys Documentation.</p>
-</div>
-<div class="section" id="restricted-mode">
+</section>
+<section id="restricted-mode">
 <h2>Restricted Mode<a class="headerlink" href="#restricted-mode" title="Permalink to this headline">¶</a></h2>
 <p>One of the goals for Choreographer is to provide a tool that gives the user as much freedom as they could possibly want. As such, you will be able to find combinations of moves, parameters, and BPM that Spot cannot reliably perform under all conditions. If, however, you want a more controlled experience that will be more likely to provide more reliable results, we have offered a Restricted Mode for Choreographer. To enable Restricted Mode, simply start Choreographer with an extra <code class="docutils literal notranslate"><span class="pre">--restricted</span></code> argument. Several of the more dynamic moves will be missing, and parameter ranges will generally be smaller, allowing for less energetic and generally more reliable dances.</p>
 <p>Note that if you create a dance in normal mode, Choreographer may not be able to load it while in Restricted Mode if the dance’s parameters are outside its reduced range.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

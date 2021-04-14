@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Spot Tensorflow Object Detection &mdash; Spot 2.3.3 documentation</title>
+  <title>Spot Tensorflow Object Detection &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
@@ -550,7 +558,7 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="spot-tensorflow-object-detection">
+--><section id="spot-tensorflow-object-detection">
 <h1>Spot Tensorflow Object Detection<a class="headerlink" href="#spot-tensorflow-object-detection" title="Permalink to this headline">¶</a></h1>
 <p>The Spot Tensorflow Detector example collects images from the 5 Spot cameras and performs object
 detection using Tensorflow. It accepts any Tensorflow model, and it allows the user to specify a
@@ -564,9 +572,9 @@ constantly receives images.These images are pushed into the RAW_IMAGES_QUEUE and
 Tensorflow processes.Those processes detect objects in the images, draw the bounding boxes around
 the detections, and push those processed images into the PROCESSED_IMAGES_QUEUE. The Display
 process then pulls images from the PROCESSED_IMAGES_QUEUE and displays them to the screen.</p>
-<img src="../../../_images/process_diagram.png" alt="Process Diagram" style="width:250px;"/><div class="section" id="user-guide">
+<img src="../../../_images/process_diagram.png" alt="Process Diagram" style="width:250px;"/><section id="user-guide">
 <h2>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="installation">
+<section id="installation">
 <h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
 <p>For your best learning experience, please use the <a class="reference internal" href="../../../docs/python/quickstart.html"><span class="doc">Quickstart Guide</span></a>
 found in the SDK’s docs/python directory.  That will help you get your Python programming
@@ -579,8 +587,8 @@ environment setup properly.</p>
 <li><p>Run the example using instructions in the next section</p></li>
 <li><p>To exit the virtual environment, run <code class="docutils literal notranslate"><span class="pre">deactivate</span></code></p></li>
 </ul>
-</div>
-<div class="section" id="execution">
+</section>
+<section id="execution">
 <h3>Execution<a class="headerlink" href="#execution" title="Permalink to this headline">¶</a></h3>
 <p>This example follows the common pattern for expected arguments. It needs the common arguments used to configure the SDK and connect to a Spot:</p>
 <ul class="simple">
@@ -617,9 +625,9 @@ environment setup properly.</p>
 - Processing_Skips: Total number of images skipped from being processed in each Tensorflow process due to latency</p>
 <p>The value for RAW_IMAGES_QUEUE increases rapidly in the beginning of the program, but it should decrease back to 0 in a few minutes. Based on the hardware where the program is running, increasing the value passed to the argument <code class="docutils literal notranslate"><span class="pre">--number-tensorflow-processes</span></code> reduces the size of this queue more quickly. Increasing the value of the argument <code class="docutils literal notranslate"><span class="pre">--sleep-between-capture</span></code> also reduces the size of this queue, but this option also reduces the real-time visualization of the environment around the Spot robot.</p>
 <p>As an example, the <code class="docutils literal notranslate"><span class="pre">faster_rcnn_inception_v2_coco</span></code> Tensorflow model pre-trained on COCO dataset can be obtained <a class="reference external" href="http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz">here</a>. Run the example with <code class="docutils literal notranslate"><span class="pre">--model-path</span></code> pointing to the <code class="docutils literal notranslate"><span class="pre">pb</span></code> file in that model and with <code class="docutils literal notranslate"><span class="pre">--detection-classes</span></code> argument set to <code class="docutils literal notranslate"><span class="pre">1</span></code> to detect people in the camera images. That model is not supported on Windows or MacOS.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>

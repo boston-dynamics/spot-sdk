@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tester Programs &mdash; Spot 2.3.3 documentation</title>
+  <title>Tester Programs &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
@@ -550,19 +558,19 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="tester-programs">
+--><section id="tester-programs">
 <h1>Tester Programs<a class="headerlink" href="#tester-programs" title="Permalink to this headline">¶</a></h1>
 <p>The following scripts are available for a developer to rapidly test and debug different components of new Boston Dynamics API services. Specifically, while writing a new service, these tests can be run to check for networking errors in the setup of the service, integration with the robot’s api, and the expected functionality of the service is complete and correct. The tester programs will display the specific test cases being run, execute the test cases, and any warnings or errors that occur.</p>
 <p>Currently, there are testing programs for DataAcquisitionPluginService and ImageService services, as well as general testing helpers that could be used for debugging other services being developed as well.</p>
-<div class="section" id="setup-dependencies">
+<section id="setup-dependencies">
 <h2>Setup Dependencies<a class="headerlink" href="#setup-dependencies" title="Permalink to this headline">¶</a></h2>
 <p>This example requires the Spot SDK to be installed, and must be run using python3. Using pip, these dependencies can be installed using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
 <p>Note, these dependencies are only for running the tester programs. The specific service examples will likely have different dependencies that</p>
-</div>
-<div class="section" id="testing-an-image-service">
+</section>
+<section id="testing-an-image-service">
 <h2>Testing an Image Service<a class="headerlink" href="#testing-an-image-service" title="Permalink to this headline">¶</a></h2>
 <p>The image service tester script (<code class="docutils literal notranslate"><span class="pre">image_service_tester.py</span></code>) can be used while developing a new image service to help ensure that the service can be communicated with and behaves as expected.</p>
 <p>Note: check that the camera is powered on, connected, and can be communicated with before running the tester program. This program is to help debug issues with the image service, and not the physical camera hardware.</p>
@@ -584,8 +592,8 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Many of the images collected during the test will be saved to a directory, which can be specified through the command line argument <code class="docutils literal notranslate"><span class="pre">--destination-folder</span></code> and defaults to the current working directory.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> command line argument can be provided, which will allow for even more debug information (e.g. complete RPC requests and responses, extra information about the failure and error messages) to be displayed to the command line when tests run and fail.</p>
 <p>Lastly, the robot’s data acquisition should automatically integrate any directory-registered image services with the data acquisition capabilities. The command line argument <code class="docutils literal notranslate"><span class="pre">--check-data-acquisition</span></code> can be provided to run an additional test for all image sources available in the image service that will check that the source is listed in the data acquisition capabilities and can be successfully acquired from the data acquisition service.</p>
-</div>
-<div class="section" id="testing-a-data-acquisition-plugin">
+</section>
+<section id="testing-a-data-acquisition-plugin">
 <h2>Testing a Data Acquisition Plugin<a class="headerlink" href="#testing-a-data-acquisition-plugin" title="Permalink to this headline">¶</a></h2>
 <p>The plugin tester script (<code class="docutils literal notranslate"><span class="pre">plugin_tester.py</span></code>) can be used while developing a new data acquisition plugin service to help ensure that the service can be communicated with and behaves as expected. The script runs through a series of tests checking:</p>
 <ul class="simple">
@@ -605,8 +613,8 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The command line argument <code class="docutils literal notranslate"><span class="pre">--service-name</span></code> is the name for the data acquisition plugin service that is used for directory registration. In the example plugins, the service name is defined near the top of each plugin file by the variable <code class="docutils literal notranslate"><span class="pre">DIRECTORY_NAME</span></code>.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> command line argument can be provided, which will allow for even more debug information (e.g. complete RPC requests and responses, extra information about the failure and error messages) to be displayed to the command line when tests run and fail.</p>
 <p>All data collected during the test will be downloaded through the REST endpoint and saved to a directory, which can be specified through the command line argument <code class="docutils literal notranslate"><span class="pre">--destination-folder</span></code> and defaults to the current working directory.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

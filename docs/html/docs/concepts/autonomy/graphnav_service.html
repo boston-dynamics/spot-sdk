@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>GraphNav Service &mdash; Spot 2.3.3 documentation</title>
+  <title>GraphNav Service &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../payload/README.html">Payloads</a><ul>
@@ -548,12 +556,12 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="graphnav-service">
+--><section id="graphnav-service">
 <h1>GraphNav Service<a class="headerlink" href="#graphnav-service" title="Permalink to this headline">¶</a></h1>
 <p>The GraphNav service is a place-based localization and locomotion service. You access the GraphNavService on the robot by making RPC calls to localize the robot, navigate a route, or download snapshot data.</p>
 <p>Maps are recorded using the GraphNavRecording service or by operating the robot using the tablet controller and using the Autowalk feature to record a map.</p>
 <p>Maps contain waypoints and edges. Together, these are known as graphs. The recorded map is used by the robot to follow a sequence of waypoints and edges. During playback, the robot compares its real-time sensor data with sensor data stored during the recording process. This helps the robot determine its location or pose during playback so it can make adjustments.</p>
-<div class="section" id="navigation">
+<section id="navigation">
 <h2>Navigation<a class="headerlink" href="#navigation" title="Permalink to this headline">¶</a></h2>
 <p>The GraphNav service is used to navigate between waypoints that are connected by edges in a recorded map. In general, the service tries to stay as close as possible to the recorded routes. The robot has the ability to adapt its route if obstacles are encountered along the way, unless the deviation takes the robot too far away from the recorded route, in which case the robot declares itself stuck.</p>
 <p>This place-based navigation scheme allows the robot to traverse building scale maps. Practical limits are dictated by site conditions. Successful map navigation relies on the ability to avoid drastic changes in the environment between recording and replay operations.</p>
@@ -564,8 +572,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Initialize the robot’s location to the map.</p></li>
 <li><p>Command the robot to navigate to another waypoint in the map.</p></li>
 </ol>
-</div>
-<div class="section" id="graphnavservice-rpcs">
+</section>
+<section id="graphnavservice-rpcs">
 <h2>GraphNavService RPCs<a class="headerlink" href="#graphnavservice-rpcs" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
@@ -624,8 +632,8 @@ Development Kit License (20191101-BDSDK-SL).
 <td>Download edge data from the server.</td>
 </tr>
 </tbody>
-</table></div>
-<div class="section" id="graphnavrecordingservice-rpcs">
+</table></section>
+<section id="graphnavrecordingservice-rpcs">
 <h2>GraphNavRecordingService RPCs<a class="headerlink" href="#graphnavrecordingservice-rpcs" title="Permalink to this headline">¶</a></h2>
 <p>Map recording is provided by the GraphNavRecordingService RPC.</p>
 <table border="1" class="docutils">
@@ -662,8 +670,8 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 </tbody>
 </table><p>Once StartRecording is called, the recording service starts creating waypoints, edges, and associated snapshots.</p>
-<!--- image and page reference link definitions ---></div>
-</div>
+<!--- image and page reference link definitions ---></section>
+</section>
 
 
            </div>

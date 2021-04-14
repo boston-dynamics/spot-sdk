@@ -1,4 +1,6 @@
-FROM jjanzic/docker-python3-opencv
+FROM python:3.7-slim
+
+RUN apt-get update && apt-get install -y libgtk2.0-dev libglib2.0-0
 
 COPY docker-requirements.txt .
 

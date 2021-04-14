@@ -19,7 +19,7 @@ from bosdyn.api import (directory_pb2, directory_registration_pb2,
 
 from bosdyn.client.common import (BaseClient, error_factory, error_pair, handle_unset_status_error,
                                   handle_common_header_errors)
-from .exceptions import ResponseError, TimedOutError
+from .exceptions import ResponseError, TimedOutError, RetryableUnavailableError
 
 
 _LOGGER = logging.getLogger(__name__)

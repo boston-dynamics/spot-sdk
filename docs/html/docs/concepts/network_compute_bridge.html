@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Machine Learning Bridge and External Compute &mdash; Spot 2.3.3 documentation</title>
+  <title>Machine Learning Bridge and External Compute &mdash; Spot 2.3.4 documentation</title>
   
 
   
@@ -68,7 +69,7 @@
             
             
               <div class="version">
-                2.3.3
+                2.3.4
               </div>
             
           
@@ -346,6 +347,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../payload/README.html">Payloads</a><ul>
@@ -548,11 +556,11 @@ Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><div class="section" id="machine-learning-bridge-and-external-compute">
+--><section id="machine-learning-bridge-and-external-compute">
 <h1>Machine Learning Bridge and External Compute<a class="headerlink" href="#machine-learning-bridge-and-external-compute" title="Permalink to this headline">¶</a></h1>
 <p>Spot provides capabilities to perform <strong>computation off-board</strong> and easily integrate it into your API programs.  For example, you might want to run a deep-learning-based bounding box detector to identify a ball that you want to command the robot to pick up.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">network_compute_bridge</span></code> API can help you by coordinating the networking between various components and adding pre- and post-processing to your image calls, capturing and rotating images for you as needed.  The tablet application has a built-in capability to view the output of bounding-box detectors online while driving (<code class="docutils literal notranslate"><span class="pre">Menu</span> <span class="pre">&gt;</span> <span class="pre">Utilities</span> <span class="pre">&gt;</span> <span class="pre">ML</span> <span class="pre">Model</span> <span class="pre">Viewer</span></code>).</p>
-<div class="section" id="example-concept">
+<section id="example-concept">
 <h2>Example Concept<a class="headerlink" href="#example-concept" title="Permalink to this headline">¶</a></h2>
 <p>You have trained a model to detect tennis balls.  You want to build a script to walk to every tennis ball in an area.  Because your tennis ball detector is computationally expensive, you decide to have a big server running on the same WiFi network as Spot to do the computation.</p>
 <p>Here’s how you might set that up:</p>
@@ -567,8 +575,8 @@ Development Kit License (20191101-BDSDK-SL).
 </li>
 <li><p>With the results, your script commands the robot to walk to a tennis ball.</p></li>
 </ol>
-</div>
-<div class="section" id="components-of-the-system">
+</section>
+<section id="components-of-the-system">
 <h2>Components of the system<a class="headerlink" href="#components-of-the-system" title="Permalink to this headline">¶</a></h2>
 <ol class="simple">
 <li><p>Spot robot</p></li>
@@ -586,20 +594,20 @@ Development Kit License (20191101-BDSDK-SL).
 </li>
 </ol>
 <p><img alt="Network compute bridge diagram" src="../../_images/network_compute_bridge_diagram.png" /></p>
-</div>
-<div class="section" id="discovering-servers-and-models">
+</section>
+<section id="discovering-servers-and-models">
 <h2>Discovering Servers and Models<a class="headerlink" href="#discovering-servers-and-models" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Computation servers register with Spot’s <a class="reference external" href="developing_api_services.html#robot-directory">Directory</a>.</p></li>
 <li><p>Clients can use the directory to look up available servers (see: <a class="reference external" href="../python/understanding_spot_programming.html#listing-services">listing services</a>).</p></li>
 <li><p>Servers should implement the <code class="docutils literal notranslate"><span class="pre">ListAvailableModels</span></code> RPC to inform clients of their available computation.</p></li>
 </ul>
-</div>
-<div class="section" id="example-clients-and-servers">
+</section>
+<section id="example-clients-and-servers">
 <h2>Example Clients and Servers<a class="headerlink" href="#example-clients-and-servers" title="Permalink to this headline">¶</a></h2>
 <p>Examples are found in the <a class="reference internal" href="../../python/examples/network_compute_bridge/README.html"><span class="doc">network compute bridge examples</span></a> folder.</p>
-</div>
-<div class="section" id="pre-and-post-processing">
+</section>
+<section id="pre-and-post-processing">
 <h2>Pre- and Post-Processing<a class="headerlink" href="#pre-and-post-processing" title="Permalink to this headline">¶</a></h2>
 <p>If you are working with images, you can:</p>
 <ol class="simple">
@@ -615,19 +623,19 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Receive the bounding-box results and un-rotate the boxes so they line up with the original image</p></li>
 <li><p>Send you the original image with the corresponding bounding boxes.</p></li>
 </ol>
-<div class="section" id="rpc-definitions-networkcomputebridge-and-networkcomputebridgeworker">
+<section id="rpc-definitions-networkcomputebridge-and-networkcomputebridgeworker">
 <h3>RPC Definitions: <code class="docutils literal notranslate"><span class="pre">NetworkComputeBridge</span></code> and <code class="docutils literal notranslate"><span class="pre">NetworkComputeBridgeWorker</span></code><a class="headerlink" href="#rpc-definitions-networkcomputebridge-and-networkcomputebridgeworker" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">NetworkComputeBridge</span></code> is the API interface between your <strong>API client</strong> and the <strong>robot</strong>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">NetworkComputeBridgeWorker</span></code> is the API interface between the <strong>robot</strong> and a <strong>compute server</strong></p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="other-data">
+</section>
+</section>
+<section id="other-data">
 <h2>Other Data<a class="headerlink" href="#other-data" title="Permalink to this headline">¶</a></h2>
 <p>The API provides an <code class="docutils literal notranslate"><span class="pre">Any</span></code> field in the proto to allow you to pack arbitrary input and output data.  This field allows you to perform external computation on any data.  However, the tablet application will not be able to interpret this custom data.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
