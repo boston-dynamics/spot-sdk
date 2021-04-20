@@ -14,8 +14,12 @@ import json
 import shutil
 import webbrowser
 import time
+import timeit
 import requests
 from requests.auth import HTTPDigestAuth
+
+import cv2
+import numpy as np
 
 class Theta:
     """Class for interacting with a Ricoh Theta camera"""
@@ -69,13 +73,14 @@ class Theta:
         pjson = json.loads(res.text)
         print(json.dumps(pjson, indent=2))
 
-    def postf(self, ext, info, print_to_screen=True):
+    def postf(self, ext, info, print_to_screen=True, stream=False):
         """Function to create an HTTP POST Request."""
         if print_to_screen:
             print("Request Contents:")
             print(json.dumps(info, indent=2))
         return requests.post(self.baseurl + ext, json=info,
-                             timeout=5, auth=(HTTPDigestAuth(self.theta_ssid, self.theta_pw)))
+                             timeout=5, auth=(HTTPDigestAuth(self.theta_ssid, self.theta_pw)),
+                             stream=stream)
 
     def sleepMode(self, enabled=None, delay=180, print_to_screen=True):
         """Alter sleep mode."""
@@ -300,3 +305,62 @@ class Theta:
         if print_to_screen:
             print("The image format is: ",format_res)
         return format_res
+
+    def getLivePreview(self, fileNamePrefix = "livePreview", timeLimitSeconds=10,
+            print_to_screen=True):
+        """
+        Save the live preview video stream to disk as a series of jpegs.
+        The capture mode must be 'image'.
+        Credit for jpeq decoding:
+        https://stackoverflow.com/questions/21702477/how-to-parse-mjpeg-http-stream-from-ip-camera
+        Reference:
+        https://developers.theta360.com/en/docs/v2/api_reference/commands/camera._get_live_preview.html
+        """
+        acquired = False
+        t10 = timeit.default_timer()
+        url = '/osc/commands/execute'
+        info = {"name": "camera.getLivePreview"}
+        try:
+            response = self.postf(url, info, True, stream=True)
+        except Exception as e:
+            return acquired
+
+        if response.status_code == 200:
+            bytes=b''
+            t0 = timeit.default_timer()
+            i = 0
+            for block in response.iter_content(16384):
+                bytes += block
+
+                # Search the current block of bytes for the jpq start and end
+                a = bytes.find(b'\xff\xd8')
+                b = bytes.find(b'\xff\xd9')
+
+                # If you have a jpg, write it to disk
+                if a !=- 1 and b != -1:
+                    #print( "Writing frame %04d - Byte range : %d to %d" % (i, a, b) )
+                    # Found a jpg, write to disk
+                    frameFileName = "%s.%04d.jpg" % (fileNamePrefix, i)
+                    jpg = bytes[a:b+2]
+                    #img = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+                    #cv2.imshow('i', img)
+                    #if cv2.waitKey(1) == 27:
+                    #    exit(0)
+                    #TODO Maybe make this a generator instead?
+                    with open(frameFileName, 'wb') as handle:
+                        handle.write(jpg)
+
+                    # Reset the buffer to point to the next set of bytes
+                    bytes = bytes[b+2:]
+                    if print_to_screen:
+                        print( "Wrote frame %04d - %2.2f seconds" % (i, elapsed) )
+
+                    i += 1
+
+                t1 = timeit.default_timer()
+                elapsed = t1 - t0
+                if elapsed > timeLimitSeconds:
+                    break
+
+            acquired = True
+        return acquired
