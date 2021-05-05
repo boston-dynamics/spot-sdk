@@ -7,8 +7,14 @@
 import bosdyn.util
 from bosdyn.api import header_pb2
 
+from deprecated import deprecated
 
 
+@deprecated(
+    reason='The ResponseContext helper class has moved to a common location. Please use '
+           'bosdyn.client.util.ResponseContext.',
+    version='2.3.5',
+    action="always")
 class ResponseContext(object):
 
     def __init__(self, response, request, rpc_logger=None):
@@ -28,7 +34,6 @@ class ResponseContext(object):
             self.response.header.error.code = self.response.header.error.CODE_OK
         if self.rpc_logger:
             self.rpc_logger.add_protobuf_async(self.response)
-
 
 
 def set_response_header(response, request, error_code=header_pb2.CommonError.CODE_OK,

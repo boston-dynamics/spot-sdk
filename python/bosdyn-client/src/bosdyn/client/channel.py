@@ -158,13 +158,13 @@ def translate_exception(rpc_error):
             return UnknownDnsNameError(rpc_error, UnknownDnsNameError.__doc__)
         elif 'channel is in state TRANSIENT_FAILURE' in debug:
             return TransientFailureError(rpc_error, TransientFailureError.__doc__)
-        elif 'Connect Failed' in debug:
-            # This error should be checked last because a lot of grpc errors contain said substring.
+        elif 'Connect Failed' in debug or 'Failed to pick subchannel' in debug:
+            # This error should be checked last because a lot of grpc errors contain said substrings.
             return UnableToConnectToRobotError(rpc_error, UnableToConnectToRobotError.__doc__)
-
-    # Handle arbitrary UNAVAILABLE cases
+    
     if code is grpc.StatusCode.UNAVAILABLE:
-        return RetryableUnavailableError(rpc_error, RetryableUnavailableError.__doc__)
+        if 'Socket closed' in debug:
+            return RetryableUnavailableError(rpc_error, RetryableUnavailableError.__doc__)
 
     _LOGGER.warning('Unclassified exception: %s', rpc_error)
 

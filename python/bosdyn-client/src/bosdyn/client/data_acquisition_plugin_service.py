@@ -54,7 +54,9 @@ from bosdyn.api import data_acquisition_pb2, data_acquisition_plugin_service_pb2
 from bosdyn.api.data_acquisition_pb2 import DataAcquisitionCapability as Capability
 from bosdyn.client import Robot
 from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
+from bosdyn.client.data_buffer import DataBufferClient
 from bosdyn.client.util import populate_response_header
+from bosdyn.client.server_util import ResponseContext
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -313,6 +315,7 @@ class DataAcquisitionPluginService(
         self.executor = executor or ThreadPoolExecutor(max_workers=2)
         self.robot = robot
         self.store_client = robot.ensure_client(DataAcquisitionStoreClient.default_service_name)
+        self.data_buffer_client = robot.ensure_client(DataBufferClient.default_service_name)
 
     def _data_collection_wrapper(self, request_id, request, state):
         """Helper function which initiates the data collection and storage in sequence.
@@ -353,6 +356,20 @@ class DataAcquisitionPluginService(
             An AcquirePluginDataResponse containing a request_id to use with GetStatus.
         """
         response = data_acquisition_pb2.AcquirePluginDataResponse()
+        with ResponseContext(response, request, self.data_buffer_client):
+            self._start_plugin_acquire(request, response)
+        return response
+
+    def _start_plugin_acquire(self, request, response):
+        """Initiates the data collection function and mutates the AcquirePluginDataResponse rpc.
+
+        Args:
+            request (data_acquisition_pb2.AcquirePluginDataRequest): The data acquisition request.
+            response (data_acquisition_pb2.AcquirePluginDataResponse): The data acquisition response.
+
+        Returns:
+            Mutates the AcquirePluginDataResponse proto and also returns it.
+        """
         if self.acquire_response_fn is not None:
             try:
                 if not self.acquire_response_fn(request, response):
@@ -360,13 +377,13 @@ class DataAcquisitionPluginService(
             except Exception as e:
                 self.logger.exception('Failed during call to user acquire response function')
                 populate_response_header(response, request,
-                                         error_code=header_pb2.CommonError.CODE_INTERNAL_ERROR,
-                                         error_msg=str(e))
+                                        error_code=header_pb2.CommonError.CODE_INTERNAL_ERROR,
+                                        error_msg=str(e))
                 return response
         self.request_manager.cleanup_requests()
         response.request_id, state = self.request_manager.add_request()
         self.logger.info('Beginning request %d for %s', response.request_id,
-                         [capture.name for capture in request.acquisition_requests.data_captures])
+                        [capture.name for capture in request.acquisition_requests.data_captures])
         self.executor.submit(self._data_collection_wrapper, response.request_id, request, state)
         response.status = data_acquisition_pb2.AcquireDataResponse.STATUS_OK
         populate_response_header(response, request)
@@ -382,12 +399,15 @@ class DataAcquisitionPluginService(
         Returns:
             An GetStatusResponse containing the details of the data acquisition.
         """
-        try:
-            response = self.request_manager.get_status_proto(request.request_id)
-        except KeyError:
-            response = data_acquisition_pb2.GetStatusResponse()
-            response.status = response.STATUS_REQUEST_ID_DOES_NOT_EXIST
-        populate_response_header(response, request)
+        response = data_acquisition_pb2.GetStatusResponse()
+        with ResponseContext(response, request, self.data_buffer_client):
+            try:
+                # Note: this needs to be a copy from and not '=' such that the response that is logged
+                # in the request context gets updated.
+                response.CopyFrom(self.request_manager.get_status_proto(request.request_id))
+            except KeyError:
+                response.status = response.STATUS_REQUEST_ID_DOES_NOT_EXIST
+            populate_response_header(response, request)
         return response
 
     def GetServiceInfo(self, request, context):
@@ -401,8 +421,9 @@ class DataAcquisitionPluginService(
             An GetServiceInfoResponse containing the list of data acquisition capabilities for the plugin.
         """
         response = data_acquisition_pb2.GetServiceInfoResponse()
-        response.capabilities.data_sources.extend(self.capabilities)
-        populate_response_header(response, request)
+        with ResponseContext(response, request, self.data_buffer_client):
+            response.capabilities.data_sources.extend(self.capabilities)
+            populate_response_header(response, request)
         return response
 
     def CancelAcquisition(self, request, context):
@@ -416,15 +437,16 @@ class DataAcquisitionPluginService(
             An CancelAcquisitionResponse containing the status of the cancel operation.
         """
         response = data_acquisition_pb2.CancelAcquisitionResponse()
-        try:
-            self.request_manager.mark_request_cancelled(request.request_id)
-            self.logger.info('Cancelling request %d', request.request_id)
+        with ResponseContext(response, request, self.data_buffer_client):
+            try:
+                self.request_manager.mark_request_cancelled(request.request_id)
+                self.logger.info('Cancelling request %d', request.request_id)
 
-        except KeyError:
-            response.status = response.STATUS_REQUEST_ID_DOES_NOT_EXIST
-        else:
-            response.status = response.STATUS_OK
-        populate_response_header(response, request)
+            except KeyError:
+                response.status = response.STATUS_REQUEST_ID_DOES_NOT_EXIST
+            else:
+                response.status = response.STATUS_OK
+            populate_response_header(response, request)
         return response
 
 

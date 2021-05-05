@@ -4,11 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Power &mdash; Spot 2.3.4 documentation</title>
+  <title>Power &mdash; Spot 2.3.5 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                2.3.4
+                2.3.5
               </div>
             
           
@@ -286,6 +286,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../robot.html">Robot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../server_util.html">Server Util</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="README.html">Spot CAM</a><ul class="current">
 <li class="toctree-l5"><a class="reference internal" href="audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="compositor.html">Compositor</a></li>
@@ -587,7 +588,10 @@
 <dl class="py method">
 <dt id="bosdyn.client.spot_cam.power.PowerClient.set_power_status">
 <code class="sig-name descname">set_power_status</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ptz</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">aux1</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">aux2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">external_mic</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/client/spot_cam/power.html#PowerClient.set_power_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.spot_cam.power.PowerClient.set_power_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Turn on/off the desire device.</p>
+<dd><p>Turn on/off the desire device.
+Should not be used on PTZ for non-IR units as it can cause the stream to crash.
+If the intent is to reset the PTZ autofocus, try PtzClient.initialize_lens instead.
+If the intent is to recover the PTZ stream in another way, you may need to power cycle the robot.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -599,7 +603,10 @@
 <dl class="py method">
 <dt id="bosdyn.client.spot_cam.power.PowerClient.cycle_power">
 <code class="sig-name descname">cycle_power</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ptz</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">aux1</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">aux2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">external_mic</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/client/spot_cam/power.html#PowerClient.cycle_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.spot_cam.power.PowerClient.cycle_power" title="Permalink to this definition">¶</a></dt>
-<dd><p>Turn power off then back on for the desired devices</p>
+<dd><p>Turn power off then back on for the desired devices.
+Should not be used on PTZ for non-IR units as it can cause the stream to crash.
+If the intent is to reset the PTZ autofocus, try PtzClient.initialize_lens instead.
+If the intent is to recover the PTZ stream in another way, you may need to power cycle the robot.</p>
 </dd></dl>
 
 <dl class="py method">

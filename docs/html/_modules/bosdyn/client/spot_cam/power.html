@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.spot_cam.power &mdash; Spot 2.3.4 documentation</title>
+  <title>bosdyn.client.spot_cam.power &mdash; Spot 2.3.5 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                2.3.4
+                2.3.5
               </div>
             
           
@@ -283,6 +283,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -584,7 +585,11 @@
                                <span class="bp">self</span><span class="o">.</span><span class="n">_power_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PowerClient.set_power_status"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html#bosdyn.client.spot_cam.power.PowerClient.set_power_status">[docs]</a>    <span class="k">def</span> <span class="nf">set_power_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aux1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aux2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">external_mic</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Turn on/off the desire device.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Turn on/off the desire device.</span>
+<span class="sd">        Should not be used on PTZ for non-IR units as it can cause the stream to crash.</span>
+<span class="sd">        If the intent is to reset the PTZ autofocus, try PtzClient.initialize_lens instead.</span>
+<span class="sd">        If the intent is to recover the PTZ stream in another way, you may need to power cycle the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_SetPowerStatusRequest</span><span class="p">(</span><span class="n">ptz</span><span class="p">,</span> <span class="n">aux1</span><span class="p">,</span> <span class="n">aux2</span><span class="p">,</span> <span class="n">external_mic</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetPowerStatus</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_power_status_from_response</span><span class="p">,</span>
@@ -598,7 +603,11 @@
                                <span class="bp">self</span><span class="o">.</span><span class="n">_power_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PowerClient.cycle_power"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html#bosdyn.client.spot_cam.power.PowerClient.cycle_power">[docs]</a>    <span class="k">def</span> <span class="nf">cycle_power</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aux1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aux2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">external_mic</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Turn power off then back on for the desired devices&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Turn power off then back on for the desired devices.</span>
+<span class="sd">        Should not be used on PTZ for non-IR units as it can cause the stream to crash.</span>
+<span class="sd">        If the intent is to reset the PTZ autofocus, try PtzClient.initialize_lens instead.</span>
+<span class="sd">        If the intent is to recover the PTZ stream in another way, you may need to power cycle the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_CyclePowerRequest</span><span class="p">(</span><span class="n">ptz</span><span class="p">,</span> <span class="n">aux1</span><span class="p">,</span> <span class="n">aux2</span><span class="p">,</span> <span class="n">external_mic</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">CyclePower</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cycle_power_from_response</span><span class="p">,</span>

@@ -301,7 +301,7 @@ kImageSources = [
         '--person-model',
         help='Person detection model name running on the external server.')
     parser.add_argument('-c',
-                        '--confidence-dotoy',
+                        '--confidence-dogtoy',
                         help='Minimum confidence to return an object for the dogoy (0.0 to 1.0)',
                         default=0.5,
                         type=float)
@@ -368,7 +368,7 @@ kImageSources = [
             # Capture an image and run ML on it.
             dogtoy, image, vision_tform_dogtoy = get_obj_and_img(
                 network_compute_client, options.ml_service, options.model,
-                options.confidence, kImageSources, 'dogtoy')
+                options.confidence_dogtoy, kImageSources, 'dogtoy')
 
             if dogtoy is None:
                 # Didn't find anything, keep searching.
@@ -394,6 +394,7 @@ kImageSources = [
 </p>
 <br />
 
+<a id="enable_in_part5">
 <pre><code class="language-python">            print('Found dogtoy...')
 
             # Got a dogtoy.  Request pick up.
@@ -402,27 +403,30 @@ kImageSources = [
             stow_cmd = RobotCommandBuilder.arm_stow_command()
             command_client.robot_command(stow_cmd)
 
-            # Walk to the object.
-            walk_rt_vision, heading_rt_vision = compute_stand_location_and_yaw(
-                vision_tform_dogtoy, robot_state_client, distance_margin=1.0)
+            # NOTE: we'll enable this code in Part 5, when we understand it.
+            # -------------------------
+            # # Walk to the object.
+            # walk_rt_vision, heading_rt_vision = compute_stand_location_and_yaw(
+                # vision_tform_dogtoy, robot_state_client, distance_margin=1.0)
 
-            move_cmd = RobotCommandBuilder.trajectory_command(
-                goal_x=walk_rt_vision[0],
-                goal_y=walk_rt_vision[1],
-                goal_heading=heading_rt_vision,
-                frame_name=frame_helpers.VISION_FRAME_NAME,
-                params=get_walking_params(0.5, 0.5))
-            end_time = 5.0
-            cmd_id = command_client.robot_command(command=move_cmd,
-                                                  end_time_secs=time.time() +
-                                                  end_time)
+            # move_cmd = RobotCommandBuilder.trajectory_command(
+                # goal_x=walk_rt_vision[0],
+                # goal_y=walk_rt_vision[1],
+                # goal_heading=heading_rt_vision,
+                # frame_name=frame_helpers.VISION_FRAME_NAME,
+                # params=get_walking_params(0.5, 0.5))
+            # end_time = 5.0
+            # cmd_id = command_client.robot_command(command=move_cmd,
+                                                  # end_time_secs=time.time() +
+                                                  # end_time)
 
-            # Wait until the robot reports that it is at the goal.
-            block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)
+            # # Wait until the robot reports that it is at the goal.
+            # block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)
+            # -------------------------
 
 </code></pre>
 <p>
-    Walk the robot to the toy before issuing the pick up command.
+    Right now, we aren't going to worry about walking longer distances, but in the next section we'll want to do that.  Don't worry about this code now and we'll enable it in Part 5.
 </p>
 <br />
 

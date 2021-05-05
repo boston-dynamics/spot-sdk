@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.data_acquisition_plugin_service &mdash; Spot 2.3.4 documentation</title>
+  <title>bosdyn.client.data_acquisition_plugin_service &mdash; Spot 2.3.5 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                2.3.4
+                2.3.5
               </div>
             
           
@@ -283,6 +283,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -600,7 +601,9 @@
 <span class="kn">from</span> <span class="nn">bosdyn.api.data_acquisition_pb2</span> <span class="kn">import</span> <span class="n">DataAcquisitionCapability</span> <span class="k">as</span> <span class="n">Capability</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client</span> <span class="kn">import</span> <span class="n">Robot</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.data_acquisition_store</span> <span class="kn">import</span> <span class="n">DataAcquisitionStoreClient</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.data_buffer</span> <span class="kn">import</span> <span class="n">DataBufferClient</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.util</span> <span class="kn">import</span> <span class="n">populate_response_header</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.server_util</span> <span class="kn">import</span> <span class="n">ResponseContext</span>
 
 <span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -859,6 +862,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">executor</span> <span class="o">=</span> <span class="n">executor</span> <span class="ow">or</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">robot</span> <span class="o">=</span> <span class="n">robot</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">DataAcquisitionStoreClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_buffer_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">DataBufferClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_data_collection_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Helper function which initiates the data collection and storage in sequence.</span>
@@ -899,6 +903,20 @@
 <span class="sd">            An AcquirePluginDataResponse containing a request_id to use with GetStatus.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">AcquirePluginDataResponse</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">ResponseContext</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_buffer_client</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_start_plugin_acquire</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+    <span class="k">def</span> <span class="nf">_start_plugin_acquire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initiates the data collection function and mutates the AcquirePluginDataResponse rpc.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (data_acquisition_pb2.AcquirePluginDataRequest): The data acquisition request.</span>
+<span class="sd">            response (data_acquisition_pb2.AcquirePluginDataResponse): The data acquisition response.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Mutates the AcquirePluginDataResponse proto and also returns it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquire_response_fn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquire_response_fn</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
@@ -906,17 +924,17 @@
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Failed during call to user acquire response function&#39;</span><span class="p">)</span>
                 <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
-                                         <span class="n">error_code</span><span class="o">=</span><span class="n">header_pb2</span><span class="o">.</span><span class="n">CommonError</span><span class="o">.</span><span class="n">CODE_INTERNAL_ERROR</span><span class="p">,</span>
-                                         <span class="n">error_msg</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                                        <span class="n">error_code</span><span class="o">=</span><span class="n">header_pb2</span><span class="o">.</span><span class="n">CommonError</span><span class="o">.</span><span class="n">CODE_INTERNAL_ERROR</span><span class="p">,</span>
+                                        <span class="n">error_msg</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
                 <span class="k">return</span> <span class="n">response</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request_manager</span><span class="o">.</span><span class="n">cleanup_requests</span><span class="p">()</span>
         <span class="n">response</span><span class="o">.</span><span class="n">request_id</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_manager</span><span class="o">.</span><span class="n">add_request</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Beginning request </span><span class="si">%d</span><span class="s1"> for </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">request_id</span><span class="p">,</span>
-                         <span class="p">[</span><span class="n">capture</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">capture</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">acquisition_requests</span><span class="o">.</span><span class="n">data_captures</span><span class="p">])</span>
+                        <span class="p">[</span><span class="n">capture</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">capture</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">acquisition_requests</span><span class="o">.</span><span class="n">data_captures</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_collection_wrapper</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">request_id</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
         <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">AcquireDataResponse</span><span class="o">.</span><span class="n">STATUS_OK</span>
         <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">response</span></div>
+        <span class="k">return</span> <span class="n">response</span>
 
 <div class="viewcode-block" id="DataAcquisitionPluginService.GetStatus"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.GetStatus">[docs]</a>    <span class="k">def</span> <span class="nf">GetStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Query the status of a data acquisition by ID.</span>
@@ -928,12 +946,15 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            An GetStatusResponse containing the details of the data acquisition.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_manager</span><span class="o">.</span><span class="n">get_status_proto</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">request_id</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">GetStatusResponse</span><span class="p">()</span>
-            <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">STATUS_REQUEST_ID_DOES_NOT_EXIST</span>
-        <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">GetStatusResponse</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">ResponseContext</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_buffer_client</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Note: this needs to be a copy from and not &#39;=&#39; such that the response that is logged</span>
+                <span class="c1"># in the request context gets updated.</span>
+                <span class="n">response</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request_manager</span><span class="o">.</span><span class="n">get_status_proto</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">request_id</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">STATUS_REQUEST_ID_DOES_NOT_EXIST</span>
+            <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionPluginService.GetServiceInfo"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.GetServiceInfo">[docs]</a>    <span class="k">def</span> <span class="nf">GetServiceInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
@@ -947,8 +968,9 @@
 <span class="sd">            An GetServiceInfoResponse containing the list of data acquisition capabilities for the plugin.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">GetServiceInfoResponse</span><span class="p">()</span>
-        <span class="n">response</span><span class="o">.</span><span class="n">capabilities</span><span class="o">.</span><span class="n">data_sources</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">capabilities</span><span class="p">)</span>
-        <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">ResponseContext</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_buffer_client</span><span class="p">):</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">capabilities</span><span class="o">.</span><span class="n">data_sources</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">capabilities</span><span class="p">)</span>
+            <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionPluginService.CancelAcquisition"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.CancelAcquisition">[docs]</a>    <span class="k">def</span> <span class="nf">CancelAcquisition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
@@ -962,15 +984,16 @@
 <span class="sd">            An CancelAcquisitionResponse containing the status of the cancel operation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">CancelAcquisitionResponse</span><span class="p">()</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">request_manager</span><span class="o">.</span><span class="n">mark_request_cancelled</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">request_id</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Cancelling request </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">request_id</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">ResponseContext</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_buffer_client</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">request_manager</span><span class="o">.</span><span class="n">mark_request_cancelled</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">request_id</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Cancelling request </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">request_id</span><span class="p">)</span>
 
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">STATUS_REQUEST_ID_DOES_NOT_EXIST</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">STATUS_OK</span>
-        <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">STATUS_REQUEST_ID_DOES_NOT_EXIST</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">STATUS_OK</span>
+            <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span></div></div>
 
 

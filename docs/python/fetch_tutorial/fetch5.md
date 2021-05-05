@@ -148,7 +148,7 @@ Loaded models:
             # Find a person to deliver the toy to
             person, image, vision_tform_person = get_obj_and_img(
                 network_compute_client, options.ml_service,
-                options.person_model, options.confidence, kImageSources,
+                options.person_model, options.confidence_person, kImageSources,
                 'person')
 </code></pre>
 <p>
@@ -504,6 +504,16 @@ Loaded models:
 <p>
     Set up Spot's <a href="https://github.com/boston-dynamics/spot-sdk/blob/3ae45683623712f548b77af17f0ee00168fc0fe5/protos/bosdyn/api/spot/robot_command.proto#L59">mobility parameters</a> to limit walking speed.
 </p>
+
+<h4>Enable longer-distance walking for Pickup</h4>
+<p>
+    In the previous section, we had a <a href="fetch4.html#enable_in_part5">part that was commented out</a>, starting with:
+</p>
+<pre><code class="language-python"># NOTE: we'll enable this code in Part 5, when we understand it.</code></pre>
+<ul>
+    <li>This is essentially the same as what we do for walking up to a person above.  Uncomment this section to allow the robot to walk further to the dogtoy.</li>
+</ul>
+
 
 <hr />
 <h2>Playing Fetch</h2>

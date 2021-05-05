@@ -23,7 +23,8 @@ from bosdyn.client.lease import LeaseClient, Lease
 from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder
 from bosdyn.client.auth import AuthResponseError
 from bosdyn.client.util import GrpcServiceRunner, setup_logging
-from bosdyn.mission import server_util, util
+from bosdyn.client.server_util import ResponseContext
+from bosdyn.mission import util
 
 DIRECTORY_NAME = 'power-off-callback'
 AUTHORITY = 'remote-mission'
@@ -58,10 +59,10 @@ class PowerOffServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
         response = remote_pb2.TickResponse()
         self.logger.debug('Ticked with session ID "%s" %i leases and %i inputs', request.session_id,
                           len(request.leases), len(request.inputs))
-        with server_util.ResponseContext(response, request):
+        with ResponseContext(response, request):
             with self.lock:
                 self._tick_implementation(request, response)
-            return response
+        return response
 
     def _tick_implementation(self, request, response):
         """Make a power off request if none has been made; otherwise check request progress."""
@@ -214,10 +215,10 @@ class PowerOffServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
         response = remote_pb2.EstablishSessionResponse()
         self.logger.debug('Establishing session with %i leases and %i inputs', len(request.leases),
                           len(request.inputs))
-        with server_util.ResponseContext(response, request):
+        with ResponseContext(response, request):
             with self.lock:
                 self._establish_session_implementation(request, response)
-            return response
+        return response
 
     def _get_unique_random_session_id(self):
         """Create a random 16-character session ID that hasn't been used."""
@@ -259,10 +260,10 @@ class PowerOffServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
         # of the Mission may have been activated.
         response = remote_pb2.StopResponse()
         self.logger.debug('Stopping session "%s"', request.session_id)
-        with server_util.ResponseContext(response, request):
+        with ResponseContext(response, request):
             with self.lock:
                 self._stop_implementation(request, response)
-            return response
+        return response
 
     def _stop_implementation(self, request, response):
         # Try to cancel any extant futures, then clear them from internal state.
@@ -285,10 +286,10 @@ class PowerOffServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
     def TeardownSession(self, request, context):
         response = remote_pb2.TeardownSessionResponse()
         self.logger.debug('Tearing down session "%s"', request.session_id)
-        with server_util.ResponseContext(response, request):
+        with ResponseContext(response, request):
             with self.lock:
                 self._teardown_session_implementation(request, response)
-            return response
+        return response
 
     def _teardown_session_implementation(self, request, response):
         if request.session_id in self.sessions_by_id:

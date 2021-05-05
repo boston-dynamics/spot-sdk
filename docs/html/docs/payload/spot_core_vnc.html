@@ -4,11 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Spot CORE VNC &mdash; Spot 2.3.4 documentation</title>
+  <title>Spot CORE VNC &mdash; Spot 2.3.5 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                2.3.4
+                2.3.5
               </div>
             
           
@@ -286,6 +286,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -574,7 +575,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="tigervnc-server-enable">
 <h2>TigerVNC Server Enable<a class="headerlink" href="#tigervnc-server-enable" title="Permalink to this headline">¶</a></h2>
 <p>First, access a terminal on the Spot CORE. To do this, you can either log in to Cockpit at https://192.168.80.3:21443 and go to the Terminal tab, or you can connect through the command line:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="o">-</span><span class="n">p</span> <span class="mi">20022</span> <span class="n">spot</span><span class="o">@</span><span class="mf">192.168</span><span class="o">.</span><span class="mf">80.3</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="o">-</span><span class="n">p</span> <span class="mi">20022</span> <span class="n">spot</span><span class="o">@</span><span class="mf">192.168.80.3</span>
 </pre></div>
 </div>
 <section id="create-a-vnc-password">
@@ -607,7 +608,7 @@ You may also choose to create a new VNC password with the following command (a v
 <section id="start-vncviewer">
 <h3>Start vncviewer<a class="headerlink" href="#start-vncviewer" title="Permalink to this headline">¶</a></h3>
 <p>We need to create a secure connection using an SSH tunnel first. The below command assumes the user is connected to Spot’s access point. Don’t forget to change the ip address or port number if required. To run this ssh session in the background without executing any commands, add <code class="docutils literal notranslate"> <span class="pre">-fN</span></code> arguments to the end of the command.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="o">-</span><span class="mi">4</span> <span class="o">-</span><span class="n">p</span> <span class="mi">20022</span> <span class="n">spot</span><span class="o">@</span><span class="mf">192.168</span><span class="o">.</span><span class="mf">80.3</span> <span class="o">-</span><span class="n">L</span> <span class="mi">21000</span><span class="p">:</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">21000</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="o">-</span><span class="mi">4</span> <span class="o">-</span><span class="n">p</span> <span class="mi">20022</span> <span class="n">spot</span><span class="o">@</span><span class="mf">192.168.80.3</span> <span class="o">-</span><span class="n">L</span> <span class="mi">21000</span><span class="p">:</span><span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">21000</span>
 </pre></div>
 </div>
 <p>Start VNC Viewer and pass the IP address and port number.</p>

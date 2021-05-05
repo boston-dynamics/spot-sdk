@@ -49,7 +49,10 @@ class CompositorSetScreenCommand(Command):
                                            'c3',
                                            'c4',
                                            'mech',
-                                           'mech_ir'])
+                                           'mech_full',
+                                           'mech_overlay',
+                                           'mech_ir',
+                                           'mech_ir_full'])
 
     def _run(self, robot, options):
         result = robot.ensure_client(CompositorClient.default_service_name).set_screen(options.name)

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.data_buffer &mdash; Spot 2.3.4 documentation</title>
+  <title>bosdyn.client.data_buffer &mdash; Spot 2.3.5 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                2.3.4
+                2.3.5
               </div>
             
           
@@ -283,6 +283,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -641,7 +642,8 @@
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RecordOperatorComments</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="DataBufferClient.add_blob"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.DataBufferClient.add_blob">[docs]</a>    <span class="k">def</span> <span class="nf">add_blob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">type_id</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="DataBufferClient.add_blob"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.DataBufferClient.add_blob">[docs]</a>    <span class="k">def</span> <span class="nf">add_blob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">type_id</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">write_sync</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Log blob messages to the data buffer.</span>
 
 <span class="sd">        Args:</span>
@@ -655,13 +657,17 @@
 <span class="sd">        Raises:</span>
 <span class="sd">            RpcError: Problem communicating with the robot.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_add_blob</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">type_id</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_add_blob</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">type_id</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="p">,</span> <span class="n">write_sync</span><span class="p">,</span>
+                                 <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DataBufferClient.add_blob_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.DataBufferClient.add_blob_async">[docs]</a>    <span class="k">def</span> <span class="nf">add_blob_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">type_id</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="DataBufferClient.add_blob_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.DataBufferClient.add_blob_async">[docs]</a>    <span class="k">def</span> <span class="nf">add_blob_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">type_id</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">write_sync</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                       <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Async version of add_blob.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_add_blob</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">type_id</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_add_blob</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">type_id</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="p">,</span>
+                                 <span class="n">write_sync</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_do_add_blob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">type_id</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_do_add_blob</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-arguments</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">type_id</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="p">,</span> <span class="n">write_sync</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Internal blob RPC stub call.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">data_buffer_protos</span><span class="o">.</span><span class="n">RecordDataBlobsRequest</span><span class="p">()</span>
 
@@ -672,10 +678,12 @@
         <span class="n">request</span><span class="o">.</span><span class="n">blob_data</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">timestamp</span><span class="o">=</span><span class="n">robot_timestamp</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">type_id</span><span class="o">=</span><span class="n">type_id</span><span class="p">,</span>
                               <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
 
+        <span class="n">request</span><span class="o">.</span><span class="n">sync</span> <span class="o">=</span> <span class="n">write_sync</span>
+
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RecordDataBlobs</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="DataBufferClient.add_protobuf"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.DataBufferClient.add_protobuf">[docs]</a>    <span class="k">def</span> <span class="nf">add_protobuf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proto</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DataBufferClient.add_protobuf"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.DataBufferClient.add_protobuf">[docs]</a>    <span class="k">def</span> <span class="nf">add_protobuf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proto</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">write_sync</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Log protobuf messages to the data buffer.</span>
 
 <span class="sd">        Args:</span>
@@ -686,20 +694,21 @@
 <span class="sd">        Raises:</span>
 <span class="sd">            RpcError: Problem communicating with the robot.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_add_protobuf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_blob</span><span class="p">,</span> <span class="n">proto</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_add_protobuf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_blob</span><span class="p">,</span> <span class="n">proto</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="p">,</span> <span class="n">write_sync</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DataBufferClient.add_protobuf_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.DataBufferClient.add_protobuf_async">[docs]</a>    <span class="k">def</span> <span class="nf">add_protobuf_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proto</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DataBufferClient.add_protobuf_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.DataBufferClient.add_protobuf_async">[docs]</a>    <span class="k">def</span> <span class="nf">add_protobuf_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proto</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">write_sync</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Async version of add_protobuf.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_add_protobuf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_blob_async</span><span class="p">,</span> <span class="n">proto</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_add_protobuf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_blob_async</span><span class="p">,</span> <span class="n">proto</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="p">,</span>
+                                     <span class="n">write_sync</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_do_add_protobuf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">proto</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_do_add_protobuf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">proto</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="p">,</span> <span class="n">write_sync</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Internal blob stub call, serializes proto and logs as blob.&quot;&quot;&quot;</span>
         <span class="n">binary_data</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
         <span class="n">robot_timestamp</span> <span class="o">=</span> <span class="n">robot_timestamp</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_now_in_robot_basis</span><span class="p">(</span><span class="n">proto</span><span class="o">=</span><span class="n">proto</span><span class="p">)</span>
         <span class="n">type_id</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">full_name</span>
         <span class="n">channel</span> <span class="o">=</span> <span class="n">channel</span> <span class="ow">or</span> <span class="n">type_id</span>
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">binary_data</span><span class="p">,</span> <span class="n">type_id</span><span class="o">=</span><span class="n">type_id</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span>
-                    <span class="n">robot_timestamp</span><span class="o">=</span><span class="n">robot_timestamp</span><span class="p">)</span>
+                    <span class="n">robot_timestamp</span><span class="o">=</span><span class="n">robot_timestamp</span><span class="p">,</span> <span class="n">write_sync</span><span class="o">=</span><span class="n">write_sync</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DataBufferClient.add_events"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.DataBufferClient.add_events">[docs]</a>    <span class="k">def</span> <span class="nf">add_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">events</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Log event messages to the robot.</span>

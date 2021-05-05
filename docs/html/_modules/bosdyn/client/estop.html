@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.estop &mdash; Spot 2.3.4 documentation</title>
+  <title>bosdyn.client.estop &mdash; Spot 2.3.5 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                2.3.4
+                2.3.5
               </div>
             
           
@@ -283,6 +283,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -988,7 +989,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">rpc_timeout_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rpc_interval_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">keep_running_cb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">keep_running_cb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_status_queue_size</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Kicks off periodic check-in on a thread.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_endpoint</span> <span class="o">=</span> <span class="n">endpoint</span>
@@ -1007,7 +1008,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;New </span><span class="si">%s</span><span class="s1"> for endpoint &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_endpoint</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">status_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">max_status_queue_size</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">KeepAliveStatus</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span>
 
         <span class="c1"># Do an initial check-in, and just log any errors that occur.</span>
@@ -1089,7 +1090,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Check-in successful&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_update_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Update the estop_keep_alive status by populating the queue. Raise exception if full.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Update the estop_keep_alive status by populating the queue, clearing old entries if the queue is full.</span>
+
+<span class="sd">        Note: this method is not thread safe because if called by multiple different threads it could</span>
+<span class="sd">        create a race condition which will raise a FullQueue exception. The EstopKeepAlive only uses</span>
+<span class="sd">        this in a single background thread for the _periodic_check_in method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status_queue</span><span class="o">.</span><span class="n">full</span><span class="p">():</span>
+            <span class="c1"># Remove an element to clear out the status queue for the new element.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">status_queue</span><span class="o">.</span><span class="n">get_nowait</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">status_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">status</span><span class="p">,</span> <span class="n">msg</span><span class="p">),</span> <span class="n">block</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_check_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rpc_timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

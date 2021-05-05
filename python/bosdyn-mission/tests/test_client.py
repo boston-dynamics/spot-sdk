@@ -22,10 +22,9 @@ from google.protobuf import timestamp_pb2
 from bosdyn.api.mission import mission_service_pb2_grpc
 from bosdyn.api.mission import mission_pb2
 import bosdyn.api.header_pb2 as HeaderProto
-
+from bosdyn.client.server_util import ResponseContext
 import bosdyn.mission.client
 
-from bosdyn.mission import server_util
 
 INVALID_ANSWER_CODE = 100
 INVALID_QUESTION_ID = -1
@@ -48,7 +47,7 @@ class MockMissionServicer(mission_service_pb2_grpc.MissionServiceServicer):
     def GetState(self, request, context):
         """Mock out GetState to produce specific state."""
         response = mission_pb2.GetStateResponse()
-        with server_util.ResponseContext(response, request):
+        with ResponseContext(response, request):
             q = response.state.questions.add()
             q.id = self.question_id
             q.source = self.source
@@ -68,43 +67,47 @@ class MockMissionServicer(mission_service_pb2_grpc.MissionServiceServicer):
     def AnswerQuestion(self, request, context):
         """Mimic AnswerQuestion in actual servicer."""
         response = mission_pb2.AnswerQuestionResponse()
-        with server_util.ResponseContext(response, request):
-            if request.question_id in self.answered_questions:
-                response.status = mission_pb2.AnswerQuestionResponse.STATUS_ALREADY_ANSWERED
-                return response
-            if request.question_id not in self.active_questions:
-                response.status = mission_pb2.AnswerQuestionResponse.STATUS_INVALID_QUESTION_ID
-                return response
-            question = self.active_questions[request.question_id]
-            if request.code not in [option.answer_code for option in question.options]:
-                response.status = mission_pb2.AnswerQuestionResponse.STATUS_INVALID_CODE
-                return response
-            self.answered_questions[request.question_id] = request
-            del self.active_questions[request.question_id]
-            response.status = mission_pb2.AnswerQuestionResponse.STATUS_OK
+        with ResponseContext(response, request):
+            self._answer_question_impl(request, response)
+        return response
+
+    def _answer_question_impl(self, request, response):
+        if request.question_id in self.answered_questions:
+            response.status = mission_pb2.AnswerQuestionResponse.STATUS_ALREADY_ANSWERED
+            return response
+        if request.question_id not in self.active_questions:
+            response.status = mission_pb2.AnswerQuestionResponse.STATUS_INVALID_QUESTION_ID
+            return response
+        question = self.active_questions[request.question_id]
+        if request.code not in [option.answer_code for option in question.options]:
+            response.status = mission_pb2.AnswerQuestionResponse.STATUS_INVALID_CODE
+            return response
+        self.answered_questions[request.question_id] = request
+        del self.active_questions[request.question_id]
+        response.status = mission_pb2.AnswerQuestionResponse.STATUS_OK
         return response
 
     def PlayMission(self, request, context):
         response = mission_pb2.PlayMissionResponse()
-        with server_util.ResponseContext(response, request):
+        with ResponseContext(response, request):
             response.status = self.play_mission_response_status
         return response
 
     def RestartMission(self, request, context):
         response = mission_pb2.RestartMissionResponse()
-        with server_util.ResponseContext(response, request):
+        with ResponseContext(response, request):
             response.status = self.restart_mission_response_status
         return response
 
     def PauseMission(self, request, context):
         response = mission_pb2.PauseMissionResponse()
-        with server_util.ResponseContext(response, request):
+        with ResponseContext(response, request):
             response.status = self.pause_mission_response_status
         return response
 
     def LoadMission(self, request, context):
         response = mission_pb2.LoadMissionResponse()
-        with server_util.ResponseContext(response, request):
+        with ResponseContext(response, request):
             response.status = self.load_mission_response_status
         return response
 
@@ -148,7 +151,10 @@ def test_simple(client, server, service):
     # Answer a question with a valid code.
     resp = client.answer_question(resp.questions[0].id, resp.questions[0].options[2].answer_code)
     assert resp.status == mission_pb2.AnswerQuestionResponse.STATUS_OK
-
+    # The next two checks make sure the response context applied the necessary changes to the response header, while
+    # also getting the changes from the answer question impl function.
+    assert resp.header.error.code == resp.header.error.CODE_OK
+    assert resp.header.request_received_timestamp.seconds + resp.header.request_received_timestamp.nanos * 1e-9 > 0
 
 def test_errors(client, server, service):
     """Test incorrect usage of the mission service client."""

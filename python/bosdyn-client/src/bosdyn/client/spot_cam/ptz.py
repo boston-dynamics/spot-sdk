@@ -31,38 +31,38 @@ class PtzClient(BaseClient):
         """List all the available ptzs"""
         request = ptz_pb2.ListPtzRequest()
         return self.call(self._stub.ListPtz, request, self._list_ptz_from_response,
-                         self._ptz_error_from_response, **kwargs)
+                         common_header_errors, **kwargs)
 
     def list_ptz_async(self, **kwargs):
         """Async version of list_ptz()"""
         request = ptz_pb2.ListPtzRequest()
         return self.call_async(self._stub.ListPtz, request, self._list_ptz_from_response,
-                               self._ptz_error_from_response, **kwargs)
+                               common_header_errors, **kwargs)
 
     def get_ptz_position(self, ptz_desc, **kwargs):
         """Position of the specified ptz"""
         request = ptz_pb2.GetPtzPositionRequest(ptz=ptz_desc)
         return self.call(self._stub.GetPtzPosition, request, self._get_ptz_position_from_response,
-                         self._ptz_error_from_response, **kwargs)
+                         common_header_errors, **kwargs)
 
     def get_ptz_position_async(self, ptz_desc, **kwargs):
         """Async version of get_ptz_position()"""
         request = ptz_pb2.GetPtzPositionRequest(ptz=ptz_desc)
         return self.call_async(self._stub.GetPtzPosition, request,
-                               self._get_ptz_position_from_response, self._ptz_error_from_response,
+                               self._get_ptz_position_from_response, common_header_errors,
                                **kwargs)
 
     def get_ptz_velocity(self, ptz_desc, **kwargs):
         """Velocity of the specified ptz"""
         request = ptz_pb2.GetPtzVelocityRequest(ptz=ptz_desc)
         return self.call(self._stub.GetPtzVelocity, request, self._get_ptz_velocity_from_response,
-                         self._ptz_error_from_response, **kwargs)
+                         common_header_errors, **kwargs)
 
     def get_ptz_velocity_async(self, ptz_desc, **kwargs):
         """Async version of get_ptz_velocity()"""
         request = ptz_pb2.GetPtzVelocityRequest(ptz=ptz_desc)
         return self.call_async(self._stub.GetPtzVelocity, request,
-                               self._get_ptz_velocity_from_response, self._ptz_error_from_response,
+                               self._get_ptz_velocity_from_response, common_header_errors,
                                **kwargs)
 
     def set_ptz_position(self, ptz_desc, pan, tilt, zoom, **kwargs):
@@ -73,7 +73,7 @@ class PtzClient(BaseClient):
         ptz_position = ptz_pb2.PtzPosition(ptz=ptz_desc, pan=p, tilt=t, zoom=z)
         request = ptz_pb2.SetPtzPositionRequest(position=ptz_position)
         return self.call(self._stub.SetPtzPosition, request, self._set_ptz_position_from_response,
-                         self._ptz_error_from_response, **kwargs)
+                         common_header_errors, **kwargs)
 
     def set_ptz_position_async(self, ptz_desc, pan, tilt, zoom, **kwargs):
         """Async version of set_ptz_position()"""
@@ -83,7 +83,7 @@ class PtzClient(BaseClient):
         ptz_position = ptz_pb2.PtzPosition(ptz=ptz_desc, pan=p, tilt=t, zoom=z)
         request = ptz_pb2.SetPtzPositionRequest(position=ptz_position)
         return self.call_async(self._stub.SetPtzPosition, request,
-                               self._set_ptz_position_from_response, self._ptz_error_from_response,
+                               self._set_ptz_position_from_response, common_header_errors,
                                **kwargs)
 
     def set_ptz_velocity(self, ptz_desc, pan, tilt, zoom, **kwargs):
@@ -94,7 +94,7 @@ class PtzClient(BaseClient):
         ptz_velocity = ptz_pb2.PtzVelocity(ptz=ptz_desc, pan=p, tilt=t, zoom=z)
         request = ptz_pb2.SetPtzVelocityRequest(velocity=ptz_velocity)
         return self.call(self._stub.SetPtzVelocity, request, self._set_ptz_velocity_from_response,
-                         self._ptz_error_from_response, **kwargs)
+                         common_header_errors, **kwargs)
 
     def set_ptz_velocity_async(self, ptz_desc, pan, tilt, zoom, **kwargs):
         """Async version of set_ptz_velocity()"""
@@ -104,7 +104,20 @@ class PtzClient(BaseClient):
         ptz_velocity = ptz_pb2.PtzVelocity(ptz=ptz_desc, pan=p, tilt=t, zoom=z)
         request = ptz_pb2.SetPtzVelocityRequest(velocity=ptz_velocity)
         return self.call_async(self._stub.SetPtzVelocity, request,
-                               self._set_ptz_velocity_from_response, self._ptz_error_from_response,
+                               self._set_ptz_velocity_from_response, common_header_errors,
+                               **kwargs)
+
+    def initialize_lens(self, **kwargs):
+        """Initializes the PTZ autofocus or resets it if already initialized"""
+        request = ptz_pb2.InitializeLensRequest()
+        return self.call(self._stub.InitializeLens, request, self._initialize_lens_from_response,
+                         common_header_errors, **kwargs)
+
+    def initialize_lens_async(self, **kwargs):
+        """Async version of initialize_lens()"""
+        request = ptz_pb2.InitializeLensRequest()
+        return self.call_async(self._stub.InitializeLens, request,
+                               self._initialize_lens_from_response, common_header_errors,
                                **kwargs)
 
     @staticmethod
@@ -128,10 +141,8 @@ class PtzClient(BaseClient):
         return response.velocity
 
     @staticmethod
-    @handle_common_header_errors
-    def _ptz_error_from_response(response):  # pylint: disable=unused-argument
-        return None
-
+    def _initialize_lens_from_response(response):
+        return response
 
 def shift_pan_angle(pan):
     """Shift the pan angle (degrees) so that it is in the [0,360] range."""

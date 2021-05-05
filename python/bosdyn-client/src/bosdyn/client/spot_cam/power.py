@@ -38,7 +38,11 @@ class PowerClient(BaseClient):
                                self._power_error_from_response, **kwargs)
 
     def set_power_status(self, ptz=None, aux1=None, aux2=None, external_mic=None, **kwargs):
-        """Turn on/off the desire device."""
+        """Turn on/off the desire device.
+        Should not be used on PTZ for non-IR units as it can cause the stream to crash.
+        If the intent is to reset the PTZ autofocus, try PtzClient.initialize_lens instead.
+        If the intent is to recover the PTZ stream in another way, you may need to power cycle the robot.
+        """
         request = self._build_SetPowerStatusRequest(ptz, aux1, aux2, external_mic)
 
         return self.call(self._stub.SetPowerStatus, request, self._set_power_status_from_response,
@@ -52,7 +56,11 @@ class PowerClient(BaseClient):
                                self._power_error_from_response, **kwargs)
 
     def cycle_power(self, ptz=None, aux1=None, aux2=None, external_mic=None, **kwargs):
-        """Turn power off then back on for the desired devices"""
+        """Turn power off then back on for the desired devices.
+        Should not be used on PTZ for non-IR units as it can cause the stream to crash.
+        If the intent is to reset the PTZ autofocus, try PtzClient.initialize_lens instead.
+        If the intent is to recover the PTZ stream in another way, you may need to power cycle the robot.
+        """
         request = self._build_CyclePowerRequest(ptz, aux1, aux2, external_mic)
 
         return self.call(self._stub.CyclePower, request, self._cycle_power_from_response,

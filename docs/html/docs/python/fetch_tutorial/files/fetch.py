@@ -31,7 +31,6 @@ kImageSources = [
     'left_fisheye_image', 'right_fisheye_image', 'back_fisheye_image'
 ]
 
-
 def get_obj_and_img(network_compute_client, server, model, confidence,
                     image_sources, label):
 
@@ -102,7 +101,6 @@ def get_obj_and_img(network_compute_client, server, model, confidence,
 
     return None, None, None
 
-
 def get_bounding_box_image(response):
     dtype = np.uint8
     img = np.fromstring(response.image_response.shot.image.data, dtype=dtype)
@@ -138,7 +136,6 @@ def get_bounding_box_image(response):
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
     return img
-
 
 def find_center_px(polygon):
     min_x = math.inf
@@ -217,7 +214,7 @@ def main(argv):
         '--person-model',
         help='Person detection model name running on the external server.')
     parser.add_argument('-c',
-                        '--confidence-dotoy',
+                        '--confidence-dogtoy',
                         help='Minimum confidence to return an object for the dogoy (0.0 to 1.0)',
                         default=0.5,
                         type=float)
@@ -252,6 +249,7 @@ def main(argv):
     # This script assumes the robot is already standing via the tablet.  We'll take over from the
     # tablet.
     lease = lease_client.take()
+
     lk = bosdyn.client.lease.LeaseKeepAlive(lease_client)
 
     # Store the position of the hand at the last toy drop point.
@@ -320,7 +318,6 @@ def main(argv):
             # gripper)
             grasp.grasp_params.grasp_palm_to_fingertip = 0.6
 
-
             # Tell the grasping system that we want a top-down grasp.
 
             # Add a constraint that requests that the x-axis of the gripper is pointing in the
@@ -344,7 +341,6 @@ def main(argv):
 
             # Specify the frame we're using.
             grasp.grasp_params.grasp_params_frame_name = frame_helpers.VISION_FRAME_NAME
-
 
             # Build the proto
             grasp_request = manipulation_api_pb2.ManipulationApiRequest(
@@ -513,8 +509,8 @@ def main(argv):
         # Wait until the robot reports that it is at the goal.
         block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)
 
-    lease_client.return_lease(lease)
 
+    lease_client.return_lease(lease)
 
 def compute_stand_location_and_yaw(vision_tform_target, robot_state_client,
                                    distance_margin):

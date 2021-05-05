@@ -12,6 +12,40 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 2.3.5
+
+### New Features
+
+#### Spot CAM
+
+Added `InitializeLens` rpc, which resets the PTZ autofocus without needing to power cycle the Spot CAM.
+
+#### Data Buffer
+
+A new `sync` option has been added to `RecordDataBlobsRequest` which specifies that the RPC should not return a response until the data has been fully committed and can be read back.
+This is exposed through the optional `write_sync` argument to the `add_blob()` and `add_protobuf()` methods of the `DataBufferClient`.
+
+### Bug fixes and improvements
+
+When running with a Spot CAM+ (PTZ) running 2.3.5, the `SetPowerStatus` and `CyclePower` endpoints will now return an error if the PTZ is specified. These endpoints could previously cause the WebRTC feed to crash. These RPCs are still safe to use for other devices, but due to hardware limitations, resetting the PTZ power can possibly cause the Spot CAM to require a reboot to regain the WebRTC stream.
+
+`RetryableUnavailableError` was raised in more cases than it should have been, and it is now more selectively raised.
+
+The `EstopKeepAlive` expected users to monitor its status by popping entries out of its `status_queue`.  If the user did not do so, the queue would continue to grow without bound.
+The queue size is now bounded and old unchecked entries will be thrown away.  The queue size is specified with the `max_status_queue_size` argument to the constructor.
+
+### Breaking Changes
+
+As stated above, the behavior of `SetPowerStatus` and `CyclePower` endpoints have been changed for Spot CAM+ units when attempting to change the power status of the PTZ. They now return an error instead of modifying the power status of the PTZ. They remain functional for the Spot CAM+IR. Clients using these SDK endpoints to reset the autofocus on the PTZ are recommended to use `InitializeLens` instead. Other clients are encouraged to seek alternative options.
+
+### Deprecations
+
+The `ResponseContext` helper class has been moved to the bosdyn-client package (from the bosdyn-mission package), so that it can be used for gRPC logging in data acquisition plugin services in addition to the mission service. The new import location will be from `bosdyn.client.server_util`, and the original import location of `bosdyn.mission.server_util` has been deprecated.
+
+### Known Issues
+
+Same as 2.3.0
+
 ## 2.3.4
 
 ### New Features

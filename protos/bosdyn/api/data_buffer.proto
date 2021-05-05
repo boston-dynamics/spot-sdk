@@ -35,6 +35,10 @@ message RecordDataBlobsRequest {
 
     // The data blobs to be logged.
     repeated DataBlob blob_data = 2;
+
+    // When set, the data blob is committed to the log synchronously. The RPC does not return until
+    // the data is written.
+    bool sync = 3;
 }
 
 message RecordSignalTicksRequest {

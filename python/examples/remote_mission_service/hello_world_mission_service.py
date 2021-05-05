@@ -19,7 +19,8 @@ from bosdyn.client.lease import LeaseClient, Lease
 from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder
 from bosdyn.client.auth import AuthResponseError
 from bosdyn.client.util import GrpcServiceRunner, setup_logging
-from bosdyn.mission import server_util, util
+from bosdyn.client.server_util import ResponseContext
+from bosdyn.mission import util
 
 DIRECTORY_NAME = 'hello-world-callback'
 AUTHORITY = 'remote-mission'
@@ -43,7 +44,7 @@ class HelloWorldServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
         """Logs text, then provides a valid response."""
         response = remote_pb2.TickResponse()
         # This utility context manager will fill out some fields in the message headers.
-        with server_util.ResponseContext(response, request):
+        with ResponseContext(response, request):
             # Default to saying hello to "world".
             name = 'World'
 
@@ -55,25 +56,25 @@ class HelloWorldServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
                     name = util.get_value_from_constant_value_message(keyvalue.value.constant)
             self.logger.info('Hello %s!', name)
             response.status = remote_pb2.TickResponse.STATUS_SUCCESS
-            return response
+        return response
 
     def EstablishSession(self, request, context):
         response = remote_pb2.EstablishSessionResponse()
-        with server_util.ResponseContext(response, request):
+        with ResponseContext(response, request):
             self.logger.info('EstablishSession unimplemented!')
             response.status = remote_pb2.EstablishSessionResponse.STATUS_OK
         return response
 
     def Stop(self, request, context):
         response = remote_pb2.StopResponse()
-        with server_util.ResponseContext(response, request):
+        with ResponseContext(response, request):
             self.logger.info('Stop unimplemented!')
             response.status = remote_pb2.StopResponse.STATUS_OK
         return response
 
     def TeardownSession(self, request, context):
         response = remote_pb2.TeardownSessionResponse()
-        with server_util.ResponseContext(response, request):
+        with ResponseContext(response, request):
             self.logger.info('TeardownSession unimplemented!')
             response.status = remote_pb2.TeardownSessionResponse.STATUS_OK
         return response
@@ -107,7 +108,7 @@ if __name__ == '__main__':
 
     options = parser.parse_args()
 
-    # If using the example without a robot in the loop, start up the service, which can be 
+    # If using the example without a robot in the loop, start up the service, which can be
     # be accessed directly at localhost:options.port.
     if options.host_type == 'local':
         # Setup logging to use INFO level.
@@ -116,8 +117,8 @@ if __name__ == '__main__':
         print('{} service running.\nCtrl + C to shutdown.'.format(DIRECTORY_NAME))
         service_runner.run_until_interrupt()
         sys.exit('Shutting down {} service'.format(DIRECTORY_NAME))
-    
-    # Else if a robot is available, register the service with the robot so that all clients can 
+
+    # Else if a robot is available, register the service with the robot so that all clients can
     # access it through the robot directory without knowledge of the service IP or port.
 
     # Setup logging to use either INFO level or DEBUG level.

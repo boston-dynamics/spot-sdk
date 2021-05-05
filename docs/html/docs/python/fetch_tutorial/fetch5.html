@@ -4,11 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Fetch Part 5: Detecting People and Playing Fetch &mdash; Spot 2.3.4 documentation</title>
+  <title>Fetch Part 5: Detecting People and Playing Fetch &mdash; Spot 2.3.5 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                2.3.4
+                2.3.5
               </div>
             
           
@@ -286,6 +286,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -667,7 +668,7 @@ Loaded models:
             # Find a person to deliver the toy to
             person, image, vision_tform_person = get_obj_and_img(
                 network_compute_client, options.ml_service,
-                options.person_model, options.confidence, kImageSources,
+                options.person_model, options.confidence_person, kImageSources,
                 'person')
 </code></pre><p>
     Same call as above, but this time we use model <code>options.person_model</code> and search for objects with the <code>'person'</code> label.
@@ -965,7 +966,14 @@ Loaded models:
     return params
 </code></pre><p>
     Set up Spot's <a href="https://github.com/boston-dynamics/spot-sdk/blob/3ae45683623712f548b77af17f0ee00168fc0fe5/protos/bosdyn/api/spot/robot_command.proto#L59">mobility parameters</a> to limit walking speed.
-</p><hr />
+</p><p><h4>Enable longer-distance walking for Pickup</h4></p>
+<p>
+    In the previous section, we had a <a href="fetch4.html#enable_in_part5">part that was commented out</a>, starting with:
+</p>
+<pre><code class="language-python"># NOTE: we'll enable this code in Part 5, when we understand it.</code></pre>
+<ul>
+    <li>This is essentially the same as what we do for walking up to a person above.  Uncomment this section to allow the robot to walk further to the dogtoy.</li>
+</ul><hr />
 <h2>Playing Fetch</h2>
 <p>
     Run the code:

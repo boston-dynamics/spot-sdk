@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.mission.server_util &mdash; Spot 2.3.4 documentation</title>
+  <title>bosdyn.mission.server_util &mdash; Spot 2.3.5 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                2.3.4
+                2.3.5
               </div>
             
           
@@ -283,6 +283,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -553,9 +554,15 @@
 <span class="kn">import</span> <span class="nn">bosdyn.util</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">header_pb2</span>
 
+<span class="kn">from</span> <span class="nn">deprecated</span> <span class="kn">import</span> <span class="n">deprecated</span>
 
 
-<div class="viewcode-block" id="ResponseContext"><a class="viewcode-back" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html#bosdyn.mission.server_util.ResponseContext">[docs]</a><span class="k">class</span> <span class="nc">ResponseContext</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="ResponseContext"><a class="viewcode-back" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html#bosdyn.mission.server_util.ResponseContext">[docs]</a><span class="nd">@deprecated</span><span class="p">(</span>
+    <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;The ResponseContext helper class has moved to a common location. Please use &#39;</span>
+           <span class="s1">&#39;bosdyn.client.util.ResponseContext.&#39;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s1">&#39;2.3.5&#39;</span><span class="p">,</span>
+    <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ResponseContext</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">rpc_logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="n">response</span>
@@ -574,7 +581,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">CODE_OK</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rpc_logger</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rpc_logger</span><span class="o">.</span><span class="n">add_protobuf_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">)</span></div>
-
 
 
 <div class="viewcode-block" id="set_response_header"><a class="viewcode-back" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html#bosdyn.mission.server_util.set_response_header">[docs]</a><span class="k">def</span> <span class="nf">set_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">error_code</span><span class="o">=</span><span class="n">header_pb2</span><span class="o">.</span><span class="n">CommonError</span><span class="o">.</span><span class="n">CODE_OK</span><span class="p">,</span>

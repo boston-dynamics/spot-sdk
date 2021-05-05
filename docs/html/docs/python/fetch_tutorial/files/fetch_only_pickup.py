@@ -31,7 +31,6 @@ kImageSources = [
     'left_fisheye_image', 'right_fisheye_image', 'back_fisheye_image'
 ]
 
-
 def get_obj_and_img(network_compute_client, server, model, confidence,
                     image_sources, label):
 
@@ -102,7 +101,6 @@ def get_obj_and_img(network_compute_client, server, model, confidence,
 
     return None, None, None
 
-
 def get_bounding_box_image(response):
     dtype = np.uint8
     img = np.fromstring(response.image_response.shot.image.data, dtype=dtype)
@@ -138,7 +136,6 @@ def get_bounding_box_image(response):
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
     return img
-
 
 def find_center_px(polygon):
     min_x = math.inf
@@ -217,9 +214,14 @@ def main(argv):
         '--person-model',
         help='Person detection model name running on the external server.')
     parser.add_argument('-c',
-                        '--confidence',
-                        help='Minimum confidence to return an object.',
+                        '--confidence-dogtoy',
+                        help='Minimum confidence to return an object for the dogoy (0.0 to 1.0)',
                         default=0.5,
+                        type=float)
+    parser.add_argument('-e',
+                        '--confidence-person',
+                        help='Minimum confidence for person detection (0.0 to 1.0)',
+                        default=0.6,
                         type=float)
     options = parser.parse_args(argv)
 
@@ -247,6 +249,7 @@ def main(argv):
     # This script assumes the robot is already standing via the tablet.  We'll take over from the
     # tablet.
     lease = lease_client.take()
+
     lk = bosdyn.client.lease.LeaseKeepAlive(lease_client)
 
     # Store the position of the hand at the last toy drop point.
@@ -258,7 +261,7 @@ def main(argv):
             # Capture an image and run ML on it.
             dogtoy, image, vision_tform_dogtoy = get_obj_and_img(
                 network_compute_client, options.ml_service, options.model,
-                options.confidence, kImageSources, 'dogtoy')
+                options.confidence_dogtoy, kImageSources, 'dogtoy')
 
             if dogtoy is None:
                 # Didn't find anything, keep searching.
@@ -280,23 +283,26 @@ def main(argv):
             stow_cmd = RobotCommandBuilder.arm_stow_command()
             command_client.robot_command(stow_cmd)
 
-            # Walk to the object.
-            walk_rt_vision, heading_rt_vision = compute_stand_location_and_yaw(
-                vision_tform_dogtoy, robot_state_client, distance_margin=1.0)
+            # NOTE: we'll enable this code in Part 5, when we understand it.
+            # -------------------------
+            # # Walk to the object.
+            # walk_rt_vision, heading_rt_vision = compute_stand_location_and_yaw(
+                # vision_tform_dogtoy, robot_state_client, distance_margin=1.0)
 
-            move_cmd = RobotCommandBuilder.trajectory_command(
-                goal_x=walk_rt_vision[0],
-                goal_y=walk_rt_vision[1],
-                goal_heading=heading_rt_vision,
-                frame_name=frame_helpers.VISION_FRAME_NAME,
-                params=get_walking_params(0.5, 0.5))
-            end_time = 5.0
-            cmd_id = command_client.robot_command(command=move_cmd,
-                                                  end_time_secs=time.time() +
-                                                  end_time)
+            # move_cmd = RobotCommandBuilder.trajectory_command(
+                # goal_x=walk_rt_vision[0],
+                # goal_y=walk_rt_vision[1],
+                # goal_heading=heading_rt_vision,
+                # frame_name=frame_helpers.VISION_FRAME_NAME,
+                # params=get_walking_params(0.5, 0.5))
+            # end_time = 5.0
+            # cmd_id = command_client.robot_command(command=move_cmd,
+                                                  # end_time_secs=time.time() +
+                                                  # end_time)
 
-            # Wait until the robot reports that it is at the goal.
-            block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)
+            # # Wait until the robot reports that it is at the goal.
+            # block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)
+            # -------------------------
 
             # The ML result is a bounding box.  Find the center.
             (center_px_x,
@@ -314,7 +320,6 @@ def main(argv):
             # small objects like this. For a bigger object like a shoe, 0 is better (use the entire
             # gripper)
             grasp.grasp_params.grasp_palm_to_fingertip = 0.6
-
 
             # Tell the grasping system that we want a top-down grasp.
 
@@ -339,7 +344,6 @@ def main(argv):
 
             # Specify the frame we're using.
             grasp.grasp_params.grasp_params_frame_name = frame_helpers.VISION_FRAME_NAME
-
 
             # Build the proto
             grasp_request = manipulation_api_pb2.ManipulationApiRequest(
@@ -397,7 +401,6 @@ def main(argv):
         print('Done for now, returning control to tablet in 5 seconds...')
         time.sleep(5.0)
         break
-
 
     lease_client.return_lease(lease)
 

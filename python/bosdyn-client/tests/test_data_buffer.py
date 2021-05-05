@@ -68,12 +68,29 @@ def test_add_text_messages(client):
 
 def test_add_protobuf(client, constant_log_timestamp):
     proto = timestamp_pb2.Timestamp(seconds=1, nanos=123456789)
+    # Asynchronous data buffer writes
     client.add_protobuf(proto)
     assert client._stub.RecordDataBlobs.call_count == 1
+    assert client._stub.RecordDataBlobs.call_args[0][0].sync == False
+
     client.add_protobuf_async(proto).result()
     assert client._stub.RecordDataBlobs.future.call_count == 1
     assert (client._stub.RecordDataBlobs.call_args == client._stub.RecordDataBlobs.future.call_args)
+    assert client._stub.RecordDataBlobs.call_args[0][0].sync == False
+    assert (
+        client._stub.RecordDataBlobs.call_args[0][0].blob_data[0].data == proto.SerializeToString())
+    assert (client._stub.RecordDataBlobs.call_args[0][0].blob_data[0].timestamp ==
+            constant_log_timestamp)
 
+    # Synchronous data buffer writes
+    client.add_protobuf(proto, write_sync=True)
+    assert client._stub.RecordDataBlobs.call_count == 2
+    assert client._stub.RecordDataBlobs.call_args[0][0].sync == True
+
+    client.add_protobuf_async(proto, write_sync=True).result()
+    assert client._stub.RecordDataBlobs.future.call_count == 2
+    assert (client._stub.RecordDataBlobs.call_args == client._stub.RecordDataBlobs.future.call_args)
+    assert client._stub.RecordDataBlobs.call_args[0][0].sync == True
     assert (
         client._stub.RecordDataBlobs.call_args[0][0].blob_data[0].data == proto.SerializeToString())
     assert (client._stub.RecordDataBlobs.call_args[0][0].blob_data[0].timestamp ==

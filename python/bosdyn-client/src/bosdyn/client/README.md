@@ -56,6 +56,7 @@ Client code and interfaces for the Boston Dynamics robot API.
 * [Robot](robot)
 * [Robot State](robot_state)
 * [SDK](sdk)
+* [Server Util](server_util)
 * [Spot CAM](spot_cam/README)
 * [Spot Check](spot_check)
 * [Time Sync](time_sync)

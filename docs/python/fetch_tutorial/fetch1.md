@@ -41,7 +41,7 @@ At the end, you'll have a fully-functional API example that enables Spot to auto
     <li><a href="https://shop.bostondynamics.com/">Spot robot with an arm</a></li>
     <li>A dog-toy, hand towel, or any object that:</li>
     <ul>
-        <li>has a distant visual appearance</li>
+        <li>has a distinct visual appearance</li>
         <li>is easy to see in the tablet view</li>
         <li>Spot's arm is capable of picking using the <a href="https://support.bostondynamics.com/s/article/Spot-Arm-quick-start#pickupandcarry">Pick Up Object</a> option in the tablet</li>
     </ul>
@@ -96,7 +96,7 @@ python3 hello_spot.py --username user --password YOUR_ROBOTS_PASSWORD 192.168.80
 <h2>Collect Images</h2>
 
 <p>
-Our goal is to collect images of the doy toy in the same environment we want to test in.  If you want your model to work in many environments, you'll need to collect data in as many of those as you can.
+Our goal is to collect images of the dog toy in the same environment we want to test in.  If you want your model to work in many environments, you'll need to collect data in as many of those as you can.
 </p>
 <p>
 To collect the data, we'll run the robot with the tablet while downloading images from the API.  We want a diverse set of viewpoints, so we'll walk Spot around while taking the images.

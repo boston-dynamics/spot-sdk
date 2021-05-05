@@ -61,9 +61,6 @@ def process_thread(args, request_queue, response_queue):
         print('    ' + model_name)
 
     while True:
-        time.sleep(2)
-        print('hi')
-        a = 1/0
         request = request_queue.get()
 
         if isinstance(request, network_compute_bridge_pb2.ListAvailableModelsRequest):

@@ -95,7 +95,8 @@ class DataBufferClient(BaseClient):
         return func(self._stub.RecordOperatorComments, request, value_from_response=None,
                     error_from_response=common_header_errors, **kwargs)
 
-    def add_blob(self, data, type_id, channel=None, robot_timestamp=None, **kwargs):
+    def add_blob(self, data, type_id, channel=None, robot_timestamp=None, write_sync=False,
+                 **kwargs):
         """Log blob messages to the data buffer.
 
         Args:
@@ -109,13 +110,17 @@ class DataBufferClient(BaseClient):
         Raises:
             RpcError: Problem communicating with the robot.
         """
-        return self._do_add_blob(self.call, data, type_id, channel, robot_timestamp, **kwargs)
+        return self._do_add_blob(self.call, data, type_id, channel, robot_timestamp, write_sync,
+                                 **kwargs)
 
-    def add_blob_async(self, data, type_id, channel=None, robot_timestamp=None, **kwargs):
+    def add_blob_async(self, data, type_id, channel=None, robot_timestamp=None, write_sync=False,
+                       **kwargs):
         """Async version of add_blob."""
-        return self._do_add_blob(self.call_async, data, type_id, channel, robot_timestamp, **kwargs)
+        return self._do_add_blob(self.call_async, data, type_id, channel, robot_timestamp,
+                                 write_sync, **kwargs)
 
-    def _do_add_blob(self, func, data, type_id, channel, robot_timestamp, **kwargs):
+    def _do_add_blob(  # pylint: disable=too-many-arguments
+            self, func, data, type_id, channel, robot_timestamp, write_sync, **kwargs):
         """Internal blob RPC stub call."""
         request = data_buffer_protos.RecordDataBlobsRequest()
 
@@ -126,10 +131,12 @@ class DataBufferClient(BaseClient):
         request.blob_data.add(timestamp=robot_timestamp, channel=channel, type_id=type_id,
                               data=data)
 
+        request.sync = write_sync
+
         return func(self._stub.RecordDataBlobs, request, value_from_response=None,
                     error_from_response=common_header_errors, **kwargs)
 
-    def add_protobuf(self, proto, channel=None, robot_timestamp=None):
+    def add_protobuf(self, proto, channel=None, robot_timestamp=None, write_sync=False):
         """Log protobuf messages to the data buffer.
 
         Args:
@@ -140,20 +147,21 @@ class DataBufferClient(BaseClient):
         Raises:
             RpcError: Problem communicating with the robot.
         """
-        return self._do_add_protobuf(self.add_blob, proto, channel, robot_timestamp)
+        return self._do_add_protobuf(self.add_blob, proto, channel, robot_timestamp, write_sync)
 
-    def add_protobuf_async(self, proto, channel=None, robot_timestamp=None):
+    def add_protobuf_async(self, proto, channel=None, robot_timestamp=None, write_sync=False):
         """Async version of add_protobuf."""
-        return self._do_add_protobuf(self.add_blob_async, proto, channel, robot_timestamp)
+        return self._do_add_protobuf(self.add_blob_async, proto, channel, robot_timestamp,
+                                     write_sync)
 
-    def _do_add_protobuf(self, func, proto, channel, robot_timestamp):
+    def _do_add_protobuf(self, func, proto, channel, robot_timestamp, write_sync):
         """Internal blob stub call, serializes proto and logs as blob."""
         binary_data = proto.SerializeToString()
         robot_timestamp = robot_timestamp or self._now_in_robot_basis(proto=proto)
         type_id = proto.DESCRIPTOR.full_name
         channel = channel or type_id
         return func(data=binary_data, type_id=type_id, channel=channel,
-                    robot_timestamp=robot_timestamp)
+                    robot_timestamp=robot_timestamp, write_sync=write_sync)
 
     def add_events(self, events, **kwargs):
         """Log event messages to the robot.

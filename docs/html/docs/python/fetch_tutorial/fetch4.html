@@ -4,11 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Fetch Part 4: Autonomous Pick Up &mdash; Spot 2.3.4 documentation</title>
+  <title>Fetch Part 4: Autonomous Pick Up &mdash; Spot 2.3.5 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                2.3.4
+                2.3.5
               </div>
             
           
@@ -286,6 +286,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -813,7 +814,7 @@ kImageSources = [
         '--person-model',
         help='Person detection model name running on the external server.')
     parser.add_argument('-c',
-                        '--confidence-dotoy',
+                        '--confidence-dogtoy',
                         help='Minimum confidence to return an object for the dogoy (0.0 to 1.0)',
                         default=0.5,
                         type=float)
@@ -871,7 +872,7 @@ kImageSources = [
             # Capture an image and run ML on it.
             dogtoy, image, vision_tform_dogtoy = get_obj_and_img(
                 network_compute_client, options.ml_service, options.model,
-                options.confidence, kImageSources, 'dogtoy')
+                options.confidence_dogtoy, kImageSources, 'dogtoy')
 
             if dogtoy is None:
                 # Didn't find anything, keep searching.
@@ -891,34 +892,38 @@ kImageSources = [
 </code></pre><p>
     After the dog-toy has been dropped off, loop back and wait for the person to throw it again.
 </p>
-<br /><pre><code class="language-python">            print('Found dogtoy...')
+<br /><a id="enable_in_part5">
+<pre><code class="language-python">            print('Found dogtoy...')<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>        <span class="c1"># Got a dogtoy.  Request pick up.</span>
 
-            # Got a dogtoy.  Request pick up.
+        <span class="c1"># Stow the arm in case it is deployed</span>
+        <span class="n">stow_cmd</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">arm_stow_command</span><span class="p">()</span>
+        <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command</span><span class="p">(</span><span class="n">stow_cmd</span><span class="p">)</span>
 
-            # Stow the arm in case it is deployed
-            stow_cmd = RobotCommandBuilder.arm_stow_command()
-            command_client.robot_command(stow_cmd)
+        <span class="c1"># NOTE: we&#39;ll enable this code in Part 5, when we understand it.</span>
+        <span class="c1"># -------------------------</span>
+        <span class="c1"># # Walk to the object.</span>
+        <span class="c1"># walk_rt_vision, heading_rt_vision = compute_stand_location_and_yaw(</span>
+            <span class="c1"># vision_tform_dogtoy, robot_state_client, distance_margin=1.0)</span>
 
-            # Walk to the object.
-            walk_rt_vision, heading_rt_vision = compute_stand_location_and_yaw(
-                vision_tform_dogtoy, robot_state_client, distance_margin=1.0)
+        <span class="c1"># move_cmd = RobotCommandBuilder.trajectory_command(</span>
+            <span class="c1"># goal_x=walk_rt_vision[0],</span>
+            <span class="c1"># goal_y=walk_rt_vision[1],</span>
+            <span class="c1"># goal_heading=heading_rt_vision,</span>
+            <span class="c1"># frame_name=frame_helpers.VISION_FRAME_NAME,</span>
+            <span class="c1"># params=get_walking_params(0.5, 0.5))</span>
+        <span class="c1"># end_time = 5.0</span>
+        <span class="c1"># cmd_id = command_client.robot_command(command=move_cmd,</span>
+                                              <span class="c1"># end_time_secs=time.time() +</span>
+                                              <span class="c1"># end_time)</span>
 
-            move_cmd = RobotCommandBuilder.trajectory_command(
-                goal_x=walk_rt_vision[0],
-                goal_y=walk_rt_vision[1],
-                goal_heading=heading_rt_vision,
-                frame_name=frame_helpers.VISION_FRAME_NAME,
-                params=get_walking_params(0.5, 0.5))
-            end_time = 5.0
-            cmd_id = command_client.robot_command(command=move_cmd,
-                                                  end_time_secs=time.time() +
-                                                  end_time)
-
-            # Wait until the robot reports that it is at the goal.
-            block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)
-
-</code></pre><p>
-    Walk the robot to the toy before issuing the pick up command.
+        <span class="c1"># # Wait until the robot reports that it is at the goal.</span>
+        <span class="c1"># block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)</span>
+        <span class="c1"># -------------------------</span>
+</pre></div>
+</div>
+<p></code></pre></p>
+<p>
+    Right now, we aren't going to worry about walking longer distances, but in the next section we'll want to do that.  Don't worry about this code now and we'll enable it in Part 5.
 </p>
 <br /><pre><code class="language-python">            # The ML result is a bounding box.  Find the center.
             (center_px_x,

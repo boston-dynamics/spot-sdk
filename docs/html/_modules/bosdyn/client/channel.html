@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.channel &mdash; Spot 2.3.4 documentation</title>
+  <title>bosdyn.client.channel &mdash; Spot 2.3.5 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                2.3.4
+                2.3.5
               </div>
             
           
@@ -283,6 +283,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -704,13 +705,13 @@
             <span class="k">return</span> <span class="n">UnknownDnsNameError</span><span class="p">(</span><span class="n">rpc_error</span><span class="p">,</span> <span class="n">UnknownDnsNameError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
         <span class="k">elif</span> <span class="s1">&#39;channel is in state TRANSIENT_FAILURE&#39;</span> <span class="ow">in</span> <span class="n">debug</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">TransientFailureError</span><span class="p">(</span><span class="n">rpc_error</span><span class="p">,</span> <span class="n">TransientFailureError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="s1">&#39;Connect Failed&#39;</span> <span class="ow">in</span> <span class="n">debug</span><span class="p">:</span>
-            <span class="c1"># This error should be checked last because a lot of grpc errors contain said substring.</span>
+        <span class="k">elif</span> <span class="s1">&#39;Connect Failed&#39;</span> <span class="ow">in</span> <span class="n">debug</span> <span class="ow">or</span> <span class="s1">&#39;Failed to pick subchannel&#39;</span> <span class="ow">in</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="c1"># This error should be checked last because a lot of grpc errors contain said substrings.</span>
             <span class="k">return</span> <span class="n">UnableToConnectToRobotError</span><span class="p">(</span><span class="n">rpc_error</span><span class="p">,</span> <span class="n">UnableToConnectToRobotError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
-
-    <span class="c1"># Handle arbitrary UNAVAILABLE cases</span>
+    
     <span class="k">if</span> <span class="n">code</span> <span class="ow">is</span> <span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNAVAILABLE</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">RetryableUnavailableError</span><span class="p">(</span><span class="n">rpc_error</span><span class="p">,</span> <span class="n">RetryableUnavailableError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;Socket closed&#39;</span> <span class="ow">in</span> <span class="n">debug</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RetryableUnavailableError</span><span class="p">(</span><span class="n">rpc_error</span><span class="p">,</span> <span class="n">RetryableUnavailableError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
 
     <span class="n">_LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Unclassified exception: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_error</span><span class="p">)</span>
 

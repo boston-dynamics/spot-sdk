@@ -193,12 +193,12 @@ Make sure that the packages have been installed.
 
 ```shell
 $ python3 -m pip list --format=columns | grep bosdyn
-bosdyn-api                    2.3.4
-bosdyn-choreography-client    2.3.4
-bosdyn-choreography-protos    2.3.4
-bosdyn-client                 2.3.4
-bosdyn-core                   2.3.4
-bosdyn-mission                2.3.4
+bosdyn-api                    2.3.5
+bosdyn-choreography-client    2.3.5
+bosdyn-choreography-protos    2.3.5
+bosdyn-client                 2.3.5
+bosdyn-core                   2.3.5
+bosdyn-mission                2.3.5
 ```
 **Windows users:**
 ```shell
