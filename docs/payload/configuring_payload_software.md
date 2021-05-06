@@ -165,9 +165,9 @@ Devices on the payload network can reach the robot at 192.168.50.3 via port 443.
 | Description | Robot port  | Target | Protocol |
 | ----------- | ----------- | ------ | -------- |
 | Standard Forwards 1 |	20000 + [22, 80, 443] |	192.168.50.5:[22, 80, 443] |	TCP
-| Fixed Forwards 1 |	21000-22000 |	192.158.50.5:21000-22000 |	TCP/UDP
+| Fixed Forwards 1 |	21000-22000 |	192.168.50.5:21000-22000 |	TCP/UDP
 | Standard Forwards 2 | 30000 + [22, 80, 443] |	192.168.50.6:[22, 80, 443] |	TCP
-| Fixed Forwards 2 |	31000-32000 |	192.158.50.6:31000-32000 |	TCP/UDP
+| Fixed Forwards 2 |	31000-32000 |	192.168.50.6:31000-32000 |	TCP/UDP
 
 
 Robot port forwards for ports 20443, 20022, 30443, and 30022 now masquerade. They should allow the payload to respond to forwarded traffic to the robot on any of the robot's ports.
