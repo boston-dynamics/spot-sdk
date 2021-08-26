@@ -12,6 +12,11 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot SDK
 
+[![Repo Code Size]](https://img.shields.io/github/languages/code-size/boston-dynamics/spot-sdk)
+[![Open Issues]](https://img.shields.io/github/issues-raw/boston-dynamics/spot-sdk)
+[![Top Language]](https://img.shields.io/github/languages/top/boston-dynamics/spot-sdk)
+[![Contributors]](https://img.shields.io/github/contributors/boston-dynamics/spot-sdk)
+
 Develop applications and payloads for Spot using the Boston Dynamics Spot SDK.
 
 The SDK consists of:
