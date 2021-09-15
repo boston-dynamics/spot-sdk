@@ -19,8 +19,9 @@ import remote_mission_service
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('output_file', help='File to save the mission to.')
-    parser.add_argument('--add-resources', help=('Resource the remote mission needs, like "body".'
-                                                 ' Can be comma separated for multiple resources.'))
+    parser.add_argument(
+        '--add-resources', help=('Resource the remote mission needs, like "body".'
+                                 ' Can be comma separated for multiple resources.'))
     parser.add_argument(
         '--user-string',
         help='Specify the user-string input to Tick. Set to the node name in Autowalk missions.')

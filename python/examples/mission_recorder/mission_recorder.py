@@ -16,9 +16,12 @@ import os
 import signal
 import threading
 import time
+import traceback
+
+from google.protobuf import wrappers_pb2 as wrappers
 
 from bosdyn.api import geometry_pb2, world_object_pb2
-from bosdyn.api.graph_nav import graph_nav_pb2, map_pb2, recording_pb2
+from bosdyn.api.graph_nav import graph_nav_pb2, map_pb2, map_processing_pb2, recording_pb2
 from bosdyn.api.mission import nodes_pb2
 import bosdyn.api.robot_state_pb2 as robot_state_proto
 import bosdyn.api.spot.robot_command_pb2 as spot_command_pb2
@@ -30,6 +33,7 @@ import bosdyn.client.channel
 from bosdyn.client.estop import EstopClient, EstopEndpoint, EstopKeepAlive
 from bosdyn.client.graph_nav import GraphNavClient
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
+from bosdyn.client.map_processing import MapProcessingServiceClient
 from bosdyn.client.power import PowerClient
 from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder
 from bosdyn.client.recording import GraphNavRecordingServiceClient, NotLocalizedToEndError
@@ -54,10 +58,9 @@ NAV_VELOCITY_MAX_Y = 0.5  # m/s
 NAV_VELOCITY_LIMITS = geometry_pb2.SE2VelocityLimit(
     max_vel=geometry_pb2.SE2Velocity(
         linear=geometry_pb2.Vec2(x=NAV_VELOCITY_MAX_X, y=NAV_VELOCITY_MAX_Y),
-        angular=NAV_VELOCITY_MAX_YAW),
-    min_vel=geometry_pb2.SE2Velocity(
-        linear=geometry_pb2.Vec2(x=-NAV_VELOCITY_MAX_X, y=-NAV_VELOCITY_MAX_Y),
-        angular=-NAV_VELOCITY_MAX_YAW))
+        angular=NAV_VELOCITY_MAX_YAW), min_vel=geometry_pb2.SE2Velocity(
+            linear=geometry_pb2.Vec2(x=-NAV_VELOCITY_MAX_X, y=-NAV_VELOCITY_MAX_Y),
+            angular=-NAV_VELOCITY_MAX_YAW))
 
 
 def _grpc_or_log(desc, thunk):
@@ -133,9 +136,6 @@ class RecorderInterface(object):
         # Filepath for the location to put the downloaded graph and snapshots.
         self._download_filepath = download_filepath
 
-        # List of waypoints in map
-        self._waypoint_list = []
-
         # List of waypoint commands
         self._waypoint_commands = []
 
@@ -155,6 +155,7 @@ class RecorderInterface(object):
             self._estop_client = None
             self._estop_endpoint = None
 
+        self._map_processing_client = robot.ensure_client(MapProcessingServiceClient.default_service_name)
         self._power_client = robot.ensure_client(PowerClient.default_service_name)
         self._robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
         self._robot_command_client = robot.ensure_client(RobotCommandClient.default_service_name)
@@ -167,10 +168,15 @@ class RecorderInterface(object):
         # Setup the graph nav service client.
         self._graph_nav_client = robot.ensure_client(GraphNavClient.default_service_name)
 
+        # Local copy of the graph.
+        self._graph = None
+        self._all_graph_wps_in_order = []
+
         self._robot_state_task = AsyncRobotState(self._robot_state_client)
         self._async_tasks = AsyncTasks([self._robot_state_task])
         self._lock = threading.Lock()
         self._command_dictionary = {
+            27: self._stop, # ESC key
             ord('\t'): self._quit_program,
             ord('T'): self._toggle_time_sync,
             ord(' '): self._toggle_estop,
@@ -181,6 +187,7 @@ class RecorderInterface(object):
             ord('w'): self._move_forward,
             ord('s'): self._move_backward,
             ord('a'): self._strafe_left,
+            ord('c'): self._auto_close_loops,
             ord('d'): self._strafe_right,
             ord('q'): self._turn_left,
             ord('e'): self._turn_right,
@@ -309,7 +316,7 @@ class RecorderInterface(object):
         stdscr.addstr(15, 0, "          [T]: Time-sync, [SPACE]: Estop, [P]: Power")
         stdscr.addstr(16, 0, "          [v]: Sit, [f]: Stand, [r]: Self-right     ")
         stdscr.addstr(17, 0, "          [wasd]: Directional strafing              ")
-        stdscr.addstr(18, 0, "          [qe]: Turning                             ")
+        stdscr.addstr(18, 0, "          [qe]: Turning, [ESC]: Stop                ")
         stdscr.addstr(19, 0, "          [m]: Start recording mission              ")
         stdscr.addstr(20, 0, "          [l]: Add fiducial localization to mission ")
         stdscr.addstr(21, 0, "          [z]: Enter desert mode                    ")
@@ -393,6 +400,9 @@ class RecorderInterface(object):
 
     def _turn_right(self):
         self._velocity_cmd_helper('turn_right', v_rot=-VELOCITY_BASE_ANGULAR)
+
+    def _stop(self):
+        self._start_robot_command('stop', RobotCommandBuilder.stop_command())
 
     def _velocity_cmd_helper(self, desc='', v_x=0.0, v_y=0.0, v_rot=0.0):
         self._start_robot_command(
@@ -487,11 +497,8 @@ class RecorderInterface(object):
             self._waypoint_id = 'ERROR'
 
         if self._recording and self._waypoint_id != 'NONE' and self._waypoint_id != 'ERROR':
-            if (self._waypoint_list == []) or (self._waypoint_id != self._waypoint_list[-1]):
-                self._waypoint_list += [self._waypoint_id]
+            if self._waypoint_id not in self._desert_flag:
                 self._desert_flag[self._waypoint_id] = self._desert_mode
-            if self._waypoint_commands == []:
-                self._waypoint_commands = [self._waypoint_id]
             return 'Current waypoint: {} [ RECORDING ]'.format(self._waypoint_id)
 
         return 'Current waypoint: {}'.format(self._waypoint_id)
@@ -550,8 +557,23 @@ class RecorderInterface(object):
             return
 
         self.add_message("Started recording map.")
-        self._waypoint_list = []
+        self._graph = None
+        self._all_graph_wps_in_order = []
+        state = self._graph_nav_client.get_localization_state()
+        if '' == state.localization.waypoint_id:
+            self.add_message("No localization after start recording.")
+            self._recording_client.stop_recording()
+            return
         self._waypoint_commands = []
+        # Treat this sort of like RPN / postfix, where operators follow their operands.
+        # waypoint_id LOCALIZE means "localize to waypoint_id".
+        # INITIALIZE takes no argument.
+        # Implicitly, we make routes between pairs of waypoint ids as they occur.
+        # `w0 w1 LOCALIZE w2` will give a route w0->w1, whereupon we localize,
+        # and then a route w1->w2.
+        self._waypoint_commands.append('INITIALIZE')
+        # Start with the first waypoint.
+        self._waypoint_commands.append(state.localization.waypoint_id)
         self._recording = True
 
     def _stop_recording(self):
@@ -560,7 +582,8 @@ class RecorderInterface(object):
             return True
         self._recording = False
 
-        self._waypoint_commands += [self._waypoint_id]
+        if self._waypoint_id != self._waypoint_commands[-1]:
+            self._waypoint_commands += [self._waypoint_id]
 
         try:
             status = self._recording_client.stop_recording()
@@ -584,6 +607,9 @@ class RecorderInterface(object):
         self.add_message("Adding fiducial localization to mission.")
         self._waypoint_commands += [self._waypoint_id]
         self._waypoint_commands += ['LOCALIZE']
+
+        # Return to waypoint (in case localization shifted to another waypoint)
+        self._waypoint_commands += [self._waypoint_id]
         return True
 
     def _enter_desert(self):
@@ -606,6 +632,11 @@ class RecorderInterface(object):
             self.add_message("ERROR: No mission recorded.")
             return
 
+        # Check for empty mission
+        if len(self._waypoint_commands) == 0:
+            self.add_message("ERROR: No waypoints in mission.")
+            return
+
         # Stop recording mission
         if not self._stop_recording():
             self.add_message("ERROR: Error while stopping recording.")
@@ -621,8 +652,8 @@ class RecorderInterface(object):
         mission = self._make_mission()
 
         # Save mission file
-        os.mkdir(self._download_filepath + "/missions")
-        mission_filepath = self._download_filepath + "/missions/autogenerated"
+        os.mkdir(os.path.join(self._download_filepath, "missions"))
+        mission_filepath = os.path.join(self._download_filepath, "missions", "autogenerated")
         write_mission(mission, mission_filepath)
 
         # Quit program
@@ -632,12 +663,20 @@ class RecorderInterface(object):
         waypoint.annotations.scan_match_region.empty.CopyFrom(
             map_pb2.Waypoint.Annotations.LocalizeRegion.Empty())
 
-    def _download_full_graph(self):
+    def _download_full_graph(self, overwrite_desert_flag=None):
         """Download the graph and snapshots from the robot."""
         graph = self._graph_nav_client.download_graph()
         if graph is None:
             self.add_message("Failed to download the graph.")
             return False
+
+        if overwrite_desert_flag is not None:
+            for wp in graph.waypoints:
+                if wp.id in overwrite_desert_flag:
+                    # Overwrite anything that we passed in.
+                    self._desert_flag[wp.id] = overwrite_desert_flag[wp.id]
+                elif wp.id not in self._desert_flag:
+                    self._desert_flag[wp.id] = False
 
         # Mark desert waypoints
         for waypoint in graph.waypoints:
@@ -652,12 +691,24 @@ class RecorderInterface(object):
         # Download the waypoint and edge snapshots.
         self._download_and_write_waypoint_snapshots(graph.waypoints)
         self._download_and_write_edge_snapshots(graph.edges)
+
+        # Cache a list of all graph waypoints, ordered by creation time.
+        # Because we only record one (non-branching) chain, all possible routes are contained
+        # in ranges in this list.
+        self._graph = graph
+        wp_to_time = []
+        for wp in graph.waypoints:
+            time = wp.annotations.creation_time.seconds + wp.annotations.creation_time.nanos / 1e9
+            wp_to_time.append((wp.id, time))
+        # Switch inner and outer grouping and grab only the waypoint names after sorting by time.
+        self._all_graph_wps_in_order = list(zip(*sorted(wp_to_time, key=lambda x: x[1])))[0]
+
         return True
 
     def _write_full_graph(self, graph):
         """Download the graph from robot to the specified, local filepath location."""
         graph_bytes = graph.SerializeToString()
-        write_bytes(self._download_filepath, '/graph', graph_bytes)
+        write_bytes(self._download_filepath, 'graph', graph_bytes)
 
     def _download_and_write_waypoint_snapshots(self, waypoints):
         """Download the waypoint snapshots from robot to the specified, local filepath location."""
@@ -670,8 +721,8 @@ class RecorderInterface(object):
                 # Failure in downloading waypoint snapshot. Continue to next snapshot.
                 self.add_message("Failed to download waypoint snapshot: " + waypoint.snapshot_id)
                 continue
-            write_bytes(self._download_filepath + '/waypoint_snapshots', '/' + waypoint.snapshot_id,
-                        waypoint_snapshot.SerializeToString())
+            write_bytes(os.path.join(self._download_filepath, 'waypoint_snapshots'),
+                        waypoint.snapshot_id, waypoint_snapshot.SerializeToString())
             num_waypoint_snapshots_downloaded += 1
             self.add_message("Downloaded {} of the total {} waypoint snapshots.".format(
                 num_waypoint_snapshots_downloaded, len(waypoints)))
@@ -679,18 +730,33 @@ class RecorderInterface(object):
     def _download_and_write_edge_snapshots(self, edges):
         """Download the edge snapshots from robot to the specified, local filepath location."""
         num_edge_snapshots_downloaded = 0
+        num_to_download = 0
         for edge in edges:
+            if len(edge.snapshot_id) == 0:
+                continue
+            num_to_download += 1
             try:
                 edge_snapshot = self._graph_nav_client.download_edge_snapshot(edge.snapshot_id)
             except Exception:
                 # Failure in downloading edge snapshot. Continue to next snapshot.
                 self.add_message("Failed to download edge snapshot: " + edge.snapshot_id)
                 continue
-            write_bytes(self._download_filepath + '/edge_snapshots', '/' + edge.snapshot_id,
-                        edge_snapshot.SerializeToString())
+            write_bytes(os.path.join(self._download_filepath, 'edge_snapshots'),
+                        edge.snapshot_id, edge_snapshot.SerializeToString())
             num_edge_snapshots_downloaded += 1
             self.add_message("Downloaded {} of the total {} edge snapshots.".format(
-                num_edge_snapshots_downloaded, len(edges)))
+                num_edge_snapshots_downloaded, num_to_download))
+
+    def _auto_close_loops(self):
+        """Automatically find and close all loops in the graph."""
+        close_fiducial_loops = True
+        close_odometry_loops = True
+        response = self._map_processing_client.process_topology(
+            params=map_processing_pb2.ProcessTopologyRequest.Params(
+                do_fiducial_loop_closure=wrappers.BoolValue(value=close_fiducial_loops),
+                do_odometry_loop_closure=wrappers.BoolValue(value=close_odometry_loops)),
+            modify_map_on_server=True)
+        self.add_message("Created {} new edge(s).".format(len(response.new_subgraph.edges)))
 
     def _make_mission(self):
         """ Create a mission that visits each waypoint on stored path."""
@@ -699,13 +765,28 @@ class RecorderInterface(object):
 
         # Create a Sequence that visits all the waypoints.
         sequence = nodes_pb2.Sequence()
-        sequence.children.add().CopyFrom(self._make_localize_node())
 
-        for waypoint_id in self._waypoint_commands:
-            if waypoint_id == 'LOCALIZE':
-                sequence.children.add().CopyFrom(self._make_localize_node())
+        prev_waypoint_command = None
+        first_waypoint = True
+        for waypoint_command in self._waypoint_commands:
+            if waypoint_command == 'LOCALIZE':
+                if prev_waypoint_command is None:
+                    raise RuntimeError(f'No prev waypoint; LOCALIZE')
+                sequence.children.add().CopyFrom(self._make_localize_node(prev_waypoint_command))
+            elif waypoint_command == 'INITIALIZE':
+                # Initialize to any fiducial.
+                sequence.children.add().CopyFrom(self._make_initialize_node())
             else:
-                sequence.children.add().CopyFrom(self._make_goto_node(waypoint_id))
+                if first_waypoint:
+                    # Go to the beginning of the mission using any path. May be a no-op.
+                    sequence.children.add().CopyFrom(self._make_goto_node(waypoint_command))
+                else:
+                    if prev_waypoint_command is None:
+                        raise RuntimeError(f'No prev waypoint; route to {waypoint_command}')
+                    sequence.children.add().CopyFrom(
+                        self._make_go_route_node(prev_waypoint_command, waypoint_command))
+                prev_waypoint_command = waypoint_command
+                first_waypoint = False
 
         # Return a Node with the Sequence.
         ret = nodes_pb2.Node()
@@ -719,11 +800,9 @@ class RecorderInterface(object):
         ret.name = "goto %s" % waypoint_id
         vel_limit = NAV_VELOCITY_LIMITS
 
-        if self._desert_flag[waypoint_id]:
-            tolerance = graph_nav_pb2.TravelParams.TOLERANCE_IGNORE_POOR_FEATURE_QUALITY
-        else:
-            tolerance = graph_nav_pb2.TravelParams.TOLERANCE_DEFAULT
-
+        # We don't actually know which path we will plan. It could have many feature deserts.
+        # So, let's just allow feature deserts.
+        tolerance = graph_nav_pb2.TravelParams.TOLERANCE_IGNORE_POOR_FEATURE_QUALITY
         travel_params = graph_nav_pb2.TravelParams(velocity_limit=vel_limit,
                                                    feature_quality_tolerance=tolerance)
 
@@ -732,10 +811,71 @@ class RecorderInterface(object):
         ret.impl.Pack(impl)
         return ret
 
-    def _make_localize_node(self):
+    def _make_go_route_node(self, prev_waypoint_id, waypoint_id):
+        """ Create a leaf node that will go to the waypoint along a route. """
+        ret = nodes_pb2.Node()
+        ret.name = "go route %s -> %s" % (prev_waypoint_id, waypoint_id)
+        vel_limit = NAV_VELOCITY_LIMITS
+
+        if prev_waypoint_id not in self._all_graph_wps_in_order:
+            raise RuntimeError(f'{prev_waypoint_id} (FROM) not in {self._all_graph_wps_in_order}')
+        if waypoint_id not in self._all_graph_wps_in_order:
+            raise RuntimeError(f'{waypoint_id} (TO) not in {self._all_graph_wps_in_order}')
+        prev_wp_idx = self._all_graph_wps_in_order.index(prev_waypoint_id)
+        wp_idx = self._all_graph_wps_in_order.index(waypoint_id)
+
+        impl = nodes_pb2.BosdynNavigateRoute()
+        backwards = False
+        if wp_idx >= prev_wp_idx:
+            impl.route.waypoint_id[:] = self._all_graph_wps_in_order[prev_wp_idx:wp_idx + 1]
+        else:
+            backwards = True
+            # Switch the indices and reverse the output order.
+            impl.route.waypoint_id[:] = reversed(self._all_graph_wps_in_order[wp_idx:prev_wp_idx + 1])
+        edge_ids = [e.id for e in self._graph.edges]
+        for i in range(len(impl.route.waypoint_id) - 1):
+            eid = map_pb2.Edge.Id()
+            # Because we only record one (non-branching) chain, and we only create routes from
+            # older to newer waypoints, we can just follow the time-sorted list of all waypoints.
+            if backwards:
+                from_i = i + 1
+                to_i = i
+            else:
+                from_i = i
+                to_i = i + 1
+            eid.from_waypoint = impl.route.waypoint_id[from_i]
+            eid.to_waypoint = impl.route.waypoint_id[to_i]
+            impl.route.edge_id.extend([eid])
+            if eid not in edge_ids:
+                raise RuntimeError(f'Was map recorded in linear chain? {eid} not in graph')
+
+        if any(self._desert_flag[wp_id] for wp_id in impl.route.waypoint_id):
+            tolerance = graph_nav_pb2.TravelParams.TOLERANCE_IGNORE_POOR_FEATURE_QUALITY
+        else:
+            tolerance = graph_nav_pb2.TravelParams.TOLERANCE_DEFAULT
+
+        travel_params = graph_nav_pb2.TravelParams(velocity_limit=vel_limit,
+                                                   feature_quality_tolerance=tolerance)
+        impl.travel_params.CopyFrom(travel_params)
+        ret.impl.Pack(impl)
+        return ret
+
+    def _make_localize_node(self, waypoint_id):
         """Make localization node."""
         loc = nodes_pb2.Node()
         loc.name = "localize robot"
+
+        impl = nodes_pb2.BosdynGraphNavLocalize()
+        impl.localization_request.fiducial_init = graph_nav_pb2.SetLocalizationRequest.FIDUCIAL_INIT_NEAREST_AT_TARGET
+        impl.localization_request.initial_guess.waypoint_id = waypoint_id
+
+        loc.impl.Pack(impl)
+        return loc
+
+    def _make_initialize_node(self):
+        """Make initialization node."""
+        loc = nodes_pb2.Node()
+        loc.name = "initialize robot"
 
         impl = nodes_pb2.BosdynGraphNavLocalize()
         impl.localization_request.fiducial_init = graph_nav_pb2.SetLocalizationRequest.FIDUCIAL_INIT_NEAREST
@@ -747,7 +887,7 @@ class RecorderInterface(object):
 def write_bytes(filepath, filename, data):
     """Write data to a file."""
     os.makedirs(filepath, exist_ok=True)
-    with open(filepath + filename, 'wb+') as f:
+    with open(os.path.join(filepath, filename), 'wb+') as f:
         f.write(data)
         f.close()
 
@@ -794,8 +934,14 @@ def main():
     parser.add_argument('--time-sync-interval-sec',
                         help='The interval (seconds) that time-sync estimate should be updated.',
                         type=float)
+    parser.add_argument('--waypoint-commands-only', nargs='+',
+                        help='Build a mission from the graph on-robot, specifying these commands')
 
     options = parser.parse_args()
+
+    if os.path.exists(options.directory):
+        LOGGER.error("ERROR: Directory %s already exists." % options.directory)
+        return False
 
     stream_handler = setup_logging(options.verbose)
 
@@ -810,6 +956,25 @@ def main():
         return False
 
     recorder_interface = RecorderInterface(robot, options.directory)
+
+    if options.waypoint_commands_only is not None:
+        recorder_interface._waypoint_commands = options.waypoint_commands_only
+        # Save graph map
+        os.mkdir(recorder_interface._download_filepath)
+        if not recorder_interface._download_full_graph(overwrite_desert_flag=[]):
+            recorder_interface.add_message("ERROR: Error downloading graph.")
+            return
+
+        LOGGER.info(recorder_interface._all_graph_wps_in_order)
+        # Generate mission
+        mission = recorder_interface._make_mission()
+
+        # Save mission file
+        os.mkdir(recorder_interface._download_filepath + "/missions")
+        mission_filepath = recorder_interface._download_filepath + "/missions/autogenerated"
+        write_mission(mission, mission_filepath)
+        return True
+
     try:
         recorder_interface.start()
     except (ResponseError, RpcError) as err:
@@ -817,10 +982,13 @@ def main():
         return False
 
     try:
+        # Prevent curses from introducing a 1 second delay for ESC key
+        os.environ.setdefault('ESCDELAY', '0')
         # Run recorder interface in curses mode, then restore terminal config.
         curses.wrapper(recorder_interface.drive)
     except Exception as e:
         LOGGER.error("Mission recorder has thrown an error: %s" % repr(e))
+        LOGGER.error(traceback.format_exc())
     finally:
         # Restore stream handler after curses mode.
         LOGGER.addHandler(stream_handler)

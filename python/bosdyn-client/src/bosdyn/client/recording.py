@@ -324,6 +324,10 @@ class NotLocalizedToExistingMapError(RecordingServiceResponseError):
     """The robot is not localized to the existing map and cannot start recording."""
 
 
+class TooFarFromExistingMapError(RecordingServiceResponseError):
+    """The robot is too far from the existing map and cannot start recording."""
+
+
 class RemoteCloudFailureNotInDirectoryError(RecordingServiceResponseError):
     """Failed to start recording because a remote point cloud (e.g. a LIDAR) is not registered to the service directory."""
 
@@ -375,7 +379,9 @@ _START_RECORDING_STATUS_TO_ERROR.update({
     recording_pb2.StartRecordingResponse.STATUS_REMOTE_CLOUD_FAILURE_NO_DATA:
         (RemoteCloudFailureNoDataError, RemoteCloudFailureNoDataError.__doc__),
     recording_pb2.StartRecordingResponse.STATUS_FIDUCIAL_POSE_NOT_OK:
-        (FiducialPoseError, FiducialPoseError.__doc__)
+        (FiducialPoseError, FiducialPoseError.__doc__),
+    recording_pb2.StartRecordingResponse.STATUS_TOO_FAR_FROM_EXISTING_MAP:
+        (TooFarFromExistingMapError, TooFarFromExistingMapError.__doc__)
 })
 
 

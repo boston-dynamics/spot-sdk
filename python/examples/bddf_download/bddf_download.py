@@ -19,7 +19,8 @@ from bosdyn.client.time_sync import TimeSyncEndpoint, TimeSyncClient
 import bosdyn.client.util
 
 # Suppress only the single warning from urllib3 needed.
-requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
+requests.packages.urllib3.disable_warnings(  # pylint:disable=no-member
+    category=InsecureRequestWarning)
 
 LOGGER = logging.getLogger()
 
@@ -110,10 +111,10 @@ def request_timespan(time_spec, time_sync_endpoint):
     return {"from_sec": str(_time_str(start_time)), "to_sec": str(_time_str(end_time))}
 
 
-def output_filename(options, response):
+def output_filename(output, response):
     """Get output filename either from command line options or http response, or default value."""
-    if options.output:
-        return options.output
+    if output:
+        return output
     content = response.headers['Content-Disposition']
     if len(content) < 2:
         LOGGER.debug("Content-Disposition not set correctly.")
@@ -124,6 +125,69 @@ def output_filename(options, response):
     return match.group(1)
 
 
+def prepare_download(hostname, username, password, timespan, channel, message_type, service):
+    """Prepares all arguments for http get request."""
+
+    # Create a robot object.
+    sdk = create_standard_sdk('bddf')
+    robot = sdk.create_robot(hostname)
+
+    # Use the robot object to authenticate to the robot.
+    # A JWT Token is required to download log data.
+    try:
+        robot.authenticate(username, password)
+    except RpcError as err:
+        LOGGER.error("Cannot authenticate to robot to obtain token: %s", err)
+        return 1
+
+    # Establish time sync with robot to obtain skew.
+    time_sync_client = robot.ensure_client(TimeSyncClient.default_service_name)
+    time_sync_endpoint = TimeSyncEndpoint(time_sync_client)
+    did_establish = time_sync_endpoint.establish_timesync()
+    if did_establish:
+        LOGGER.debug("Established timesync, skew of sec:%d nanosec:%d",
+                     time_sync_endpoint.clock_skew.seconds, time_sync_endpoint.clock_skew.nanos)
+
+    # Now assemble the query to obtain a bddf file.
+    url = 'https://{}/v1/data-buffer/bddf/'.format(hostname)
+    headers = {"Authorization": "Bearer {}".format(robot.user_token)}
+
+    # Get the parameters for limiting the timespan of the response.
+    get_params = request_timespan(timespan, time_sync_endpoint)
+
+    # Optional parameters for limiting the messages
+    if channel:
+        get_params['channel'] = channel
+    if message_type:
+        get_params['type'] = message_type
+    if service:
+        get_params['grpc_service'] = service
+
+    return url, headers, get_params
+
+
+def collect_and_write_file(url, headers, parameters, output):
+    """Downloads data and writes it to a file."""
+    outfile = None
+    with requests.get(url, headers=headers, verify=False, stream=True, params=parameters) as resp:
+        if 'content-length' in resp.headers:
+            total_content_length = resp.headers['content-length']
+        else:
+            # Transfer encoding is chunked.
+            total_content_length = 0
+        if resp.status_code != 200:
+            LOGGER.error("Unable to get data. https response: %d", resp.status_code)
+            yield None, None, resp.status_code
+        else:
+            outfile = output_filename(output, resp)
+            with open(outfile, 'wb') as fid:
+                for chunk in resp.iter_content(chunk_size=REQUEST_CHUNK_SIZE):
+                    fid.write(chunk)
+                    yield len(chunk), int(total_content_length), resp.status_code
+
+    LOGGER.info("Wrote '%s'.", outfile)
+
+
 def main():  # pylint: disable=too-many-locals
     """Command-line interface"""
     import argparse  # pylint: disable=import-outside-toplevel
@@ -131,7 +195,8 @@ def main():  # pylint: disable=too-many-locals
     parser.add_argument('-T', '--timespan', help='Time span (default last 5 minutes)')
     parser.add_argument('--help-timespan', action='store_true',
                         help='Print time span formatting options')
-    parser.add_argument('-c', '--channel', help='Specify channel for data (default=all)')
+    parser.add_argument('-c', '--channel', nargs='+',
+                        help='Specify channel(s) for data (default=all)')
     parser.add_argument('-t', '--type', help='Specify message type (default=all)')
     parser.add_argument('-s', '--service', help='Specify service name (default=all)')
     parser.add_argument('-o', '--output', help='Output file name (default is "download.bddf"')
@@ -146,54 +211,29 @@ def main():  # pylint: disable=too-many-locals
         _print_help_timespan()
         return 0
 
-    # Create a robot object.
-    sdk = create_standard_sdk('bddf')
-    robot = sdk.create_robot(options.hostname)
+    url, headers, params = prepare_download(options.hostname, options.username, options.password, \
+                                                options.timespan, \
+                                                options.channel, options.type, options.service)
 
-    # Use the robot object to authenticate to the robot.
-    # A JWT Token is required to download log data.
-    try:
-        robot.authenticate(options.username, options.password)
-    except RpcError as err:
-        LOGGER.error("Cannot authenticate to robot to obtain token: %s", err)
-        return 1
+    number_of_bytes_processed = 0
+    for chunk, total_content_length, response_status_code in collect_and_write_file(
+            url, headers, params, options.output):
+        # Check for success status response.
+        if response_status_code != 200:
+            return False
+        else:
+            # Calculate and write status updates.
+            number_of_bytes_processed = number_of_bytes_processed + chunk
+            total_size_of_request = total_content_length
+            if total_size_of_request == 0:
+                print(
+                    f"Data is chunked. Number of megabytes processed: {number_of_bytes_processed/1e6:.0f} [MB].",
+                    end="\r")
+            else:
+                percentage_compete = (number_of_bytes_processed / total_size_of_request) * 100
+                print(f"Download is {percentage_compete:.2f}% complete.", end="\r")
+    print()
 
-    # Establish time sync with robot to obtain skew.
-    time_sync_client = robot.ensure_client(TimeSyncClient.default_service_name)
-    time_sync_endpoint = TimeSyncEndpoint(time_sync_client)
-    did_establish = time_sync_endpoint.establish_timesync()
-    if did_establish:
-        LOGGER.debug("Established timesync, skew of sec:%d nanosec:%d",
-                     time_sync_endpoint.clock_skew.seconds, time_sync_endpoint.clock_skew.nanos)
-
-    # Now assemble the query to obtain a bddf file.
-    url = 'https://{}/v1/data-buffer/bddf/'.format(options.hostname)
-    headers = {"Authorization": "Bearer {}".format(robot.user_token)}
-
-    # Get the parameters for limiting the timespan of the response.
-    get_params = request_timespan(options.timespan, time_sync_endpoint)
-
-    # Optional parameters for limiting the messages
-    if options.channel:
-        get_params['channel'] = options.channel
-    if options.type:
-        get_params['type'] = options.type
-    if options.service:
-        get_params['grpc_service'] = options.service
-
-    # Request the data.
-    with requests.get(url, headers=headers, verify=False, stream=True, params=get_params) as resp:
-        if resp.status_code != 200:
-            LOGGER.error("https response: %d", resp.status_code)
-            sys.exit(1)
-        outfile = output_filename(options, resp)
-        with open(outfile, 'wb') as fid:
-            for chunk in resp.iter_content(chunk_size=REQUEST_CHUNK_SIZE):
-                print('.', end='', flush=True)
-                fid.write(chunk)
-        print()
-
-    LOGGER.info("Wrote '%s'.", outfile)
     return 0
 
 

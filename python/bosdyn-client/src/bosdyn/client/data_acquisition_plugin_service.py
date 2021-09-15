@@ -55,8 +55,7 @@ from bosdyn.api.data_acquisition_pb2 import DataAcquisitionCapability as Capabil
 from bosdyn.client import Robot
 from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
 from bosdyn.client.data_buffer import DataBufferClient
-from bosdyn.client.util import populate_response_header
-from bosdyn.client.server_util import ResponseContext
+from bosdyn.client.server_util import ResponseContext, populate_response_header
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -266,8 +265,8 @@ class DataAcquisitionStoreHelper(object):
             if future.exception() is None:
                 self.state.add_saved([data_id])
             else:
-                self.state.add_errors([
-                    make_error(data_id, 'Failed to store data: {}'.format(future.exception()))])
+                self.state.add_errors(
+                    [make_error(data_id, 'Failed to store data: {}'.format(future.exception()))])
 
         return not self.state.has_data_errors()
 

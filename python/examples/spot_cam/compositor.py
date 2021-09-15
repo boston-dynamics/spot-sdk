@@ -16,6 +16,7 @@ from bosdyn.api.spot_cam import compositor_pb2
 
 from utils import add_bool_arg
 
+
 class CompositorCommands(Subcommands):
     """Commands related to the Spot CAM's Compositor service"""
 
@@ -23,9 +24,12 @@ class CompositorCommands(Subcommands):
 
     def __init__(self, subparsers, command_dict):
         super(CompositorCommands, self).__init__(subparsers, command_dict, [
-            CompositorSetScreenCommand, CompositorGetScreenCommand,
-            CompositorListScreensCommand, CompositorGetVisibleCamerasCommand,
-            CompositorGetIrColorMapCommand, CompositorSetIrColorMapCommand,
+            CompositorSetScreenCommand,
+            CompositorGetScreenCommand,
+            CompositorListScreensCommand,
+            CompositorGetVisibleCamerasCommand,
+            CompositorGetIrColorMapCommand,
+            CompositorSetIrColorMapCommand,
         ])
 
 
@@ -87,6 +91,7 @@ class CompositorListScreensCommand(Command):
 
         return result
 
+
 class CompositorGetVisibleCamerasCommand(Command):
     """List currently visible windows"""
 
@@ -99,6 +104,7 @@ class CompositorGetVisibleCamerasCommand(Command):
         result = robot.ensure_client(CompositorClient.default_service_name).get_visible_cameras()
 
         return result
+
 
 class CompositorGetIrColorMapCommand(Command):
     """Get currently selected IR colormap on Spot CAM"""
@@ -113,6 +119,7 @@ class CompositorGetIrColorMapCommand(Command):
 
         return result
 
+
 class CompositorSetIrColorMapCommand(Command):
     """Set IR colormap to use on Spot CAM"""
 
@@ -120,7 +127,8 @@ class CompositorSetIrColorMapCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         super(CompositorSetIrColorMapCommand, self).__init__(subparsers, command_dict)
-        self._parser.add_argument('color', default='jet', const='jet', nargs='?', choices=['jet', 'greyscale', 'grayscale'])
+        self._parser.add_argument('color', default='jet', const='jet', nargs='?',
+                                  choices=['jet', 'greyscale', 'grayscale'])
         self._parser.add_argument('--min-temp', default=0.0, type=float,
                                   help='minimum temperature on the temperature scale')
         self._parser.add_argument('--max-temp', default=100.0, type=float,
@@ -136,6 +144,7 @@ class CompositorSetIrColorMapCommand(Command):
 
         return result
 
+
 class CompositorSetIrMeterOverlayCommand(Command):
     """Set IR reticle to use on Spot CAM+IR"""
 
@@ -143,11 +152,10 @@ class CompositorSetIrMeterOverlayCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         super(CompositorSetIrMeterOverlayCommand, self).__init__(subparsers, command_dict)
-        self._parser.add_argument('color', default='jet', const='jet', nargs='?', choices=['jet', 'greyscale', 'grayscale'])
-        self._parser.add_argument('-x', default=0.5,
-                                  help='horizontal coordinate of reticle')
-        self._parser.add_argument('-y', default=0.5,
-                                  help='vertical coordinate of reticle')
+        self._parser.add_argument('color', default='jet', const='jet', nargs='?',
+                                  choices=['jet', 'greyscale', 'grayscale'])
+        self._parser.add_argument('-x', default=0.5, help='horizontal coordinate of reticle')
+        self._parser.add_argument('-y', default=0.5, help='vertical coordinate of reticle')
         add_bool_arg(self._parser, 'enable', default=True)
 
     def _run(self, robot, options):

@@ -30,6 +30,7 @@ def test_trigger_service_fault_error():
     response.status = response.STATUS_OK
     assert not _trigger_service_fault_error(response)
 
+
 def test_clear_service_fault_error():
     # Test unset header error
     response = service_fault_pb2.ClearServiceFaultResponse()

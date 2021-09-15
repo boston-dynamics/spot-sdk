@@ -17,9 +17,9 @@ import bosdyn.api.basic_command_pb2 as basic_command_pb2
 import bosdyn.client
 import bosdyn.client.util
 import bosdyn.client.estop
-from bosdyn.client.lease import LeaseClient, _RESOURCE_BODY, LeaseKeepAlive
+from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 from bosdyn.client.estop import EstopClient
-from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient, blocking_stand
+from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient
 from bosdyn.geometry import EulerZXY
 
 from xbox_joystick_factory import XboxJoystickFactory
@@ -117,7 +117,8 @@ class XboxController:
             locomotion_hint=spot_command_pb2.HINT_AUTO)
 
         # Print controls
-        print(textwrap.dedent("""\
+        print(
+            textwrap.dedent("""\
 | Button Combination | Functionality            |
 |--------------------|--------------------------|
 | A                  | Walk                     |
@@ -135,7 +136,7 @@ class XboxController:
 |                    |                          |
 | If Stand Mode      |                          |
 | - Left Stick       |                          |
-| -- X               | Rotate body in roll axis |  
+| -- X               | Rotate body in roll axis |
 | -- Y               | Control height           |
 | - Right Stick      |                          |
 | -- X               | Turn body in yaw axis    |
@@ -148,7 +149,6 @@ class XboxController:
 | Start              | Motor power & Control    |
 | Back               | Exit                     |
         """))
-
 
         # Describe the necessary steps before one can command the robot.
         print("Before you can command the robot: \n" + \
@@ -346,8 +346,8 @@ class XboxController:
         standing then roll to its [right]/left side for easier battery changing.
         """
 
-        cmd = RobotCommandBuilder.battery_change_pose_command(dir_hint=
-            basic_command_pb2.BatteryChangePoseCommand.Request.HINT_RIGHT)
+        cmd = RobotCommandBuilder.battery_change_pose_command(
+            dir_hint=basic_command_pb2.BatteryChangePoseCommand.Request.HINT_RIGHT)
         self._issue_robot_command(cmd)
 
     def _move(self, left_x, left_y, right_x):
@@ -374,7 +374,7 @@ class XboxController:
             stair_hint=self.mobility_params.stair_hint)
 
         cmd = RobotCommandBuilder.synchro_velocity_command(v_x=v_x, v_y=v_y, v_rot=v_rot,
-                                                   params=self.mobility_params)
+                                                           params=self.mobility_params)
         self._issue_robot_command(cmd, endtime=time.time() + VELOCITY_CMD_DURATION)
 
     def _orientation_cmd_helper(self, yaw=0.0, roll=0.0, pitch=0.0, height=0.0):
@@ -392,7 +392,8 @@ class XboxController:
             return
 
         orientation = EulerZXY(yaw, roll, pitch)
-        cmd = RobotCommandBuilder.synchro_stand_command(body_height=height, footprint_R_body=orientation)
+        cmd = RobotCommandBuilder.synchro_stand_command(body_height=height,
+                                                        footprint_R_body=orientation)
         self._issue_robot_command(cmd, endtime=time.time() + VELOCITY_CMD_DURATION)
 
     def _change_height(self, direction):
@@ -649,7 +650,8 @@ def main(argv):
         argv: List of command-line arguments.
     """
 
-    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, description=('''
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawTextHelpFormatter, description=('''
         Use this script to control the Spot robot from an Xbox controller. Press the Back
         controller button to safely power off the robot. Note that the example needs the E-Stop
         to be released. The estop_gui script from the estop SDK example can be used to release

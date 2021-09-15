@@ -22,12 +22,16 @@ import argparse
 
 from ricoh_theta import Theta
 
+
 def connect(options):
     """Uses the ricoh_theta.py script to connect to an access point"""
-    camera = Theta(theta_ssid=options.theta_ssid, theta_pw=options.theta_password, client_mode=False, show_state_at_init=True)
-    camera.connectToAP(ap_ssid=options.wifi_ssid, ap_pw=options.wifi_password, ap_sec=options.security)
+    camera = Theta(theta_ssid=options.theta_ssid, theta_pw=options.theta_password,
+                   client_mode=False, show_state_at_init=True)
+    camera.connectToAP(ap_ssid=options.wifi_ssid, ap_pw=options.wifi_password,
+                       ap_sec=options.security)
     if options.disable_sleep_mode:
         camera.sleepMode(enabled=False)
+
 
 def main(argv):
     """Collects command line arguments to enable client mode"""
@@ -46,6 +50,7 @@ def main(argv):
     options = parser.parse_args(argv)
 
     connect(options)
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])

@@ -22,8 +22,8 @@ from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
 from bosdyn.client.lease import LeaseClient, Lease
 from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder
 from bosdyn.client.auth import AuthResponseError
-from bosdyn.client.util import GrpcServiceRunner, setup_logging
-from bosdyn.client.server_util import ResponseContext
+from bosdyn.client.util import setup_logging
+from bosdyn.client.server_util import ResponseContext, GrpcServiceRunner
 from bosdyn.mission import util
 
 DIRECTORY_NAME = 'power-off-callback'
@@ -298,6 +298,7 @@ class PowerOffServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
             response.status = remote_pb2.TeardownSessionResponse.STATUS_OK
         else:
             response.status = remote_pb2.TeardownSessionResponse.STATUS_INVALID_SESSION_ID
+
 
 def run_service(bosdyn_sdk_robot, port, logger=None):
     # Proto service specific function used to attach a servicer to a server.

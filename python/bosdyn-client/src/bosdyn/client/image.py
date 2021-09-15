@@ -9,7 +9,8 @@ import os
 import numpy as np
 import collections
 from bosdyn.client.common import BaseClient
-from bosdyn.client.common import (error_factory, error_pair, common_header_errors, handle_common_header_errors)
+from bosdyn.client.common import (error_factory, error_pair, common_header_errors,
+                                  handle_common_header_errors)
 from bosdyn.client.exceptions import ResponseError, UnsetStatusError
 
 from bosdyn.api import image_pb2
@@ -31,17 +32,24 @@ class SourceDataError(ImageResponseError):
 class ImageDataError(ImageResponseError):
     """System cannot generate image data for the ImageCapture at this time."""
 
+
 class UnsupportedImageFormatRequestedError(ImageResponseError):
     """The image service cannot return data in the requested format."""
+
 
 _STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _STATUS_TO_ERROR.update({
     image_pb2.ImageResponse.STATUS_OK: (None, None),
-    image_pb2.ImageResponse.STATUS_UNKNOWN_CAMERA: error_pair(UnknownImageSourceError),
-    image_pb2.ImageResponse.STATUS_SOURCE_DATA_ERROR: error_pair(SourceDataError),
-    image_pb2.ImageResponse.STATUS_IMAGE_DATA_ERROR: error_pair(ImageDataError),
-    image_pb2.ImageResponse.STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED: error_pair(UnsupportedImageFormatRequestedError),
-    image_pb2.ImageResponse.STATUS_UNKNOWN: error_pair(UnsetStatusError),
+    image_pb2.ImageResponse.STATUS_UNKNOWN_CAMERA:
+        error_pair(UnknownImageSourceError),
+    image_pb2.ImageResponse.STATUS_SOURCE_DATA_ERROR:
+        error_pair(SourceDataError),
+    image_pb2.ImageResponse.STATUS_IMAGE_DATA_ERROR:
+        error_pair(ImageDataError),
+    image_pb2.ImageResponse.STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED:
+        error_pair(UnsupportedImageFormatRequestedError),
+    image_pb2.ImageResponse.STATUS_UNKNOWN:
+        error_pair(UnsetStatusError),
 })
 
 
@@ -142,8 +150,7 @@ class ImageClient(BaseClient):
         return image_pb2.ListImageSourcesRequest()
 
 
-def build_image_request(image_source_name, quality_percent=75,
-                        image_format=None):
+def build_image_request(image_source_name, quality_percent=75, image_format=None):
     """Helper function which builds an ImageRequest from an image source name.
 
     By default the robot will choose an appropriate format when no image format
@@ -180,10 +187,13 @@ def write_pgm_or_ppm(image_response, filename="", filepath="."):
         filepath(string): The directory to save the image.
     """
     # Determine the data type to decode the image.
-    if image_response.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_DEPTH_U16:
+    if image_response.shot.image.pixel_format in (image_pb2.Image.PIXEL_FORMAT_DEPTH_U16,
+                                                  image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U16):
         dtype = np.uint16
+        max_val = 2 ** 16 - 1
     else:
         dtype = np.uint8
+        max_val = 2 ** 8 - 1
 
     num_channels = 1
     pgm_header_number = 'P5'
@@ -202,7 +212,7 @@ def write_pgm_or_ppm(image_response, filename="", filepath="."):
         num_channels = 1
     else:
         print("Unsupported pixel format for PGM/PPM: %s." %
-            image_pb2.Image.PixelFormat.Name(image_response.shot.image.pixel_format))
+              image_pb2.Image.PixelFormat.Name(image_response.shot.image.pixel_format))
         return
 
     img = np.frombuffer(image_response.shot.image.data, dtype=dtype)
@@ -211,7 +221,9 @@ def write_pgm_or_ppm(image_response, filename="", filepath="."):
     try:
         img = img.reshape((height, width, num_channels))
     except ValueError as err:
-        print("Cannot convert raw image into expected shape (rows %d, cols %d, color channels %d)." % (height, width, num_channels))
+        print(
+            "Cannot convert raw image into expected shape (rows %d, cols %d, color channels %d)." %
+            (height, width, num_channels))
         print(err)
         return
     if not filename:
@@ -224,12 +236,13 @@ def write_pgm_or_ppm(image_response, filename="", filepath="."):
         print("Cannot open file %s. Exception thrown: %s" % (filename, err))
         return
 
-    max_val = np.amax(img)
-    pgm_header = pgm_header_number + ' ' + str(width) + ' ' + str(height) + ' ' + str(max_val) + '\n'
+    pgm_header = pgm_header_number + ' ' + str(width) + ' ' + str(height) + ' ' + str(
+        max_val) + '\n'
     fd_out.write(pgm_header)
     img.tofile(fd_out)
-    print('Saved matrix with pixel values from camera "%s" to file "%s".' % (
-        image_response.source.name, filename))
+    print('Saved matrix with pixel values from camera "%s" to file "%s".' %
+          (image_response.source.name, filename))
+
 
 def write_image_data(image_response, filename="", filepath="."):
     """Write image data from image_response to a file.
@@ -251,6 +264,7 @@ def write_image_data(image_response, filename="", filepath="."):
     except IOError as err:
         print('Failed to save "{}".'.format(image_response.source.name))
         print(err)
+
 
 def save_images_as_files(image_responses, filename="", filepath="."):
     """Write image responses to files.
@@ -276,3 +290,28 @@ def save_images_as_files(image_responses, filename="", filepath="."):
         else:
             # Save jpeg format as a jpeg image.
             write_image_data(image, save_file_name, filepath)
+
+def pixel_to_camera_space(image_proto, pixel_x, pixel_y, depth=1.0):
+    """Using the camera intrinsics, determine the (x,y,z) point in the camera frame for
+    the (u,v) pixel coordinates.
+
+    Args:
+        image_proto (image_pb2.Image): The image in which the pixel coordinates are from
+        pixel_x (int): x-coordinate.
+        pixel_y (int): y-coordinate.
+        depth (double): The depth from the camera to the point of interest.
+
+    Returns:
+        An (x,y,z) tuple representing the pixel point of interest now described as a point
+        in the camera frame.
+    """
+    focal_x = image_proto.source.pinhole.intrinsics.focal_length.x
+    principal_x = image_proto.source.pinhole.intrinsics.principal_point.x
+
+    focal_y = image_proto.source.pinhole.intrinsics.focal_length.y
+    principal_y = image_proto.source.pinhole.intrinsics.principal_point.y
+
+    x_rt_camera = depth * (pixel_x - principal_x) / focal_x
+    y_rt_camera = depth * (pixel_y - principal_y) / focal_y
+    return (x_rt_camera, y_rt_camera, depth)
+

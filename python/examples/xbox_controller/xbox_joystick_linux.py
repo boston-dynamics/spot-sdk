@@ -48,7 +48,7 @@ class XboxJoystickLinux(XboxJoystick):
             refresh_rate: Determines the maximum rate at which events are polled from xboxdrv.
         """
 
-        super()
+        super().__init__()
         try:
             self.proc = subprocess.Popen(['xboxdrv', '--no-uinput', '--detach-kernel-driver'],
                                          stdout=subprocess.PIPE, bufsize=0)

@@ -19,7 +19,6 @@ import bosdyn.api.directory_pb2 as directory_protos
 import bosdyn.api.directory_registration_pb2 as directory_registration_protos
 
 
-
 def main(argv):
     """Command line interface.
 
@@ -28,28 +27,21 @@ def main(argv):
     """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-i', '--server-ip', help=
-        'IP address of the server to register', required=True
-    )
-    parser.add_argument(
-        '-p', '--server-port', help=
-        'Port of the server to register', required=True
-    )
-    parser.add_argument(
-        '-n', '--service-name', help=
-        'Name for the service you are registering', required=True
-    )
-    parser.add_argument(
-        '-f', '--force', help=
-        'Overwrite existing clients using this name.', action='store_true'
-    )
+    parser.add_argument('-i', '--server-ip', help='IP address of the server to register',
+                        required=True)
+    parser.add_argument('-p', '--server-port', help='Port of the server to register', required=True)
+    parser.add_argument('-n', '--service-name', help='Name for the service you are registering',
+                        required=True)
+    parser.add_argument('-a', '--authority', help='Authority for the service you are registering',
+                        required=False)
+    parser.add_argument('-f', '--force', help='Overwrite existing clients using this name.',
+                        action='store_true')
 
     bosdyn.client.util.add_common_arguments(parser)
 
     options = parser.parse_args(argv)
 
-    kServiceAuthority = "auth.spot.robot"
+    kServiceAuthority = options.authority or "remote-server-worker.spot.robot"
 
     sdk = bosdyn.client.create_standard_sdk("register_remote_server")
 
@@ -79,8 +71,12 @@ def main(argv):
             break
 
     # Register service
-    print('Attempting to register ' + options.server_ip + ':' + options.server_port + ' onto ' + options.hostname + ' directory...')
-    directory_registration_client.register(options.service_name, "bosdyn.api.NetworkComputeBridgeWorker", kServiceAuthority, options.server_ip, int(options.server_port))
+    print('Attempting to register ' + options.server_ip + ':' + options.server_port + ' onto ' +
+          options.hostname + ' directory...')
+    directory_registration_client.register(options.service_name,
+                                           "bosdyn.api.NetworkComputeBridgeWorker",
+                                           kServiceAuthority, options.server_ip,
+                                           int(options.server_port))
     print('Done.')
 
     return True

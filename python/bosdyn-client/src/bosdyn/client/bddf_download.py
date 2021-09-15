@@ -7,10 +7,11 @@
 """Code for downloading robot data in bddf format."""
 import logging
 import re
+import ssl
 import sys
 
-import requests
-from urllib3.exceptions import InsecureRequestWarning
+from urllib.request import Request, urlopen
+from urllib.parse import urlencode
 
 from bosdyn.client.time_sync import (TimeSyncEndpoint, TimeSyncClient, NotEstablishedError,
                                      robot_time_range_from_nanoseconds, timespec_to_robot_timespan)
@@ -19,6 +20,7 @@ from bosdyn.util import TIME_FORMAT_DESC
 LOGGER = logging.getLogger()
 
 REQUEST_CHUNK_SIZE = 10 * (1024**2)  # This value is not guaranteed.
+REQUEST_TIMEOUT = 20  # Seconds.
 
 DEFAULT_OUTPUT = "./download.bddf"
 
@@ -83,11 +85,6 @@ def download_data(  # pylint: disable=too-many-arguments,too-many-locals
     Returns:
       output filename, or None on error
     """
-    # pylint: disable=no-member
-    # Suppress only the single warning from urllib3 needed.
-    requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
-    # pylint: enable=no-member
-
     time_sync_endpoint = None
     if not robot_time:
         # Establish time sync with robot to obtain skew.
@@ -113,16 +110,20 @@ def download_data(  # pylint: disable=too-many-arguments,too-many-locals
         get_params['grpc_service'] = grpc_service
 
     # Request the data.
-    url = _bddf_url(hostname)
-    with requests.get(url, headers=_http_headers(robot), verify=False, stream=True,
-                      params=get_params) as resp:
-        if resp.status_code != 200:
-            LOGGER.error("%s %s response: %d", url, get_params, resp.status_code)
+    url = _bddf_url(hostname) + '?{}'.format(urlencode(get_params))
+    request = Request(url, headers=_http_headers(robot))
+    context = ssl._create_unverified_context()  # pylint: disable=protected-access
+    with urlopen(request, context=context, timeout=REQUEST_TIMEOUT) as resp:
+        if resp.status != 200:
+            LOGGER.error("%s %s response: %d", url, get_params, resp.status)
             return None
 
         outfile = output_filename if output_filename else _output_filename(resp)
         with open(outfile, 'wb') as fid:
-            for chunk in resp.iter_content(chunk_size=REQUEST_CHUNK_SIZE):
+            while True:
+                chunk = resp.read(REQUEST_CHUNK_SIZE)
+                if len(chunk) == 0:
+                    break
                 if show_progress:
                     print('.', end='', flush=True)
                 fid.write(chunk)
@@ -165,8 +166,8 @@ def main():
     add_common_arguments(parser)
     options = parser.parse_args()
 
-    if options.verbose:
-        LOGGER.setLevel(logging.DEBUG)
+    options.verbose = level = logging.DEBUG if options.verbose else logging.INFO
+    logging.basicConfig(level=level, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     if options.help_timespan:
         _print_help_timespan()
@@ -184,7 +185,7 @@ def main():
         LOGGER.error("Cannot authenticate to robot to obtain token: %s", err)
         return 1
 
-    output_filename = download_data(robot, options.hostname, options.timespan,
+    output_filename = download_data(robot, options.hostname, timespan_spec=options.timespan,
                                     robot_time=options.robot_time, channel=options.channel,
                                     message_type=options.type, grpc_service=options.service,
                                     show_progress=True)

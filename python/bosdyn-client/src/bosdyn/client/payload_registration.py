@@ -118,8 +118,12 @@ class PayloadRegistrationClient(BaseClient):
           PayloadRegistrationResponseError: Something went wrong during the payload registration.
         """
         request = payload_registration_protos.UpdatePayloadVersionRequest()
+        # Deprecated credential fields.
         request.payload_guid = guid
         request.payload_secret = secret
+        # Supported credential fields for 2.4+ robots.
+        request.payload_credentials.guid = guid
+        request.payload_credentials.secret = secret
         request.updated_version.CopyFrom(updated_version)
         return self.call(self._stub.UpdatePayloadVersion, request,
                          error_from_response=_update_payload_version_error, **kw_args)
@@ -140,11 +144,15 @@ class PayloadRegistrationClient(BaseClient):
           PayloadRegistrationResponseError: Something went wrong during the payload registration.
         """
         request = payload_registration_protos.UpdatePayloadVersionRequest()
+        # Deprecated credential fields.
         request.payload_guid = guid
         request.payload_secret = secret
+        # Supported credential fields for 2.4+ robots.
+        request.payload_credentials.guid = guid
+        request.payload_credentials.secret = secret
         request.updated_version.CopyFrom(updated_version)
         return self.call_async(self._stub.UpdatePayloadVersion, request,
-                         error_from_response=_update_payload_version_error, **kw_args)
+                               error_from_response=_update_payload_version_error, **kw_args)
 
     def get_payload_auth_token(self, guid, secret, **kw_args):
         """Request a limited-access auth token for a payload.
@@ -167,10 +175,104 @@ class PayloadRegistrationClient(BaseClient):
             does not match any existing payload.
           PayloadRegistrationResponseError: Something went wrong during the payload registration.
         """
-        request = payload_registration_protos.GetPayloadAuthTokenRequest(
-            payload_guid=guid, payload_secret=secret)
+        request = payload_registration_protos.GetPayloadAuthTokenRequest()
+        # Deprecated credential fields.
+        request.payload_guid = guid
+        request.payload_secret = secret
+        # Supported credential fields for 2.4+ robots.
+        request.payload_credentials.guid = guid
+        request.payload_credentials.secret = secret
+
         return self.call(self._stub.GetPayloadAuthToken, request, value_from_response=_get_token,
                          error_from_response=_get_payload_auth_token_error, **kw_args)
+
+    def attach_payload(self, guid, secret, **kw_args):
+        """Attach a payload to the robot.
+
+        Args:
+          guid:                 The GUID of the payload to attach.
+          secret:               Secret of the payload to attach.
+          kw_args:              Extra arguments to pass to grpc call invocation.
+
+        Raises:
+          RpcError: Problem communicating with the robot.
+          PayloadDoesNotExistError: A payload with the provided GUID does not exist.
+          InvalidPayloadCredentialsError: The GUID + secret does not match an existing payload.
+          PayloadNotAuthorizedError: The payload you've requested to change is not yet authorized.
+          PayloadRegistrationResponseError: Something went wrong during the payload registration.
+        """
+        request = payload_registration_protos.UpdatePayloadAttachedRequest()
+        request.payload_credentials.guid = guid
+        request.payload_credentials.secret = secret
+        request.request = payload_registration_protos.UpdatePayloadAttachedRequest.REQUEST_ATTACH
+        return self.call(self._stub.UpdatePayloadAttached, request,
+                         error_from_response=_update_payload_attached_error, **kw_args)
+
+    def attach_payload_async(self, guid, secret, **kw_args):
+        """Attach a payload to the robot.
+
+        Args:
+          guid:                 The GUID of the payload to attach.
+          secret:               Secret of the payload to attach.
+          kw_args:              Extra arguments to pass to grpc call invocation.
+
+        Raises:
+          RpcError: Problem communicating with the robot.
+          PayloadDoesNotExistError: A payload with the provided GUID does not exist.
+          InvalidPayloadCredentialsError: The GUID + secret does not match an existing payload.
+          PayloadNotAuthorizedError: The payload you've requested to change is not yet authorized.
+          PayloadRegistrationResponseError: Something went wrong during the payload registration.
+        """
+        request = payload_registration_protos.UpdatePayloadAttachedRequest()
+        request.payload_credentials.guid = guid
+        request.payload_credentials.secret = secret
+        request.request = payload_registration_protos.UpdatePayloadAttachedRequest.REQUEST_ATTACH
+        return self.call_async(self._stub.UpdatePayloadAttached, request,
+                               error_from_response=_update_payload_attached_error, **kw_args)
+
+    def detach_payload(self, guid, secret, **kw_args):
+        """Detach a payload from the robot.
+
+        Args:
+          guid:                 The GUID of the payload to detach.
+          secret:               Secret of the payload to detach.
+          kw_args:              Extra arguments to pass to grpc call invocation.
+
+        Raises:
+          RpcError: Problem communicating with the robot.
+          PayloadDoesNotExistError: A payload with the provided GUID does not exist.
+          InvalidPayloadCredentialsError: The GUID + secret does not match an existing payload.
+          PayloadNotAuthorizedError: The payload you've requested to change is not yet authorized.
+          PayloadRegistrationResponseError: Something went wrong during the payload registration.
+        """
+        request = payload_registration_protos.UpdatePayloadAttachedRequest()
+        request.payload_credentials.guid = guid
+        request.payload_credentials.secret = secret
+        request.request = payload_registration_protos.UpdatePayloadAttachedRequest.REQUEST_DETACH
+        return self.call(self._stub.UpdatePayloadAttached, request,
+                         error_from_response=_update_payload_attached_error, **kw_args)
+
+    def detach_payload_async(self, guid, secret, **kw_args):
+        """Detach a payload from the robot.
+
+        Args:
+          guid:                 The GUID of the payload to detach.
+          secret:               Secret of the payload to detach.
+          kw_args:              Extra arguments to pass to grpc call invocation.
+
+        Raises:
+          RpcError: Problem communicating with the robot.
+          PayloadDoesNotExistError: A payload with the provided GUID does not exist.
+          InvalidPayloadCredentialsError: The GUID + secret does not match an existing payload.
+          PayloadNotAuthorizedError: The payload you've requested to change is not yet authorized.
+          PayloadRegistrationResponseError: Something went wrong during the payload registration.
+        """
+        request = payload_registration_protos.UpdatePayloadAttachedRequest()
+        request.payload_credentials.guid = guid
+        request.payload_credentials.secret = secret
+        request.request = payload_registration_protos.UpdatePayloadAttachedRequest.REQUEST_DETACH
+        return self.call_async(self._stub.UpdatePayloadAttached, request,
+                               error_from_response=_update_payload_attached_error, **kw_args)
 
 
 # Associate proto status errors to python client errors for RegisterPayload
@@ -178,7 +280,7 @@ _REGISTER_PAYLOAD_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseErr
 _REGISTER_PAYLOAD_STATUS_TO_ERROR.update({
     payload_registration_protos.RegisterPayloadResponse.STATUS_OK: (None, None),
     payload_registration_protos.RegisterPayloadResponse.STATUS_ALREADY_EXISTS:
-    (PayloadAlreadyExistsError, PayloadAlreadyExistsError.__doc__),
+        (PayloadAlreadyExistsError, PayloadAlreadyExistsError.__doc__),
 })
 
 
@@ -198,9 +300,9 @@ _UPDATE_PAYLOAD_VERSION_STATUS_TO_ERROR = collections.defaultdict(lambda: (Respo
 _UPDATE_PAYLOAD_VERSION_STATUS_TO_ERROR.update({
     payload_registration_protos.UpdatePayloadVersionResponse.STATUS_OK: (None, None),
     payload_registration_protos.UpdatePayloadVersionResponse.STATUS_DOES_NOT_EXIST:
-    (PayloadDoesNotExistError, PayloadDoesNotExistError.__doc__),
+        (PayloadDoesNotExistError, PayloadDoesNotExistError.__doc__),
     payload_registration_protos.UpdatePayloadVersionResponse.STATUS_INVALID_CREDENTIALS:
-    (InvalidPayloadCredentialsError, InvalidPayloadCredentialsError.__doc__),
+        (InvalidPayloadCredentialsError, InvalidPayloadCredentialsError.__doc__),
 })
 
 
@@ -220,9 +322,9 @@ _GET_PAYLOAD_AUTH_TOKEN_STATUS_TO_ERROR = collections.defaultdict(lambda: (Respo
 _GET_PAYLOAD_AUTH_TOKEN_STATUS_TO_ERROR.update({
     payload_registration_protos.GetPayloadAuthTokenResponse.STATUS_OK: (None, None),
     payload_registration_protos.GetPayloadAuthTokenResponse.STATUS_INVALID_CREDENTIALS:
-    (InvalidPayloadCredentialsError, InvalidPayloadCredentialsError.__doc__),
+        (InvalidPayloadCredentialsError, InvalidPayloadCredentialsError.__doc__),
     payload_registration_protos.GetPayloadAuthTokenResponse.STATUS_PAYLOAD_NOT_AUTHORIZED:
-    (PayloadNotAuthorizedError, PayloadNotAuthorizedError.__doc__),
+        (PayloadNotAuthorizedError, PayloadNotAuthorizedError.__doc__),
 })
 
 
@@ -235,6 +337,29 @@ def _get_payload_auth_token_error(response):
         response, response.status,
         status_to_string=payload_registration_protos.GetPayloadAuthTokenResponse.Status.Name,
         status_to_error=_GET_PAYLOAD_AUTH_TOKEN_STATUS_TO_ERROR)
+
+# Associate proto status errors to python client errors for UpdatePayloadAttachedResponse
+_UPDATE_PAYLOAD_ATTACHED_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
+_UPDATE_PAYLOAD_ATTACHED_STATUS_TO_ERROR.update({
+    payload_registration_protos.UpdatePayloadAttachedResponse.STATUS_OK: (None, None),
+    payload_registration_protos.UpdatePayloadAttachedResponse.STATUS_DOES_NOT_EXIST:
+        (PayloadDoesNotExistError, PayloadDoesNotExistError.__doc__),
+    payload_registration_protos.UpdatePayloadAttachedResponse.STATUS_INVALID_CREDENTIALS:
+        (InvalidPayloadCredentialsError, InvalidPayloadCredentialsError.__doc__),
+    payload_registration_protos.UpdatePayloadAttachedResponse.STATUS_PAYLOAD_NOT_AUTHORIZED:
+        (PayloadNotAuthorizedError, PayloadNotAuthorizedError.__doc__),
+})
+
+
+# Function to parse all types of errors from update payload attached request
+@handle_common_header_errors
+@handle_unset_status_error(unset='STATUS_UNKNOWN')
+def _update_payload_attached_error(response):
+    """Return a custom exception based on response, None if no error."""
+    return error_factory(
+        response, response.status,
+        status_to_string=payload_registration_protos.UpdatePayloadAttachedResponse.Status.Name,
+        status_to_error=_UPDATE_PAYLOAD_ATTACHED_STATUS_TO_ERROR)
 
 
 class PayloadRegistrationKeepAlive(object):
@@ -291,7 +416,8 @@ class PayloadRegistrationKeepAlive(object):
             self.pay_reg_client.register_payload(self.payload, self.secret)
         except PayloadAlreadyExistsError as exc:
             # If the payload exists, log a warning and continue.
-            self.logger.warning('Got a "payload already exists" error: %s\nContinuing to start thread.', str(exc))
+            self.logger.warning(
+                'Got a "payload already exists" error: %s\nContinuing to start thread.', str(exc))
         else:
             self.logger.info('Payload registered.')
 

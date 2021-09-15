@@ -29,6 +29,9 @@ message DataAcquisitionCapability {
     // Channel name that will be associated with all data stored in the data buffer through
     // each data acquisition plugin. Metadata acquirers do not specify this field.
     string channel_name = 3;
+
+    // The data acquisition plugin service's service name used in directory registration.
+    string service_name = 4;
 }
 
 // Description of an image acquisition capability. The image acquisition capabilities will be available
@@ -98,6 +101,7 @@ message Metadata {
 // metadata that is associated with previously stored data.
 message AssociatedMetadata {
     // The data that this metadata refers to.
+    // The timestamp field is ignored.
     // If only the action_id is filled out, this metadata is associated with the entire capture action.
     DataIdentifier reference_id = 1;
 

@@ -28,6 +28,10 @@ class AudioCommands(Subcommands):
             AudioPlaySoundCommand,
             AudioDeleteSoundCommand,
             AudioLoadSoundCommand,
+            AudioGetAudioCaptureChannel,
+            AudioSetAudioCaptureChannel,
+            AudioGetAudioCaptureGain,
+            AudioSetAudioCaptureGain
         ])
 
 
@@ -122,3 +126,78 @@ class AudioLoadSoundCommand(Command):
         with open(options.src, 'rb') as fh:
             data = fh.read()
         robot.ensure_client(AudioClient.default_service_name).load_sound(sound, data)
+
+#
+# RPCs for Spot CAM+IR Only
+#
+
+class AudioGetAudioCaptureChannel(Command):
+    """Get the current microphone channel"""
+
+    NAME = 'get_capture_channel'
+
+    def __init__(self, subparsers, command_dict):
+        super(AudioGetAudioCaptureChannel, self).__init__(subparsers, command_dict)
+
+    def _run(self, robot, options):
+        channel = robot.ensure_client(AudioClient.default_service_name).get_audio_capture_channel()
+
+        return channel
+
+class AudioSetAudioCaptureChannel(Command):
+    """Set the microphone channel"""
+
+    NAME = 'set_capture_channel'
+
+    def __init__(self, subparsers, command_dict):
+        super(AudioSetAudioCaptureChannel, self).__init__(subparsers, command_dict)
+        self._parser.add_argument(
+            'channel_name', default='internal_mic', const='internal_mic', nargs='?',
+            choices=['internal_mic', 'external_mic'])
+
+    def _run(self, robot, options):
+        if options.channel_name == 'internal_mic':
+            channel = audio_pb2.AudioCaptureChannel.AUDIO_CHANNEL_INTERNAL_MIC
+        else:
+            channel = audio_pb2.AudioCaptureChannel.AUDIO_CHANNEL_EXTERNAL_MIC
+        return robot.ensure_client(AudioClient.default_service_name).set_audio_capture_channel(channel)
+
+class AudioGetAudioCaptureGain(Command):
+    """Get the current gain of the external microphone"""
+
+    NAME = 'get_capture_gain'
+
+    def __init__(self, subparsers, command_dict):
+        super(AudioGetAudioCaptureGain, self).__init__(subparsers, command_dict)
+        self._parser.add_argument(
+            'channel_name', default='external_mic', const='internal_mic', nargs='?',
+            choices=['internal_mic', 'external_mic'])
+
+    def _run(self, robot, options):
+        if options.channel_name == 'internal_mic':
+            channel = audio_pb2.AudioCaptureChannel.AUDIO_CHANNEL_INTERNAL_MIC
+        else:
+            channel = audio_pb2.AudioCaptureChannel.AUDIO_CHANNEL_EXTERNAL_MIC
+        gain = robot.ensure_client(AudioClient.default_service_name).get_audio_capture_gain(channel)
+
+        return gain
+
+class AudioSetAudioCaptureGain(Command):
+    """Adjust the gain from 0.0 to 1.0"""
+
+    NAME = 'set_capture_gain'
+
+    def __init__(self, subparsers, command_dict):
+        super(AudioSetAudioCaptureGain, self).__init__(subparsers, command_dict)
+        self._parser.add_argument(
+            'channel_name', default='external_mic', const='internal_mic', nargs='?',
+            choices=['internal_mic', 'external_mic'])
+        self._parser.add_argument('gain', help='Gain of the CAM\'s external microphone, 0.0 to 1.0')
+
+    def _run(self, robot, options):
+        gain = min(max(float(options.gain), 0.0), 1.0)
+        if options.channel_name == 'internal_mic':
+            channel = audio_pb2.AudioCaptureChannel.AUDIO_CHANNEL_INTERNAL_MIC
+        else:
+            channel = audio_pb2.AudioCaptureChannel.AUDIO_CHANNEL_EXTERNAL_MIC
+        return robot.ensure_client(AudioClient.default_service_name).set_audio_capture_gain(channel, gain)

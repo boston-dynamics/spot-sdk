@@ -8,8 +8,10 @@
 import copy
 import functools
 import logging
+import math
 import types
 import grpc
+import six
 import socket
 
 from .channel import TransportError, translate_exception
@@ -17,9 +19,11 @@ from .exceptions import Error, InternalServerError, InvalidRequestError, License
 
 _LOGGER = logging.getLogger(__name__)
 
+from bosdyn.api import data_chunk_pb2
 from bosdyn.api import license_pb2
 
 DEFAULT_RPC_TIMEOUT = 30  # seconds
+
 
 def common_header_errors(response):
     """Return an exception based on common response header. None if no error."""
@@ -187,6 +191,10 @@ def handle_lease_use_result_errors(func):
 
     return wrapper
 
+def maybe_raise(exc):
+    """raise the provided exception if it is not None"""
+    if exc is not None:
+        raise exc
 
 def print_response(func):
     """Decorate "error from response" functions to print for debugging specific messages."""
@@ -305,7 +313,9 @@ class BaseClient(object):
             # be thrown for streaming rpcs if any are going to occur.
             # Here we make sure that they're translated to our more meaningful exceptions.
             # Any ResponseErrors or other exception types can be let through untranslated.
-            raise translate_exception(e)
+            # Use the "raise from None" pattern to reset the exception's context, which produces
+            # confusing stack traces.
+            six.raise_from(translate_exception(e), None)
 
     @process_kwargs
     def call(self, rpc_method, request, value_from_response=None, error_from_response=None,
@@ -330,14 +340,16 @@ class BaseClient(object):
             timeout = kwargs.pop('timeout', DEFAULT_RPC_TIMEOUT)
             response = rpc_method(request, timeout=timeout, **kwargs)
         except TransportError as e:
-            raise translate_exception(e)
+            # Use the "raise from None" pattern to reset the exception's context, which produces
+            # confusing stack traces.
+            six.raise_from(translate_exception(e), None)
 
         if isinstance(rpc_method, grpc.UnaryStreamMultiCallable) or isinstance(
                 rpc_method, grpc.StreamStreamMultiCallable):
             # The outgoing response is a streaming response.
             response = self.update_response_iterator(response, logger, rpc_method, is_blocking=True)
-            return self.handle_response_streaming(
-                list(response), error_from_response, value_from_response)
+            return self.handle_response_streaming(list(response), error_from_response,
+                                                  value_from_response)
         else:
             response = self._apply_response_processors(response)
             logger.debug('response: %s %s', rpc_method._method,
@@ -350,7 +362,7 @@ class BaseClient(object):
         else:
             exc = None
         if exc is not None:
-            raise exc
+            raise exc  # pylint: disable=raising-bad-type
         if value_from_response is None:
             return response
         return value_from_response(response)
@@ -361,7 +373,7 @@ class BaseClient(object):
         else:
             exc = None
         if exc is not None:
-            raise exc
+            raise exc  # pylint: disable=raising-bad-type
         if value_from_response is None:
             return response
         return value_from_response(response)
@@ -419,6 +431,22 @@ class BaseClient(object):
             # This returns the same instance if it's been created before.
             return self.logger.getChild(method_name_short)
         return self.logger
+
+    @staticmethod
+    def chunk_message(message, data_chunk_byte_size):
+        """Take a message, and split it into data chunks
+        Args:
+            data_chunk_byte_size: max size of each streamed message
+        """
+        serialized = message.SerializeToString()
+        total_bytes_size = len(serialized)
+        num_chunks = math.ceil(total_bytes_size / data_chunk_byte_size)
+        for i in range(num_chunks):
+            start_index = i * data_chunk_byte_size
+            end_index = min(total_bytes_size, (i + 1) * data_chunk_byte_size)
+            chunk = data_chunk_pb2.DataChunk(total_size=total_bytes_size)
+            chunk.data = serialized[start_index:end_index]
+            yield chunk
 
 
 class FutureWrapper():

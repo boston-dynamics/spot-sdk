@@ -30,16 +30,12 @@ class ResponseError(Error):
 
 
 class InvalidRequestError(ResponseError):
-    """The provided request arguments are ill-formed or invalid.
-
-       This is programmer error, hence it should be fixed and not ignored.
-       This error does not depend on the state of the system."""
+    """The provided request arguments are ill-formed or invalid, independent of the system state."""
 
 
 class LeaseUseError(ResponseError):
-    """Request was rejected due to using an invalid lease.
+    """Request was rejected due to using an invalid lease."""
 
-       This is thrown by services outside of LeaseService."""
 
 class LicenseError(ResponseError):
     """Request was rejected due to using an invalid license."""
@@ -70,71 +66,83 @@ class RpcError(Error):
         return '{}: {}'.format(full_classname, self.error_message)
 
 
-class ClientCancelledOperationError(RpcError):
+class RetryableRpcError(RpcError):
+    """An RpcError that denotes the same request may succeed if retried."""
+
+
+class PersistentRpcError(RpcError):
+    """An RpcError that will almost certainly continue to keep failing if retried"""
+
+
+class ClientCancelledOperationError(PersistentRpcError):
     """The user cancelled the rpc request."""
 
 
-class InvalidAppTokenError(RpcError):
+class InvalidAppTokenError(PersistentRpcError):
     """The provided app token is invalid."""
 
 
-class InvalidClientCertificateError(RpcError):
+class InvalidClientCertificateError(PersistentRpcError):
     """The provided client certificate is invalid."""
 
 
-class NonexistentAuthorityError(RpcError):
+class NonexistentAuthorityError(PersistentRpcError):
     """The app token's authority field names a nonexistent service."""
 
 
-class PermissionDeniedError(RpcError):
+class PermissionDeniedError(PersistentRpcError):
     """The rpc request was denied access."""
 
 
-class ProxyConnectionError(RpcError):
+class ProxyConnectionError(RetryableRpcError):
     """The proxy on the robot could not be reached."""
 
 
-class ResponseTooLargeError(RpcError):
+class ResponseTooLargeError(RetryableRpcError):
     """The rpc response was larger than allowed max size."""
 
 
-class ServiceUnavailableError(RpcError):
+class ServiceUnavailableError(RetryableRpcError):
     """The proxy could not find the (possibly unregistered) service."""
 
 
-class ServiceFailedDuringExecutionError(RpcError):
+class TooManyRequestsError(RetryableRpcError):
+    """The remote procedure call did not go through the proxy due to rate limiting."""
+
+
+class ServiceFailedDuringExecutionError(RetryableRpcError):
     """The service encountered an unexpected failure."""
 
 
-class TimedOutError(RpcError):
+class TimedOutError(RetryableRpcError):
     """The remote procedure call did not terminate within the allotted time."""
 
 
-class UnableToConnectToRobotError(RpcError):
+class UnableToConnectToRobotError(RetryableRpcError):
     """The robot may be offline or otherwise unreachable."""
 
 
 class RetryableUnavailableError(UnableToConnectToRobotError):
-    """gRPC service unavailable. Likely transient and can be resolved by retrying the request."""
+    """Service unavailable or channel reset. Likely transient and can be resolved by retrying."""
 
 
-class UnauthenticatedError(RpcError):
+class UnauthenticatedError(PersistentRpcError):
     """The user needs to authenticate or does not have permission to access requested service."""
 
 
-class UnknownDnsNameError(RpcError):
+class UnknownDnsNameError(PersistentRpcError):
     """The system is unable to translate the domain name."""
 
 
-class NotFoundError(RpcError):
+class NotFoundError(PersistentRpcError):
     """The backend system could not be found."""
 
 
-class UnimplementedError(RpcError):
+class UnimplementedError(PersistentRpcError):
     """The API does not recognize the request and is unable to complete the request."""
 
 
-class TransientFailureError(RpcError):
+class TransientFailureError(RetryableRpcError):
     """The channel is in state TRANSIENT_FAILURE, often caused by a connection failure."""
 
 

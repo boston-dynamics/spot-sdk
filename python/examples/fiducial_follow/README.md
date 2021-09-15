@@ -38,18 +38,6 @@ On Linux, follow the instructions below to build the apriltag repository correct
 - The `make install` command of the external apriltag repo instructions will install the shared library and requires `LD_LIBRARY_PATH=/usr/local/lib` to be set.
 - For running the example in a virtualenv named `venv`, copy `apriltag.cpython-36m-x86_64-linux-gnu.so` from `~/.local/lib/python3.7/site-packages/` to `venv/lib/python3.7/site-packages/`. Note that "python3.7" is a placeholder for your system's python version.
 
-On MacOS, follow the instructions below to build the apriltag repository correctly:
-- Install cmake if it is not installed.
-- Run `open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg` to install missing `stdio.h` file. The name of the `pkg` file might be different, depending on the MacOS version.
-- Clone the apriltag git repository referenced above.
-- Open the CMakeLists.txt and:
-  - Remove `,-rpath=lib`
-  - Replace libapriltag.so with libapriltag.dylib
-- Run cmake and make commands as specified in the apriltag README file
-- Copy the compiled apriltag library into your python site-packages folder. For example, if you configure a virtualenv named `venv`, execute this command `cp /Users/apitester/.local/lib/python3.7/site-packages/apriltag.cpython-37m-darwin.so venv/lib/python3.7/site-packages/`
-
-Note, in these instructions, the filepath `/Users/apitester/.local/lib/python3.7/site-packages/` represents the folder where the apriltag github library installs by default on MacOS, and it includes "apitester" as a placeholder for your system username, and "python3.7" as a placeholder for your system's python version.
-
 This example is not supported on Windows OS if you want to use the external apriltag library. However, the example can be run using the world object service.
 
 
@@ -61,6 +49,8 @@ The example depends on an external E-Stop endpoint application to configure E-St
 ### Run Follow Fiducial Example
 
 **Warning:** by default, obstacle avoidance is disabled so that the robot can walk to exactly to the location of the tag if necessary. This means the robot will get very close to walls or any people holding April Tags if the tag remains stationary while the program continues to iterate. Obstacle avoidance can be re-enabled, however this can prevent Spot from fully achieving the goal point (of the April Tag location).
+
+Note: this example can only be run on Windows and Linux; Mac OS is not supported explicitly.
 
 To run the example:
 ```

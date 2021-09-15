@@ -16,13 +16,24 @@ from bosdyn.client.lease import LeaseState
 from bosdyn.client.lease import LeaseWallet
 from bosdyn.client.lease import NoSuchLease
 from bosdyn.client.lease import LeaseNotOwnedByWallet
+from bosdyn.client.lease import test_active_lease as active_lease_test
 from bosdyn.api import lease_pb2 as LeaseProto
+
 
 LLAMA = 'llama'
 MESO = 'mesozoic'
 SEQ = [500, 20, 9000]
 
 # Start of Lease object tests.
+
+
+@pytest.fixture
+def body_lease_proto():
+    proto = LeaseProto.Lease()
+    proto.resource = 'body'
+    proto.sequence[:] = [1]
+    proto.epoch = 'epoch'
+    return proto
 
 
 def _check_lease(expected_resource, expected_epoch, expected_sequence, actual_lease):
@@ -75,10 +86,24 @@ def test_good_constructor():
 
 
 def test_compare_different_resource():
+    client_name = 'testname'
     lease_a = _create_lease(LLAMA, MESO, SEQ)
     lease_b = _create_lease('koala', MESO, SEQ)
     assert Lease.CompareResult.DIFFERENT_RESOURCES == lease_a.compare(lease_b)
     assert Lease.CompareResult.DIFFERENT_RESOURCES == lease_b.compare(lease_a)
+
+    # Test comparison with function that returns a lease use result and sublease of the incoming lease.
+    lease_use_result, incoming_lease_subleased = active_lease_test(lease_a.lease_proto, lease_b,
+                                                                   client_name)
+    assert lease_use_result.status == LeaseProto.LeaseUseResult.STATUS_UNMANAGED
+    assert lease_use_result.attempted_lease.sequence == lease_a.lease_proto.sequence
+    # latest known lease is the "active lease":lease_b since incoming lease failed checks.
+    assert lease_use_result.latest_known_lease.sequence == lease_b.lease_proto.sequence
+    assert len(incoming_lease_subleased.lease_proto.sequence) > len(
+        lease_a.lease_proto.sequence)  # subleases
+    assert incoming_lease_subleased.lease_proto.resource == lease_a.lease_proto.resource
+    assert incoming_lease_subleased.lease_proto.epoch == lease_a.lease_proto.epoch
+    assert incoming_lease_subleased.lease_proto.client_names[-1] == client_name
 
 
 def test_compare_different_epoch():
@@ -87,12 +112,34 @@ def test_compare_different_epoch():
     assert Lease.CompareResult.DIFFERENT_EPOCHS == lease_a.compare(lease_b)
     assert Lease.CompareResult.DIFFERENT_EPOCHS == lease_b.compare(lease_a)
 
+    # Test comparison with function that returns a lease use result and sublease of the incoming lease.
+    lease_use_result, incoming_lease_subleased = active_lease_test(lease_a.lease_proto, lease_b, '')
+    assert lease_use_result.status == LeaseProto.LeaseUseResult.STATUS_WRONG_EPOCH
+    assert lease_use_result.attempted_lease.sequence == lease_a.lease_proto.sequence
+    # latest known lease is the "active lease":lease_b since incoming lease failed checks.
+    assert lease_use_result.latest_known_lease.sequence == lease_b.lease_proto.sequence
+    assert len(incoming_lease_subleased.lease_proto.sequence) > len(
+        lease_a.lease_proto.sequence)  # subleases
+    assert incoming_lease_subleased.lease_proto.resource == lease_a.lease_proto.resource
+    assert incoming_lease_subleased.lease_proto.epoch == lease_a.lease_proto.epoch
+
 
 def test_compare_same():
     lease_a = _create_lease(LLAMA, MESO, SEQ)
     lease_b = _create_lease(LLAMA, MESO, SEQ)
     assert Lease.CompareResult.SAME == lease_a.compare(lease_b)
     assert Lease.CompareResult.SAME == lease_b.compare(lease_a)
+
+    # Test comparison with function that returns a lease use result and sublease of the incoming lease.
+    lease_use_result, incoming_lease_subleased = active_lease_test(lease_a.lease_proto, lease_b, '')
+    assert lease_use_result.status == LeaseProto.LeaseUseResult.STATUS_OK
+    assert lease_use_result.attempted_lease.sequence == lease_a.lease_proto.sequence
+    # latest known lease is the sublease of lease_a, make sure the initial part of the sequence matches.
+    assert lease_use_result.latest_known_lease.sequence[:-1] == lease_a.lease_proto.sequence
+    assert len(incoming_lease_subleased.lease_proto.sequence) > len(
+        lease_a.lease_proto.sequence)  # subleases
+    assert incoming_lease_subleased.lease_proto.resource == lease_a.lease_proto.resource
+    assert incoming_lease_subleased.lease_proto.epoch == lease_a.lease_proto.epoch
 
 
 def test_compare_different_first_element():
@@ -102,6 +149,27 @@ def test_compare_different_first_element():
     lease_b = _create_lease(LLAMA, MESO, seq_b)
     assert Lease.CompareResult.OLDER == lease_a.compare(lease_b)
     assert Lease.CompareResult.NEWER == lease_b.compare(lease_a)
+
+    # Test comparison with function that returns a lease use result and sublease of the incoming lease.
+    lease_use_result, incoming_lease_subleased = active_lease_test(lease_a.lease_proto, lease_b, '')
+    assert lease_use_result.status == LeaseProto.LeaseUseResult.STATUS_OLDER
+    assert lease_use_result.attempted_lease.sequence == lease_a.lease_proto.sequence
+    # latest known lease is the "active lease":lease_b since incoming lease failed checks.
+    assert lease_use_result.latest_known_lease.sequence == lease_b.lease_proto.sequence
+    assert len(incoming_lease_subleased.lease_proto.sequence) > len(
+        lease_a.lease_proto.sequence)  # subleases
+    assert incoming_lease_subleased.lease_proto.resource == lease_a.lease_proto.resource
+    assert incoming_lease_subleased.lease_proto.epoch == lease_a.lease_proto.epoch
+
+    lease_use_result, incoming_lease_subleased = active_lease_test(lease_b.lease_proto, lease_a, '')
+    assert lease_use_result.status == LeaseProto.LeaseUseResult.STATUS_OK
+    assert lease_use_result.attempted_lease.sequence == lease_b.lease_proto.sequence
+    # latest known lease is the sublease of lease_b, make sure the initial part of the sequence matches.
+    assert lease_use_result.latest_known_lease.sequence[:-1] == lease_b.lease_proto.sequence
+    assert len(incoming_lease_subleased.lease_proto.sequence) > len(
+        lease_b.lease_proto.sequence)  # subleases
+    assert incoming_lease_subleased.lease_proto.resource == lease_b.lease_proto.resource
+    assert incoming_lease_subleased.lease_proto.epoch == lease_b.lease_proto.epoch
 
 
 def test_compare_different_second_element():
@@ -129,6 +197,36 @@ def test_compare_manual_sub_lease():
     lease_b = _create_lease(LLAMA, MESO, seq_b)
     assert Lease.CompareResult.SUPER_LEASE == lease_a.compare(lease_b)
     assert Lease.CompareResult.SUB_LEASE == lease_b.compare(lease_a)
+
+    # Test comparison with function that returns a lease use result and sublease of the incoming lease.
+    # Note, by default the function does not allow super leases and will consider a super lease older.
+    lease_use_result, incoming_lease_subleased = active_lease_test(lease_a.lease_proto, lease_b)
+    assert lease_use_result.status == LeaseProto.LeaseUseResult.STATUS_OLDER
+    assert lease_use_result.attempted_lease.sequence == lease_a.lease_proto.sequence
+    assert lease_use_result.latest_known_lease.sequence == lease_b.lease_proto.sequence
+    assert len(incoming_lease_subleased.lease_proto.sequence) == len(
+        lease_a.lease_proto.sequence)  # didn't make a sublease.
+    assert incoming_lease_subleased.lease_proto.resource == lease_a.lease_proto.resource
+    assert incoming_lease_subleased.lease_proto.epoch == lease_a.lease_proto.epoch
+
+    lease_use_result, incoming_lease_subleased = active_lease_test(lease_a.lease_proto, lease_b,
+                                                                   allow_super_leases=True)
+    assert lease_use_result.status == LeaseProto.LeaseUseResult.STATUS_OK
+    assert lease_use_result.attempted_lease.sequence == lease_a.lease_proto.sequence
+    assert lease_use_result.latest_known_lease.sequence == lease_b.lease_proto.sequence
+    assert len(incoming_lease_subleased.lease_proto.sequence) == len(
+        lease_a.lease_proto.sequence)  # didn't make a sublease
+    assert incoming_lease_subleased.lease_proto.resource == lease_a.lease_proto.resource
+    assert incoming_lease_subleased.lease_proto.epoch == lease_a.lease_proto.epoch
+
+    lease_use_result, incoming_lease_subleased = active_lease_test(lease_b.lease_proto, lease_a, '')
+    assert lease_use_result.status == LeaseProto.LeaseUseResult.STATUS_OK
+    assert lease_use_result.attempted_lease.sequence == lease_b.lease_proto.sequence
+    assert lease_use_result.latest_known_lease.sequence[:-1] == lease_b.lease_proto.sequence
+    assert len(incoming_lease_subleased.lease_proto.sequence) > len(
+        lease_b.lease_proto.sequence)  # subleases
+    assert incoming_lease_subleased.lease_proto.resource == lease_b.lease_proto.resource
+    assert incoming_lease_subleased.lease_proto.epoch == lease_b.lease_proto.epoch
 
 
 def test_compare_auto_sub_lease():
@@ -476,3 +574,28 @@ def test_lease_keep_alive_shutdown():
     # A second shutdown should also work, even if it is a no-op.
     keep_alive.shutdown()
     assert not keep_alive.is_alive()
+
+
+def test_lease_compare_result_to_status():
+    # Test the implicit conversion between CompareResult enum and LeaseUseResult status enum.
+    assert Lease.compare_result_to_lease_use_result_status(
+        Lease.CompareResult.SAME, False) == LeaseProto.LeaseUseResult.STATUS_OK
+    assert Lease.compare_result_to_lease_use_result_status(
+        Lease.CompareResult.SUPER_LEASE, False) == LeaseProto.LeaseUseResult.STATUS_OLDER
+    assert Lease.compare_result_to_lease_use_result_status(
+        Lease.CompareResult.SUPER_LEASE, True) == LeaseProto.LeaseUseResult.STATUS_OK
+    assert Lease.compare_result_to_lease_use_result_status(
+        Lease.CompareResult.SUB_LEASE, False) == LeaseProto.LeaseUseResult.STATUS_OK
+    assert Lease.compare_result_to_lease_use_result_status(
+        Lease.CompareResult.NEWER, False) == LeaseProto.LeaseUseResult.STATUS_OK
+    assert Lease.compare_result_to_lease_use_result_status(
+        Lease.CompareResult.OLDER, False) == LeaseProto.LeaseUseResult.STATUS_OLDER
+    assert Lease.compare_result_to_lease_use_result_status(
+        Lease.CompareResult.DIFFERENT_RESOURCES,
+        False) == LeaseProto.LeaseUseResult.STATUS_UNMANAGED
+    assert Lease.compare_result_to_lease_use_result_status(
+        Lease.CompareResult.DIFFERENT_EPOCHS, False) == LeaseProto.LeaseUseResult.STATUS_WRONG_EPOCH
+
+    with pytest.raises(Exception):
+        Lease.compare_result_to_lease_use_result_status(100, False)
+

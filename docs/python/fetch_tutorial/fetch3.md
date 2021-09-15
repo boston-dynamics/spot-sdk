@@ -132,7 +132,7 @@ import threading
 from google.protobuf import wrappers_pb2
 from object_detection.utils import label_map_util
 
-kServiceAuthority = "auth.spot.robot"
+kServiceAuthority = "fetch-tutorial-worker.spot.robot"
 
 </code></pre>
 
@@ -578,7 +578,7 @@ python -m bosdyn.client 192.168.80.3 --username user --password YOUR_ROBOTS_PASS
 <pre><code class="language-text">name                       type                                                      authority                             tokens
 --------------------------------------------------------------------------------------------------------------------------------
 [...]
-fetch-server              bosdyn.api.NetworkComputeBridgeWorker                     auth.spot.robot                       user
+fetch-server              bosdyn.api.NetworkComputeBridgeWorker                     fetch-tutorial-worker.spot.robot      user
 [...]
 </code></pre>
 

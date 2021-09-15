@@ -15,15 +15,20 @@ from bosdyn.client.spot_cam.media_log import MediaLogClient
 
 from bosdyn.api.spot_cam import logging_pb2, camera_pb2
 
+
 def add_bool_arg(parser, name, default=False, prefix=('disable', 'enable')):
     feature_parser = parser.add_mutually_exclusive_group(required=False)
     stripped_name = name.replace('-', '_')
-    feature_parser.add_argument('--{}-{}'.format(prefix[1], name), dest=stripped_name, action='store_true')
-    feature_parser.add_argument('--{}-{}'.format(prefix[0], name), dest=stripped_name, action='store_false')
+    feature_parser.add_argument('--{}-{}'.format(prefix[1], name), dest=stripped_name,
+                                action='store_true')
+    feature_parser.add_argument('--{}-{}'.format(prefix[0], name), dest=stripped_name,
+                                action='store_false')
     feature_parser.set_defaults(**{stripped_name: default})
+
 
 def ip2int(addr):
     return struct.unpack("!I", socket.inet_aton(addr))[0]
+
 
 def int2ip(addr):
     return socket.inet_ntoa(struct.pack("!I", addr))
@@ -70,9 +75,10 @@ class UtilitySaveCalibrationCommand(Command):
                 q = Quat(camera.base_tfrom_sensor.rotation.w, camera.base_tfrom_sensor.rotation.x,
                          camera.base_tfrom_sensor.rotation.y, camera.base_tfrom_sensor.rotation.z)
                 R = q.to_matrix()
-                T = [camera.base_tfrom_sensor.position.x,
-                     camera.base_tfrom_sensor.position.y,
-                     camera.base_tfrom_sensor.position.z]
+                T = [
+                    camera.base_tfrom_sensor.position.x, camera.base_tfrom_sensor.position.y,
+                    camera.base_tfrom_sensor.position.z
+                ]
 
                 for i in range(3):
                     for j in range(3):

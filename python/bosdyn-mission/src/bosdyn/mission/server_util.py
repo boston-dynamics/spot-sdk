@@ -10,11 +10,9 @@ from bosdyn.api import header_pb2
 from deprecated import deprecated
 
 
-@deprecated(
-    reason='The ResponseContext helper class has moved to a common location. Please use '
-           'bosdyn.client.util.ResponseContext.',
-    version='2.3.5',
-    action="always")
+
+@deprecated(reason='The ResponseContext helper class has moved to a common location. Please use '
+            'bosdyn.client.server_util.ResponseContext.', version='2.3.5', action="always")
 class ResponseContext(object):
 
     def __init__(self, response, request, rpc_logger=None):
@@ -36,13 +34,7 @@ class ResponseContext(object):
             self.rpc_logger.add_protobuf_async(self.response)
 
 
-def set_response_header(response, request, error_code=header_pb2.CommonError.CODE_OK,
-                        error_message=None):
-    """Sets the ResponseHeader header in the response."""
-    header = header_pb2.ResponseHeader()
-    header.request_received_timestamp = bosdyn.util.now_timestamp()
-    header.request_header.CopyFrom(request.header)
-    header.error.code = error_code
-    if error_message:
-        header.error.message = error_message
-    response.header.CopyFrom(header)
+set_response_header = deprecated(
+    reason='The bosdyn.mission.set_response_header helper class has moved to a common '
+    'location. Please use bosdyn.client.server_util.populate_response_header.', version='3.0.0',
+    action="always")(bosdyn.client.server_util.populate_response_header)

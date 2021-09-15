@@ -52,6 +52,7 @@ class DataAcquisitionPluginClient(BaseClient):
 
         Raises:
           RpcError: Problem communicating with the robot.
+          ValueError: Metadata is not in the right format.
 
         Returns:
             If the RPC is successful, then it will return the acquire data response, which can be
@@ -66,7 +67,7 @@ class DataAcquisitionPluginClient(BaseClient):
                          error_from_response=acquire_data_error, **kwargs)
 
     def acquire_plugin_data_async(self, acquisition_requests, action_id, data_identifiers=None,
-        metadata=None, **kwargs):
+                                  metadata=None, **kwargs):
         """Async version of the acquire_plugin_data() RPC."""
 
         metadata_proto = metadata_to_proto(metadata)

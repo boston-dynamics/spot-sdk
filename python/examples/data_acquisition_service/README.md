@@ -30,7 +30,6 @@ To run a plugin service from this example directory, issue the command:
 ```
 python3 {PLUGIN_FILE_NAME} --guid {GUID} --secret {SECRET} --host-ip {IP_WHERE_PLUGIN_WILL_RUN} --port {PORT_THE_PLUGIN_WILL_MONITOR} {ROBOT_IP}
 ```
-Note: The pointcloud plugin will require you to pass the registered service name. You can find this by running `python -m bosdyn.client --username {USER} --password {PASSWORD} {ROBOT_IP} dir list`
 
 This example takes two different IP addresses as arguments. The `--host-ip` argument describes the IP address for the computer that will be running the data acquisition plugin service. A helper exists to try to determine the correct IP address. This command must be run on the same computer that will be running the plugin service:
 ```
@@ -49,6 +48,25 @@ Lastly, port numbers for the example plugin services can be specified using the 
 The network ports used by the services can be opened by running this command on the host computer (Linux):
 ```
 sudo ufw allow {PORT_NUMBER}
+```
+
+### Point Cloud and Network Compute Bridge Plugins
+The pointcloud and network compute bridge plugin will require you to pass the associated registered service name. You can find this by running:
+```
+python -m bosdyn.client --username {USER} --password {PASSWORD} {ROBOT_IP} dir list`
+```
+This will list all the services registered to the robot.  Use `--pointcloud-service` to provide the registered service name for pointcloud plugin.  Use `---worker-name` to provide the registered service name for network compute bridge plugin.
+
+For example, if a network compute bridge plugin is needed for a `fire-extinguisher-server`, the registered service name would show up in the directory list like the following:
+```
+name                                 type                                                      authority                                       tokens
+----------------------------------------------------------------------------------------------------------------------------------------------------
+fire-extinguisher-server             bosdyn.api.NetworkComputeBridgeWorker                     auth.spot.robot                                 user
+```
+
+The command to start the network compute bridge pluging would be:
+```
+python3 {PLUGIN_FILE_NAME} --guid {GUID} --secret {SECRET} --host-ip {IP_WHERE_PLUGIN_WILL_RUN} --port {PORT_THE_PLUGIN_WILL_MONITOR} --worker-name fire-extinguisher-server {ROBOT_IP}
 ```
 
 ## Testing the Data Acquisition Plugin

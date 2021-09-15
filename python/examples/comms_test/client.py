@@ -37,21 +37,24 @@ from bosdyn.mission.client import MissionClient
 
 LOGGER = logging.getLogger(__name__)
 
+
 def is_docker():
     path = '/proc/self/cgroup'
-    return (
-        os.path.exists('/.dockerenv') or
-        os.path.isfile(path) and any('docker' in line for line in open(path)))
+    return (os.path.exists('/.dockerenv') or
+            os.path.isfile(path) and any('docker' in line for line in open(path)))
+
 
 def _update_thread(async_task):
     while True:
         async_task.update()
         time.sleep(0.01)
 
+
 def create_csv_filename(test_protocol):
     if is_docker():
         return f'/comms_out/comms_test_out_{test_protocol}{time.strftime("%Y%m%d-%H%M%S")}.csv'
     return f'comms_test_out_{test_protocol}{time.strftime("%Y%m%d-%H%M%S")}.csv'
+
 
 def check_ping(server_hostname):
     cmd = ['ping', '-c', '1', '-w', '1', server_hostname]
@@ -73,6 +76,8 @@ def check_ping(server_hostname):
     except Exception as e:
         print(e)
         return None
+
+
 class AsyncRobotState(AsyncPeriodicQuery):
     """Grab robot state."""
 
@@ -83,15 +88,17 @@ class AsyncRobotState(AsyncPeriodicQuery):
     def _start_query(self):
         return self._client.get_robot_state_async()
 
+
 class AsyncMissionState(AsyncPeriodicQuery):
     """Grab mission state."""
 
     def __init__(self, mission_client):
         super(AsyncMissionState, self).__init__("mission_state", mission_client, LOGGER,
-                                              period_sec=0.2)
+                                                period_sec=0.2)
 
     def _start_query(self):
         return self._client.get_state_async()
+
 
 def main(argv):
     parser = argparse.ArgumentParser()
@@ -108,7 +115,7 @@ def main(argv):
     options = parser.parse_args(argv)
 
     sdk = bosdyn.client.create_standard_sdk('CommsTestingClient', [MissionClient])
-    robot = sdk.create_robot(options.hostname) #ROBOT_IP
+    robot = sdk.create_robot(options.hostname)  #ROBOT_IP
     robot.authenticate(options.username, options.password)
     robot.sync_with_directory()
 
@@ -179,14 +186,16 @@ def main(argv):
                                 'recv throughput(Mbps)': -1,
                                 'jitter(ms)': result.jitter_ms,
                                 'lost(%)': result.lost_percent,
-                                'retransmits': -1})
+                                'retransmits': -1
+                            })
                         elif options.protocol == 'tcp':
                             data_entry.update({
                                 'send throughput(Mbps)': result.sent_Mbps,
                                 'recv throughput(Mbps)': result.received_Mbps,
                                 'jitter(ms)': -1,
                                 'lost(%)': -1,
-                                'retransmits': result.retransmits})
+                                'retransmits': result.retransmits
+                            })
                         data_list.append(data_entry)
                         print(data_list[-1])
 
@@ -206,6 +215,7 @@ def main(argv):
     except KeyboardInterrupt:
         print("Caught KeyboardInterrupt, exiting")
         return True
+
 
 if __name__ == '__main__':
     if not main(sys.argv[1:]):

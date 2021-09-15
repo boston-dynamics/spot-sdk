@@ -156,6 +156,7 @@ def hello_arm(config):
         # If we successfully acquired a lease, return it.
         lease_client.return_lease(lease)
 
+
 def block_until_arm_arrives_with_prints(robot, command_client, cmd_id):
     """Block until the arm arrives at the goal and print the distance remaining.
         Note: a version of this function is available as a helper in robot_command
@@ -163,12 +164,19 @@ def block_until_arm_arrives_with_prints(robot, command_client, cmd_id):
     """
     while True:
         feedback_resp = command_client.robot_command_feedback(cmd_id)
-        robot.logger.info('Distance to go: ' + '{:.2f} meters'.format(feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_cartesian_feedback.measured_pos_distance_to_goal) + ', {:.2f} radians'.format(feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_cartesian_feedback.measured_rot_distance_to_goal))
+        robot.logger.info(
+            'Distance to go: ' +
+            '{:.2f} meters'.format(feedback_resp.feedback.synchronized_feedback.arm_command_feedback
+                                   .arm_cartesian_feedback.measured_pos_distance_to_goal) +
+            ', {:.2f} radians'.format(
+                feedback_resp.feedback.synchronized_feedback.arm_command_feedback.
+                arm_cartesian_feedback.measured_rot_distance_to_goal))
 
         if feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_cartesian_feedback.status == arm_command_pb2.ArmCartesianCommand.Feedback.STATUS_TRAJECTORY_COMPLETE:
             robot.logger.info('Move complete.')
             break
         time.sleep(0.1)
+
 
 def main(argv):
     """Command line interface."""

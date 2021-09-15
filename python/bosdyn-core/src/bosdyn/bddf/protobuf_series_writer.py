@@ -6,8 +6,9 @@
 
 """Class for registering a series which stores protobuf messages in a message series."""
 
-from . bosdyn import MessageChannel
-from . common import PROTOBUF_CONTENT_TYPE
+from .bosdyn import MessageChannel
+from .common import PROTOBUF_CONTENT_TYPE
+
 
 class ProtobufSeriesWriter:  # pylint: disable=too-many-instance-attributes
     """A class for registering a series which stores protobuf messages in a message series.

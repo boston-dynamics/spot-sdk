@@ -27,6 +27,7 @@ def get_comments(config):
     query.comments = True
     print(service_client.get_events_comments(query))
 
+
 def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()

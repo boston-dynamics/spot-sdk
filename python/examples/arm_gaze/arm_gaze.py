@@ -14,7 +14,7 @@ import bosdyn.client
 import bosdyn.client.lease
 import bosdyn.client.util
 
-from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder, blocking_stand
+from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder, blocking_stand, block_until_arm_arrives
 from bosdyn.client.frame_helpers import *
 from bosdyn.client.robot_state import RobotStateClient
 from bosdyn.client import math_helpers
@@ -158,10 +158,11 @@ def gaze_control(config):
             synchro_command = RobotCommandBuilder.build_synchro_command(gripper_command, command)
 
             # Send the request
-            command_client.robot_command(command)
+            gaze_cmd_id = command_client.robot_command(command)
             robot.logger.info('Sending gaze trajectory.')
 
-            time.sleep(traj_time + 3.0)
+            # Wait until the robot completes the gaze before issuing the next command.
+            block_until_arm_arrives(command_client, gaze_cmd_id, timeout_sec=traj_time+3.0)
 
             # ------------- #
 
@@ -222,10 +223,11 @@ def gaze_control(config):
             synchro_command = RobotCommandBuilder.build_synchro_command(gripper_command, command)
 
             # Send the request
-            command_client.robot_command(synchro_command)
+            gaze_cmd_id = command_client.robot_command(synchro_command)
             robot.logger.info('Sending gaze trajectory with hand movement.')
 
-            time.sleep(traj_time + 3.0)
+            # Wait until the robot completes the gaze before powering off.
+            block_until_arm_arrives(command_client, gaze_cmd_id, timeout_sec=traj_time+3.0)
 
             # Power the robot off. By specifying "cut_immediately=False", a safe power off command
             # is issued to the robot. This will attempt to sit the robot before powering off.

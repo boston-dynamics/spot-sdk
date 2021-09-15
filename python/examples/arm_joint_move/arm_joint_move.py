@@ -15,7 +15,7 @@ import bosdyn.client.estop
 import bosdyn.client.lease
 import bosdyn.client.util
 
-from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder, blocking_stand
+from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder, blocking_stand, block_until_arm_arrives
 from bosdyn.client.robot_state import RobotStateClient
 from bosdyn.client.estop import EstopClient
 from bosdyn.client import math_helpers
@@ -27,7 +27,7 @@ from bosdyn.api import robot_command_pb2
 from google.protobuf import wrappers_pb2
 from bosdyn.client.frame_helpers import *
 from bosdyn.api import geometry_pb2
-from bosdyn.util import seconds_to_duration
+from bosdyn.util import duration_to_seconds
 
 import traceback
 import time
@@ -44,12 +44,37 @@ def verify_estop(robot):
         raise Exception(error_message)
 
 
-def to_double_val(val):
-    return wrappers_pb2.DoubleValue(value=val)
+def make_robot_command(arm_joint_traj):
+    """ Helper function to create a RobotCommand from an ArmJointTrajectory. 
+        The returned command will be a SynchronizedCommand with an ArmJointMoveCommand
+        filled out to follow the passed in trajectory. """
+
+    joint_move_command = arm_command_pb2.ArmJointMoveCommand.Request(trajectory=arm_joint_traj)
+    arm_command = arm_command_pb2.ArmCommand.Request(arm_joint_move_command=joint_move_command)
+    sync_arm = synchronized_command_pb2.SynchronizedCommand.Request(arm_command=arm_command)
+    arm_sync_robot_cmd = robot_command_pb2.RobotCommand(synchronized_command=sync_arm)
+    return RobotCommandBuilder.build_synchro_command(arm_sync_robot_cmd)
+
+
+def print_feedback(feedback_resp, logger):
+    """ Helper function to query for ArmJointMove feedback, and print it to the console.
+        Returns the time_to_goal value reported in the feedback """
+    joint_move_feedback = feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_joint_move_feedback
+    logger.info(f'  planner_status = {joint_move_feedback.planner_status}')
+    logger.info(
+        f'  time_to_goal = {duration_to_seconds(joint_move_feedback.time_to_goal):.2f} seconds.')
+
+    # Query planned_points to determine target pose of arm
+    logger.info('  planned_points:')
+    for idx, points in enumerate(joint_move_feedback.planned_points):
+        pos = points.position
+        pos_str = f'sh0 = {pos.sh0.value:.3f}, sh1 = {pos.sh1.value:.3f}, el0 = {pos.el0.value:.3f}, el1 = {pos.el1.value:.3f}, wr0 = {pos.wr0.value:.3f}, wr1 = {pos.wr1.value:.3f}'
+        logger.info(f'    {idx}: {pos_str}')
+    return duration_to_seconds(joint_move_feedback.time_to_goal)
 
 
 def joint_move_example(config):
-    """A simple example of using the Boston Dynamics API to command Spot's arm."""
+    """A simple example of using the Boston Dynamics API to command Spot's arm to perform joint moves."""
 
     # See hello_spot.py for an explanation of these lines.
     bosdyn.client.util.setup_logging(config.verbose)
@@ -90,38 +115,86 @@ def joint_move_example(config):
 
             time.sleep(2.0)
 
-            # Do a joint move to move the arm around.
-            sh0 = wrappers_pb2.DoubleValue(value=0.0692)
-            sh1 = wrappers_pb2.DoubleValue(value=-1.882)
-            el0 = wrappers_pb2.DoubleValue(value=1.652)
-            el1 = wrappers_pb2.DoubleValue(value=-0.0691)
-            wr0 = wrappers_pb2.DoubleValue(value=1.622)
-            wr1 = wrappers_pb2.DoubleValue(value=1.550)
+            # Example 1: issue a single point trajectory without a time_since_reference in order to perform
+            # a minimum time joint move to the goal obeying the default acceleration and velocity limits.
+            sh0 = 0.0692
+            sh1 = -1.882
+            el0 = 1.652
+            el1 = -0.0691
+            wr0 = 1.622
+            wr1 = 1.550
 
-            # Build up a proto.
-            joint_position1 = arm_command_pb2.ArmJointPosition(sh0=sh0, sh1=sh1, el0=el0, el1=el1,
-                                                               wr0=wr0, wr1=wr1)
-
-            traj_point = arm_command_pb2.ArmJointTrajectoryPoint(position=joint_position1)
+            traj_point = RobotCommandBuilder.create_arm_joint_trajectory_point(
+                sh0, sh1, el0, el1, wr0, wr1)
             arm_joint_traj = arm_command_pb2.ArmJointTrajectory(points=[traj_point])
-            joint_move_command = arm_command_pb2.ArmJointMoveCommand.Request(
-                trajectory=arm_joint_traj)
-            arm_command = arm_command_pb2.ArmCommand.Request(
-                arm_joint_move_command=joint_move_command)
-            sync_arm = synchronized_command_pb2.SynchronizedCommand.Request(arm_command=arm_command)
-            arm_sync_robot_cmd = robot_command_pb2.RobotCommand(synchronized_command=sync_arm)
-
-            # Make the open gripper RobotCommand
-            gripper_command = RobotCommandBuilder.claw_gripper_open_fraction_command(1.0)
-
-            # Combine the arm and gripper commands into one RobotCommand
-            command = RobotCommandBuilder.build_synchro_command(gripper_command, arm_sync_robot_cmd)
+            # Make a RobotCommand
+            command = make_robot_command(arm_joint_traj)
 
             # Send the request
-            command_client.robot_command(command)
+            cmd_id = command_client.robot_command(command)
             robot.logger.info('Moving arm to position 1.')
 
-            time.sleep(4.0)
+            # Query for feedback to determine how long the goto will take.
+            feedback_resp = command_client.robot_command_feedback(cmd_id)
+            robot.logger.info("Feedback for Example 1: single point goto")
+            time_to_goal = print_feedback(feedback_resp, robot.logger)
+            time.sleep(time_to_goal)
+
+            # Example 2: Single point trajectory with maximum acceleration/velocity constraints specified such
+            # that the solver has to modify the desired points to honor the constraints
+            sh0 = 0.0
+            sh1 = -2.0
+            el0 = 2.6
+            el1 = 0.0
+            wr0 = -0.6
+            wr1 = 0.0
+            max_vel = wrappers_pb2.DoubleValue(value=1)
+            max_acc = wrappers_pb2.DoubleValue(value=5)
+            traj_point = RobotCommandBuilder.create_arm_joint_trajectory_point(
+                sh0, sh1, el0, el1, wr0, wr1, time_since_reference_secs=1.5)
+            arm_joint_traj = arm_command_pb2.ArmJointTrajectory(points=[traj_point],
+                                                                maximum_velocity=max_vel,
+                                                                maximum_acceleration=max_acc)
+            # Make a RobotCommand
+            command = make_robot_command(arm_joint_traj)
+
+            # Send the request
+            cmd_id = command_client.robot_command(command)
+            robot.logger.info(
+                'Requesting a single point trajectory with unsatisfiable constraints.')
+
+            # Query for feedback
+            feedback_resp = command_client.robot_command_feedback(cmd_id)
+            robot.logger.info("Feedback for Example 2: planner modifies trajectory")
+            time_to_goal = print_feedback(feedback_resp, robot.logger)
+            time.sleep(time_to_goal)
+
+            # Example 3: Single point trajectory with default acceleration/velocity constraints and
+            # time_since_reference_secs large enough such that the solver can plan a solution to the
+            # points that also satisfies the constraints.
+            sh0 = 0.0692
+            sh1 = -1.882
+            el0 = 1.652
+            el1 = -0.0691
+            wr0 = 1.622
+            wr1 = 1.550
+            traj_point = RobotCommandBuilder.create_arm_joint_trajectory_point(
+                sh0, sh1, el0, el1, wr0, wr1, time_since_reference_secs=1.5)
+
+            arm_joint_traj = arm_command_pb2.ArmJointTrajectory(points=[traj_point])
+
+            # Make a RobotCommand
+            command = make_robot_command(arm_joint_traj)
+
+            # Send the request
+            cmd_id = command_client.robot_command(command)
+            robot.logger.info('Requesting a single point trajectory with satisfiable constraints.')
+
+            # Query for feedback
+            feedback_resp = command_client.robot_command_feedback(cmd_id)
+            robot.logger.info("Feedback for Example 3: unmodified trajectory")
+            time_to_goal = print_feedback(feedback_resp, robot.logger)
+            time.sleep(time_to_goal)
 
             # ----- Do a two-point joint move trajectory ------
 
@@ -136,30 +209,34 @@ def joint_move_example(config):
             time.sleep(2.0)
 
             # First point position
-            sh0 = wrappers_pb2.DoubleValue(value=-1.5)
-            sh1 = wrappers_pb2.DoubleValue(value=-0.8)
-            el0 = wrappers_pb2.DoubleValue(value=1.7)
-            el1 = wrappers_pb2.DoubleValue(value=0.0)
-            wr0 = wrappers_pb2.DoubleValue(value=0.5)
-            wr1 = wrappers_pb2.DoubleValue(value=0.0)
+            sh0 = -1.5
+            sh1 = -0.8
+            el0 = 1.7
+            el1 = 0.0
+            wr0 = 0.5
+            wr1 = 0.0
 
-            # Build up a proto.
-            joint_position1 = arm_command_pb2.ArmJointPosition(sh0=sh0, sh1=sh1, el0=el0, el1=el1,
-                                                               wr0=wr0, wr1=wr1)
+            # First point time (seconds)
+            first_point_t = 2.0
+
+            # Build the proto for the trajectory point.
+            traj_point1 = RobotCommandBuilder.create_arm_joint_trajectory_point(
+                sh0, sh1, el0, el1, wr0, wr1, first_point_t)
+
             # Second point position
-            sh0 = wrappers_pb2.DoubleValue(value=1.0)
-            sh1 = wrappers_pb2.DoubleValue(value=-0.2)
-            el0 = wrappers_pb2.DoubleValue(value=1.3)
-            el1 = wrappers_pb2.DoubleValue(value=-1.3)
-            wr0 = wrappers_pb2.DoubleValue(value=-1.5)
-            wr1 = wrappers_pb2.DoubleValue(value=1.5)
+            sh0 = 1.0
+            sh1 = -0.2
+            el0 = 1.3
+            el1 = -1.3
+            wr0 = -1.5
+            wr1 = 1.5
 
             # Second point time (seconds)
-            first_point_t = 2.0
             second_point_t = 4.0
 
-            joint_position2 = arm_command_pb2.ArmJointPosition(sh0=sh0, sh1=sh1, el0=el0, el1=el1,
-                                                               wr0=wr0, wr1=wr1)
+            # Build the proto for the second trajectory point.
+            traj_point2 = RobotCommandBuilder.create_arm_joint_trajectory_point(
+                sh0, sh1, el0, el1, wr0, wr1, second_point_t)
 
             # Optionally, set the maximum allowable velocity in rad/s that a joint is allowed to
             # travel at. Also set the maximum allowable acceleration in rad/s^2 that a joint is
@@ -174,30 +251,23 @@ def joint_move_example(config):
             max_acc = wrappers_pb2.DoubleValue(value=15)
 
             # Build up a proto.
-            traj_point1 = arm_command_pb2.ArmJointTrajectoryPoint(
-                position=joint_position1, time_since_reference=seconds_to_duration(first_point_t))
-            traj_point2 = arm_command_pb2.ArmJointTrajectoryPoint(
-                position=joint_position2, time_since_reference=seconds_to_duration(second_point_t))
-            arm_joint_traj = arm_command_pb2.ArmJointTrajectory(
-                points=[traj_point1, traj_point2], maximum_velocity=max_vel, maximum_acceleration=max_acc)
-            joint_move_command = arm_command_pb2.ArmJointMoveCommand.Request(
-                trajectory=arm_joint_traj)
-            arm_command = arm_command_pb2.ArmCommand.Request(
-                arm_joint_move_command=joint_move_command)
-            sync_arm = synchronized_command_pb2.SynchronizedCommand.Request(arm_command=arm_command)
-            arm_sync_robot_cmd = robot_command_pb2.RobotCommand(synchronized_command=sync_arm)
-
-            # Make the open gripper RobotCommand
-            gripper_command = RobotCommandBuilder.claw_gripper_open_fraction_command(1.0)
-
-            # Combine the arm and gripper commands into one RobotCommand
-            command = RobotCommandBuilder.build_synchro_command(gripper_command, arm_sync_robot_cmd)
+            arm_joint_traj = arm_command_pb2.ArmJointTrajectory(points=[traj_point1, traj_point2],
+                                                                maximum_velocity=max_vel,
+                                                                maximum_acceleration=max_acc)
+            # Make a RobotCommand
+            command = make_robot_command(arm_joint_traj)
 
             # Send the request
-            command_client.robot_command(command)
+            cmd_id = command_client.robot_command(command)
             robot.logger.info('Moving arm along 2-point joint trajectory.')
 
-            time.sleep(5.0)
+            # Query for feedback to determine exactly what the planned trajectory is.
+            feedback_resp = command_client.robot_command_feedback(cmd_id)
+            robot.logger.info("Feedback for 2-point joint trajectory")
+            print_feedback(feedback_resp, robot.logger)
+
+            # Wait until the move completes before powering off.
+            block_until_arm_arrives(command_client, cmd_id, second_point_t + 3.0)
 
             # Power the robot off. By specifying "cut_immediately=False", a safe power off command
             # is issued to the robot. This will attempt to sit the robot before powering off.

@@ -14,9 +14,9 @@ import pytest
 
 import bosdyn.api.bddf_pb2 as bddf
 from bosdyn.api.data_buffer_pb2 import OperatorComment
-from bosdyn.client.bddf import (DataReader, DataWriter, PodSeriesReader, PodSeriesWriter,
-                                ProtoSeriesWriter, ProtobufChannelReader, ProtobufReader,
-                                StreamDataReader)
+from bosdyn.bddf import (DataReader, DataWriter, PodSeriesReader, PodSeriesWriter,
+                         ProtobufSeriesWriter, ProtobufChannelReader, ProtobufReader,
+                         StreamDataReader)
 from bosdyn.util import now_nsec, now_timestamp, timestamp_to_nsec
 
 
@@ -45,14 +45,12 @@ def test_write_read():
         data_writer.write_data(series1_index, timestamp_nsec, msg_data, [1, 2])
 
         # Write a protobuf to the file.
-        proto_writer = ProtoSeriesWriter(data_writer, OperatorComment)
+        proto_writer = ProtobufSeriesWriter(data_writer, OperatorComment)
         proto_writer.write(timestamp_to_nsec(operator_comment.timestamp), operator_comment)
 
         # Write POD data (floats) to the file.
         pod_writer = PodSeriesWriter(data_writer, pod_series_type, pod_spec, bddf.TYPE_FLOAT32,
-                                     annotations={
-                                         'units': 'm/s^2'
-                                     })
+                                     annotations={'units': 'm/s^2'})
         for val in range(10, 20):
             pod_writer.write(timestamp_nsec, val)
 

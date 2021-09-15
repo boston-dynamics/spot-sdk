@@ -16,6 +16,7 @@ from bosdyn.api.spot_cam import power_pb2
 
 from google.protobuf.wrappers_pb2 import BoolValue
 
+
 class PowerClient(BaseClient):
     """A client calling Spot CAM Power service.
     """
@@ -34,7 +35,8 @@ class PowerClient(BaseClient):
     def get_power_status_async(self, **kwargs):
         """Async version of get_power_status()"""
         request = power_pb2.GetPowerStatusRequest()
-        return self.call_async(self._stub.GetPowerStatus, request, self._get_power_status_from_response,
+        return self.call_async(self._stub.GetPowerStatus, request,
+                               self._get_power_status_from_response,
                                self._power_error_from_response, **kwargs)
 
     def set_power_status(self, ptz=None, aux1=None, aux2=None, external_mic=None, **kwargs):
@@ -52,7 +54,8 @@ class PowerClient(BaseClient):
         """Async version of set_power_status()"""
         request = self._build_SetPowerStatusRequest(ptz, aux1, aux2, external_mic)
 
-        return self.call_async(self._stub.SetPowerStatus, request, self._set_power_status_from_response,
+        return self.call_async(self._stub.SetPowerStatus, request,
+                               self._set_power_status_from_response,
                                self._power_error_from_response, **kwargs)
 
     def cycle_power(self, ptz=None, aux1=None, aux2=None, external_mic=None, **kwargs):

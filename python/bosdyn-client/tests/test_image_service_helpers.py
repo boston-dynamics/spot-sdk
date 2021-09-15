@@ -13,14 +13,15 @@ import threading
 from bosdyn.api import service_fault_pb2
 from bosdyn.api import image_pb2, header_pb2
 from bosdyn.client.fault import FaultClient
-from bosdyn.client.image_service_helpers import (VisualImageSource, ImageCaptureThread, CameraBaseImageServicer,
-                                                CameraInterface)
+from bosdyn.client.image_service_helpers import (VisualImageSource, ImageCaptureThread,
+                                                 CameraBaseImageServicer, CameraInterface)
 from google.protobuf import timestamp_pb2
+
 
 class MockFaultClient:
 
     def __init__(self):
-        self.service_fault_counts = dict() # key=fault id name, value = count
+        self.service_fault_counts = dict()  # key=fault id name, value = count
 
     def trigger_service_fault_async(self, service_fault, **kwargs):
         fault = service_fault.fault_id.fault_name
@@ -31,7 +32,7 @@ class MockFaultClient:
         return service_fault_pb2.TriggerServiceFaultResponse()
 
     def clear_service_fault_async(self, service_fault_id, clear_all_service_faults=False,
-                            clear_all_payload_faults=False, **kwargs):
+                                  clear_all_payload_faults=False, **kwargs):
         # This function makes the assumption that every fault in this mock fault client's dictionary
         # has the same service_name in the fault id.
         if clear_all_service_faults:
@@ -46,13 +47,15 @@ class MockFaultClient:
             fault_amount += fault_count
         return fault_amount
 
+
 class MockTimeSync:
 
     def wait_for_sync(self):
         return 1
 
-    def robot_timestamp_from_local_secs(self,seconds):
+    def robot_timestamp_from_local_secs(self, seconds):
         return timestamp_pb2.Timestamp(seconds=10, nanos=20)
+
 
 class MockRobot:
 
@@ -68,32 +71,49 @@ class MockRobot:
     def time_sync(self):
         return MockTimeSync()
 
+
 ##### Helper functions to mimic the function signatures of the capture function
 # and the decode image function for the VisualImageSource.
 class FakeCamera(CameraInterface):
+
     def __init__(self, capture_func, decode_func):
         self.capture_func = capture_func
         self.decode_func = decode_func
+
     def blocking_capture(self):
         return self.capture_func()
+
     def image_decode(self, image_data, image_proto, image_format, quality_percent):
         return self.decode_func(image_data, image_proto, image_format, quality_percent)
 
+
 def capture_fake():
     return "image", 1
+
+
 def decode_fake(img_data, img_proto, img_format, quality):
     img_proto.rows = 15
+
+
 def capture_return_onething():
     return 1
+
+
 def decode_less_args(arg1, arg2):
     return 2
+
+
 def capture_with_error():
     raise Exception("Failed Capture.")
+
+
 def decode_with_error(img_data, img_proto, img_format, quality):
     img_proto.rows = 15
     raise Exception("Failed Decode.")
 
+
 class Increment():
+
     def __init__(self, barrier, t=1.1):
         self.timestamp = t
         self.barrier = barrier
@@ -102,13 +122,15 @@ class Increment():
         self.barrier.wait(timeout=1)
         return "image", self.timestamp
 
+
 def test_faults_in_visual_source():
     # Create the fault client
     fault_client = MockFaultClient()
 
     # Populate fault client with at least one "old" fault.
     fault_client.trigger_service_fault_async(
-        service_fault_pb2.ServiceFault(fault_id=service_fault_pb2.ServiceFaultId(fault_name="fault1")))
+        service_fault_pb2.ServiceFault(fault_id=service_fault_pb2.ServiceFaultId(
+            fault_name="fault1")))
     init_fault_amount = fault_client.get_total_fault_count()
 
     visual_src = VisualImageSource("source1", FakeCamera(capture_with_error, decode_with_error))
@@ -137,16 +159,19 @@ def test_faults_in_visual_source():
     image, timestamp = visual_src.get_image_and_timestamp()
     assert image is None
     assert timestamp is None
-    assert fault_client.service_fault_counts[visual_src.camera_capture_fault.fault_id.fault_name] == 1
+    assert fault_client.service_fault_counts[
+        visual_src.camera_capture_fault.fault_id.fault_name] == 1
     im_proto = image_pb2.Image(rows=21)
     success = visual_src.image_decode_with_error_checking(None, im_proto, None, None)
     assert im_proto.rows == 15
     assert fault_client.service_fault_counts[visual_src.decode_data_fault.fault_id.fault_name] == 1
     assert not success
 
+
 def test_faults_are_cleared_on_success():
     # Check that captures/decodes that fail and then later succeed will cause the faults to get cleared.
     class FailsThenSucceeds(CameraInterface):
+
         def __init__(self):
             self.capture_count = 0
             self.decode_count = 0
@@ -167,15 +192,20 @@ def test_faults_are_cleared_on_success():
     visual_src.initialize_faults(fault_client, "service1")
     # The first call to the capture and decode functions cause a fault to be thrown.
     image, timestamp = visual_src.get_image_and_timestamp()
-    assert fault_client.service_fault_counts[visual_src.camera_capture_fault.fault_id.fault_name] == 1
-    success = visual_src.image_decode_with_error_checking(None, image_pb2.Image(rows=21), None, None)
+    assert fault_client.service_fault_counts[
+        visual_src.camera_capture_fault.fault_id.fault_name] == 1
+    success = visual_src.image_decode_with_error_checking(None, image_pb2.Image(rows=21), None,
+                                                          None)
     assert fault_client.service_fault_counts[visual_src.decode_data_fault.fault_id.fault_name] == 1
 
     # The second calls will succeed, and now cause the faults to be cleared.
     image, timestamp = visual_src.get_image_and_timestamp()
-    assert fault_client.service_fault_counts[visual_src.camera_capture_fault.fault_id.fault_name] == 0
-    success = visual_src.image_decode_with_error_checking(None, image_pb2.Image(rows=21), None, None)
+    assert fault_client.service_fault_counts[
+        visual_src.camera_capture_fault.fault_id.fault_name] == 0
+    success = visual_src.image_decode_with_error_checking(None, image_pb2.Image(rows=21), None,
+                                                          None)
     assert fault_client.service_fault_counts[visual_src.decode_data_fault.fault_id.fault_name] == 0
+
 
 def test_make_image_source():
     # Create a visual source with no rows/cols/image type provided.
@@ -190,7 +220,8 @@ def test_make_image_source():
     src_name2 = "source2"
     src_rows2 = 60
     src_cols2 = 100
-    visual_src2 = VisualImageSource(src_name2, FakeCamera(capture_fake, decode_fake), src_rows2, src_cols2)
+    visual_src2 = VisualImageSource(src_name2, FakeCamera(capture_fake, decode_fake), src_rows2,
+                                    src_cols2)
     assert visual_src2.image_source_proto.name == src_name2
     assert visual_src2.image_source_proto.image_type == image_pb2.ImageSource.IMAGE_TYPE_VISUAL
     assert visual_src2.image_source_proto.rows == src_rows2
@@ -207,6 +238,7 @@ def test_make_image_source():
     assert img_proto.rows == src_rows3
     assert img_proto.cols == src_cols3
 
+
 def test_make_capture_params():
     # Create a visual source with no gain/exposure provided.
     visual_src = VisualImageSource("source1", FakeCamera(capture_fake, decode_fake))
@@ -218,7 +250,8 @@ def test_make_capture_params():
     # Create a visual source with gain and exposure provided.
     gain = 1.5
     exposure = 101.005
-    visual_src = VisualImageSource("source1", FakeCamera(capture_fake, decode_fake), gain=gain, exposure=exposure)
+    visual_src = VisualImageSource("source1", FakeCamera(capture_fake, decode_fake), gain=gain,
+                                   exposure=exposure)
     params = visual_src.get_image_capture_params()
     assert abs(params.gain - gain) < 1e-3
     assert abs(params.exposure_duration.seconds - 101) < 1e-3
@@ -236,6 +269,7 @@ def test_make_capture_params():
     assert abs(cap_proto.exposure_duration.seconds - 101) < 1e-3
     assert abs(cap_proto.exposure_duration.nanos - int(.005 * 1e9)) <= 1
 
+
 def test_visual_source_with_thread():
     barrier = threading.Barrier(2)
     inc = Increment(barrier)
@@ -251,8 +285,11 @@ def test_visual_source_with_thread():
     finally:
         visual_src.stop_capturing()
 
+
 def test_not_camera_interface():
+
     class WrongFakeCamera():
+
         def blocking_capture(self):
             return 1
 
@@ -264,6 +301,7 @@ def test_not_camera_interface():
     # Check that instantiating a class with camera interface without the methods expected
     # will fail on creation.
     class BadFakeCamera(CameraInterface):
+
         def missing_everything(self):
             pass
 
@@ -274,6 +312,7 @@ def test_not_camera_interface():
     # # the methods incorrectly will throw errors.
     # with pytest.raises(Exception):
     #     visual_src = VisualImageSource("source3", FakeCamera(capture_return_onething, decode_less_args))
+
 
 def test_image_capture_thread():
     default_time = 1.1
@@ -308,6 +347,7 @@ def test_image_capture_thread():
     with pytest.raises(threading.BrokenBarrierError):
         barrier.wait(0.5)
 
+
 def _test_camera_service(use_background_capture_thread, logger=None):
     robot = MockRobot()
 
@@ -315,19 +355,26 @@ def _test_camera_service(use_background_capture_thread, logger=None):
     r_amt = 10
     c_amt = 21
     gain = 25
-    visual_src = VisualImageSource(src_name, FakeCamera(capture_fake, decode_fake), rows=r_amt, cols=c_amt, gain=gain)
+    visual_src = VisualImageSource(src_name, FakeCamera(capture_fake, decode_fake), rows=r_amt,
+                                   cols=c_amt, gain=gain)
     src_name2 = "source_cap_error"
-    visual_src2 = VisualImageSource(src_name2, FakeCamera(capture_with_error, decode_fake), rows=r_amt, cols=c_amt)
+    visual_src2 = VisualImageSource(src_name2, FakeCamera(capture_with_error, decode_fake),
+                                    rows=r_amt, cols=c_amt)
     src_name3 = "source_decode_error"
-    visual_src3 = VisualImageSource(src_name3, FakeCamera(capture_fake, decode_with_error), rows=r_amt, cols=c_amt)
+    visual_src3 = VisualImageSource(src_name3, FakeCamera(capture_fake, decode_with_error),
+                                    rows=r_amt, cols=c_amt)
     src_name4 = "source_capture_malformed"
-    visual_src4 = VisualImageSource(src_name4, FakeCamera(capture_return_onething, decode_fake), rows=r_amt, cols=c_amt)
+    visual_src4 = VisualImageSource(src_name4, FakeCamera(capture_return_onething, decode_fake),
+                                    rows=r_amt, cols=c_amt)
     src_name5 = "source_decode_malformed"
-    visual_src5 = VisualImageSource(src_name5, FakeCamera(capture_fake, decode_less_args), rows=r_amt, cols=c_amt)
+    visual_src5 = VisualImageSource(src_name5, FakeCamera(capture_fake, decode_less_args),
+                                    rows=r_amt, cols=c_amt)
     src_name6 = "source2"
-    visual_src6 = VisualImageSource(src_name6, FakeCamera(capture_fake, decode_fake), rows=r_amt, cols=c_amt, gain=gain)
+    visual_src6 = VisualImageSource(src_name6, FakeCamera(capture_fake, decode_fake), rows=r_amt,
+                                    cols=c_amt, gain=gain)
     image_sources = [visual_src, visual_src2, visual_src3, visual_src4, visual_src5, visual_src6]
-    camera_service = CameraBaseImageServicer(robot, "camera-service", image_sources,
+    camera_service = CameraBaseImageServicer(
+        robot, "camera-service", image_sources,
         use_background_capture_thread=use_background_capture_thread, logger=logger)
 
     req = image_pb2.ListImageSourcesRequest()
@@ -352,7 +399,8 @@ def _test_camera_service(use_background_capture_thread, logger=None):
 
     # Request a known image source and make sure the response is as expected.
     req = image_pb2.GetImageRequest()
-    req.image_requests.extend([image_pb2.ImageRequest(image_source_name=src_name, quality_percent=10)])
+    req.image_requests.extend(
+        [image_pb2.ImageRequest(image_source_name=src_name, quality_percent=10)])
     resp = camera_service.GetImage(req, None)
     assert resp.header.error.code == header_pb2.CommonError.CODE_OK
     assert len(resp.image_responses) == 1
@@ -361,14 +409,17 @@ def _test_camera_service(use_background_capture_thread, logger=None):
     assert img_resp.source.rows == r_amt
     assert img_resp.source.cols == c_amt
     assert img_resp.shot.capture_params.gain == gain
-    assert img_resp.shot.image.rows == 15 # Output of decode_fake
+    assert img_resp.shot.image.rows == 15  # Output of decode_fake
     assert img_resp.shot.image.cols == c_amt
-    assert abs(img_resp.shot.acquisition_time.seconds - 10) < 1e-3 # Robot converted timestamp
-    assert abs(img_resp.shot.acquisition_time.nanos - 20) < 1e-3 # Robot converted timestamp
+    assert abs(img_resp.shot.acquisition_time.seconds - 10) < 1e-3  # Robot converted timestamp
+    assert abs(img_resp.shot.acquisition_time.nanos - 20) < 1e-3  # Robot converted timestamp
 
     # Request multiple image sources and make sure the response is complete.
     req = image_pb2.GetImageRequest()
-    req.image_requests.extend([image_pb2.ImageRequest(image_source_name=src_name, quality_percent=10), image_pb2.ImageRequest(image_source_name=src_name6)])
+    req.image_requests.extend([
+        image_pb2.ImageRequest(image_source_name=src_name, quality_percent=10),
+        image_pb2.ImageRequest(image_source_name=src_name6)
+    ])
     resp = camera_service.GetImage(req, None)
     assert resp.header.error.code == header_pb2.CommonError.CODE_OK
     assert len(resp.image_responses) == 2
@@ -382,7 +433,8 @@ def _test_camera_service(use_background_capture_thread, logger=None):
 
     # Request an image source that does not exist.
     req = image_pb2.GetImageRequest()
-    req.image_requests.extend([image_pb2.ImageRequest(image_source_name="unknown", quality_percent=10)])
+    req.image_requests.extend(
+        [image_pb2.ImageRequest(image_source_name="unknown", quality_percent=10)])
     resp = camera_service.GetImage(req, None)
     assert resp.header.error.code == header_pb2.CommonError.CODE_OK
     assert len(resp.image_responses) == 1
@@ -391,7 +443,8 @@ def _test_camera_service(use_background_capture_thread, logger=None):
 
     # Request an image from a source with a bad capture function.
     req = image_pb2.GetImageRequest()
-    req.image_requests.extend([image_pb2.ImageRequest(image_source_name=src_name2, quality_percent=10)])
+    req.image_requests.extend(
+        [image_pb2.ImageRequest(image_source_name=src_name2, quality_percent=10)])
     resp = camera_service.GetImage(req, None)
     assert resp.header.error.code == header_pb2.CommonError.CODE_OK
     assert len(resp.image_responses) == 1
@@ -400,7 +453,8 @@ def _test_camera_service(use_background_capture_thread, logger=None):
 
     # Request an image from a source with a decode error.
     req = image_pb2.GetImageRequest()
-    req.image_requests.extend([image_pb2.ImageRequest(image_source_name=src_name3, quality_percent=10)])
+    req.image_requests.extend(
+        [image_pb2.ImageRequest(image_source_name=src_name3, quality_percent=10)])
     resp = camera_service.GetImage(req, None)
     assert resp.header.error.code == header_pb2.CommonError.CODE_OK
     assert len(resp.image_responses) == 1
@@ -410,15 +464,18 @@ def _test_camera_service(use_background_capture_thread, logger=None):
 
     # Request an image with a malformed capture function (should raise an error so developer can fix).
     req = image_pb2.GetImageRequest()
-    req.image_requests.extend([image_pb2.ImageRequest(image_source_name=src_name4, quality_percent=10)])
+    req.image_requests.extend(
+        [image_pb2.ImageRequest(image_source_name=src_name4, quality_percent=10)])
     resp = camera_service.GetImage(req, None)
     assert resp.header.error.code == header_pb2.CommonError.CODE_OK
     assert len(resp.image_responses) == 1
     img_resp = resp.image_responses[0]
     assert img_resp.status == image_pb2.ImageResponse.STATUS_IMAGE_DATA_ERROR
 
+
 def test_image_service_no_thread():
     _test_camera_service(use_background_capture_thread=False)
+
 
 def test_image_service_with_thread(caplog, capsys):
     # Disable the logger from printing messages because the background thread will repeatedly
@@ -426,8 +483,11 @@ def test_image_service_with_thread(caplog, capsys):
     # the service.
     _test_camera_service(use_background_capture_thread=True)
 
+
 def test_gain_and_exposure_as_functions():
+
     class GainAndExposure():
+
         def __init__(self):
             self.gain = 0
             self.exposure = 0
@@ -443,7 +503,8 @@ def test_gain_and_exposure_as_functions():
     # Check that gain/exposure functions are accepted inputs and get recalled each time you get the
     # capture parameters proto.
     ge = GainAndExposure()
-    visual_src = VisualImageSource("source1", FakeCamera(capture_fake, decode_fake), gain=ge.get_gain, exposure=ge.get_exposure)
+    visual_src = VisualImageSource("source1", FakeCamera(capture_fake, decode_fake),
+                                   gain=ge.get_gain, exposure=ge.get_exposure)
     capture_params = visual_src.get_image_capture_params()
     assert capture_params.gain == 1
     assert capture_params.exposure_duration.seconds == 1

@@ -13,3 +13,5 @@ Choreography client code and interfaces for the Boston Dynamics robot API.
 ## Contents
 
 * [Choreography](choreography)
+* [Animation File to Proto](animation_file_to_proto)
+* [Animation File to Proto Helpers](animation_file_conversion_helpers)

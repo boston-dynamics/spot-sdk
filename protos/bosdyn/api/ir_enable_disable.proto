@@ -1,0 +1,35 @@
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option java_outer_classname = "IREnableDisableProto";
+
+import "bosdyn/api/header.proto";
+
+message IREnableDisableRequest {
+    RequestHeader header = 1;  ///< Common request header.
+    
+    enum Request {
+        // Unspecified value -- should not be used.
+        REQUEST_UNKNOWN = 0;
+
+        // Disable emissions.
+        REQUEST_OFF = 1;
+
+        // Enable emissions.
+        REQUEST_ON = 2;
+    }    
+    Request request = 2;
+}
+
+
+message IREnableDisableResponse {
+    ResponseHeader header = 1;  ///< Common response header.
+}
+
+

@@ -108,9 +108,9 @@ Spam, Spam, Spam, Spam!
     def test_load_robot_cert(self):
         sdk = bosdyn.client.Sdk()
         sdk.load_robot_cert()
-        self.assertEqual(sdk.cert,
-                         pkg_resources.resource_stream('bosdyn.client.resources',
-                                                       'robot.pem').read())
+        self.assertEqual(
+            sdk.cert,
+            pkg_resources.resource_stream('bosdyn.client.resources', 'robot.pem').read())
         with self.assertRaises(IOError):
             sdk.load_robot_cert('this-path-does-not-exist')
 

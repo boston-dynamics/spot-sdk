@@ -102,6 +102,26 @@ pivot | What part of the robot to pivot around.  Pivoting around the front means
 clockwise | Which direction to rotate.
 starting_angle | Where in the circle to start rotation.  Since it spirals outwards, it may not be obvious exactly where it starts.
 
+### fidget_stand
+
+A procedurally-generated idle animation.  It looks around, breathes, shifts its weight, and stamps.  Can use one of the preset configurations or customize the parameters.
+
+Parameter | Effect
+--|--
+preset | Pre-designed parameter combinations that attempt to convey a specific emotion.  NOTE: All other sliders are only active if this is set to "Custom".
+min_gaze_pitch | How far down it will look. (Radians)
+max_gaze_pitch | How far up it will look. (Radians)
+gaze_mean_period | How frequently it will look somewhere else. (Seconds)
+gaze_center_cfp | Where the gaze array originates in the center-of-footprint frame. (Meters)
+shift_mean_period | How frequently it will shift its weight. (Seconds)
+shift_max_transition_time | Maximum amount of time it will spend shifting its weight. (Seconds)
+breath_min_z | Minimum amplitude of the "breathing". (Meters)
+breath_max_z | Maximum amplitude of the "breathing". (Meters)
+leg_gesture_mean_period | How frequently it will do a leg gesture. (Seconds)
+gaze_slew_rate | How quickly it will shift its gaze. (Meters/Second)
+gaze_position_generation_gain | How much Brownian motion will be applied to the gaze point.
+gaze_roll_generation_gain | How much Brownian motion will be applied to the gaze roll.
+
 ## Step Moves
 
 ### step
@@ -122,6 +142,20 @@ waypoint_dwell | What fraction of the swing should be spent near the waypoint.
 swing_height | How high to lift the foot/feet.  Does nothing if a swing_waypoint is specified.
 liftoff_velocity | How quickly to raise the foot/feet. Does nothing if a swing_waypoint is specified.
 touchdown_velocity | How quickly to lower the foot/feet. Does nothing if a swing_waypoint is specified.
+
+### goto
+
+![](gif_images/Goto.gif)
+
+Trot to a specified position in the dance frame.  (Unless explicitly set, the dance frame is defined by where the dance began.)  Takes 1 step per beat.  Extend the duration to successfully move farther.
+
+Parameter | Effect
+--|--
+absolute_position | Position we should go to in the dance frame.
+absolute_yaw | Yaw orientation we should go to in the dance frame.
+step_position_stiffness | How precisely should we step in the nominal locations.
+duty_cycle | What fraction of the time a foot is on the ground.  0.5 is a standard trot.
+link_to_next | Should we smoothly transition from this move to a subsequent goto move.
 
 ### trot
 
@@ -153,8 +187,12 @@ Take two steps to turn in place.  Requires 2 beats (8 slices).
 
 Parameter | Effect
 --|--
-yaw | How far to turn.
-absolute | If true, yaw is interpreted relative to the orientation the choreography sequence began in.  If false, yaw is interpreted relative to the orientation before entering the move.
+motion_is_absolute | Is motion in the dance frame (true) or relative to the current position (false).
+motion | How far to move. (Meters)
+absolute_motion | Where to move to in the dance frame. (Meters)
+yaw_is_absolute | Is yaw in the dance frame (true) or relative to the current position (false).
+yaw | How far to rotate. (Radians)
+absolute_yaw | Where to rotate to in the dance frame. (Radians)
 swing_height | How how to pick up the feet.  Zero indicates to use a default swing.
 swing_velocity | How quickly to lift off and touch down the feet | Zero indicates to use a default swing.
 
@@ -166,10 +204,14 @@ Take two steps to translate using a pace gait (legs on the same side of the robo
 
 Parameter | Effect
 --|--
-motion | How far and what direction to move.
+motion_is_absolute | Is motion in the dance frame (true) or relative to the current position (false).
+motion | How far to move. (Meters)
+absolute_motion | Where to move to in the dance frame. (Meters)
+yaw_is_absolute | Is yaw in the dance frame (true) or relative to the current position (false).
+yaw | How far to rotate. (Radians)
+absolute_yaw | Where to rotate to in the dance frame. (Radians)
 swing_height | How how to pick up the feet.  Zero indicates to use a default swing.
 swing_velocity | How quickly to lift off and touch down the feet | Zero indicates to use a default swing.
-absolute | Motion is measured relative to the dance’s starting location rather than the current location.  May not be accurate for longer dances with lots of stepping.
 
 ### crawl
 
@@ -266,13 +308,17 @@ Jumps in place.  Nominally lasts one beat, but may take more slices at faster te
 
 Parameter | Effect
 --|--
-yaw | What orientation to land in.
-absolute | If true, yaw is interpreted relative to the orientation the choreography sequence began in.  If false, yaw is interpreted relative to the orientation before entering the move.
+translation_is_absolute | Is motion in the dance frame (true) or relative to the current position (false).
+translation | How far to move. (Meters)
+absolute_translation | Where to move to in the dance frame. (Meters)
+yaw_is_absolute | Is yaw in the dance frame (true) or relative to the current position (false).
+yaw | How far to rotate. (Radians)
+absolute_yaw | Where to rotate to in the dance frame. (Radians)
 flight_slices | How long the jump should last with all feet off the ground measured in slices.  Depending on tempo, higher values will be unreliable.
 stance_width/stance_length | The footprint the robot should land its jump in.
+swing_height | How how to pick up the feet.
 split_fraction | Splits the liftoff and touchdown into two pairs of two legs.  In fraction of of swing with two legs in flight, so 0 means all legs fully synchronized.
 lead_leg_pair | If split_fraction is not 0, indicates which legs lift off first. Default AUTO mode will select a pair based on the translation vector.
-translation | Distance and direction the robot should jump.
 
 ## Transition Moves
 
@@ -486,6 +532,17 @@ Parameter | Effect
 angle | The desired gripper angle.
 speed | The desired velocity of the gripper in rad/s.
 
+### frame_snapshot
+
+This move does not directly do anything.  Instead it sets the frame to be used by future moves that are in an absolute frame.  Some such moves will always be in the dance frame (frame_id = 0), and some allow you to explicitly select a frame_id.  This move can set frames relative to either a fiducial or to the robot's footprint.
+
+Parameter | Effect
+--|--
+frame_id | Which frame to set. 0 is the dance frame and will be used by moves that do absolute motion but don't explicitly select a frame.
+fiducial_number | Which fiducial to set the frame relative to.  If set to -1 or the fiducial has not been seen recently, will set according to the robot's footprint.
+include_each_leg | Should each leg be included when determining the footprint.
+compensated | If a foot is not included, should we offset the footprint as if that foot were in a nominal stance?  Otherwise, we'll take the center of the included feet.
+
 ### chicken_head
 
 ![](gif_images/chickenhead-opt.gif)
@@ -498,3 +555,58 @@ bob_magnitude | A vector describing the amplitude and direction of a periodic mo
 beats_per_cycle | How long it takes to complete 1 cycle of the motion described by bob_magnitude
 follow | If set to true, the gripper position will adjust if the robot steps to a new location.
 
+## Lights moves
+
+All colors are specified as RGB on a 0-255 scale.
+
+### set_color
+
+Sets the color of the robot's face lights.  Can independently set left and right lights if desired.  Can fade in and out gradually if desired.
+
+Parameter | Effect
+--|--
+left_color | Color of the left lights.  (Color of all lights if right_same_as_left specified.)
+right_same_as_left | If true, all lights are left_color.  If false, left and right are independently specified.
+right_color | Color of the right lights.  Does nothing if right_same_as_left specified.
+fade_in_slices | How long to spend brightening at the beginning, measured in slices (1/4 beats).
+fade_out_slices | How long to spend darkening at the end, measured in slices (1/4 beats).
+
+### fade_color
+
+Sets the lights to show one color at the top fading towards another color at the bottom.
+
+Parameter | Effect
+--|--
+top_color | The color of the topmost lights.
+bottom_color | The color of the bottommost lights.
+fade_in_slices | How long to spend brightening at the beginning, measured in slices (1/4 beats).
+fade_out_slices | How long to spend darkening at the end, measured in slices (1/4 beats).
+
+### independent_Color
+
+Independently specifies the color for all 8 of the lights.
+
+Parameter | Effect
+--|--
+top_left | Color of the top left light.
+upper_mid_left | Color of the second from top left light.
+lower_mid_left | Color of the second from bottom left light.
+bottom_left | Color of the bottom left light.
+top_right | Color of the top right light.
+upper_mid_right | Color of the second from top right light.
+lower_mid_right | CColor of the second from bottom right light.
+bottom_right | Color of the bottom right light.
+fade_in_slices | How long to spend brightening at the beginning, measured in slices (1/4 beats).
+fade_out_slices | How long to spend darkening at the end, measured in slices (1/4 beats).
+
+### ripple_Color
+
+Sets the lights in a variety of moving patterns.
+
+Parameter | Effect
+--|--
+main | Color to make the lights.
+secondary | Second color to make the lights, used only by some patterns.
+pattern | Select from a variety of light motion patterns.
+light_side | Which side lights to use for the pattern.
+increment_slices | How quickly to move the pattern.  Gives the time in slices (1/4 beats) between updates to the pattern.

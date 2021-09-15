@@ -12,6 +12,7 @@ from bosdyn.api import arm_surface_contact_service_pb2_grpc
 from .lease import add_lease_wallet_processors
 from bosdyn.client.robot_command import NoTimeSyncError, _TimeConverter, _edit_proto
 
+
 class ArmSurfaceContactClient(BaseClient):
     """Client for the ArmSurfaceContact service."""
     default_service_name = 'arm-surface-contact'
@@ -76,6 +77,7 @@ class ArmSurfaceContactClient(BaseClient):
         self._update_command_timestamps(request)
         return self.call_async(self._stub.ArmSurfaceContact, request, **kwargs)
 
+
 # Tree of proto fields leading to Timestamp protos which need to be converted from
 # client clock to robot clock values using timesync information from the robot.
 # Note, the "@" sign indicates a oneof field. The "None" indicates the field which
@@ -85,7 +87,7 @@ EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME = {
         'pose_trajectory_in_task': {
             'reference_time': None
         },
-        'gripper_command':{
+        'gripper_command': {
             'trajectory': {
                 'reference_time': None
             }

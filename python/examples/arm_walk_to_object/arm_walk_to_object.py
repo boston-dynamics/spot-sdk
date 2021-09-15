@@ -32,6 +32,7 @@ import cv2
 g_image_click = None
 g_image_display = None
 
+
 def walk_to_object(config):
     """Get an image and command the robot to walk up to a selected object.
        We'll walk "up to" the object, not on top of it.  The idea is that you
@@ -114,11 +115,10 @@ def walk_to_object(config):
                     print('"q" pressed, exiting.')
                     exit(0)
 
-            robot.logger.info('Walking to object at image location (' + str(g_image_click[0]) + ', ' +
-                              str(g_image_click[1]) + ')')
+            robot.logger.info('Walking to object at image location (' + str(g_image_click[0]) +
+                              ', ' + str(g_image_click[1]) + ')')
 
             walk_vec = geometry_pb2.Vec2(x=g_image_click[0], y=g_image_click[1])
-
 
             # Optionally populate the offset distance parameter.
             if config.distance is None:
@@ -150,10 +150,8 @@ def walk_to_object(config):
                 response = manipulation_api_client.manipulation_api_feedback_command(
                     manipulation_api_feedback_request=feedback_request)
 
-                print(
-                    'Current state: ',
-                    manipulation_api_pb2.ManipulationFeedbackState.Name(
-                        response.current_state))
+                print('Current state: ',
+                      manipulation_api_pb2.ManipulationFeedbackState.Name(response.current_state))
 
                 if response.current_state == manipulation_api_pb2.MANIP_STATE_DONE:
                     break
@@ -190,6 +188,7 @@ def cv_mouse_callback(event, x, y, flags, param):
         cv2.line(clone, (x, 0), (x, height), color, thickness)
         cv2.imshow(image_title, clone)
 
+
 def arg_float(x):
     try:
         x = float(x)
@@ -197,13 +196,15 @@ def arg_float(x):
         raise argparse.ArgumentTypeError("%r not a number" % (x))
     return x
 
+
 def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
     parser.add_argument('-i', '--image-source', help='Get image from source',
                         default='frontleft_fisheye_image')
-    parser.add_argument('-d', '--distance', help='Distance from object to walk to (meters).', default=None, type=arg_float)
+    parser.add_argument('-d', '--distance', help='Distance from object to walk to (meters).',
+                        default=None, type=arg_float)
     options = parser.parse_args(argv)
 
     try:

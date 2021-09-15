@@ -26,12 +26,14 @@ from bosdyn.client.exceptions import ResponseError
 from bosdyn.client.graph_nav import GraphNavClient
 from bosdyn.client.frame_helpers import get_odom_tform_body
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive, LeaseWallet
+from bosdyn.client.math_helpers import Quat, SE3Pose
 from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder
 from bosdyn.client.robot_state import RobotStateClient
 import bosdyn.client.util
 import google.protobuf.timestamp_pb2
 
 import graph_nav_util
+
 
 class GraphNavInterface(object):
     """GraphNav service command line interface."""
@@ -88,7 +90,8 @@ class GraphNavInterface(object):
             '5': self._upload_graph_and_snapshots,
             '6': self._navigate_to,
             '7': self._navigate_route,
-            '8': self._clear_graph
+            '8': self._navigate_to_anchor,
+            '9': self._clear_graph
         }
 
     def _get_localization_state(self, *args):
@@ -132,8 +135,8 @@ class GraphNavInterface(object):
         self._graph_nav_client.set_localization(
             initial_guess_localization=localization,
             # It's hard to get the pose perfect, search +/-20 deg and +/-20cm (0.2m).
-            max_distance = 0.2,
-            max_yaw = 20.0 * math.pi / 180.0,
+            max_distance=0.2,
+            max_yaw=20.0 * math.pi / 180.0,
             fiducial_init=graph_nav_pb2.SetLocalizationRequest.FIDUCIAL_INIT_NO_FIDUCIAL,
             ko_tform_body=current_odom_tform_body)
 
@@ -153,7 +156,6 @@ class GraphNavInterface(object):
         self._current_annotation_name_to_wp_id, self._current_edges = graph_nav_util.update_waypoints_and_edges(
             graph, localization_id)
 
-
     def _upload_graph_and_snapshots(self, *args):
         """Upload the graph and snapshots to the robot."""
         print("Loading the graph from disk into local storage...")
@@ -172,6 +174,8 @@ class GraphNavInterface(object):
                 waypoint_snapshot.ParseFromString(snapshot_file.read())
                 self._current_waypoint_snapshots[waypoint_snapshot.id] = waypoint_snapshot
         for edge in self._current_graph.edges:
+            if len(edge.snapshot_id) == 0:
+                continue
             # Load the edge snapshots from disk.
             with open(self._upload_filepath + "/edge_snapshots/{}".format(edge.snapshot_id),
                       "rb") as snapshot_file:
@@ -180,8 +184,10 @@ class GraphNavInterface(object):
                 self._current_edge_snapshots[edge_snapshot.id] = edge_snapshot
         # Upload the graph to the robot.
         print("Uploading the graph and snapshots to the robot...")
+        true_if_empty = not len(self._current_graph.anchoring.anchors)
         response = self._graph_nav_client.upload_graph(lease=self._lease.lease_proto,
-                                                       graph=self._current_graph)
+                                                       graph=self._current_graph,
+                                                       generate_new_anchoring=true_if_empty)
         # Upload the snapshots to the robot.
         for snapshot_id in response.unknown_waypoint_snapshot_ids:
             waypoint_snapshot = self._current_waypoint_snapshots[snapshot_id]
@@ -201,6 +207,72 @@ class GraphNavInterface(object):
             print("\n")
             print("Upload complete! The robot is currently not localized to the map; please localize", \
                    "the robot using commands (2) or (3) before attempting a navigation command.")
+
+    def _navigate_to_anchor(self, *args):
+        """Navigate to a pose in seed frame, using anchors."""
+        # The following options are accepted for arguments: [x, y], [x, y, yaw], [x, y, z, yaw],
+        # [x, y, z, qw, qx, qy, qz].
+        # When a value for z is not specified, we use the current z height.
+        # When only yaw is specified, the quaternion is constructed from the yaw.
+        # When yaw is not specified, an identity quaternion is used.
+
+        if len(args) < 1 or len(args[0]) not in [2, 3, 4, 7]:
+            print("Invalid arguments supplied.")
+            return
+
+        seed_T_goal = SE3Pose(float(args[0][0]), float(args[0][1]), 0.0, Quat())
+
+        if len(args[0]) in [4, 7]:
+            seed_T_goal.z = float(args[0][2])
+        else:
+            localization_state = self._graph_nav_client.get_localization_state()
+            if not localization_state.localization.waypoint_id:
+                print("Robot not localized")
+                return
+            seed_T_goal.z = localization_state.localization.seed_tform_body.position.z
+
+        if len(args[0]) == 3:
+            seed_T_goal.rot = Quat.from_yaw(float(args[0][2]))
+        elif len(args[0]) == 4:
+            seed_T_goal.rot = Quat.from_yaw(float(args[0][3]))
+        elif len(args[0]) == 7:
+            seed_T_goal.rot = Quat(w=float(args[0][3]), x=float(args[0][4]), y=float(args[0][5]),
+                                   z=float(args[0][6]))
+
+        self._lease = self._lease_wallet.get_lease()
+        if not self.toggle_power(should_power_on=True):
+            print("Failed to power on the robot, and cannot complete navigate to request.")
+            return
+
+        # Stop the lease keepalive and create a new sublease for graph nav.
+        self._lease = self._lease_wallet.advance()
+        sublease = self._lease.create_sublease()
+        self._lease_keepalive.shutdown()
+        nav_to_cmd_id = None
+        # Navigate to the destination.
+        is_finished = False
+        while not is_finished:
+            # Issue the navigation command about twice a second such that it is easy to terminate the
+            # navigation command (with estop or killing the program).
+            try:
+                nav_to_cmd_id = self._graph_nav_client.navigate_to_anchor(
+                    seed_T_goal.to_proto(), 1.0, leases=[sublease.lease_proto],
+                    command_id=nav_to_cmd_id)
+            except ResponseError as e:
+                print("Error while navigating {}".format(e))
+                break
+            time.sleep(.5)  # Sleep for half a second to allow for command execution.
+            # Poll the robot for feedback to determine if the navigation command is complete. Then sit
+            # the robot down once it is finished.
+            is_finished = self._check_success(nav_to_cmd_id)
+
+        self._lease = self._lease_wallet.advance()
+        self._lease_keepalive = LeaseKeepAlive(self._lease_client)
+
+        # Update the lease and power off the robot if appropriate.
+        if self._powered_on and not self._started_powered_on:
+            # Sit the robot down + power off after the navigation command is complete.
+            self.toggle_power(should_power_on=False)
 
     def _navigate_to(self, *args):
         """Navigate to a specific waypoint."""
@@ -327,7 +399,8 @@ class GraphNavInterface(object):
             motors_on = False
             while not motors_on:
                 future = self._robot_state_client.get_robot_state_async()
-                state_response = future.result(timeout=10) # 10 second timeout for waiting for the state response.
+                state_response = future.result(
+                    timeout=10)  # 10 second timeout for waiting for the state response.
                 if state_response.power_state.motor_power_state == robot_state_pb2.PowerState.STATE_ON:
                     motors_on = True
                 else:
@@ -410,7 +483,12 @@ class GraphNavInterface(object):
             (5) Upload the graph and its snapshots.
             (6) Navigate to. The destination waypoint id is the second argument.
             (7) Navigate route. The (in-order) waypoint ids of the route are the arguments.
-            (8) Clear the current graph.
+            (8) Navigate to in seed frame. The following options are accepted for arguments: [x, y],
+                [x, y, yaw], [x, y, z, yaw], [x, y, z, qw, qx, qy, qz]. (Don't type the braces).
+                When a value for z is not specified, we use the current z height.
+                When only yaw is specified, the quaternion is constructed from the yaw.
+                When yaw is not specified, an identity quaternion is used.
+            (9) Clear the current graph.
             (q) Exit.
             """)
             try:

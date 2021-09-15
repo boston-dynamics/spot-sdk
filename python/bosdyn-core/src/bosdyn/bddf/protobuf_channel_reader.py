@@ -14,7 +14,8 @@ class ProtobufChannelReader:
         self._protobuf_reader = protobuf_reader
         self._protobuf_type = protobuf_type
         self._channel_name = channel_name or protobuf_type.DESCRIPTOR.full_name
-        self._series_index = self._protobuf_reader.series_index(self._channel_name)
+        self._series_index = self._protobuf_reader.series_index(
+            self._channel_name, message_type=protobuf_type.DESCRIPTOR.full_name)
         self._descriptor = None
         self._num_messages = None
 
@@ -45,3 +46,22 @@ class ProtobufChannelReader:
                                                                   self._protobuf_type,
                                                                   index_in_series)
         return timestamp, msg
+
+
+    def __iter__(self):
+        return ProtobufChannelReader.Iterator(self)
+
+    class Iterator:  # pylint: disable=too-few-public-methods
+        """Iterator over messages from a ProtobufChannelReader"""
+
+        def __init__(self, channel_reader):
+            self._channel_reader = channel_reader
+            self._index = 0
+
+        def __next__(self):
+            """Returns the next vlue."""
+            if self._index >= self._channel_reader.num_messages:
+                raise StopIteration
+            msg = self._channel_reader.get_message(self._index)
+            self._index += 1
+            return msg

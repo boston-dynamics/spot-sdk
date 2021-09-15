@@ -34,6 +34,17 @@ message Lease {
     repeated string client_names = 4;
 }
 
+
+// Lease resources can be divided into a hierarchy of sub-resources that can
+// be commanded together. This message describes the hierarchy of a resource.
+message ResourceTree {
+    // The name of this resource.
+    string resource = 1;
+
+    // Sub-resources that make up this resource.
+    repeated ResourceTree sub_resources = 2;
+}
+
 // Details about who currently owns the Lease for a resource.
 message LeaseOwner {
     string client_name = 1; // The name of the client application.
@@ -75,6 +86,12 @@ message LeaseUseResult {
 
     // The previous lease, if any, which was used.
     Lease previous_lease = 4;
+
+    // The "latest"/"most recent" lease known to the system.
+    Lease latest_known_lease = 5;
+
+    // Represents the latest "leaf" resources of the hierarchy.
+    repeated Lease latest_resources = 6;
 }
 
 // The AcquireLease request message which sends which resource the lease should be for.
@@ -241,6 +258,11 @@ message ListLeasesResponse {
 
     // The resources managed by the LeaseService.
     repeated LeaseResource resources = 2;
+
+    // Provide the hierarchical lease structure.
+    // A resource can encapsulate multiple sub-resources.
+    // For example, the "body" lease may include control of the legs, arm, and gripper.
+    ResourceTree resource_tree = 3;
 }
 
 // The RetainLease request will inform the LeaseService that the application contains to hold
@@ -263,3 +285,5 @@ message RetainLeaseResponse {
     // Result of using the lease.
     LeaseUseResult lease_use_result = 2;
 }
+
+

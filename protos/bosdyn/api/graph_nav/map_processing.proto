@@ -1,0 +1,362 @@
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+import "bosdyn/api/geometry.proto";
+import "bosdyn/api/header.proto";
+import "bosdyn/api/graph_nav/map.proto";
+
+package bosdyn.api.graph_nav;
+
+// Processes a GraphNav map by creating additional edges. After processing,
+// a new subgraph is created containing additional edges to add to the map.
+// Edges are created between waypoints that are near each other. These waypoint pairs
+// are called "loop closures", and are found by different means.
+// In general, if parameters are not provided, reasonable defaults will be used.
+// Note that this can be used to merge disconnected subgraphs from multiple recording
+// sessions so long as they share fiducial observations.
+message ProcessTopologyRequest {
+    // Parameters for how to refine loop closure edges using iterative
+    // closest point matching.
+    message ICPParams {
+        // The maximum number of iterations to run. Set to zero to skip ICP processing.
+        google.protobuf.Int32Value icp_iters = 1;
+        // The maximum distance between points in the point cloud we are willing to
+        // accept for matches.
+        google.protobuf.DoubleValue max_point_match_distance = 2;
+    }
+    // Parameters for how to close loops using odometry. This infers which waypoints
+    // should be connected to one another based on the odometry measurements in the map.
+    message OdometryLoopClosureParams {
+        // The maximum distance between waypoints found by walking a path from one
+        // waypoint to the other using only the existing edges in the map. Beyond
+        // this distance, we are unwilling to trust odometry.
+        google.protobuf.DoubleValue max_loop_closure_path_length = 1;
+        // The minimum distance between waypoints found by walking a path from
+        // one waypoint to the other using only the existing edges in the map.
+        // Set this higher to avoid creating small shortcuts along the existing path.
+        // Note that this is a 2d path length.
+        google.protobuf.DoubleValue min_loop_closure_path_length = 2;
+        // The maximum apparent height change of the created edge that we are
+        // willing to accept between waypoints. This avoids closing loops up ramps,
+        // stairs, etc. or closing loops where there is significant odometry drift.
+        google.protobuf.DoubleValue max_loop_closure_height_change = 3;
+        // Once a loop closure candidate is found, the system creates an edge between the
+        // candidate waypoints. Only create the edge if it is shorter than this value.
+        // Note that this is a 3d edge length.
+        google.protobuf.DoubleValue max_loop_closure_edge_length = 4;
+        // Use prior loop closures to infer new odometry based loop closures. This is
+        // useful when other sources of loop closures (like fiducials) are being used.
+        // The existence of those loop closures allows the system to infer other nearby
+        // loop closures using odometry. Alternatively, the user may call the ProcessTopology
+        // RPC multiple times to achieve the same effect.
+        google.protobuf.Int32Value num_extra_loop_closure_iterations = 5;
+    }
+    // Parameters for how to close a loop using fiducials (AprilTags). This infers
+    // which waypoints should be connected to one another based on shared observations
+    // of AprilTags.
+    // Note that multiple disconnected subgraphs (for example from multiple recording sessions)
+    // can be merged this way.
+    message FiducialLoopClosureParams {
+        // The minimum distance between waypoints found by walking a path from
+        // one waypoint to the other using only the existing edges in the map.
+        // Set this higher to avoid creating small shortcuts along the existing path.
+        // Note that this is a 2d path length.
+        google.protobuf.DoubleValue min_loop_closure_path_length = 1;
+        // Once a loop closure candidate is found, the system creates an edge between the
+        // candidate waypoints. Only create the edge if it is shorter than this value.
+        // Note that this is a 3d edge length.
+        google.protobuf.DoubleValue max_loop_closure_edge_length = 2;
+        // Maximum distance to accept between a waypoint and a fiducial detection to
+        // use that fiducial detection for generating loop closure candidates.
+        google.protobuf.DoubleValue max_fiducial_distance = 3;
+        // The maximum apparent height change of the created edge that we are
+        // willing to accept between waypoints. This avoids closing loops up ramps,
+        // stairs, etc. or closing loops where there is significant odometry drift.
+        google.protobuf.DoubleValue max_loop_closure_height_change = 4;
+    }
+    // Parameters for how to check for collisions when creating loop closures. The system
+    // will avoid creating edges in the map that the robot cannot actually traverse due to
+    // the presence of nearby obstacles.
+    message CollisionCheckingParams {
+        // By default, this is true.
+        google.protobuf.BoolValue check_edges_for_collision = 1;
+        // Assume that the robot is a sphere with this radius. Only accept a
+        // loop closure if this spherical robot can travel in a straight line
+        // from one waypoint to the other without hitting obstacles.
+        google.protobuf.DoubleValue collision_check_robot_radius = 2;
+        // Consider significant height variations along the edge (like stairs or ramps)
+        // to be obstacles. The edge will not be created if there is a height change along
+        // it of more than this value according to the nearby sensor data.
+        google.protobuf.DoubleValue collision_check_height_variation = 3;
+    }
+    // Parameters which control topology processing. In general, anything which isn't filled out
+    // will be replaced by reasonable defaults.
+    message Params {
+        // True by default -- generate loop closure candidates using odometry.
+        google.protobuf.BoolValue do_odometry_loop_closure = 1;
+        // Parameters for generating loop closure candidates using odometry.
+        OdometryLoopClosureParams odometry_loop_closure_params = 2;
+        // Parameters for refining loop closure candidates using iterative closest point
+        // cloud matching.
+        ICPParams icp_params = 3;
+        // True by default -- generate loop closure candidates using fiducials.
+        google.protobuf.BoolValue do_fiducial_loop_closure = 4;
+        // Parameters for generating loop closure candidates using fiducials.
+        FiducialLoopClosureParams fiducial_loop_closure_params = 5;
+        // Parameters which control rejecting loop closure candidates which
+        // collide with obstacles.
+        CollisionCheckingParams collision_check_params = 6;
+        // Causes the processing to time out after this many seconds. If not set, a default of 45 seconds
+        // will be used. If this timeout occurs before the overall RPC timeout, a partial result will be
+        // returned with ProcessTopologyResponse.timed_out set to true. Processing can be continued by
+        // calling ProcessTopology again.
+        double timeout_seconds = 7;
+    }
+    // Standard message header.
+    RequestHeader header = 1;
+    // Parameters. If not filled out, reasonable defaults will be used.
+    Params params = 2;
+
+    // If true, any processing should directly modify the map on the server.
+    // Otherwise, the client is expected to upload the processing results (newly created edges)
+    // back to the server. The processing service shares memory with a map container service
+    // (e.g the GraphNav service).
+    bool modify_map_on_server = 3;
+}
+
+// Result of the topology processing RPC. If successful, contains a subgraph of new
+// waypoints or edges created by this process.
+message ProcessTopologyResponse {
+    // Standard message header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        STATUS_UNKNOWN = 0; // Programming error.
+        STATUS_OK = 1; // Success.
+        STATUS_MISSING_WAYPOINT_SNAPSHOTS = 2; // Not all of the waypoint snapshots exist on the server. Upload them to continue.
+        STATUS_INVALID_GRAPH = 3; // The graph is invalid topologically, for example containing missing waypoints referenced by edges.
+        STATUS_MAP_MODIFIED_DURING_PROCESSING = 4; // Tried to write the anchoring after processing, but another client may have modified the map. Try again
+    }
+    // Result of the processing.
+    Status status = 2;
+
+    // This graph contains the new edge(s) created by map processing. Note that these edges will be
+    // annotated with their creation method. Note that several subgraphs may be returned via
+    // streaming as the map is processed.
+    Graph new_subgraph = 3;
+
+    // If modify_map_on_server was set to true in the request, then the map currently on the server
+    // was modified using map processing. If this is set to false, then either an error occurred during
+    // processing, or modify_map_on_server was set to false in the request.
+    // When map_on_server_was_modified is set to false, the client is expected to upload the results
+    // back to the server to commit the changes.
+    bool map_on_server_was_modified = 4;
+    // When there are missing waypoint snapshots, these are the IDs of the missing snapshots.
+    // Upload them to continue.
+    repeated string missing_snapshot_ids = 10;
+    // When there are missing waypoints, these are the IDs of the missing waypoints. Upload them
+    // to continue.
+    repeated string missing_waypoint_ids = 11;
+    // If true, the processing timed out. Note that this is not considered an error. Run topology processing again
+    // to continue adding edges.
+    bool timed_out = 12;
+}
+
+// Represents an interval in x, y, z and yaw around some center. Some value x
+// will be within the bounds if  center - x_bounds <= x >= center + x_bounds.
+// If the values are left at zero, the bounds are considered to be unconstrained.
+// The center of the bounds is left implicit, and should be whatever this message
+// is packaged with.
+message PoseBounds {
+    // Bounds on the x position in meters.
+    double x_bounds = 1;
+    // Bounds on the y position in meters.
+    double y_bounds = 2;
+    // Bounds on the z position in meters.
+    double z_bounds = 3;
+    // Bounds on the yaw (rotation around z axis) in radians.
+    double yaw_bounds= 4;
+}
+
+// Controls how certain the user is of an anchor's pose. If left empty, a reasonable default will be chosen.
+message AnchorHintUncertainty {
+    oneof uncertainty {
+        // A full 6x6 Gaussian covariance matrix representing uncertainty of an anchoring.
+        SE3Covariance se3_covariance = 1;
+        // Represents the 95 percent confidence interval on individual axes. This
+        // will be converted to a SE3Covariance internally by creating a diagonal
+        // matrix whose elements are informed by the confidence bounds.
+        PoseBounds confidence_bounds = 2;
+    }
+}
+
+// Waypoints may be anchored to a particular seed frame. The user may request that a waypoint
+// be anchored in a particular place with some Gaussian uncertainty.
+message WaypointAnchorHint {
+    // This is to be interpreted as the mean of a Gaussian distribution, representing
+    // the pose of the waypoint in the seed frame.
+    Anchor waypoint_anchor = 1;
+    // This is the uncertainty of the anchor's pose in the seed frame.
+    // If left empty, a reasonable default uncertainty will be generated.
+    AnchorHintUncertainty seed_tform_waypoint_uncertainty = 2;
+    // Normally, the optimizer will move the anchorings of waypoints based on context, to minimize the
+    // overall cost of the optimization problem. By providing a constraint on pose, the user can ensure
+    // that the anchors stay within a certain region in the seed frame.
+    // Leaving this empty will allow the optimizer to move the anchoring from the hint as far as it likes.
+    PoseBounds seed_tform_waypoint_constraint = 3;
+}
+
+// World objects (such as fiducials) may be anchored to a particular seed frame. The user may request that an object
+// be anchored in a particular place with some Gaussian uncertainty.
+message WorldObjectAnchorHint {
+    // This is to be interpreted as the mean of a Gaussian distribution, representing
+    // the pose of the object in the seed frame.
+    AnchoredWorldObject object_anchor = 1;
+    // This is the uncertainty of the anchor's pose in the seed frame.
+    // If left empty, a reasonable default uncertainty will be generated.
+    AnchorHintUncertainty seed_tform_object_uncertainty = 2;
+    // Normally, the optimizer will move the anchorings of object based on context, to minimize the
+    // overall cost of the optimization problem. By providing a constraint on pose, the user can ensure
+    // that the anchors stay within a certain region in the seed frame.
+    // Leaving this empty will allow the optimizer to move the anchoring from the hint as far as it likes.
+    PoseBounds seed_tform_object_constraint = 3;
+}
+
+// The user may assign a number of world objects and waypoints a guess at where they are in the seed frame.
+// These hints will be respected by the ProcessAnchoringRequest.
+message AnchoringHint {
+    // List of waypoints and hints as to where they are in the seed frame.
+    repeated WaypointAnchorHint waypoint_anchors = 1;
+    // List of world objects and hints as to where they are in the seed frame.
+    repeated WorldObjectAnchorHint world_objects = 2;
+}
+
+// Causes the server to optimize an existing anchoring, or generate a new anchoring for the map using the given parameters.
+// In general, if parameters are not provided, reasonable defaults will be used.
+// The new anchoring will be streamed back to the client, or modified on the server if desired.
+message ProcessAnchoringRequest {
+    // Parameters for procesing an anchoring.
+    message Params {
+        // Parameters affecting the underlying optimizer.
+        message OptimizerParams {
+            // Maximum iterations of the optimizer to run.
+            google.protobuf.Int32Value max_iters = 1;
+            // Maximum time the optimizer is allowed to run before giving up.
+            google.protobuf.DoubleValue max_time_seconds = 2;
+        }
+        // Parameters which affect the measurements the optimzier uses to process the anchoring.
+        message MeasurementParams {
+            // If true, waypoints which share the same kinematic odometry
+            // frame will be constrained to one another using it.
+            google.protobuf.BoolValue use_kinematic_odometry = 1;
+            // If true, waypoints which share the same visual odometry frame
+            // will be constrained to one another using it.
+            google.protobuf.BoolValue use_visual_odometry = 2;
+            // If true, waypoints will be constrained so that the apparent pose of the
+            // robot w.r.t the waypoint at the time of recording is consistent with gravity.
+            google.protobuf.BoolValue use_gyroscope_measurements = 3;
+            // If true, edges which were created by topology processing via loop closures will
+            // be used as constraints.
+            google.protobuf.BoolValue use_loop_closures = 4;
+            // If true, world object measurements will be used to constrain waypoints to one another
+            // when those waypoints co-observe the same world object.
+            google.protobuf.BoolValue use_world_objects = 5;
+        }
+        // Relative weights to use for each of the optimizer's terms. These can be any positive value.
+        // If set to zero, a reasonable default will be used. In general, the higher the weight, the more
+        // the optimizer will care about that particular measurement.
+        message Weights {
+            double kinematic_odometry_weight = 1;
+            double visual_odometry_weight = 2;
+            double world_object_weight = 3;
+            double hint_weight = 4;
+            double gyroscope_weight = 5;
+            double loop_closure_weight = 6;
+        }
+        OptimizerParams optimizer_params = 1;
+        MeasurementParams measurement_params = 2;
+        Weights weights = 3;
+        // If true, the anchoring which already exists on the server will be used as the initial
+        // guess for the optimizer. Otherwise, a new anchoring will be generated for every waypoint
+        // which doesn't have a value passed in through initial_hint. If no hint is provided,
+        // and this value is false, every waypoint will be given a starting anchoring based on
+        // the oldest waypoint in the map.
+        google.protobuf.BoolValue optimize_existing_anchoring = 4;
+        // The optimizer will try to keep the orientation of waypoints consistent with gravity.
+        // If provided, this is the gravity direction expressed with respect to the seed. This
+        // will be interpreted as a unit vector. If not filled out, a default of (0, 0, -1) will be
+        // used.
+        bosdyn.api.Vec3 gravity_ewrt_seed = 5;
+    }
+    // Standard request header.
+    RequestHeader header = 1;
+    Params params = 2;
+    // Initial guess at some number of waypoints and world objects and their anchorings.
+    AnchoringHint initial_hint = 3;
+    // If true, the map currently uploaded to the server will have its anchoring modified.
+    // Otherwise, the user is expected to re-upload the anchoring.
+    bool modify_anchoring_on_server = 4;
+    // If true, the anchoring will be streamed back to the user after every iteration.
+    // This is useful for debug visualization.
+    bool stream_intermediate_results = 5;
+}
+
+// Streamed response from the ProcessAnchoringRequest. These will be streamed until optimization is complete.
+// New anchorings will be streamed as they become available.
+message ProcessAnchoringResponse {
+    ResponseHeader header = 1;
+    enum Status {
+        STATUS_UNKNOWN = 0; // Programming error.
+        STATUS_OK = 1; // Success.
+        STATUS_MISSING_WAYPOINT_SNAPSHOTS = 2; // Not all of the waypoint snapshots exist on the server. Upload them to continue.
+        STATUS_INVALID_GRAPH = 3; // The graph is invalid topologically, for example containing missing waypoints referenced by edges.
+        STATUS_OPTIMIZATION_FAILURE = 4; // The optimization failed due to local minima or an ill-conditioned problem definition.
+        STATUS_INVALID_PARAMS = 5; // The parameters passed to the optimizer do not make sense (e.g negative weights).
+        STATUS_CONSTRAINT_VIOLATION = 6; // One or more anchors were moved outside of the desired constraints.
+        STATUS_MAX_ITERATIONS = 7; // The optimizer reached the maximum number of iterations before converging.
+        STATUS_MAX_TIME = 8; // The optimizer timed out before converging.
+        STATUS_INVALID_HINTS = 9; // One or more of the hints passed in to the optimizer are invalid (do not correspond to real waypoints or objects).
+        STATUS_MAP_MODIFIED_DURING_PROCESSING = 10; // Tried to write the anchoring after processing, but another client may have modified the map. Try again.
+    }
+    Status status = 2;
+    // Contains new anchorings for waypoint(s) processed by the server.
+    // These will be streamed back to the user as they become available.
+    repeated Anchor waypoint_results = 3;
+    // Contains new anchorings for object(s) (e.g april tags) processed by the server.
+    // These will be streamed back to the user as they become available
+    repeated AnchoredWorldObject world_object_results = 4;
+    // If modify_anchoring_on_server was set to true in the request, then the anchoring currently on the server
+    // was modified using map processing. If this is set to false, then either an error occurred during
+    // processing, or modify_anchoring_on_server was set to false in the request.
+    // When anchoring_on_server_was_modified is set to false, the client is expected to upload the results
+    // back to the server to commit the changes.
+    bool anchoring_on_server_was_modified = 5;
+    // The current optimizer iteration that produced these data.
+    int32 iteration = 6;
+    // The current nonlinear optimization cost.
+    double cost = 7;
+    // If true, this is the result of the final iteration of optimization.
+    // This will always be true when stream_intermediate_results in the request is false.
+    bool final_iteration = 8;
+    // On failure due to constraint violation, these hints were violated by the optimization.
+    // Try increasing the pose bounds on the constraints of these hints.
+    repeated WaypointAnchorHint violated_waypoint_constraints = 9;
+    // On failure due to constraint violation, these hints were violated by the optimization.
+    // Try increasing the pose bounds on the constraints of these hints.
+    repeated WorldObjectAnchorHint violated_object_constraints = 10;
+    // When there are missing waypoint snapshots, these are the IDs of the missing snapshots.
+    // Upload them to continue.
+    repeated string missing_snapshot_ids = 11;
+    // When there are missing waypoints, these are the IDs of the missing waypoints. Upload them
+    // to continue.
+    repeated string missing_waypoint_ids = 12;
+    // Unorganized list of waypoints and object IDs which were invalid (missing from the map).
+    repeated string invalid_hints = 13;
+}

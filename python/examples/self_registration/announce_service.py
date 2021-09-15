@@ -11,7 +11,8 @@ This is a generic python grpc server set up.
 """
 import argparse
 import bosdyn.client.util
-from bosdyn.client.util import GrpcServiceRunner, setup_logging
+from bosdyn.client.util import setup_logging
+from bosdyn.client.server_util import GrpcServiceRunner
 import logging
 import time
 import sys

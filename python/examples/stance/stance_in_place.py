@@ -46,7 +46,7 @@ def run(config):
     # Acquire lease
     lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
     lease = lease_client.acquire()
-    
+
     try:
         with bosdyn.client.lease.LeaseKeepAlive(lease_client):
             command_client = robot.ensure_client(RobotCommandClient.default_service_name)

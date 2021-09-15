@@ -14,6 +14,7 @@ from __future__ import print_function
 
 import functools
 import time
+import uuid
 
 from bosdyn.client.exceptions import Error
 from bosdyn.client.common import BaseClient, common_header_errors
@@ -24,6 +25,56 @@ import bosdyn.api.data_buffer_service_pb2_grpc as data_buffer_service
 
 class InvalidArgument(Error):
     """A given argument could not be used."""
+
+
+def log_event(  # pylint: disable=too-many-arguments,no-member
+        robot, event_type, level, description, start_timestamp_secs,
+        end_timestamp_secs=None, id_str=None, parameters=None,
+        log_preserve_hint=data_buffer_protos.Event.LOG_PRESERVE_HINT_NORMAL):
+    """Add an Event to the Data Buffer.
+
+    Args:
+      robot:                          A Robot object.
+      event_type (string):            The type of event.
+      level (bosdyn.api.Event.Level): The relative importance of the event.
+      description (string):           A human-readable description of the event.
+      start_timestamp_secs (float):   Start of the event, in local time.
+      end_timestamp_secs (float):     End of the event.  start_timestamp_secs is used if None.
+      id_str (string):                      Unique id for event.  A uuid is generated if None.
+      parameters ([bosdyn.api.Parameter]):  Parameters to attach to the event.
+      log_preserve_hint (bosdyn.api.LogPreserveHint): Whether event should try to preserve log data.
+    """
+
+    data_buffer_client = robot.ensure_client(DataBufferClient.default_service_name)
+
+    if not id_str:
+        id_str = str(uuid.uuid1())
+
+    robot.time_sync.wait_for_sync()
+    robot_start_timestamp = robot.time_sync.robot_timestamp_from_local_secs(start_timestamp_secs)
+    if end_timestamp_secs:
+        robot_end_timestamp = robot.time_sync.robot_timestamp_from_local_secs(end_timestamp_secs)
+    else:
+        robot_end_timestamp = robot_start_timestamp
+
+    # pylint: disable=no-member
+    if isinstance(log_preserve_hint, bool):
+        if log_preserve_hint:
+            log_preserve_hint = data_buffer_protos.Event.LOG_PRESERVE_HINT_PRESERVE
+        else:
+            log_preserve_hint = data_buffer_protos.Event.LOG_PRESERVE_HINT_NORMAL
+
+    event = data_buffer_protos.Event(
+        type=event_type, description=description, source=robot.client_name,
+        id=id_str, start_time=robot_start_timestamp, end_time=robot_end_timestamp,
+        level=level, log_preserve_hint=log_preserve_hint)
+
+    if parameters:
+        for parameter in parameters:
+            proto = event.parameters.add()
+            proto.CopyFrom(parameter)
+
+    data_buffer_client.add_events([event])
 
 
 class DataBufferClient(BaseClient):
@@ -65,6 +116,7 @@ class DataBufferClient(BaseClient):
         """Internal text message RPC stub call."""
         request = data_buffer_protos.RecordTextMessagesRequest()
         for in_text_msg in text_messages:
+            # pylint: disable=no-member
             request.text_messages.add().CopyFrom(in_text_msg)
 
         return func(self._stub.RecordTextMessages, request, value_from_response=None,
@@ -91,6 +143,7 @@ class DataBufferClient(BaseClient):
         """Internal operator comment RPC stub call."""
         request = data_buffer_protos.RecordOperatorCommentsRequest()
         robot_timestamp = robot_timestamp or self._now_in_robot_basis(msg_type="Operator Comment")
+        # pylint: disable=no-member
         request.operator_comments.add(message=msg, timestamp=robot_timestamp)
         return func(self._stub.RecordOperatorComments, request, value_from_response=None,
                     error_from_response=common_header_errors, **kwargs)
@@ -101,10 +154,11 @@ class DataBufferClient(BaseClient):
 
         Args:
             data (bytes): Binary data of one blob.
-            type_id (string): Type of binary data of blob. For example, this could be the full name of
-                            a protobuf message type.
-            channel (string): The name by which messages are typically queried: often the same as
-                            type_id, or of the form '{prefix}/{type_id}'.
+            type_id (string): Type of binary data of blob. For example, this could
+                               be the full name of a protobuf message type.
+            channel (string): The name by which messages are typically queried:
+                               often the same as type_id, or of the form
+                               '{prefix}/{type_id}'.
             robot_timestamp (google.protobuf.Timestamp): Time of messages, in *robot time*.
 
         Raises:
@@ -128,8 +182,11 @@ class DataBufferClient(BaseClient):
             channel = type_id
 
         robot_timestamp = robot_timestamp or self._now_in_robot_basis(msg_type=type_id)
-        request.blob_data.add(timestamp=robot_timestamp, channel=channel, type_id=type_id,
-                              data=data)
+
+        request.blob_data.add(  # pylint: disable=no-member
+            timestamp=robot_timestamp, channel=channel, type_id=type_id, data=data)
+
+        request.sync = write_sync
 
         request.sync = write_sync
 
@@ -183,7 +240,7 @@ class DataBufferClient(BaseClient):
         request = data_buffer_protos.RecordEventsRequest()
 
         for event in events:
-            request.events.add().CopyFrom(event)
+            request.events.add().CopyFrom(event)  # pylint: disable=no-member
 
         return func(self._stub.RecordEvents, request, value_from_response=None,
                     error_from_response=common_header_errors, **kwargs)
@@ -192,7 +249,8 @@ class DataBufferClient(BaseClient):
         """Log signal schema to the robot.
 
         Args:
-            variables (List[SignalSchema.Variable]): List of SignalSchema variables defining what is in tick.
+            variables (List[SignalSchema.Variable]): List of SignalSchema variables
+                                                      defining what is in tick.
             schema_name (string): Name of schema (defined previously by client).
 
         Raises:
@@ -208,7 +266,7 @@ class DataBufferClient(BaseClient):
         """Internal register stub call."""
         tick_schema = data_buffer_protos.SignalSchema(vars=variables, schema_name=schema_name)
         request = data_buffer_protos.RegisterSignalSchemaRequest()
-        request.schema.CopyFrom(tick_schema)
+        request.schema.CopyFrom(tick_schema)  # pylint: disable=no-member
         # Schemas are saved internally, according to their schema ID. We need to wait for the
         # response from the server to get the schema id. The response does not include the schema
         # itself so use a partial to process the response appropriately.
@@ -217,8 +275,9 @@ class DataBufferClient(BaseClient):
                     value_from_response=value_from_response,
                     error_from_response=common_header_errors, **kwargs)
 
-    def add_signal_tick(self, data, schema_id, encoding=data_buffer_protos.SignalTick.ENCODING_RAW,
-                        sequence_id=0, source="client", **kwargs):
+    def add_signal_tick(  # pylint: disable=too-many-arguments,no-member
+            self, data, schema_id, encoding=data_buffer_protos.SignalTick.ENCODING_RAW,
+            sequence_id=0, source="client", **kwargs):
         """Log signal data to the robot data buffer.
 
         Schema should be sent before any ticks.
@@ -237,21 +296,23 @@ class DataBufferClient(BaseClient):
         return self._do_add_signal_tick(self.call, data, schema_id, encoding, sequence_id, source,
                                         **kwargs)
 
-    def add_signal_tick_async(self, data, schema_id,
-                              encoding=data_buffer_protos.SignalTick.ENCODING_RAW, sequence_id=0,
-                              source="client", **kwargs):
+    def add_signal_tick_async(  # pylint: disable=too-many-arguments,no-member
+            self, data, schema_id, encoding=data_buffer_protos.SignalTick.ENCODING_RAW,
+            sequence_id=0, source="client", **kwargs):
         """Async version of add_signal_tick."""
         return self._do_add_signal_tick(self.call_async, data, schema_id, encoding, sequence_id,
                                         source, **kwargs)
 
-    def _do_add_signal_tick(self, func, data, schema_id, encoding, sequence_id, source, **kwargs):
+    def _do_add_signal_tick(  # pylint: disable=too-many-arguments
+            self, func, data, schema_id, encoding, sequence_id, source, **kwargs):
         """Internal add signal tick stub call."""
         if schema_id not in self.log_tick_schemas:
             raise LookupError('The log tick schema id "{}" is unknown'.format(schema_id))
 
         request = data_buffer_protos.RecordSignalTicksRequest()
-        request.tick_data.add(sequence_id=sequence_id, source=source, schema_id=schema_id,
-                              encoding=encoding, data=data)
+        request.tick_data.add(  # pylint: disable=no-member
+            sequence_id=sequence_id, source=source, schema_id=schema_id, encoding=encoding,
+            data=data)
         return func(self._stub.RecordSignalTicks, request, value_from_response=None,
                     error_from_response=common_header_errors, **kwargs)
 

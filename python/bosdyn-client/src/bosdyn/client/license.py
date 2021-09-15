@@ -9,8 +9,10 @@
 from bosdyn.api import license_pb2, license_service_pb2_grpc
 from bosdyn.client.common import BaseClient, common_header_errors
 
+
 def _get_entry_value(response):
     return response.license
+
 
 class LicenseClient(BaseClient):
     """Client to acquire robot license."""

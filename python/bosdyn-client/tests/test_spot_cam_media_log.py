@@ -102,6 +102,7 @@ class MockMediaLogService(service_pb2_grpc.MediaLogServiceServicer):
         helpers.add_common_header(response, request)
         return response
 
+
 def _setup(rpc_delay=0):
     client = bosdyn.client.spot_cam.media_log.MediaLogClient()
     service = MockMediaLogService(rpc_delay=rpc_delay)
@@ -131,13 +132,16 @@ def test_delete_async():
     completed_lp = _create_fake_logpoint()
     client.delete_async(completed_lp).result()
 
+
 def test_enable_debug():
     client, service, server = _setup()
     client.enable_debug()
 
+
 def test_enable_debug_async():
     client, service, server = _setup()
     client.enable_debug_async().result()
+
 
 def test_get_status():
     client, service, server = _setup()
@@ -196,6 +200,7 @@ def test_retrieve():
     assert lp.SerializeToString() == completed_lp.SerializeToString()
     assert len(image_binary) == 0
 
+
 def test_retrieve_raw_data():
     client, service, server = _setup()
     completed_lp = _create_fake_logpoint()
@@ -203,13 +208,16 @@ def test_retrieve_raw_data():
     assert lp.SerializeToString() == completed_lp.SerializeToString()
     assert len(image_binary) == 0
 
+
 def test_set_passphrase():
     client, service, server = _setup()
     client.set_passphrase('good')
 
+
 def test_set_passphrase_async():
     client, service, server = _setup()
     client.set_passphrase_async('good').result()
+
 
 def test_store():
     client, service, server = _setup()
@@ -232,10 +240,12 @@ def test_store_async():
     assert lp.type == logging_pb2.Logpoint.STILLIMAGE
     assert lp.tag == camera_tag
 
+
 def test_tag():
     client, service, server = _setup()
     completed_lp = _create_fake_logpoint()
     client.tag(completed_lp)
+
 
 def test_tag_async():
     client, service, server = _setup()

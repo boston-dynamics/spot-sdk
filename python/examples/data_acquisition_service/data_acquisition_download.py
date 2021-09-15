@@ -50,27 +50,28 @@ def data_acquisition_download(config):
     except ValueError as val_err:
         print("Value Exception:\n" + str(val_err))
 
-    download_data_REST(query_params, config.hostname, robot.user_token,
-        config.destination_folder, config.additional_REST_params)
+    download_data_REST(query_params, config.hostname, robot.user_token, config.destination_folder,
+                       config.additional_REST_params)
 
 
 def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
-    parser.add_argument(
-        '--destination-folder', help=('The folder where the data should be downloaded to.'),
-        required=False, default='.')
+    parser.add_argument('--destination-folder',
+                        help=('The folder where the data should be downloaded to.'), required=False,
+                        default='.')
     parser.add_argument(
         '--query-from-timestamp', help=('The beginning timestamp to query from in RFC 3339 date'
-        ' string format (YYYY-MM-DDTHH:MM::SSZ).'), required=True)
+                                        ' string format (YYYY-MM-DDTHH:MM::SSZ).'), required=True)
     parser.add_argument(
         '--query-to-timestamp', help=('The end timestamp to query to in RFC 3339 date'
-        ' string format (YYYY-MM-DDTHH:MM::SSZ).'), required=True)
+                                      ' string format (YYYY-MM-DDTHH:MM::SSZ).'), required=True)
     parser.add_argument(
-        '--additional-REST-params', type=json.loads, help=('JSON dictionary with additional REST '
-        'parameters to append to the GET request when downloading the data. Parameters with '
-        'multiple values need to be set to lists in the format (param: [value1, value2])'),
+        '--additional-REST-params', type=json.loads,
+        help=('JSON dictionary with additional REST '
+              'parameters to append to the GET request when downloading the data. Parameters with '
+              'multiple values need to be set to lists in the format (param: [value1, value2])'),
         required=False)
     options = parser.parse_args(argv)
 

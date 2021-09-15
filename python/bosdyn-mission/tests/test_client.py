@@ -25,6 +25,7 @@ import bosdyn.api.header_pb2 as HeaderProto
 from bosdyn.client.server_util import ResponseContext
 import bosdyn.mission.client
 
+import helpers
 
 INVALID_ANSWER_CODE = 100
 INVALID_QUESTION_ID = -1
@@ -131,13 +132,8 @@ def service():
 
 @pytest.fixture(scope='function')
 def server(client, service):
-    server = grpc.server(concurrent.futures.ThreadPoolExecutor(max_workers=1))
-    mission_service_pb2_grpc.add_MissionServiceServicer_to_server(service, server)
-    port = server.add_insecure_port('localhost:0')
-    channel = grpc.insecure_channel('localhost:{}'.format(port))
-    client.channel = channel
-    server.start()
-    return server
+    return helpers.start_server(mission_service_pb2_grpc.add_MissionServiceServicer_to_server,
+                                client, service)
 
 
 def test_simple(client, server, service):
@@ -155,6 +151,7 @@ def test_simple(client, server, service):
     # also getting the changes from the answer question impl function.
     assert resp.header.error.code == resp.header.error.CODE_OK
     assert resp.header.request_received_timestamp.seconds + resp.header.request_received_timestamp.nanos * 1e-9 > 0
+
 
 def test_errors(client, server, service):
     """Test incorrect usage of the mission service client."""

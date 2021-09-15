@@ -30,9 +30,20 @@ message GrpcSpec {
 
 // Specification for selecting of blob messages.
 message BlobSpec {
+    // If set, require the message source to match this.
     string source = 1;
+
+    // If set, require the message type to match this value.
     string message_type = 2;
+
+    // If both channel and channel_glob are set, messages are selected which match either one.
+
+    // If set, require the channel to match this value (or channel_glob, if set).
     string channel = 3;
+
+    // Optionally require the channel to match a glob (or channel, if set)..
+    // For example, 'gps/*' will match all channels starting with 'gps/'.
+    string channel_glob = 4;
 }
 
 
@@ -41,6 +52,7 @@ message EventSpec {
     string source = 1;
     string type = 2;
     google.protobuf.Int32Value level = 3;
+    Event.LogPreserveHint log_preserve_hint = 4;
 }
 
 

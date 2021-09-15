@@ -36,7 +36,8 @@ class LocalGridClient(BaseClient):
 
     def get_local_grid_types_async(self, **kwargs):
         """Async version of get_local_grid_types()."""
-        return self.call_async(self._stub.GetLocalGridTypes, local_grid_pb2.GetLocalGridTypesRequest(),
+        return self.call_async(self._stub.GetLocalGridTypes,
+                               local_grid_pb2.GetLocalGridTypesRequest(),
                                value_from_response=lambda res: res.local_grid_type,
                                error_from_response=common_header_errors, **kwargs)
 
@@ -59,7 +60,6 @@ class LocalGridClient(BaseClient):
         return self.call(self._stub.GetLocalGrids, request,
                          value_from_response=lambda res: res.local_grid_responses,
                          error_from_response=common_header_errors, **kwargs)
-
 
     def get_local_grids_async(self, local_grid_type_names, **kwargs):
         """Async version of get_local_grids()."""

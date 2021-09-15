@@ -38,6 +38,9 @@ from bosdyn.client.world_object import WorldObjectClient
 #pylint: disable=no-member
 LOGGER = logging.getLogger()
 
+# Use this length to make sure we're commanding the head of the robot
+# to a position instead of the center.
+BODY_LENGTH = 1.1
 
 class FollowFiducial(object):
     """ Detect and follow a fiducial with Spot."""
@@ -54,7 +57,7 @@ class FollowFiducial(object):
         self._world_object_client = robot.ensure_client(WorldObjectClient.default_service_name)
 
         # Stopping Distance (x,y) offset from the tag and angle offset from desired angle.
-        self._tag_offset = float(options.distance_margin)  #meters
+        self._tag_offset = float(options.distance_margin) + BODY_LENGTH / 2.0  # meters
 
         # Maximum speeds.
         self._max_x_vel = 0.5
@@ -66,7 +69,6 @@ class FollowFiducial(object):
         # does not include the world object service, than default to april tag library.
         self._use_world_object_service = (options.use_world_objects and
                                           self.check_if_version_has_world_objects(self._robot_id))
-
 
         # Indicators for movement and image displays.
         self._standup = True  # Stand up the robot.
@@ -348,8 +350,8 @@ class FollowFiducial(object):
             # the same camera source.
             self._camera_to_extrinsics_guess[source_name] = (True, (rvec, tvec))
 
-            dist = math.sqrt(
-                float(tvec[0][0])**2 + float(tvec[1][0])**2 + float(tvec[2][0])**2) / 1000.0
+            dist = math.sqrt(float(tvec[0][0])**2 + float(tvec[1][0])**2 +
+                             float(tvec[2][0])**2) / 1000.0
             if dist < closest_dist:
                 closest_dist = dist
                 best_bbox = (tvec, rvec, source_name)
@@ -437,9 +439,8 @@ class FollowFiducial(object):
                                                     obstacle_avoidance_padding=.001)
         body_control = self.set_default_body_control()
         if self._limit_speed:
-            speed_limit = SE2VelocityLimit(
-                max_vel=SE2Velocity(
-                    linear=Vec2(x=self._max_x_vel, y=self._max_y_vel), angular=self._max_ang_vel))
+            speed_limit = SE2VelocityLimit(max_vel=SE2Velocity(
+                linear=Vec2(x=self._max_x_vel, y=self._max_y_vel), angular=self._max_ang_vel))
             if not self._avoid_obstacles:
                 mobility_params = spot_command_pb2.MobilityParams(
                     obstacle_params=obstacles, vel_limit=speed_limit, body_control=body_control,
@@ -483,8 +484,8 @@ class FollowFiducial(object):
     def make_camera_matrix(ints):
         """Transform the ImageResponse proto intrinsics into a camera matrix."""
         camera_matrix = np.array([[ints.focal_length.x, ints.skew.x, ints.principal_point.x],
-                                  [ints.skew.y, ints.focal_length.y,
-                                   ints.principal_point.y], [0, 0, 1]])
+                                  [ints.skew.y, ints.focal_length.y, ints.principal_point.y],
+                                  [0, 0, 1]])
         return camera_matrix
 
     def stop(self):
@@ -591,8 +592,8 @@ def main():
                         help="Distance [meters] that the robot should stop from the fiducial.")
     parser.add_argument("--limit-speed", default=True, type=lambda x: (str(x).lower() == 'true'),
                         help="If the robot should limit its maximum speed.")
-    parser.add_argument("--avoid-obstacles", default=False,
-                        type=lambda x: (str(x).lower() == 'true'),
+    parser.add_argument("--avoid-obstacles", default=False, type=lambda x:
+                        (str(x).lower() == 'true'),
                         help="If the robot should have obstacle avoidance enabled.")
     parser.add_argument(
         "--use-world-objects", default=True, type=lambda x: (str(x).lower() == 'true'),

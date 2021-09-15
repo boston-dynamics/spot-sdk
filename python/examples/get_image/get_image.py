@@ -17,13 +17,23 @@ from bosdyn.api import image_pb2
 import cv2
 import numpy as np
 
+from scipy import ndimage
+
+ROTATION_ANGLE = {
+    'back_fisheye_image': 0,
+    'frontleft_fisheye_image': -78,
+    'frontright_fisheye_image': -102,
+    'left_fisheye_image': 0,
+    'right_fisheye_image': 180
+}
 
 def main(argv):
     # Parse args
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
     parser.add_argument('--list', help='list image sources', action='store_true')
-    parser.add_argument('--auto-rotate', help='rotate right and front images to be upright', action='store_true')
+    parser.add_argument('--auto-rotate', help='rotate right and front images to be upright',
+                        action='store_true')
     parser.add_argument('--image-sources', help='Get image from source(s)', action='append')
     parser.add_argument('--image-service', help='Name of the image service to query.',
                         default=ImageClient.default_service_name)
@@ -83,12 +93,8 @@ def main(argv):
                 img = cv2.imdecode(img, -1)
 
             if options.auto_rotate:
-                if image.source.name[0:5] == "front":
-                    img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+                img = ndimage.rotate(img, ROTATION_ANGLE[image.source.name])
 
-                elif image.source.name[0:5] == "right":
-                    img = cv2.rotate(img, cv2.ROTATE_180)
-            
 
             # Save the image from the GetImage request to the current directory with the filename
             # matching that of the image source.

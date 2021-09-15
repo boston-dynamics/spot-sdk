@@ -222,7 +222,9 @@ class StateMachineStand(StateMachine):
         self._robot.stand_up()
         self._state_idx = self._state_idx + 1
 
-        print("\n Shine a light in Spot's front left camera, and Spot will tilt to follow the light.\n")
+        print(
+            "\n Shine a light in Spot's front left camera, and Spot will tilt to follow the light.\n"
+        )
 
 
 #===================================================================================================

@@ -8,8 +8,9 @@
 
 import bosdyn.api.bddf_pb2 as bddf
 
-from . block_writer import BlockWriter
-from . file_indexer import FileIndexer
+from .block_writer import BlockWriter
+from .file_indexer import FileIndexer
+
 
 class DataWriter:
     """Class for writing data to a file."""

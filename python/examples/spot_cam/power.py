@@ -17,6 +17,7 @@ from bosdyn.api.spot_cam import power_pb2
 
 from utils import add_bool_arg
 
+
 class PowerCommands(Subcommands):
     """Commands related to the Spot CAM's Power service"""
 

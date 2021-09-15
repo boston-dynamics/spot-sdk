@@ -30,3 +30,4 @@ The Autowalk feature is an implementation of the autonomous navigation API. Howe
 * [Missions service](missions_service.md)
 * [Network compute bridge](../network_compute_bridge.md)
 * [AutoReturn service](auto_return.md)
+* [Directed Exploration](directed_exploration.md)

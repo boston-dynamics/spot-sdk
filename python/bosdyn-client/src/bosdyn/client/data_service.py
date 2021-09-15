@@ -23,7 +23,7 @@ class InvalidArgument(Error):
 class DataServiceClient(BaseClient):
     """A client for adding to robot data buffer."""
 
-    default_service_name = 'data-service'
+    default_service_name = 'data'
     service_type = 'bosdyn.api.DataService'
 
     def __init__(self):

@@ -53,9 +53,7 @@ def test_write_read():  # pylint: disable=too-many-statements,too-many-locals
 
         # Write POD data (floats) to the file.
         pod_writer = PodSeriesWriter(data_writer, pod_series_type, pod_spec, bddf.TYPE_FLOAT32,
-                                     annotations={
-                                         'units': 'm/s^2'
-                                     })
+                                     annotations={'units': 'm/s^2'})
         for val in range(10, 20):
             pod_writer.write(timestamp_nsec, val)
 

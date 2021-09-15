@@ -34,16 +34,17 @@ from bosdyn.client.async_tasks import AsyncPeriodicQuery, AsyncTasks
 from bosdyn.client.math_helpers import Quat, SE3Pose
 from bosdyn.client.frame_helpers import get_odom_tform_body
 
-
 matplotlib.use('Qt5agg')
 LOGGER = logging.getLogger(__name__)
 TEXT_SIZE = 10
 SPOT_YELLOW = '#FBD403'
 
+
 def _update_thread(async_task):
     while True:
         async_task.update()
         time.sleep(0.01)
+
 
 class AsyncPointCloud(AsyncPeriodicQuery):
     """Grab robot state."""
@@ -55,6 +56,7 @@ class AsyncPointCloud(AsyncPeriodicQuery):
     def _start_query(self):
         return self._client.get_point_cloud_from_sources_async(["velodyne-point-cloud"])
 
+
 class AsyncRobotState(AsyncPeriodicQuery):
     """Grab robot state."""
 
@@ -65,10 +67,12 @@ class AsyncRobotState(AsyncPeriodicQuery):
     def _start_query(self):
         return self._client.get_robot_state_async()
 
+
 def window_closed(ax):
     fig = ax.figure.canvas.manager
     active_managers = plt._pylab_helpers.Gcf.figs.values()
     return not fig in active_managers
+
 
 def set_axes_equal(ax):
     """Make axes of 3D plot have equal scale so that spheres appear as spheres,
@@ -92,11 +96,12 @@ def set_axes_equal(ax):
 
     # The plot bounding box is a sphere in the sense of the infinity
     # norm, hence I call half the max range the plot radius.
-    plot_radius = 0.5*max([x_range, y_range, z_range])
+    plot_radius = 0.5 * max([x_range, y_range, z_range])
 
     ax.set_xlim3d([x_middle - plot_radius, x_middle + plot_radius])
     ax.set_ylim3d([y_middle - plot_radius, y_middle + plot_radius])
     ax.set_zlim3d([z_middle - plot_radius, z_middle + plot_radius])
+
 
 def main(argv):
     # The last argument should be the IP address of the robot. The app will use the directory to find
@@ -109,7 +114,6 @@ def main(argv):
     robot = sdk.create_robot(options.hostname)
     robot.authenticate(options.username, options.password)
     robot.sync_with_directory()
-
 
     _point_cloud_client = robot.ensure_client('velodyne-point-cloud')
     _robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
@@ -146,16 +150,23 @@ def main(argv):
 
             # Draw robot position and orientation on plot
             if _robot_state_task.proto:
-                odom_tform_body = get_odom_tform_body(_robot_state_task.proto.kinematic_state.transforms_snapshot).to_proto()
+                odom_tform_body = get_odom_tform_body(
+                    _robot_state_task.proto.kinematic_state.transforms_snapshot).to_proto()
                 helper_se3 = SE3Pose.from_obj(odom_tform_body)
                 odom_tform_butt = helper_se3.mult(body_tform_butt)
                 odom_tform_head = helper_se3.mult(body_tform_head)
-                ax.plot([odom_tform_butt.x], [odom_tform_butt.y], [odom_tform_butt.z], 'o', color=SPOT_YELLOW, markersize=7, label='robot_butt')
-                ax.plot([odom_tform_head.x], [odom_tform_head.y], [odom_tform_head.z], 'o', color=SPOT_YELLOW, markersize=7, label='robot_head')
-                ax.text(odom_tform_butt.x,odom_tform_butt.y,odom_tform_butt.z, 'Spot Butt', size=TEXT_SIZE, zorder=1, color='k') 
-                ax.text(odom_tform_head.x,odom_tform_head.y,odom_tform_head.z, 'Spot Head', size=TEXT_SIZE, zorder=1, color='k')
-                ax.plot([odom_tform_butt.x, odom_tform_head.x], [odom_tform_butt.y,odom_tform_head.y],zs=[odom_tform_butt.z,odom_tform_head.z], linewidth=6, color=SPOT_YELLOW)
-            
+                ax.plot([odom_tform_butt.x], [odom_tform_butt.y], [odom_tform_butt.z], 'o',
+                        color=SPOT_YELLOW, markersize=7, label='robot_butt')
+                ax.plot([odom_tform_head.x], [odom_tform_head.y], [odom_tform_head.z], 'o',
+                        color=SPOT_YELLOW, markersize=7, label='robot_head')
+                ax.text(odom_tform_butt.x, odom_tform_butt.y, odom_tform_butt.z, 'Spot Butt',
+                        size=TEXT_SIZE, zorder=1, color='k')
+                ax.text(odom_tform_head.x, odom_tform_head.y, odom_tform_head.z, 'Spot Head',
+                        size=TEXT_SIZE, zorder=1, color='k')
+                ax.plot([odom_tform_butt.x, odom_tform_head.x],
+                        [odom_tform_butt.y, odom_tform_head.y],
+                        zs=[odom_tform_butt.z, odom_tform_head.z], linewidth=6, color=SPOT_YELLOW)
+
             # Plot point cloud data
             ax.plot(plot_data[0::3], plot_data[1::3], plot_data[2::3], '.')
             set_axes_equal(ax)
@@ -163,7 +174,6 @@ def main(argv):
             plt.pause(0.016)
             if window_closed(ax):
                 sys.exit(0)
-        
 
 
 if __name__ == '__main__':

@@ -22,8 +22,7 @@ class GrpcReader:
         self._service_name_to_reader = {}
         self._series_index_to_reader = {}
         proto_name_to_class = {
-            proto_class.DESCRIPTOR.full_name: proto_class
-            for proto_class in protobuf_classes
+            proto_class.DESCRIPTOR.full_name: proto_class for proto_class in protobuf_classes
         }
         self._proto_name_to_reader = {}
         for series_index, series_identifier in enumerate(data_reader.file_index.series_identifiers):

@@ -28,6 +28,7 @@ CLIENTS = [
     version.VersionClient
 ]
 
+
 def register_all_service_clients(sdk):
     for client in CLIENTS:
         sdk.register_service_client(client)

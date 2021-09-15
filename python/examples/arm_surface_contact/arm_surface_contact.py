@@ -99,7 +99,7 @@ def arm_surface_contact(config):
             hand_z = 0  # will be ignored since we'll have a force in the Z axis.
 
             f_z = -0.05  # percentage of maximum press force, negative to press down
-                         # be careful setting this too large, you can knock the robot over
+            # be careful setting this too large, you can knock the robot over
             percentage_press = geometry_pb2.Vec3(x=0, y=0, z=f_z)
 
             hand_vec3_start_rt_body = geometry_pb2.Vec3(x=hand_x, y=hand_y_start, z=hand_z)
@@ -140,15 +140,18 @@ def arm_surface_contact(config):
             gripper_command = gripper_cmd_packed.synchronized_command.gripper_command.claw_gripper_command
 
             cmd = arm_surface_contact_pb2.ArmSurfaceContact.Request(
-                pose_trajectory_in_task=hand_traj, root_frame_name=ODOM_FRAME_NAME,
+                pose_trajectory_in_task=hand_traj,
+                root_frame_name=ODOM_FRAME_NAME,
                 press_force_percentage=percentage_press,
                 x_axis=arm_surface_contact_pb2.ArmSurfaceContact.Request.AXIS_MODE_POSITION,
                 y_axis=arm_surface_contact_pb2.ArmSurfaceContact.Request.AXIS_MODE_POSITION,
                 z_axis=arm_surface_contact_pb2.ArmSurfaceContact.Request.AXIS_MODE_FORCE,
-                z_admittance=arm_surface_contact_pb2.ArmSurfaceContact.Request.ADMITTANCE_SETTING_LOOSE,
+                z_admittance=arm_surface_contact_pb2.ArmSurfaceContact.Request.
+                ADMITTANCE_SETTING_LOOSE,
                 # Enable the cross term so that if the arm gets stuck in a rut, it will retract
                 # upwards slightly, preventing excessive lateral forces.
-                xy_to_z_cross_term_admittance=arm_surface_contact_pb2.ArmSurfaceContact.Request.ADMITTANCE_SETTING_VERY_STIFF,
+                xy_to_z_cross_term_admittance=arm_surface_contact_pb2.ArmSurfaceContact.Request.
+                ADMITTANCE_SETTING_VERY_STIFF,
                 gripper_command=gripper_command)
 
             # Enable walking

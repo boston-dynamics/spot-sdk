@@ -7,11 +7,12 @@
 """For clients to the Spot CAM Network service."""
 
 import socket
-import struct 
+import struct
 
 from bosdyn.client.common import (BaseClient, handle_common_header_errors)
 from bosdyn.api.spot_cam import service_pb2_grpc
 from bosdyn.api.spot_cam import network_pb2
+
 
 class NetworkClient(BaseClient):
     """A client calling Spot CAM Network services such as ICE Candidates, SSL certs / Keys etc.

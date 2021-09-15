@@ -16,7 +16,9 @@ from bosdyn.api.spot_cam import power_pb2, service_pb2_grpc
 
 from . import helpers
 
+
 class MockPowerService(service_pb2_grpc.PowerServiceServicer):
+
     def __init__(self, rpc_delay=0):
         """Create mock that returns fake power statuses."""
         super(MockPowerService, self).__init__()
@@ -40,12 +42,14 @@ class MockPowerService(service_pb2_grpc.PowerServiceServicer):
         helpers.add_common_header(response, request)
         return response
 
+
 def _setup(rpc_delay=0):
     client = bosdyn.client.spot_cam.power.PowerClient()
     service = MockPowerService(rpc_delay=rpc_delay)
     server = helpers.setup_client_and_service(client, service,
                                               service_pb2_grpc.add_PowerServiceServicer_to_server)
     return client, service, server
+
 
 def test_get_power_status():
     client, service, server = _setup()
@@ -54,6 +58,7 @@ def test_get_power_status():
     assert ps.aux1.value
     assert not ps.aux2.value
 
+
 def test_get_power_status_async():
     client, service, server = _setup()
     ps = client.get_power_status_async().result()
@@ -61,12 +66,14 @@ def test_get_power_status_async():
     assert ps.aux1.value
     assert not ps.aux2.value
 
+
 def test_set_power_status():
     client, service, server = _setup()
     ps = client.set_power_status(ptz=True, aux1=False)
     assert ps.ptz.value
     assert not ps.aux1.value
     assert not ps.aux2.value
+
 
 def test_set_power_status_async():
     client, service, server = _setup()

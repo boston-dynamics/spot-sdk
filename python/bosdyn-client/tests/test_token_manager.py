@@ -14,6 +14,7 @@ from bosdyn.client.exceptions import Error, RpcError
 from bosdyn.client.token_manager import TokenManager, WriteFailedError
 from bosdyn.client.util import cli_login_prompt, cli_auth
 
+
 class MockRobot:
 
     def __init__(self, token=None):
@@ -43,11 +44,14 @@ def test_token_refresh():
 
     tm.stop()
 
+
 def test_token_refresh_rpc_error():
     robot = MockRobot(token='mock-token-default')
+
     def fail_with_rpc(token):
         fail_with_rpc.count += 1
         raise RpcError("Fake Rpc Error")
+
     fail_with_rpc.count = 0
     robot.authenticate_with_token = fail_with_rpc
     assert robot.user_token == 'mock-token-default'
@@ -60,22 +64,28 @@ def test_token_refresh_rpc_error():
 
 def test_token_refresh_token_error():
     robot = MockRobot(token='mock-token-default')
+
     def fail_with_rpc(token):
         raise InvalidTokenError(None)
+
     robot.authenticate_with_token = fail_with_rpc
     assert robot.user_token == 'mock-token-default'
     local = datetime.datetime.now() + datetime.timedelta(hours=-2)
     tm = TokenManager(robot, timestamp=local)
     time.sleep(0.1)
-    assert tm.is_alive() # For now we keep the tokenmanager retrying, so if the user does re-auth it
-                         # will start updating the new token.
+    assert tm.is_alive(
+    )  # For now we keep the tokenmanager retrying, so if the user does re-auth it
+    # will start updating the new token.
+
 
 def test_token_refresh_write_error():
     robot = MockRobot(token='mock-token-default')
     original_auth = robot.authenticate_with_token
+
     def fail_write(token):
         original_auth(token)
         raise WriteFailedError("Fake write failure")
+
     robot.authenticate_with_token = fail_write
     assert robot.user_token == 'mock-token-default'
     local = datetime.datetime.now() + datetime.timedelta(hours=-2)
@@ -84,6 +94,7 @@ def test_token_refresh_write_error():
     assert robot.user_token == 'mock-token-refresh'
     assert tm.is_alive()
     tm.stop()
+
 
 def test_cli_login(monkeypatch):
     real_login = ('user', 'password')

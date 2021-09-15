@@ -12,6 +12,7 @@ option java_outer_classname = "NodesProto";
 
 import "google/protobuf/any.proto";
 import "google/protobuf/duration.proto";
+import "google/protobuf/wrappers.proto";
 
 import "bosdyn/api/docking/docking.proto";
 import "bosdyn/api/geometry.proto";
@@ -21,7 +22,9 @@ import "bosdyn/api/spot_cam/ptz.proto";
 import "bosdyn/api/robot_command.proto";
 import "bosdyn/api/power.proto";
 import "bosdyn/api/data_acquisition.proto";
+import "bosdyn/api/data_buffer.proto";
 import "bosdyn/api/graph_nav/graph_nav.proto";
+import "bosdyn/api/graph_nav/nav.proto";
 import "bosdyn/api/mission/util.proto";
 
 
@@ -108,12 +111,26 @@ message Retry {
 
 // Run this child for a maximum amount of mission execution time.
 // Will exit with child's status if the child finishes early,
-// FAILURE if the child remains in RUNNING state for too long.
+// FAILURE if the child remains in RUNNING state for too long 
+// and no timeout_child is specified, or the status of the
+// timeout_child.
 message ForDuration {
     // Maximum duration of mission execution time.
     google.protobuf.Duration duration = 1;
+
     // Child to execute for the duration.
     Node child = 2;
+
+    // Optional blackboard variable name.  If specified, this node will define a blackboard
+    // variable that its child has access to, and write the number of seconds remaining as
+    // a double to the blackboard under this name.
+    string time_remaining_name = 3;
+
+    // Optional node that will run if the child times out.  If not specified, this node
+    // will return FAILURE when the child times out.  If specified, and the
+    // child times out, this node will return the status of the timeout_child.
+    // The timeout_child does not respect the original timeout.
+    Node timeout_child = 4;
 }
 
 
@@ -241,6 +258,39 @@ message BosdynNavigateTo {
     bosdyn.api.graph_nav.RouteGenParams route_gen_params = 4;
     // Parameters that define how to traverse and end the route.
     bosdyn.api.graph_nav.TravelParams travel_params = 5;
+
+    // If provided, this will write the last NavigationFeedbackResponse message
+    // to a blackboard variable with this name.
+    string navigation_feedback_response_blackboard_key = 6;
+    // If provided, this will write the last NavigateToResponse message to
+    // a blackboard variable with this name.
+    string navigate_to_response_blackboard_key = 7;
+}
+
+
+// Tell the robot to navigate a route.
+message BosdynNavigateRoute {
+    // Name of the service to use.
+    string service_name = 1;
+    // Host machine the service is running on.
+    string host = 2;
+
+    // A route for the robot to follow.
+    bosdyn.api.graph_nav.Route route = 3;
+
+    // What should the robot do if it is not at the expected point in the route, or the route is
+    // blocked.
+    bosdyn.api.graph_nav.RouteFollowingParams route_follow_params = 4;
+
+    // Parameters that define how to traverse and end the route.
+    bosdyn.api.graph_nav.TravelParams travel_params = 5;
+
+    // If provided, this will write the last NavigationFeedbackResponse message
+    // to a blackboard variable with this name.
+    string navigation_feedback_response_blackboard_key = 6;
+    // If provided, this will write the last NavigateRouteResponse message to
+    // a blackboard variable with this name.
+    string navigate_route_response_blackboard_key = 7;
 }
 
 // Get GraphNav state from the robot and save it to the blackboard.
@@ -274,6 +324,18 @@ message BosdynGraphNavLocalize {
     // Otherwise, the options inside the set_localization_request will be used.
     // Note that ko_tform_body in the request will be ignored (it will be recalculated at runtime).
     bosdyn.api.graph_nav.SetLocalizationRequest localization_request = 3;
+}
+
+// Record an APIEvent
+message BosdynRecordEvent {
+    // Name of the service to use.
+    string service_name = 1;
+    // Host machine the service is running on.
+    string host = 2;
+    // The event to be logged. Note that everything should be populated except the id, start_time
+    // and end_time. The start and end time will be populated by the mission, using the node's start time.
+    // The id field shouldn't be set when the start and end times are the same.
+    bosdyn.api.Event event = 3;
 }
 
 // Call out to another system using the RemoteMission service.
@@ -317,7 +379,9 @@ message Prompt {
     // door for the robot.
     bool always_reprompt = 1;
 
-    // The text of the question itself.
+    // The text of the question itself.  The question text may contain formatted blackboard
+    // variables.  Please see the documentation in FormatBlackboard for more information
+    // about supported string formats.
     string text = 2;
 
     // Metadata describing the source of the question.
@@ -390,6 +454,28 @@ message SpotCamStoreMedia {
     string tag = 5;
 }
 
+// Set the LEDs to a specified brightness
+message SpotCamLed {
+    // Name of the service to use.
+    string service_name = 1;
+
+    // Host machine of the directory server that the Spot CAM registered with.
+    string host = 2;
+
+    // Brightnesses of the LEDs, from SetLEDBrightnessRequest
+    map<int32, float> brightnesses = 3;
+}
+
+// Reset the autofocus on the Spot CAM PTZ
+message SpotCamResetAutofocus {
+    // Name of the service to use.
+    string service_name = 1;
+
+    // Host machine of the directory server that the Spot CAM registered with.
+    string host = 2;
+}
+
+
 message Dock {
     // Name of the service to use.
     string service_name = 1;
@@ -401,23 +487,60 @@ message Dock {
 
     // Optional child node. Children will have access to the status variables gathered by this node.
     // If specified, child node will determine success/failure of this node.
-    Node child = 4;
+    //
+    // DEPRECATED!  Use docking_command_response_blackboard_key and
+    // docking_command_feedback_response_blackboard_key instead.
+    Node child = 4 [deprecated = true];
 
     // Name of the command status variable in the blackboard.  This is the status of the docking
     // command request made to the robot.  Please refer to
     // bosdyn.api.docking.DockingCommandResponse.Status for more details.  Children can use this
     // name to look up docking command status in the blackboard. If no name is provided, status will
     // not be available.
-    string command_status_name = 5;
+    //
+    // DEPRECATED!  Use docking_command_response_blackboard_key and
+    // docking_command_feedback_response_blackboard_key instead.
+    string command_status_name = 5 [deprecated = true];
 
     // Name of the feedback status variable in the blackboard.  This is the feedback provided while
     // docking is in progress.  Please refer to bosdyn.api.docking.DockingCommandFeedbackResponse.Status
     // for a list of possible status values.  Children can use this name to look up docking status
     // in the blackboard. If no name is provided, status will not be available.
-    string feedback_status_name = 6;
+    //
+    // DEPRECATED!  Use docking_command_response_blackboard_key and
+    // docking_command_feedback_response_blackboard_key instead.
+    string feedback_status_name = 6 [deprecated = true];
 
     // Defines how we use the "pre-docking" behavior.
     docking.PrepPoseBehavior prep_pose_behavior = 7;
+
+    // If provided, this will write the last DockingCommandFeedbackResponse message
+    // to a blackboard variable with this name.
+    string docking_command_feedback_response_blackboard_key = 8;
+
+    // If provided, this will write the last DockingCommandResponse message to
+    // a blackboard variable with this name.
+    string docking_command_response_blackboard_key = 9;
+}
+
+// Triggers a StoreMetadataRequest to the data acquisition store.
+message StoreMetadata {
+    // Name of the service to use.
+    string service_name = 1;
+   
+    // Host machine of the directory server that the data acquisition service is registered with.
+    string host = 2;
+
+    // The name of the blackboard variable that holds the associated AcquireDataRequest. The
+    // reference ID that this metadata is associated with will be copied from the request.
+    string acquire_data_request_name = 3;
+
+    // The name of the metadata object in the blackboard to be stored.
+    // The metadata object can be any protobuf message.
+    string metadata_name = 5;
+
+    // The data buffer channel on which to store the metadata.
+    string metadata_channel = 6;
 }
 
 // Trigger the acquisition and storage of data.
@@ -447,6 +570,20 @@ message DataAcquisition{
     // Example: "{date}_loop_{loop_counter}", where "loop_counter" is a blackboard variable from a Repeat.
     string group_name_format = 5;
 
+    // If populated, name of the variable in the blackboard in which to store the AcquireDataRequest.
+    string request_name_in_blackboard = 6;
+
+}
+
+// Send RetainLease for every Lease the mission service is given via PlayMissionRequest.
+// Returns RUNNING while there are more leases to retain, SUCCESS once a lease for each resource has
+// been retained, and FAILURE if any one lease cannot be retained.
+message RetainLease {
+    // Name of the service to use.
+    string service_name = 1;
+
+    // Host machine of the directory server that the lease service is registered with.
+    string host = 2;
 }
 
 // Defines new blackboard variables within the scope of the child. Shadows blackboard
@@ -478,9 +615,37 @@ message FormatBlackboard {
     string key = 1;
 
     // Define a format string that will be used together with the blackboard to generate
-    // string value.  Values from the blackboard will replace the keys in braces {}.
-    // Example: "telop-{date}", where "date" is a blackboard variable.
-    // Example: "{date}_loop_{loop_counter}", where "loop_counter" is a blackboard variable from a Repeat.
+    // string value.  Values from the blackboard will replace the keys in braces {}, i.e.
+    // {blackboard_variable_name}.  We also allow some string formatting options, namely:
+    //
+    // 1) Floating point decimal places: {float_variable:.2f}
+    // 2) TBD
+    //
+    // Select examples:
+    //
+    // Format String: "telop-{date}"
+    //    Blackboard: "date" is a blackboard variable with string value: "2021-05-13"
+    //        Output: "teleop-2021-05-13"
+    //
+    // Format String: "{date}_loop_{loop_counter}"
+    //    Blackboard: "date" is a blackboard variable with string value: "2021-05-13"
+    //    Blackboard: "loop_counter" is a blackboard variable with integer value: "3"
+    //        Output: "2021-05-13_loop_3"
+    //
+    // Format String: "battery charge is: {state.power_state.locomotion_charge_percentage.value}"
+    //    Blackboard: "state" is a protobuf message in the blackboard from a BosdynRobotState, and
+    //                the power_state submessage has a charge percentage of 30.2148320923085
+    //        Output: "battery charge is: 30.2158320923085"
+    //
+    // Format String: "battery charge is: {state.power_state.locomotion_charge_percentage.value:.2f}"
+    //    Blackboard: "state" is a protobuf message in the blackboard from a BosdynRobotState, and
+    //                the power_state submessage has a charge percentage of 30.2148320923085
+    //        Output: "battery charge is: 30.21"
+    //
+    // Format String: "the value is {x:.0f}"
+    //    Blackboard: "x" is a blackboard variable with float value: "2.71828"
+    //        Output: "the value is 3"
+    //
     string format = 2;
 }
 
@@ -495,4 +660,11 @@ message DateToBlackboard {
 message ConstantResult {
     // This result is always returned when calling tick().
     Result result = 1;
+}
+
+// This node will run and return the status of the child node.
+// If the mission is paused while this node is executing, the child will be
+// restarted when the mission is resumed.
+message RestartWhenPaused {
+    Node child = 1;
 }

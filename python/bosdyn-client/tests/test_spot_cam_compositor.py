@@ -16,7 +16,9 @@ from bosdyn.api.spot_cam import compositor_pb2, service_pb2_grpc, camera_pb2
 
 from . import helpers
 
+
 class MockCompositorService(service_pb2_grpc.CompositorServiceServicer):
+
     def __init__(self, rpc_delay=0):
         """Create mock that returns fake compositor queries."""
         super(MockCompositorService, self).__init__()
@@ -54,38 +56,47 @@ class MockCompositorService(service_pb2_grpc.CompositorServiceServicer):
         helpers.add_common_header(response, request)
         return response
 
+
 def _setup(rpc_delay=0):
     client = bosdyn.client.spot_cam.compositor.CompositorClient()
     service = MockCompositorService(rpc_delay=rpc_delay)
-    server = helpers.setup_client_and_service(client, service,
-                                              service_pb2_grpc.add_CompositorServiceServicer_to_server)
+    server = helpers.setup_client_and_service(
+        client, service, service_pb2_grpc.add_CompositorServiceServicer_to_server)
     return client, service, server
+
 
 def _mock_stream(name='good', x_offset=0, y_offset=0, width=2, height=1):
     stream = compositor_pb2.GetVisibleCamerasResponse.Stream()
-    stream.window.CopyFrom(compositor_pb2.GetVisibleCamerasResponse.Stream.Window(xoffset=x_offset, yoffset=y_offset, width=width, height=height))
+    stream.window.CopyFrom(
+        compositor_pb2.GetVisibleCamerasResponse.Stream.Window(xoffset=x_offset, yoffset=y_offset,
+                                                               width=width, height=height))
     stream.camera.CopyFrom(camera_pb2.Camera(name=name))
     return stream
+
 
 def test_set_screen():
     client, service, server = _setup()
     result = client.set_screen('good')
     assert result == 'good'
 
+
 def test_set_screen_async():
     client, service, server = _setup()
     result = client.set_screen_async('good').result()
     assert result == 'good'
+
 
 def test_get_screen():
     client, service, server = _setup()
     result = client.get_screen()
     assert result == 'good'
 
+
 def test_get_screen_async():
     client, service, server = _setup()
     result = client.get_screen_async().result()
     assert result == 'good'
+
 
 def test_list_screens():
     client, service, server = _setup()
@@ -93,11 +104,13 @@ def test_list_screens():
     assert len(result) == 1
     assert result[0].name == 'good'
 
+
 def test_list_screens_async():
     client, service, server = _setup()
     result = client.list_screens_async().result()
     assert len(result) == 1
     assert result[0].name == 'good'
+
 
 def test_get_visible_cameras():
     client, service, server = _setup()

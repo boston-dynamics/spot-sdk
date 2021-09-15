@@ -80,13 +80,14 @@ def start_tensorflow_processes(num_processes, model_path, detection_classes, det
     """
 
     for counter in range(num_processes):
-        process = Process(target=process_images, args=(
-            counter,
-            model_path,
-            detection_classes,
-            detection_threshold,
-            max_processing_delay,
-        ))
+        process = Process(
+            target=process_images, args=(
+                counter,
+                model_path,
+                detection_classes,
+                detection_threshold,
+                max_processing_delay,
+            ))
         process.start()
 
 
@@ -258,12 +259,14 @@ def main(argv):
     parser.add_argument(
         "--detection-classes", help="Comma-separated list of detection classes " +
         "included in the Tensorflow model; Default is to use all classes in the model")
-    parser.add_argument("--max-processing-delay", default=4.0, type=float,
-                        help="Maximum allowed delay for processing an image; " +
-                        "any image older than this value will be skipped")
-    parser.add_argument("--max-display-delay", default=5.0, type=float,
-                        help="Maximum allowed delay for displaying an image; " +
-                        "any image older than this value will be skipped")
+    parser.add_argument(
+        "--max-processing-delay", default=4.0, type=float,
+        help="Maximum allowed delay for processing an image; " +
+        "any image older than this value will be skipped")
+    parser.add_argument(
+        "--max-display-delay", default=5.0, type=float,
+        help="Maximum allowed delay for displaying an image; " +
+        "any image older than this value will be skipped")
 
     bosdyn.client.util.add_common_arguments(parser)
     options = parser.parse_args(argv)
@@ -281,8 +284,8 @@ def main(argv):
             sys.exit(1)
 
         image_capture = SpotImageCapture()
-        image_capture.initialize_sdk_no_motor_control(options.hostname,
-                                                      options.username, options.password)
+        image_capture.initialize_sdk_no_motor_control(options.hostname, options.username,
+                                                      options.password)
 
         # Start Tensorflow processes
         start_tensorflow_processes(options.number_tensorflow_processes, options.model_path,

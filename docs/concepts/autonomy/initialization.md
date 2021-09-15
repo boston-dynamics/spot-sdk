@@ -74,7 +74,7 @@ Note that areas with intersecting walls, corners, furniture, equipment, and othe
 
 ## Initializing with search
 
-If fiducials aren’t available, the client program can use other methods of initialization through the `SetLocalization` RPC (available in the [`graph_nav.proto`](../../../protos/bosdyn/api/graph_nav/graph_nav.proto)). The client can provide an initial guess for the complete localization in the `initial_guess` field which describes the robot’s pose relative to a known waypoint and which waypoint to initialize to. Details on the algorithm that is run when a initial guess is provided are described in the next section.
+If fiducials are not available, the client program can use other methods of initialization through the `SetLocalization` RPC (available in the [`graph_nav.proto`](../../../protos/bosdyn/api/graph_nav/graph_nav.proto)). The client can provide an initial guess for the complete localization in the `initial_guess` field which describes the robot’s pose relative to a known waypoint and which waypoint to initialize to. Details on the algorithm that is run when a initial guess is provided are described in the next section.
 
 If the initial guess for the localization is unknown, then GraphNav can perform a brute force search. The parameters of that search are set in the `SetLocalization` RPC via `max_distance` and `max_yaw` fields. Depending on the size of these parameters, the `SetLocalization` RPC can take a long time to complete.
 

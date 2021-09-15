@@ -8,6 +8,8 @@ import os
 import shutil
 import tempfile
 
+from bisect import bisect_left
+
 from bosdyn.client.command_line import (Command, Subcommands)
 
 from bosdyn.client.spot_cam.ptz import PtzClient
@@ -23,7 +25,7 @@ class PtzCommands(Subcommands):
     def __init__(self, subparsers, command_dict):
         super(PtzCommands, self).__init__(subparsers, command_dict, [
             PtzListPtzCommand, PtzGetPtzPositionCommand, PtzGetPtzVelocityCommand,
-            PtzSetPtzPositionCommand, PtzSetPtzVelocityCommand, PtzInitializeLensCommand
+            PtzSetPtzPositionCommand, PtzSetPtzVelocityCommand, PtzInitializeLensCommand,
         ])
 
 
@@ -48,9 +50,9 @@ class PtzGetPtzPositionCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         super(PtzGetPtzPositionCommand, self).__init__(subparsers, command_dict)
-        self._parser.add_argument('ptz_name', default='digi', const='digi', nargs='?', choices=[
-            'digi', 'full_digi', 'mech', 'overlay_digi', 'full_pano', 'overlay_pano'
-        ])
+        self._parser.add_argument(
+            'ptz_name', default='digi', const='digi', nargs='?',
+            choices=['digi', 'full_digi', 'mech', 'overlay_digi', 'full_pano', 'overlay_pano'])
 
     def _run(self, robot, options):
         ptz_desc = ptz_pb2.PtzDescription(name=options.ptz_name)
@@ -66,9 +68,9 @@ class PtzGetPtzVelocityCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         super(PtzGetPtzVelocityCommand, self).__init__(subparsers, command_dict)
-        self._parser.add_argument('ptz_name', default='digi', const='digi', nargs='?', choices=[
-            'digi', 'full_digi', 'mech', 'overlay_digi', 'full_pano', 'overlay_pano'
-        ])
+        self._parser.add_argument(
+            'ptz_name', default='digi', const='digi', nargs='?',
+            choices=['digi', 'full_digi', 'mech', 'overlay_digi', 'full_pano', 'overlay_pano'])
 
     def _run(self, robot, options):
         ptz_desc = ptz_pb2.PtzDescription(name=options.ptz_name)
@@ -84,9 +86,9 @@ class PtzSetPtzPositionCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         super(PtzSetPtzPositionCommand, self).__init__(subparsers, command_dict)
-        self._parser.add_argument('ptz_name', default='digi', const='digi', nargs='?', choices=[
-            'digi', 'full_digi', 'mech', 'overlay_digi', 'full_pano', 'overlay_pano'
-        ])
+        self._parser.add_argument(
+            'ptz_name', default='digi', const='digi', nargs='?',
+            choices=['digi', 'full_digi', 'mech', 'overlay_digi', 'full_pano', 'overlay_pano'])
         self._parser.add_argument('pan', help='[0, 360] Degrees', default=0.0, type=float)
         self._parser.add_argument('tilt', help='[-90, 90] Degrees', default=0.0, type=float)
         self._parser.add_argument('zoom', help='[0, 0x4000]', default=0.0, type=float)
@@ -106,9 +108,9 @@ class PtzSetPtzVelocityCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         super(PtzSetPtzVelocityCommand, self).__init__(subparsers, command_dict)
-        self._parser.add_argument('ptz_name', default='digi', const='digi', nargs='?', choices=[
-            'digi', 'full_digi', 'mech', 'overlay_digi', 'full_pano', 'overlay_pano'
-        ])
+        self._parser.add_argument(
+            'ptz_name', default='digi', const='digi', nargs='?',
+            choices=['digi', 'full_digi', 'mech', 'overlay_digi', 'full_pano', 'overlay_pano'])
         self._parser.add_argument('pan', help='[0, 360] Degrees', default=0.0, type=float)
         self._parser.add_argument('tilt', help='[-90, 90] Degrees', default=0.0, type=float)
         self._parser.add_argument('zoom', help='[0, 0x4000]', default=0.0, type=float)
@@ -137,3 +139,4 @@ class PtzInitializeLensCommand(Command):
         resp = robot.ensure_client(PtzClient.default_service_name).initialize_lens()
 
         return resp
+

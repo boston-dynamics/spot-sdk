@@ -56,6 +56,8 @@ def payload_spot(config):
     payload.version.major_version = 1
     payload.version.minor_version = 1
     payload.version.patch_level = 1
+    # note: this field is not required, but highly recommended
+    payload.mount_frame_name = payload_protos.MOUNT_FRAME_GRIPPER_PAYLOAD
 
     # Register the payload
     payload_registration_client.register_payload(payload, payload_secret)
@@ -90,6 +92,8 @@ def payload_spot(config):
     payload.version.major_version = 3
     payload.version.minor_version = 2
     payload.version.patch_level = 1
+    # note: this field is not required, but highly recommended
+    payload.mount_frame_name = payload_protos.MOUNT_FRAME_GRIPPER_PAYLOAD
 
     # Create and start the keep alive
     keep_alive = PayloadRegistrationKeepAlive(payload_registration_client, payload, payload_secret)
@@ -101,6 +105,7 @@ def payload_spot(config):
     print(payloads)
 
     print('\n\n\nDon\'t forget to clean up these registrations in the Spot payloads webpage!')
+
 
 def main(argv):
     """Command line interface."""

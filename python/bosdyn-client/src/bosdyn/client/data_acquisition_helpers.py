@@ -26,8 +26,9 @@ from google.protobuf import json_format
 # Logger for all the debug information from the tests.
 _LOGGER = logging.getLogger()
 
-def issue_acquire_data_request(data_acq_client, acquisition_requests, group_name,
-	                           action_name, metadata=None):
+
+def issue_acquire_data_request(data_acq_client, acquisition_requests, group_name, action_name,
+                               metadata=None):
     """Sends the data acquisition request without blocking until the acquisition completes.
 
     Args:
@@ -42,18 +43,20 @@ def issue_acquire_data_request(data_acq_client, acquisition_requests, group_name
         indicates the AcquireData rpc failed.
     """
     # Create action id for the query for this request.
-    action_id = data_acquisition_pb2.CaptureActionId(action_name=action_name,
-                                                     group_name=group_name)
+    action_id = data_acquisition_pb2.CaptureActionId(action_name=action_name, group_name=group_name)
 
     # Send an AcquireData request
     request_id = None
     try:
         request_id = data_acq_client.acquire_data(acquisition_requests=acquisition_requests,
-            action_name=action_name, group_name=action_id.group_name, metadata=metadata)
+                                                  action_name=action_name,
+                                                  group_name=action_id.group_name,
+                                                  metadata=metadata)
     except ResponseError as err:
         print("Exception raised by issue_acquire_data_request: " + str(err))
 
     return request_id, action_id
+
 
 def acquire_and_process_request(data_acquisition_client, acquisition_requests, group_name,
                                 action_name, metadata=None, block_until_complete=True):
@@ -74,8 +77,9 @@ def acquire_and_process_request(data_acquisition_client, acquisition_requests, g
         Boolean indicating if the acquisition completed successfully or not.
     """
     # Make the acquire data request. This will return our current request id.
-    request_id, action_id = issue_acquire_data_request(data_acquisition_client, acquisition_requests,
-        group_name, action_name, metadata)
+    request_id, action_id = issue_acquire_data_request(data_acquisition_client,
+                                                       acquisition_requests, group_name,
+                                                       action_name, metadata)
 
     if not request_id:
         # The AcquireData request failed for some reason. No need to attempt to
@@ -95,7 +99,7 @@ def acquire_and_process_request(data_acquisition_client, acquisition_requests, g
             print("Exception: %s" % str(err))
             return False
         print("Current status is: %s" %
-            data_acquisition_pb2.GetStatusResponse.Status.Name(get_status_response.status))
+              data_acquisition_pb2.GetStatusResponse.Status.Name(get_status_response.status))
         if get_status_response.status == data_acquisition_pb2.GetStatusResponse.STATUS_COMPLETE:
             return True
         if get_status_response.status == data_acquisition_pb2.GetStatusResponse.STATUS_TIMEDOUT:
@@ -105,10 +109,12 @@ def acquire_and_process_request(data_acquisition_client, acquisition_requests, g
             print("Data error was received: %s" % get_status_response)
             return False
         if get_status_response.status == data_acquisition_pb2.GetStatusResponse.STATUS_REQUEST_ID_DOES_NOT_EXIST:
-            print("The acquisition request id %s is unknown: %s" % (request_id, get_status_response))
+            print(
+                "The acquisition request id %s is unknown: %s" % (request_id, get_status_response))
             return False
         time.sleep(0.2)
     return True
+
 
 def cancel_acquisition_request(data_acq_client, request_id):
     """Cancels an acquisition request based on the request id
@@ -128,9 +134,10 @@ def cancel_acquisition_request(data_acq_client, request_id):
     try:
         is_cancelled_response = data_acq_client.cancel_acquisition(request_id)
         print("Status of the request to cancel the data-acquisition in progress: " +
-            data_acquisition_pb2.CancelAcquisitionResponse.Status.Name(is_cancelled_response.status))
+              data_acquisition_pb2.CancelAcquisitionResponse.Status.Name(
+                  is_cancelled_response.status))
     except ResponseError as err:
-        print("ResponseError raised when cancelling: "+str(err))
+        print("ResponseError raised when cancelling: " + str(err))
         # Don't attempt to wait for the cancellation success status.
         return
 
@@ -144,10 +151,11 @@ def cancel_acquisition_request(data_acq_client, request_id):
             break
 
         print("Request " + str(request_id) + " status: " +
-            data_acquisition_pb2.GetStatusResponse.Status.Name(get_status_response.status))
+              data_acquisition_pb2.GetStatusResponse.Status.Name(get_status_response.status))
         if get_status_response.status == data_acquisition_pb2.GetStatusResponse.STATUS_ACQUISITION_CANCELLED:
             print("The request is fully cancelled.")
             break
+
 
 def clean_filename(filename):
     """Removes bad characters in a filename.
@@ -160,6 +168,7 @@ def clean_filename(filename):
     """
 
     return "".join(i for i in filename if i not in ":*?<>|")
+
 
 def make_time_query_params(start_time_secs, end_time_secs, robot):
     """Create time-based query params for the download request.
@@ -177,8 +186,9 @@ def make_time_query_params(start_time_secs, end_time_secs, robot):
     print(from_timestamp.ToJsonString(), to_timestamp.ToJsonString())
     query_params = data_acquisition_store_pb2.DataQueryParams(
         time_range=data_acquisition_store_pb2.TimeRangeQuery(from_timestamp=from_timestamp,
-            to_timestamp=to_timestamp))
+                                                             to_timestamp=to_timestamp))
     return query_params
+
 
 def make_time_query_params_from_group_name(group_name, data_store_client):
     """Create time-based query params for the download request using the group name.
@@ -198,7 +208,8 @@ def make_time_query_params_from_group_name(group_name, data_store_client):
     try:
         saved_capture_actions = data_store_client.list_capture_actions(query_params)
     except Exception as err:
-        _LOGGER.error("Failed to list the capture action ids for group_name %s: %s", group_name, err)
+        _LOGGER.error("Failed to list the capture action ids for group_name %s: %s", group_name,
+                      err)
         return None
 
     # Filter all the CaptureActionIds for the start/end time. These end times are already in
@@ -218,7 +229,8 @@ def make_time_query_params_from_group_name(group_name, data_store_client):
             end_time = (time_secs, timestamp)
 
     if not (start_time and end_time):
-        _LOGGER.error("Could not find a start/end time from the list of capture action ids: %s", saved_capture_actions)
+        _LOGGER.error("Could not find a start/end time from the list of capture action ids: %s",
+                      saved_capture_actions)
         return None
 
     # Ensure the timestamps are ordered correctly and the
@@ -228,13 +240,15 @@ def make_time_query_params_from_group_name(group_name, data_store_client):
     start_time[1].seconds -= 3
     end_time[1].seconds += 3
 
-    _LOGGER.info("Downloading data with a start time  of %s seconds and end time of %s seconds.", start_time[0], end_time[0])
+    _LOGGER.info("Downloading data with a start time  of %s seconds and end time of %s seconds.",
+                 start_time[0], end_time[0])
 
     # Make the download data request with a time query parameter.
     query_params = data_acquisition_store_pb2.DataQueryParams(
         time_range=data_acquisition_store_pb2.TimeRangeQuery(from_timestamp=start_time[1],
-                                                                to_timestamp=end_time[1]))
+                                                             to_timestamp=end_time[1]))
     return query_params
+
 
 def download_data_REST(query_params, hostname, token, destination_folder='.',
                        additional_params=None):
@@ -261,18 +275,20 @@ def download_data_REST(query_params, hostname, token, destination_folder='.',
         headers = {"Authorization": "Bearer {}".format(token)}
         get_params = additional_params or {}
         if query_params.HasField('time_range'):
-            get_params.update({'from_nsec': query_params.time_range.from_timestamp.ToNanoseconds(),
-                'to_nsec': query_params.time_range.to_timestamp.ToNanoseconds()})
-        chunk_size = 10 * (1024 ** 2) # This value is not guaranteed.
+            get_params.update({
+                'from_nsec': query_params.time_range.from_timestamp.ToNanoseconds(),
+                'to_nsec': query_params.time_range.to_timestamp.ToNanoseconds()
+            })
+        chunk_size = 10 * (1024**2)  # This value is not guaranteed.
 
         with requests.get(url, verify=False, stream=True, headers=headers,
-            params=get_params) as resp:
+                          params=get_params) as resp:
             print("Download request HTTPS status code: %s" % resp.status_code)
             # This is the default file name used to download data, updated from response.
             if resp.status_code == 204:
                 print("No content available for the specified download time range (in seconds): "
-                "[%d, %d]"% (query_params.time_range.from_timestamp.ToNanoseconds()/1.0e9,
-                query_params.time_range.to_timestamp.ToNanoseconds()/1.0e9))
+                      "[%d, %d]" % (query_params.time_range.from_timestamp.ToNanoseconds() / 1.0e9,
+                                    query_params.time_range.to_timestamp.ToNanoseconds() / 1.0e9))
                 return False
             download_file = Path(folder, "download.zip")
             content = resp.headers['Content-Disposition']
@@ -290,7 +306,7 @@ def download_data_REST(query_params, hostname, token, destination_folder='.',
 
             with open(str(download_file), 'wb') as fid:
                 for chunk in resp.iter_content(chunk_size=chunk_size):
-                    print('.', end = '', flush=True)
+                    print('.', end='', flush=True)
                     fid.write(chunk)
     except requests.exceptions.HTTPError as rest_error:
         print("REST Exception:\n")

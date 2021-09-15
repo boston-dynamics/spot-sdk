@@ -9,18 +9,16 @@
 import collections
 import enum
 import logging
+from bosdyn.api import lease_pb2
+import six
 import threading
 import time
 
+from bosdyn.api.lease_pb2 import AcquireLeaseRequest, AcquireLeaseResponse
 from bosdyn.api.lease_pb2 import Lease as LeaseProto
-from bosdyn.api.lease_pb2 import AcquireLeaseRequest
-from bosdyn.api.lease_pb2 import AcquireLeaseResponse
-from bosdyn.api.lease_pb2 import ListLeasesRequest
-from bosdyn.api.lease_pb2 import RetainLeaseRequest
-from bosdyn.api.lease_pb2 import ReturnLeaseRequest
-from bosdyn.api.lease_pb2 import ReturnLeaseResponse
-from bosdyn.api.lease_pb2 import TakeLeaseRequest
-from bosdyn.api.lease_pb2 import TakeLeaseResponse
+from bosdyn.api.lease_pb2 import (LeaseUseResult, ListLeasesRequest, RetainLeaseRequest,
+                                  ReturnLeaseRequest, ReturnLeaseResponse, TakeLeaseRequest,
+                                  TakeLeaseResponse)
 from bosdyn.api.lease_service_pb2_grpc import LeaseServiceStub
 
 from . import common
@@ -73,6 +71,7 @@ class Error(Exception):
 
 class NoSuchLease(Error):
     """The requested lease does not exist."""
+
     def __init__(self, resource):
         self.resource = resource
 
@@ -82,6 +81,7 @@ class NoSuchLease(Error):
 
 class LeaseNotOwnedByWallet(Error):
     """The lease is not owned by the wallet."""
+
     def __init__(self, resource, lease_state):
         self.resource = resource
         self.lease_state = lease_state
@@ -97,30 +97,30 @@ class LeaseNotOwnedByWallet(Error):
 _ACQUIRE_LEASE_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _ACQUIRE_LEASE_STATUS_TO_ERROR.update({
     AcquireLeaseResponse.STATUS_OK: (None, None),
-    AcquireLeaseResponse.STATUS_RESOURCE_ALREADY_CLAIMED: (ResourceAlreadyClaimedError,
-                                                           ResourceAlreadyClaimedError.__doc__),
-    AcquireLeaseResponse.STATUS_INVALID_RESOURCE: (InvalidResourceError,
-                                                   InvalidResourceError.__doc__),
-    AcquireLeaseResponse.STATUS_NOT_AUTHORITATIVE_SERVICE: (NotAuthoritativeServiceError,
-                                                            NotAuthoritativeServiceError.__doc__),
+    AcquireLeaseResponse.STATUS_RESOURCE_ALREADY_CLAIMED:
+        (ResourceAlreadyClaimedError, ResourceAlreadyClaimedError.__doc__),
+    AcquireLeaseResponse.STATUS_INVALID_RESOURCE:
+        (InvalidResourceError, InvalidResourceError.__doc__),
+    AcquireLeaseResponse.STATUS_NOT_AUTHORITATIVE_SERVICE:
+        (NotAuthoritativeServiceError, NotAuthoritativeServiceError.__doc__),
 })
 
 _TAKE_LEASE_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _TAKE_LEASE_STATUS_TO_ERROR.update({
     TakeLeaseResponse.STATUS_OK: (None, None),
     TakeLeaseResponse.STATUS_INVALID_RESOURCE: (InvalidResourceError, InvalidResourceError.__doc__),
-    TakeLeaseResponse.STATUS_NOT_AUTHORITATIVE_SERVICE: (NotAuthoritativeServiceError,
-                                                         NotAuthoritativeServiceError.__doc__),
+    TakeLeaseResponse.STATUS_NOT_AUTHORITATIVE_SERVICE:
+        (NotAuthoritativeServiceError, NotAuthoritativeServiceError.__doc__),
 })
 
 _RETURN_LEASE_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _RETURN_LEASE_STATUS_TO_ERROR.update({
     ReturnLeaseResponse.STATUS_OK: (None, None),
-    ReturnLeaseResponse.STATUS_INVALID_RESOURCE: (InvalidResourceError,
-                                                  InvalidResourceError.__doc__),
+    ReturnLeaseResponse.STATUS_INVALID_RESOURCE:
+        (InvalidResourceError, InvalidResourceError.__doc__),
     ReturnLeaseResponse.STATUS_NOT_ACTIVE_LEASE: (NotActiveLeaseError, NotActiveLeaseError.__doc__),
-    ReturnLeaseResponse.STATUS_NOT_AUTHORITATIVE_SERVICE: (NotAuthoritativeServiceError,
-                                                           NotAuthoritativeServiceError.__doc__),
+    ReturnLeaseResponse.STATUS_NOT_AUTHORITATIVE_SERVICE:
+        (NotAuthoritativeServiceError, NotAuthoritativeServiceError.__doc__),
 })
 
 
@@ -135,13 +135,13 @@ class Lease(object):
         lease_proto: bosdyn.api.Lease protobuf object.
     """
 
-    def __init__(self, lease_proto):
+    def __init__(self, lease_proto, ignore_is_valid_check=False):
         """Initializes a Lease object.
 
         Raises:
             ValueError if lease_proto is not present or valid.
         """
-        if not self.is_valid_proto(lease_proto):
+        if not ignore_is_valid_check and not self.is_valid_proto(lease_proto):
             raise ValueError('invalid lease_proto: {}'.format(lease_proto))
         self.lease_proto = lease_proto
 
@@ -155,7 +155,7 @@ class Lease(object):
         DIFFERENT_RESOURCES = 6
         DIFFERENT_EPOCHS = 7
 
-    def compare(self, other_lease):
+    def compare(self, other_lease, ignore_resources=False):
         """Compare two different lease objects.
 
         Args:
@@ -176,10 +176,10 @@ class Lease(object):
             * CompareResult.DIFFERENT_EPOCHS if this lease is for a different
               epoch than other_lease. There is no way to compare recency/time of
               Leases for two different epochs.
-            * CompareResult.INVALID if either this or other_lease is invalid.
         """
         # Sequences are only valid for leases with the same resource and epoch.
-        if not (self.lease_proto.resource == other_lease.lease_proto.resource):
+        if not (self.lease_proto.resource
+                == other_lease.lease_proto.resource) and not ignore_resources:
             return self.CompareResult.DIFFERENT_RESOURCES
         if not (self.lease_proto.epoch == other_lease.lease_proto.epoch):
             return self.CompareResult.DIFFERENT_EPOCHS
@@ -236,6 +236,9 @@ class Lease(object):
             sub_lease_proto.client_names.append(client_name)
         return Lease(sub_lease_proto)
 
+    def is_valid_lease(self):
+        return Lease.is_valid_proto(self.lease_proto)
+
     @staticmethod
     def is_valid_proto(lease_proto):
         """Checks whether this lease is valid.
@@ -244,6 +247,43 @@ class Lease(object):
            bool indicating that this lease has a valid resource and sequence.
         """
         return lease_proto and lease_proto.resource and lease_proto.sequence
+
+    @staticmethod
+    def compare_result_to_lease_use_result_status(compare_result, allow_super_leases):
+        """Determines the comparable LeaseUseResult.Status enum value based on the CompareResult enum.
+
+        Args:
+            allow_super_leases(boolean): If true, a super lease will still be considered as "ok"/
+                                     newer when compared to the active lease.
+
+        Raises:
+            bosdyn.client.lease.Error: Raised if there is an unknown compare result enum value.
+
+        Returns:
+            The corresponding LeaseUseResult.Status enum value.
+        """
+        if compare_result == Lease.CompareResult.DIFFERENT_EPOCHS:
+            return LeaseUseResult.STATUS_WRONG_EPOCH
+        elif compare_result == Lease.CompareResult.DIFFERENT_RESOURCES:
+            # if the incoming lease's resource doesn't match the active lease resource,
+            # then mark it as unmanaged.
+            return LeaseUseResult.STATUS_UNMANAGED
+        elif compare_result == Lease.CompareResult.SUPER_LEASE:
+            # In some cases we may want to allow a super lease, so check an optional boolean
+            # to see if that is the case.
+            if allow_super_leases:
+                return LeaseUseResult.STATUS_OK
+            # In the normal case, a super lease is considered older.
+            return LeaseUseResult.STATUS_OLDER
+        elif compare_result == Lease.CompareResult.OLDER:
+            return LeaseUseResult.STATUS_OLDER
+        elif (compare_result == Lease.CompareResult.SAME or
+              compare_result == Lease.CompareResult.SUB_LEASE or
+              compare_result == Lease.CompareResult.NEWER):
+            return LeaseUseResult.STATUS_OK
+        else:
+            # Shouldn't hit here. The above set of checks should be exhaustive.
+            raise Error("The comparison result of the leases is unknown/unaccounted for.")
 
 
 class LeaseState(object):
@@ -262,7 +302,8 @@ class LeaseState(object):
     STATUS_OTHER_OWNER = Status.OTHER_OWNER
     STATUS_NOT_MANAGED = Status.NOT_MANAGED
 
-    def __init__(self, lease_status, lease_owner=None, lease=None, lease_current=None, client_name=None):
+    def __init__(self, lease_status, lease_owner=None, lease=None, lease_current=None,
+                 client_name=None):
         """
         Args:
             lease_status(LeaseState.Status): The ownership status of the lease.
@@ -342,8 +383,12 @@ class LeaseWallet(object):
             lease: Lease to add in the wallet.
         """
         with self._lock:
-            self._lease_state_map[lease.lease_proto.resource] = LeaseState(
-                LeaseState.Status.SELF_OWNER, lease=lease, client_name=self.client_name)
+            self._add_lease_locked(lease)
+
+    def _add_lease_locked(self, lease, current=False):
+        resource = lease.lease_proto.resource
+        self._lease_state_map[resource] = LeaseState(LeaseState.Status.SELF_OWNER, lease=lease,
+                                                     client_name=self.client_name)
 
     def remove(self, lease):
         """Remove lease from the wallet.
@@ -519,7 +564,7 @@ class LeaseClient(common.BaseClient):
         """Return an acquired lease.
 
         Args:
-            lease: Lease to return.
+            lease (Lease object): Lease to return. This should be a Lease class object, and not the proto.
 
         Raises:
             InvalidResourceError: Resource is not known to the LeaseService.
@@ -558,6 +603,7 @@ class LeaseClient(common.BaseClient):
         return self.call_async(self._stub.RetainLease, req, None, common.common_lease_errors,
                                **kwargs)
 
+
     def list_leases(self, include_full_lease_info=False, **kwargs):
         """Get a list of the leases.
 
@@ -582,6 +628,32 @@ class LeaseClient(common.BaseClient):
         req = self._make_list_leases_request(include_full_lease_info)
         return self.call_async(self._stub.ListLeases, req, self._list_leases_success,
                                common.common_header_errors, **kwargs)
+
+    def list_leases_full(self, include_full_lease_info=False, **kwargs):
+        """Get a list of the leases.
+
+        Args:
+            include_full_lease_info: Whether the returned list of LeaseResources should include
+                                     all of the available information about the last lease used.
+                                     Defaults to False.
+
+        Returns:
+            The complete ListLeasesResponse message.
+
+        Raises:
+            InternalServerError: Service experienced an unexpected error state.
+            LeaseUseError: Request was rejected due to using an invalid lease.
+        """
+        req = self._make_list_leases_request(include_full_lease_info)
+        return self.call(self._stub.ListLeases, req, None,
+                         common.common_header_errors, **kwargs)
+
+    def list_leases_full_async(self, include_full_lease_info=False, **kwargs):
+        """Async version of the list_leases() function."""
+        req = self._make_list_leases_request(include_full_lease_info)
+        return self.call_async(self._stub.ListLeases, req, None,
+                               common.common_header_errors, **kwargs)
+
 
     @staticmethod
     def _make_acquire_request(resource):
@@ -775,11 +847,20 @@ class LeaseKeepAlive(object):
                 False if the UI thread is wedged, which prevents the
                 application from continuing to keep the Lease alive when it is
                 no longer in a good state.
+        on_failure_callback: If specified, this should be a callable function object
+                which takes the error/exception as an input. The  function does not
+                need to return anything. This function can be used to action on any
+                failures during the keepalive from the RetainLease RPC.
+        warnings: Boolean used to determine if the _periodic_check_in function will print lease check-in errors.
     """
 
     def __init__(self, lease_client, lease_wallet=None, resource=_RESOURCE_BODY,
-                 rpc_interval_seconds=2, keep_running_cb=None):
+                 rpc_interval_seconds=2, keep_running_cb=None, host_name="",
+                 on_failure_callback=None, warnings=True, return_at_exit=False):
         """Create a new LeaseKeepAlive object."""
+        self.host_name = host_name
+        self.print_warnings = warnings
+        self._return_at_exit = return_at_exit
         if not lease_client:
             raise ValueError("lease_client must be set")
         self._lease_client = lease_client
@@ -803,6 +884,9 @@ class LeaseKeepAlive(object):
         self._keep_running = keep_running_cb or (lambda: True)
 
         self._end_check_in_signal = threading.Event()
+
+        # If the on_failure_callback is not provided, then set the default as a no-op function.
+        self._retain_lease_failed_cb = on_failure_callback or (lambda err: None)
 
         # Configure the thread to do check-ins, and begin checking in.
         self._thread = threading.Thread(target=self._periodic_check_in)
@@ -846,6 +930,8 @@ class LeaseKeepAlive(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.shutdown()
+        if self._return_at_exit:
+            self._lease_client.return_lease(self.lease_wallet.get_lease(self._resource))
 
     def _ok(self):
         self.logger.debug('Check-in successful')
@@ -874,8 +960,11 @@ class LeaseKeepAlive(object):
             # We really do want to catch anything.
             #pylint: disable=broad-except
             except Exception as exc:
-                self.logger.warning('Generic exception during check-in:\n%s\n'
-                                    '    (resuming check-in)', exc)
+                if self.print_warnings:
+                    self.logger.warning(
+                        'Generic exception for %s during check-in:\n%s\n'
+                        '    (resuming check-in)', self.host_name, exc)
+                self._retain_lease_failed_cb(exc)
             else:
                 # No errors!
                 self._ok()
@@ -890,3 +979,70 @@ class LeaseKeepAlive(object):
             if self._end_check_in_signal.wait(self._rpc_interval_seconds - exec_seconds):
                 break
         self.logger.info('Lease check-in stopped')
+
+
+def test_active_lease(incoming_lease_proto, active_lease, sublease_name=None,
+                      allow_super_leases=False):
+    """Check if an incoming lease is newer than the current lease.
+
+    Args:
+        incoming_lease_proto(lease_pb2.Lease): The incoming lease proto.
+        active_lease(Lease): A lease object representing the most recent/newest known lease
+                             that the incoming lease should be compared against.
+        sublease_name(string): If not NoneType, a sublease of the incoming lease will be
+                             created (with sublease_name as the client name) and used to compare to
+                             the active lease.
+        allow_super_leases(boolean): If true, a super lease will still be considered as "ok"/
+                                     newer when compared to the active lease.
+
+    Returns:
+        A tuple containing the lease use result from comparing the incoming and active leases, and
+        then a Lease object made from the incoming lease proto. The lease object will be None if
+        the incoming lease proto was invalid. The lease object will be a sublease of the incoming
+        lease proto if sublease_name is not NoneType.
+    """
+    lease_use_result = LeaseUseResult()
+    lease_use_result.attempted_lease.CopyFrom(incoming_lease_proto)
+
+    # Ensure the incoming lease is valid. If it is valid, create a sublease for the
+    # incoming lease and test with that.
+    try:
+        incoming_lease = Lease(incoming_lease_proto)
+        if sublease_name is not None:
+            incoming_lease = incoming_lease.create_sublease(client_name=sublease_name)
+    except ValueError:
+        # Invalid lease proto will throw this error.
+        lease_use_result.status = LeaseUseResult.STATUS_INVALID_LEASE
+        return lease_use_result, None
+
+    if active_lease is None:
+        # No active lease means that the incoming lease is good!
+        # Set the incoming lease proto as the latest known lease. There will be no previous
+        # lease since this is the first one for the resource.
+        lease_use_result.latest_known_lease.CopyFrom(incoming_lease.lease_proto)
+        lease_use_result.status = LeaseUseResult.STATUS_OK
+        return lease_use_result, incoming_lease
+
+    # Ensure the active lease is also valid.
+    if not active_lease.is_valid_lease():
+        # Raise an exception since the incoming lease is invalid.
+        raise Error("The active lease object is invalid.")
+
+    # Set the previous lease as the active lease.
+    lease_use_result.previous_lease.CopyFrom(active_lease.lease_proto)
+
+    # Set the latest known lease as the active lease. This will be overwritten if the incoming
+    # lease is found to be newer.
+    lease_use_result.latest_known_lease.CopyFrom(active_lease.lease_proto)
+
+    # Compare the incoming lease's sublease to the latest known/most recent lease (active lease).
+    compare_result = incoming_lease.compare(active_lease)
+    lease_use_result.status = Lease.compare_result_to_lease_use_result_status(
+        compare_result, allow_super_leases)
+    if lease_use_result.status == LeaseUseResult.STATUS_OK and compare_result != Lease.CompareResult.SUPER_LEASE:
+        # Only update the latest known lease if the incoming lease was found as status ok (newer/the same
+        # as the existing lease). Also prevents a "super-lease" from getting set as the
+        # latest known lease (when the allow_super_lease boolean is True) when there have been newer
+        # subleases seen.
+        lease_use_result.latest_known_lease.CopyFrom(incoming_lease.lease_proto)
+    return lease_use_result, incoming_lease

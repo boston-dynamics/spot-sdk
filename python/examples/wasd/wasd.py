@@ -200,10 +200,10 @@ class WasdInterface(object):
         self._robot_command_client = robot.ensure_client(RobotCommandClient.default_service_name)
         self._robot_state_task = AsyncRobotState(self._robot_state_client)
         self._image_task = AsyncImageCapture(robot)
-        self._async_tasks = AsyncTasks(
-            [self._robot_state_task, self._image_task])
+        self._async_tasks = AsyncTasks([self._robot_state_task, self._image_task])
         self._lock = threading.Lock()
         self._command_dictionary = {
+            27: self._stop, # ESC key
             ord('\t'): self._quit_program,
             ord('T'): self._toggle_time_sync,
             ord(' '): self._toggle_estop,
@@ -330,7 +330,7 @@ class WasdInterface(object):
         stdscr.addstr(13, 0, "          [f]: Stand, [r]: Self-right               ")
         stdscr.addstr(14, 0, "          [v]: Sit, [b]: Battery-change             ")
         stdscr.addstr(15, 0, "          [wasd]: Directional strafing              ")
-        stdscr.addstr(16, 0, "          [qe]: Turning                             ")
+        stdscr.addstr(16, 0, "          [qe]: Turning, [ESC]: Stop              ")
         stdscr.addstr(17, 0, "          [l]: Return/Acquire lease                 ")
         stdscr.addstr(18, 0, "")
 
@@ -363,12 +363,14 @@ class WasdInterface(object):
             return None
 
     def _try_grpc_async(self, desc, thunk):
+
         def on_future_done(fut):
             try:
                 fut.result()
             except (ResponseError, RpcError, LeaseBaseError) as err:
                 self.add_message("Failed {}: {}".format(desc, err))
                 return None
+
         future = thunk()
         future.add_done_callback(on_future_done)
 
@@ -419,8 +421,8 @@ class WasdInterface(object):
         # Default HINT_RIGHT, maybe add option to choose direction?
         self._start_robot_command(
             'battery_change_pose',
-            RobotCommandBuilder.battery_change_pose_command(dir_hint=
-            basic_command_pb2.BatteryChangePoseCommand.Request.HINT_RIGHT))
+            RobotCommandBuilder.battery_change_pose_command(
+                dir_hint=basic_command_pb2.BatteryChangePoseCommand.Request.HINT_RIGHT))
 
     def _sit(self):
         self._start_robot_command('sit', RobotCommandBuilder.synchro_sit_command())
@@ -446,11 +448,13 @@ class WasdInterface(object):
     def _turn_right(self):
         self._velocity_cmd_helper('turn_right', v_rot=-VELOCITY_BASE_ANGULAR)
 
+    def _stop(self):
+        self._start_robot_command('stop', RobotCommandBuilder.stop_command())
+
     def _velocity_cmd_helper(self, desc='', v_x=0.0, v_y=0.0, v_rot=0.0):
-        self._start_robot_command(desc,
-                                  RobotCommandBuilder.synchro_velocity_command(
-                                      v_x=v_x, v_y=v_y, v_rot=v_rot),
-                                  end_time_secs=time.time() + VELOCITY_CMD_DURATION)
+        self._start_robot_command(
+            desc, RobotCommandBuilder.synchro_velocity_command(v_x=v_x, v_y=v_y, v_rot=v_rot),
+            end_time_secs=time.time() + VELOCITY_CMD_DURATION)
 
     def _stow(self):
         self._start_robot_command('stow', RobotCommandBuilder.arm_stow_command())
@@ -459,12 +463,12 @@ class WasdInterface(object):
         self._start_robot_command('stow', RobotCommandBuilder.arm_ready_command())
 
     def _return_to_origin(self):
-        self._start_robot_command('fwd_and_rotate',
-                                  RobotCommandBuilder.synchro_se2_trajectory_point_command(
-                                      goal_x=0.0, goal_y=0.0, goal_heading=0.0,
-                                      frame_name=ODOM_FRAME_NAME, params=None, body_height=0.0,
-                                      locomotion_hint=spot_command_pb2.HINT_SPEED_SELECT_TROT),
-                                  end_time_secs=time.time() + 20)
+        self._start_robot_command(
+            'fwd_and_rotate',
+            RobotCommandBuilder.synchro_se2_trajectory_point_command(
+                goal_x=0.0, goal_y=0.0, goal_heading=0.0, frame_name=ODOM_FRAME_NAME, params=None,
+                body_height=0.0, locomotion_hint=spot_command_pb2.HINT_SPEED_SELECT_TROT),
+            end_time_secs=time.time() + 20)
 
     def _take_ascii_image(self):
         source_name = "frontright_fisheye_image"
@@ -638,14 +642,19 @@ def main():
         return False
 
     LOGGER.removeHandler(stream_handler)  # Don't use stream handler in curses mode.
+
     try:
-        # Run wasd interface in curses mode, then restore terminal config.
-        curses.wrapper(wasd_interface.drive)
+        try:
+            # Prevent curses from introducing a 1 second delay for ESC key
+            os.environ.setdefault('ESCDELAY', '0')
+            # Run wasd interface in curses mode, then restore terminal config.
+            curses.wrapper(wasd_interface.drive)
+        finally:
+            # Restore stream handler to show any exceptions or final messages.
+            LOGGER.addHandler(stream_handler)
     except Exception as e:
-        LOGGER.error("WASD has thrown an error: %s" % repr(e))
+        LOGGER.error("WASD has thrown an error: [%r] %s", e, e)
     finally:
-        # Restore stream handler after curses mode.
-        LOGGER.addHandler(stream_handler)
         # Do any final cleanup steps.
         wasd_interface.shutdown()
 

@@ -15,13 +15,14 @@ from bosdyn.api.data_buffer_pb2 import Event, OperatorComment
 LOGGER = logging.getLogger()
 
 
-def get_data(proto_type, filename):
+def get_data(proto_type, filename, channel=None):
     """Iterator for message of the given protobuf type stored in bddf file 'filename'."""
     with open(filename, 'rb') as infile:
         data_reader = DataReader(infile)
         protobuf_reader = ProtobufReader(data_reader)
         try:
-            channel_reader = ProtobufChannelReader(protobuf_reader, proto_type)
+            channel_reader = ProtobufChannelReader(protobuf_reader, proto_type,
+                                                   channel_name=channel)
         except KeyError:
             LOGGER.error("No messages of type '%s' found", proto_type.DESCRIPTOR.full_name)
             sys.exit(1)
@@ -70,8 +71,8 @@ class OperatorCommentLister(MessageLister):
 
     def show(self, timestamp_msg):
         msg = timestamp_msg[1]
-        timestamp = datetime.datetime.fromtimestamp(
-            msg.timestamp.seconds + 1e-9 * msg.timestamp.nanos)
+        timestamp = datetime.datetime.fromtimestamp(msg.timestamp.seconds +
+                                                    1e-9 * msg.timestamp.nanos)
         print('{}   {}'.format(timestamp, msg.message.strip()))
 
 
@@ -141,9 +142,11 @@ def setup():
     # pylint: disable=import-outside-toplevel
     import bosdyn.api.data_buffer_pb2
     import bosdyn.api.robot_id_pb2
+    import bosdyn.api.robot_state_pb2
     index_protos(bosdyn.api.data_buffer_pb2)
     index_protos(bosdyn.api.robot_id_pb2)
-    # Specialized listeners
+    index_protos(bosdyn.api.robot_state_pb2)
+    # Specialized listers
     EventLister()
     OperatorCommentLister()
 
@@ -160,7 +163,7 @@ def list_series(options):
         series_identifiers = data_reader.file_index.series_identifiers
         print("Series in '{}' ({}):".format(options.filename, len(series_identifiers)))
         for i, sid in enumerate(series_identifiers):
-            print("- [{}] {}: {}".format(i, sid.series_type, sid.spec))
+            print("- [{}] {}: {}".format(i, sid.series_type, {k: v for k, v in sid.spec.items()}))
 
 
 def show_messages(options):
@@ -171,7 +174,7 @@ def show_messages(options):
         print("No support for printing messages of type '{}'".format(options.message_type))
         sys.exit(1)
 
-    for msg in get_data(lister.proto_type, options.filename):
+    for msg in get_data(lister.proto_type, options.filename, channel=options.channel):
         lister.show(msg)
 
 
@@ -205,6 +208,7 @@ def main():  # pylint: disable=too-many-locals
     show_parser = subparsers.add_parser('show', help='Show messages from a given channel')
     show_parser.add_argument('filename', default='download.bddf', help='input file')
     show_parser.add_argument('message_type', help='type of messages to show')
+    show_parser.add_argument('--channel', help='name of channel, if not the same as message_type')
 
     grpc_parser = subparsers.add_parser('show-grpc', help='Show grpc requests/responses by type')
     grpc_parser.add_argument('filename', default='download.bddf', help='input file')

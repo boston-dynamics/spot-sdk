@@ -93,6 +93,7 @@ message MobilityParams {
 
     // Disable the secondary nearmap-based cliff avoidance that runs while on stairs.
     bool disable_nearmap_cliff_avoidance = 12;
+
 }
 
 // Parameters for offsetting the body from the normal default.
@@ -128,6 +129,11 @@ message ObstacleParams {
   // Desired padding around the body to use when attempting to avoid obstacles.
   // Described in meters. Must be >= 0.
   double obstacle_avoidance_padding = 4;
+  // Prevent the robot body from raising above nominal height to avoid lower-leg collisions with
+  // the terrain.
+  bool disable_vision_foot_obstacle_body_assist = 5;
+  // Use vision to make the robot avoid stepping into negative obstacles?
+  bool disable_vision_negative_obstacles = 6;
 
 }
 
@@ -138,8 +144,26 @@ message TerrainParams {
     // necessary on the robot side. Best suggested values lie in the range between 0.4 and 0.8
     // (which is the robot's default.)
     google.protobuf.DoubleValue ground_mu_hint = 2;
-    // When true, the robot will assume the ground below it is made of grated metal.
-    bool enable_grated_floor = 3;
+
+    // *** Deprecation Warning ***
+    // DEPRECATED as of 3.0.0: The boolean field has been replaced by the field grated_surfaces_mode
+    // The following field will be deprecated and moved to 'reserved' in a future release.
+    bool enable_grated_floor = 3 [deprecated = true];
+
+    // Options for Grated Surfaces Mode. When Grated Surfaces Mode is on, the robot assumes the
+    // ground below it is made of grated metal or other repeated pattern. When on, the robot will
+    // make assumptions about the environment structure and more aggressively filter noise in
+    // perception data.
+    enum GratedSurfacesMode {
+        GRATED_SURFACES_MODE_UNKNOWN = 0; // Invalid; do not use.
+        GRATED_SURFACES_MODE_OFF = 1;
+        GRATED_SURFACES_MODE_ON = 2;
+        GRATED_SURFACES_MODE_AUTO = 3;    // Robot will automatically turn mode on or off
+    }
+    // The selected option for grated surfaces mode
+    GratedSurfacesMode grated_surfaces_mode = 4;
+
+
 }
 
 // External Force on robot body parameters. This is a beta feature and still can have some odd behaviors.

@@ -1,0 +1,66 @@
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "SparseFeaturesProto";
+
+import "bosdyn/api/geometry.proto";
+
+// A point of interest in an image expressed as a pixel coordinate with associated metadata.
+message Keypoint {
+    // The image pixel coordinates of the keypoint.
+    Vec2 coordinates = 2;
+    // A binary descriptor representing the keypoint.
+    bytes binary_descriptor = 3;
+    // The score of this keypoint from the underlying keypoint detector, if applicable.
+    float score = 4;
+    // The diameter in pixels of the local neighborhood used to construct the descriptor.
+    float size = 5;
+    // The orientation of the keypoint, if applicable.
+    float angle = 6;
+}
+
+// A set of keypoints detected in a single image.
+message KeypointSet {
+    // A set of detected keypoints and associated metadata.
+    repeated Keypoint keypoints = 2;
+
+    enum KeypointType {
+        KEYPOINT_UNKNOWN = 0;
+        // Keypoints that consist only of image coordinates. Simple keypoints do not have
+        // descriptors.
+        KEYPOINT_SIMPLE = 1;
+        // Keypoints detected by the ORB feature extraction algorithm (Oriented FAST and Rotated
+        // BRIEF.)
+        KEYPOINT_ORB = 2;
+    }
+    // The algorithm used to compute this keypoint and its descriptor.
+    KeypointType type = 3;
+}
+
+message Match {
+    // The index in the reference KeypointSet of the keypoint in the matching pair.
+    int32 reference_index = 2;
+    // The index in the live KeypointSet of the keypoint in the matching pair.
+    int32 live_index = 3;
+    // The distance in descriptor space between the two keypoints.
+    float distance = 4;
+}
+
+// A pair of keypoint sets containing only features in common that have been matched.
+message KeypointMatches {
+    // The set of common keypoints in a first ("reference") image.
+    KeypointSet reference_keypoints = 2;
+
+    // The set of common keypoints in a second ("live") image.
+    KeypointSet live_keypoints = 3;
+
+    // Indices of pairs of matches in the two KeypointSets and their distance measure.
+    repeated Match matches = 4;
+}

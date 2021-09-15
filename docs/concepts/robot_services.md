@@ -72,7 +72,7 @@ The robot state service also tracks different parameters for the robot and this 
 
 Spot can have many different image sources, including the cameras on the base platform or any other payloads which implement the image service proto definitions, like Spot CAM. The image service provides a way to list all these different sources using the `ListImageSources` RPC and then query the sources for their images with the `GetImage` RPC.
 
-Images can be regular pixel-based visual images where the data value corresponds to the greyscale (or color) intensity. They can also be depth images where the data value corresponds to the depth measured from the camera sensor. To align depth data with visual image data, use the `depth_in_visual_frame` sources, which reprojects the depth onto the same projection as the visual image.
+Images can be regular pixel-based visual images where the data value corresponds to the greyscale (or color) intensity. They can also be depth images where the data value corresponds to the depth measured from the camera sensor. To align depth data with visual image data, use the `depth_in_visual_frame` sources ([example code](../../python/examples/get_depth_plus_visual_image/README.md)), which reprojects the depth onto the same projection as the visual image.
 
 Since an image can be a lot of data, there are also different types of encodings and compression schemes that the image can be transmitted as to reduce the size of the data sent over the wire. The image service offers a `Format` field to describe the encoding of the image:
 

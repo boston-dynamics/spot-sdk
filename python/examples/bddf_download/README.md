@@ -18,7 +18,7 @@ $ python3 -m pip install -r requirements.txt
 
 ## Running the Examples
 
-There are two scripts in this example.  The first is `bddf_download.py`, which downloads specified data from a robot and saves it as a bddf file.
+There are two primary scripts in this example.  The first is `bddf_download.py`, which downloads specified data from a robot and saves it as a bddf file.
 
 Another example script is `bddf_read.py`, which extracts and prints protobuf messages stored in a bddf file.
 
@@ -116,4 +116,17 @@ $ ${DOWNLOAD_BDDF} --timespan 20m-10m --service robot-id -o robot-id.bddf
 ```
 $ python3 ./bddf_read.py show-grpc robot-id.bddf bosdyn.api.RobotIdRequest
 $ python3 ./bddf_read.py show-grpc robot-id.bddf bosdyn.api.RobotIdResponse
+```
+
+## GUI
+
+A graphical user interface is also available using `bddf_download_gui.py`. An additional PyQt5 dependency is required.
+
+```
+$ python3 -m pip install -r gui_requirements.txt
+```
+
+To run the example as a GUI:
+```
+$ python3 bddf_download_gui.py
 ```

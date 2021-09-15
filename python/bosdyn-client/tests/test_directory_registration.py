@@ -187,7 +187,7 @@ def test_keep_alive(default_service_entry, default_service_endpoint):
     name = default_service_entry.name
     assert name not in service.service_entries
     with keepalive.start(name, default_service_entry.type, default_service_entry.authority,
-                    default_service_endpoint.host_ip, default_service_endpoint.port):
+                         default_service_endpoint.host_ip, default_service_endpoint.port):
         assert name in service.service_entries
 
         # Just have some statement inside the "with" context.
@@ -212,7 +212,7 @@ def test_keep_alive_update(default_service_entry, default_service_endpoint):
 
     new_authority = default_service_entry.authority + 'woo-hoo'
     with keepalive.start(name, default_service_entry.type, new_authority,
-                    default_service_endpoint.host_ip, default_service_endpoint.port):
+                         default_service_endpoint.host_ip, default_service_endpoint.port):
         assert service.service_entries[name].authority == new_authority
 
         # Make sure the thread is still alive after a few loops.

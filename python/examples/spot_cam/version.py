@@ -27,7 +27,8 @@ class VersionGetSoftwareVersionCommand(Command):
         super(VersionGetSoftwareVersionCommand, self).__init__(subparsers, command_dict)
 
     def _run(self, robot, options):
-        response = robot.ensure_client(VersionClient.default_service_name).get_software_version_full()
+        response = robot.ensure_client(
+            VersionClient.default_service_name).get_software_version_full()
         version = response.version
         return 'Version {}.{}.{}\n{}'.format(version.major_version, version.minor_version,
                                              version.patch_level, response.detail)

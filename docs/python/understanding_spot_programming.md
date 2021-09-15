@@ -370,36 +370,84 @@ Let's make a `LeaseClient` for the `lease` service and list the current leases:
 ```python
 >>> lease_client = robot.ensure_client('lease')
 >>> lease_client.list_leases()
-[resource: "body"
+[resource: "all-leases"
+lease {
+  resource: "all-leases"
+  epoch: "ZBEwqFkjbTznJRxU"
+  sequence: 1
+  client_names: "root"
+}
+lease_owner {
+}
+, resource: "body"
 lease {
   resource: "body"
-  epoch: "IOSDMpfEqvdTHZGV"
-  sequence: 0
+  epoch: "ZBEwqFkjbTznJRxU"
+  sequence: 1
+  client_names: "root"
+}
+lease_owner {
+}
+, resource: "mobility"
+lease {
+  resource: "mobility"
+  epoch: "ZBEwqFkjbTznJRxU"
+  sequence: 1
+  client_names: "root"
 }
 lease_owner {
 }
 ]
+
 ```
 
-Lease-able resources are listed: currently the only resource supported is "body", which covers all of the motors on Spot.  Note that the `lease_owner` field is empty since no one has acquired the body lease.
+The lease-able resources are listed: "body", "mobility", ("full-arm", "gripper", "arm" for robots with an arm). The "body" resource covers all of the motors on Spot and for most use-cases it is sufficient to issue all commands just using the "body" lease since services on Spot will break apart the lease to use the minimal set of resources necessary.
 
-Let's acquire a lease and again list:
+NOTE: the `lease_owner` field is empty since no one has acquired the body lease.
+
+When taking lease control of Spot, the lease should first be acquired, and then the "keepalive" should be created to retain ownership of the lease resource.
+Let's acquire a lease, create the keepalive, and again list:
 
 ```python
->>> lease_keep_alive = bosdyn.client.lease.LeaseKeepAlive(lease_client)
 >>> lease = lease_client.acquire()
+>>> lease_keep_alive = bosdyn.client.lease.LeaseKeepAlive(lease_client)
 >>> lease_client.list_leases()
-[resource: "body"
+[resource: "all-leases"
 lease {
-  resource: "body"
-  epoch: "IOSDMpfEqvdTHZGV"
-  sequence: 1
+  resource: "all-leases"
+  epoch: "ZBEwqFkjbTznJRxU"
+  sequence: 2
+  client_names: "root"
 }
 lease_owner {
-  client_name: "understanding-spotbblank02:29516"
+  client_name: "HelloSpotClientlaptop-kbrandes01:hello_spot.py-32049"
+}
+, resource: "body"
+lease {
+  resource: "body"
+  epoch: "ZBEwqFkjbTznJRxU"
+  sequence: 2
+  client_names: "root"
+}
+lease_owner {
+  client_name: "HelloSpotClientlaptop-kbrandes01:hello_spot.py-32049"
+}
+, resource: "mobility"
+lease {
+  resource: "mobility"
+  epoch: "ZBEwqFkjbTznJRxU"
+  sequence: 2
+  client_names: "root"
+}
+lease_owner {
+  client_name: "HelloSpotClientlaptop-kbrandes01:hello_spot.py-32049"
 }
 ]
 ```
+
+After acquiring the "body" lease, you take ownership of the sub-resource "mobility". For a robot with an arm, you will also take ownership of the sub-resources "full-arm", "arm", and "gripper" when acquiring the "body" lease.
+
+NOTE: the lease keepalive object must remain in scope for the entire duration of the program that is using the lease for commands.
 
 ### Powering on the robot
 
@@ -451,10 +499,10 @@ We encourage you to experiment with these various parameters, referencing the [r
 >>> from bosdyn.geometry import EulerZXY
 >>> footprint_R_body = EulerZXY(yaw=0.4, roll=0.0, pitch=0.0)
 >>> from bosdyn.client.robot_command import RobotCommandBuilder
->>> cmd = RobotCommandBuilder.stand_command(footprint_R_body=footprint_R_body)
+>>> cmd = RobotCommandBuilder.synchro_stand_command(footprint_R_body=footprint_R_body)
 >>> command_client.robot_command(cmd)
 # Command Spot to raise up.
->>> cmd = RobotCommandBuilder.stand_command(body_height=0.1)
+>>> cmd = RobotCommandBuilder.synchro_stand_command(body_height=0.1)
 >>> command_client.robot_command(cmd)
 ```
 

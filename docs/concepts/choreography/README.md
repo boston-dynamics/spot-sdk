@@ -20,6 +20,9 @@ The high-level [documentation](choreography_service.md) provides an overview of 
 ## Contents
 
 * [Choreography Service](choreography_service.md)
+* [Animations in Choreography](animations_in_choreographer.md)
 * [Move Reference Guide](move_reference.md)
 * [Choreographer Setup](choreographer_setup.md)
 * [Choreographer Overview](choreographer.md)
+* [Robot Connections in Choreographer](robot_controls_in_choreographer.md)
+* [Animation File Format](animation_file_specification.md)

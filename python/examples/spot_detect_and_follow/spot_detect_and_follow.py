@@ -36,8 +36,8 @@ from bosdyn.client.frame_helpers import *
 from bosdyn.client.image import ImageClient
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 from bosdyn.client.math_helpers import Quat, SE3Pose
-from bosdyn.client.robot_command import (RobotCommandBuilder, RobotCommandClient,
-                                        blocking_stand, CommandFailedError, CommandTimedOutError)
+from bosdyn.client.robot_command import (RobotCommandBuilder, RobotCommandClient, blocking_stand,
+                                         CommandFailedError, CommandTimedOutError)
 from bosdyn.client.robot_state import RobotStateClient
 from tensorflow_object_detection import DetectorAPI
 
@@ -73,25 +73,94 @@ PROCESSED_BOXES_QUEUE = Queue(QUEUE_MAXSIZE)
 # Barrier for waiting on Tensorflow processes to start, initialized in main()
 TENSORFLOW_PROCESS_BARRIER = None
 
-COCO_CLASS_DICT = {1:'person',2:'bicycle',3:'car',4:'motorcycle',5:'airplane',6:'bus',7:'train',
-                   8:'truck',9:'boat',10:'trafficlight',11:'firehydrant',13:'stopsign',
-                   14:'parkingmeter',15:'bench',16:'bird',17:'cat',18:'dog',19:'horse',20:'sheep',
-                   21:'cow',22:'elephant',23:'bear',24:'zebra',25:'giraffe',27:'backpack',
-                   28:'umbrella',31:'handbag',32:'tie',33:'suitcase',34:'frisbee',35:'skis',
-                   36:'snowboard',37:'sportsball',38:'kite',39:'baseballbat',40:'baseballglove',
-                   41:'skateboard',42:'surfboard',43:'tennisracket',44:'bottle',46:'wineglass',
-                   47:'cup',48:'fork',49:'knife',50:'spoon',51:'bowl',52:'banana',53:'apple',
-                   54:'sandwich',55:'orange',56:'broccoli',57:'carrot',58:'hotdog',59:'pizza',
-                   60:'donut',61:'cake',62:'chair',63:'couch',64:'pottedplant',65:'bed',
-                   67:'diningtable',70:'toilet',72:'tv',73:'laptop',74:'mouse',75:'remote',
-                   76:'keyboard',77:'cellphone',78:'microwave',79:'oven',80:'toaster',81:'sink',
-                   82:'refrigerator',84:'book',85:'clock',86:'vase',87:'scissors',88:'teddybear',
-                   89:'hairdrier',90:'toothbrush'}
+COCO_CLASS_DICT = {
+    1: 'person',
+    2: 'bicycle',
+    3: 'car',
+    4: 'motorcycle',
+    5: 'airplane',
+    6: 'bus',
+    7: 'train',
+    8: 'truck',
+    9: 'boat',
+    10: 'trafficlight',
+    11: 'firehydrant',
+    13: 'stopsign',
+    14: 'parkingmeter',
+    15: 'bench',
+    16: 'bird',
+    17: 'cat',
+    18: 'dog',
+    19: 'horse',
+    20: 'sheep',
+    21: 'cow',
+    22: 'elephant',
+    23: 'bear',
+    24: 'zebra',
+    25: 'giraffe',
+    27: 'backpack',
+    28: 'umbrella',
+    31: 'handbag',
+    32: 'tie',
+    33: 'suitcase',
+    34: 'frisbee',
+    35: 'skis',
+    36: 'snowboard',
+    37: 'sportsball',
+    38: 'kite',
+    39: 'baseballbat',
+    40: 'baseballglove',
+    41: 'skateboard',
+    42: 'surfboard',
+    43: 'tennisracket',
+    44: 'bottle',
+    46: 'wineglass',
+    47: 'cup',
+    48: 'fork',
+    49: 'knife',
+    50: 'spoon',
+    51: 'bowl',
+    52: 'banana',
+    53: 'apple',
+    54: 'sandwich',
+    55: 'orange',
+    56: 'broccoli',
+    57: 'carrot',
+    58: 'hotdog',
+    59: 'pizza',
+    60: 'donut',
+    61: 'cake',
+    62: 'chair',
+    63: 'couch',
+    64: 'pottedplant',
+    65: 'bed',
+    67: 'diningtable',
+    70: 'toilet',
+    72: 'tv',
+    73: 'laptop',
+    74: 'mouse',
+    75: 'remote',
+    76: 'keyboard',
+    77: 'cellphone',
+    78: 'microwave',
+    79: 'oven',
+    80: 'toaster',
+    81: 'sink',
+    82: 'refrigerator',
+    84: 'book',
+    85: 'clock',
+    86: 'vase',
+    87: 'scissors',
+    88: 'teddybear',
+    89: 'hairdrier',
+    90: 'toothbrush'
+}
 
 # Mapping from visual to depth data
 VISUAL_SOURCE_TO_DEPTH_MAP_SOURCE = {
     'frontleft_fisheye_image': 'frontleft_depth_in_visual_frame',
-    'frontright_fisheye_image': 'frontright_depth_in_visual_frame'}
+    'frontright_fisheye_image': 'frontright_depth_in_visual_frame'
+}
 ROTATION_ANGLES = {
     'back_fisheye_image': 0,
     'frontleft_fisheye_image': -78,
@@ -100,22 +169,24 @@ ROTATION_ANGLES = {
     'right_fisheye_image': 180
 }
 
+
 def _update_thread(async_task):
     while True:
         async_task.update()
         time.sleep(0.01)
+
 
 class AsyncImage(AsyncPeriodicQuery):
     """Grab image."""
 
     def __init__(self, image_client, image_sources):
         # Period is set to be about 15 FPS
-        super(AsyncImage, self).__init__('images', image_client, LOGGER,
-                                         period_sec=0.067)
+        super(AsyncImage, self).__init__('images', image_client, LOGGER, period_sec=0.067)
         self.image_sources = image_sources
 
     def _start_query(self):
         return self._client.get_image_from_sources_async(self.image_sources)
+
 
 class AsyncRobotState(AsyncPeriodicQuery):
     """Grab robot state."""
@@ -127,6 +198,7 @@ class AsyncRobotState(AsyncPeriodicQuery):
 
     def _start_query(self):
         return self._client.get_robot_state_async()
+
 
 def get_source_list(image_client):
     """Gets a list of image sources and filters based on config dictionary
@@ -146,6 +218,7 @@ def get_source_list(image_client):
                 source_list.append(VISUAL_SOURCE_TO_DEPTH_MAP_SOURCE[source.name])
     return source_list
 
+
 def capture_images(image_task, sleep_between_capture):
     """ Captures images and places them on the queue
 
@@ -157,8 +230,11 @@ def capture_images(image_task, sleep_between_capture):
         images_response = image_task.proto
         if not images_response:
             continue
-        depth_responses = {img.source.name: img for img in images_response
-                           if img.source.image_type == ImageSource.IMAGE_TYPE_DEPTH}
+        depth_responses = {
+            img.source.name: img
+            for img in images_response
+            if img.source.image_type == ImageSource.IMAGE_TYPE_DEPTH
+        }
         entry = {}
         for image_response in images_response:
             if image_response.source.image_type == ImageSource.IMAGE_TYPE_VISUAL:
@@ -178,9 +254,7 @@ def capture_images(image_task, sleep_between_capture):
                     image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)  # Converted to RGB for TF
                     tform_snapshot = image_response.shot.transforms_snapshot
                     frame_name = image_response.shot.frame_name_image_sensor
-                    world_tform_cam = get_a_tform_b(tform_snapshot,
-                                                    VISION_FRAME_NAME,
-                                                    frame_name)
+                    world_tform_cam = get_a_tform_b(tform_snapshot, VISION_FRAME_NAME, frame_name)
                     entry[source] = {
                         'source': source,
                         'world_tform_cam': world_tform_cam,
@@ -191,13 +265,14 @@ def capture_images(image_task, sleep_between_capture):
                         'depth_image': depth_image,
                         'system_cap_time': time.time()
                     }
-                except Exception as exc: # pylint: disable=broad-except
+                except Exception as exc:  # pylint: disable=broad-except
                     print(f'Exception occurred during image capture {exc}')
         try:
             RAW_IMAGES_QUEUE.put_nowait(entry)
         except Full as exc:
             print(f'RAW_IMAGES_QUEUE is full: {exc}')
         time.sleep(sleep_between_capture)
+
 
 def start_tensorflow_processes(num_processes, model_path, detection_class, detection_threshold,
                                max_processing_delay):
@@ -215,12 +290,13 @@ def start_tensorflow_processes(num_processes, model_path, detection_class, detec
     """
 
     for counter in range(num_processes):
-        process = Process(target=process_images, args=(
-            model_path,
-            detection_class,
-            detection_threshold,
-            max_processing_delay,
-        ))
+        process = Process(
+            target=process_images, args=(
+                model_path,
+                detection_class,
+                detection_threshold,
+                max_processing_delay,
+            ))
         process.start()
 
 
@@ -262,8 +338,7 @@ def process_images(model_path, detection_class, detection_threshold, max_process
             confident_scores = []
             if len(boxes) == 0:
                 continue
-            for box, score, box_class in sorted(zip(boxes, scores, classes),
-                                                key=lambda x: x[1],
+            for box, score, box_class in sorted(zip(boxes, scores, classes), key=lambda x: x[1],
                                                 reverse=True):
                 # if score > detection_threshold:
                 if score > detection_threshold and box_class == detection_class:
@@ -281,6 +356,7 @@ def process_images(model_path, detection_class, detection_threshold, max_process
             PROCESSED_BOXES_QUEUE.put_nowait(entry)
         except Full as exc:
             print(f'PROCESSED_BOXES_QUEUE is full: {exc}')
+
 
 def get_go_to(world_tform_object, robot_state, mobility_params, dist_margin=1.2):
     """Gets trajectory command to a goal location
@@ -303,10 +379,12 @@ def get_go_to(world_tform_object, robot_state, mobility_params, dist_margin=1.2)
         world_tform_object.x - delta_ewrt_vo_norm[0] * dist_margin,
         world_tform_object.y - delta_ewrt_vo_norm[1] * dist_margin
     ])
-    tag_cmd = RobotCommandBuilder.trajectory_command(
-                goal_x=vo_tform_goal[0], goal_y=vo_tform_goal[1], goal_heading=heading,
-                frame_name=VISION_FRAME_NAME, params=mobility_params)
+    tag_cmd = RobotCommandBuilder.trajectory_command(goal_x=vo_tform_goal[0],
+                                                     goal_y=vo_tform_goal[1], goal_heading=heading,
+                                                     frame_name=VISION_FRAME_NAME,
+                                                     params=mobility_params)
     return tag_cmd
+
 
 def _get_heading(xhat):
     zhat = [0.0, 0.0, 1.0]
@@ -337,10 +415,9 @@ def get_mobility_params():
                                                       locomotion_hint=spot_command_pb2.HINT_TROT)
     return mobility_params
 
-def get_distance_to_closest_object_depth(x_min, x_max, y_min, y_max,
-                                         depth_scale, raw_depth_image,
-                                         histogram_bin_size=0.20,
-                                         minimum_number_of_points=100,
+
+def get_distance_to_closest_object_depth(x_min, x_max, y_min, y_max, depth_scale, raw_depth_image,
+                                         histogram_bin_size=0.20, minimum_number_of_points=100,
                                          max_distance=4.0):
     """Make a histogram of distances to points in the cloud and take the closest distance with
     enough points.
@@ -367,7 +444,7 @@ def get_distance_to_closest_object_depth(x_min, x_max, y_min, y_max,
                 depth = raw_depth / depth_scale
                 depths.append(depth)
 
-    hist, hist_edges = np.histogram(depths, bins=num_bins, range=(0,max_distance))
+    hist, hist_edges = np.histogram(depths, bins=num_bins, range=(0, max_distance))
 
     edges_zipped = zip(hist_edges[:-1], hist_edges[1:])
     # Iterate over the histogram and return the first distance with enough points.
@@ -376,6 +453,7 @@ def get_distance_to_closest_object_depth(x_min, x_max, y_min, y_max,
             return statistics.mean([d for d in depths if d > edges[0] and d > edges[1]])
 
     return max_distance
+
 
 def rotate_about_origin_degrees(origin, point, angle):
     """
@@ -387,6 +465,7 @@ def rotate_about_origin_degrees(origin, point, angle):
         angle (float): Angle in degrees
     """
     return rotate_about_origin(origin, point, math.radians(angle))
+
 
 def rotate_about_origin(origin, point, angle):
     """
@@ -404,9 +483,8 @@ def rotate_about_origin(origin, point, angle):
     ret_y = orig_y + math.sin(angle) * (pnt_x - orig_x) + math.cos(angle) * (pnt_y - orig_y)
     return int(ret_x), int(ret_y)
 
-def get_object_position(world_tform_cam,
-                        visual_image, depth_image,
-                        bounding_box, rotation_angle):
+
+def get_object_position(world_tform_cam, visual_image, depth_image, bounding_box, rotation_angle):
     """
     Extract the bounding box, then find the mode in that region.
 
@@ -424,10 +502,8 @@ def get_object_position(world_tform_cam,
         return
 
     # Rotate bounding box back to original frame
-    points = [(bounding_box[1], bounding_box[0]),
-              (bounding_box[3], bounding_box[0]),
-              (bounding_box[3], bounding_box[2]),
-              (bounding_box[1], bounding_box[2])]
+    points = [(bounding_box[1], bounding_box[0]), (bounding_box[3], bounding_box[0]),
+              (bounding_box[3], bounding_box[2]), (bounding_box[1], bounding_box[2])]
 
     origin = (visual_image.shot.image.cols / 2, visual_image.shot.image.rows / 2)
 
@@ -486,9 +562,10 @@ def get_object_position(world_tform_cam,
         obj_tform_camera = SE3Pose(tform_x, tform_y, tform_z, Quat())
 
         return world_tform_cam * obj_tform_camera
-    except Exception as exc: # pylint: disable=broad-except
+    except Exception as exc:  # pylint: disable=broad-except
         print(f'Error getting object position: {exc}')
         return
+
 
 def _check_model_path(model_path):
     if model_path is None or \
@@ -498,11 +575,13 @@ def _check_model_path(model_path):
         return False
     return True
 
+
 def _check_and_load_json_classes(config_path):
     if os.path.isfile(config_path):
         with open(config_path) as json_classes:
-            global COCO_CLASS_DICT # pylint: disable=global-statement
+            global COCO_CLASS_DICT  # pylint: disable=global-statement
             COCO_CLASS_DICT = json.load(json_classes)
+
 
 def _find_highest_conf_source(processed_boxes_entry):
     highest_conf_source = None
@@ -514,6 +593,7 @@ def _find_highest_conf_source(processed_boxes_entry):
                 max_score = capture['scores'][0]
     return highest_conf_source
 
+
 def main(argv):
     """Command line interface.
 
@@ -522,10 +602,12 @@ def main(argv):
     """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model-path", required=True,
-                        help="Local file path to the Tensorflow model, example pre-trained models \
+    parser.add_argument(
+        "--model-path", required=True,
+        help="Local file path to the Tensorflow model, example pre-trained models \
                             can be found at \
-                            https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md")
+                            https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md"
+    )
     parser.add_argument("--classes", default='/classes.json', type=str,
                         help="File containing json mapping of object class IDs to class names")
     parser.add_argument("--number-tensorflow-processes", default=1, type=int,
@@ -539,9 +621,10 @@ def main(argv):
     parser.add_argument(
         "--detection-class", default=1, type=int, help="Detection classes to use in the" +
         "Tensorflow model; Default is to use 1, which is a person in the Coco dataset")
-    parser.add_argument("--max-processing-delay", default=7.0, type=float,
-                        help="Maximum allowed delay for processing an image; " +
-                        "any image older than this value will be skipped")
+    parser.add_argument(
+        "--max-processing-delay", default=7.0, type=float,
+        help="Maximum allowed delay for processing an image; " +
+        "any image older than this value will be skipped")
 
     bosdyn.client.util.add_common_arguments(parser)
     options = parser.parse_args(argv)
@@ -553,7 +636,7 @@ def main(argv):
         # Check for classes json file, otherwise use the COCO class dictionary
         _check_and_load_json_classes(options.classes)
 
-        global TENSORFLOW_PROCESS_BARRIER # pylint: disable=global-statement
+        global TENSORFLOW_PROCESS_BARRIER  # pylint: disable=global-statement
         TENSORFLOW_PROCESS_BARRIER = Barrier(options.number_tensorflow_processes + 1)
         # Start Tensorflow processes
         start_tensorflow_processes(options.number_tensorflow_processes, options.model_path,
@@ -616,8 +699,10 @@ def main(argv):
             time.sleep(0.1)
 
         # Start image capture process
-        image_capture_thread = Thread(target=capture_images,
-                                      args=(image_task, options.sleep_between_capture,))
+        image_capture_thread = Thread(target=capture_images, args=(
+            image_task,
+            options.sleep_between_capture,
+        ))
         image_capture_thread.start()
         while True:
             # This comes from the tensorflow processes and limits the rate of this loop
@@ -634,11 +719,10 @@ def main(argv):
                 continue  # Skip image due to delay
 
             # Find the transform to highest confidence object using the depth sensor
-            world_tform_object = get_object_position(capture_to_use['world_tform_cam'],
-                                                     capture_to_use['visual_image'],
-                                                     capture_to_use['depth_image'],
-                                                     capture_to_use['boxes'][0],
-                                                     ROTATION_ANGLES[capture_to_use['source']])
+            world_tform_object = get_object_position(
+                capture_to_use['world_tform_cam'], capture_to_use['visual_image'],
+                capture_to_use['depth_image'], capture_to_use['boxes'][0],
+                ROTATION_ANGLES[capture_to_use['source']])
 
             # get_object_position can fail if there is insufficient depth sensor information
             if not world_tform_object:
@@ -647,9 +731,7 @@ def main(argv):
             scores = capture_to_use['scores']
             print(f'Transform for object with confidence {scores[0]}: {world_tform_object}')
             print(f'Process latency: {time.time() - capture_to_use["system_cap_time"]}')
-            tag_cmd = get_go_to(world_tform_object,
-                                robot_state_task.proto,
-                                params_set)
+            tag_cmd = get_go_to(world_tform_object, robot_state_task.proto, params_set)
             end_time = 15.0
             if tag_cmd is not None:
                 robot_command_client.robot_command(lease=None, command=tag_cmd,

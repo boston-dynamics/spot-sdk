@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Install Choreographer
 
-Choreographer is an application to easily author choreographies with advanced moves and parameters and execute the routines on robot with music synchronization. The application and choreography service require a special license to use. The application can be downloaded from the [Support Center](https://support.bostondynamics.com) in the "Downloads Page" for the 2.1 Release. Additionally, the Support Center provides in depth documentation for how to use Choreographer to create routines, modify moves, connect to robots to execute routines, and debug issues with a FAQs section.
+Choreographer is an application to easily author choreographies with advanced moves and parameters and execute the routines on robot with music synchronization. The application and choreography service require a special license to use. The application can be downloaded from the [Support Center](https://support.bostondynamics.com) in the "Downloads Page" for the latest Spot software release. Additionally, the Support Center provides in depth documentation for how to use Choreographer to create routines, modify moves, connect to robots to execute routines, and debug issues with a FAQs section.
 
 ## System Requirements
 
@@ -23,7 +23,7 @@ The Choreographer application is an executable which can be run directly on a la
 sudo chmod +x choreographer
 ```
 
-To run Choroeographer without any robots connected, just double-click on the executable to open it.
+To run Choreographer without any robots connected, just double-click on the executable to open it.
 
 To run Choreographer with robots, start Choreographer from the command line, in the directory where the executable was download, with the following options:
 * On windows:

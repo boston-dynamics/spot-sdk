@@ -38,10 +38,11 @@ def main(argv):
     print("World objects: " + str(world_objects))
     # Examine the transform snapshot for the world object!
     for world_obj in world_objects:
-        print("ID: "+str(world_obj.id))
+        print("ID: " + str(world_obj.id))
         full_snapshot = world_obj.transforms_snapshot
         for edge in full_snapshot.child_to_parent_edge_map:
-            print("Child frame name: " + edge + ". Parent frame name: " + full_snapshot.child_to_parent_edge_map[edge].parent_frame_name)
+            print("Child frame name: " + edge + ". Parent frame name: " +
+                  full_snapshot.child_to_parent_edge_map[edge].parent_frame_name)
 
     # Get all fiducial objects (an object of a specific type).
     request_fiducials = [world_object_pb2.WORLD_OBJECT_APRILTAG]

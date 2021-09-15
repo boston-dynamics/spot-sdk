@@ -22,6 +22,7 @@ from bosdyn.client.data_acquisition_plugin_service import (Capability, DataAcqui
                                                            DataAcquisitionStoreHelper)
 from .helpers import make_async
 
+
 @pytest.fixture
 def daq_store_client():
     client = mock.Mock()
@@ -41,6 +42,7 @@ def daq_store_failure_client():
     future.set_exception(Exception("Test"))
     client.store_image_async.return_value = future
     return client
+
 
 @pytest.fixture
 def daq_robot(daq_store_client):
@@ -126,6 +128,7 @@ def test_wait_for_stores_complete_cancel(daq_store_client):
         state._cancelled = True
     with pytest.raises(RequestCancelledError):
         store_helper.wait_for_stores_complete()
+
 
 def test_simple_plugin(daq_robot):
     """Test that a basic plugin that completes right away works."""

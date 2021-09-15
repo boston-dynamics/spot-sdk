@@ -19,7 +19,8 @@ import bosdyn.client
 import bosdyn.client.util
 from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
                                                   DirectoryRegistrationKeepAlive)
-from bosdyn.client.util import GrpcServiceRunner, setup_logging
+from bosdyn.client.util import setup_logging
+from bosdyn.client.server_util import GrpcServiceRunner
 from bosdyn.client.fault import FaultClient
 from bosdyn.client.image_service_helpers import VisualImageSource, CameraBaseImageServicer, CameraInterface
 
@@ -56,9 +57,18 @@ CAMERA_SETUP_FAULT = service_fault_pb2.ServiceFault(
 
 class RicohThetaServiceHelper(CameraInterface):
 
-    def __init__(self, theta_ssid, theta_instance, logger=None):
+    def __init__(self, theta_ssid, theta_instance, logger=None, live_stream=False,
+                 capture_continuously=False):
         # Setup the logger.
         self.logger = logger or _LOGGER
+
+        # Save whether or not we are capturing continuously. If we are not, but live stream is
+        # enabled, then we should wipe the generator and start a new stream at the latest.
+        self.capture_continuously = capture_continuously
+
+        # Boolean indicating which capture method: True = fast mjpeg captures with lower quality stitching, and
+        # False = slower jpeg captures with high quality stitching
+        self.live_stream = live_stream
 
         # Name of the image source that is being requested from.
         self.theta_ssid = theta_ssid
@@ -73,21 +83,6 @@ class RicohThetaServiceHelper(CameraInterface):
         self.camera_gain = None
         self.camera_exposure = None
 
-        # Request the image format (height, width) from the camera.
-        format_json = None
-        try:
-            format_json = self.camera.getFileFormat(print_to_screen=False)
-        except Exception as err:
-            # An issue occurred getting the file format for the camera images. This is likely due
-            # to upstream failures creating the Theta instance, which already have triggered service
-            # faults.
-            _LOGGER.info("Unable to set the image width/height dimensions. Error message: %s %s",
-                         str(type(err)), str(err))
-            pass
-        if format_json is not None:
-            self.cols = format_json["width"]
-            self.rows = format_json["height"]
-
         try:
             self.camera_gain, self.camera_exposure = self.camera.getCaptureParameters(
                 print_to_screen=False)
@@ -99,6 +94,53 @@ class RicohThetaServiceHelper(CameraInterface):
                          str(type(err)), str(err))
             pass
 
+        self.mjpeg_generator = None
+        self._maybe_reset_mjpeg_generator()
+
+        # Request the image format (height, width) from the camera.
+        if not self.live_stream:
+            format_json = None
+            try:
+                format_json = self.camera.getFileFormat(print_to_screen=False)
+            except Exception as err:
+                # An issue occurred getting the file format for the camera images. This is likely due
+                # to upstream failures creating the Theta instance, which already have triggered service
+                # faults.
+                _LOGGER.info("Unable to set the image width/height dimensions. Error message: %s %s",
+                            str(type(err)), str(err))
+                pass
+            if format_json is not None:
+                print(format_json)
+                self.cols = format_json["width"]
+                self.rows = format_json["height"]
+        else:
+            # The live stream has different dimensions then the full ricoh theta image because it
+            # is lower resolution and doesn't have the full image processing as the regular ricoh
+            # theta still captures. There is no easy way with the API requests to get the dimensions of
+            # the mjpeg, so we will just take the first image and decode it to get the size.
+            if self.mjpeg_generator is not None:
+                image_data = next(self.mjpeg_generator)
+                pil_image = Image.open(io.BytesIO(image_data))
+                self.cols = pil_image.size[0]
+                self.rows = pil_image.size[1]
+            else:
+                _LOGGER.info("Unable to set the image dimensions because no mjpeg generator.")
+                pass
+
+    def _maybe_reset_mjpeg_generator(self):
+        """Reset the generator which reads from the mjpeg stream.
+
+        This is used to help catch up the live stream generator to the latest/most recent
+        images being viewed from the camera.
+        """
+        if self.live_stream:
+            try:
+                self.mjpeg_generator = self.camera.yieldLivePreview(print_to_screen=False)
+            except Exception as err:
+                _LOGGER.info("Error in creating the live preview: %s %s", str(type(err)), str(err))
+                # Default to original capture method.
+                self.live_stream = False
+
     def blocking_capture(self):
         """Take an image and download the processed image to local memory from the Ricoh Theta camera.
 
@@ -108,8 +150,19 @@ class RicohThetaServiceHelper(CameraInterface):
         if self.camera is None:
             raise Exception("The Ricoh Theta camera instance is not initialized.")
 
+        if not self.capture_continuously and self.live_stream:
+            self._maybe_reset_mjpeg_generator()
+
         # Send the request to take a picture
         capture_time_secs = time.time()
+
+        # If we are in "live_stream" mode, then just return the next result of the generator that reads from
+        # the motion jpeg live preview. .
+        if self.live_stream and self.mjpeg_generator is not None:
+            buffer_bytes = next(self.mjpeg_generator)
+            return buffer_bytes, capture_time_secs
+
+        # Otherwise, request to take a picture (blocking) and download the image.
         self.camera.takePicture(print_to_screen=False)
         img_json, img_raw = self.camera.getLastImage(wait_for_latest=True, print_to_screen=False)
         if not (img_json and img_raw):
@@ -125,7 +178,7 @@ class RicohThetaServiceHelper(CameraInterface):
         # the capture was triggered.
         try:
             # Split on the "+" and "-" to remove the timezone information from the string. Note, on python 3.6
-            # the time zome parsing in strptime does not correctly parse a timezone with a semicolon, and the
+            # the time zone parsing in strptime does not correctly parse a timezone with a semicolon, and the
             # ricoh theta's output includes this. So for now, we use this string splitting to just remove the
             # timezone entirely.
             date_time = img_json["dateTimeZone"].split("+")[0].split("-")[0]
@@ -137,13 +190,11 @@ class RicohThetaServiceHelper(CameraInterface):
             # Part of the datetime string parsing failed. Therefore just use the saved capture_time_secs.
             pass
 
-        return buffer_bytes, capture_time_secs
+        # Return the result of reading the image into local memory. Apparently, the action of reading the buffer can
+        # only be performed one time unless it is converted to a stream or copied.
+        return buffer_bytes.read(), capture_time_secs
 
     def image_decode(self, image_data, image_proto, image_format, quality_percent):
-        # Read the image into local memory. Apparently, the action of reading the buffer can only be performed
-        # one time unless it is converted to a stream or copied.
-        img_bytes_read = image_data.read()
-
         # Ricoh Theta takes colored JPEG images, so it's pixel type is RGB.
         image_proto.pixel_format = image_pb2.Image.PIXEL_FORMAT_RGB_U8
 
@@ -156,7 +207,7 @@ class RicohThetaServiceHelper(CameraInterface):
             # Note, the returned raw bytes array from the Ricoh Theta camera is often around 8MB, so the GRPC server
             # must be setup to have an increased message size limit. The run_ricoh_image_service script does increase
             # the size to allow for the larger raw images.
-            pil_image = Image.open(io.BytesIO(img_bytes_read))
+            pil_image = Image.open(io.BytesIO(image_data))
             compressed_byte_buffer = io.BytesIO()
             # PIL will not do any JPEG compression if the quality is specified as 100. It effectively treats
             # requests with quality > 95 as a request for a raw image.
@@ -168,7 +219,7 @@ class RicohThetaServiceHelper(CameraInterface):
             # it matches the output of the ricoh theta camera and is compact enough to transmit.
             # Decode the bytes into a PIL jpeg image. This allows for the formatting to be compressed. This is then
             # converted back into a bytes array.
-            pil_image = Image.open(io.BytesIO(img_bytes_read))
+            pil_image = Image.open(io.BytesIO(image_data))
             compressed_byte_buffer = io.BytesIO()
             checked_quality = self.default_jpeg_quality
             if quality_percent > 0 and quality_percent <= 100:
@@ -193,7 +244,7 @@ class RicohThetaServiceHelper(CameraInterface):
 
 
 def make_ricoh_theta_image_service(theta_ssid, theta_password, theta_client, robot, logger=None,
-                                   use_background_capture_thread=False):
+                                   use_background_capture_thread=False, live_stream=False):
     # Create an theta instance, which will perform the HTTP requests to the ricoh theta
     # camera (using the Ricoh Theta API: https://api.ricoh/docs/#ricoh-theta-api).
     theta_instance = Theta(theta_ssid=theta_ssid, theta_pw=theta_password, client_mode=theta_client,
@@ -221,7 +272,8 @@ def make_ricoh_theta_image_service(theta_ssid, theta_password, theta_client, rob
         resp = fault_client.trigger_service_fault_async(fault)
         return False, None
 
-    ricoh_helper = RicohThetaServiceHelper(theta_ssid, theta_instance, logger)
+    ricoh_helper = RicohThetaServiceHelper(theta_ssid, theta_instance, logger, live_stream,
+                                           use_background_capture_thread)
     img_src = VisualImageSource(ricoh_helper.image_source_name, ricoh_helper, ricoh_helper.rows,
                                 ricoh_helper.cols, ricoh_helper.camera_gain,
                                 ricoh_helper.camera_exposure, logger)
@@ -236,7 +288,7 @@ def run_service(bosdyn_sdk_robot, options, logger=None):
     # Instance of the servicer to be run.
     init_success, service_servicer = make_ricoh_theta_image_service(
         options.theta_ssid, options.theta_password, options.theta_client, bosdyn_sdk_robot, logger,
-        options.capture_continuously)
+        options.capture_continuously, options.live_stream)
     if init_success and service_servicer is not None:
         service_runner = GrpcServiceRunner(service_servicer, add_servicer_to_server_fn,
                                            options.port, logger=logger)
@@ -258,10 +310,14 @@ def add_ricoh_theta_arguments(parser):
         "Use a background thread to request images continuously. Otherwise, capture images only when a "
         "GetImage RPC is received.")
     parser.add_argument(
-            '--capture-when-requested', action='store_false', dest='capture_continuously',
-            help="Only request images from the Ricoh Theta when a GetImage RPC is received. Otherwise, use "
-            "a background thread to request images continuously.")
+        '--capture-when-requested', action='store_false', dest='capture_continuously', help=
+        "Only request images from the Ricoh Theta when a GetImage RPC is received. Otherwise, use "
+        "a background thread to request images continuously.")
+    parser.add_argument(
+        '--live-stream', action='store_true',
+        help="Return images as a live stream but with less high quality image stitching.")
     parser.set_defaults(capture_continuously=False)
+
 
 if __name__ == '__main__':
     # Define all arguments used by this service.

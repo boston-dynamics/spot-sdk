@@ -27,7 +27,6 @@ from bosdyn.api import trajectory_pb2
 from bosdyn.api import synchronized_command_pb2
 from bosdyn.api import robot_command_pb2
 
-
 import traceback
 import time
 
@@ -74,24 +73,24 @@ def arm_trajectory(config):
 
             time.sleep(2.0)
 
-
             # Move the arm along a simple trajectory
 
-            vo_T_flat_body = get_a_tform_b(robot_state_client.get_robot_state().kinematic_state.transforms_snapshot,
-                          VISION_FRAME_NAME, GRAV_ALIGNED_BODY_FRAME_NAME)
+            vo_T_flat_body = get_a_tform_b(
+                robot_state_client.get_robot_state().kinematic_state.transforms_snapshot,
+                VISION_FRAME_NAME, GRAV_ALIGNED_BODY_FRAME_NAME)
 
-            x = 0.75     # a reasonable position in front of the robot
-            y1 = 0 # centered
-            y2 = 0.4 # 0.4 meters to the robot's left
-            y3 = -0.4 # 0.4 meters to the robot's right
-            z = 0       # at the body's height
+            x = 0.75  # a reasonable position in front of the robot
+            y1 = 0  # centered
+            y2 = 0.4  # 0.4 meters to the robot's left
+            y3 = -0.4  # 0.4 meters to the robot's right
+            z = 0  # at the body's height
 
             # Use the same rotation as the robot's body.
             rotation = math_helpers.Quat()
 
-            t_first_point = 0    # first point starts at t = 0 for the trajectory.
-            t_second_point = 4.0 # trajectory will last 1.0 seconds
-            t_third_point = 8.0 # trajectory will last 1.0 seconds
+            t_first_point = 0  # first point starts at t = 0 for the trajectory.
+            t_second_point = 4.0  # trajectory will last 1.0 seconds
+            t_third_point = 8.0  # trajectory will last 1.0 seconds
 
             # Build the two points in the trajectory
             hand_pose1 = math_helpers.SE3Pose(x=x, y=y1, z=z, rot=rotation)
@@ -102,7 +101,8 @@ def arm_trajectory(config):
             traj_point1 = trajectory_pb2.SE3TrajectoryPoint(
                 pose=hand_pose1.to_proto(), time_since_reference=seconds_to_duration(t_first_point))
             traj_point2 = trajectory_pb2.SE3TrajectoryPoint(
-                pose=hand_pose2.to_proto(), time_since_reference=seconds_to_duration(t_second_point))
+                pose=hand_pose2.to_proto(),
+                time_since_reference=seconds_to_duration(t_second_point))
             traj_point3 = trajectory_pb2.SE3TrajectoryPoint(
                 pose=hand_pose3.to_proto(), time_since_reference=seconds_to_duration(t_third_point))
 
@@ -128,7 +128,8 @@ def arm_trajectory(config):
                 synchronized_command=synchronized_command)
 
             # Keep the gripper closed the whole time.
-            robot_command = RobotCommandBuilder.claw_gripper_open_fraction_command(0, build_on_command=robot_command)
+            robot_command = RobotCommandBuilder.claw_gripper_open_fraction_command(
+                0, build_on_command=robot_command)
 
             robot.logger.info("Sending trajectory command...")
 
@@ -138,7 +139,13 @@ def arm_trajectory(config):
             # Wait until the arm arrives at the goal.
             while True:
                 feedback_resp = command_client.robot_command_feedback(cmd_id)
-                robot.logger.info('Distance to final point: ' + '{:.2f} meters'.format(feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_cartesian_feedback.measured_pos_distance_to_goal) + ', {:.2f} radians'.format(feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_cartesian_feedback.measured_rot_distance_to_goal))
+                robot.logger.info(
+                    'Distance to final point: ' + '{:.2f} meters'.format(
+                        feedback_resp.feedback.synchronized_feedback.arm_command_feedback.
+                        arm_cartesian_feedback.measured_pos_distance_to_goal) +
+                    ', {:.2f} radians'.format(
+                        feedback_resp.feedback.synchronized_feedback.arm_command_feedback.
+                        arm_cartesian_feedback.measured_rot_distance_to_goal))
 
                 if feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_cartesian_feedback.status == arm_command_pb2.ArmCartesianCommand.Feedback.STATUS_TRAJECTORY_COMPLETE:
                     robot.logger.info('Move complete.')

@@ -30,7 +30,7 @@ import threading
 from google.protobuf import wrappers_pb2
 from object_detection.utils import label_map_util
 
-kServiceAuthority = "auth.spot.robot"
+kServiceAuthority = "fetch-tutorial-worker.spot.robot"
 
 
 class TensorFlowObjectDetectionModel:

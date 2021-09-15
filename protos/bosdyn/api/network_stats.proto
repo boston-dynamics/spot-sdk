@@ -1,0 +1,82 @@
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+import "google/protobuf/duration.proto";
+
+option java_outer_classname = "NetworkStatsProto";
+
+message Association {
+    // MAC address of the associated station
+    string mac_address = 1;
+
+    // Time duration since the station last connected.
+    google.protobuf.Duration connected_time = 2;
+
+    // Signal strength of last received packet
+    int32 rx_signal_dbm = 3;
+
+    // Signal strength average
+    int32 rx_signal_avg_dbm = 4;
+
+    // Signal strength average for beacons only.
+    int32 rx_beacon_signal_avg_dbm = 5;
+
+    // Expected throughput
+    int64 expected_bits_per_second = 6;
+
+    // Total received bytes
+    int64 rx_bytes = 7;
+
+    // Total received packets from the associated station
+    int64 rx_packets = 8;
+
+    // Last unicast receive rate
+    int64 rx_bits_per_second = 9;
+
+    // Total transmitted bytes
+    int64 tx_bytes = 10;
+
+    // Total transmitted packets to the associated station
+    int64 tx_packets = 11;
+
+    // Current unicast transmit rate
+    int64 tx_bits_per_second = 12;
+
+    // Cumulative retry count to this station, within connected time
+    int64 tx_retries = 13;
+
+    // Cumulative failed tx packet count to this station, within connected time
+    int64 tx_failed = 14;
+
+    // Number of beacons received from this peer
+    int64 beacons_received = 15;
+
+    // Number of times beacon loss was detected
+    int64 beacon_loss_count = 16;
+}
+
+message WifiDevice {
+    enum Type {
+        UNKNOWN = 0;
+        AP = 1;
+        CLIENT = 2;
+    }
+    Type type = 1;
+    string name = 2;
+    string mac_address = 3;
+    string ssid = 4;
+    int32 tx_power_dbm = 5;
+    repeated Association associations = 6;
+}
+
+message WifiStats {
+    string hostname = 1;
+    repeated WifiDevice devices = 2;
+}

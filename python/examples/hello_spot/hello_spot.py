@@ -152,6 +152,7 @@ def _maybe_display_image(image, display_time=3.0):
         logger = bosdyn.client.util.get_logger()
         logger.warning("Exception thrown displaying image. %r", exc)
 
+
 def _maybe_save_image(image, path):
     """Try to save image, if client has correct deps."""
     logger = bosdyn.client.util.get_logger()
@@ -180,8 +181,14 @@ def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
-    parser.add_argument('-s', '--save', action='store_true', help='Save the image captured by Spot to the working directory. To chose the save location, use --save_path instead.')
-    parser.add_argument('--save-path', default=None, nargs='?', help='Save the image captured by Spot to the provided directory. Invalid path saves to working directory.')
+    parser.add_argument(
+        '-s', '--save', action='store_true', help=
+        'Save the image captured by Spot to the working directory. To chose the save location, use --save_path instead.'
+    )
+    parser.add_argument(
+        '--save-path', default=None, nargs='?', help=
+        'Save the image captured by Spot to the provided directory. Invalid path saves to working directory.'
+    )
     options = parser.parse_args(argv)
     try:
         hello_spot(options)

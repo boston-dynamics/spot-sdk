@@ -271,10 +271,27 @@ message Event {
 
     // Optional set of event parameters.
     repeated bosdyn.api.Parameter parameters = 8;
+
+    // LogPreserveHint may encode a hint to the robot's logging system for whether to preserve
+    // internal log data near the time of this event.  This could be useful in saving data
+    // to be used in a service log to send to Boston Dynamics.
+    enum LogPreserveHint {
+        // If this this is unset, it is equivalent to LOG_PRESERVE_HINT_NORMAL.
+        LOG_PRESERVE_HINT_UNSET = 0;
+        // Do not change the robot's default log data preservation behavior in response to this
+        // event.
+        LOG_PRESERVE_HINT_NORMAL = 1;
+        // Request that the robot try to preserve data near the time of this event.
+        // Log space on the robot is limited, so this does not guarentee that the data will be
+        // preserved.
+        LOG_PRESERVE_HINT_PRESERVE = 2;
+    }
+
+    // Optionally request that the robot try to preserve data near this time for a service log.
+    LogPreserveHint log_preserve_hint = 9;
 }
 
 message RecordTextMessagesResponse {
-    
     // Text message recording error.
     message Error {
         enum Type {
@@ -300,7 +317,6 @@ message RecordTextMessagesResponse {
 }
 
 message RecordOperatorCommentsResponse {
-
     // Operator comment recording error.
     message Error {
         enum Type {
@@ -325,7 +341,6 @@ message RecordOperatorCommentsResponse {
 }
 
 message RecordDataBlobsResponse {
-
     // DataBlob recording error.
     message Error {
         enum Type {
@@ -351,7 +366,6 @@ message RecordDataBlobsResponse {
 }
 
 message RecordSignalTicksResponse {
-
     // Signal tick recording error.
     message Error {
         enum Type {
@@ -378,7 +392,6 @@ message RecordSignalTicksResponse {
 }
 
 message RecordEventsResponse {
-
     // Event recording error.
     message Error {
         enum Type {

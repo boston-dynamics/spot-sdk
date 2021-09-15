@@ -24,6 +24,7 @@ else:
     import mock
 
 
+
 class DummyClass0:
 
     def __init__(self):

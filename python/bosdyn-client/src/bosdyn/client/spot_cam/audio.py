@@ -116,6 +116,76 @@ class AudioClient(BaseClient):
         return self.call(self._stub.LoadSound, yield_requests(data), self._load_sound_from_response,
                          self._audio_error_from_response, **kwargs)
 
+    #
+    # RPCs for Spot CAM+IR Only
+    #
+
+    def set_audio_capture_channel(self, channel, **kwargs):
+        """Set the audio capture channel
+        
+        Args:
+            channel (audio_pb2.AudioCaptureChannel): Microphone to use
+        """
+        request = audio_pb2.SetAudioCaptureChannelRequest(channel=channel)
+        return self.call(self._stub.SetAudioCaptureChannel, request, None,
+                         self._audio_error_from_response, **kwargs)
+
+    def set_audio_capture_channel_async(self, channel, **kwargs):
+        """Async version of set_audio_capture_channel()"""
+        request = audio_pb2.SetAudioCaptureChannelRequest(channel=channel)
+        return self.call_async(self._stub.SetAudioCaptureChannel, request, None,
+                               self._audio_error_from_response, **kwargs)
+
+    def get_audio_capture_channel(self, **kwargs):
+        """Retrieve the audio capture channel (microphone)
+        """
+        request = audio_pb2.GetAudioCaptureChannelRequest()
+        return self.call(self._stub.GetAudioCaptureChannel, request,
+                         self._get_audio_capture_channel_from_response,
+                         self._audio_error_from_response, **kwargs)
+
+    def get_audio_capture_channel_async(self, **kwargs):
+        """Async version of get_audio_capture_channel()"""
+        request = audio_pb2.GetAudioCaptureChannelRequest()
+        return self.call_async(self._stub.GetAudioCaptureChannel, request,
+                               self._get_audio_capture_channel_from_response,
+                               self._audio_error_from_response, **kwargs)
+
+    def set_audio_capture_gain(self, channel, gain, **kwargs):
+        """Set the audio capture gain
+        
+        Args:
+            channel (audio_pb2.AudioCaptureChannel): Microphone to set gain for
+            gain (Double): Microphone gain, 0.0 to 1.0
+        """
+        request = audio_pb2.SetAudioCaptureGainRequest(channel=channel, gain=gain)
+        return self.call(self._stub.SetAudioCaptureGain, request, None,
+                         self._audio_error_from_response, **kwargs)
+
+    def set_audio_capture_gain_async(self, channel, gain, **kwargs):
+        """Async version of set_audio_capture_gain()"""
+        request = audio_pb2.SetAudioCaptureGainRequest(channel=channel, gain=gain)
+        return self.call_async(self._stub.SetAudioCaptureGain, request, None,
+                               self._audio_error_from_response, **kwargs)
+
+    def get_audio_capture_gain(self, channel, **kwargs):
+        """Retrieve the audio capture gain (microphone volume)
+        
+        Args:
+            channel (audio_pb2.AudioCaptureChannel): Microphone to get gain for
+        """
+        request = audio_pb2.GetAudioCaptureGainRequest(channel=channel)
+        return self.call(self._stub.GetAudioCaptureGain, request,
+                         self._get_audio_capture_gain_from_response,
+                         self._audio_error_from_response, **kwargs)
+
+    def get_audio_capture_gain_async(self, channel, **kwargs):
+        """Async version of get_audio_capture_gain()"""
+        request = audio_pb2.GetAudioCaptureGainRequest(channel=channel)
+        return self.call_async(self._stub.GetAudioCaptureGain, request,
+                               self._get_audio_capture_gain_from_response,
+                               self._audio_error_from_response, **kwargs)
+
     @staticmethod
     def _list_sounds_from_response(response):
         return response.sounds
@@ -139,6 +209,14 @@ class AudioClient(BaseClient):
     @staticmethod
     def _load_sound_from_response(response):
         pass
+
+    @staticmethod
+    def _get_audio_capture_channel_from_response(response):
+        return response.channel
+
+    @staticmethod
+    def _get_audio_capture_gain_from_response(response):
+        return response.gain
 
     @staticmethod
     @handle_common_header_errors

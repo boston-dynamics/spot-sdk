@@ -1,0 +1,25 @@
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.graph_nav;
+
+option java_outer_classname = "MapProcessingServiceProto";
+
+import "bosdyn/api/graph_nav/map_processing.proto";
+
+// Defines services for processing an existing GraphNav map.
+service MapProcessingService {
+
+    // Processes a GraphNav map by creating additional edges or waypoints. After processing,
+    // a new subgraph is created containing additional waypoints or edges to add to the map.
+    rpc ProcessTopology(ProcessTopologyRequest) returns (stream ProcessTopologyResponse) {}
+
+    // Processes a GraphNav map by modifying the anchoring of waypoints and world objects in the map
+    // with respect to a seed frame. After processing, a new anchoring is streamed back.
+    rpc ProcessAnchoring(ProcessAnchoringRequest) returns (stream ProcessAnchoringResponse) {}
+}

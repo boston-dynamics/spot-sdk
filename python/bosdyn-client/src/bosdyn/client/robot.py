@@ -9,20 +9,22 @@ import copy
 import logging
 import time
 
+import bosdyn.api.data_buffer_pb2 as data_buffer_protos
 import bosdyn.client.channel
 from bosdyn.util import timestamp_to_sec
 
 from .auth import AuthClient
 from .channel import DEFAULT_MAX_MESSAGE_LENGTH
 from .data_buffer import DataBufferClient
-from .data_service import DataServiceClient
+from .data_buffer import log_event as pkg_log_event
 from .directory import DirectoryClient
 from .directory_registration import DirectoryRegistrationClient
 from .estop import EstopClient
 from .estop import is_estopped as pkg_is_estopped
 from .exceptions import Error
 from .lease import LeaseWallet
-from .payload_registration import PayloadRegistrationClient, PayloadAlreadyExistsError, PayloadNotAuthorizedError
+from .payload_registration import (PayloadRegistrationClient, PayloadAlreadyExistsError,
+                                   PayloadNotAuthorizedError)
 from .power import PowerClient
 from .power import power_on as pkg_power_on
 from .power import power_off as pkg_power_off
@@ -88,8 +90,6 @@ class Robot(object):
 
     _bootstrap_service_authorities = {
         AuthClient.default_service_name: 'auth.spot.robot',
-        DataBufferClient.default_service_name: 'buffer.spot.robot',
-        DataServiceClient.default_service_name: 'data.spot.robot',
         DirectoryClient.default_service_name: 'api.spot.robot',
         DirectoryRegistrationClient.default_service_name: 'api.spot.robot',
         PayloadRegistrationClient.default_service_name: 'payload-registration.spot.robot',
@@ -132,17 +132,23 @@ class Robot(object):
         self.max_send_message_length = DEFAULT_MAX_MESSAGE_LENGTH
         self.max_receive_message_length = DEFAULT_MAX_MESSAGE_LENGTH
 
-    def __del__(self):
+    def _shutdown(self):
+        """Shut down background threads for tokens and time sync."""
         if self._time_sync_thread:
             self._time_sync_thread.stop()
+            self._time_sync_thread = None
         if self._token_manager:
             self._token_manager.stop()
+            self._token_manager = None
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.__del__()
+        self._shutdown()
 
     def __enter__(self):
         return self
+
+    def __del__(self):
+        self._shutdown()
 
     def _get_token_id(self, username):
         return '{}.{}'.format(self.serial_number, username)
@@ -265,13 +271,6 @@ class Robot(object):
             UnregisteredServiceNameError: service_name is unknown.
         """
 
-        # Update max send/receive message lengths.
-        if 'grpc.max_receive_message_length' not in [option[0] for option in options]:
-            options.append(('grpc.max_receive_message_length', self.max_receive_message_length))
-        if 'grpc.max_send_message_length' not in [option[0] for option in options]:
-            options.append(('grpc.max_send_message_length', self.max_send_message_length))
-
-
         # If a specific channel was not set, look up the authority so we can get a channel.
         # Get the authority from either
         #   1. The bootstrap authority for this client_class, if available
@@ -296,6 +295,12 @@ class Robot(object):
         """Get the channel to access the given authority, creating it if it doesn't exist."""
         if authority in self.channels_by_authority:
             return self.channels_by_authority[authority]
+
+        # Update max send/receive message lengths.
+        if 'grpc.max_receive_message_length' not in [option[0] for option in options]:
+            options.append(('grpc.max_receive_message_length', self.max_receive_message_length))
+        if 'grpc.max_send_message_length' not in [option[0] for option in options]:
+            options.append(('grpc.max_send_message_length', self.max_send_message_length))
 
         if skip_app_token_check:
             should_send_app_token = False
@@ -396,7 +401,7 @@ class Robot(object):
             except PayloadNotAuthorizedError:
                 if not printed_warning:
                     printed_warning = True
-                    print('Payload is not authorized. Authentication will block until an'
+                    self.logger.warn('Payload is not authorized. Authentication will block until an'
                           ' operator authorizes the payload in the Admin Console.')
                 pass
             time.sleep(0.1)
@@ -534,6 +539,26 @@ class Robot(object):
             robot_timestamp = self.time_sync.robot_timestamp_from_local_secs(timestamp_secs)
         client.add_operator_comment(comment, robot_timestamp=robot_timestamp, timeout=timeout)
 
+    def log_event(  # pylint: disable=too-many-arguments,no-member
+            self, event_type, level, description, start_timestamp_secs, end_timestamp_secs=None,
+            id_str=None, parameters=None,
+            log_preserve_hint=data_buffer_protos.Event.LOG_PRESERVE_HINT_NORMAL):
+        """Add an Event to the Data Buffer.
+
+        Args:
+          event_type (string):            The type of event.
+          level (bosdyn.api.Event.Level): The relative importance of the event.
+          description (string):           A human-readable description of the event.
+          start_timestamp_secs (float):   Start of the event, in local time.
+          end_timestamp_secs (float):     End of the event.  start_timestamp_secs is used if None.
+          id_str (string):                      Unique id for event.  A uuid is generated if None.
+          parameters ([bosdyn.api.Parameter]):  Parameters to attach to the event.
+        """
+        return pkg_log_event(self, event_type=event_type, level=level, description=description,
+                             start_timestamp_secs=start_timestamp_secs,
+                             end_timestamp_secs=end_timestamp_secs, id_str=id_str,
+                             parameters=parameters, log_preserve_hint=log_preserve_hint)
+
     def power_on(self, timeout_sec=20, update_frequency=1.0, timeout=None):
         """Power on robot. This function blocks until robot powers on.
 
@@ -647,4 +672,5 @@ class Robot(object):
         state_client = self.ensure_client(RobotStateClient.default_service_name)
         self._has_arm = pkg_has_arm(state_client, timeout=timeout)
         return self._has_arm
+
 

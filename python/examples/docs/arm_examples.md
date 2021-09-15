@@ -19,6 +19,7 @@ See the [robot services](../../../docs/concepts/robot_services.md) document and 
 * [Stow/unstow Arm](../arm_stow_unstow/README.md)
 * [Arm and Mobility Command](../arm_and_mobility_command/README.md)
 * [Arm Command with Body Following](../arm_with_body_follow/README.md)
+* [Arm Constrained Manipulation](../arm_constrained_manipulation/README.md)
 * [Arm Trajectory Motion Command](../arm_trajectory/README.md)
 * [Arm Joint Move Command](../arm_joint_move/README.md)
 * [Arm Force Control Command](../arm_force_control/README.md)

@@ -39,6 +39,7 @@ from google.protobuf import wrappers_pb2
 import cv2
 import numpy as np
 
+
 def get_all_network_compute_services(directory_client):
     dir_list = directory_client.list()
     out = []
@@ -49,20 +50,31 @@ def get_all_network_compute_services(directory_client):
 
     return out
 
+
 def main(argv):
     """An example using the API to list and get specific objects."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
     parser.add_argument('-i', '--image-source', help='Image source on the robot to use.')
-    parser.add_argument('-q', '--image-source-service', help='Image *service* for the image source to use.  Defaults to the main image service if not provided.', default='')
-    parser.add_argument('-s', '--service', help='Service name of external machine learning server in the directory.',
+    parser.add_argument(
+        '-q', '--image-source-service', help=
+        'Image *service* for the image source to use.  Defaults to the main image service if not provided.',
+        default='')
+    parser.add_argument('-s', '--service',
+                        help='Service name of external machine learning server in the directory.',
                         required=False)
     parser.add_argument('-m', '--model', help='Model file on the server')
     parser.add_argument('-c', '--confidence', help='Minimum confidence to return an object.',
                         default=0.5, type=float)
-    parser.add_argument('-j', '--input-image', help='Path to an image to use instead of an image source.')
-    parser.add_argument('-l', '--model-list', help='List all available network compute servers and their provided models.', action='store_true')
-    parser.add_argument('-r', '--disable-rotation', help='Disable rotation of images (to align with horizontal)', action='store_true')
+    parser.add_argument('-j', '--input-image',
+                        help='Path to an image to use instead of an image source.')
+    parser.add_argument(
+        '-l', '--model-list',
+        help='List all available network compute servers and their provided models.',
+        action='store_true')
+    parser.add_argument('-r', '--disable-rotation',
+                        help='Disable rotation of images (to align with horizontal)',
+                        action='store_true')
     options = parser.parse_args(argv)
 
     if options.image_source is not None and options.input_image is not None:
@@ -96,12 +108,11 @@ def main(argv):
     robot_command_client = robot.ensure_client(RobotCommandClient.default_service_name)
     robot.time_sync.wait_for_sync()
 
-
-
     if options.model_list:
         server_service_names = get_all_network_compute_services(directory_client)
 
-        print('Found ' + str(len(server_service_names)) + ' available service(s).  Listing their models:')
+        print('Found ' + str(len(server_service_names)) +
+              ' available service(s).  Listing their models:')
         print('------------------------------------')
 
         for service in server_service_names:
@@ -133,8 +144,7 @@ def main(argv):
             sys.exit(1)
 
         img_source_and_service = network_compute_bridge_pb2.ImageSourceAndService(
-            image_source = options.image_source,
-            image_service = options.image_source_service)
+            image_source=options.image_source, image_service=options.image_source_service)
 
         input_data = network_compute_bridge_pb2.NetworkComputeInputData(
             image_source_and_service=img_source_and_service, model_name=options.model,
@@ -157,11 +167,12 @@ def main(argv):
         height = image_in.shape[0]
         width = image_in.shape[1]
 
-        image_proto = image_pb2.Image(format=image_pb2.Image.FORMAT_JPEG, cols=width, rows=height, data=im_buffer.tobytes(), pixel_format=image_pb2.Image.PIXEL_FORMAT_RGB_U8)
+        image_proto = image_pb2.Image(format=image_pb2.Image.FORMAT_JPEG, cols=width, rows=height,
+                                      data=im_buffer.tobytes(),
+                                      pixel_format=image_pb2.Image.PIXEL_FORMAT_RGB_U8)
 
         input_data = network_compute_bridge_pb2.NetworkComputeInputData(
-            image=image_proto, model_name=options.model,
-            min_confidence=options.confidence)
+            image=image_proto, model_name=options.model, min_confidence=options.confidence)
 
     if options.disable_rotation:
         input_data.rotate_image = network_compute_bridge_pb2.NetworkComputeInputData.ROTATE_IMAGE_NO_ROTATION
@@ -192,6 +203,10 @@ def main(argv):
         # image.
         img = image_in
 
+    # The image always comes back in the raw orientation.  Rotate it to horizontal so that we can
+    # visualize it the same as it was processed.
+    img, rotmat = rotate_image_nocrop(img, response.image_rotation_angle)
+
     # Convert to color for nicer drawing
     if len(img.shape) < 3:
         img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
@@ -207,9 +222,12 @@ def main(argv):
         min_x = float('inf')
         min_y = float('inf')
         for v in obj.image_properties.coordinates.vertexes:
-            polygon.append([v.x, v.y])
-            min_x = min(min_x, v.x)
-            min_y = min(min_y, v.y)
+            # If we are rotating the output image, make sure to rotate the bounding box points
+            # as well
+            x, y = rotate_point(v.x, v.y, rotmat)
+            polygon.append([x, y])
+            min_x = min(min_x, x)
+            min_y = min(min_y, y)
 
         polygon = np.array(polygon, np.int32)
         polygon = polygon.reshape((-1, 1, 2))
@@ -221,6 +239,35 @@ def main(argv):
 
     cv2.imwrite('identify_object_output.jpg', img)
 
+def rotate_image_nocrop(img, rotation_rad):
+    """ Rotate an image without cropping (instead adding black space) """
+    h = img.shape[0]
+    w = img.shape[1]
+    cX = w / 2
+    cY = h / 2
+
+    rotmat = cv2.getRotationMatrix2D((cX, cY), math.degrees(rotation_rad), 1.0)
+
+    cos_d = abs(rotmat[0][0])
+    sin_d = abs(rotmat[0][1])
+
+    # Compute the new bounding dimensions
+    nW = int( (h*sin_d) + (w*cos_d) )
+    nH = int( (h*cos_d) + (w*sin_d) )
+
+    # Adjust the rotation matrix to account for translation
+    rotmat[0][2] += (nW / 2.0) - cX
+    rotmat[1][2] += (nH / 2.0) - cY
+
+    img = cv2.warpAffine(img, rotmat, (nW, nH))
+
+    return img, rotmat
+
+def rotate_point(x, y, rotmat):
+    """ Apply a rotation matrix to a point """
+    src = np.array([[[x, y]]])
+    out = cv2.transform(src, rotmat)
+    return out[0][0]
 
 if __name__ == '__main__':
     if not main(sys.argv[1:]):

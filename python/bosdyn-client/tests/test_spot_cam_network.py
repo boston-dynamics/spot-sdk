@@ -19,13 +19,17 @@ from . import helpers
 import socket
 import struct
 
+
 def ip2int(addr):
     return struct.unpack("!I", socket.inet_aton(addr))[0]
+
 
 def int2ip(addr):
     return socket.inet_ntoa(struct.pack("!I", addr))
 
+
 class MockNetworkService(service_pb2_grpc.NetworkServiceServicer):
+
     def __init__(self, rpc_delay=0):
         """Create mock that returns fake network statuses."""
         super(MockNetworkService, self).__init__()
@@ -47,12 +51,14 @@ class MockNetworkService(service_pb2_grpc.NetworkServiceServicer):
         return response
 
 
+
 def _setup(rpc_delay=0):
     client = bosdyn.client.spot_cam.network.NetworkClient()
     service = MockNetworkService(rpc_delay=rpc_delay)
     server = helpers.setup_client_and_service(client, service,
                                               service_pb2_grpc.add_NetworkServiceServicer_to_server)
     return client, service, server
+
 
 def _fill_ice_server(server, src=None):
     if not src:
@@ -61,12 +67,14 @@ def _fill_ice_server(server, src=None):
     server.CopyFrom(src)
     return server
 
+
 def _mock_ice_server(server_type=network_pb2.ICEServer.TURN, address='127.0.0.1', port=22):
     server = network_pb2.ICEServer()
     server.type = server_type
     server.address = address
     server.port = port
     return server
+
 
 def test_get_ice_configuration():
     client, service, server = _setup()
@@ -77,6 +85,7 @@ def test_get_ice_configuration():
     assert ice[0].address == mock.address
     assert ice[0].port == mock.port
 
+
 def test_get_ice_configuration_async():
     client, service, server = _setup()
     ice = client.get_ice_configuration_async().result()
@@ -86,11 +95,14 @@ def test_get_ice_configuration_async():
     assert ice[0].address == mock.address
     assert ice[0].port == mock.port
 
+
 def test_set_ice_configuration():
     client, service, server = _setup()
     ice = client.set_ice_configuration([_mock_ice_server()])
 
+
 def test_set_ice_configuration_async():
     client, service, server = _setup()
     ice = client.set_ice_configuration_async([_mock_ice_server()]).result()
+
 

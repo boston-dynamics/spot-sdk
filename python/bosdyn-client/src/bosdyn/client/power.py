@@ -44,15 +44,15 @@ class CommandInProgressError(PowerResponseError):
 
 
 class EstoppedError(PowerResponseError):
-    """Cannot power on while estopped.
+    """Cannot power on while estopped; inspect EStopState for more info."""
 
-       Inspect EStopState for more info."""
+
+class OverriddenError(PowerResponseError):
+    """The command was overridden and is no longer valid."""
 
 
 class FaultedError(PowerResponseError):
-    """Cannot power on due to a fault.
-
-       Inspect FaultState for more info."""
+    """Cannot power on due to a fault; inspect FaultState for more info."""
 
 
 class PowerError(Error):
@@ -169,6 +169,7 @@ _STATUS_TO_ERROR.update({
     power_pb2.STATUS_FAULTED: (FaultedError, FaultedError.__doc__),
     power_pb2.STATUS_INTERNAL_ERROR: (InternalServerError, InternalServerError.__doc__),
     power_pb2.STATUS_LICENSE_ERROR: (LicenseError, LicenseError.__doc__),
+    power_pb2.STATUS_OVERRIDDEN: (OverriddenError, OverriddenError.__doc__),
 })
 
 
@@ -176,7 +177,14 @@ def _power_status_from_response(response):
     return response.status
 
 
+@deprecated(reason='Replaced by the less ambiguous safe_power_off_motors function.', version='3.0.0',
+            action="ignore")
 def safe_power_off(command_client, state_client, timeout_sec=30, update_frequency=1.0, **kwargs):
+    """Safely power off motors. See safe_power_off_motors()."""
+    safe_power_off_motors(command_client, state_client, timeout_sec, update_frequency, **kwargs)
+
+
+def safe_power_off_motors(command_client, state_client, timeout_sec=30, update_frequency=1.0, **kwargs):
     """Power off robot motors safely. This function blocks until robot safely powers off. This
     means the robot will attempt to sit before powering motors off.
 
@@ -266,9 +274,34 @@ def power_off_motors(power_client, timeout_sec=30, update_frequency=1.0, **kwarg
     _power_command(power_client, request, timeout_sec, update_frequency, **kwargs)
 
 
+def safe_power_off_robot(command_client, state_client, power_client, timeout_sec=30,
+                         update_frequency=1.0, **kwargs):
+    """Power off the robot motors and then the robot computers safely. This function blocks until
+    robot safely powers off. This means the robot will attempt to sit before powering motors off.
+
+    Args:
+        command_client (RobotCommandClient): client for calling RobotCommandService safe power off.
+        state_client (RobotStateClient): client for monitoring power state.
+        power_client (bosdyn.api.PowerClient): client for calling power service.
+        timeout_sec (float): Max time this function will block for.
+        update_frequency (float): The frequency with which the robot should check if the command
+                                  has succeeded.
+
+    Raises:
+        RpcError: Problem communicating with the robot.
+        power.CommandTimedOutError: Did not power off within timeout_sec
+        RobotCommandResponseError: Something went wrong with the safe power off.
+    """
+    end_time = time.time() + timeout_sec
+    safe_power_off_motors(command_client, state_client, timeout_sec=end_time - time.time(),
+                          update_frequency=update_frequency, **kwargs)
+    power_off_robot(power_client, timeout_sec=end_time - time.time(),
+                    update_frequency=update_frequency, **kwargs)
+
+
 def power_off_robot(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
     """Fully power off the robot. Powering off the robot will stop API comms.
-    
+
     Args:
         power_client (bosdyn.api.PowerClient): client for calling power service.
         timeout_sec (float): Max time this function will block for.
@@ -284,9 +317,34 @@ def power_off_robot(power_client, timeout_sec=30, update_frequency=1.0, **kwargs
                    **kwargs)
 
 
+def safe_power_cycle_robot(command_client, state_client, power_client, timeout_sec=30,
+                           update_frequency=1.0, **kwargs):
+    """Power cycle the robot safely. This function blocks until robot safely powers off. The robot
+    will attempt to sit before powering cycling.
+
+    Args:
+        command_client (RobotCommandClient): client for calling RobotCommandService safe power off.
+        state_client (RobotStateClient): client for monitoring power state.
+        power_client (bosdyn.api.PowerClient): client for calling power service.
+        timeout_sec (float): Max time this function will block for.
+        update_frequency (float): The frequency with which the robot should check if the command
+                                  has succeeded.
+
+    Raises:
+        RpcError: Problem communicating with the robot.
+        power.CommandTimedOutError: Did not power off within timeout_sec
+        RobotCommandResponseError: Something went wrong with the safe power off.
+    """
+    end_time = time.time() + timeout_sec
+    safe_power_off_motors(command_client, state_client, timeout_sec=end_time - time.time(),
+                          update_frequency=update_frequency, **kwargs)
+    power_cycle_robot(power_client, timeout_sec=end_time - time.time(),
+                      update_frequency=update_frequency, **kwargs)
+
+
 def power_cycle_robot(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
     """Power cycle the robot. Power cycling the robot will stop API comms.
-    
+
     Args:
         power_client (bosdyn.api.PowerClient): client for calling power service.
         timeout_sec (float): Max time this function will block for.
@@ -304,7 +362,7 @@ def power_cycle_robot(power_client, timeout_sec=30, update_frequency=1.0, **kwar
 
 def power_off_payload_ports(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
     """Power off the robot payload ports.
-    
+
     Args:
         power_client (bosdyn.api.PowerClient): client for calling power service.
         timeout_sec (float): Max time this function will block for.
@@ -321,7 +379,7 @@ def power_off_payload_ports(power_client, timeout_sec=30, update_frequency=1.0, 
 
 def power_on_payload_ports(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
     """Power on the robot payload ports.
-    
+
     Args:
         power_client (bosdyn.api.PowerClient): client for calling power service.
         timeout_sec (float): Max time this function will block for.
@@ -338,7 +396,7 @@ def power_on_payload_ports(power_client, timeout_sec=30, update_frequency=1.0, *
 
 def power_off_wifi_radio(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
     """Power off the robot Wi-Fi radio.
-    
+
     Args:
         power_client (bosdyn.api.PowerClient): client for calling power service.
         timeout_sec (float): Max time this function will block for.
@@ -355,7 +413,7 @@ def power_off_wifi_radio(power_client, timeout_sec=30, update_frequency=1.0, **k
 
 def power_on_wifi_radio(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
     """Power off the robot Wi-Fi radio.
-    
+
     Args:
         power_client (bosdyn.api.PowerClient): client for calling power service.
         timeout_sec (float): Max time this function will block for.
@@ -377,7 +435,7 @@ def power_on_wifi_radio(power_client, timeout_sec=30, update_frequency=1.0, **kw
 def _power_command(power_client, request, timeout_sec=30, update_frequency=1.0,
                    expect_grpc_timeout=False, **kwargs):
     """Helper function to issue command to power client.
-    
+
     Args:
         power_client (bosdyn.api.PowerClient): Client for calling power service.
         request (bosdyn.api.PowerCommandRequest): Request to make to power service.

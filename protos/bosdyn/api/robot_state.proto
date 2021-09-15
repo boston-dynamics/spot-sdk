@@ -52,10 +52,11 @@ message HardwareConfiguration {
 
     // Set of power features that are compatible with the robot hardware.
     // See power.proto for the associated requests.
-    bool can_power_command_request_off_robot = 2;          // Turn off the robot. Same as physical switch.
-    bool can_power_command_request_cycle_robot = 3;        // Power cycle the robot. Same as physical switch.
-    bool can_power_command_request_payload_ports = 4;      // Control power to the payload ports.
-    bool can_power_command_request_wifi_radio = 5;        // Control power to the hardware Wi-Fi radio.
+
+    bool can_power_command_request_off_robot = 2;        // Turn off the robot. Same as physical switch.
+    bool can_power_command_request_cycle_robot = 3;      // Power cycle the robot. Same as physical switch.
+    bool can_power_command_request_payload_ports = 4;    // Control power to the payload ports.
+    bool can_power_command_request_wifi_radio = 5;       // Control power to the hardware Wi-Fi radio.
 
 }
 
@@ -516,6 +517,35 @@ message FootState {
     }
     // Is the foot in contact with the ground?
     Contact contact = 2;
+
+    // Foot specific terrain data. Data may not be valid if the contact state is
+    // not CONTACT_MADE.
+    message TerrainState {
+        // Estimated ground coefficient of friction for this foot.
+        double ground_mu_est = 1;
+
+        // Reference frame name for vector data.
+        string frame_name = 2;
+
+        // Foot slip distance rt named frame
+        Vec3 foot_slip_distance_rt_frame = 3;
+
+        // Foot slip velocity rt named frame
+        Vec3 foot_slip_velocity_rt_frame = 4;
+
+        // Ground contact normal rt named frame
+        Vec3 ground_contact_normal_rt_frame = 5;
+
+        // Mean penetration (meters) of the foot below the ground visual
+        // surface. For penetrable terrains (gravel/sand/grass etc.) these values are
+        // positive. Negative values would indicate potential odometry issues.
+        double visual_surface_ground_penetration_mean = 6;
+
+        // Standard deviation of the visual surface ground penetration.
+        double visual_surface_ground_penetration_std = 7;
+    }
+
+    TerrainState terrain = 3;
 }
 
 /// Additional state published if an arm is attached to the robot.
@@ -545,6 +575,23 @@ message ManipulatorState {
     // Again, the linear velocity is applied at the origin of the hand frame.
     SE3Velocity velocity_of_hand_in_odom = 15;
 
+    // The stowing behavior is modified as a function of the Carry State.  If holding an item, the
+    // stowing behavior will be modified as follows:
+    //  NOT_CARRIABLE - The arm will not stow, instead entering stop
+    //  CARRIABLE - The arm will not stow, instead entering stop
+    //  CARRIABLE_AND_STOWABLE - The arm will stow while continuing to grasp the item
+    // The comms loss behavior of the arm is also modified as follows:
+    //  NOT_CARRIABLE - The arm will release the item and stow
+    //  CARRIABLE - The arm will not stow, instead entering stop
+    //  CARRIABLE_AND_STOWABLE - The arm will stow while continuing to grasp the item
+    enum CarryState {
+        CARRY_STATE_UNKNOWN = 0;
+        CARRY_STATE_NOT_CARRIABLE = 1;
+        CARRY_STATE_CARRIABLE = 2;
+        CARRY_STATE_CARRIABLE_AND_STOWABLE = 3;
+    }
+    CarryState carry_state = 16;
+
     // Previous fields in the protobuf that are now reserved.
     reserved 1, 2, 3, 4, 5, 7, 8, 10, 11;
 }
@@ -556,7 +603,7 @@ message ServiceFaultState {
     // Currently active faults
     repeated ServiceFault faults = 1;
 
-    // Inactive faults that cleared within the last 10 minutes
+    // Service faults that have been cleared. Acts as a ring buffer with size of 50.
     repeated ServiceFault historical_faults = 2;
 
     // Aggregated service fault data. Maps attribute string to highest severity level
@@ -631,3 +678,40 @@ message RobotLinkModelResponse {
     // The requested RobotState skeleton obj model.
     Skeleton.Link.ObjModel link_model = 2;
 }
+
+// Keeps track of why the robot is not able to drive autonomously.
+message RobotImpairedState {
+    // If the robot is stopped due to being impaired, this is the reason why.
+    enum ImpairedStatus {
+        // Unknown/unexpected error.
+        IMPAIRED_STATUS_UNKNOWN = 0;
+        // The robot is able to drive.
+        IMPAIRED_STATUS_OK = 1;
+        // The autonomous system does not have any data from the robot state service.
+        IMPAIRED_STATUS_NO_ROBOT_DATA = 2;
+        // There is a system fault which caused the robot to stop. See system_fault for details.
+        IMPAIRED_STATUS_SYSTEM_FAULT = 3;
+        // The robot's motors are not powered on.
+        IMPAIRED_STATUS_NO_MOTOR_POWER = 4;
+        // The autonomous system is expected to have a remote point cloud (e.g. a LIDAR), but this is not working.
+        IMPAIRED_STATUS_REMOTE_CLOUDS_NOT_WORKING = 5;
+        // A remote service the autonomous system depends on is not working.
+        IMPAIRED_STATUS_SERVICE_FAULT = 6;
+        // A behavior fault caused the robot to stop. See behavior_faults for details.
+        IMPAIRED_STATUS_BEHAVIOR_FAULT = 7;
+    }
+    // If the status is ROBOT_IMPAIRED, this is specifically why the robot is impaired.
+    ImpairedStatus impaired_status = 1;
+
+    // If impaired_status is STATUS_SYSTEM_FAULT, these are the faults which caused the robot to stop.
+    repeated bosdyn.api.SystemFault system_faults = 2;
+
+    // If impaired_status is STATUS_SERVICE_FAULT, these are the service faults which caused
+    // the robot to stop.
+    repeated bosdyn.api.ServiceFault service_faults = 3;
+
+    // If impaired_status is STATUS_BEHAVIOR_FAULT, these are the behavior faults which caused
+    // the robot to stop.
+    repeated bosdyn.api.BehaviorFault behavior_faults = 4;
+}
+

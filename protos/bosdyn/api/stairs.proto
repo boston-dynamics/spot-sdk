@@ -1,0 +1,57 @@
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "StairsProto";
+
+import "bosdyn/api/geometry.proto";
+
+message StairTransform {
+    // The staircase origin is the bottom-center of the first rise.
+    bosdyn.api.SE3Pose frame_tform_stairs = 1;
+    string frame_name = 2;
+}
+
+message StraightStaircase {
+    // The staircase origin is the bottom-center of the first rise.
+    oneof location {
+        // It is expressed in ko frame of the from_waypoint.
+        // This field is only used in GraphNav.
+        bosdyn.api.SE3Pose from_ko_tform_stairs = 1;
+
+        // Outside GraphNav, this field specifies the stair origin.
+        StairTransform tform = 5;
+    }
+
+    // A single stair from a staircase.
+    message Stair {
+        // Height of each stair.
+        float rise = 1;
+        // Depth of each stair.
+        float run = 2;
+    }
+    // Straight staircases have two landings, one at the top and one at the bottom.
+    // Landings are areas of free space before and after the stairs, and are represented
+    // as oriented bounding boxes.
+    message Landing {
+        // Pose of the landing's center relative to the stairs frame.
+        bosdyn.api.SE3Pose stairs_tform_landing_center = 1;
+        // The half-size of the box representing the landing in the x axis.
+        double landing_extent_x = 2;
+        // The half-size of the box representing the landing in the y axis.
+        double landing_extent_y = 3;
+    }
+    // Each stair should be rise followed by run. The last stair will have zero run.
+    repeated Stair stairs = 2;
+    // The lowermost landing of the stairs. The robot will try to
+    // align itself to the stairs while on this landing.
+    Landing bottom_landing = 3;
+    // The uppermost landing of the stairs.
+    Landing top_landing = 4;
+}

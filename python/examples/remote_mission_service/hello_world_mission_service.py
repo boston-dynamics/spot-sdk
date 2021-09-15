@@ -18,8 +18,8 @@ from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
 from bosdyn.client.lease import LeaseClient, Lease
 from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder
 from bosdyn.client.auth import AuthResponseError
-from bosdyn.client.util import GrpcServiceRunner, setup_logging
-from bosdyn.client.server_util import ResponseContext
+from bosdyn.client.util import setup_logging
+from bosdyn.client.server_util import ResponseContext, GrpcServiceRunner
 from bosdyn.mission import util
 
 DIRECTORY_NAME = 'hello-world-callback'
@@ -95,7 +95,8 @@ if __name__ == '__main__':
 
     # Create the top-level parser.
     parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers(help='Select how this service will be accessed.', dest='host_type')
+    subparsers = parser.add_subparsers(help='Select how this service will be accessed.',
+                                       dest='host_type')
 
     # Create the parser for the "local" command.
     local_parser = subparsers.add_parser('local', help='Run this example locally.')

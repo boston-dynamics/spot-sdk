@@ -41,6 +41,7 @@ def run_query(options, query):
     query.time_range.CopyFrom(timespec_to_robot_timespan(options.timespan, time_sync_endpoint))
     return service_client.get_data_index(query)
 
+
 def get_blobs(options):
     """Get pages with message blobs from robot"""
     query = data_index_protos.DataQuery()
@@ -52,11 +53,13 @@ def get_blobs(options):
         blobspec.message_type = options.message_type
     print(run_query(options, query))
 
+
 def get_text(options):
     """Get pages with text-messages from robot"""
     query = data_index_protos.DataQuery()
     query.text_messages = True
     print(run_query(options, query))
+
 
 def get_events(options):
     """Get pages with events from robot"""
@@ -64,11 +67,13 @@ def get_events(options):
     query.events = True
     print(run_query(options, query))
 
+
 def get_comments(options):
     """Get pages with operator comments from robot"""
     query = data_index_protos.DataQuery()
     query.comments = True
     print(run_query(options, query))
+
 
 def main(argv):
     """Command line interface."""

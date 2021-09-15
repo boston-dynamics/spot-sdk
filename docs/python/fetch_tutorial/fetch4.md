@@ -302,7 +302,7 @@ kImageSources = [
         help='Person detection model name running on the external server.')
     parser.add_argument('-c',
                         '--confidence-dogtoy',
-                        help='Minimum confidence to return an object for the dogoy (0.0 to 1.0)',
+                        help='Minimum confidence to return an object for the dogtoy (0.0 to 1.0)',
                         default=0.5,
                         type=float)
     parser.add_argument('-e',
@@ -394,7 +394,7 @@ kImageSources = [
 </p>
 <br />
 
-<a id="enable_in_part5">
+<a id="enable_in_part5"></a>
 <pre><code class="language-python">            print('Found dogtoy...')
 
             # Got a dogtoy.  Request pick up.

@@ -21,7 +21,6 @@ from bosdyn.client.common import (BaseClient, error_factory, error_pair, handle_
                                   handle_common_header_errors)
 from .exceptions import ResponseError, TimedOutError, RetryableUnavailableError
 
-
 _LOGGER = logging.getLogger(__name__)
 
 

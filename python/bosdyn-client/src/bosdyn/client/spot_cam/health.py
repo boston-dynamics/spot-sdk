@@ -14,6 +14,7 @@ from bosdyn.client.common import (BaseClient, common_header_errors, handle_commo
 from bosdyn.api.spot_cam import service_pb2_grpc
 from bosdyn.api.spot_cam import health_pb2
 
+
 class HealthClient(BaseClient):
     """A client calling Spot CAM Health service.
     """
@@ -32,7 +33,8 @@ class HealthClient(BaseClient):
     def clear_bit_events_async(self, **kwargs):
         """Async version of clear_bit_events()."""
         request = health_pb2.ClearBITEventsRequest()
-        return self.call_async(self._stub.ClearBITEvents, request, self._clear_bit_events_from_response,
+        return self.call_async(self._stub.ClearBITEvents, request,
+                               self._clear_bit_events_from_response,
                                self._health_error_from_response, **kwargs)
 
     def get_bit_status(self, **kwargs):
@@ -56,7 +58,8 @@ class HealthClient(BaseClient):
     def get_temperature_async(self, **kwargs):
         """Async version of get_temperature()."""
         request = health_pb2.GetTemperatureRequest()
-        return self.call_async(self._stub.GetTemperature, request, self._get_temperature_from_response,
+        return self.call_async(self._stub.GetTemperature, request,
+                               self._get_temperature_from_response,
                                self._health_error_from_response, **kwargs)
 
     @staticmethod

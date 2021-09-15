@@ -1,0 +1,98 @@
+// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.auto_return;
+option java_outer_classname = "AutoReturnProto";
+
+import "google/protobuf/any.proto";
+import "google/protobuf/duration.proto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/lease.proto";
+
+// Parameters to AutoReturn actions.
+message Params {
+    // Robot-specific mobility parameters to use.
+    // For example, see bosdyn.api.spot.MobilityParams.
+    google.protobuf.Any mobility_params = 1;
+
+    // Allow AutoReturn to move the robot this far in the XY plane from the location where
+    // AutoReturn started. Travel along the Z axis (which is gravity-aligned) does not count.
+    // Must be > 0.
+    float max_displacement = 2; // meters
+
+    // Optionally specify the maximum amount of time AutoReturn can take.
+    // If this duration is exceeded, AutoReturn will stop trying to move the robot.
+    // Omit to try indefinitely. Robot may become stuck and never take other comms loss actions!
+    google.protobuf.Duration max_duration = 3;
+}
+
+// Configure the AutoReturn system.
+message ConfigureRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Leases that AutoReturn may use to accomplish its goals when AutoReturn automatically
+    // triggers. If left empty, AutoReturn will not automatically trigger.
+    repeated Lease leases = 2;
+
+    // Parameters to use when AutoReturn automatically triggers.
+    Params params = 3;
+    
+    // Forget any buffered locations the robot may be remembering. Defaults to false.
+    // Set to true if the robot has just crossed an area it should not traverse in AutoReturn.
+    bool clear_buffer = 4;
+
+}
+
+// Response to a configuration request.
+message ConfigureResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        STATUS_INVALID_PARAMS = 2;
+    }
+    // Return status for the request.
+    Status status = 2;
+
+    // If status is STATUS_INVALID_PARAMS, this contains the settings that were invalid.
+    Params invalid_params = 3;
+}
+
+// Ask for the current configuration.
+message GetConfigurationRequest {
+    // Common request header.
+    RequestHeader header = 1;
+}
+
+// Response to a "get configuration" request.
+message GetConfigurationResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // A simple yes/no, will AutoReturn automatically trigger.
+    bool enabled = 2;
+
+    // The most recent successful ConfigureRequest.
+    // Will be empty if service has not successfully been configured.
+    ConfigureRequest request = 3;
+}
+
+// Start AutoReturn behavior now.
+message StartRequest {
+    // Common request header.
+    RequestHeader header = 1;
+}
+
+message StartResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+}

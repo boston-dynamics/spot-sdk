@@ -1,0 +1,1235 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bosdyn.choreography.client.animation_file_conversion_helpers &mdash; Spot 3.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/bd-favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https:://dev.bostondynamics.com/_modules/bosdyn/choreography/client/animation_file_conversion_helpers.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../README.html">
+          
+
+          
+            
+            <img src="../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../docs/concepts/README.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/base_services.html">Base services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/robot_services.html">Robot services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/lease_service.html">Lease</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/faults.html">Faults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/docking.html">Docking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav Map Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_map_structure.html#recording-and-modifying-maps">Recording and Modifying Maps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/localization.html">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/network_compute_bridge.html">Network compute bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/auto_return.html">AutoReturn service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/directed_exploration.html">Directed Exploration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/choreography/README.html">Choreography</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/animation_file_specification.html">Animation Files for Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/animation_file_specification.html#file-specification">File Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/animation_file_specification.html#options-file-section">Options File Section</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/animation_file_specification.html#parameters-file-section">Parameters File Section</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/animation_file_specification.html#body-keyframe-file-section">Body Keyframe File Section</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/arm/README.html">Spot Arm</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/arm/arm_specification.html">Arm and Gripper Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/arm/arm_concepts.html">Concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/arm/arm_services.html">Services</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/data.html">Spot Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/data_acquisition_overview.html">Data Acquisition Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/data_acquisition_output.html">Data Acquisition Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/data_buffer_overview.html">Data Buffer Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/bddf.html">BDDF file format</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../docs/python/README.html">Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/python/quickstart.html">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/python/understanding_spot_programming.html">Understanding Spot Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../python/examples/README.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/basic_service_examples.html">Basic Service Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/directory/README.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/estop/README.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/comms_test/README.html">Comms Test</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/disable_ir_emission/README.html">IR Enable/Disable</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/robot_behavior_examples.html">Robot Behavior and Commands Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/stance/README.html">Stance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/upload_choreographed_sequence/README.html">Upload Choreographed Sequence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/xbox_controller/README.html">Xbox Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/wasd/README.html">WASD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/docking/README.html">Docking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/auto_return/README.html">Auto Return</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_simple/README.html">Simple Arm Motion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_stow_unstow/README.html">Stow/unstow Arm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_and_mobility_command/README.html">Arm and Mobility Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_with_body_follow/README.html">Arm Command with Body Following</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_constrained_manipulation/README.html">Arm Constrained Manipulation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_trajectory/README.html">Arm Trajectory Motion Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/payloads/README.html">Payloads</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/service_faults/README.html">Faults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/world_object_with_image_coordinates/README.html">World Object With Image Coordinates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/stitch_front_images/README.html">Stitch front images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/bddf_download/README.html">BDDF Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/data_buffer/README.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/data_service/README.html">Data Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/logging/README.html">Logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/bddf_download/README.html">BDDF Download</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/data_acquisition_examples.html">Data Acquisition Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/data_acquisition_service/README.html">Data Acquisition Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/service_faults/README.html">Faults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/tester_programs/README.html">Tester Programs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/autonomy_and_missions_examples.html">Autonomy and Missions Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_anchoring_optimization/README.html">Graph Nav Anchoring Optimization Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_anchoring_optimization/README.html#setup-dependencies">Setup Dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_anchoring_optimization/README.html#running-the-example">Running the Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_anchoring_optimization/README.html#understanding-the-example-code">Understanding the Example Code</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/mission_question_answerer/README.html">Mission Question Answerer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../python/README.html">Python Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/command_line.html">Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/common.html">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html">Data Acquisition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_helpers.html">Data Acquisition Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin.html">Data Acquisition Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/docking.html">Docking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/door.html">Door</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/processors.html">Processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/recording.html">Recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/robot_command.html">Robot Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/robot_id.html">Robot ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html">PTZ</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/streamquality.html">Stream Quality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html">Version</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_check.html">Spot Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/time_sync.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/README.html">Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/README.html">BDDF</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/base_data_reader.html">Base Data Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/block_writer.html">Block Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/bosdyn.html">BDDF Conventions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/common.html">Common</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/data_reader.html">Data Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/data_writer.html">Data Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/file_indexer.html">File Indexer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/grpc_proto_reader.html">GRPC Proto Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/grpc_reader.html">GRPC Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/grpc_service_reader.html">GRPC Service Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/grpc_service_writer.html">GRPC Service Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/message_reader.html">Message Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/pod_series_reader.html">POD Series Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/pod_series_writer.html">POD Series Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/protobuf_channel_reader.html">Protobuf Channel Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/protobuf_reader.html">Protobuf Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/protobuf_series_writer.html">Protobuf Series Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/stream_data_reader.html">Stream Data Reader</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/README.html">Choreography</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../docs/payload/README.html">Payloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/payload_configuration_requirements.html">Payload configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/mechanical_interfaces.html">Mechanical interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/robot_mounting_rails.html">Robot mounting rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../docs/protos/README.html">API Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/protos/style_guide.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html">arm_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#arm-surface-contact-proto">arm_surface_contact.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#arm-surface-contact-service-proto">arm_surface_contact_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#auth-proto">auth.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-acquisition-plugin-service-proto">data_acquisition_plugin_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-acquisition-service-proto">data_acquisition_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-acquisition-store-proto">data_acquisition_store.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-acquisition-store-service-proto">data_acquisition_store_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-buffer-proto">data_buffer.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-buffer-service-proto">data_buffer_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-chunk-proto">data_chunk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-index-proto">data_index.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-service-proto">data_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#directory-proto">directory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#directory-registration-proto">directory_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#directory-registration-service-proto">directory_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#directory-service-proto">directory_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#docking-docking-proto">docking/docking.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#docking-docking-service-proto">docking/docking_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#estop-proto">estop.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#estop-service-proto">estop_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-processing-proto">graph_nav/map_processing.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-processing-service-proto">graph_nav/map_processing_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#license-service-proto">license_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#local-grid-proto">local_grid.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-mission-service-proto">mission/mission_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-nodes-proto">mission/nodes.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-remote-proto">mission/remote.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-remote-service-proto">mission/remote_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-util-proto">mission/util.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#network-compute-bridge-proto">network_compute_bridge.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#network-compute-bridge-service-proto">network_compute_bridge_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#network-stats-proto">network_stats.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#payload-estimation-proto">payload_estimation.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#payload-registration-proto">payload_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#payload-registration-service-proto">payload_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#payload-service-proto">payload_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#point-cloud-proto">point_cloud.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#point-cloud-service-proto">point_cloud_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#power-proto">power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#power-service-proto">power_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-command-service-proto">robot_command_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-id-proto">robot_id.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-led-proto">spot_cam/LED.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-health-proto">spot_cam/health.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-network-proto">spot_cam/network.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-power-proto">spot_cam/power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-ptz-proto">spot_cam/ptz.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-service-proto">spot_cam/service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-streamquality-proto">spot_cam/streamquality.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-version-proto">spot_cam/version.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#stairs-proto">stairs.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#synchronized-command-proto">synchronized_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#time-range-proto">time_range.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../choreography_protos/bosdyn/api/README.html">Choreography Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../choreography_protos/bosdyn/api/choreography_reference.html">spot/choreography_params.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../choreography_protos/bosdyn/api/choreography_reference.html#spot-choreography-sequence-proto">spot/choreography_sequence.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../choreography_protos/bosdyn/api/choreography_reference.html#spot-choreography-service-proto">spot/choreography_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../choreography_protos/bosdyn/api/choreography_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../docs/release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../README.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../README.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bosdyn.choreography.client.animation_file_conversion_helpers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bosdyn.choreography.client.animation_file_conversion_helpers</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;A set helpers which convert specific lines from an animation</span>
+<span class="sd">file into the animation-specific protobuf messages.</span>
+
+<span class="sd">NOTE: All of these helpers are to convert specific values read from a `cha`</span>
+<span class="sd">file into fields within the choreography_sequence_pb2.Animation protobuf</span>
+<span class="sd">message. They are used by the animation_file_to_proto.py file.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">bosdyn.api.spot</span> <span class="kn">import</span> <span class="p">(</span><span class="n">choreography_sequence_pb2</span><span class="p">,</span> <span class="n">choreography_service_pb2</span><span class="p">,</span>
+                             <span class="n">choreography_service_pb2_grpc</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="start_time_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.start_time_handler">[docs]</a><span class="k">def</span> <span class="nf">start_time_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fl_angles_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fl_angles_handler">[docs]</a><span class="k">def</span> <span class="nf">fl_angles_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_x</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_y</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">knee</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fr_angles_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fr_angles_handler">[docs]</a><span class="k">def</span> <span class="nf">fr_angles_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_x</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_y</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">knee</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hl_angles_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hl_angles_handler">[docs]</a><span class="k">def</span> <span class="nf">hl_angles_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_x</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_y</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">knee</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hr_angles_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hr_angles_handler">[docs]</a><span class="k">def</span> <span class="nf">hr_angles_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_x</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_y</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">knee</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fl_pos_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fl_pos_handler">[docs]</a><span class="k">def</span> <span class="nf">fl_pos_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fr_pos_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fr_pos_handler">[docs]</a><span class="k">def</span> <span class="nf">fr_pos_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hl_pos_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hl_pos_handler">[docs]</a><span class="k">def</span> <span class="nf">hl_pos_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hr_pos_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hr_pos_handler">[docs]</a><span class="k">def</span> <span class="nf">hr_pos_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="gripper_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.gripper_handler">[docs]</a><span class="k">def</span> <span class="nf">gripper_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">gripper</span><span class="o">.</span><span class="n">gripper_angle</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fl_contact_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fl_contact_handler">[docs]</a><span class="k">def</span> <span class="nf">fl_contact_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">stance</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fr_contact_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fr_contact_handler">[docs]</a><span class="k">def</span> <span class="nf">fr_contact_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">stance</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hl_contact_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hl_contact_handler">[docs]</a><span class="k">def</span> <span class="nf">hl_contact_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">stance</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hr_contact_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hr_contact_handler">[docs]</a><span class="k">def</span> <span class="nf">hr_contact_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">stance</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="sh0_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.sh0_handler">[docs]</a><span class="k">def</span> <span class="nf">sh0_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">shoulder_0</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="sh1_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.sh1_handler">[docs]</a><span class="k">def</span> <span class="nf">sh1_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">shoulder_1</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="el0_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.el0_handler">[docs]</a><span class="k">def</span> <span class="nf">el0_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">elbow_0</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="el1_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.el1_handler">[docs]</a><span class="k">def</span> <span class="nf">el1_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">elbow_1</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="wr0_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.wr0_handler">[docs]</a><span class="k">def</span> <span class="nf">wr0_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">wrist_0</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="wr1_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.wr1_handler">[docs]</a><span class="k">def</span> <span class="nf">wr1_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">wrist_1</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fl_hx_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fl_hx_handler">[docs]</a><span class="k">def</span> <span class="nf">fl_hx_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_x</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fl_hy_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fl_hy_handler">[docs]</a><span class="k">def</span> <span class="nf">fl_hy_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_y</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fl_kn_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fl_kn_handler">[docs]</a><span class="k">def</span> <span class="nf">fl_kn_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">knee</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fr_hx_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fr_hx_handler">[docs]</a><span class="k">def</span> <span class="nf">fr_hx_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_x</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fr_hy_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fr_hy_handler">[docs]</a><span class="k">def</span> <span class="nf">fr_hy_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_y</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fr_kn_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fr_kn_handler">[docs]</a><span class="k">def</span> <span class="nf">fr_kn_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">knee</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hl_hx_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hl_hx_handler">[docs]</a><span class="k">def</span> <span class="nf">hl_hx_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_x</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hl_hy_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hl_hy_handler">[docs]</a><span class="k">def</span> <span class="nf">hl_hy_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_y</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hl_kn_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hl_kn_handler">[docs]</a><span class="k">def</span> <span class="nf">hl_kn_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">knee</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hr_hx_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hr_hx_handler">[docs]</a><span class="k">def</span> <span class="nf">hr_hx_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_x</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hr_hy_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hr_hy_handler">[docs]</a><span class="k">def</span> <span class="nf">hr_hy_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_y</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hr_kn_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hr_kn_handler">[docs]</a><span class="k">def</span> <span class="nf">hr_kn_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">knee</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fl_x_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fl_x_handler">[docs]</a><span class="k">def</span> <span class="nf">fl_x_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fl_y_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fl_y_handler">[docs]</a><span class="k">def</span> <span class="nf">fl_y_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fl_z_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fl_z_handler">[docs]</a><span class="k">def</span> <span class="nf">fl_z_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fr_x_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fr_x_handler">[docs]</a><span class="k">def</span> <span class="nf">fr_x_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fr_y_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fr_y_handler">[docs]</a><span class="k">def</span> <span class="nf">fr_y_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="fr_z_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.fr_z_handler">[docs]</a><span class="k">def</span> <span class="nf">fr_z_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hl_x_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hl_x_handler">[docs]</a><span class="k">def</span> <span class="nf">hl_x_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hl_y_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hl_y_handler">[docs]</a><span class="k">def</span> <span class="nf">hl_y_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hl_z_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hl_z_handler">[docs]</a><span class="k">def</span> <span class="nf">hl_z_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hr_x_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hr_x_handler">[docs]</a><span class="k">def</span> <span class="nf">hr_x_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hr_y_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hr_y_handler">[docs]</a><span class="k">def</span> <span class="nf">hr_y_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hr_z_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hr_z_handler">[docs]</a><span class="k">def</span> <span class="nf">hr_z_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="body_x_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.body_x_handler">[docs]</a><span class="k">def</span> <span class="nf">body_x_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">body_pos</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="body_y_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.body_y_handler">[docs]</a><span class="k">def</span> <span class="nf">body_y_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">body_pos</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="body_z_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.body_z_handler">[docs]</a><span class="k">def</span> <span class="nf">body_z_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">body_pos</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="com_x_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.com_x_handler">[docs]</a><span class="k">def</span> <span class="nf">com_x_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">com_pos</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="com_y_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.com_y_handler">[docs]</a><span class="k">def</span> <span class="nf">com_y_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">com_pos</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="com_z_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.com_z_handler">[docs]</a><span class="k">def</span> <span class="nf">com_z_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">com_pos</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="body_quat_x_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.body_quat_x_handler">[docs]</a><span class="k">def</span> <span class="nf">body_quat_x_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="body_quat_y_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.body_quat_y_handler">[docs]</a><span class="k">def</span> <span class="nf">body_quat_y_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="body_quat_z_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.body_quat_z_handler">[docs]</a><span class="k">def</span> <span class="nf">body_quat_z_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="body_quat_w_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.body_quat_w_handler">[docs]</a><span class="k">def</span> <span class="nf">body_quat_w_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="body_roll_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.body_roll_handler">[docs]</a><span class="k">def</span> <span class="nf">body_roll_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">euler_angles</span><span class="o">.</span><span class="n">roll</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="body_pitch_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.body_pitch_handler">[docs]</a><span class="k">def</span> <span class="nf">body_pitch_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">euler_angles</span><span class="o">.</span><span class="n">pitch</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="body_yaw_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.body_yaw_handler">[docs]</a><span class="k">def</span> <span class="nf">body_yaw_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">euler_angles</span><span class="o">.</span><span class="n">yaw</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="body_pos_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.body_pos_handler">[docs]</a><span class="k">def</span> <span class="nf">body_pos_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">body_pos</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">body_pos</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">body_pos</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="com_pos_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.com_pos_handler">[docs]</a><span class="k">def</span> <span class="nf">com_pos_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">com_pos</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">com_pos</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">com_pos</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="body_euler_rpy_angles_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.body_euler_rpy_angles_handler">[docs]</a><span class="k">def</span> <span class="nf">body_euler_rpy_angles_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">euler_angles</span><span class="o">.</span><span class="n">roll</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">euler_angles</span><span class="o">.</span><span class="n">pitch</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">euler_angles</span><span class="o">.</span><span class="n">yaw</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="body_quaternion_xyzw_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.body_quaternion_xyzw_handler">[docs]</a><span class="k">def</span> <span class="nf">body_quaternion_xyzw_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="body_quaternion_wxyz_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.body_quaternion_wxyz_handler">[docs]</a><span class="k">def</span> <span class="nf">body_quaternion_wxyz_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="leg_angles_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.leg_angles_handler">[docs]</a><span class="k">def</span> <span class="nf">leg_angles_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_x</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_y</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">knee</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_x</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_y</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">knee</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_x</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_y</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">knee</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_x</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">hip_y</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">knee</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="foot_pos_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.foot_pos_handler">[docs]</a><span class="k">def</span> <span class="nf">foot_pos_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">foot_pos</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="contact_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.contact_handler">[docs]</a><span class="k">def</span> <span class="nf">contact_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fl</span><span class="o">.</span><span class="n">stance</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">fr</span><span class="o">.</span><span class="n">stance</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hl</span><span class="o">.</span><span class="n">stance</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">legs</span><span class="o">.</span><span class="n">hr</span><span class="o">.</span><span class="n">stance</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="arm_joints_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.arm_joints_handler">[docs]</a><span class="k">def</span> <span class="nf">arm_joints_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">shoulder_0</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">shoulder_1</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">elbow_0</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">elbow_1</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">wrist_0</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">joint_angles</span><span class="o">.</span><span class="n">wrist_1</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hand_x_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hand_x_handler">[docs]</a><span class="k">def</span> <span class="nf">hand_x_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hand_y_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hand_y_handler">[docs]</a><span class="k">def</span> <span class="nf">hand_y_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hand_z_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hand_z_handler">[docs]</a><span class="k">def</span> <span class="nf">hand_z_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hand_quat_x_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hand_quat_x_handler">[docs]</a><span class="k">def</span> <span class="nf">hand_quat_x_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hand_quat_y_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hand_quat_y_handler">[docs]</a><span class="k">def</span> <span class="nf">hand_quat_y_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hand_quat_z_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hand_quat_z_handler">[docs]</a><span class="k">def</span> <span class="nf">hand_quat_z_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hand_quat_w_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hand_quat_w_handler">[docs]</a><span class="k">def</span> <span class="nf">hand_quat_w_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hand_roll_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hand_roll_handler">[docs]</a><span class="k">def</span> <span class="nf">hand_roll_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">euler_angles</span><span class="o">.</span><span class="n">roll</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hand_pitch_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hand_pitch_handler">[docs]</a><span class="k">def</span> <span class="nf">hand_pitch_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">euler_angles</span><span class="o">.</span><span class="n">pitch</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hand_yaw_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hand_yaw_handler">[docs]</a><span class="k">def</span> <span class="nf">hand_yaw_handler</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">euler_angles</span><span class="o">.</span><span class="n">yaw</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hand_pos_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hand_pos_handler">[docs]</a><span class="k">def</span> <span class="nf">hand_pos_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hand_euler_rpy_angles_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hand_euler_rpy_angles_handler">[docs]</a><span class="k">def</span> <span class="nf">hand_euler_rpy_angles_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">euler_angles</span><span class="o">.</span><span class="n">roll</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">euler_angles</span><span class="o">.</span><span class="n">pitch</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">euler_angles</span><span class="o">.</span><span class="n">yaw</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hand_quaternion_xyzw_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hand_quaternion_xyzw_handler">[docs]</a><span class="k">def</span> <span class="nf">hand_quaternion_xyzw_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="hand_quaternion_wxyz_handler"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.hand_quaternion_wxyz_handler">[docs]</a><span class="k">def</span> <span class="nf">hand_quaternion_wxyz_handler</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">animation_frame</span><span class="p">):</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">animation_frame</span><span class="o">.</span><span class="n">arm</span><span class="o">.</span><span class="n">hand_pose</span><span class="o">.</span><span class="n">quaternion</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">animation_frame</span></div>
+
+
+<div class="viewcode-block" id="controls_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.controls_option">[docs]</a><span class="k">def</span> <span class="nf">controls_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="n">file_line_split</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">track</span> <span class="o">==</span> <span class="s2">&quot;legs&quot;</span><span class="p">:</span>
+            <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">controls_legs</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">track</span> <span class="o">==</span> <span class="s2">&quot;arm&quot;</span><span class="p">:</span>
+            <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">controls_arm</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">track</span> <span class="o">==</span> <span class="s2">&quot;body&quot;</span><span class="p">:</span>
+            <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">controls_body</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">track</span> <span class="o">==</span> <span class="s2">&quot;gripper&quot;</span><span class="p">:</span>
+            <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">controls_gripper</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">track</span> <span class="o">==</span> <span class="s2">&quot;controls&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unknown track name </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">track</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">animation</span></div>
+
+
+<div class="viewcode-block" id="bpm_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.bpm_option">[docs]</a><span class="k">def</span> <span class="nf">bpm_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">bpm</span> <span class="o">=</span> <span class="n">file_line_split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">bpm</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bpm</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">animation</span></div>
+
+
+<div class="viewcode-block" id="extendable_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.extendable_option">[docs]</a><span class="k">def</span> <span class="nf">extendable_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">extendable</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="n">animation</span></div>
+
+
+<div class="viewcode-block" id="truncatable_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.truncatable_option">[docs]</a><span class="k">def</span> <span class="nf">truncatable_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">truncatable</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="n">animation</span></div>
+
+
+<div class="viewcode-block" id="neutral_start_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.neutral_start_option">[docs]</a><span class="k">def</span> <span class="nf">neutral_start_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">neutral_start</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="n">animation</span></div>
+
+
+<div class="viewcode-block" id="precise_steps_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.precise_steps_option">[docs]</a><span class="k">def</span> <span class="nf">precise_steps_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">precise_steps</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="precise_timing_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.precise_timing_option">[docs]</a><span class="k">def</span> <span class="nf">precise_timing_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">precise_timing</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="no_looping_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.no_looping_option">[docs]</a><span class="k">def</span> <span class="nf">no_looping_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">no_looping</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="arm_required_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.arm_required_option">[docs]</a><span class="k">def</span> <span class="nf">arm_required_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">arm_required</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="arm_prohibited_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.arm_prohibited_option">[docs]</a><span class="k">def</span> <span class="nf">arm_prohibited_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">arm_prohibited</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="track_swing_trajectories_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.track_swing_trajectories_option">[docs]</a><span class="k">def</span> <span class="nf">track_swing_trajectories_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">track_swing_trajectories</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="n">animation</span></div>
+
+<div class="viewcode-block" id="assume_zero_roll_and_pitch_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.assume_zero_roll_and_pitch_option">[docs]</a><span class="k">def</span> <span class="nf">assume_zero_roll_and_pitch_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">assume_zero_roll_and_pitch</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="n">animation</span></div>
+
+<div class="viewcode-block" id="track_hand_rt_body_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.track_hand_rt_body_option">[docs]</a><span class="k">def</span> <span class="nf">track_hand_rt_body_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">track_hand_rt_body</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="n">animation</span></div>
+
+
+<div class="viewcode-block" id="track_hand_rt_feet_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.track_hand_rt_feet_option">[docs]</a><span class="k">def</span> <span class="nf">track_hand_rt_feet_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">track_hand_rt_feet</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="n">animation</span></div>
+
+
+<div class="viewcode-block" id="arm_playback_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.arm_playback_option">[docs]</a><span class="k">def</span> <span class="nf">arm_playback_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">playback</span> <span class="o">=</span> <span class="n">file_line_split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">playback</span> <span class="o">==</span> <span class="s2">&quot;jointspace&quot;</span><span class="p">:</span>
+        <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">arm_playback</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">Animation</span><span class="o">.</span><span class="n">ARM_PLAYBACK_JOINTSPACE</span>
+    <span class="k">elif</span> <span class="n">playback</span> <span class="o">==</span> <span class="s2">&quot;workspace&quot;</span><span class="p">:</span>
+        <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">arm_playback</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">Animation</span><span class="o">.</span><span class="n">ARM_PLAYBACK_WORKSPACE</span>
+    <span class="k">elif</span> <span class="n">playback</span> <span class="o">==</span> <span class="s2">&quot;workspace_dance_frame&quot;</span><span class="p">:</span>
+        <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">arm_playback</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">Animation</span><span class="o">.</span><span class="n">ARM_PLAYBACK_WORKSPACE_DANCE_FRAME</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">arm_playback</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">Animation</span><span class="o">.</span><span class="n">ARM_PLAYBACK_DEFAULT</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unknown arm playbak option </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">playback</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">animation</span></div>
+
+
+<div class="viewcode-block" id="display_rgb_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.display_rgb_option">[docs]</a><span class="k">def</span> <span class="nf">display_rgb_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+        <span class="n">animation</span><span class="o">.</span><span class="n">rgb</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">animation</span></div>
+
+
+<div class="viewcode-block" id="frequency_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.frequency_option">[docs]</a><span class="k">def</span> <span class="nf">frequency_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">freq</span> <span class="o">=</span> <span class="n">file_line_split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">frequency</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">animation</span></div>
+
+
+<div class="viewcode-block" id="retime_to_integer_slices_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.retime_to_integer_slices_option">[docs]</a><span class="k">def</span> <span class="nf">retime_to_integer_slices_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">retime_to_integer_slices</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="n">animation</span></div>
+
+
+<div class="viewcode-block" id="description_option"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html#bosdyn.choreography.client.animation_file_conversion_helpers.description_option">[docs]</a><span class="k">def</span> <span class="nf">description_option</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">):</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">file_line_split</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>  <span class="c1"># remove any quotation marks</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
+    <span class="k">return</span> <span class="n">animation</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      
+      &copy; Copyright 2021 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

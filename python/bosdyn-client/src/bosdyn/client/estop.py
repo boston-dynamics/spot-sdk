@@ -415,11 +415,10 @@ class EstopEndpoint(object):
         else:
             cpt_seconds = int(self.estop_cut_power_timeout)
             cpt_nanos = int((self.estop_cut_power_timeout - cpt_seconds) * 1e9)
-            return estop_pb2.EstopEndpoint(role=self.role, name=self._name,
-                                           unique_id=self._unique_id,
-                                           timeout=Duration(seconds=t_seconds, nanos=t_nanos),
-                                           cut_power_timeout=Duration(seconds=cpt_seconds,
-                                                                      nanos=cpt_nanos))
+            return estop_pb2.EstopEndpoint(
+                role=self.role, name=self._name, unique_id=self._unique_id,
+                timeout=Duration(seconds=t_seconds, nanos=t_nanos),
+                cut_power_timeout=Duration(seconds=cpt_seconds, nanos=cpt_nanos))
 
     def _response(self):
         """Generate a response for self._challenge."""
@@ -576,8 +575,9 @@ class EstopKeepAlive(object):
                 self._error('RPC took longer than {:.2f} seconds'.format(self._rpc_timeout),
                             exception=exc)
             except RpcError as exc:
-                self._error('Transport exception during check-in:\n{}\n'
-                            '    (resuming check-in)'.format(exc), exception=exc)
+                self._error(
+                    'Transport exception during check-in:\n{}\n'
+                    '    (resuming check-in)'.format(exc), exception=exc)
             except EndpointUnknownError as exc:
                 # Disable ourself to show we cannot estop any longer.
                 self._error(str(exc), exception=exc, disable=True)
@@ -617,6 +617,7 @@ class EstopKeepAlive(object):
         ERROR = 1
         DISABLED = 2
 
+
 def is_estopped(estop_client, **kwargs):
     """Returns true if robot is estopped, false otherwise.
 
@@ -626,6 +627,7 @@ def is_estopped(estop_client, **kwargs):
     response = estop_client.get_status(**kwargs)
     return response.stop_level != estop_pb2.ESTOP_LEVEL_NONE
 
+
 def response_from_challenge(challenge):
     return ctypes.c_ulonglong(~challenge).value
 
@@ -633,10 +635,10 @@ def response_from_challenge(challenge):
 _CHECK_IN_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _CHECK_IN_STATUS_TO_ERROR.update({
     estop_pb2.EstopCheckInResponse.STATUS_OK: (None, None),
-    estop_pb2.EstopCheckInResponse.STATUS_ENDPOINT_UNKNOWN: (EndpointUnknownError,
-                                                             EndpointUnknownError.__doc__),
+    estop_pb2.EstopCheckInResponse.STATUS_ENDPOINT_UNKNOWN:
+        (EndpointUnknownError, EndpointUnknownError.__doc__),
     estop_pb2.EstopCheckInResponse.STATUS_INCORRECT_CHALLENGE_RESPONSE:
-    (IncorrectChallengeResponseError, IncorrectChallengeResponseError.__doc__),
+        (IncorrectChallengeResponseError, IncorrectChallengeResponseError.__doc__),
 })
 
 
@@ -677,9 +679,11 @@ _DEREGISTER_ENDPOINT_STATUS_TO_ERROR = collections.defaultdict(lambda: (Response
 _DEREGISTER_ENDPOINT_STATUS_TO_ERROR.update({
     estop_pb2.DeregisterEstopEndpointResponse.STATUS_SUCCESS: (None, None),
     estop_pb2.DeregisterEstopEndpointResponse.STATUS_ENDPOINT_MISMATCH:
-    (EndpointMismatchError, EndpointMismatchError.__doc__),
-    estop_pb2.DeregisterEstopEndpointResponse.STATUS_CONFIG_MISMATCH: (ConfigMismatchError,
-                                                                       ConfigMismatchError.__doc__),
+        (EndpointMismatchError, EndpointMismatchError.__doc__),
+    estop_pb2.DeregisterEstopEndpointResponse.STATUS_CONFIG_MISMATCH:
+        (ConfigMismatchError, ConfigMismatchError.__doc__),
+    estop_pb2.DeregisterEstopEndpointResponse.STATUS_MOTORS_ON:
+        (MotorsOnError, MotorsOnError.__doc__),
 })
 
 
@@ -696,11 +700,11 @@ _REGISTER_ENDPOINT_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseEr
 _REGISTER_ENDPOINT_STATUS_TO_ERROR.update({
     estop_pb2.RegisterEstopEndpointResponse.STATUS_SUCCESS: (None, None),
     estop_pb2.RegisterEstopEndpointResponse.STATUS_ENDPOINT_MISMATCH:
-    (EndpointMismatchError, EndpointMismatchError.__doc__),
-    estop_pb2.RegisterEstopEndpointResponse.STATUS_CONFIG_MISMATCH: (ConfigMismatchError,
-                                                                     ConfigMismatchError.__doc__),
-    estop_pb2.RegisterEstopEndpointResponse.STATUS_INVALID_ENDPOINT: (InvalidEndpointError,
-                                                                      InvalidEndpointError.__doc__),
+        (EndpointMismatchError, EndpointMismatchError.__doc__),
+    estop_pb2.RegisterEstopEndpointResponse.STATUS_CONFIG_MISMATCH:
+        (ConfigMismatchError, ConfigMismatchError.__doc__),
+    estop_pb2.RegisterEstopEndpointResponse.STATUS_INVALID_ENDPOINT:
+        (InvalidEndpointError, InvalidEndpointError.__doc__),
 })
 
 

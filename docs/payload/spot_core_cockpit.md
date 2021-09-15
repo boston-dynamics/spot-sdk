@@ -76,7 +76,7 @@ nmcli d # List interface names.
 nmcli r wifi on # Turn WiFi radio on.
 nmcli d wifi list # List available WiFi networks.
 ```
-From the listed wireless access points, replace the captilized letters of the command below with your desired WiFi network and password.
+From the listed wireless access points, replace the capitalized letters of the command below with your desired WiFi network and password.
 ```
 sudo nmcli d wifi connect "MY_WIFI" password "MY_PASSWORD"
 ```
@@ -84,7 +84,7 @@ sudo nmcli d wifi connect "MY_WIFI" password "MY_PASSWORD"
 Included below is an example of running the above commands.
 ![login](./images/cockpit/terminal_wifi.png)
 
-A succesful connection will appear as follows.
+A successful connection will appear as follows.
 
 ![login](./images/cockpit/terminal_wifi_connected.png)
 
@@ -104,7 +104,7 @@ In order to connect to the internet, remove the IPv4 default route of enp2s0. Se
 
 **IMPORTANT NOTES:**
 
-1. By default, Boston Dynamics has included 2 pre-defined Routes which will route outbound communication from the Spot CORE to the explicity defined gateways, Spot's Access Point `192.168.80.0` and Spot's Ethernet port `10.0.0.0`, rather than the default gateway.
+1. By default, Boston Dynamics has included 2 pre-defined Routes which will route outbound communication from the Spot CORE to the explicitly defined gateways, Spot's Access Point `192.168.80.0` and Spot's Ethernet port `10.0.0.0`, rather than the default gateway.
 1. These routes are only required if the default gateway is removed for internet access. 
 1. The route to `10.0.0.0` is only valid if the user has not adjusted the Ethernet network settings on the robot admin console.
 1. To access the internet, remove the default gateway (the third field) under Addresses as pictured below and Apply these changes. Instead of routing all traffic to the robot, we will instead route to the internet.

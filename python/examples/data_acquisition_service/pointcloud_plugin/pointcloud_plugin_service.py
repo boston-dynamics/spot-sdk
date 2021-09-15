@@ -19,7 +19,8 @@ from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
 from bosdyn.client.exceptions import ServiceUnavailableError
 from bosdyn.client.point_cloud import PointCloudClient
 import bosdyn.client.util
-from bosdyn.client.util import GrpcServiceRunner, setup_logging
+from bosdyn.client.util import setup_logging
+from bosdyn.client.server_util import GrpcServiceRunner
 
 DIRECTORY_NAME = 'data-acquisition-pointcloud-plugin'
 AUTHORITY = 'data-acquisition-pc-plugin'
@@ -40,8 +41,8 @@ class PointCloudAdapter:
 
     def get_capabilities(self):
         """Get list of available capabilities to capture point-clouds.
-        
-        The capabilities available will vary depending on what sources of pointclouds are 
+
+        The capabilities available will vary depending on what sources of pointclouds are
         available. This method blocks until it communicates with the SpotCAM MediaLog service.
 
         Returns:
@@ -60,10 +61,9 @@ class PointCloudAdapter:
         for source in sources:
             name = source.name
             capabilities.append(
-                Capability(
-                    name=name,
-                    description="Point-clouds from a {} LIDAR sensor.".format(name),
-                    channel_name="{}--{}".format(self._service_name, name)))
+                Capability(name=name,
+                           description="Point-clouds from a {} LIDAR sensor.".format(name),
+                           channel_name="{}--{}".format(self._service_name, name)))
         return capabilities
 
     def get_point_cloud_data(self, request, store_helper):

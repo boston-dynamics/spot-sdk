@@ -20,9 +20,9 @@ def pretty_print_waypoints(waypoint_id, waypoint_name, short_code_to_count, loca
     if short_code is None or short_code_to_count[short_code] != 1:
         short_code = '  '  # If the short code is not valid/unique, don't show it.
 
-    print("%s Waypoint name: %s id: %s short code: %s" %
-            ('->' if localization_id == waypoint_id else '  ',
-            waypoint_name, waypoint_id, short_code))
+    print(
+        "%s Waypoint name: %s id: %s short code: %s" %
+        ('->' if localization_id == waypoint_id else '  ', waypoint_name, waypoint_id, short_code))
 
 
 def find_unique_waypoint_id(short_code, graph, name_to_id):
@@ -51,7 +51,7 @@ def find_unique_waypoint_id(short_code, graph, name_to_id):
     return ret
 
 
-def update_waypoints_and_edges(graph, localization_id):
+def update_waypoints_and_edges(graph, localization_id, do_print=True):
     """Update and print waypoint ids and edge ids."""
     name_to_id = dict()
     edges = dict()
@@ -67,9 +67,7 @@ def update_waypoints_and_edges(graph, localization_id):
             # Must be operating on an older graph nav map, since the creation_time is not
             # available within the waypoint annotations message.
             pass
-        waypoint_to_timestamp.append((waypoint.id,
-                                        timestamp,
-                                        waypoint.annotations.name))
+        waypoint_to_timestamp.append((waypoint.id, timestamp, waypoint.annotations.name))
 
         # Determine how many waypoints have the same short code.
         short_code = id_to_short_code(waypoint.id)
@@ -91,13 +89,14 @@ def update_waypoints_and_edges(graph, localization_id):
 
     # Sort the set of waypoints by their creation timestamp. If the creation timestamp is unavailable,
     # fallback to sorting by annotation name.
-    waypoint_to_timestamp = sorted(waypoint_to_timestamp, key= lambda x:(x[1], x[2]))
+    waypoint_to_timestamp = sorted(waypoint_to_timestamp, key=lambda x: (x[1], x[2]))
 
     # Print out the waypoints name, id, and short code in a ordered sorted by the timestamp from
     # when the waypoint was created.
-    print('%d waypoints:' % len(graph.waypoints))
-    for waypoint in waypoint_to_timestamp:
-        pretty_print_waypoints(waypoint[0], waypoint[2], short_code_to_count, localization_id)
+    if do_print:
+        print('%d waypoints:' % len(graph.waypoints))
+        for waypoint in waypoint_to_timestamp:
+            pretty_print_waypoints(waypoint[0], waypoint[2], short_code_to_count, localization_id)
 
     for edge in graph.edges:
         if edge.id.to_waypoint in edges:
@@ -105,10 +104,12 @@ def update_waypoints_and_edges(graph, localization_id):
                 edges[edge.id.to_waypoint].append(edge.id.from_waypoint)
         else:
             edges[edge.id.to_waypoint] = [edge.id.from_waypoint]
-        print("(Edge) from waypoint {} to waypoint {} (cost {})".format(
-            edge.id.from_waypoint, edge.id.to_waypoint, edge.annotations.cost.value))
+        if do_print:
+            print("(Edge) from waypoint {} to waypoint {} (cost {})".format(
+                edge.id.from_waypoint, edge.id.to_waypoint, edge.annotations.cost.value))
 
     return name_to_id, edges
+
 
 def sort_waypoints_chrono(graph):
     """Sort waypoints by time created."""
@@ -122,12 +123,10 @@ def sort_waypoints_chrono(graph):
             # Must be operating on an older graph nav map, since the creation_time is not
             # available within the waypoint annotations message.
             pass
-        waypoint_to_timestamp.append((waypoint.id,
-                                        timestamp,
-                                        waypoint.annotations.name))
+        waypoint_to_timestamp.append((waypoint.id, timestamp, waypoint.annotations.name))
 
     # Sort the set of waypoints by their creation timestamp. If the creation timestamp is unavailable,
     # fallback to sorting by annotation name.
-    waypoint_to_timestamp = sorted(waypoint_to_timestamp, key= lambda x:(x[1], x[2]))
+    waypoint_to_timestamp = sorted(waypoint_to_timestamp, key=lambda x: (x[1], x[2]))
 
     return waypoint_to_timestamp

@@ -1,0 +1,9 @@
+FROM python:3.7-slim
+
+COPY docker-requirements.txt .
+RUN python3 -m pip install -r docker-requirements.txt
+
+COPY network_compute_bridge_plugin_service.py /app/network_compute_bridge_plugin_service.py
+WORKDIR /app
+
+ENTRYPOINT ["python3", "/app/network_compute_bridge_plugin_service.py"]

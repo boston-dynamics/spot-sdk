@@ -134,10 +134,10 @@ def _session_id_from_response(response):
 _ESTABLISH_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _ESTABLISH_STATUS_TO_ERROR.update({
     remote_pb2.EstablishSessionResponse.STATUS_OK: (None, None),
-    remote_pb2.EstablishSessionResponse.STATUS_MISSING_LEASES: (MissingLeases,
-                                                                MissingLeases.__doc__),
-    remote_pb2.EstablishSessionResponse.STATUS_MISSING_INPUTS: (MissingInputs,
-                                                                MissingInputs.__doc__),
+    remote_pb2.EstablishSessionResponse.STATUS_MISSING_LEASES:
+        (MissingLeases, MissingLeases.__doc__),
+    remote_pb2.EstablishSessionResponse.STATUS_MISSING_INPUTS:
+        (MissingInputs, MissingInputs.__doc__),
 })
 
 
@@ -188,8 +188,8 @@ def _stop_error_from_response(response):
 _TEARDOWN_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _TEARDOWN_STATUS_TO_ERROR.update({
     remote_pb2.TeardownSessionResponse.STATUS_OK: (None, None),
-    remote_pb2.TeardownSessionResponse.STATUS_INVALID_SESSION_ID: (InvalidSessionId,
-                                                                   InvalidSessionId.__doc__),
+    remote_pb2.TeardownSessionResponse.STATUS_INVALID_SESSION_ID:
+        (InvalidSessionId, InvalidSessionId.__doc__),
 })
 
 

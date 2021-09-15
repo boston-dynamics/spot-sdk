@@ -15,11 +15,11 @@ from PIL import Image
 from bosdyn.client.command_line import (Command, Subcommands)
 
 from bosdyn.client.spot_cam.media_log import MediaLogClient
-
 from bosdyn.api import image_pb2
 from bosdyn.api.spot_cam import logging_pb2, camera_pb2
 
 from utils import add_bool_arg
+
 
 def write_pgm(filename, width, height, max_val, data):
     """ Helper function to supplement PIL with writing a 16-bit PGM from the IR camera
@@ -29,6 +29,7 @@ def write_pgm(filename, width, height, max_val, data):
         f.write(f'{width} {height}\n'.encode('utf-8'))
         f.write(f'{max_val}\n'.encode('utf-8'))
         f.write(data)
+
 
 class MediaLogCommands(Subcommands):
     """Commands related to the Spot CAM's Media Log service"""
@@ -45,7 +46,6 @@ class MediaLogCommands(Subcommands):
             MediaLogListLogpointsCommand,
             MediaLogRetrieveCommand,
             MediaLogRetrieveAllCommand,
-            MediaLogSetPassphraseCommand,
             MediaLogStoreCommand,
             MediaLogStoreRetrieveCommand,
             MediaLogTagCommand,
@@ -64,6 +64,7 @@ class MediaLogDeleteCommand(Command):
     def _run(self, robot, options):
         lp = logging_pb2.Logpoint(name=options.name)
         robot.ensure_client(MediaLogClient.default_service_name).delete(lp)
+
 
 class MediaLogDeleteAllCommand(Command):
     """Delete all logpoints"""
@@ -95,11 +96,9 @@ class MediaLogEnableDebugCommand(Command):
         add_bool_arg(self._parser, 'system-stats')
 
     def _run(self, robot, options):
-        robot.ensure_client(MediaLogClient.default_service_name).enable_debug(temp=options.temperature,
-                                                                              humidity=options.humidity,
-                                                                              bit=options.BIT,
-                                                                              shock=options.shock,
-                                                                              system_stats=options.system_stats)
+        robot.ensure_client(MediaLogClient.default_service_name).enable_debug(
+            temp=options.temperature, humidity=options.humidity, bit=options.BIT,
+            shock=options.shock, system_stats=options.system_stats)
 
 
 class MediaLogGetStatusCommand(Command):
@@ -157,6 +156,7 @@ class MediaLogRetrieveCommand(Command):
         self._parser.add_argument('--dst', default=None, help='Filename of saved image')
         add_bool_arg(self._parser, 'save-as-rgb24', default=False)
         add_bool_arg(self._parser, 'stitching', default=True)
+        add_bool_arg(self._parser, "raw-ir", default=False)
 
     def _run(self, robot, options):
         lp = logging_pb2.Logpoint(name=options.name)
@@ -167,16 +167,15 @@ class MediaLogRetrieveCommand(Command):
     @staticmethod
     def save_logpoint_as_image(robot, lp, options, dst_filename=None):
         """'options' need to have boolean arguments save-as-rgb24 and stitching."""
-        ir_flag = hasattr(options, 'camera_name') and options.camera_name == 'ir'
-        if options.stitching or ir_flag:
+        if options.stitching and not options.raw_ir:
             lp, img = robot.ensure_client(MediaLogClient.default_service_name).retrieve(lp)
         else:
             lp, img = robot.ensure_client(MediaLogClient.default_service_name).retrieve_raw_data(lp)
 
         # case for 16 bit raw thermal image
         if lp.image_params.format == image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U16:
-            np_img = np.frombuffer(img, dtype=np.uint16)
-            np_img = img.reshape((lp.image_params.height, lp.image_params.width, 1))
+            np_img = np.frombuffer(img, dtype=np.uint16).byteswap()
+            np_img = np_img.reshape((lp.image_params.height, lp.image_params.width, 1))
             cv2.imwrite(f'{dst_filename}.pgm', np_img)
             return lp
 
@@ -188,10 +187,12 @@ class MediaLogRetrieveCommand(Command):
             dst_filename = os.path.basename(src_filename)
 
         # Pano and IR both come in as JPEG from retrieve command
-        if lp.image_params.height == 4800 or (lp.image_params.width == 640 and lp.image_params.height == 512):
+        if lp.image_params.height == 4800 or (lp.image_params.width == 640 and
+                                              lp.image_params.height == 512):
             shutil.move(src_filename, '{}.jpg'.format(dst_filename))
         else:
-            target_filename = '{}-{}x{}.rgb24'.format(dst_filename, lp.image_params.width, lp.image_params.height)
+            target_filename = '{}-{}x{}.rgb24'.format(dst_filename, lp.image_params.width,
+                                                      lp.image_params.height)
             shutil.move(src_filename, target_filename)
 
             if not options.save_as_rgb24:
@@ -199,7 +200,8 @@ class MediaLogRetrieveCommand(Command):
                     data = fd.read()
 
                 mode = 'RGB'
-                image = Image.frombuffer(mode, (lp.image_params.width, lp.image_params.height), data, 'raw', mode, 0, 1)
+                image = Image.frombuffer(mode, (lp.image_params.width, lp.image_params.height),
+                                         data, 'raw', mode, 0, 1)
                 image.save('{}.jpg'.format(dst_filename))
 
                 os.remove(target_filename)
@@ -222,23 +224,11 @@ class MediaLogRetrieveAllCommand(Command):
 
         detailed_lps = []
         for logpoint in logpoints:
-            lp = MediaLogRetrieveCommand.save_logpoint_as_image(robot, logpoint, options, dst_filename=logpoint.name)
+            lp = MediaLogRetrieveCommand.save_logpoint_as_image(robot, logpoint, options,
+                                                                dst_filename=logpoint.name)
             detailed_lps.append(lp)
 
         return detailed_lps
-
-
-class MediaLogSetPassphraseCommand(Command):
-    """Enable encryption of data"""
-
-    NAME = 'set_passphrase'
-
-    def __init__(self, subparsers, command_dict):
-        super(MediaLogSetPassphraseCommand, self).__init__(subparsers, command_dict)
-        self._parser.add_argument('passphrase', help='double-quoted text, an empty string disables encryption')
-
-    def _run(self, robot, options):
-        robot.ensure_client(MediaLogClient.default_service_name).set_passphrase(options.passphrase)
 
 
 class MediaLogStoreCommand(Command):
@@ -270,6 +260,7 @@ class MediaLogStoreRetrieveCommand(Command):
         self._parser.add_argument('--dst', default=None, help='Filename of saved image')
         add_bool_arg(self._parser, 'save-as-rgb24', default=False)
         add_bool_arg(self._parser, 'stitching', default=True)
+        add_bool_arg(self._parser, 'raw-ir', default=False)
 
     def _run(self, robot, options):
         client = robot.ensure_client(MediaLogClient.default_service_name)
@@ -280,7 +271,8 @@ class MediaLogStoreRetrieveCommand(Command):
         while lp.status != logging_pb2.Logpoint.COMPLETE:
             lp = client.get_status(lp)
 
-        lp = MediaLogRetrieveCommand.save_logpoint_as_image(robot, lp, options, dst_filename=options.dst)
+        lp = MediaLogRetrieveCommand.save_logpoint_as_image(robot, lp, options,
+                                                            dst_filename=options.dst)
 
         return lp
 

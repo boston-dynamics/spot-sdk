@@ -66,6 +66,7 @@ REQUEST_QUEUE = Queue()
 # the display process.
 RESPONSE_QUEUE = Queue()
 
+
 class TensorflowModel:
     """ Wraps a tensorflow model in a way that allows online switching between models."""
 
@@ -108,10 +109,9 @@ class TensorflowModel:
             image_np_expanded = np.expand_dims(image, axis=0)
             # Actual detection.
             (boxes, scores, classes, num) = self.sess.run([
-                self.detection_boxes, self.detection_scores, self.detection_classes, self.num_detections
-            ], feed_dict={
-                self.image_tensor: image_np_expanded
-            })
+                self.detection_boxes, self.detection_scores, self.detection_classes,
+                self.num_detections
+            ], feed_dict={self.image_tensor: image_np_expanded})
 
             im_height, im_width, _ = image.shape
             boxes_list = [None for i in range(boxes.shape[1])]
@@ -125,8 +125,6 @@ class TensorflowModel:
                 labels_out = classes[0].tolist()
 
             return boxes_list, scores[0].tolist(), labels_out, int(num[0])
-
-
 
 
 def start_tensorflow_processes(options, model_extension):
@@ -151,7 +149,7 @@ def process_images(options, model_extension):
 
         path = os.path.join(options.model_dir, f)
         if os.path.isfile(path) and path.endswith(model_extension):
-            model_name = ''.join(f.rsplit(model_extension, 1)) # remove the extension
+            model_name = ''.join(f.rsplit(model_extension, 1))  # remove the extension
 
             # reverse replace the extension
             labels_file = '.csv'.join(f.rsplit(model_extension, 1))
@@ -201,7 +199,8 @@ def process_images(options, model_extension):
             pil_image = Image.open(io.BytesIO(request.input_data.image.data))
             pil_image = ndimage.rotate(pil_image, 0)
             if request.input_data.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8:
-                image = cv2.cvtColor(pil_image, cv2.COLOR_GRAY2RGB)  # Converted to RGB for Tensorflow
+                image = cv2.cvtColor(pil_image,
+                                     cv2.COLOR_GRAY2RGB)  # Converted to RGB for Tensorflow
             elif request.input_data.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_RGB_U8:
                 # Already in the correct format
                 image = pil_image
@@ -280,8 +279,8 @@ def process_images(options, model_extension):
                 caption = "{}: {:.3f}".format(label, score)
                 left_x = min(point1[0], min(point2[0], min(point3[0], point4[0])))
                 top_y = min(point1[1], min(point2[1], min(point3[1], point4[1])))
-                cv2.putText(image, caption, (int(left_x), int(top_y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
-                            (0, 255, 0), 2)
+                cv2.putText(image, caption, (int(left_x), int(top_y)), cv2.FONT_HERSHEY_SIMPLEX,
+                            0.5, (0, 255, 0), 2)
 
         print('Found ' + str(num_objects) + ' object(s)')
 
@@ -312,12 +311,13 @@ class NetworkComputeBridgeWorkerServicer(
         out_proto = self.thread_output_queue.get()
         return out_proto
 
+
 def register_with_robot(options):
     """ Registers this worker with the robot's Directory."""
     ip = bosdyn.client.common.get_self_ip(options.hostname)
     print('Detected IP address as: ' + ip)
     kServiceName = "tensorflow-server"
-    kServiceAuthority = "auth.spot.robot"
+    kServiceAuthority = "tensorflow-worker.spot.robot"
 
     sdk = bosdyn.client.create_standard_sdk("tensorflow_server")
 
@@ -340,9 +340,10 @@ def register_with_robot(options):
             break
 
     # Register service
-    print('Attempting to register ' + ip + ':' + options.port + ' onto ' + options.hostname + ' directory...')
-    directory_registration_client.register(kServiceName, "bosdyn.api.NetworkComputeBridgeWorker", kServiceAuthority, ip, int(options.port))
-
+    print('Attempting to register ' + ip + ':' + options.port + ' onto ' + options.hostname +
+          ' directory...')
+    directory_registration_client.register(kServiceName, "bosdyn.api.NetworkComputeBridgeWorker",
+                                           kServiceAuthority, ip, int(options.port))
 
 
 def main(argv):
@@ -358,12 +359,16 @@ def main(argv):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '-d', '--model-dir', help=
-        'Directory of pre-trained models and (optionally) associated label files.\nExample directory contents: my_model.pb, my_classes.csv, my_model2.pb, my_classes2.csv.  CSV label format is: object,1<new line>thing,2', required=True
-    )
+        'Directory of pre-trained models and (optionally) associated label files.\nExample directory contents: my_model.pb, my_classes.csv, my_model2.pb, my_classes2.csv.  CSV label format is: object,1<new line>thing,2',
+        required=True)
     parser.add_argument('-p', '--port', help='Server\'s port number, default: ' + default_port,
                         default=default_port)
-    parser.add_argument('-n', '--no-debug', help='Disable writing debug images.', action='store_true')
-    parser.add_argument('-r', '--no-registration', help='Don\'t register with the robot\'s directory. This is useful for cloud applications where we can\'t reach into every robot directly. Instead use another program to register this server.', action='store_true')
+    parser.add_argument('-n', '--no-debug', help='Disable writing debug images.',
+                        action='store_true')
+    parser.add_argument(
+        '-r', '--no-registration', help=
+        'Don\'t register with the robot\'s directory. This is useful for cloud applications where we can\'t reach into every robot directly. Instead use another program to register this server.',
+        action='store_true')
 
     parser.add_argument('--username', help='User name of account to get credentials for.')
     parser.add_argument('--password', help='Password to get credentials for.')
@@ -394,7 +399,8 @@ def main(argv):
             break
 
     if not found_model:
-        print('Error: model directory must contain at least one model file with extension ' + model_extension + '.  Found:')
+        print('Error: model directory must contain at least one model file with extension ' +
+              model_extension + '.  Found:')
         for f in os.listdir(options.model_dir):
             print('    ' + f)
         sys.exit(1)

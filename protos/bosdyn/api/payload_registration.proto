@@ -50,16 +50,19 @@ message RegisterPayloadResponse {
 
 // Update the payload definition of the payload with matching GUID. The existing payload must
 // have a secret set and the request must provide the secret for access.
-// GUID, is_authorized, and is_enabled fields are immutable and cannot be updated.
+// GUID and is_authorized fields are immutable and cannot be updated.
 message UpdatePayloadVersionRequest {
     // Common request header.
     RequestHeader header = 1;
 
+    // Payload credentials.
+    PayloadCredentials payload_credentials = 5;
+
     // The GUID of the payload to be updated.
-    string payload_guid = 2;
+    string payload_guid = 2 [deprecated = true];
 
     // The payload secret for the specified payload.
-    string payload_secret = 3;
+    string payload_secret = 3 [deprecated = true];
 
     // The new software version that the payload is being updated to.
     SoftwareVersion updated_version = 4;
@@ -94,11 +97,14 @@ message GetPayloadAuthTokenRequest {
     // Common request header.
     RequestHeader header = 1;
 
+    // Payload credentials.
+    PayloadCredentials payload_credentials = 4;
+
     // The GUID to identify which payload to get the auth token for.
-    string payload_guid = 2;
+    string payload_guid = 2 [deprecated = true];
 
     // The payload secret for the specified payload.
-    string payload_secret = 3;
+    string payload_secret = 3 [deprecated = true];
 }
 
 // The GetPayloadAuthToken response message that returns the token for the payload.
@@ -125,4 +131,58 @@ message GetPayloadAuthTokenResponse {
 
     // A limited-access user token provided on successful payload registration
     string token = 3;
+}
+
+// Attach/detach the payload with the matching GUID. The existing payload must
+// have a secret set and the request must provide the secret for access.
+// GUID is immutable and cannot be updated.
+message UpdatePayloadAttachedRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Payload credentials, used to identify the payload and authorize the changes. 
+    PayloadCredentials payload_credentials = 2;
+
+    enum Request {
+        REQUEST_UNKNOWN = 0;
+        REQUEST_ATTACH = 1;
+        REQUEST_DETACH = 2;
+    }
+    // Attach or detach the payload.
+    Request request = 3;
+}
+
+// The UpdatePayloadAttached response message contains the status of whether the update was successful.
+message UpdatePayloadAttachedResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        // UNKNOWN should never be used. An internal PayloadRegistrationService issue has happened if UNKNOWN is set.
+        STATUS_UNKNOWN = 0;
+
+        // Success.  The payload version has been updated.
+        STATUS_OK = 1;
+
+        // UpdatePayloadAttached failed because a payload with this GUID does not yet exist.
+        STATUS_DOES_NOT_EXIST = 2;
+
+        // UpdatePayloadAttached failed because the paylod guid & secret do not match any registered payloads.
+        STATUS_INVALID_CREDENTIALS = 3;
+
+        // UpdatePayloadAttached failed because the requested payload has not yet been authorized.
+        // Authorize the payload in the webserver first, then try again.
+        STATUS_PAYLOAD_NOT_AUTHORIZED = 4;
+    }
+    // Return status for the request.
+    Status status = 2;
+}
+
+// PayloadCredentials are used to authorize a payload. 
+message PayloadCredentials {
+    // The GUID of the payload.
+    string guid = 1;
+
+    // The secret of the payload.
+    string secret = 2;
 }

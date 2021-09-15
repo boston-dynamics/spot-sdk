@@ -16,15 +16,11 @@ from bosdyn.client.robot_state import RobotStateClient
 def main():
     import argparse
 
-    commands = {
-        'state': "get_robot_state",
-        'hardware': "get_hardware_config_with_link_info",
-        'metrics': "get_robot_metrics",
-    }
+    commands = set(['state', 'hardware', 'metrics'])
 
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
-    parser.add_argument('command', choices=list(commands.keys()), help='Command to run')
+    parser.add_argument('command', choices=list(commands), help='Command to run')
     options = parser.parse_args()
 
     # Create robot object with an image client.
@@ -34,9 +30,12 @@ def main():
     robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
 
     # Make a robot state request
-    request_fn = getattr(robot_state_client, commands[options.command])
-    response = request_fn()
-    print(response)
+    if options.command == 'state':
+        print(robot_state_client.get_robot_state())
+    elif options.command == 'hardware':
+        print(robot_state_client.get_hardware_config_with_link_info())
+    elif options.command == 'metrics':
+        print(robot_state_client.get_robot_metrics())
 
     return True
 

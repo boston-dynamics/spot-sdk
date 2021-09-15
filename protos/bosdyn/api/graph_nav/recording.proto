@@ -11,6 +11,7 @@ package bosdyn.api.graph_nav;
 import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
 import "bosdyn/api/license.proto";
+import "bosdyn/api/world_object.proto";
 import "bosdyn/api/graph_nav/map.proto";
 
 option java_outer_classname = "RecordingProto";
@@ -102,6 +103,9 @@ message StartRecordingResponse {
         STATUS_REMOTE_CLOUD_FAILURE_NO_DATA = 8;
         // All fiducials are visible but at least one pose could not be determined accurately.
         STATUS_FIDUCIAL_POSE_NOT_OK = 9;
+        // When recording branches, the robot is too far from the existing map when starting
+        // to record a new branch.
+        STATUS_TOO_FAR_FROM_EXISTING_MAP = 10;
     }
     // Return status for the request.
     Status status = 4;
@@ -178,6 +182,8 @@ message CreateWaypointRequest {
     // are presently visible before creating a waypoint. This is useful for verifying
     // that the robot is where the user thinks it is in an area with known fiducials.
     repeated int32 require_fiducials = 5;
+    // Additional world objects to insert into this waypoint. 
+    repeated WorldObject world_objects = 6;
 }
 
 // The CreateWaypoint response message contains the complete waypoint, and the associated

@@ -15,7 +15,6 @@ import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
 import "bosdyn/api/mission/nodes.proto";
 import "bosdyn/api/mission/util.proto";
-
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
@@ -98,6 +97,8 @@ message State {
         STATUS_ERROR = 5;
         // No mission has been loaded.
         STATUS_NONE = 6;
+        // The mission was stopped before completion.
+        STATUS_STOPPED = 7;
     }
     // Current status of the mission.
     Status status = 4;
@@ -197,6 +198,8 @@ message FailedNode {
     string name = 1;
     // The reason why this node failed. May not be provided by all nodes.
     string error = 2;
+    // The type of node, e.g. "bosdyn.api.mission.Sequence". May not be provided by all nodes.
+    string impl_typename = 3;
 }
 
 // A request to play the currently loaded mission for a fixed amount of time.
@@ -225,6 +228,12 @@ message PlayMissionRequest {
 message PlaySettings {
     // Velocity limits on the robot motion. Example use: limit velocity in "navigate to" nodes.
     SE2VelocityLimit velocity_limit = 1;
+
+    // Disable directed exploration to bypass blocked path sections
+    bool disable_directed_exploration = 2;
+
+    // Disable alternate-route-finding; overrides the per-edge setting in the map.
+    bool disable_alternate_route_finding = 3;
 }
 
 
@@ -381,6 +390,37 @@ message PauseMissionResponse {
     // Result of the pause request.
     Status status = 2;
     // Result of the lease in the pause request.
+    bosdyn.api.LeaseUseResult lease_use_result = 3;
+}
+
+// The StopMission request message will fully stop the mission.
+message StopMissionRequest {
+    // Common request header.
+    RequestHeader header = 1;
+    // Lease on the mission service.
+    bosdyn.api.Lease lease = 2;
+}
+
+// The StopMission response message will return the status of the request.
+message StopMissionResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+    // Possible results of a stop request.
+    enum Status {
+        // Invalid status, do not use.
+        STATUS_UNKNOWN = 0;
+        // Mission is stopped/complete.
+        // The mission state may be in any of the "complete states", e.g. if the mission completed
+        // successfully before this RPC took effect, the mission will report STATUS_SUCCESS and not
+        // STATUS_STOPPED.
+        STATUS_OK = 1;
+        // No mission has started playing.
+        // NOT returned if the mission is already stopped. In that case, you will get STATUS_OK.
+        STATUS_NO_MISSION_PLAYING = 2;
+    }
+    // Result of the stop request.
+    Status status = 2;
+    // Result of the lease in the stop request.
     bosdyn.api.LeaseUseResult lease_use_result = 3;
 }
 

@@ -4,25 +4,34 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""Simple robot command capture tutorial."""
+"""Command the robot to go to an offset position using a trajectory command."""
 
-import argparse
 import math
 import sys
 import time
+from bosdyn.api.basic_command_pb2 import RobotCommandFeedbackStatus
 import bosdyn.client
 import bosdyn.client.util
 from bosdyn.client.robot_state import RobotStateClient
 from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder, blocking_stand
-from bosdyn.api import geometry_pb2 as geo
 from bosdyn.client import math_helpers
-from bosdyn.client.frame_helpers import ODOM_FRAME_NAME, VISION_FRAME_NAME, get_odom_tform_body, get_vision_tform_body
+from bosdyn.client.frame_helpers import ODOM_FRAME_NAME, VISION_FRAME_NAME, BODY_FRAME_NAME, get_se2_a_tform_b
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 
 
 def main():
+    import argparse
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
+    parser.add_argument('--dx', default=0, type=float,
+                        help='Position offset in body frame (meters forward).')
+    parser.add_argument('--dy', default=0, type=float,
+                        help='Position offset in body frame (meters left).')
+    parser.add_argument('--dyaw', default=0, type=float,
+                        help='Position offset in body frame (degrees ccw).')
+    parser.add_argument('--frame', choices=[VISION_FRAME_NAME, ODOM_FRAME_NAME],
+                        default=ODOM_FRAME_NAME, help='Send the command in this frame.')
+    parser.add_argument('--stairs', action='store_true', help='Move the robot in stairs mode.')
     options = parser.parse_args()
 
     # Create robot object.
@@ -36,69 +45,58 @@ def main():
 
     # Create the lease client.
     lease_client = robot.ensure_client(LeaseClient.default_service_name)
-    lease = lease_client.acquire()
-    robot.time_sync.wait_for_sync()
-    lk = bosdyn.client.lease.LeaseKeepAlive(lease_client)
 
     # Setup clients for the robot state and robot command services.
     robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
     robot_command_client = robot.ensure_client(RobotCommandClient.default_service_name)
 
-    # Power on the robot and stand it up.
-    robot.power_on()
-    blocking_stand(robot_command_client)
+    lease_client.acquire()
+    with LeaseKeepAlive(lease_client, return_at_exit=True):
+        # Power on the robot and stand it up.
+        robot.time_sync.wait_for_sync()
+        robot.power_on()
+        blocking_stand(robot_command_client)
 
-    # Get robot state information. Specifically, we are getting the vision_tform_body transform to understand
-    # the robot's current position in the vision frame.
-    vision_tform_body = get_vision_tform_body(
-        robot_state_client.get_robot_state().kinematic_state.transforms_snapshot)
+        try:
+            return relative_move(options.dx, options.dy, math.radians(options.dyaw), options.frame,
+                                 robot_command_client, robot_state_client, stairs=options.stairs)
+        finally:
+            # Send a Stop at the end, regardless of what happened.
+            robot_command_client.robot_command(RobotCommandBuilder.stop_command())
 
-    # We want to command a trajectory to go forward one meter in the x-direction of the body.
-    # It is simple to define this trajectory relative to the body frame, since we know that will be
-    # just 1 meter forward in the x-axis of the body.
-    # Note that the rotation is just math_helpers.Quat(), which is the identity quaternion. We want the
-    # rotation of the body at the goal to match the rotation of the body currently, so we do not need
-    # to transform the rotation.
-    body_tform_goal = math_helpers.SE3Pose(x=1, y=0, z=0, rot=math_helpers.Quat())
-    # We can then transform this transform to get the goal position relative to the vision frame.
-    vision_tform_goal = vision_tform_body * body_tform_goal
 
-    # Command the robot to go to the goal point in the vision frame. The command will stop at the new
-    # position in the vision frame.
-    robot_cmd = RobotCommandBuilder.synchro_se2_trajectory_point_command(goal_x=vision_tform_goal.x,
-                                                     goal_y=vision_tform_goal.y,
-                                                     goal_heading=vision_tform_goal.rot.to_yaw(),
-                                                     frame_name=VISION_FRAME_NAME)
-    end_time = 2.0
-    robot_command_client.robot_command(lease=None, command=robot_cmd,
-                                       end_time_secs=time.time() + end_time)
-    time.sleep(end_time)
+def relative_move(dx, dy, dyaw, frame_name, robot_command_client, robot_state_client, stairs=False):
+    transforms = robot_state_client.get_robot_state().kinematic_state.transforms_snapshot
 
-    # Get new robot state information after moving the robot. Here we are getting the transform odom_tform_body,
-    # which describes the robot body's position in the odom frame.
-    odom_tform_body = get_odom_tform_body(
-        robot_state_client.get_robot_state().kinematic_state.transforms_snapshot)
+    # Build the transform for where we want the robot to be relative to where the body currently is.
+    body_tform_goal = math_helpers.SE2Pose(x=dx, y=dy, angle=dyaw)
+    # We do not want to command this goal in body frame because the body will move, thus shifting
+    # our goal. Instead, we transform this offset to get the goal position in the output frame
+    # (which will be either odom or vision).
+    out_tform_body = get_se2_a_tform_b(transforms, frame_name, BODY_FRAME_NAME)
+    out_tform_goal = out_tform_body * body_tform_goal
 
-    # We want to command a trajectory to go backwards one meter and to the left one meter.
-    # It is simple to define this trajectory relative to the body frame, since we know that will be
-    # just 1 meter backwards (negative-value) in the x-axis of the body and one meter left (positive-value)
-    # in the y-axis of the body.
-    body_tform_goal = math_helpers.SE3Pose(x=-1, y=1, z=0, rot=math_helpers.Quat())
-    # We can then transform this transform to get the goal position relative to the odom frame.
-    odom_tform_goal = odom_tform_body * body_tform_goal
-
-    # Command the robot to go to the goal point in the odom frame. The command will stop at the new
-    # position in the odom frame.
-    robot_cmd = RobotCommandBuilder.synchro_se2_trajectory_point_command(goal_x=odom_tform_goal.x,
-                                                     goal_y=odom_tform_goal.y,
-                                                     goal_heading=odom_tform_goal.rot.to_yaw(),
-                                                     frame_name=ODOM_FRAME_NAME)
-    end_time = 5.0
-    robot_command_client.robot_command(lease=None, command=robot_cmd,
-                                       end_time_secs=time.time() + end_time)
-    time.sleep(end_time)
-
-    return True
+    # Command the robot to go to the goal point in the specified frame. The command will stop at the
+    # new position.
+    robot_cmd = RobotCommandBuilder.synchro_se2_trajectory_point_command(
+        goal_x=out_tform_goal.x, goal_y=out_tform_goal.y, goal_heading=out_tform_goal.angle,
+        frame_name=frame_name, params=RobotCommandBuilder.mobility_params(stair_hint=stairs))
+    end_time = 10.0
+    cmd_id = robot_command_client.robot_command(lease=None, command=robot_cmd,
+                                                end_time_secs=time.time() + end_time)
+    # Wait until the robot has reached the goal.
+    while True:
+        feedback = robot_command_client.robot_command_feedback(cmd_id)
+        mobility_feedback = feedback.feedback.synchronized_feedback.mobility_command_feedback
+        if mobility_feedback.status != RobotCommandFeedbackStatus.STATUS_PROCESSING:
+            print("Failed to reach the goal")
+            return False
+        traj_feedback = mobility_feedback.se2_trajectory_feedback
+        if (traj_feedback.status == traj_feedback.STATUS_AT_GOAL and
+                traj_feedback.body_movement_status == traj_feedback.BODY_STATUS_SETTLED):
+            print("Arrived at the goal.")
+            return True
+        time.sleep(1)
 
 
 if __name__ == "__main__":

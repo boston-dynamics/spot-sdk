@@ -10,6 +10,8 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
+from deprecated import deprecated
+
 from bosdyn.client.common import (BaseClient, common_header_errors, handle_common_header_errors)
 from bosdyn.api.spot_cam import service_pb2_grpc
 from bosdyn.api.spot_cam import logging_pb2
@@ -39,7 +41,8 @@ class MediaLogClient(BaseClient):
         return self.call_async(self._stub.Delete, request, self._delete_from_response,
                                self._media_log_error_from_response, **kwargs)
 
-    def enable_debug(self, temp=False, humidity=False, bit=False, shock=True, system_stats=False, **kwargs):
+    def enable_debug(self, temp=False, humidity=False, bit=False, shock=True, system_stats=False,
+                     **kwargs):
         """Start periodic logging of health data to the database, queryable via Health service.
 
         Args:
@@ -48,21 +51,18 @@ class MediaLogClient(BaseClient):
           bit: Enable logging of BIT events coming from the Health service.
           shock: Enable logging of Shock data.
           system_stats: Enable logging of cpu, gpu, memory, and network utilization."""
-        request = logging_pb2.DebugRequest(enable_temperature=temp,
-                                           enable_humidity=humidity,
-                                           enable_BIT=bit,
-                                           enable_shock=shock,
+        request = logging_pb2.DebugRequest(enable_temperature=temp, enable_humidity=humidity,
+                                           enable_BIT=bit, enable_shock=shock,
                                            enable_system_stat=system_stats)
         return self.call(self._stub.EnableDebug, request, self._enable_debug_from_response,
                          self._media_log_error_from_response, **kwargs)
 
-    def enable_debug_async(self, temp=False, humidity=False, bit=False, shock=True, system_stats=False, **kwargs):
+    def enable_debug_async(self, temp=False, humidity=False, bit=False, shock=True,
+                           system_stats=False, **kwargs):
         """Async version of enable_debug()"""
-        request = logging_pb2.DebugRequest(enable_temperature=temp,
-                                                 enable_humidity=humidity,
-                                                 enable_BIT=bit,
-                                                 enable_shock=shock,
-                                                 enable_system_stat=system_stats)
+        request = logging_pb2.DebugRequest(enable_temperature=temp, enable_humidity=humidity,
+                                           enable_BIT=bit, enable_shock=shock,
+                                           enable_system_stat=system_stats)
         return self.call_async(self._stub.EnableDebug, request, self._enable_debug_from_response,
                                self._media_log_error_from_response, **kwargs)
 
@@ -119,16 +119,21 @@ class MediaLogClient(BaseClient):
         return self.call(self._stub.RetrieveRawData, request, self._retrieve_from_response,
                          self._media_log_error_from_response, **kwargs)
 
+    @deprecated(reason='Spot CAM encryption has been removed as a result of the switch to NTFS.',
+                version='3.0.0', action="always")
     def set_passphrase(self, passphrase, **kwargs):
         """Set password for Spot CAM filesystem."""
         request = logging_pb2.SetPassphraseRequest(passphrase=passphrase)
         return self.call(self._stub.SetPassphrase, request, self._set_passphrase_from_response,
                          self._media_log_error_from_response, **kwargs)
 
+    @deprecated(reason='Spot CAM encryption has been removed as a result of the switch to NTFS.',
+                version='3.0.0', action="always")
     def set_passphrase_async(self, passphrase, **kwargs):
         """Async version of set_passphrase()"""
         request = logging_pb2.SetPassphraseRequest(passphrase=passphrase)
-        return self.call_async(self._stub.SetPassphrase, request, self._set_passphrase_from_response,
+        return self.call_async(self._stub.SetPassphrase, request,
+                               self._set_passphrase_from_response,
                                self._media_log_error_from_response, **kwargs)
 
     def store(self, camera, record_type, tag=None, **kwargs):
@@ -201,8 +206,8 @@ class MediaLogClient(BaseClient):
                 logpoint = response.logpoint
             chunk = response.data
             total += len(chunk.data)
-            _LOGGER.debug('Retrieved {} bytes ({}/{})'.format(
-                len(chunk.data), total, chunk.total_size))
+            _LOGGER.debug('Retrieved {} bytes ({}/{})'.format(len(chunk.data), total,
+                                                              chunk.total_size))
             local_chunks.append(chunk)
         return logpoint, b''.join(chunk.data for chunk in local_chunks)
 

@@ -22,7 +22,8 @@ from bosdyn.api import image_pb2
 from bosdyn.client.data_acquisition import (DataAcquisitionClient, RequestIdDoesNotExistError)
 from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
 from bosdyn.client.exceptions import ResponseError
-from bosdyn.client.data_acquisition_helpers import (acquire_and_process_request, issue_acquire_data_request,
+from bosdyn.client.data_acquisition_helpers import (acquire_and_process_request,
+                                                    issue_acquire_data_request,
                                                     cancel_acquisition_request, download_data_REST,
                                                     make_time_query_params)
 
@@ -55,29 +56,30 @@ def data_acquisition(config):
     acquisition_requests = data_acquisition_pb2.AcquisitionRequestList()
     acquisition_requests.image_captures.extend([
         data_acquisition_pb2.ImageSourceCapture(image_service="image",
-                                                image_source="back_fisheye_image")])
+                                                image_source="back_fisheye_image")
+    ])
     acquisition_requests.data_captures.extend([
         data_acquisition_pb2.DataCapture(name="robot-state"),
         data_acquisition_pb2.DataCapture(name="detailed-position-data"),
-        data_acquisition_pb2.DataCapture(name="detected-objects")])
+        data_acquisition_pb2.DataCapture(name="detected-objects")
+    ])
 
-    acquire_and_process_request(data_acq_client, acquisition_requests,
-                                group_name, "InternalAcquisitions")
+    acquire_and_process_request(data_acq_client, acquisition_requests, group_name,
+                                "InternalAcquisitions")
 
     # Request 2 contains capture requests for all the capabilities and a user-generated metadata
     # struct.
     json_struct = Struct()
-    json_struct.update({
-        "user_comment" : "it is raining"
-    })
-    metadata=data_acquisition_pb2.Metadata(data=json_struct)
+    json_struct.update({"user_comment": "it is raining"})
+    metadata = data_acquisition_pb2.Metadata(data=json_struct)
 
     acquisition_requests = data_acquisition_pb2.AcquisitionRequestList()
-    acquisition_requests.image_captures.extend(
-        [data_acquisition_pb2.ImageSourceCapture(image_service="image",
-            image_source="left_fisheye_image"),
+    acquisition_requests.image_captures.extend([
         data_acquisition_pb2.ImageSourceCapture(image_service="image",
-            image_source="right_fisheye_image")])
+                                                image_source="left_fisheye_image"),
+        data_acquisition_pb2.ImageSourceCapture(image_service="image",
+                                                image_source="right_fisheye_image")
+    ])
     acquisition_requests.data_captures.extend([
         data_acquisition_pb2.DataCapture(name="robot-state"),
         data_acquisition_pb2.DataCapture(name="detailed-position-data"),
@@ -85,11 +87,10 @@ def data_acquisition(config):
         data_acquisition_pb2.DataCapture(name="detected-objects"),
         data_acquisition_pb2.DataCapture(name="GPS"),
         data_acquisition_pb2.DataCapture(name="velodyne-point-cloud")
-        ])
+    ])
 
     acquire_and_process_request(data_acq_client, acquisition_requests, group_name,
                                 "AllAcquisitions", metadata)
-
 
     # Request 3 contains capture requests for only one capability from main DAQ and one capability
     # from DAQ plugin.
@@ -98,11 +99,10 @@ def data_acquisition(config):
         data_acquisition_pb2.DataCapture(name="robot-state"),
         data_acquisition_pb2.DataCapture(name="GPS"),
         data_acquisition_pb2.DataCapture(name="velodyne-point-cloud"),
-        ])
+    ])
 
     acquire_and_process_request(data_acq_client, acquisition_requests, group_name,
                                 "PartialAcquisitions")
-
 
     # Request #4 shows how to issue and then cancel different data acquisition requests (one on-robot
     # data source and one off-robot plugin data source).
@@ -112,11 +112,10 @@ def data_acquisition(config):
         data_acquisition_pb2.DataCapture(name="robot-state"),
         data_acquisition_pb2.DataCapture(name="slow-gps"),
     ])
-    request_id, action_id = issue_acquire_data_request(
-        data_acq_client, acquisition_requests, group_name, "AcquisitionsToCancel")
+    request_id, action_id = issue_acquire_data_request(data_acq_client, acquisition_requests,
+                                                       group_name, "AcquisitionsToCancel")
     time.sleep(2)
     cancel_acquisition_request(data_acq_client, request_id)
-
 
     # Request 5 contains a SpotCAM capture request.
     acquisition_requests = data_acquisition_pb2.AcquisitionRequestList()
@@ -124,16 +123,17 @@ def data_acquisition(config):
         data_acquisition_pb2.DataCapture(name="spot-cam-pano"),
         data_acquisition_pb2.DataCapture(name="spot-cam-ptz"),
         data_acquisition_pb2.DataCapture(name="spot-cam-ir"),
-        data_acquisition_pb2.DataCapture(name="robot-state")])
+        data_acquisition_pb2.DataCapture(name="robot-state")
+    ])
 
     acquire_and_process_request(data_acq_client, acquisition_requests, group_name,
                                 "SpotCAMAcquisitions")
 
     # Get the end time, and download all the data from the example.
     end_time_secs = time.time()
-    # Add a buffer around the start/end time for downloading.
-    query_params = make_time_query_params(start_time_secs-3.0, end_time_secs+3.0, robot)
+    query_params = make_time_query_params(start_time_secs, end_time_secs, robot)
     download_data_REST(query_params, config.hostname, robot.user_token, destination_folder='.')
+
 
 def main(argv):
     """Command line interface."""

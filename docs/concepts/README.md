@@ -32,6 +32,7 @@ Finally, payloads allow for expansion of services beyond those provided by Spot 
 * [Geometry and Frames](geometry_and_frames.md)
 * [Robot services](robot_services.md)
 * [E-Stop](estop_service.md)
+* [Lease](lease_service.md)
 * [Developing API Services](developing_api_services.md)
 * [Faults](faults.md)
 * [Autonomy services](autonomy/README.md)

@@ -23,6 +23,7 @@ BDDF code and interfaces for the Boston Dynamics robot API.
 * [GRPC Reader](grpc_reader)
 * [GRPC Service Reader](grpc_service_reader)
 * [GRPC Service Writer](grpc_service_writer)
+* [Message Reader](message_reader)
 * [POD Series Reader](pod_series_reader)
 * [POD Series Writer](pod_series_writer)
 * [Protobuf Channel Reader](protobuf_channel_reader)

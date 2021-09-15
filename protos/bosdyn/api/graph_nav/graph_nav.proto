@@ -10,6 +10,7 @@ package bosdyn.api.graph_nav;
 
 option java_outer_classname = "GraphNavProto";
 
+import "bosdyn/api/basic_command.proto";
 import "bosdyn/api/data_chunk.proto";
 import "bosdyn/api/geometry.proto";
 import "bosdyn/api/graph_nav/nav.proto";
@@ -140,6 +141,9 @@ message SetLocalizationResponse {
 
     // Alternative information if the localization is ambiguous.
     SuspectedAmbiguity suspected_ambiguity = 7;
+
+    // If the status is ROBOT_IMPAIRED, this is why the robot is impaired.
+    RobotImpairedState impaired_state = 8;
 }
 
 message RouteGenParams {
@@ -171,6 +175,13 @@ message TravelParams {
         TOLERANCE_IGNORE_POOR_FEATURE_QUALITY   = 2;    // Navigate through unlimited number of waypoints with poor quality features
     }
     FeatureQualityTolerance feature_quality_tolerance = 5;
+
+    // Disable directed exploration to skip blocked portions of route
+    bool disable_directed_exploration = 6;
+
+
+    // Disable alternate-route-finding; overrides the per-edge setting in the map.
+    bool disable_alternate_route_finding = 8;
 }
 
 // The NavigateToRequest can be used to command GraphNav to drive the robot to a specific waypoint.
@@ -264,11 +275,74 @@ message NavigateToResponse {
     // Return status for the request.
     Status status = 3;
 
+    // If the status is ROBOT_IMPAIRED, this is why the robot is impaired.
+    RobotImpairedState impaired_state = 6;
+
     // Unique identifier for the command, If 0, command was not accepted.
     uint32 command_id = 4;
 
     // On a relevant error status code, these fields contain the waypoint/edge IDs that caused the error.
     repeated string error_waypoint_ids = 5;
+}
+
+// These parameters are specific to how the robot follows a specified route in NavigateRoute.
+message RouteFollowingParams {
+    // For each enum in this message, if UNKNOWN is passed in, we default to one of the values
+    // (indicated in the comments). Passing UNKNOWN is not considered a programming error.
+
+    // This setting applies when a new NavigateRoute command is issued (different route or
+    // final-waypoint-offset), and command_id indicates a new command.
+    enum StartRouteBehavior {
+        // The mode is unset.
+        START_UNKNOWN = 0;
+        // The robot will find the shortest path to the start of the route, possibly using
+        // edges that are not in the route. After going to the start, the robot will follow the
+        // route.
+        START_GOTO_START = 1;
+        // The robot will find the shortest path to any point on the route, and go to the point
+        // that gives that shortest path. Then, the robot will follow the rest of the route from
+        // that point.
+        // If multiple points on the route are similarly close to the robot, the robot will
+        // prefer the earliest on the route.
+        // This is the default.
+        START_GOTO_ROUTE = 2;
+        // The robot will fail the command with status STATUS_NOT_LOCALIZED_TO_ROUTE.
+        START_FAIL_WHEN_NOT_ON_ROUTE = 3;
+    }
+
+    // This setting applies when a NavigateRoute command is issued with the same route and
+    // final-waypoint-offset. It is not necessary that command_id indicate the same command.
+    // The expected waypoint is the last waypoint that GraphNav was autonomously navigating to.
+    enum ResumeBehavior {
+        // The mode is unset.
+        RESUME_UNKNOWN = 0;
+        // The robot will find the shortest path to any point on the route after the
+        // furthest-along traversed edge, and go to the point that gives that shortest path.
+        // Then, the robot will follow the rest of the route from that point.
+        // This is the default.
+        RESUME_RETURN_TO_UNFINISHED_ROUTE = 1;
+        // The robot will fail the command with status STATUS_NOT_LOCALIZED_TO_ROUTE.
+        RESUME_FAIL_WHEN_NOT_ON_ROUTE = 2;
+    }
+
+    // This setting applies when the robot discovers that the route is blocked.
+    enum RouteBlockedBehavior {
+        // The mode is unset.
+        ROUTE_BLOCKED_UNKNOWN = 0;
+        // The robot will find the shortest path to any point after the furthest-along blockage,
+        // and after the furthest-along traversed edge, and go to the point that gives that
+        // shortest path. Then, the robot will follow the rest of the route from that point.
+        // If multiple points on the route are similarly close to the robot, the robot will
+        // prefer the earliest on the route.
+        // This is the default.
+        ROUTE_BLOCKED_REROUTE = 1;
+        // The robot will fail the command with status STATUS_STUCK;
+        ROUTE_BLOCKED_FAIL = 2;
+    }
+
+    StartRouteBehavior new_cmd_behavior = 1;
+    ResumeBehavior existing_cmd_behavior = 2;
+    RouteBlockedBehavior route_blocked_behavior = 3;
 }
 
 // A NavigateRoute request message specifies a route of waypoints/edges and parameters
@@ -284,6 +358,10 @@ message NavigateRouteRequest {
 
     // A route for the robot to follow.
     Route route = 3;
+
+    // What should the robot do if it is not at the expected point in the route, or the route is
+    // blocked.
+    RouteFollowingParams route_follow_params = 9;
 
     // How to travel the route.
     TravelParams travel_params = 4;
@@ -337,6 +415,8 @@ message NavigateRouteResponse {
         STATUS_UNKNOWN_ROUTE_ELEMENTS = 8;
         // [Route Error] One or more edges do not connect to expected waypoints.
         STATUS_INVALID_EDGE           = 9;
+        // [Route Error] There is no path to the specified route.
+        STATUS_NO_PATH                = 20;
         // [Route Error] Route contained a constraint fault.
         STATUS_CONSTRAINT_FAULT       = 11;
         // [Route Error] Route contained too many waypoints with low-quality features.
@@ -346,6 +426,8 @@ message NavigateRouteResponse {
         // [Route Error] Happens when the current localization doesn't refer to any waypoint
         // in the route (possibly uninitialized localization).
         STATUS_NOT_LOCALIZED_TO_ROUTE = 16;
+        // [Route Error] Happens when the current localization doesn't refer to any waypoint in the map (possibly uninitialized localization).
+        STATUS_NOT_LOCALIZED_TO_MAP = 19;
 
         // [Wrestling Errors] Happens when graph nav refuses to follow the route you specified.  Try saying please?
         STATUS_COULD_NOT_UPDATE_ROUTE = 15;
@@ -359,6 +441,9 @@ message NavigateRouteResponse {
     // Return status for the request.
     Status status = 3;
 
+    // If the status is ROBOT_IMPAIRED, this is why the robot is impaired.
+    RobotImpairedState impaired_state = 7;
+
     // Unique identifier for the command, If 0, command was not accepted.
     uint32 command_id = 4;
 
@@ -366,6 +451,118 @@ message NavigateRouteResponse {
     repeated string error_waypoint_ids = 5;
     // On a relevant error status code (STATUS_INVALID_EDGE), this is populated with the edge ID's that cased the error.
     repeated Edge.Id error_edge_ids = 6;
+}
+
+// The NavigateToAnchorRequest can be used to command GraphNav to drive the robot to a specific
+// place in an anchoring. GraphNav will find the waypoint that has the shortest path length from
+// robot's current position but is still close to the goal. GraphNav will plan a path through the
+// map which most efficiently gets the robot to the goal waypoint, and will then travel
+// in a straight line from the destination waypoint to the offset goal, attempting to avoid
+// obstacles along the way.
+// Parameters are provided which influence how GraphNav will generate and follow the path.
+// This RPC returns immediately after the request is processed. It does not block until GraphNav
+// completes the path to the goal waypoint. The user is expected to periodically check the status
+// of the NavigateToAnchor command using the NavigationFeedbackRequest RPC.
+message NavigateToAnchorRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The Leases to show ownership of the robot and the graph.
+    repeated Lease leases = 2;
+
+    // The goal, expressed with respect to the seed frame of the current anchoring.
+    // The robot will use the z value to find the goal waypoint, but the final z height the robot
+    // achieves will depend on the terrain height at the offset from the goal.
+    SE3Pose seed_tform_goal = 3;
+
+    // These parameters control selection of the goal waypoint. In seed frame, they are the x, y,
+    // and z tolerances with respect to the goal pose within which waypoints will be considered.
+    // If these values are negative, or too small, reasonable defaults will be used.
+    Vec3 goal_waypoint_rt_seed_ewrt_seed_tolerance = 4;
+
+    // Preferences on how to pick the route.
+    RouteGenParams route_params = 6;
+    // Parameters that define how to traverse and end the route.
+    TravelParams travel_params = 7;
+
+    // The timestamp (in robot time) that the navigation command is valid until.
+    google.protobuf.Timestamp end_time = 8;
+
+    // Identifier provided by the time sync service to verify time sync between robot and client.
+    string clock_identifier = 9;
+
+    // Unique identifier for the command. If 0, this is a new command, otherwise it is a continuation
+    // of an existing command. If this is a continuation of an existing command, all parameters will be
+    // ignored, and the old parameters will be preserved.
+    uint32 command_id = 10;
+}
+
+// Response to a NavigateToAnchorRequest. This is returned immediately after the request is
+// processed. A command_id is provided to specify the ID that the user may use to poll the system
+// for feedback on the NavigateTo command.
+message NavigateToAnchorResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Results of using the various leases.
+    repeated LeaseUseResult lease_use_results = 2;
+
+    enum Status {
+        // An unknown / unexpected error occurred.
+        STATUS_UNKNOWN                = 0;
+        // Request was accepted.
+        STATUS_OK                     = 1;
+
+        // [Time error] Client has not done timesync with robot.
+        STATUS_NO_TIMESYNC            = 2;
+        // [Time error] The command was received after its end time had already passed.
+        STATUS_EXPIRED                = 3;
+        // [Time error]The command end time was too far in the future.
+        STATUS_TOO_DISTANT            = 4;
+
+        // [Robot State Error] Cannot navigate a route if the robot has a critical
+        //  perception fault, or behavior fault, or LIDAR not working.
+        STATUS_ROBOT_IMPAIRED         = 5;
+        // [Robot State Error] Cannot navigate a route while recording a map.
+        STATUS_RECORDING              = 6;
+
+        // [Route Error] There is no anchoring.
+        STATUS_NO_ANCHORING           = 7;
+        // [Route Error] There is no path to a waypoint near the specified goal.
+        //               If any waypoints were found (but no path), the error_waypoint_ids field
+        //               will be filled.
+        STATUS_NO_PATH                = 8;
+
+        // [Route Error] Route contained too many waypoints with low-quality features.
+        STATUS_FEATURE_DESERT         = 10;
+        // [Route Error] Happens when you try to issue a navigate to while the robot is lost.
+        STATUS_LOST                   = 11;
+        // [Route Error] Happens when the current localization doesn't refer to any waypoint in the map (possibly uninitialized localization).
+        STATUS_NOT_LOCALIZED_TO_MAP = 13;
+
+        // [Wrestling error] Happens when graph nav refuses to follow the route you specified.
+        STATUS_COULD_NOT_UPDATE_ROUTE = 12;
+        // [Route Error] Happens when you try to issue a navigate to while the robot is stuck. Navigate to a different
+        // waypoint, or clear the route and try again.
+        STATUS_STUCK                  = 14;
+        // [Request Error] Happens when you try to continue a command that was either expired, or had an unrecognized id.
+        STATUS_UNRECOGNIZED_COMMAND   = 15;
+
+        // [Route Error] The pose is invalid, or known to be unachievable (upside-down, etc).
+        STATUS_INVALID_POSE           = 16;
+
+    }
+    // Return status for the request.
+    Status status = 3;
+
+    // If the status is ROBOT_IMPAIRED, this is why the robot is impaired.
+    RobotImpairedState impaired_state = 6;
+
+    // Unique identifier for the command, If 0, command was not accepted.
+    uint32 command_id = 4;
+
+    // On a relevant error status code, these fields contain the waypoint/edge IDs that caused the error.
+    repeated string error_waypoint_ids = 5;
 }
 
 // The NavigationFeedback request message uses the command_id of a navigation request to get
@@ -407,7 +604,7 @@ message NavigationFeedbackResponse {
         // The command expired.
         STATUS_COMMAND_TIMED_OUT = 7;
         // Cannot navigate a route if the robot has a crtical perception fault, or behavior fault,
-        // or LIDAR not working.
+        // or LIDAR not working. See impared_status for details.
         STATUS_ROBOT_IMPAIRED = 8;
         // The route constraints were not feasible.
         STATUS_CONSTRAINT_FAULT = 11;
@@ -421,6 +618,9 @@ message NavigationFeedbackResponse {
     // Return status for the request.
     Status status = 2;
 
+    // If the status is ROBOT_IMPAIRED, this is why the robot is impaired.
+    RobotImpairedState impaired_state = 6;
+
     // Remaining part of current route.
     Route remaining_route = 3;
 
@@ -429,6 +629,11 @@ message NavigationFeedbackResponse {
 
     // The most recent transform describing the robot's pose relative to the navigation goal.
     SE3Pose last_ko_tform_goal = 5;
+
+    // Indicates whether the robot's body is currently in motion.
+    SE2TrajectoryCommand.Feedback.BodyMovementStatus body_movement_status = 7;
+
+
 }
 
 // The GetLocalizationState request message requests the current localization state and any other
@@ -538,6 +743,9 @@ message UploadGraphRequest {
     Graph graph = 2;
     // The Lease to show ownership of graph-nav service.
     Lease lease = 3;
+
+    // If this is true, generate an (overwrite the) anchoring on upload.
+    bool generate_new_anchoring = 4;
 }
 
 // Response to the UploadGraphRequest. After uploading a graph, the user is expected
@@ -552,6 +760,8 @@ message UploadGraphResponse {
         STATUS_OK = 1;
         // Can't upload the graph because it was too large for the license.
         STATUS_MAP_TOO_LARGE_LICENSE = 3;
+        // The graph is invalid topologically, for example containing missing waypoints referenced by edges.
+        STATUS_INVALID_GRAPH = 4;
     };
     // Status for an upload request.
     Status status = 8;
@@ -653,6 +863,10 @@ message DownloadWaypointSnapshotRequest {
     // available point cloud encoding. If false, three 32-bit floats will
     // be used per point.
     bool compress_point_cloud = 4;
+
+    // Skip downloading the point cloud, and only download other data such as images or world
+    // objects.
+    bool do_not_download_point_cloud = 5;
 
 }
 

@@ -18,16 +18,21 @@ from bosdyn.api.spot_cam import network_pb2
 
 from utils import int2ip
 
+
 class NetworkCommands(Subcommands):
     """Commands related to the Spot CAM's Network service"""
 
     NAME = 'network'
 
     def __init__(self, subparsers, command_dict):
-        super(NetworkCommands, self).__init__(subparsers, command_dict, [
-            NetworkGetICEConfigurationCommand,
-            NetworkSetICEConfigurationCommand,
-        ])
+        super(NetworkCommands, self).__init__(
+            subparsers,
+            command_dict,
+            [
+                NetworkGetICEConfigurationCommand,
+                NetworkSetICEConfigurationCommand,
+            ])
+
 
 
 
@@ -54,7 +59,8 @@ class NetworkSetICEConfigurationCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         super(NetworkSetICEConfigurationCommand, self).__init__(subparsers, command_dict)
-        self._parser.add_argument('ice_file', metavar='ice.json', type=argparse.FileType('r'), help='IceServer(s) in JSON format')
+        self._parser.add_argument('ice_file', metavar='ice.json', type=argparse.FileType('r'),
+                                  help='IceServer(s) in JSON format')
 
     def _run(self, robot, options):
         with options.ice_file as handler:
@@ -62,7 +68,8 @@ class NetworkSetICEConfigurationCommand(Command):
 
         ice_servers = []
         for ice in json_ice_servers:
-            ice_servers.append(network_pb2.ICEServer(type=ice['type'],
-                                                     address=ice['address'], port=ice['port']))
+            ice_servers.append(
+                network_pb2.ICEServer(type=ice['type'], address=ice['address'], port=ice['port']))
 
         robot.ensure_client(NetworkClient.default_service_name).set_ice_configuration(ice_servers)
+

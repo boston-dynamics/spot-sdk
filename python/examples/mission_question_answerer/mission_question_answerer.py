@@ -15,7 +15,6 @@ import bosdyn.client
 import bosdyn.client.util
 from bosdyn.mission.client import MissionClient
 
-
 LOGGER = logging.getLogger(__name__)
 
 

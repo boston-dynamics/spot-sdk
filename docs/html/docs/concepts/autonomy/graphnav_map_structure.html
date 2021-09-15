@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>GraphNav Map Structure &mdash; Spot 2.3.5 documentation</title>
+  <title>GraphNav Map Structure &mdash; Spot 3.0.0 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                2.3.5
+                3.0.0
               </div>
             
           
@@ -102,6 +102,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../developing_api_services.html">Developing API Services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../faults.html">Faults</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="README.html">Autonomy services</a><ul class="current">
@@ -112,20 +113,32 @@
 <li class="toctree-l3"><a class="reference internal" href="typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
 <li class="toctree-l3"><a class="reference internal" href="autonomous_navigation_services.html">Autonomous navigation services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="graphnav_service.html">GraphNav service</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">GraphNav map structure</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">GraphNav Map Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#recording-and-modifying-maps">Recording and Modifying Maps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#map-processing">Map Processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#map-data-transfer">Map Data Transfer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="missions_service.html">Missions service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="auto_return.html">AutoReturn service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="directed_exploration.html">Directed Exploration</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../choreography/choreography_service.html">Choreography Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../choreography/move_reference.html">Move Reference Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../choreography/choreographer.html">Choreographer Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/animation_file_specification.html">Animation Files for Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/animation_file_specification.html#file-specification">File Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/animation_file_specification.html#options-file-section">Options File Section</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/animation_file_specification.html#parameters-file-section">Parameters File Section</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/animation_file_specification.html#body-keyframe-file-section">Body Keyframe File Section</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../arm/README.html">Spot Arm</a><ul>
@@ -159,6 +172,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/estop/README.html">E-Stop</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/time_sync/README.html">Time Sync</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/comms_test/README.html">Comms Test</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/disable_ir_emission/README.html">IR Enable/Disable</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/robot_behavior_examples.html">Robot Behavior and Commands Examples</a><ul>
@@ -169,6 +183,9 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/xbox_controller/README.html">Xbox Controller</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/wasd/README.html">WASD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/docking/README.html">Docking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -176,6 +193,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_stow_unstow/README.html">Stow/unstow Arm</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_and_mobility_command/README.html">Arm and Mobility Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_with_body_follow/README.html">Arm Command with Body Following</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_constrained_manipulation/README.html">Arm Constrained Manipulation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_trajectory/README.html">Arm Trajectory Motion Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
@@ -208,10 +226,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/bddf_download/README.html">BDDF Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_buffer/README.html">Data Buffer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_service/README.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/logging/README.html">Logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/bddf_download/README.html">BDDF Download</a></li>
@@ -223,19 +244,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/tester_programs/README.html">Tester Programs</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/autonomy_and_missions_examples.html">Autonomy and Missions Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_anchoring_optimization/README.html">Graph Nav Anchoring Optimization Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_anchoring_optimization/README.html#setup-dependencies">Setup Dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_anchoring_optimization/README.html#running-the-example">Running the Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_anchoring_optimization/README.html#understanding-the-example-code">Understanding the Example Code</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_question_answerer/README.html">Mission Question Answerer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 </ul>
 </li>
 </ul>
@@ -245,6 +271,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
@@ -268,12 +295,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
@@ -321,6 +350,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_reader.html">GRPC Reader</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_service_reader.html">GRPC Service Reader</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_service_writer.html">GRPC Service Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/message_reader.html">Message Reader</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/pod_series_reader.html">POD Series Reader</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/pod_series_writer.html">POD Series Writer</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/protobuf_channel_reader.html">Protobuf Channel Reader</a></li>
@@ -344,6 +374,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/README.html">Choreography</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
 </ul>
 </li>
 </ul>
@@ -377,6 +409,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#arm-surface-contact-service-proto">arm_surface_contact_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-proto">auth.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
@@ -403,6 +437,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-processing-proto">graph_nav/map_processing.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-processing-service-proto">graph_nav/map_processing_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
@@ -410,6 +446,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -429,6 +467,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#network-compute-bridge-proto">network_compute_bridge.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#network-compute-bridge-service-proto">network_compute_bridge_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#network-stats-proto">network_stats.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#payload-estimation-proto">payload_estimation.proto</a></li>
@@ -446,6 +485,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
@@ -463,6 +503,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-service-proto">spot_cam/service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-streamquality-proto">spot_cam/streamquality.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-cam-version-proto">spot_cam/version.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#stairs-proto">stairs.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#synchronized-command-proto">synchronized_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-range-proto">time_range.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
@@ -571,11 +612,120 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The viewer also shows fiducials that were detected during the map recording process. Fiducials are shown as blue squares labeled with the fiducial ID. If multiple fiducials with the same ID are displayed near each other, this represents multiple detections taken at different times during recording.</p>
 <p>Maps do not have a global coordinate system (like GPS coordinates, for example). Only the relative transformations between waypoints are known.</p>
 </section>
+</section>
+<section id="recording-and-modifying-maps">
+<h1>Recording and Modifying Maps<a class="headerlink" href="#recording-and-modifying-maps" title="Permalink to this headline">¶</a></h1>
+<p>The GraphNav map recording service is used to create and modify maps using robot data. Using the <code class="docutils literal notranslate"><span class="pre">StartRecording</span></code> RPC, you can tell the map recording service to begin creating a new map. You may then drive the robot around a site, and it will record a map. Afterwards (or at intervals during recording), you may download map data.</p>
+<p>The <a class="reference external" href="../../../python/examples/graph_nav_command_line/README.html#recording-service-command-line"><code class="docutils literal notranslate"><span class="pre">recording_command_line</span></code> example</a> in the Spot SDK shows how to record and modify maps at runtime, and how to download map data from the recording service.</p>
 <section id="creating-waypoints">
 <h2>Creating waypoints<a class="headerlink" href="#creating-waypoints" title="Permalink to this headline">¶</a></h2>
 <p>Waypoints are created by the robot every two meters during map recording. However, they can be created in areas where the robot’s path has more curvature as it navigates around corners and obstacles.</p>
 <p>Call the <code class="docutils literal notranslate"><span class="pre">CreateWaypoint</span></code> RPC at specific locations in order to perform some action in a mission or when you want to explicitly maintain some mapping between a user event and a waypoint ID. Example: creating a waypoint at an inspection point.</p>
 </section>
+<section id="creating-edges">
+<h2>Creating edges<a class="headerlink" href="#creating-edges" title="Permalink to this headline">¶</a></h2>
+<p>Edges are created automatically while recording is active. One edge will be created between every new waypoint that the recording service creates.</p>
+<p>If you want to create edges manually, you can call the <code class="docutils literal notranslate"><span class="pre">CreateEdge</span></code> RPC in the recording service.</p>
+</section>
+</section>
+<section id="map-processing">
+<h1>Map Processing<a class="headerlink" href="#map-processing" title="Permalink to this headline">¶</a></h1>
+<p>Starting in the 3.0 SDK release, the GraphNav map processing service makes two new options available to modify maps, Topology Processing (automatic loop closure) and Anchoring Optimization. The map processing service is an RPC service interface which shares a map with the GraphNav Service. The map processing Service performs operations on the GraphNav map, and can either return results to the user, or write results into the shared map. The map processing service may be used after recording a map using the Map Recording Service.</p>
+<p>The <a class="reference external" href="../../../python/examples/graph_nav_command_line/README.html#recording-service-command-line"><code class="docutils literal notranslate"><span class="pre">recording_command_line</span></code> example</a> has examples for how to use the map processing service on a newly recorded GraphNav map.</p>
+<section id="topology-processing">
+<h2>Topology Processing<a class="headerlink" href="#topology-processing" title="Permalink to this headline">¶</a></h2>
+<p>The Topology of a GraphNav map refers to the connectivity between different Waypoints using Edges.  Below are some examples of  Maps with different topologies.</p>
+<p><img alt="Topologies" src="../../../_images/topologies.png" /></p>
+<p>The recording service records one kind of map topology: the Chain. Chains always go from a starting point to an ending point. Chains are easy to create – it only requires recording the robot’s current position and sensor data relative to the previous pose and sensor data. There are no connections between waypoints that aren’t along the chain, even if they happen to cross each other in physical space.</p>
+<p>When starting a new recording while the robot is localized to an existing waypoint, the recording service will create a Branch – which is simply a Chain starting from a waypoint within another Chain.</p>
+<p>Loops are topologies where there is more than one possible path between two waypoints. The recording service is <strong>unable to create loops</strong> on its own. To create loops, you can manually call the <code class="docutils literal notranslate"><span class="pre">CreateEdge</span></code> RPC, or, starting in SDK 3.0, you may use the map processing service to automatically close loops.</p>
+<section id="why-are-loops-important">
+<h3>Why are loops important?<a class="headerlink" href="#why-are-loops-important" title="Permalink to this headline">¶</a></h3>
+<p>Any time the robot crosses its own path in physical space, there is an opportunity to create a topological connection (an edge) between where the robot currently is, and where it was in the past. This is called <em>“loop closure”</em>.</p>
+<p><img alt="The robot has returned to the start" src="../../../_images/robot_back_at_start.png" /></p>
+<p>For example, if the robot has returned to its starting place after traversing hundreds of meters through a site, it would be desirable to know that the start and end points of the map are topologically connected.</p>
+<p>For example, consider the chain:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">start</span> <span class="n">waypoint</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">000</span> <span class="n">waypoints</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">end</span> <span class="n">waypoint</span>
+</pre></div>
+</div>
+<p>The robot may only travel along edges while using GraphNav, so without an edge between the starting and ending waypoints of the map, the robot is unable to travel betwen the start and end directly. For example, the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NavigateTo</span><span class="p">(</span><span class="n">start</span> <span class="n">waypoint</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>causes the robot to traverse the 1,000 waypoints it had recorded <em>in reverse</em> rather than walking directly from the end to the start.</p>
+<p>To prevent this, we must <strong>close the loop</strong> between the starting and ending waypoint.</p>
+</section>
+</section>
+<section id="automatic-loop-closure">
+<h2>Automatic Loop Closure<a class="headerlink" href="#automatic-loop-closure" title="Permalink to this headline">¶</a></h2>
+<p>You can issue a <code class="docutils literal notranslate"><span class="pre">ProcessTopologyRequest</span></code> to the map processing service to automatically close loops in the GraphNav map.	This helps the robot know which areas of the map are topologically connected so that it can make smarter decisions about initializing its localization to the map and planning around it.</p>
+<p>Note that Loop Closures in the Autonomy SDK affect both localization and navigation – an edge is expected to be traversable by the robot in a physical sense (that is, the robot can walk from point A to point B if there is an edge between A and B), and it also encodes the relative transformation between the waypoints it connects.</p>
+<p><img alt="Topology processing example" src="../../../_images/topo_processing_example.svg" /></p>
+<p>There are two types of loop closure currently supported: odometry loop closures and fiducial loop closures.</p>
+<p><strong>Odometry loop closures</strong> occur whenever:</p>
+<ul class="simple">
+<li><p>The robot walks a total path length of less than 50 meters (for base platform robots) or 100 meters (for robots with LIDAR) and believes it is back at the same location (within 4 meters).</p></li>
+<li><p>That path <strong>does not cross a staircase</strong>.</p></li>
+<li><p>The resulting loop closure edge does not cross any body obstacles.</p></li>
+</ul>
+<p>To close larger loops, the map processing service relies on fiducials. <strong>Fiducial loop closures</strong> occur whenever:</p>
+<ul class="simple">
+<li><p>The robot sees the same fiducial twice.</p></li>
+<li><p>In both instances that the robot sees the fiducial, the fiducial was less than 4 meters away and had low measurement error.</p></li>
+<li><p>The resulting loop closure edge does not cross any body obstacles.</p></li>
+</ul>
+<blockquote>
+<div><p>Note: the Autowalk app automatically calls topology processing after recording ends. SDK users must make sure to manually call the map processing service to enable this feature. See the recording_command_line.py example for how to call this service.</p>
+</div></blockquote>
+<section id="ensuring-good-topology">
+<h3>Ensuring good topology<a class="headerlink" href="#ensuring-good-topology" title="Permalink to this headline">¶</a></h3>
+<p>To make sure that the map processing service has the best chance of closing loops, adhere to the following guidelines:</p>
+<ul class="simple">
+<li><p>The more fiducials in the environment, the better.</p></li>
+<li><p>If the map is multi-floor, there must be at least one fiducial per floor.</p></li>
+<li><p>Try to pass as closely as possible to fiducials while recording.</p></li>
+<li><p>Try to record multiple pathways through the same site to maximize the chance that the robot will be able to navigate around obstacles.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="anchorings-and-anchoring-optimization">
+<h1>Anchorings and Anchoring Optimization<a class="headerlink" href="#anchorings-and-anchoring-optimization" title="Permalink to this headline">¶</a></h1>
+<p>The 3.0 SDK introduces a new concept for GraphNav maps called <em>anchorings</em>. In addition to waypoints and edges, GraphNav maps now have an attached anchoring for waypoints and fiducials.</p>
+<p>An <em>anchoring</em> is a mapping from waypoints to some global reference frame. That is, for every waypoint and fiducial, we have an <code class="docutils literal notranslate"><span class="pre">SE3Pose</span></code> describing the transform from a <em>seed</em> frame to that waypoint or fiducial.</p>
+<p>For example, to get all of the positions of the waypoints relative to the seed frame, you can do this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># For each waypoint in the graph&#39;s anchoring, prints the (x, y, z) position of that waypoint.</span>
+<span class="k">def</span> <span class="nf">print_anchorings</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">anchor</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">anchoring</span><span class="o">.</span><span class="n">anchors</span><span class="p">:</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">anchor</span><span class="o">.</span><span class="n">seed_tform_waypoint</span><span class="o">.</span><span class="n">position</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;id: </span><span class="si">{}</span><span class="s2"> x: </span><span class="si">{}</span><span class="s2"> y: </span><span class="si">{}</span><span class="s2"> z: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">anchor</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>Note: it is not necessary for every waypoint in the graph to have an anchoring. GraphNav will use edge transformations to interpolate between the provided anchors.</p>
+</div></blockquote>
+<p>All GraphNav maps have a <em>default anchoring</em>, which comes from the User Origin if it exists, or the starting waypoint otherwise. The default anchoring is computed by extrapolating robot odometry over the edges in the graph.</p>
+<p>Additionally, the map processing tool can be used to <strong>optimize the anchoring</strong> via the <code class="docutils literal notranslate"><span class="pre">ProcessAnchoringRequest</span></code> RPC. An example for how to use this RPC using its default parameters can be found in the <a class="reference external" href="../../../python/examples/graph_nav_command_line/README.html#recording-service-command-line"><code class="docutils literal notranslate"><span class="pre">recording_command_line</span></code> example</a>. A more complex example can be found in the <a class="reference internal" href="../../../python/examples/graph_nav_anchoring_optimization/README.html"><span class="doc">graph_nav_anchoring_optimization SDK example</span></a>.</p>
+<p>Anchoring optimization can be used to improve the <strong>metric consistency</strong> of a map’s anchoring. An example is shown below:</p>
+<p><img alt="Anchoring before optimization" src="../../../_images/treehouse_ko.png" />
+<em>A real, 1km graph_nav map displayed from above before anchoring optimization is applied. The long red and yellow lines are loop closures from topology processing. The numbers are instances of fiducials stored in individual waypoints.</em></p>
+<p><img alt="Anchoring after optimization" src="../../../_images/treehouse_anchoring.png" />
+<em>The same map after anchoring optimization has been applied. Notice that segments of the building which were disjoint before now align.</em></p>
+<blockquote>
+<div><p>Note: the Autowalk app automatically calls anchoring optimization after recording ends. SDK users must make sure to manually call the anchoring optimization RPC to access this feature.</p>
+</div></blockquote>
+<section id="what-can-you-do-with-anchorings">
+<h2>What can you do with anchorings?<a class="headerlink" href="#what-can-you-do-with-anchorings" title="Permalink to this headline">¶</a></h2>
+<p>Anchorings can be used to describe the global relationships and layout between waypoints in a GraphNav map. The pose of the robot relative to the anchoring is also available in the Localization message returned by GraphNav as <code class="docutils literal notranslate"><span class="pre">seed_tform_body</span></code>.</p>
+<p>Anchorings may also be used to display the GraphNav map relative to a blueprint, BIM model, or other pre-existing map. For details on how to achieve this, please see the <a class="reference internal" href="../../../python/examples/graph_nav_anchoring_optimization/README.html"><span class="doc">graph_nav_anchoring_optimization SDK example</span></a>.</p>
+<p>There is also an SDK example for how to use GraphNav anchorings to extract a global 3D point cloud from a map and save it as a PLY file. This is located in the <a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html"><span class="doc">graph_nav_extract_point_cloud SDK example.</span></a></p>
+<p><img alt="An extracted point cloud of a real GraphNav map" src="../../../_images/extract_cloud.png" /> <em>An extracted point cloud from a real GraphNav map, viewed in a 3rdparty tool called <a class="reference external" href="https://www.danielgm.net/cc/">CloudCompare</a>.</em></p>
+<p>Starting in SDK release 3.0, anchorings can also be used to command the robot. The <code class="docutils literal notranslate"><span class="pre">NavigateToAnchor</span></code> command can be used to send the robot to an approximate <code class="docutils literal notranslate"><span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">z</span></code> position relative to the seed frame. To do this, the robot will navigate over a series of waypoints and edges from its current location to the nearest waypoint to the given commanded pose, and will then walk in a straight line toward the commanded pose.</p>
+</section>
+</section>
+<section id="map-data-transfer">
+<h1>Map Data Transfer<a class="headerlink" href="#map-data-transfer" title="Permalink to this headline">¶</a></h1>
+<p>The GraphNav service has one active map instance on the robot that it shares with the GraphNav recording service. You can download the data stored in this map instance, or upload new data to the robot to replace or extend the current map instance.</p>
 <section id="downloading-maps">
 <h2>Downloading maps<a class="headerlink" href="#downloading-maps" title="Permalink to this headline">¶</a></h2>
 <p>Waypoints and edges have associated snapshots that store data the robot uses to compute localization and inform the robot’s locomotion.</p>

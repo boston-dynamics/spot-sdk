@@ -105,3 +105,10 @@ This estimate is purely at the application layer.  This is important for two rea
 
 Clients needing high precision timing, such as a payload sensor collecting data while the robot is moving, should instead use NTP to synchronize to the robot.
 
+## lease
+
+The lease service provides methods to achieve ownership over controlling the robot and maintaining valid communication with that owner.
+
+The lease is required to issue commands that control the robots mobility and motion, such as powering on the robot or commanding stand. To start, the lease must be acquired (or taken) to show ownership of the robot resources. Then retain lease signals must be sent throughout the duration of the operation to preserve ownership and indicate reliable communication with the lease owner. Ultimately the lease should be returned to free the resources to be reclaimed; however, it can be revoked during operation by another user or if the communication signals are not received within a certain period of time.
+
+The [Lease documentation](lease_service.md) provides a more in-depth description of leases, typical lease usage, and how to understand lease errors.

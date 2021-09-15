@@ -42,6 +42,8 @@ message Payload {
     SE3Pose body_tform_payload = 7;
     // The pose of the payload relative to the mount frame.
     SE3Pose mount_tform_payload = 8;
+    // Optional - mount frame_name (if not included, payload is assumed to be in the body mount frame)
+    MountFrameName mount_frame_name = 13;
     // The mass and volume properties of the payload.
     PayloadMassVolumeProperties mass_volume_properties = 10;
     // A list of possible physical configurations for the payload.
@@ -58,6 +60,8 @@ message PayloadPreset {
     string description = 2;
     // The pose of the payload relative to the body frame.
     SE3Pose mount_tform_payload = 3;
+    // Optional - mount frame_name (if not included, payload is assumed to be in the body mount frame)
+    MountFrameName mount_frame_name = 6;
     // The mass and volume properties of the payload.
     PayloadMassVolumeProperties mass_volume_properties = 4;
     // A list of labels used to indicate what type of payload this is.
@@ -124,4 +128,16 @@ message ListPayloadsResponse {
     ResponseHeader header = 1;
     // The returned list of payloads registered in the directory.
     repeated Payload payloads = 2;
+}
+
+// Payloads are defined relative to a frame on the robot. These are the possible frames. 
+enum MountFrameName {
+    // The is the default. For backwards compatibility, we assume unknown means body mount frame. 
+    MOUNT_FRAME_UNKNOWN = 0;
+    // The body payload mount frame, as defined in documentation. 
+    MOUNT_FRAME_BODY_PAYLOAD = 1;
+    // The gripper payload mount frame, as defined in documentation. 
+    MOUNT_FRAME_GRIPPER_PAYLOAD = 2;
+    // The wrist link frame, as defined in the gripper CAD and documentation. 
+    MOUNT_FRAME_WR1 = 3;
 }

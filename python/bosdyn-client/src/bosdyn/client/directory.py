@@ -115,7 +115,7 @@ _STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _STATUS_TO_ERROR.update({
     directory_pb2.GetServiceEntryResponse.STATUS_OK: (None, None),
     directory_pb2.GetServiceEntryResponse.STATUS_NONEXISTENT_SERVICE:
-    (NonexistentServiceError, NonexistentServiceError.__doc__),
+        (NonexistentServiceError, NonexistentServiceError.__doc__),
 })
 
 

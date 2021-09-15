@@ -25,3 +25,5 @@ The following examples show how to use Spot's perception system, through image s
 * [Fiducial Follow](../fiducial_follow/README.md)
 * [Spot Detect and Follow](../spot_detect_and_follow/README.md)
 * [Tensorflow Detector](../spot_tensorflow_detector/README.md)
+* [Machine Learning with the Network Compute Bridge](../network_compute_bridge/README.md)
+* [Fire Extinguisher Detector with the Network Compute Bridge](../network_compute_bridge/fire_extinguisher_server/README.md)

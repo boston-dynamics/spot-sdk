@@ -19,7 +19,8 @@ from bosdyn.client.data_acquisition_plugin_service import (Capability, RequestSt
 from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
                                                   DirectoryRegistrationKeepAlive)
 import bosdyn.client.util
-from bosdyn.client.util import GrpcServiceRunner, setup_logging
+from bosdyn.client.util import setup_logging
+from bosdyn.client.server_util import GrpcServiceRunner
 
 DIRECTORY_NAME = 'data-acquisition-gps-metadata-plugin'
 AUTHORITY = 'data-acquisition-gps-metadata-plugin'
@@ -33,13 +34,16 @@ kCapabilities = [Capability(name=kName, description=kDescription, channel_name=k
 
 
 class GPSData:
+
     def __init__(self, lat, lon, alt):
         self.lat = lat
         self.lon = lon
         self.alt = alt
 
+
 class GPS_Adapter:
     """Provide access to the latest data from a fake sensor."""
+
     def __init__(self):
         self.data_lock = threading.Lock()
         self.data = None
@@ -56,8 +60,7 @@ class GPS_Adapter:
         """Update the internal data with random numbers."""
         with self.data_lock:
             self.data = GPSData(random.random() * math.pi - math.pi / 2,
-                                random.random() * 2 * math.pi - math.pi,
-                                0.0)
+                                random.random() * 2 * math.pi - math.pi, 0.0)
 
     def get_GPS_data(self, request, store_helper):
         """Save the latest GPS data to the data store."""

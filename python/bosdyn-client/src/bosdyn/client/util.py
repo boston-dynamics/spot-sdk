@@ -4,9 +4,11 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
+"""Helper functions and classes for creating client applications."""
+
 from concurrent import futures
 import copy
-from deprecated.sphinx import deprecated
+from deprecated import deprecated
 import getpass
 import glob
 import grpc
@@ -17,17 +19,10 @@ import signal
 import time
 import threading
 
-from bosdyn.api import header_pb2
-from bosdyn.api import data_acquisition_store_pb2
-from bosdyn.api import data_buffer_pb2
-from bosdyn.api import image_pb2
-from bosdyn.api import local_grid_pb2
-from bosdyn.api import log_annotation_pb2
+import bosdyn.client.server_util
 from bosdyn.client.channel import generate_channel_options
-import bosdyn.util
-
-from .auth import InvalidLoginError
-from .exceptions import Error
+from bosdyn.client.auth import InvalidLoginError
+from bosdyn.client.exceptions import Error
 import google.protobuf.descriptor
 
 _LOGGER = logging.getLogger(__name__)
@@ -123,7 +118,8 @@ def setup_logging(verbose=False, include_dedup_filter=False,
         # main log already. If not, add it to a new handler.
         filter_exists = None
         for handler in logger.handlers:
-            filter_exists = filter_exists or does_dedup_filter_exist(handler, always_print_logger_levels)
+            filter_exists = filter_exists or does_dedup_filter_exist(handler,
+                                                                     always_print_logger_levels)
         if not filter_exists:
             dedupFilterLog = logging.StreamHandler()
             # Propagate the filter through the handler. logging.Filter does not propagate to other
@@ -145,7 +141,9 @@ def does_dedup_filter_exist(logger, always_print_logger_levels):
         Boolean indicating if the DedupLoggingMessages filter already exists and matches the new parameters.
     """
     for filt in logger.filters:
-        if type(filt) == DedupLoggingMessages and filt.always_print_logger_levels == always_print_logger_levels:
+        if type(
+                filt
+        ) == DedupLoggingMessages and filt.always_print_logger_levels == always_print_logger_levels:
             return True
     return False
 
@@ -153,14 +151,6 @@ def does_dedup_filter_exist(logger, always_print_logger_levels):
 def get_logger():
     return logging.getLogger()
 
-
-@deprecated(
-    reason='App tokens are no longer in use. Authorization is now handled via licenses.',
-    version='2.0.1',
-    action="always")
-def default_app_token_path():
-    """Do nothing, this method is kept only to maintain backwards compatibility."""
-    return
 
 def add_base_arguments(parser):
     """Add hostname argument to parser.
@@ -194,6 +184,7 @@ def add_payload_credentials_arguments(parser, required=True):
     parser.add_argument('--guid', required=required, help='Unique GUID of the payload.')
     parser.add_argument('--secret', required=required, help='Secret of the payload.')
 
+
 def add_service_hosting_arguments(parser):
     """Add arguments common to most applications hosting a GRPC service.
 
@@ -204,6 +195,7 @@ def add_service_hosting_arguments(parser):
         '--port', default=0, help=
         ('The port number the service can be reached at (Warning: This port cannot be firewalled).'
          ' Defaults to 0, which will assign an ephemeral port'), type=int)
+
 
 def add_service_endpoint_arguments(parser):
     """Add arguments common to most applications defining a GRPC service endpoint.
@@ -217,6 +209,15 @@ def add_service_endpoint_arguments(parser):
         ' e.g. "192.168.50.5"')
 
 
+@deprecated(reason='App tokens are no longer in use. Authorization is now handled via licenses.',
+            version='2.0.1', action="always")
+def default_app_token_path():
+    """Do nothing, this method is kept only to maintain backwards compatibility."""
+    return
+
+
+@deprecated(reason='The GrpcServiceRunner class helper has moved to server_util.py. Please use '
+            'bosdyn.client.server_util.GrpcServiceRunner.', version='3.0.0', action="always")
 class GrpcServiceRunner(object):
     """A runner to start a gRPC server on a background thread and allow easy cleanup.
 
@@ -280,79 +281,57 @@ class GrpcServiceRunner(object):
 
 
 
-def populate_response_header(response, request, error_code=header_pb2.CommonError.CODE_OK,
-                             error_msg=None):
-    """Sets the ResponseHeader header in the response.
-    Args:
-        response (bosdyn.api Response message): The GRPC response message to be populated.
-        request (bosdyn.api Request message): The header from the request is added to the response.
-        error_code (header_pb2.CommonError): The status for the RPC response.
-        error_msg (str): An optional error message describing a bad header status failure.
-    Returns:
-        Mutates the response message's header to be fully populated.
-    """
-    header = header_pb2.ResponseHeader()
-    header.request_received_timestamp.CopyFrom(bosdyn.util.now_timestamp())
-    header.request_header.CopyFrom(request.header)
-    header.error.code = error_code
-    if error_msg:
-        header.error.message = error_msg
-    copied_request = copy.copy(request)
-    strip_large_bytes_fields(copied_request)
-    header.request.Pack(copied_request)
-    response.header.CopyFrom(header)
+populate_response_header = deprecated(
+    reason='The populate_response_header helper has moved to '
+    'server_util.py. Please use bosdyn.client.server_util.populate_response_header.',
+    version='3.0.0', action="always")(bosdyn.client.server_util.populate_response_header)
 
+strip_large_bytes_fields = deprecated(
+    reason='The strip_large_bytes_fields helper has moved to '
+    'server_util.py. Please use bosdyn.client.server_util.strip_large_bytes_fields.',
+    version='3.0.0', action="always")(bosdyn.client.server_util.strip_large_bytes_fields)
 
-def strip_large_bytes_fields(proto_message):
-    message_type = type(proto_message)
-    whitelist_map = get_bytes_field_whitelist()
-    if message_type in whitelist_map:
-        whitelist_map[message_type](proto_message)
+get_bytes_field_whitelist = deprecated(
+    reason='The get_bytes_field_whitelist helper has moved to '
+    'server_util.py. Please use bosdyn.client.server_util.get_bytes_field_allowlist.',
+    version='3.0.0', action="always")(bosdyn.client.server_util.get_bytes_field_allowlist)
 
+strip_image_response = deprecated(
+    reason='The strip_image_response helper has moved to '
+    'server_util.py. Please use bosdyn.client.server_util.strip_image_response.', version='3.0.0',
+    action="always")(bosdyn.client.server_util.strip_image_response)
 
-def get_bytes_field_whitelist():
-    whitelist_map = {
-        image_pb2.GetImageResponse : strip_get_image_response,
-        local_grid_pb2.GetLocalGridsResponse : strip_local_grid_responses,
-        data_acquisition_store_pb2.StoreDataRequest : strip_store_data_request,
-        data_acquisition_store_pb2.StoreImageRequest : strip_store_image_request,
-        data_buffer_pb2.RecordSignalTicksRequest : strip_record_signal_tick,
-        data_buffer_pb2.RecordDataBlobsRequest : strip_record_data_blob,
-        log_annotation_pb2.AddLogAnnotationRequest : strip_log_annotation
-    }
-    return whitelist_map
+strip_get_image_response = deprecated(
+    reason='The strip_get_image_response helper has moved to '
+    'server_util.py. Please use bosdyn.client.server_util.strip_get_image_response.',
+    version='3.0.0', action="always")(bosdyn.client.server_util.strip_get_image_response)
 
+strip_local_grid_responses = deprecated(
+    reason='The strip_local_grid_responses helper has moved to '
+    'server_util.py. Please use bosdyn.client.server_util.strip_local_grid_responses.',
+    version='3.0.0', action="always")(bosdyn.client.server_util.strip_local_grid_responses)
 
-def strip_image_response(proto_message):
-    proto_message.shot.image.ClearField("data")
+strip_store_image_request = deprecated(
+    reason='The strip_store_image_request helper has moved to '
+    'server_util.py. Please use bosdyn.client.server_util.strip_store_image_request.',
+    version='3.0.0', action="always")(bosdyn.client.server_util.strip_store_image_request)
 
-def strip_get_image_response(proto_message):
-    for img_resp in proto_message.image_responses:
-        strip_image_response(img_resp)
+strip_store_data_request = deprecated(
+    reason='The strip_store_data_request helper has moved to '
+    'server_util.py. Please use bosdyn.client.server_util.strip_store_data_request.',
+    version='3.0.0', action="always")(bosdyn.client.server_util.strip_store_data_request)
 
+strip_record_signal_tick = deprecated(
+    reason='The strip_record_signal_tick helper has moved to '
+    'server_util.py. Please use bosdyn.client.server_util.strip_record_signal_tick.',
+    version='3.0.0', action="always")(bosdyn.client.server_util.strip_record_signal_tick)
 
-def strip_local_grid_responses(proto_message):
-    for grid_resp in proto_message.local_grid_responses:
-        grid_resp.local_grid.ClearField("data")
+strip_record_data_blob = deprecated(
+    reason='The strip_record_data_blob helper has moved to '
+    'server_util.py. Please use bosdyn.client.server_util.strip_record_data_blob.', version='3.0.0',
+    action="always")(bosdyn.client.server_util.strip_record_data_blob)
 
-
-def strip_store_image_request(proto_message):
-    proto_message.image.image.ClearField("data")
-
-def strip_store_data_request(proto_message):
-    proto_message.ClearField("data")
-
-
-def strip_record_signal_tick(proto_message):
-    for tick_data in proto_message.tick_data:
-        tick_data.ClearField("data")
-
-
-def strip_record_data_blob(proto_message):
-    for blob in proto_message.blob_data:
-        blob.ClearField("data")
-
-
-def strip_log_annotation(proto_message):
-    for blob in proto_message.annotations.blob_data:
-        blob.ClearField("data")
+strip_log_annotation = deprecated(
+    reason='The strip_log_annotation helper has moved to '
+    'server_util.py. Please use bosdyn.client.server_util.strip_log_annotation.', version='3.0.0',
+    action="always")(bosdyn.client.server_util.strip_log_annotation)

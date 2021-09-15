@@ -87,7 +87,8 @@ def create_apriltag_object():
     # so the parent_frame must also be in the tree.
     vision_tform_special_frame = update_frame(tf=default_a_tform_b, position_change=(0, 0, -.2),
                                               rotation_change=(0, 0, 0, 0))
-    edges = add_edge_to_tree(edges, vision_tform_special_frame, VISION_FRAME_NAME, "my_special_frame")
+    edges = add_edge_to_tree(edges, vision_tform_special_frame, VISION_FRAME_NAME,
+                             "my_special_frame")
     snapshot = geom.FrameTreeSnapshot(child_to_parent_edge_map=edges)
 
     # Create the specific properties for the apriltag including the frame names for the transforms
@@ -121,8 +122,7 @@ def main(argv):
 
     # List all world objects in the scene.
     world_objects = world_object_client.list_world_objects().world_objects
-    print("Current World objects' ids " +
-          str([obj.id for obj in world_objects]))
+    print("Current World objects' ids " + str([obj.id for obj in world_objects]))
 
     # If there are any world objects in Spot's perception scene, then attempt to mutate one.
     # This should fail and return a STATUS_NO_PERMISSION since a client cannot mutate
@@ -160,7 +160,8 @@ def main(argv):
             full_snapshot = world_obj.transforms_snapshot
             for edge in full_snapshot.child_to_parent_edge_map:
                 if edge == "my_special_frame":
-                    print("The world object includes the custom frame vision_tform_my_special_frame!")
+                    print(
+                        "The world object includes the custom frame vision_tform_my_special_frame!")
 
     # Request to change an existing apriltag's dimensions. This will succeed because it is changing
     # an object that was added by a client program. We are using the ID returned by the service to
@@ -169,8 +170,9 @@ def main(argv):
     tag_prop_modified = world_object_pb2.AprilTagProperties(tag_id=308,
                                                             dimensions=geom.Vec2(x=.35, y=.35))
     wo_obj_to_change = world_object_pb2.WorldObject(
-        id=added_apriltag_world_obj_id, name="world_obj_apriltag", transforms_snapshot=wo_obj_to_add.transforms_snapshot,
-        acquisition_time=time_now, apriltag_properties=tag_prop_modified)
+        id=added_apriltag_world_obj_id, name="world_obj_apriltag",
+        transforms_snapshot=wo_obj_to_add.transforms_snapshot, acquisition_time=time_now,
+        apriltag_properties=tag_prop_modified)
     print("World object X dimension of apriltag size before change: " +
           str([obj.apriltag_properties.dimensions.x for obj in world_objects]))
 
@@ -218,10 +220,11 @@ def main(argv):
     world_objects = world_object_client.list_world_objects().world_objects
     for world_obj in world_objects:
         if world_obj.id == sphere_id:
-            print("Found sphere named "+world_obj.name)
+            print("Found sphere named " + world_obj.name)
             full_snapshot = world_obj.transforms_snapshot
             for edge in full_snapshot.child_to_parent_edge_map:
-                print("Child frame name: " + edge + ". Parent frame name: " + full_snapshot.child_to_parent_edge_map[edge].parent_frame_name)
+                print("Child frame name: " + edge + ". Parent frame name: " +
+                      full_snapshot.child_to_parent_edge_map[edge].parent_frame_name)
     return True
 
 

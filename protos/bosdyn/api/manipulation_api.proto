@@ -14,6 +14,7 @@ import "bosdyn/api/geometry.proto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/image.proto";
 import "bosdyn/api/lease.proto";
+import "bosdyn/api/robot_state.proto";
 import "google/protobuf/wrappers.proto";
 
 message WalkToObjectRayInWorld {
@@ -66,7 +67,7 @@ message PickObjectRayInWorld {
     //  cast a ray from the camera out to 4 meters (well past the object). \
     //  To do this you'd set: \
     //      ray_start_rt_frame: camera's position \
-    //      ray_end_rt_frame: camera's position + unit vector along ray of interest * 4 meters \
+    //      ray_end_rt_frame: camera's position + unit vector along ray of interest * 4 meters
     Vec3 ray_start_rt_frame = 1;
     Vec3 ray_end_rt_frame = 2;
 
@@ -132,6 +133,7 @@ message PickObjectInImage {
 
     reserved 5, 6, 7, 8;
 }
+
 
 message GraspParams {
     // Where the grasp is on the hand.  Set to 0 to be a (default) palm grasp, where the object will
@@ -218,11 +220,25 @@ message VectorAlignmentWithTolerance {
 message SqueezeGrasp {
     // A "squeeze grasp" is a top-down grasp where we try to keep both jaws of the gripper in
     // contact with the ground and bring the jaws together.  This can allow the robot to pick up
-    // small objects on the ground. \
-    // If you specify a SqueezeGrasp with no other allowable orientations, then the robot
-    // will perform this grasp.  If you specify it will at least one other allowable orientation,
-    // the robot will attempt to find a normal grasp with that orientation and if it fails, will
-    // try a compliant grasp.
+    // small objects on the ground.
+    //
+    // If you specify a SqueezeGrasp as:
+    //      allowed:
+    //          - with no other allowable orientations:
+    //              then the robot will perform a squeeze grasp.
+    //          - with at least one other allowable orientation:
+    //              the robot will attempt to find a normal grasp with that orientation and if it
+    //              fails, will perform a squeeze grasp.
+    //      disallowed:
+    //          - with no other allowable orientations:
+    //              the robot will perform an unconstrained grasp search and a grasp if a good grasp
+    //              is found.  If no grasp is found, the robot will report
+    //              MANIP_STATE_GRASP_PLANNING_NO_SOLUTION
+    //          - with other allowable orientations:
+    //              the robot will attempt to find a valid grasp.  If it cannot it will report
+    //              MANIP_STATE_GRASP_PLANNING_NO_SOLUTION
+
+    bool squeeze_grasp_disallowed = 1;
 }
 
 message ManipulationApiFeedbackRequest {
@@ -263,6 +279,9 @@ message ManipulationApiResponse {
     // ID of the manipulation command either just issued or that we are providing feedback for.
     int32 manipulation_cmd_id = 5;
 
+    // Details about how the lease was used.
+    LeaseUseResult lease_use_result = 6;
+
     reserved 2, 3, 4;
 }
 
@@ -290,6 +309,10 @@ enum ManipulationFeedbackState {
     MANIP_STATE_GRASP_PLANNING_WAITING_DATA_AT_EDGE = 13;
     MANIP_STATE_WALKING_TO_OBJECT = 10;
     MANIP_STATE_ATTEMPTING_RAYCASTING = 12;
+    MANIP_STATE_MOVING_TO_PLACE = 14;
+    MANIP_STATE_PLACE_FAILED_TO_RAYCAST_INTO_MAP = 15;
+    MANIP_STATE_PLACE_SUCCEEDED = 16;
+    MANIP_STATE_PLACE_FAILED = 17;
 }
 
 enum ManipulationCameraSource {
@@ -343,6 +366,7 @@ message ManipulationApiRequest {
 
         // Execute a previously planned pick.
         PickObjectExecutePlan pick_object_execute_plan = 14;
+
     }
 
     reserved 3, 6, 9;
@@ -363,11 +387,21 @@ message ApiGraspOverride {
     Override override_request = 1;
 }
 
+// Use this message to assert properties about the grasped item.
+// By default, the robot will assume all grasped items are not carriable.
+message ApiGraspedCarryStateOverride {
+    ManipulatorState.CarryState override_request = 1;
+}
+
 message ApiGraspOverrideRequest {
     // Common request header.
     RequestHeader header = 1;
 
     ApiGraspOverride api_grasp_override = 4;
+
+    // If the grasp override is set to NOT_HOLDING, setting a carry_state_override
+    // message will cause the request to be rejected as malformed.
+    ApiGraspedCarryStateOverride carry_state_override = 2;
 }
 
 message ApiGraspOverrideResponse {

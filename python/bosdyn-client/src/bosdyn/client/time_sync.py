@@ -19,6 +19,7 @@ from bosdyn.api import time_sync_pb2, time_sync_service_pb2_grpc
 from bosdyn.api.time_range_pb2 import TimeRange
 from bosdyn.util import (RobotTimeConverter, now_nsec, parse_timespan, nsec_to_timestamp,
                          set_timestamp_from_nsec, timestamp_to_nsec)
+from google.protobuf import duration_pb2
 
 from .common import BaseClient, common_header_errors
 from .exceptions import Error
@@ -135,8 +136,8 @@ def robot_time_range_from_datetimes(start_datetime, end_datetime, time_sync_endp
             return date_time.timestamp() * 1e9
         return None
 
-    return robot_time_range_from_nanoseconds(
-        _datetime_to_nsec(start_datetime), _datetime_to_nsec(end_datetime), time_sync_endpoint)
+    return robot_time_range_from_nanoseconds(_datetime_to_nsec(start_datetime),
+                                             _datetime_to_nsec(end_datetime), time_sync_endpoint)
 
 
 def timespec_to_robot_timespan(timespan_spec, time_sync_endpoint=None):
@@ -156,6 +157,8 @@ def timespec_to_robot_timespan(timespan_spec, time_sync_endpoint=None):
     """
     start_datetime, end_datetime = parse_timespan(timespan_spec)
     return robot_time_range_from_datetimes(start_datetime, end_datetime, time_sync_endpoint)
+
+
 
 
 class TimeSyncEndpoint:
@@ -508,8 +511,8 @@ class TimeSyncThread:
             while not self.should_exit:
                 response = self._time_sync_endpoint.response
                 # pylint: disable=no-member
-                if (not response or response.state.status ==
-                        time_sync_pb2.TimeSyncState.STATUS_MORE_SAMPLES_NEEDED):
+                if (not response or response.state.status
+                        == time_sync_pb2.TimeSyncState.STATUS_MORE_SAMPLES_NEEDED):
                     # No wait between updates while time-sync is not established.
                     pass
                 elif response.state.status == time_sync_pb2.TimeSyncState.STATUS_SERVICE_NOT_READY:

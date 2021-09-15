@@ -30,13 +30,13 @@ from bosdyn.client import time_sync
 import bosdyn.api.log_annotation_pb2 as log_annotation_protos
 import bosdyn.api.log_annotation_service_pb2_grpc as log_annotation_service
 
+
 class InvalidArgument(Error):
     """A given argument could not be used."""
 
-@deprecated(
-    reason='The log-annotation client and service have been replaced by data_buffer.',
-    version='2.1.0',
-    action="always")
+
+@deprecated(reason='The log-annotation client and service have been replaced by data_buffer.',
+            version='2.1.0', action="always")
 class LogAnnotationClient(BaseClient):
     """A client for adding annotations to robot logs."""
 
@@ -156,19 +156,17 @@ class LogAnnotationClient(BaseClient):
                 converter = self._timesync_endpoint.get_robot_time_converter()
             except time_sync.NotEstablishedError:
                 # No timesync. That's OK -- the receiving host will provide the timestamp.
-                self.logger.debug('Could not timestamp message of type %s',
-                                  (msg_type if msg_type is not None
-                                   else (proto.DESCRIPTOR.full_name if proto is not None
-                                         else 'Unknown')))
+                self.logger.debug(
+                    'Could not timestamp message of type %s',
+                    (msg_type if msg_type is not None else
+                     (proto.DESCRIPTOR.full_name if proto is not None else 'Unknown')))
             else:
                 return converter.robot_timestamp_from_local_secs(time.time())
         return None
 
 
-@deprecated(
-    reason='The log-annotation client and service have been replaced by data_buffer.',
-    version='2.1.0',
-    action="always")
+@deprecated(reason='The log-annotation client and service have been replaced by data_buffer.',
+            version='2.1.0', action="always")
 class LogAnnotationHandler(logging.Handler):
     """A logging system Handler that will publish text to a bosdyn.api.LogAnnotationService.
 

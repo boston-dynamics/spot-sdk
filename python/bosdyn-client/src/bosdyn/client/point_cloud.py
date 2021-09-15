@@ -17,10 +17,12 @@ import bosdyn.api.point_cloud_pb2 as point_cloud_protos
 import bosdyn.api.point_cloud_service_pb2_grpc as point_cloud_service
 
 from .common import BaseClient
-from bosdyn.client.common import (error_factory, error_pair, common_header_errors, handle_common_header_errors)
+from bosdyn.client.common import (error_factory, error_pair, common_header_errors,
+                                  handle_common_header_errors)
 from bosdyn.client.exceptions import ResponseError, UnsetStatusError
 
 LOGGER = logging.getLogger('point_cloud_client')
+
 
 class PointCloudResponseError(ResponseError):
     """General class of errors for PointCloud service."""
@@ -41,11 +43,16 @@ class PointCloudDataError(PointCloudResponseError):
 _STATUS_TO_ERROR = collections.defaultdict(lambda: (PointCloudResponseError, None))
 _STATUS_TO_ERROR.update({
     point_cloud_protos.PointCloudResponse.STATUS_OK: (None, None),
-    point_cloud_protos.PointCloudResponse.STATUS_UNKNOWN_SOURCE: error_pair(UnknownPointCloudSourceError),
-    point_cloud_protos.PointCloudResponse.STATUS_SOURCE_DATA_ERROR: error_pair(SourceDataError),
-    point_cloud_protos.PointCloudResponse.STATUS_UNKNOWN: error_pair(UnsetStatusError),
-    point_cloud_protos.PointCloudResponse.STATUS_POINT_CLOUD_DATA_ERROR: error_pair(PointCloudDataError),
+    point_cloud_protos.PointCloudResponse.STATUS_UNKNOWN_SOURCE:
+        error_pair(UnknownPointCloudSourceError),
+    point_cloud_protos.PointCloudResponse.STATUS_SOURCE_DATA_ERROR:
+        error_pair(SourceDataError),
+    point_cloud_protos.PointCloudResponse.STATUS_UNKNOWN:
+        error_pair(UnsetStatusError),
+    point_cloud_protos.PointCloudResponse.STATUS_POINT_CLOUD_DATA_ERROR:
+        error_pair(PointCloudDataError),
 })
+
 
 @handle_common_header_errors
 def _error_from_response(response):
@@ -58,6 +65,7 @@ def _error_from_response(response):
         if result is not None:
             return result
     return None
+
 
 class PointCloudClient(BaseClient):
     """A client handling point clouds."""
@@ -84,8 +92,8 @@ class PointCloudClient(BaseClient):
     def list_point_cloud_sources_async(self, **kwargs):
         """Async version of list_point_cloud_sources()"""
         req = self._get_list_point_cloud_source_request()
-        return self.call_async(self._stub.ListPointCloudSources, req, _list_point_cloud_sources_value,
-                               common_header_errors, **kwargs)
+        return self.call_async(self._stub.ListPointCloudSources, req,
+                               _list_point_cloud_sources_value, common_header_errors, **kwargs)
 
     def get_point_cloud_from_sources(self, point_cloud_sources, **kwargs):
         """Obtain point clouds from sources using default parameters.
@@ -104,12 +112,13 @@ class PointCloudClient(BaseClient):
             UnsetStatusError: An internal PointCloudService issue has happened
             PointCloudDataError: Problem with the point cloud data. Only PointCloudSource is filled
         """
-        return self.get_point_cloud([build_pc_request(src) for src in point_cloud_sources], **kwargs)
+        return self.get_point_cloud([build_pc_request(src) for src in point_cloud_sources],
+                                    **kwargs)
 
     def get_point_cloud_from_sources_async(self, point_cloud_sources, **kwargs):
         """Obtain point clouds from sources using default parameters."""
         return self.get_point_cloud_async([build_pc_request(src) for src in point_cloud_sources],
-                                    **kwargs)
+                                          **kwargs)
 
     def get_point_cloud(self, point_cloud_requests, **kw_args):
         """Get the most recent point cloud
@@ -167,6 +176,7 @@ class PointCloudClient(BaseClient):
     def _get_list_point_cloud_source_request():
         return point_cloud_protos.ListPointCloudSourcesRequest()
 
+
 def build_pc_request(point_cloud_source_name):
     """Helper function which builds an PointCloudRequest from an point cloud source name.
 
@@ -177,6 +187,7 @@ def build_pc_request(point_cloud_source_name):
         The PointCloudRequest protobuf message for the given parameters.
     """
     return point_cloud_protos.PointCloudRequest(point_cloud_source_name=point_cloud_source_name)
+
 
 def _list_point_cloud_sources_value(response):
     return response.point_cloud_sources

@@ -13,7 +13,8 @@ from abc import ABC, abstractmethod
 import bosdyn.util
 from bosdyn.util import seconds_to_duration, sec_to_nsec
 from bosdyn.client.fault import FaultClient, ServiceFaultDoesNotExistError
-from bosdyn.client.util import populate_response_header, setup_logging
+from bosdyn.client.server_util import populate_response_header
+from bosdyn.client.util import setup_logging
 
 from bosdyn.api import service_fault_pb2
 from bosdyn.api import header_pb2
@@ -553,4 +554,3 @@ class CameraBaseImageServicer(image_service_pb2_grpc.ImageServiceServicer):
     def __del__(self):
         for source in self.image_sources_mapped.values():
             source.stop_capturing()
-        super().__del__()

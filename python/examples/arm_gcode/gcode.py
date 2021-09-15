@@ -497,13 +497,13 @@ def get_transforms(use_vision_frame, robot_state):
         world_T_body = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot, "vision",
                                      "body")
 
-    body_T_hand = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot, "body",
-                                "hand")
+    body_T_hand = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot, "body", "hand")
     world_T_hand = world_T_body * body_T_hand
 
     odom_T_body = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot, "odom", "body")
 
     return (world_T_body, body_T_hand, world_T_hand, odom_T_body)
+
 
 def do_pause():
     input('Paused, press enter to continue...')
@@ -513,7 +513,7 @@ def run_gcode_program(config):
     """A simple example of using the Boston Dynamics API to command a Spot robot."""
 
     config_parser = configparser.ConfigParser()
-    config_parser.readfp(open('gcode.cfg'))
+    config_parser.read_file(open('gcode.cfg'))
     gcode_file = config_parser.get("General", "gcode_file")
     scale = config_parser.getfloat("General", "scale")
     min_dist_to_goal = config_parser.getfloat("General", "min_dist_to_goal")
@@ -650,10 +650,12 @@ def run_gcode_program(config):
             # Send the request
             odom_T_hand_obj = odom_T_hand.to_proto()
 
+            move_time = 0.000001  # move as fast as possible because we will use (default) velocity/accel limiting.
 
-            move_time = 0.000001 # move as fast as possible because we will use (default) velocity/accel limiting.
-
-            arm_command = RobotCommandBuilder.arm_pose_command(odom_T_hand_obj.position.x, odom_T_hand_obj.position.y, odom_T_hand_obj.position.z, odom_T_hand_obj.rotation.w, odom_T_hand_obj.rotation.x, odom_T_hand_obj.rotation.y, odom_T_hand_obj.rotation.z, ODOM_FRAME_NAME, move_time)
+            arm_command = RobotCommandBuilder.arm_pose_command(
+                odom_T_hand_obj.position.x, odom_T_hand_obj.position.y, odom_T_hand_obj.position.z,
+                odom_T_hand_obj.rotation.w, odom_T_hand_obj.rotation.x, odom_T_hand_obj.rotation.y,
+                odom_T_hand_obj.rotation.z, ODOM_FRAME_NAME, move_time)
 
             command = RobotCommandBuilder.build_synchro_command(arm_command)
 
@@ -692,9 +694,9 @@ def run_gcode_program(config):
                                                                 rotation=q_wall_proto)
 
             # Touch the ground/wall
-            move_arm(robot_state, True, [world_T_hand],
-                     arm_surface_contact_client, velocity, allow_walking, world_T_admittance_frame,
-                     press_force_percent, api_send_frame, use_xy_to_z_cross_term, bias_force_x)
+            move_arm(robot_state, True, [world_T_hand], arm_surface_contact_client, velocity,
+                     allow_walking, world_T_admittance_frame, press_force_percent, api_send_frame,
+                     use_xy_to_z_cross_term, bias_force_x)
 
             time.sleep(4.0)
             last_admittance = True
@@ -707,10 +709,11 @@ def run_gcode_program(config):
                 use_vision_frame, robot_state)
 
             odom_T_ground_plane = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot,
-                                               "odom", "gpe")
+                                                "odom", "gpe")
             world_T_odom = world_T_body * odom_T_body.inverse()
 
-            (gx, gy, gz) = world_T_odom.transform_point(odom_T_ground_plane.x, odom_T_ground_plane.y,
+            (gx, gy, gz) = world_T_odom.transform_point(odom_T_ground_plane.x,
+                                                        odom_T_ground_plane.y,
                                                         odom_T_ground_plane.z)
             ground_plane_rt_vo = [gx, gy, gz]
 
@@ -741,20 +744,21 @@ def run_gcode_program(config):
             gcode.set_origin(world_T_origin, world_T_admittance_frame)
             robot.logger.info('Origin set')
 
-            (is_admittance, world_T_goals, is_pause) = gcode.get_next_world_T_goals(ground_plane_rt_vo)
+            (is_admittance, world_T_goals,
+             is_pause) = gcode.get_next_world_T_goals(ground_plane_rt_vo)
 
             while is_pause:
                 do_pause()
-                (is_admittance, world_T_goals, is_pause) = gcode.get_next_world_T_goals(ground_plane_rt_vo)
+                (is_admittance, world_T_goals,
+                 is_pause) = gcode.get_next_world_T_goals(ground_plane_rt_vo)
 
             if world_T_goals is None:
                 # we're done!
                 done = True
 
-            move_arm(robot_state, is_admittance,
-                     world_T_goals, arm_surface_contact_client, velocity, allow_walking,
-                     world_T_admittance_frame, press_force_percent, api_send_frame,
-                     use_xy_to_z_cross_term, bias_force_x)
+            move_arm(robot_state, is_admittance, world_T_goals, arm_surface_contact_client,
+                     velocity, allow_walking, world_T_admittance_frame, press_force_percent,
+                     api_send_frame, use_xy_to_z_cross_term, bias_force_x)
             odom_T_hand_goal = world_T_odom.inverse() * world_T_goals[-1]
             last_admittance = is_admittance
 
@@ -794,12 +798,13 @@ def run_gcode_program(config):
 
                 if arm_near_goal:
                     # Compute where to go.
-                    (is_admittance,
-                     world_T_goals, is_pause) = gcode.get_next_world_T_goals(ground_plane_rt_vo)
+                    (is_admittance, world_T_goals,
+                     is_pause) = gcode.get_next_world_T_goals(ground_plane_rt_vo)
 
                     while is_pause:
                         do_pause()
-                        (is_admittance, world_T_goals, is_pause) = gcode.get_next_world_T_goals(ground_plane_rt_vo)
+                        (is_admittance, world_T_goals,
+                         is_pause) = gcode.get_next_world_T_goals(ground_plane_rt_vo)
 
                     if world_T_goals is None:
                         # we're done!
@@ -807,10 +812,9 @@ def run_gcode_program(config):
                         robot.logger.info("Gcode program finished.")
                         break
 
-                    move_arm(robot_state, is_admittance,
-                             world_T_goals, arm_surface_contact_client, velocity, allow_walking,
-                             world_T_admittance_frame, press_force_percent, api_send_frame,
-                             use_xy_to_z_cross_term, bias_force_x)
+                    move_arm(robot_state, is_admittance, world_T_goals, arm_surface_contact_client,
+                             velocity, allow_walking, world_T_admittance_frame, press_force_percent,
+                             api_send_frame, use_xy_to_z_cross_term, bias_force_x)
                     odom_T_hand_goal = world_T_odom.inverse() * world_T_goals[-1]
 
                     if is_admittance != last_admittance:
@@ -848,8 +852,7 @@ def run_gcode_program(config):
                     goal_heading=odom_T_walk_se2.angle, frame_name="odom")
                 end_time = 15.0
                 #Issue the command to the robot
-                command_client.robot_command(command=walk_cmd,
-                    end_time_secs=time.time() + end_time)
+                command_client.robot_command(command=walk_cmd, end_time_secs=time.time() + end_time)
                 time.sleep(end_time)
 
             robot.logger.info('Done.')

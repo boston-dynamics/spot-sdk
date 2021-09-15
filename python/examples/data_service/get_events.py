@@ -24,8 +24,9 @@ def get_events(config):
     robot.authenticate(config.username, config.password)
     service_client = robot.ensure_client(DataServiceClient.default_service_name)
     query = data_index_protos.EventsCommentsSpec()
-    query.events.add()
+    query.events.add()  # pylint: disable=no-member
     print(service_client.get_events_comments(query))
+
 
 def main(argv):
     """Command line interface."""

@@ -37,9 +37,10 @@ Requests an end effector trajectory move while applying some force to the ground
 A [GCODE](https://en.wikipedia.org/wiki/G-code) interpreter that can be used to draw with sidewalk chalk.
 
 ## Door Service
-The door service is a framework for opening doors.  We provide two command types:
-* **Auto** This message requires users to specify a location to search for a door handle along with and some door parameters. Spot autonomously grabs the handle, opens the door, and walks through.
+The door service is a framework for opening doors.  We support three command types:
+* **AutoGrasp**: This message requires users to specify a location to search for a door handle along with and some door parameters. Spot autonomously grabs the handle, opens the door, and walks through.
 * **Warmstart**: In Warmstart, the assumption is the robot is already grasping the door handle.  The robot will skip the grasp stage of auto, and immediately begin opening the door and then traverses through the doorway.
+* **AutoPush**: Used for doors that can be opened via a push without requiring a grasp. This includes pushbars, crashbars, and doors without a latching mechanism. The robot will point the hand down and push the door open with its wrist based on a push point supplied over the API.
 
 See the following example for using this service:
 

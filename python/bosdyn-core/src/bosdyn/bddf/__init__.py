@@ -24,6 +24,9 @@ from .grpc_reader import GrpcReader
 # Class for registering a series which stores GRPC request/response pairs.
 from .grpc_service_writer import GrpcServiceWriter
 
+# A class for reading message data from a DataFile.
+from .message_reader import MessageReader
+
 # Class for reading a series of POD data from a DataFile.
 from .pod_series_reader import PodSeriesReader
 

@@ -25,6 +25,7 @@ from webrtc import WebRTCCommands
 
 from bosdyn.client import spot_cam
 
+
 def register_all_commands(subparsers, command_dict):
     COMMANDS = [
         AudioCommands,
@@ -43,6 +44,7 @@ def register_all_commands(subparsers, command_dict):
 
     for register_command in COMMANDS:
         register_command(subparsers, command_dict)
+
 
 def main(args=None):
     """Command-line interface for interacting with Spot CAM"""
@@ -71,6 +73,7 @@ def main(args=None):
         print(result)
 
     return result
+
 
 if __name__ == '__main__':
     main()

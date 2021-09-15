@@ -6,13 +6,14 @@
 
 """Common utilities for API Python code."""
 from __future__ import division
+
+import datetime
 import re
 import sys
 import time
-import datetime
 
-from google.protobuf.timestamp_pb2 import Timestamp
 from google.protobuf.duration_pb2 import Duration
+from google.protobuf.timestamp_pb2 import Timestamp
 
 if sys.version_info[0] >= 3:
     LONG = int
@@ -104,9 +105,25 @@ def sec_to_nsec(secs):
     return LONG(secs * NSEC_PER_SEC)
 
 
+def nsec_to_sec(secs):
+    """Convert time in nanoseconds to a timestamp in seconds.
+
+    Args:
+     secs: Time in nanoseconds
+    Returns:
+     The time in seconds, as a .
+    """
+    return float(secs) / NSEC_PER_SEC
+
+
 def now_nsec():
     """Returns nanoseconds from dawn of unix epoch until when this is called."""
     return sec_to_nsec(time.time())
+
+
+def now_sec():
+    """Returns seconds from dawn of unix epoch until when this is called."""
+    return time.time()
 
 
 def set_timestamp_from_now(timestamp_proto):
@@ -288,7 +305,16 @@ def parse_datetime(val):
 
 
 def parse_timespan(timespan_spec):
-    """Parse the timespan."""
+    """Parse a timespan spec of the form {from-time}[-{to-time}]
+
+    Args:
+     val: string with format {spec} or {spec}-{spec} where {spec} is a string
+             with a format as described by TIME_FORMAT_DESC.
+
+    Returns: (datetime.datetime, None) or (datetime.datetime, datetime.datetime).
+
+    Raises: DatetimeParseError if format of val is not recognized.
+    """
     dash_idx = timespan_spec.find('-')
     if dash_idx < 0:
         return parse_datetime(timespan_spec), None
@@ -336,3 +362,11 @@ class RobotTimeConverter:
           timestamp_proto[in/out] (google.protobuf.Timestamp): local system time time
         """
         timestamp_proto.CopyFrom(self.robot_timestamp_from_local(timestamp_proto))
+
+    def robot_seconds_from_local_seconds(self, local_time_secs):
+        """Returns the robot time in seconds from a local time in seconds.
+
+        Args:
+          local_time_secs:  Local system time time, in seconds from the unix epoch.
+        """
+        return local_time_secs + nsec_to_sec(self._clock_skew_nsec)

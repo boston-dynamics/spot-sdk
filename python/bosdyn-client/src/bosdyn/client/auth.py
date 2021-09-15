@@ -51,16 +51,16 @@ class InvalidApplicationTokenError(AuthResponseError):
 _STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _STATUS_TO_ERROR.update({
     auth_pb2.GetAuthTokenResponse.STATUS_OK: (None, None),
-    auth_pb2.GetAuthTokenResponse.STATUS_INVALID_LOGIN: (InvalidLoginError,
-                                                         InvalidLoginError.__doc__),
-    auth_pb2.GetAuthTokenResponse.STATUS_INVALID_TOKEN: (InvalidTokenError,
-                                                         InvalidTokenError.__doc__),
+    auth_pb2.GetAuthTokenResponse.STATUS_INVALID_LOGIN:
+        (InvalidLoginError, InvalidLoginError.__doc__),
+    auth_pb2.GetAuthTokenResponse.STATUS_INVALID_TOKEN:
+        (InvalidTokenError, InvalidTokenError.__doc__),
     auth_pb2.GetAuthTokenResponse.STATUS_TEMPORARILY_LOCKED_OUT:
-    (TemporarilyLockedOutError, TemporarilyLockedOutError.__doc__),
+        (TemporarilyLockedOutError, TemporarilyLockedOutError.__doc__),
     auth_pb2.GetAuthTokenResponse.STATUS_INVALID_APPLICATION_TOKEN:
-    (InvalidApplicationTokenError, InvalidApplicationTokenError.__doc__),
+        (InvalidApplicationTokenError, InvalidApplicationTokenError.__doc__),
     auth_pb2.GetAuthTokenResponse.STATUS_EXPIRED_APPLICATION_TOKEN:
-    (ExpiredApplicationTokenError, ExpiredApplicationTokenError.__doc__)
+        (ExpiredApplicationTokenError, ExpiredApplicationTokenError.__doc__)
 })
 
 

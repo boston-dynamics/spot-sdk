@@ -6,11 +6,13 @@
 
 """For clients to the Manipulation API service."""
 
-from bosdyn.client.common import BaseClient
+from bosdyn.client.common import (BaseClient, handle_common_header_errors,
+                                  handle_lease_use_result_errors)
 
 from bosdyn.api import manipulation_api_service_pb2_grpc
 
 from .lease import add_lease_wallet_processors
+
 
 class ManipulationApiClient(BaseClient):
     """Client for the ManipulationAPI service."""
@@ -41,7 +43,9 @@ class ManipulationApiClient(BaseClient):
         Returns:
             The full ManipulationApiResponse message, which includes a command id for feedback.
         """
-        return self.call(self._stub.ManipulationApi, manipulation_api_request, **kwargs)
+        return self.call(self._stub.ManipulationApi, manipulation_api_request,
+                         error_from_response=_manipulation_api_command_error_from_response,
+                         **kwargs)
 
     def manipulation_api_command_async(self, manipulation_api_request, **kwargs):
         """Async version of the manipulation_api_command()."""
@@ -57,8 +61,44 @@ class ManipulationApiClient(BaseClient):
         Returns:
             The full ManipulationApiFeedbackResponse message.
         """
-        return self.call(self._stub.ManipulationApiFeedback, manipulation_api_feedback_request, **kwargs)
+        return self.call(self._stub.ManipulationApiFeedback, manipulation_api_feedback_request,
+                         error_from_response=_manipulation_api_feedback_error_from_response,
+                         **kwargs)
 
     def manipulation_api_feedback_command_async(self, manipulation_api_feedback_request, **kwargs):
         """Async version of the manipulation_api_feedback_command()."""
-        return self.call_async(self._stub.ManipulationApiFeedback, manipulation_api_feedback_request, **kwargs)
+        return self.call_async(self._stub.ManipulationApiFeedback,
+                               manipulation_api_feedback_request, **kwargs)
+
+    def grasp_override_command(self, grasp_override_request, **kwargs):
+        """Issue a grasp override command to the robot.
+
+        Args:
+            grasp_override_request (manipulation_api_pb2.ApiGraspOverrideRequest): The command request
+                for a grasp override.
+
+        Returns:
+            An ApiGraspOverrideResponse message.
+        """
+        return self.call(self._stub.OverrideGrasp, grasp_override_request,
+                         error_from_response=_grasp_override_command_error_from_response, **kwargs)
+
+    def grasp_override_command_async(self, grasp_override_request, **kwargs):
+        """Async version of the grasp_override_command()."""
+        return self.call_async(self._stub.OverrideGrasp, grasp_override_request, **kwargs)
+
+
+@handle_common_header_errors
+@handle_lease_use_result_errors
+def _manipulation_api_command_error_from_response(response):
+    return None
+
+
+@handle_common_header_errors
+def _manipulation_api_feedback_error_from_response(response):
+    return None
+
+
+@handle_common_header_errors
+def _grasp_override_command_error_from_response(response):
+    return None

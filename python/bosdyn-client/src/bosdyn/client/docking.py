@@ -9,12 +9,17 @@
 import collections
 import time
 
+from deprecated import deprecated
+
 from bosdyn.api.docking import docking_pb2, docking_service_pb2_grpc
 from bosdyn.client import lease
-from bosdyn.client.common import (BaseClient, error_factory, handle_common_header_errors,
-                                  handle_lease_use_result_errors, handle_unset_status_error)
+from bosdyn.client.common import (BaseClient, common_header_errors, common_lease_errors,
+                                  error_factory, handle_common_header_errors,
+                                  handle_lease_use_result_errors, handle_unset_status_error,
+                                  maybe_raise)
 from bosdyn.client.exceptions import ResponseError
 from bosdyn.client.robot_command import CommandFailedError
+from bosdyn.util import now_sec, seconds_to_timestamp
 
 
 class DockingClient(BaseClient):
@@ -64,7 +69,47 @@ class DockingClient(BaseClient):
         return self.call_async(self._stub.DockingCommand, req, self._docking_id_from_response,
                                _docking_command_error_from_response, **kwargs)
 
+    def docking_command_full(self, station_id, clock_identifier, end_time, prep_pose_behavior=None,
+                             lease=None, **kwargs):
+        """Identical to docking_command(), except will return the full DockingCommandResponse."""
+        req = self._docking_command_request(lease, station_id, clock_identifier, end_time,
+                                            prep_pose_behavior)
+        return self.call(self._stub.DockingCommand, req,
+                         error_from_response=_docking_command_error_from_response, **kwargs)
 
+    def docking_command_full_async(self, station_id, clock_identifier, end_time,
+                                   prep_pose_behavior=None, lease=None, **kwargs):
+        """Identical to docking_command_async(), except will return the full DockingCommandResponse."""
+        req = self._docking_command_request(lease, station_id, clock_identifier, end_time,
+                                            prep_pose_behavior)
+        return self.call_async(self._stub.DockingCommand, req,
+                               error_from_response=_docking_command_error_from_response, **kwargs)
+
+
+    def docking_command_feedback_full(self, command_id, **kwargs):
+        """Check the status of a previously issued docking command.
+
+        Args:
+            command_id: The ID returned from a previous docking_command call.
+        Raises:
+            RpcError: problem communicating with the robot
+
+        Returns:
+            DockingCommandFeedbackResponse
+        """
+        req = self._docking_command_feedback_request(command_id)
+        return self.call(self._stub.DockingCommandFeedback, req,
+                         error_from_response=common_header_errors, **kwargs)
+
+    def docking_command_feedback_full_async(self, command_id, **kwargs):
+        """Async version of docking_command_feedback_full()."""
+        req = self._docking_command_feedback_request(command_id)
+        return self.call_async(self._stub.DockingCommandFeedback, req,
+                               error_from_response=common_header_errors, **kwargs)
+
+    @deprecated(
+        reason='This function can raise LeaseErrors when the feedback was successfully retrieved. '
+        'Use docking_command_feedback_full instead.', version='3.0.0', action='always')
     def docking_command_feedback(self, command_id, **kwargs):
         """Check the status of a previously issued docking command.
 
@@ -72,12 +117,15 @@ class DockingClient(BaseClient):
             command_id: The ID returned from a previous docking_command call.
 
         Returns:
-            Status of type DockingCommandResponse.Status
+            Status of type DockingCommandFeedbackResponse.Status
         """
         req = self._docking_command_feedback_request(command_id)
         return self.call(self._stub.DockingCommandFeedback, req, self._docking_status_from_response,
                          _docking_feedback_error_from_response, **kwargs)
 
+    @deprecated(
+        reason='This function can raise LeaseErrors when the feedback was successfully retrieved. '
+        'Use docking_command_feedback_full_async instead.', version='3.0.0', action='always')
     def docking_command_feedback_async(self, command_id, **kwargs):
         """Async version of docking_command_feedback()."""
         req = self._docking_command_feedback_request(command_id)
@@ -180,7 +228,7 @@ def _docking_get_state_error_from_response(response):
     return None
 
 
-def blocking_dock_robot(robot, dock_id, num_retries=4):
+def blocking_dock_robot(robot, dock_id, num_retries=4, timeout=30):
     """Blocking helper that takes control of the robot and docks it.
 
     Args:
@@ -202,18 +250,21 @@ def blocking_dock_robot(robot, dock_id, num_retries=4):
     # Try to dock the robot
     while attempt_number < num_retries and not docking_success:
         attempt_number += 1
-        cmd_end_time = time.time() + 30  # expect to finish in 30 seconds
+        converter = robot.time_sync.get_robot_time_converter()
+        start_time = converter.robot_seconds_from_local_seconds(now_sec())
+        cmd_end_time = start_time + timeout
         cmd_timeout = cmd_end_time + 10  # client side buffer
 
         prep_pose = (docking_pb2.PREP_POSE_USE_POSE if
                      (attempt_number % 2) else docking_pb2.PREP_POSE_SKIP_POSE)
 
-        cmd_id = docking_client.docking_command(
-            dock_id, robot.time_sync.endpoint.clock_identifier,
-            robot.time_sync.robot_timestamp_from_local_secs(cmd_end_time), prep_pose)
+        cmd_id = docking_client.docking_command(dock_id, robot.time_sync.endpoint.clock_identifier,
+                                                seconds_to_timestamp(cmd_end_time), prep_pose)
 
-        while time.time() < cmd_timeout:
-            status = docking_client.docking_command_feedback(cmd_id)
+        while converter.robot_seconds_from_local_seconds(now_sec()) < cmd_timeout:
+            feedback = docking_client.docking_command_feedback_full(cmd_id)
+            maybe_raise(common_lease_errors(feedback))
+            status = feedback.status
             if status == docking_pb2.DockingCommandFeedbackResponse.STATUS_IN_PROGRESS:
                 # keep waiting/trying
                 time.sleep(1)
@@ -259,17 +310,19 @@ def blocking_go_to_prep_pose(robot, dock_id, timeout=20):
     """
     docking_client = robot.ensure_client(DockingClient.default_service_name)
 
-    # Try and put the robot in a safe position
-    cmd_end_time = time.time() + timeout
+    converter = robot.time_sync.get_robot_time_converter()
+    start_time = converter.robot_seconds_from_local_seconds(now_sec())
+    cmd_end_time = start_time + timeout
     cmd_timeout = cmd_end_time + 10  # client side buffer
 
-    cmd_id = docking_client.docking_command(
-        dock_id, robot.time_sync.endpoint.clock_identifier,
-        robot.time_sync.robot_timestamp_from_local_secs(cmd_end_time),
-        docking_pb2.PREP_POSE_ONLY_POSE)
+    cmd_id = docking_client.docking_command(dock_id, robot.time_sync.endpoint.clock_identifier,
+                                            seconds_to_timestamp(cmd_end_time),
+                                            docking_pb2.PREP_POSE_ONLY_POSE)
 
-    while time.time() < cmd_timeout:
-        status = docking_client.docking_command_feedback(cmd_id)
+    while converter.robot_seconds_from_local_seconds(now_sec()) < cmd_timeout:
+        feedback = docking_client.docking_command_feedback_full(cmd_id)
+        maybe_raise(common_lease_errors(feedback))
+        status = feedback.status
         if status == docking_pb2.DockingCommandFeedbackResponse.STATUS_IN_PROGRESS:
             # keep waiting/trying
             time.sleep(1)
@@ -296,16 +349,19 @@ def blocking_undock(robot, timeout=20):
     """
     docking_client = robot.ensure_client(DockingClient.default_service_name)
 
-    # Try and put the robot in a safe position
-    cmd_end_time = time.time() + timeout
+    converter = robot.time_sync.get_robot_time_converter()
+    start_time = converter.robot_seconds_from_local_seconds(now_sec())
+    cmd_end_time = start_time + timeout
     cmd_timeout = cmd_end_time + 10  # client side buffer
 
-    cmd_id = docking_client.docking_command(
-        0, robot.time_sync.endpoint.clock_identifier,
-        robot.time_sync.robot_timestamp_from_local_secs(cmd_end_time), docking_pb2.PREP_POSE_UNDOCK)
+    cmd_id = docking_client.docking_command(0, robot.time_sync.endpoint.clock_identifier,
+                                            seconds_to_timestamp(cmd_end_time),
+                                            docking_pb2.PREP_POSE_UNDOCK)
 
-    while time.time() < cmd_timeout:
-        status = docking_client.docking_command_feedback(cmd_id)
+    while converter.robot_seconds_from_local_seconds(now_sec()) < cmd_timeout:
+        feedback = docking_client.docking_command_feedback_full(cmd_id)
+        maybe_raise(common_lease_errors(feedback))
+        status = feedback.status
         if status == docking_pb2.DockingCommandFeedbackResponse.STATUS_IN_PROGRESS:
             # keep waiting/trying
             time.sleep(1)

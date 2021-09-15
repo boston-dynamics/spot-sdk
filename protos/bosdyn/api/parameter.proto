@@ -7,10 +7,12 @@
 syntax = "proto3";
 
 package bosdyn.api;
-option java_outer_classname = "ParameterProto";
 
-import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "bosdyn/api";
+option java_outer_classname = "ParameterProto";
 
 // A generic parameter message used by the robot state service to describe different,
 // parameterized aspects of the robot.
@@ -39,6 +41,9 @@ message Parameter {
 
         // Value as true/false.
         bool bool_value = 8;
+
+        // Unsigned integer
+        uint64 uint_value = 10;
     }
 
     // Description of the parameter or its value.

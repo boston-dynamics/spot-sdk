@@ -12,6 +12,7 @@ import google.protobuf.text_format
 import pytest
 import math
 
+
 def _create_snapshot(frame_tree_snapshot_string):
     frame_tree_snapshot = geom_protos.FrameTreeSnapshot()
     google.protobuf.text_format.Parse(frame_tree_snapshot_string, frame_tree_snapshot)
@@ -541,11 +542,13 @@ def test_get_a_tform_b_se2():
     assert odom_tform_body is None
 
     # Check that a gravity aligned frame is used and properly computed.
-    vision_tform_fiducial_404 = frame_helpers.get_se2_a_tform_b(frame_tree, "vision", "fiducial_404")
+    vision_tform_fiducial_404 = frame_helpers.get_se2_a_tform_b(frame_tree, "vision",
+                                                                "fiducial_404")
     assert vision_tform_fiducial_404 is not None
     assert math.fabs(vision_tform_fiducial_404.position.x - 4) < 1e-6
     assert math.fabs(vision_tform_fiducial_404.position.y) < 1e-6
     assert math.fabs(vision_tform_fiducial_404.angle) < 1e-6
+
 
 def test_express_velocity_new_frame():
     snapshot_text = """
@@ -620,23 +623,85 @@ def test_express_velocity_new_frame():
     assert frame_helpers.validate_frame_tree_snapshot(frame_tree)
 
     # Transform SE(2) velocity
-    vel_of_body_in_vision = math_helpers.SE2Velocity(1,1,2)
-    vel_of_body_in_odom = frame_helpers.express_se2_velocity_in_new_frame(frame_tree, "vision", "odom", vel_of_body_in_vision)
+    vel_of_body_in_vision = math_helpers.SE2Velocity(1, 1, 2)
+    vel_of_body_in_odom = frame_helpers.express_se2_velocity_in_new_frame(
+        frame_tree, "vision", "odom", vel_of_body_in_vision)
     assert vel_of_body_in_odom is not None
     assert type(vel_of_body_in_vision) == math_helpers.SE2Velocity
-    assert math.fabs(vel_of_body_in_odom.angular -2) < 1e-6
-    assert math.fabs(vel_of_body_in_odom.linear.x -1) < 1e-6
-    assert math.fabs(vel_of_body_in_odom.linear.y -5) < 1e-6
-
+    assert math.fabs(vel_of_body_in_odom.angular - 2) < 1e-6
+    assert math.fabs(vel_of_body_in_odom.linear.x - 1) < 1e-6
+    assert math.fabs(vel_of_body_in_odom.linear.y - 5) < 1e-6
 
     # Transform SE(3) velocity
-    vel_of_body_in_vision = math_helpers.SE3Velocity(1,2,3,1,2,3)
-    vel_of_body_in_odom = frame_helpers.express_se3_velocity_in_new_frame(frame_tree, "vision", "odom", vel_of_body_in_vision)
+    vel_of_body_in_vision = math_helpers.SE3Velocity(1, 2, 3, 1, 2, 3)
+    vel_of_body_in_odom = frame_helpers.express_se3_velocity_in_new_frame(
+        frame_tree, "vision", "odom", vel_of_body_in_vision)
     assert vel_of_body_in_odom is not None
     assert type(vel_of_body_in_vision) == math_helpers.SE3Velocity
-    assert math.fabs(vel_of_body_in_odom.angular.x -1) < 1e-6
-    assert math.fabs(vel_of_body_in_odom.angular.y -2) < 1e-6
-    assert math.fabs(vel_of_body_in_odom.angular.z -3) < 1e-6
-    assert math.fabs(vel_of_body_in_odom.linear.x -21) < 1e-6
-    assert math.fabs(vel_of_body_in_odom.linear.y -(-2)) < 1e-6
-    assert math.fabs(vel_of_body_in_odom.linear.z -(-1)) < 1e-6
+    assert math.fabs(vel_of_body_in_odom.angular.x - 1) < 1e-6
+    assert math.fabs(vel_of_body_in_odom.angular.y - 2) < 1e-6
+    assert math.fabs(vel_of_body_in_odom.angular.z - 3) < 1e-6
+    assert math.fabs(vel_of_body_in_odom.linear.x - 21) < 1e-6
+    assert math.fabs(vel_of_body_in_odom.linear.y - (-2)) < 1e-6
+    assert math.fabs(vel_of_body_in_odom.linear.z - (-1)) < 1e-6
+
+def test_express_velocity_types():
+    snapshot_text = """
+    child_to_parent_edge_map {
+      key: "vision"
+      value: {
+        parent_frame_name: "body"
+        parent_tform_child: {
+          position: {
+            x: 1
+            z: 10
+          }
+          rotation: {
+            w: 1
+          }
+        }
+      }
+    }
+    child_to_parent_edge_map {
+      key: "body"
+      value: {
+        parent_frame_name: ""
+      }
+    }
+    """
+    frame_tree = _create_snapshot(snapshot_text)
+    assert frame_helpers.validate_frame_tree_snapshot(frame_tree)
+    test_vel1 = math_helpers.SE3Velocity(1.1,2.2,3.3,4.4,5.5,6.6)
+    assert type(test_vel1.linear_velocity_x) == float
+    assert test_vel1.linear_velocity_x == 1.1
+    assert test_vel1.linear.x == 1.1
+    test_vel2 = math_helpers.SE3Velocity(1.1,2.2,3.3,4.4,5.5,6.6)
+    test_vel2_proto = test_vel2.to_proto()
+
+    body_vel = frame_helpers.express_se3_velocity_in_new_frame(frame_tree, "body", "vision", test_vel2)
+    assert body_vel is not None
+    assert type(body_vel.linear.x) == float
+    assert type(body_vel.linear_velocity_x) == float
+    assert body_vel.linear_velocity_x == 56.1
+    assert body_vel.linear.x == 56.1
+    body_vel = frame_helpers.express_se3_velocity_in_new_frame(frame_tree, "body", "vision", test_vel2_proto)
+    assert body_vel is not None
+    assert type(body_vel.linear.x) == float
+    assert type(body_vel.linear_velocity_x) == float
+    assert body_vel.linear_velocity_x == 56.1
+    assert body_vel.linear.x == 56.1
+
+    test_vel3 = math_helpers.SE2Velocity(1.1,2.2,3.3)
+    test_vel3_proto = test_vel3.to_proto()
+    body_vel = frame_helpers.express_se2_velocity_in_new_frame(frame_tree, "body", "vision", test_vel3)
+    assert body_vel is not None
+    assert type(body_vel.linear.x) == float
+    assert type(body_vel.linear_velocity_x) == float
+    assert body_vel.linear_velocity_x == 1.1
+    assert body_vel.linear.x == 1.1
+    body_vel = frame_helpers.express_se2_velocity_in_new_frame(frame_tree, "body", "vision", test_vel3_proto)
+    assert body_vel is not None
+    assert type(body_vel.linear.x) == float
+    assert type(body_vel.linear_velocity_x) == float
+    assert body_vel.linear_velocity_x == 1.1
+    assert body_vel.linear.x == 1.1

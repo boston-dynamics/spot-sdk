@@ -178,7 +178,8 @@ def get_se2_a_tform_b(frame_tree_snapshot, frame_a, frame_b, validate=True):
     return se3_a_tform_b.get_closest_se2_transform()
 
 
-def express_se2_velocity_in_new_frame(frame_tree_snapshot, frame_b, frame_c, vel_of_a_in_b, validate=True):
+def express_se2_velocity_in_new_frame(frame_tree_snapshot, frame_b, frame_c, vel_of_a_in_b,
+                                      validate=True):
     """Convert the SE2 Velocity in frame b to a SE2 Velocity in frame c using
        the frame tree snapshot.
 
@@ -210,7 +211,9 @@ def express_se2_velocity_in_new_frame(frame_tree_snapshot, frame_b, frame_c, vel
     vel_of_a_in_c = math_helpers.transform_se2velocity(c_adjoint_b, vel_of_a_in_b)
     return vel_of_a_in_c
 
-def express_se3_velocity_in_new_frame(frame_tree_snapshot, frame_b, frame_c, vel_of_a_in_b, validate=True):
+
+def express_se3_velocity_in_new_frame(frame_tree_snapshot, frame_b, frame_c, vel_of_a_in_b,
+                                      validate=True):
     """Convert the SE(3) Velocity in frame b to an SE(3) Velocity in frame c using
        the frame tree snapshot.
 
@@ -234,6 +237,7 @@ def express_se3_velocity_in_new_frame(frame_tree_snapshot, frame_b, frame_c, vel
     c_adjoint_b = se3_c_tform_b.to_adjoint_matrix()
     vel_of_a_in_c = math_helpers.transform_se3velocity(c_adjoint_b, vel_of_a_in_b)
     return vel_of_a_in_c
+
 
 def get_odom_tform_body(frame_tree_snapshot):
     """Get the transformation between "odom" frame and "body" frame from the FrameTreeSnapshot."""

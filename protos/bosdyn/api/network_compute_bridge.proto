@@ -13,7 +13,6 @@ import "bosdyn/api/header.proto";
 import "bosdyn/api/image.proto";
 import "bosdyn/api/world_object.proto";
 import "google/protobuf/any.proto";
-import "google/protobuf/duration.proto";
 
 message ListAvailableModelsRequest {
     RequestHeader header = 1; // Common request header
@@ -28,8 +27,19 @@ message ListAvailableModelsResponse {
     // Provide list of available models
     repeated string available_models = 2;
 
+    // Optional information about available classes for each model
+    repeated ModelLabels labels = 6;
+
     // Command status
     ListAvailableModelsStatus status = 5;
+}
+
+message ModelLabels {
+    // Model name.
+    string model_name = 1;
+
+    // List of class labels returned by this model.
+    repeated string available_labels = 2;
 }
 
 message NetworkComputeRequest {
@@ -59,10 +69,10 @@ message NetworkComputeInputData {
         // Image to process, if you are not using an image source.
         Image image = 2;
 
-        // Other data that isn't an image.  NetworkComputeBridge service will pass it through
-        // to the remote server so you can do computation on arbitrary data.
-        google.protobuf.Any other_data = 3;
     }
+    // Other data that isn't an image.  NetworkComputeBridge service will pass it through
+    // to the remote server so you can do computation on arbitrary data.
+    google.protobuf.Any other_data = 3;
 
     // Name of the model to be run on the input data.
     string model_name = 4;
@@ -114,6 +124,13 @@ message NetworkComputeResponse {
     // The image we computed the data on. If the input image itself was provided in the request,
     // this field is not populated.  This field is not set for non-image input.
     ImageResponse image_response = 3;
+
+    // If the image was rotated for processing, this field will contain the amount it was rotated by
+    // (counter-clockwise, in radians).
+    //
+    // Note that the image returned is *not* rotated, regardless of if it was rotated
+    // for processing.  This ensures that all other calibration and metadata remains valid.
+    double image_rotation_angle = 6;
 
     // Non image-type data that can optionally be returned by a remote server.
     google.protobuf.Any other_data = 4;

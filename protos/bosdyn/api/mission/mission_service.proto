@@ -10,6 +10,7 @@ package bosdyn.api.mission;
 
 option java_outer_classname = "MissionServiceProto";
 
+import "bosdyn/api/data_chunk.proto";
 import "bosdyn/api/mission/mission.proto";
 
 // The MissionService can be used to specify high level autonomous behaviors for Spot using behavior trees.
@@ -17,12 +18,21 @@ service MissionService {
     // Load a mission to run later.
     rpc LoadMission(LoadMissionRequest) returns (LoadMissionResponse) {}
 
+    // Alternative loading method for large missions, that allows you to break the 
+    // mission up into multiple streamed requests.  The data chunks should deserialize
+    // into a LoadMissionRequest
+    rpc LoadMissionAsChunks (stream DataChunk) returns (LoadMissionResponse) {}
+
     // Start executing a loaded mission.
     // Will not restart a mission that has run to completion. Use RestartMission to do that.
     rpc PlayMission(PlayMissionRequest) returns (PlayMissionResponse) {}
 
     // Pause mission execution.
     rpc PauseMission(PauseMissionRequest) returns (PauseMissionResponse) {}
+
+    // Stop a running mission.
+    // Must use RestartMission, not PlayMission, to begin from the beginning.
+    rpc StopMission(StopMissionRequest) returns (StopMissionResponse) {}
 
     // Start executing a loaded mission from the beginning.
     // Does not need to be called after LoadMission.

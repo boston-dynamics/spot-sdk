@@ -15,10 +15,50 @@ class Error(Exception):
 
 class CompileError(Error):
     """Error occurred during compilation."""
+    def __init__(self, msg='', node_proto=None):
+        Error.__init__(self, msg)
+        self.node_proto = node_proto
+
+    def node_name(self):
+        """Returns the 'name' field of the Node proto if possible, None otherwise"""
+        if self.node_proto is None:
+            return None
+        try:
+            return self.node_proto.name
+        except Exception:
+            return None
+
+    def node_impl(self):
+        """Returns the proto type of the Node 'impl' field if possible, None otherwise"""
+        if self.node_proto is None:
+            return None
+        try:
+            return self.node_proto.impl.TypeName()
+        except Exception:
+            return None
+
+    def get_node_details(self):
+        """Get a string of the node detail."""
+        details = ''
+        node_impl = self.node_impl()
+        if node_impl:
+            details = f' ({node_impl}'
+
+        node_name = self.node_name()
+        if node_name is not None:
+            if not details:
+                details = ' (???'
+            details += f' with name "{node_name}")'
+        return details
+
+    def __str__(self):
+        msg = super(CompileError, self).__str__()
+        return msg + self.get_node_details()
 
 
 class UnknownType(CompileError):
-    pass
+    def __str__(self):
+        return 'Do not know how to build {}'.format(self.node_impl())
 
 
 class ValidationError(Error):

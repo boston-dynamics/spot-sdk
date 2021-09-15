@@ -12,6 +12,7 @@ from bosdyn.api.spot_cam import compositor_pb2
 
 from google.protobuf.wrappers_pb2 import BoolValue
 
+
 class CompositorClient(BaseClient):
     """A client calling Spot CAM Compositor services.
     """

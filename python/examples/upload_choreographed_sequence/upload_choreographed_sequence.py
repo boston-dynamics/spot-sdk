@@ -18,6 +18,7 @@ from bosdyn.choreography.client.choreography import ChoreographyClient, load_cho
 
 DEFAULT_DANCE = "default_dance.csq"
 
+
 def main(argv):
     # Parse args
     parser = argparse.ArgumentParser()
@@ -65,10 +66,12 @@ def main(argv):
     # Once the choreography is loaded into a protobuf message, upload the routine to the robot. We set
     # non_strict_parsing to true so that the robot will automatically correct any errors it find in the routine.
     try:
-        upload_response = choreography_client.upload_choreography(choreography, non_strict_parsing=True)
+        upload_response = choreography_client.upload_choreography(choreography,
+                                                                  non_strict_parsing=True)
     except UnauthenticatedError as err:
-        print("The robot license must contain 'choreography' permissions to upload and execute dances. "
-              "Please contact Boston Dynamics Support to get the appropriate license file. ")
+        print(
+            "The robot license must contain 'choreography' permissions to upload and execute dances. "
+            "Please contact Boston Dynamics Support to get the appropriate license file. ")
         return True
     except ResponseError as err:
         # Check if the ChoreographyService considers the uploaded routine as valid. If not, then the warnings must be
@@ -107,6 +110,7 @@ def main(argv):
     # Sit the robot down and power off the robot.
     robot.power_off()
     return True
+
 
 if __name__ == "__main__":
     if not main(sys.argv[1:]):

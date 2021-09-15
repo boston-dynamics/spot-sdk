@@ -128,7 +128,7 @@ message ArmVelocityCommand {
         // The angular velocity of the hand frame measured with respect to the odom frame, expressed
         // in the hand frame. A 'X' rate will cause the hand to rotate about its x-axis, e.g. the
         // final wrist twist joint will rotate. And similarly, 'Y' and 'Z' rates will cause the hand
-        // to rotate about its y and z axis respectively. \ 
+        // to rotate about its y and z axis respectively. \
         // The units should be rad/sec.
         Vec3 angular_velocity_of_hand_rt_odom_in_hand = 6;
 
@@ -162,7 +162,8 @@ message NamedArmPositionsCommand {
         POSITIONS_READY = 2;
 
         // Stow the arm, safely. If the robot is holding something, it will freeze the arm instead
-        // of stowing.
+        // of stowing.  Overriding the carry_state to CARRY_STATE_CARRIABLE_AND_STOWABLE, will allow
+        // the robot to stow the arm while grasping an item.
         POSITIONS_STOW = 3;
     }
 
@@ -313,7 +314,7 @@ message ArmJointMoveCommand {
 
     message Feedback {
         enum Status {
-            // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
+            // STATUS_UNKNOWN should never be used. If used, an internal error has happened
             STATUS_UNKNOWN = 0;
             // The arm is at the desired configuration.
             STATUS_COMPLETE = 1;
@@ -322,6 +323,40 @@ message ArmJointMoveCommand {
         }
         // Current status of the request.
         Status status = 1;
+    
+        enum PlannerStatus {
+            // PLANNER_STATUS_UNKNOWN should never be used. If used, an internal error has happened.
+            PLANNER_STATUS_UNKNOWN = 0;
+            // A solution passing through the desired points and obeying the constraints was found.
+            PLANNER_STATUS_SUCCESS = 1;
+            // The planner had to modify the desired points in order to obey the constraints.  For
+            // example, if you specify a 1 point trajectory, and tell it to get there in a really short
+            // amount of time, but haven't set a high allowable max velocity / acceleration, the planner
+            // will do its best to get as close as possible to the final point, but won't reach it. In
+            // situations where we've modified you last point, we append a minimum time trajectory (that
+            // obeys the velocity and acceleration limits) from the planner's final point to the requested
+            // final point.
+            PLANNER_STATUS_MODIFIED = 2;
+            // Failed to compute a valid trajectory, will go to first point instead. It is possible
+            // that our optimizer till fail to solve the problem instead of returning a sub-optimal
+            // solution.  This is un-likely to occur.
+            PLANNER_STATUS_FAILED = 3;
+        }
+        // Current status of the trajectory planner.
+        PlannerStatus planner_status = 2;
+
+        // Based on the user trajectory, the planned knot points that obey acceleration and 
+        // velocity constraints. If these knot points don't match the requested knot points, 
+        // consider increasing velocity/acceleration limits, and/or staying further away from 
+        // joint position limits. In situations where we've modified you last point, we append
+        // a minimum time trajectory (that obeys the velocity and acceleration limits) from the
+        // planner's final point to the requested final point. This means that the length of
+        // planned_points may be one point larger than the requested.
+        repeated ArmJointTrajectoryPoint planned_points = 3;
+
+        // Returns amount of time remaining until the joints are at the goal position.  For
+        // multiple point trajectories, this is the time remaining to the final point.
+        google.protobuf.Duration time_to_goal = 4;
     }
 }
 
@@ -401,16 +436,15 @@ message GazeCommand {
         Vec3Trajectory target_trajectory_in_frame1 = 1;
         string frame1_name = 2;
 
-        // Optional desired pose of the tool expressed in frame2.  Will be constrained to 'look at'
+        // Optional, desired pose of the tool expressed in frame2.  Will be constrained to 'look at'
         // the target regardless of the requested orientation.
         SE3Trajectory tool_trajectory_in_frame2 = 10;
         string frame2_name = 11;
 
-        // The tool pose relative to the parent link (wrist).
-        // Defaults to the gripper's hand frame position with the gripper camera's
-        // orientation.
-        //    pos: [0.195570  0  0]
-        //    rot: [0.9969173 0 -0.0784593 0] (-9 degrees about y)
+        // The transformation of the tool pose relative to the parent link (wrist).
+        // If the field is left unset, the transform will default to:
+        //      The position is wrist_tform_hand.position() [20 cm translation in wrist x].
+        //      The rotation is wrist_tform_hand_camera.rotation() [-9 degree pitch about wrist y].
         SE3Pose wrist_tform_tool = 9;
 
         // Optional velocity to move the target along the shortest path from the gaze's starting

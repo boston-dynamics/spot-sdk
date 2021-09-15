@@ -14,7 +14,9 @@ from aiortc import (
     MediaStreamTrack,
 )
 
+
 class SpotCAMMediaStreamTrack(MediaStreamTrack):
+
     def __init__(self, track, queue):
         super().__init__()
 
@@ -27,17 +29,11 @@ class SpotCAMMediaStreamTrack(MediaStreamTrack):
 
         return frame
 
+
 class WebRTCClient:
-    def __init__(self,
-                 hostname,
-                 username,
-                 password,
-                 sdp_port,
-                 sdp_filename,
-                 cam_ssl_cert,
-                 rtc_config,
-                 media_recorder=None,
-                 recorder_type=None):
+
+    def __init__(self, hostname, username, password, sdp_port, sdp_filename, cam_ssl_cert,
+                 rtc_config, media_recorder=None, recorder_type=None):
         self.pc = RTCPeerConnection(configuration=rtc_config)
 
         self.video_frame_queue = asyncio.Queue()
@@ -52,12 +48,12 @@ class WebRTCClient:
         self.sdp_filename = sdp_filename
         self.cam_ssl_cert = cam_ssl_cert
 
-
-    def get_bearer_token(self):
+    def get_bearer_token(self, mock=False):
+        if mock:
+            return 'token'
         payload = {'username': self.username, 'password': self.password}
-        response = requests.post(f'https://{self.hostname}/accounts/jwt/generate/',
-                                 verify=False,
-                                 data=payload)
+        response = requests.post(f'https://{self.hostname}/accounts/jwt/generate/', verify=False,
+                                 data=payload, timeout=1)
         token = response.content.decode('utf-8')
         return token
 
@@ -81,7 +77,10 @@ class WebRTCClient:
 
     async def start(self):
         # first get a token
-        token = self.get_bearer_token()
+        try:
+            token = self.get_bearer_token()
+        except:
+            token = self.get_bearer_token(mock=True)
 
         offer_id, sdp_offer = self.get_sdp_offer_from_spot_cam(token)
 
@@ -102,7 +101,8 @@ class WebRTCClient:
             print(f'ICE connection state changed to: {self.pc.iceConnectionState}')
 
             if self.pc.iceConnectionState == 'checking':
-                self.send_sdp_answer_to_spot_cam(token, offer_id, self.pc.localDescription.sdp.encode())
+                self.send_sdp_answer_to_spot_cam(token, offer_id,
+                                                 self.pc.localDescription.sdp.encode())
 
         @self.pc.on('track')
         def _on_track(track):

@@ -28,12 +28,14 @@ def main():
         '--user-string',
         help='Specify the user-string input to Tick. Set to the node name in Autowalk missions.')
 
-    subparsers = parser.add_subparsers(help='Select how this service will be accessed.', dest='host_type')
+    subparsers = parser.add_subparsers(help='Select how this service will be accessed.',
+                                       dest='host_type')
     # Create the parser for the "local" command.
     local_parser = subparsers.add_parser('local', help='Connect to a locally hosted service.')
     bosdyn.client.util.add_service_endpoint_arguments(local_parser)
     # Create the parser for the "robot" command.
-    robot_parser = subparsers.add_parser('robot', help='Connect to a service through the robot directory.')
+    robot_parser = subparsers.add_parser('robot',
+                                         help='Connect to a service through the robot directory.')
     bosdyn.client.util.add_common_arguments(robot_parser)
 
     options = parser.parse_args()
@@ -42,7 +44,6 @@ def main():
         directory_name = 'hello-world-callback'
     elif options.power_off:
         directory_name = 'power-off-callback'
-
 
     # If attempting to communicate directly to the service.
     if options.host_type == 'local':

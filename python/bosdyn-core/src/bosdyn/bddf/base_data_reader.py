@@ -17,12 +17,20 @@ from .common import (BLOCK_HEADER_SIZE_MASK, BLOCK_HEADER_TYPE_MASK, ChecksumErr
 class BaseDataReader:  # pylint: disable=too-many-instance-attributes
     """Shared parent class for DataReader and StreamedDataReader."""
 
-    def __init__(self, outfile):
+    def __init__(self, infile=None, filename=None):
         """
+        At least one of the following arguments must be specified.
+
         Args:
-         outfile:      binary file-like object for reading (e.g., from open(fname, "rb")).
+         infile:      binary file-like object for reading (e.g., from open(fname, "rb")).
+         filename:    path of input file, if applicable.
         """
-        self._file = outfile
+        self._file = infile
+        self._filename = filename
+        if not self._file:
+            if not self._filename:
+                raise ValueError("One of infile or filename must be specified")
+            self._file = open(self._filename, 'rb')
         self._file_descriptor = None
         self._spec_index = None
         self._index_offset = None
@@ -31,6 +39,11 @@ class BaseDataReader:  # pylint: disable=too-many-instance-attributes
         self._eof = False
         self._file_index = None
         self._read_header()
+
+    @property
+    def filename(self):
+        """Return input file name, if specified, or None if not."""
+        return self._filename
 
     @property
     def file_descriptor(self):

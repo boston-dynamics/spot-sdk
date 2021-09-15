@@ -9,7 +9,7 @@ import collections
 import time
 
 from deprecated.sphinx import deprecated
-from google.protobuf import any_pb2
+from google.protobuf import any_pb2, wrappers_pb2
 from bosdyn import geometry
 
 from bosdyn.api import geometry_pb2
@@ -32,7 +32,7 @@ from bosdyn.client.common import (BaseClient, error_factory, error_pair, handle_
 from .exceptions import ResponseError, InvalidRequestError, TimedOutError, UnsetStatusError
 from .exceptions import Error as BaseError
 from .frame_helpers import BODY_FRAME_NAME, ODOM_FRAME_NAME, get_se2_a_tform_b
-from .math_helpers import SE2Pose
+from .math_helpers import SE2Pose, SE3Pose
 from .lease import add_lease_wallet_processors
 
 # The angles (in radians) that represent the claw gripper open and closed positions.
@@ -63,8 +63,10 @@ class TooDistantError(RobotCommandResponseError):
 class NotPoweredOnError(RobotCommandResponseError):
     """The robot must be powered on to accept a command."""
 
+
 class BehaviorFaultError(RobotCommandResponseError):
     """The robot may not be commanded with uncleared behavior faults."""
+
 
 class NotClearedError(RobotCommandResponseError):
     """Behavior fault could not be cleared."""
@@ -80,6 +82,7 @@ class CommandFailedError(Error):
 
 class CommandTimedOutError(Error):
     """Timed out waiting for SUCCESS response from robot command."""
+
 
 class UnknownFrameError(RobotCommandResponseError):
     """Robot does not know how to handle supplied frame."""
@@ -177,7 +180,7 @@ EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME = {
                 }
             }
         },
-        'gripper_command':{
+        'gripper_command': {
             '@command': {
                 'claw_gripper_command': {
                     'trajectory': {
@@ -238,7 +241,8 @@ def _edit_proto(proto, edit_tree, edit_fn):
             # Recursion into a one-of message. '@key' means field 'key' contains a one-of message.
             which_oneof = proto.WhichOneof(key[1:])
             if not which_oneof or which_oneof not in subtree:
-                return  # No submessage, or tree doesn't contain a conversion for it.
+                # No submessage, or tree doesn't contain a conversion for it.
+                return
             _edit_proto(getattr(proto, which_oneof), subtree[which_oneof], edit_fn)
         elif subtree:
             # Recursion into a sub-message by field name.
@@ -452,7 +456,8 @@ class RobotCommandClient(BaseClient):
         def _to_robot_time(key, proto):
             """If proto has a field named key with a timestamp, convert timestamp to robot time."""
             if not (key in proto.DESCRIPTOR.fields_by_name and proto.HasField(key)):
-                return  # No such field in proto, or field does not contain a timestamp.
+                # No such field in proto, or field does not contain a timestamp.
+                return
             timestamp = getattr(proto, key)
             converter.convert_timestamp_from_local_to_robot(timestamp)
 
@@ -503,7 +508,8 @@ def _robot_command_value(response):
 
 
 # yapf: disable
-_ROBOT_COMMAND_STATUS_TO_ERROR = collections.defaultdict(lambda: (RobotCommandResponseError, None))
+_ROBOT_COMMAND_STATUS_TO_ERROR = collections.defaultdict(
+    lambda: (RobotCommandResponseError, None))
 _ROBOT_COMMAND_STATUS_TO_ERROR.update({
     robot_command_pb2.RobotCommandResponse.STATUS_OK: (None, None),
     robot_command_pb2.RobotCommandResponse.STATUS_INVALID_REQUEST: error_pair(InvalidRequestError),
@@ -564,7 +570,8 @@ def _clear_behavior_fault_value(response):
 
 
 # yapf: disable
-_CLEAR_BEHAVIOR_FAULT_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
+_CLEAR_BEHAVIOR_FAULT_STATUS_TO_ERROR = collections.defaultdict(
+    lambda: (ResponseError, None))
 _CLEAR_BEHAVIOR_FAULT_STATUS_TO_ERROR.update({
     robot_command_pb2.ClearBehaviorFaultResponse.STATUS_CLEARED: (None, None),
     robot_command_pb2.ClearBehaviorFaultResponse.STATUS_NOT_CLEARED:
@@ -672,6 +679,31 @@ class RobotCommandBuilder(object):
             safe_power_off_request=basic_command_pb2.SafePowerOffCommand.Request())
         command = robot_command_pb2.RobotCommand(full_body_command=full_body_command)
         return command
+
+    @staticmethod
+    def constrained_manipulation_command(task_type, init_wrench_direction_in_frame_name,
+                                         force_limit, torque_limit, frame_name,
+                                         tangential_speed=None, rotational_speed=None):
+        """Command constrained manipulation. """
+        if (tangential_speed is not None):
+            full_body_command = full_body_command_pb2.FullBodyCommand.Request(
+                constrained_manipulation_request=basic_command_pb2.ConstrainedManipulationCommand.
+                Request(task_type=task_type,
+                        init_wrench_direction_in_frame_name=init_wrench_direction_in_frame_name,
+                        frame_name=frame_name, tangential_speed=tangential_speed))
+        elif (rotational_speed is not None):
+            full_body_command = full_body_command_pb2.FullBodyCommand.Request(
+                constrained_manipulation_request=basic_command_pb2.ConstrainedManipulationCommand.
+                Request(task_type=task_type,
+                        init_wrench_direction_in_frame_name=init_wrench_direction_in_frame_name,
+                        frame_name=frame_name, rotational_speed=rotational_speed))
+        else:
+            raise Exception("Need either translational or rotational speed")
+        full_body_command.constrained_manipulation_request.force_limit.value = force_limit
+        full_body_command.constrained_manipulation_request.torque_limit.value = torque_limit
+        command = robot_command_pb2.RobotCommand(full_body_command=full_body_command)
+        return command
+
     ###################################
     # Mobility commands  - DEPRECATED #
     ###################################
@@ -716,11 +748,8 @@ class RobotCommandBuilder(object):
         return command
 
     @staticmethod
-    @deprecated(
-        reason='Mobility commands are now sent as a part of synchronized commands. '\
-               'Use synchro_velocity_command instead.',
-        version='2.1.0',
-        action="always")
+    @deprecated(reason='Mobility commands are now sent as a part of synchronized commands. '
+                'Use synchro_velocity_command instead.', version='2.1.0', action="always")
     def velocity_command(v_x, v_y, v_rot, params=None, body_height=0.0,
                          locomotion_hint=spot_command_pb2.HINT_AUTO, frame_name=BODY_FRAME_NAME):
         """
@@ -757,11 +786,8 @@ class RobotCommandBuilder(object):
         return command
 
     @staticmethod
-    @deprecated(
-        reason='Mobility commands are now sent as a part of synchronized commands. '\
-               'Use synchro_stand_command instead.',
-        version='2.1.0',
-        action="always")
+    @deprecated(reason='Mobility commands are now sent as a part of synchronized commands. '
+                'Use synchro_stand_command instead.', version='2.1.0', action="always")
     def stand_command(params=None, body_height=0.0, footprint_R_body=geometry.EulerZXY()):
         """
         Command robot to stand. If the robot is sitting, it will stand up. If the robot is
@@ -790,11 +816,8 @@ class RobotCommandBuilder(object):
         return command
 
     @staticmethod
-    @deprecated(
-        reason='Mobility commands are now sent as a part of synchronized commands. '\
-               'Use synchro_sit_command instead.',
-        version='2.1.0',
-        action="always")
+    @deprecated(reason='Mobility commands are now sent as a part of synchronized commands. '
+                'Use synchro_sit_command instead.', version='2.1.0', action="always")
     def sit_command(params=None):
         """
         Command the robot to sit.
@@ -812,7 +835,6 @@ class RobotCommandBuilder(object):
             sit_request=basic_command_pb2.SitCommand.Request(), params=any_params)
         command = robot_command_pb2.RobotCommand(mobility_command=mobility_command)
         return command
-
 
     #########################
     # Synchronized commands #
@@ -896,8 +918,9 @@ class RobotCommandBuilder(object):
         return robot_command
 
     @staticmethod
-    def synchro_trajectory_command_in_body_frame(goal_x_rt_body, goal_y_rt_body, goal_heading_rt_body,
-                                                 frame_tree_snapshot, params=None, body_height=0.0,
+    def synchro_trajectory_command_in_body_frame(goal_x_rt_body, goal_y_rt_body,
+                                                 goal_heading_rt_body, frame_tree_snapshot,
+                                                 params=None, body_height=0.0,
                                                  locomotion_hint=spot_command_pb2.HINT_AUTO):
         """Command robot to move to pose described relative to the robots body along a 2D plane. For example,
         a command to move forward 2 meters at the same heading will have goal_x_rt_body=2.0, goal_y_rt_body=0.0,
@@ -929,8 +952,8 @@ class RobotCommandBuilder(object):
         odom_tform_body = get_se2_a_tform_b(frame_tree_snapshot, ODOM_FRAME_NAME, BODY_FRAME_NAME)
         odom_tform_goto = odom_tform_body * goto_rt_body
         return RobotCommandBuilder.synchro_se2_trajectory_command(odom_tform_goto.to_proto(),
-                                                                 ODOM_FRAME_NAME,
-                                                                 params, body_height, locomotion_hint)
+                                                                  ODOM_FRAME_NAME, params,
+                                                                  body_height, locomotion_hint)
 
     @staticmethod
     def synchro_velocity_command(v_x, v_y, v_rot, params=None, body_height=0.0,
@@ -1138,7 +1161,9 @@ class RobotCommandBuilder(object):
         return robot_command
 
     @staticmethod
-    def arm_gaze_command(x, y, z, frame_name, build_on_command=None):
+    def arm_gaze_command(x, y, z, frame_name, build_on_command=None, frame2_tform_desired_hand=None,
+                         frame2_name=None, max_linear_vel=None, max_angular_vel=None,
+                         max_accel=None):
         """ Builds a Vec3Trajectory to tell the robot arm to gaze at a point in 3D space.
         Returns:
             RobotCommand, which can be issued to the robot command service
@@ -1147,10 +1172,26 @@ class RobotCommandBuilder(object):
         point1 = trajectory_pb2.Vec3TrajectoryPoint(point=pos)
 
         traj = trajectory_pb2.Vec3Trajectory(points=[point1])
-
         # Build the proto
         gaze_cmd = arm_command_pb2.GazeCommand.Request(target_trajectory_in_frame1=traj,
                                                        frame1_name=frame_name)
+
+        if frame2_tform_desired_hand is not None and frame2_name is not None:
+            if type(frame2_tform_desired_hand) == SE3Pose:
+                # Convert input argument from math_helpers class to protobuf message.
+                frame2_tform_desired_hand = frame2_tform_desired_hand.to_proto()
+
+            desired_point = trajectory_pb2.SE3TrajectoryPoint(pose=frame2_tform_desired_hand)
+            gaze_cmd.tool_trajectory_in_frame2.points.extend([desired_point])
+            gaze_cmd.frame2_name = frame2_name
+
+        if max_linear_vel is not None:
+            gaze_cmd.max_linear_velocity.value = max_linear_vel
+        if max_angular_vel is not None:
+            gaze_cmd.max_angular_velocity.value = max_angular_vel
+        if max_accel is not None:
+            gaze_cmd.maximum_acceleration.value = max_accel
+
         arm_command = arm_command_pb2.ArmCommand.Request(arm_gaze_command=gaze_cmd)
         synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
             arm_command=arm_command)
@@ -1187,7 +1228,8 @@ class RobotCommandBuilder(object):
         return robot_command
 
     @staticmethod
-    def arm_wrench_command(force_x, force_y, force_z, torque_x, torque_y, torque_z, frame_name, seconds=5, build_on_command=None):
+    def arm_wrench_command(force_x, force_y, force_z, torque_x, torque_y, torque_z, frame_name,
+                           seconds=5, build_on_command=None):
         """ Builds a command to tell robot arm to exhibit a wrench.
             Wraps it in a SynchronizedCommand.
 
@@ -1202,7 +1244,6 @@ class RobotCommandBuilder(object):
                                                           time_since_reference=duration)
         trajectory = trajectory_pb2.WrenchTrajectory(points=[traj_point])
 
-
         arm_cartesian_command = arm_command_pb2.ArmCartesianCommand.Request(
             root_frame_name=frame_name, wrench_trajectory_in_task=trajectory,
             x_axis=arm_command_pb2.ArmCartesianCommand.Request.AXIS_MODE_FORCE,
@@ -1210,8 +1251,7 @@ class RobotCommandBuilder(object):
             z_axis=arm_command_pb2.ArmCartesianCommand.Request.AXIS_MODE_FORCE,
             rx_axis=arm_command_pb2.ArmCartesianCommand.Request.AXIS_MODE_FORCE,
             ry_axis=arm_command_pb2.ArmCartesianCommand.Request.AXIS_MODE_FORCE,
-            rz_axis=arm_command_pb2.ArmCartesianCommand.Request.AXIS_MODE_FORCE
-            )
+            rz_axis=arm_command_pb2.ArmCartesianCommand.Request.AXIS_MODE_FORCE)
         arm_command = arm_command_pb2.ArmCommand.Request(
             arm_cartesian_command=arm_cartesian_command)
         synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
@@ -1266,10 +1306,44 @@ class RobotCommandBuilder(object):
             return RobotCommandBuilder.build_synchro_command(build_on_command, command)
         return command
 
+    @staticmethod
+    def create_arm_joint_trajectory_point(sh0, sh1, el0, el1, wr0, wr1,
+                                          time_since_reference_secs=None):
+        joint_position = arm_command_pb2.ArmJointPosition(
+            sh0=wrappers_pb2.DoubleValue(value=sh0), sh1=wrappers_pb2.DoubleValue(value=sh1),
+            el0=wrappers_pb2.DoubleValue(value=el0), el1=wrappers_pb2.DoubleValue(value=el1),
+            wr0=wrappers_pb2.DoubleValue(value=wr0), wr1=wrappers_pb2.DoubleValue(value=wr1))
+        if time_since_reference_secs is not None:
+            return arm_command_pb2.ArmJointTrajectoryPoint(
+                position=joint_position,
+                time_since_reference=seconds_to_duration(time_since_reference_secs))
+        else:
+            return arm_command_pb2.ArmJointTrajectoryPoint(position=joint_position)
+
+    @staticmethod
+    def arm_joint_command(sh0, sh1, el0, el1, wr0, wr1, max_vel=None, max_accel=None,
+                          build_on_command=None):
+        traj_point1 = RobotCommandBuilder.create_arm_joint_trajectory_point(
+            sh0, sh1, el0, el1, wr0, wr1)
+        arm_joint_traj = arm_command_pb2.ArmJointTrajectory(points=[traj_point1])
+
+        if max_vel is not None:
+            arm_joint_traj.maximum_velocity.value = max_vel
+        if max_accel is not None:
+            arm_joint_traj.maximum_acceleration.value = max_accel
+
+        joint_move_command = arm_command_pb2.ArmJointMoveCommand.Request(trajectory=arm_joint_traj)
+        arm_command = arm_command_pb2.ArmCommand.Request(arm_joint_move_command=joint_move_command)
+        sync_arm = synchronized_command_pb2.SynchronizedCommand.Request(arm_command=arm_command)
+        arm_sync_robot_cmd = robot_command_pb2.RobotCommand(synchronized_command=sync_arm)
+        if build_on_command:
+            return RobotCommandBuilder.build_synchro_command(build_on_command, arm_sync_robot_cmd)
+        return arm_sync_robot_cmd
 
     ########################
     # Spot mobility params #
     ########################
+
     @staticmethod
     def mobility_params(body_height=0.0, footprint_R_body=geometry.EulerZXY(),
                         locomotion_hint=spot_command_pb2.HINT_AUTO, stair_hint=False,
@@ -1304,6 +1378,7 @@ class RobotCommandBuilder(object):
                                                stair_hint=stair_hint,
                                                external_force_params=external_force_params)
 
+    @staticmethod
     def build_body_external_forces(
             external_force_indicator=spot_command_pb2.BodyExternalForceParams.EXTERNAL_FORCE_NONE,
             override_external_force_vec=None):
@@ -1327,7 +1402,7 @@ class RobotCommandBuilder(object):
         """
         if external_force_indicator == spot_command_pb2.BodyExternalForceParams.EXTERNAL_FORCE_USE_OVERRIDE:
             if override_external_force_vec is None:
-                #Default the override forces to all zeros if none are specified
+                # Default the override forces to all zeros if none are specified
                 override_external_force_vec = (0.0, 0.0, 0.0)
             ext_forces = geometry_pb2.Vec3(x=override_external_force_vec[0],
                                            y=override_external_force_vec[1],
@@ -1335,10 +1410,10 @@ class RobotCommandBuilder(object):
             return spot_command_pb2.BodyExternalForceParams(
                 external_force_indicator=external_force_indicator, frame_name=BODY_FRAME_NAME,
                 external_force_override=ext_forces)
-        elif (external_force_indicator ==
-              spot_command_pb2.BodyExternalForceParams.EXTERNAL_FORCE_NONE or
-              external_force_indicator ==
-              spot_command_pb2.BodyExternalForceParams.EXTERNAL_FORCE_USE_ESTIMATE):
+        elif (external_force_indicator
+              == spot_command_pb2.BodyExternalForceParams.EXTERNAL_FORCE_NONE or
+              external_force_indicator
+              == spot_command_pb2.BodyExternalForceParams.EXTERNAL_FORCE_USE_ESTIMATE):
             return spot_command_pb2.BodyExternalForceParams(
                 external_force_indicator=external_force_indicator)
         else:
@@ -1440,8 +1515,12 @@ def blocking_stand(command_client, timeout_sec=10, update_frequency=1.0):
     raise CommandTimedOutError(
         "Took longer than {:.1f} seconds to assure the robot stood.".format(now - start_time))
 
+
 def block_until_arm_arrives(command_client, cmd_id, timeout_sec=None):
-    """Helper that blocks until the arm arrives at the end of its current trajectory.
+    """Helper that blocks until the arm achieves a finishing state for the specific arm command.
+
+       This helper will block and check the feedback for ArmCartesianCommand, GazeCommand,
+       ArmJointMoveCommand, and NamedArmPositionsCommand.
 
        Args:
         command_client: robot command client, used to request feedback
@@ -1460,11 +1539,26 @@ def block_until_arm_arrives(command_client, cmd_id, timeout_sec=None):
 
     while timeout_sec is None or now < end_time:
         feedback_resp = command_client.robot_command_feedback(cmd_id)
+        arm_feedback = feedback_resp.feedback.synchronized_feedback.arm_command_feedback
 
-        if feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_cartesian_feedback.status == arm_command_pb2.ArmCartesianCommand.Feedback.STATUS_TRAJECTORY_COMPLETE:
-            return True
-        elif feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_cartesian_feedback.status == arm_command_pb2.ArmCartesianCommand.Feedback.STATUS_TRAJECTORY_STALLED or feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_cartesian_feedback.status == arm_command_pb2.ArmCartesianCommand.Feedback.STATUS_TRAJECTORY_CANCELLED:
-            return False
+        if arm_feedback.HasField("arm_cartesian_feedback"):
+            if arm_feedback.arm_cartesian_feedback.status == arm_command_pb2.ArmCartesianCommand.Feedback.STATUS_TRAJECTORY_COMPLETE:
+                return True
+            elif arm_feedback.arm_cartesian_feedback.status == arm_command_pb2.ArmCartesianCommand.Feedback.STATUS_TRAJECTORY_STALLED or feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_cartesian_feedback.status == arm_command_pb2.ArmCartesianCommand.Feedback.STATUS_TRAJECTORY_CANCELLED:
+                return False
+        elif arm_feedback.HasField("arm_gaze_feedback"):
+            if arm_feedback.arm_gaze_feedback.status == arm_command_pb2.GazeCommand.Feedback.STATUS_TRAJECTORY_COMPLETE:
+                return True
+            elif arm_feedback.arm_gaze_feedback.status == arm_command_pb2.GazeCommand.Feedback.STATUS_TOOL_TRAJECTORY_STALLED:
+                return False
+        elif arm_feedback.HasField("arm_joint_move_feedback"):
+            if arm_feedback.arm_joint_move_feedback.status == arm_command_pb2.ArmJointMoveCommand.Feedback.STATUS_COMPLETE:
+                return True
+        elif arm_feedback.HasField("named_arm_position_feedback"):
+            if arm_feedback.named_arm_position_feedback.status == arm_command_pb2.NamedArmPositionsCommand.Feedback.STATUS_COMPLETE:
+                return True
+            elif arm_feedback.named_arm_position_feedback.status == arm_command_pb2.NamedArmPositionsCommand.Feedback.STATUS_STALLED_HOLDING_ITEM:
+                return False
 
         time.sleep(0.1)
         now = time.time()

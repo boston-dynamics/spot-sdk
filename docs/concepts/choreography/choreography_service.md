@@ -11,14 +11,14 @@ Development Kit License (20191101-BDSDK-SL).
 ## Overview
 
 ### What is it?
-The Choreography service is a framework for producing precisely scripted motion, currently focused on dancing.
 
-An example script can be seen on [YouTube](https://www.youtube.com/watch?v=kHBcVlqpvZ8).
+The Choreography service is a framework for producing precisely scripted motion, currently focused on dancing. Example choreography scripts can be seen on the Boston Dynamics Youtube channel, showing the robot dancing to [Bruno Mars's "Uptown Funk"](https://www.youtube.com/watch?v=kHBcVlqpvZ8) and [The Contours' "Do You Love Me"](https://www.youtube.com/watch?v=fn3KWM1kuAw).
 
 A choreography sequence consists of a series of moves.  We can achieve a wide variety of possible behavior from a moderate list of available moves by:
 
 1) Combining multiple moves (see the tracks/layering section).
 2) Altering move parameters to vary the behavior of the move.
+3) Adjusting the BPM of the choreography sequence to change the speed of the moves.
 
 ### Note on Reliability
 
@@ -38,24 +38,30 @@ Note that any number of slices per minute can be selected, however very fast or 
 
 ### Tracks/Layering
 
-We divide the robot’s motion into four distinct tracks:
+We divide the robot’s motion into the following distinct tracks:
 
 * Legs
 * Body
 * Arm
 * Gripper
 
-Each dance move requires one or more of these tracks.  Moves that use different tracks can be run simultaneously in any combination. In Choreographer, a track is represented as a horizontal section in the timeline view.  For example, here is a screenshot from Choreographer of a script that combines moves in all three of the four tracks:
+In addition to the base motion, there are also tracks for:
 
-![](images/main_image1.png)
+* Lights: controls the robot's front two sets of LEDs.
+* Annotations: enables dance annotations that are separate from any specific move.
+* (Choreographer Only) Music: controls the audio played from the Choreographer application when dancing.
+
+Each dance move requires one or more of these tracks.  Moves that use different tracks can be run simultaneously in any combination. In Choreographer, a track is represented as a horizontal section in the timeline view.  For example, here is an image from Choreographer of a script that combines moves in three of the four tracks:
+
+![Tracks](images/tracks_labeled.png)
 
 And the resulting behavior looks like this:
 
-![](gif_images/main_image3.gif)
+![Dancing Behavior Gif](gif_images/main_image3.gif)
 
-Some moves require multiple tracks, such as the "Skip" move which uses the Body and Legs track or the "Arm Move Relative" which uses the Arm and Gripper tracks, as shown in this example:
+Some moves require multiple tracks, such as the "Jump" move which uses the Body and Legs track or the "Arm Move" which uses the Arm and Gripper tracks, as shown in this example:
 
-![](images/main_image4.png)
+![](images/multi_tracked_dance.png)
 
 
 ### Entry/Exit conditions
@@ -74,9 +80,11 @@ The first leg-track move can have any entry state, and the robot will automatica
 
 All subsequent legs-track moves must have an entry state that corresponds to the previous legs-track move’s exit state.  Scripts that violate this requirement will be rejected by the API and return warnings indicating which moves violate the entry/exit states. As well, routines made in Choreographer will highlight moves red when the entry state does not match the previous leg move's exit state, such as in this example:
 
-![](images/main_image2.png)
+![Transitions Error](images/transition_error.png)
 
 ## API
+
+### Choreography API Interface
 
 The API defines a choreography sequence by a unique name, the number of slices per minute, and a repeated list of moves. Each move consists of the move’s type, its starting slice, duration (in slices), and the actual parameters (`MoveParams` proto message). The `MoveParams` message describe how the robot should behave during each move. For example, a move parameter could specify positions for the body.  Each parameter may have specific limits/bounds that are described by the `MoveInfo` proto; this information can be found using the `ListAllMoves` RPC.
 
@@ -86,7 +94,33 @@ The service will return a list of warnings and failures related to the uploaded 
 
 The `ExecuteChoreography` RPC will run the choreography sequence to completion on the robot. A choreography sequence is identified by the unique name of the sequence that was uploaded to the robot. Additionally, a starting time (in robot’s time) and a starting slice will fully specify to the robot when to start the choreography sequence and at which move.
 
+### Animation API Interface
+
+The API defines an animated move (`Animation` proto message) by a unique name, a repeated list of `AnimationKeyFrames` which describes the robot's motion at each timestamp, and additional parameters and options which fully describe how the move should be executed. Unlike other dance moves, the information about the minimum and maximum parameters, if the move is extendable, or which tracks the move controls are not known to the robot beforehand and must be specified in the `Animation` protobuf.
+
+The `Animation` can be uploaded to the robot using the `UploadAnimatedMove` RPC, which will send the animation to the robot. The choreography service will validate and check the structure of the animation to ensure it is fully specified and is feasible. If the animation does not pass this validation, the RPC will respond with a failure status and a set of warning messages indicating which parts of the animation failed.
+
+If the animation uploads successfully, then it can be used within choreography sequences and will appear as a move option in Choreographer with any of the parameters that were specified in the initial `Animation` protobuf message. The move type associated with the uploaded animation is "animation::" +  the animation's name. The animations will persist on robot until either the robot is powered off or an animation with the exact same name is uploaded (overwriting the previous animation with that name).
+
+While animations can be written manually using protobuf in any application, we have also provided a way to create animations from human-readable text files. The animation text file has the extension *.cha and has a specific format which is described in the [animation file specification document](animation_file_specification.md). The animation *.cha file can be converted into an `Animation` protobuf message using the `animation_file_to_proto.py` script provided in the choreography client library.
+
+### Choreography Logs API Interface
+
+The API defines a choreography log using the `ChoreographyStateLog` protobuf message, which consists of a repeated series of timestamped key frames that contain the joint state of the entire robot, the foot contacts, and the SE3Pose for the robot body relative to the animation frame. The animation frame is defined based on the feet position at the beginning of the animation: the position is the center of all four feet, and the rotation is yaw only as computed from the feet positions.
+
+The choreography logs are divided into two types:
+- Automatic/"Last Choreography" Logs: This log is recorded from when the `ExecuteChoreography` RPC is first received to 3 seconds after the completion of the choreography.
+- Manual Logs: This log is recorded from when a `StartRecordingState` RPC is received to when a `StopRecordingState` RPC is received. There is a maximum of 5 minutes of recording for a manual log.
+
+The choreography logs can be used to review how the robot actually executed a choreography or animated dance move. For example, specifically for animations, if the move is not completely feasible, the robot will attempt to get as close to what was asked as possible but may not succeed. The choreography log can be used to understand and update the animated move to be realistic.
+
+The `DownloadRobotStateLog` RPC can be used to download the choreography logs. The request specifies which type of log should be downloaded. The response is streamed over grpc and recombined by the choreography client to create a full log message. The robot only keeps one auto log and one manual log in its buffer (2 total logs) at a time, so the log must be downloaded immediately after completing the move on robot.
+
+### Choreography Client
+
 The choreography service has a python client library which provides helper functions for each RPC as well as functions that help convert the choreography sequence from a protobuf message into either a binary or text file.
+
+### Python Examples using the Choreography API
 
 The [upload_choreographed_sequence example](../../../python/examples/upload_choreographed_sequence/README.md) demonstrates how to read an existing routine from a saved text file, upload it to the robot, and then execute the uploaded choreography.
 
@@ -110,6 +144,8 @@ The `MoveInfoConfig` can be parsed by a protobuf parser into each moves field of
 * controls_legs: Does this move require the legs track.
 * controls_body: Does this move require the body track.
 * controls_gripper: Does this move require the gripper track.
+* controls_lights: Does this move require the front LED lights.
+* controls_annotations: Does this move update the overall dance state.
 * display: Information for how Choreographer should display the move.
    * color: The color to draw the box for the move in the timeline tracks.
    * markers: The slices to draw the small grey vertical lines.  These usually correspond to events such as touchdown and liftoff, and help the user line those events up as desired (e.g. on the beat).  Negative values here indicate slices before the end of the move.

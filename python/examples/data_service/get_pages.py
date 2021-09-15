@@ -36,8 +36,8 @@ def _show_page(page):
     is_open = " (open)" if page.is_open else ""
     print("{}\n    {} - {} ({})\n    {} ticks {} bytes  {} {}{}\n    {}\n".format(
         page.id, start_str, end_str, page.source, page.num_ticks, page.total_bytes,
-        page.PageFormat.Name(page.format), page.Compression.Name(page.compression),
-        is_open, page.path))
+        page.PageFormat.Name(page.format), page.Compression.Name(page.compression), is_open,
+        page.path))
 
 
 def get_pages(options):

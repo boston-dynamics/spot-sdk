@@ -11,7 +11,7 @@ import collections
 
 from google.protobuf import timestamp_pb2
 
-from bosdyn.client.common import BaseClient
+from bosdyn.client.common import BaseClient, handle_lease_use_result_errors
 from bosdyn.client.common import (common_header_errors, handle_common_header_errors,
                                   handle_unset_status_error, error_factory)
 
@@ -144,6 +144,22 @@ class MissionClient(BaseClient):
         return self.call_async(self._stub.LoadMission, req, None, _load_mission_error_from_response,
                                **kwargs)
 
+    def load_mission_as_chunks(self, root, leases, data_chunk_byte_size=1000*1000, **kwargs):
+        """Load a mission onto the robot.
+        Args:
+            root: Root node in a mission.
+            leases: All leases necessary to initialize a mission.
+            data_chunk_byte_size: max size of each streamed message
+        Raises:
+            RpcError: Problem communicating with the robot.
+            CompilationError: The mission failed to compile.
+            bosdyn.mission.client.ValidationError: The mission failed to validate.
+        """
+        req = self._load_mission_request(root, leases)
+        return self.call(self._stub.LoadMissionAsChunks,
+                         BaseClient.chunk_message(req, data_chunk_byte_size), None,
+                         _load_mission_error_from_response, **kwargs)
+
     def play_mission(self, pause_time_secs, leases, settings=None, **kwargs):
         """Play the loaded mission.
 
@@ -207,6 +223,23 @@ class MissionClient(BaseClient):
         req = self._pause_mission_request()
         return self.call_async(self._stub.PauseMission, req, None,
                                _pause_mission_error_from_response, **kwargs)
+
+    def stop_mission(self, **kwargs):
+        """Stop the running mission.
+
+        Raises:
+            RpcError: Problem communicating with the robot.
+            NoMissionPlayingError: No mission playing.
+        """
+        req = self._stop_mission_request()
+        return self.call(self._stub.StopMission, req, None, _stop_mission_error_from_response,
+                         **kwargs)
+
+    def stop_mission_async(self, **kwargs):
+        """Async version of stop_mission()."""
+        req = self._stop_mission_request()
+        return self.call_async(self._stub.StopMission, req, None,
+                               _stop_mission_error_from_response, **kwargs)
 
     def get_info(self, **kwargs):
         """Get static information about the loaded mission.
@@ -279,6 +312,10 @@ class MissionClient(BaseClient):
         return mission_pb2.PauseMissionRequest()
 
     @staticmethod
+    def _stop_mission_request():
+        return mission_pb2.StopMissionRequest()
+
+    @staticmethod
     def _get_info_request():
         return mission_pb2.GetInfoRequest()
 
@@ -300,12 +337,12 @@ def _get_info_value(response):
 _ANSWER_QUESTION_STATUS_TO_ERROR = collections.defaultdict(lambda: (MissionResponseError, None))
 _ANSWER_QUESTION_STATUS_TO_ERROR.update({
     mission_pb2.AnswerQuestionResponse.STATUS_OK: (None, None),
-    mission_pb2.AnswerQuestionResponse.STATUS_INVALID_QUESTION_ID: (InvalidQuestionId,
-                                                                    InvalidQuestionId.__doc__),
-    mission_pb2.AnswerQuestionResponse.STATUS_INVALID_CODE: (InvalidAnswerCode,
-                                                             InvalidAnswerCode.__doc__),
-    mission_pb2.AnswerQuestionResponse.STATUS_ALREADY_ANSWERED: (QuestionAlreadyAnswered,
-                                                                 QuestionAlreadyAnswered.__doc__),
+    mission_pb2.AnswerQuestionResponse.STATUS_INVALID_QUESTION_ID:
+        (InvalidQuestionId, InvalidQuestionId.__doc__),
+    mission_pb2.AnswerQuestionResponse.STATUS_INVALID_CODE:
+        (InvalidAnswerCode, InvalidAnswerCode.__doc__),
+    mission_pb2.AnswerQuestionResponse.STATUS_ALREADY_ANSWERED:
+        (QuestionAlreadyAnswered, QuestionAlreadyAnswered.__doc__),
 })
 
 
@@ -327,6 +364,7 @@ _LOAD_MISSION_STATUS_TO_ERROR.update({
 
 @handle_common_header_errors
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
+@handle_lease_use_result_errors
 def _load_mission_error_from_response(response):
     return error_factory(response, response.status,
                          status_to_string=mission_pb2.LoadMissionResponse.Status.Name,
@@ -342,6 +380,7 @@ _PLAY_MISSION_STATUS_TO_ERROR.update({
 
 @handle_common_header_errors
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
+@handle_lease_use_result_errors
 def _play_mission_error_from_response(response):
     return error_factory(response, response.status,
                          status_to_string=mission_pb2.PlayMissionResponse.Status.Name,
@@ -357,10 +396,27 @@ _PAUSE_MISSION_STATUS_TO_ERROR.update({
 
 @handle_common_header_errors
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
+@handle_lease_use_result_errors
 def _pause_mission_error_from_response(response):
     return error_factory(response, response.status,
                          status_to_string=mission_pb2.PauseMissionResponse.Status.Name,
                          status_to_error=_PAUSE_MISSION_STATUS_TO_ERROR)
+
+
+_STOP_MISSION_STATUS_TO_ERROR = collections.defaultdict(lambda: (MissionResponseError, None))
+_STOP_MISSION_STATUS_TO_ERROR.update({
+    mission_pb2.StopMissionResponse.STATUS_OK: (None, None),
+    mission_pb2.StopMissionResponse.STATUS_NO_MISSION_PLAYING: (NoMissionPlayingError, None),
+})
+
+
+@handle_common_header_errors
+@handle_unset_status_error(unset='STATUS_UNKNOWN')
+@handle_lease_use_result_errors
+def _stop_mission_error_from_response(response):
+    return error_factory(response, response.status,
+                         status_to_string=mission_pb2.StopMissionResponse.Status.Name,
+                         status_to_error=_STOP_MISSION_STATUS_TO_ERROR)
 
 
 _RESTART_MISSION_STATUS_TO_ERROR = collections.defaultdict(lambda: (MissionResponseError, None))
@@ -373,6 +429,7 @@ _RESTART_MISSION_STATUS_TO_ERROR.update({
 
 @handle_common_header_errors
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
+@handle_lease_use_result_errors
 def _restart_mission_error_from_response(response):
     return error_factory(response, response.status,
                          status_to_string=mission_pb2.RestartMissionResponse.Status.Name,

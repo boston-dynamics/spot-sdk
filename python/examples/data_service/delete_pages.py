@@ -47,8 +47,7 @@ def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_common_arguments(parser)
-    parser.add_argument('-T', '--timespan', default='5m',
-                        help='Time span (default last 5 minutes)')
+    parser.add_argument('-T', '--timespan', default='5m', help='Time span (default last 5 minutes)')
     parser.add_argument('-R', '--robot-time', action='store_true',
                         help='Specified timespan is in robot time')
     parser.add_argument("--id", nargs="+", help="delete pages by page id")

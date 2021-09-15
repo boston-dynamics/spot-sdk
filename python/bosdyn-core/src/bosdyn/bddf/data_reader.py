@@ -18,12 +18,15 @@ class DataReader(BaseDataReader):  # pylint: disable=too-many-instance-attribute
     Methods raise ParseError if there is a problem with the format of the file.
     """
 
-    def __init__(self, outfile):
+    def __init__(self, infile=None, filename=None):
         """
+        At least one of the following arguments must be specified.
+
         Args:
-         outfile:      binary file-like object for reading (e.g., from open(fname, "rb")).
+         infile:      binary file-like object for reading (e.g., from open(fname, "rb")).
+         filename:    path of input file, if applicable.
         """
-        super(DataReader, self).__init__(outfile)
+        super(DataReader, self).__init__(infile, filename)
         self._series_index_to_descriptor = {}
         self._series_index_to_block_index = {}  # {series_index -> SeriesBlockIndex}
         self._read_index()

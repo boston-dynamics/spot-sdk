@@ -24,6 +24,13 @@ SSID = 'THETAYN14103427'
 camera = Theta(theta_ssid=SSID, client_mode=False, show_state_at_init=False)
 camera.showState()
 camera.takePicture()
+camera.downloadLastImage()
+
+gen = camera.yieldLivePreview()
+jpg = next(gen)
+with open("ricoh_theta_live_preview.jpg",'wb') as f:
+    f.write(jpg)
+gen.close()
 
 # Below are some additional user functions for testing:
 # camera.setMode(client_mode=False)

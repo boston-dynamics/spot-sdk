@@ -22,6 +22,7 @@ Examples:
     - Robot takes image, rotates it to align with the horizon and sends it to a server running `tensorflow_server.py`.
     - Results are returned to the client.  If depth data is available inside the bounding box, the robot adds depth to the result.
 
+- [Fire Extinguisher Server](./fire_extinguisher_server/README.md): Example of a network compute bridge server for detecting fire extinguishers that uses Keras Retinanet instead of TensorFlow.
 
 ## System Diagram
 
@@ -38,11 +39,11 @@ dependencies via:
 ```
 For non-GPU installations:
 
-python3 -m pip install -r requirements_tensorflow_server_cpu.txt
+python3 -m pip install -r requirements_server_cpu.txt
 
 For CUDA / NVIDIA GPU installations:
 
-python3 -m pip install -r requirements_tensorflow_server_gpu.txt
+python3 -m pip install -r requirements_server_gpu.txt
 ```
 
 Installation of NVIDIA drivers and CUDA is outside the scope of the document.  There are
@@ -54,7 +55,7 @@ many tutorials available such as [this one](https://www.pyimagesearch.com/2019/0
 The client example (`identify_object.py`) does not require TensorFlow:
 
 ```
-python3 -m pip install -r requirements_client_only.txt
+python3 -m pip install -r requirements_client.txt
 ```
 
 
@@ -94,6 +95,49 @@ python3 identify_object.py --username <USERNAME> --password <PASSWORD> --service
 ```
 
 Note, the `USERNAME` and `PASSWORD` are your user credentials for your Spot.
+
+## Robot-independent Execution
+
+To run this example without a robot in the pipeline, first launch the server with the "-r" flag:
+
+```
+python3 tensorflow_server.py -r -d <MODEL DIRECTORY>
+```
+After launching tensorflow_server.py, the user may post requests to it using the `identify_object_without_robot.py` client example. To run this example with the above example server and model, run:
+
+```
+python3 identify_object_without_robot.py --model <MODEL_NAME> --server <SERVER_IP:PORT> --confidence 0.5 --model frozen_inference_graph
+
+For example:
+
+python3 identify_object_without_robot.py --confidence 0.5 --model frozen_inference_graph --input-image-dir ~/Download/images/ -v
+```
+
+Example output:
+```
+    Got 2 objects.
+    name: "obj1_label_person"
+    image_properties {
+        coordinates {
+        vertexes {
+            x: 1146.0
+            y: 27.0
+        }
+    --- cut ---
+```
+
+## Docker Execution
+
+This example contains the configuration files to run the python scripts described above also in Docker containers. The docker containers accept the same arguments descrined above. For example, to run the server_cpu docker container and the client docker container, follow the steps below with the correct values for the <> variables:
+
+```
+sudo docker build -t ncb_server_cpu -f Dockerfile.server_cpu .
+sudo docker run -it --network=host -v <MODEL_DIRECTORY>:/model_dir/ ncb_server_cpu --model-dir /model_dir/ --username <USERNAME> --password <PASSWORD> <ROBOT_IP>
+
+
+sudo docker build -t ncb_client -f Dockerfile.client .
+sudo docker run -it --network=host ncb_client --username <USERNAME> --password <PASSWORD> --service tensorflow-server --confidence 0.5 --model frozen_inference_graph --image-source frontleft_fisheye_image <ROBOT_IP>
+```
 
 ## Troubleshooting
 

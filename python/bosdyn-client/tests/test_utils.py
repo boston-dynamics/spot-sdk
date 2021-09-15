@@ -4,17 +4,18 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""Unit tests for the token_manager module."""
+"""Unit tests for the server_utils module."""
 import datetime
 import pytest
 import time
 from bosdyn.api import data_acquisition_store_pb2 as daq_store
 from bosdyn.api import local_grid_pb2 as grid
-from bosdyn.client.util import strip_large_bytes_fields, populate_response_header
+from bosdyn.client.server_util import strip_large_bytes_fields, populate_response_header
+
 
 def test_strip_large_bytes():
     req = daq_store.StoreImageRequest()
-    temp_data = bytes("mybytes",'utf-8')
+    temp_data = bytes("mybytes", 'utf-8')
     req.image.image.data = temp_data
     req.image.image.cols = 21
     assert len(req.image.image.data) > 0
@@ -26,13 +27,14 @@ def test_strip_large_bytes():
     assert len(req.image.image.data) == 0
     assert req.image.image.cols == 21
 
+
 def test_strip_large_bytes_repeated_msg():
     req = grid.GetLocalGridsResponse()
     grid1 = grid.LocalGridResponse()
-    grid1.local_grid.data = bytes("mybytes",'utf-8')
+    grid1.local_grid.data = bytes("mybytes", 'utf-8')
     grid1.local_grid.frame_name_local_grid_data = "my_frame"
     grid2 = grid.LocalGridResponse()
-    grid2.local_grid.data = bytes("mybytes",'utf-8')
+    grid2.local_grid.data = bytes("mybytes", 'utf-8')
     grid2.local_grid.frame_name_local_grid_data = "my_frame"
     req.local_grid_responses.extend([grid1, grid2])
 
@@ -47,10 +49,11 @@ def test_strip_large_bytes_repeated_msg():
         assert len(g.local_grid.data) == 0
         assert g.local_grid.frame_name_local_grid_data == "my_frame"
 
+
 def test_stripped_headers():
     request = daq_store.StoreImageRequest()
     request.header.client_name = "my_client"
-    request.image.image.data = bytes("mybytes",'utf-8')
+    request.image.image.data = bytes("mybytes", 'utf-8')
     request.image.image.cols = 21
     response = daq_store.StoreImageResponse()
 

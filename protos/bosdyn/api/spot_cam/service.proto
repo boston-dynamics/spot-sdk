@@ -88,6 +88,7 @@ service MediaLogService {
     rpc ListLogpoints (ListLogpointsRequest) returns (stream ListLogpointsResponse);
     //SetPassphrase sets the eCryptFS passphrase used by the filesystem.
     //there is no symmetry here, because key material is write-only
+    //This rpc is now deprecated as of the switch from EXT4 to NTFS and returns UnimplementedError
     rpc SetPassphrase (SetPassphraseRequest) returns (SetPassphraseResponse);
 }
 
@@ -102,6 +103,7 @@ service PtzService {
     rpc ListPtz (ListPtzRequest) returns (ListPtzResponse);
     // Reinitializes PTZ autofocus
     rpc InitializeLens (InitializeLensRequest) returns (InitializeLensResponse);
+
 }
 
 // Upload and play sounds over the SpotCam's speakers.

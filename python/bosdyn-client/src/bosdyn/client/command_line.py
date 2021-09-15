@@ -17,7 +17,7 @@ import os
 
 import six
 
-from bosdyn.api.data_buffer_pb2 import TextMessage
+from bosdyn.api.data_buffer_pb2 import Event, TextMessage
 from bosdyn.api.data_index_pb2 import EventsCommentsSpec
 from bosdyn.api import data_acquisition_pb2
 import bosdyn.client
@@ -905,8 +905,8 @@ class GetDataBufferCommentsCommand(GetDataBufferEventsCommentsCommand):
     def pretty_print(self, values):  # pylint: disable=no-self-use
         last_date_shown = None
         for comment in values:
-            dtm = datetime.datetime.fromtimestamp(
-                comment.timestamp.seconds + comment.timestamp.seconds * 1e-9)
+            dtm = datetime.datetime.fromtimestamp(comment.timestamp.seconds +
+                                                  comment.timestamp.seconds * 1e-9)
             if dtm.date() != last_date_shown:
                 print("\n[{}]".format(dtm.date()))
                 last_date_shown = dtm.date()
@@ -917,6 +917,21 @@ class GetDataBufferEventsCommand(GetDataBufferEventsCommentsCommand):
     """Get events from the robot."""
 
     NAME = 'events'
+
+    def __init__(self, subparsers, command_dict):
+        """Get operator comments from the robot.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(GetDataBufferEventsCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('--type', help='query for only the given event-type')
+        # pylint: disable=no-member
+        self._parser.add_argument(
+            '--level',
+            choices=Event.Level.keys()[1:],  # slice skips UNSET
+            help='limit level to this and above')
 
     def _run(self, robot, options):
         """Implementation of the command.
@@ -930,7 +945,11 @@ class GetDataBufferEventsCommand(GetDataBufferEventsCommentsCommand):
         """
 
         request_spec = EventsCommentsSpec()
-        request_spec.events.add()  # pylint: disable=no-member
+        event_spec = request_spec.events.add()  # pylint: disable=no-member
+        if options.type:
+            event_spec.type = options.type
+        if options.level:
+            event_spec.level.value = Event.Level.Value(options.level)  # pylint: disable=no-member
 
         def _get_events(response):
             return response.events_comments.events
@@ -1283,6 +1302,8 @@ class LicenseCommand(Command):
         super(LicenseCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('--proto', action='store_true',
                                   help='print listing in proto format')
+        self._parser.add_argument('-f', '--feature-codes', nargs='+',
+                                  help='Optional feature list for GetFeatureEnabled API.')
 
     def _run(self, robot, options):
         """Implementation of the command.
@@ -1295,13 +1316,27 @@ class LicenseCommand(Command):
             True.
         """
         license_client = robot.ensure_client(LicenseClient.default_service_name)
+        self._get_license_info(license_client, options)
+        self._get_feature_enabled(license_client, options)
+        return True
+
+    def _get_license_info(self, license_client, options):
         license_info = license_client.get_license_info()
         if options.proto:
             print(license_info)
         else:
             print(str(license_info))
 
-        return True
+    def _get_feature_enabled(self, license_client, options):
+        if not options.feature_codes or len(options.feature_codes) == 0:
+            return
+
+        feature_enabled = license_client.get_feature_enabled(options.feature_codes)
+        for feature in feature_enabled:
+            if feature_enabled[feature]:
+                print(f"Feature {feature} is enabled.")
+            else:
+                print(f"Feature {feature} is not enabled.")
 
 
 class LeaseCommands(Subcommands):
@@ -1792,7 +1827,7 @@ class DataAcquisitionServiceCommand(Command):
         self._format_and_print_capability("Data Type", "Data Name", "(optional) Service Name")
         print("-" * (self._data_type_width + self._data_name_width + self._service_name_width))
         for data_name in capabilities.data_sources:
-            self._format_and_print_capability("data", data_name.name)
+            self._format_and_print_capability("data", data_name.name, data_name.service_name)
         for img_service in capabilities.image_sources:
             for img in img_service.image_source_names:
                 self._format_and_print_capability("image", img, img_service.service_name)
@@ -1829,6 +1864,7 @@ class DataAcquisitionStatusCommand(Command):
         print(response)
         return True
 
+
 class HostComputerIPCommand(Command):
     """Determine a computer's IP address."""
 
@@ -1854,7 +1890,9 @@ class HostComputerIPCommand(Command):
         Returns:
             True
         """
-        print("The IP address of the computer used to talk to the robot is: %s" %(bosdyn.client.common.get_self_ip(robot._name)))
+        print("The IP address of the computer used to talk to the robot is: %s" %
+              (bosdyn.client.common.get_self_ip(robot._name)))
+
 
 
 class PowerCommand(Subcommands):

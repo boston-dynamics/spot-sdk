@@ -274,8 +274,8 @@ def get_terrain_grid(local_grid_proto):
     """Generate a 3xN set of points representing the terrain local grid."""
     cells_pz_full = unpack_grid(local_grid_proto).astype(np.float32)
     # Populate the x,y values with a complete combination of all possible pairs for the dimensions in the grid extent.
-    ys, xs = np.mgrid[0:local_grid_proto.local_grid.extent.num_cells_x, 0:local_grid_proto.
-                      local_grid.extent.num_cells_y]
+    ys, xs = np.mgrid[0:local_grid_proto.local_grid.extent.num_cells_x,
+                      0:local_grid_proto.local_grid.extent.num_cells_y]
     # Numpy vstack makes it so that each column is (x,y,z) for a single terrain point. The height values (z) come from the
     # terrain grid's data field.
     pts = np.vstack(
@@ -295,8 +295,8 @@ def create_vtk_no_step_grid(proto, robot_state_client):
     # Unpack the data field for the local grid.
     cells_no_step = unpack_grid(local_grid_proto).astype(np.float32)
     # Populate the x,y values with a complete combination of all possible pairs for the dimensions in the grid extent.
-    ys, xs = np.mgrid[0:local_grid_proto.local_grid.extent.num_cells_x, 0:local_grid_proto.
-                      local_grid.extent.num_cells_y]
+    ys, xs = np.mgrid[0:local_grid_proto.local_grid.extent.num_cells_x,
+                      0:local_grid_proto.local_grid.extent.num_cells_y]
     # Get the estimated height (z value) of the ground in the vision frame as if the robot was standing.
     transforms_snapshot = local_grid_proto.local_grid.transforms_snapshot
     vision_tform_body = get_a_tform_b(transforms_snapshot, VISION_FRAME_NAME, BODY_FRAME_NAME)
@@ -335,8 +335,8 @@ def create_vtk_obstacle_grid(proto, robot_state_client):
     # Unpack the data field for the local grid.
     cells_obstacle_dist = unpack_grid(local_grid_proto).astype(np.float32)
     # Populate the x,y values with a complete combination of all possible pairs for the dimensions in the grid extent.
-    ys, xs = np.mgrid[0:local_grid_proto.local_grid.extent.num_cells_x, 0:local_grid_proto.
-                      local_grid.extent.num_cells_y]
+    ys, xs = np.mgrid[0:local_grid_proto.local_grid.extent.num_cells_x,
+                      0:local_grid_proto.local_grid.extent.num_cells_y]
 
     # Get the estimated height (z value) of the ground in the vision frame.
     transforms_snapshot = local_grid_proto.local_grid.transforms_snapshot
@@ -475,7 +475,8 @@ def get_vtk_from_local_grid_proto(proto, robot_state_client):
 def compute_ground_height_in_vision_frame(robot_state_client):
     """Get the z-height of the ground plane in vision frame from the current robot state."""
     robot_state = robot_state_client.get_robot_state()
-    vision_tform_ground_plane = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot, VISION_FRAME_NAME, GROUND_PLANE_FRAME_NAME)
+    vision_tform_ground_plane = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot,
+                                              VISION_FRAME_NAME, GROUND_PLANE_FRAME_NAME)
     return vision_tform_ground_plane.position.x
 
 
@@ -515,7 +516,8 @@ class LocalGridTimedCallbackEvent(object):
         proto = self.local_grid_client.get_local_grids(
             ['terrain', 'terrain_valid', 'intensity', 'no_step', 'obstacle_distance'])
         # Generate the polydata for each local grid source.
-        obstacle_distance, no_step, terrain = get_vtk_from_local_grid_proto(proto, self.robot_state_client)
+        obstacle_distance, no_step, terrain = get_vtk_from_local_grid_proto(
+            proto, self.robot_state_client)
         # Update the polydata with the newest local grid data and re-render the windows.
         if 'no-step' in self.local_grid_types:
             self.update_polydata_points(self.no_step_polydata, no_step)
@@ -544,7 +546,8 @@ class LocalGridTimedCallbackEvent(object):
         proto = self.local_grid_client.get_local_grids(
             ['terrain', 'terrain_valid', 'intensity', 'no_step', 'obstacle_distance'])
         # Generate the polydata for each local grid source.
-        obstacle_distance, no_step, terrain = get_vtk_from_local_grid_proto(proto, self.robot_state_client)
+        obstacle_distance, no_step, terrain = get_vtk_from_local_grid_proto(
+            proto, self.robot_state_client)
         # Create a VTK actor for the local grid.
         for local_grid in proto:
             if local_grid.local_grid_type_name == "terrain" and 'terrain' in self.local_grid_types:
@@ -618,7 +621,8 @@ def main(argv):
     robot_state_actor = robot_state_timer.get_actor()
     renderer.AddActor(robot_state_actor)
 
-    local_grid_timer = LocalGridTimedCallbackEvent(local_grid_client, robot_state_client, options.local_grid)
+    local_grid_timer = LocalGridTimedCallbackEvent(local_grid_client, robot_state_client,
+                                                   options.local_grid)
     grid_actors = local_grid_timer.get_actors()
     for actor in grid_actors:
         renderer.AddActor(actor)

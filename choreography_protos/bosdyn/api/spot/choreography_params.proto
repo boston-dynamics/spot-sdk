@@ -126,6 +126,7 @@ enum ArmMoveFrame {
     ARM_MOVE_FRAME_BODY = 3;
     ARM_MOVE_FRAME_SHOULDER = 4;
     ARM_MOVE_FRAME_SHADOW = 5;
+    ARM_MOVE_FRAME_DANCE = 6;
 }
 
 message WorkspaceArmMoveParams {
@@ -143,6 +144,9 @@ message WorkspaceArmMoveParams {
 
     // How the motion should be paced.
     Easing easing = 5;
+
+    // If we're using the dance frame, which one?
+    google.protobuf.Int32Value dance_frame_id = 6;
 }
 
 message Figure8Params {
@@ -266,6 +270,15 @@ message CrawlParams {
     google.protobuf.DoubleValue stance_length = 4;
 }
 
+message GotoParams {
+    Vec2Value absolute_position = 1;
+    google.protobuf.DoubleValue absolute_yaw = 2;
+    google.protobuf.DoubleValue step_position_stiffness = 3;
+    google.protobuf.DoubleValue duty_cycle = 4;
+    // Should we combine with the next move into a smooth trajectory.
+    google.protobuf.BoolValue link_to_next = 5;
+}
+
 // Parameters for the Bourree move.
 message BourreeParams {
     // The speed at which we should bourree [m/s].  X is forward.  Y is left.
@@ -296,8 +309,6 @@ message JumpParams {
     google.protobuf.DoubleValue stance_width = 3;
     // The distance between the robot's front and back feet [m].
     google.protobuf.DoubleValue stance_length = 4;
-    // Should we turn to a yaw in choreography sequence frame?
-    google.protobuf.BoolValue absolute = 5;
     // How far the robot should jump [m].
     Vec2Value translation = 6;
     // How much it should lo/td the first pair of lets ahead of the other pair.  In fraction of flight time.
@@ -312,6 +323,24 @@ message JumpParams {
         LEAD_RIGHT = 5;
     }
     Lead lead_leg_pair = 8;
+
+    // Should we turn to a yaw in choreography sequence frame?
+    google.protobuf.BoolValue yaw_is_absolute = 11;
+    // Should we translate in choreography sequence frame?
+    google.protobuf.BoolValue translation_is_absolute = 12;
+
+    // The direction the robot should face upon landing relative to pose at the start of the dance. [rad]
+    google.protobuf.DoubleValue absolute_yaw = 9;
+    // Where the robot should land relative to the pose at the start of the dance. [m]
+    Vec2Value absolute_translation = 10;
+
+    google.protobuf.DoubleValue swing_height = 13;
+
+
+    // *** Deprecation Warning ***
+    // DEPRECATED as of 3.0.0: The absolute field has been deprecated and split into the yaw_is_absolute and translation_is_absolute fields.
+    // The following field will be deprecated and moved to 'reserved' in a future release.
+    google.protobuf.BoolValue absolute = 5 [deprecated = true];
 }
 
 message StepParams {
@@ -383,25 +412,51 @@ message TwerkParams {
 message TurnParams {
     // How far to turn, described in radians with a positive value representing a turn to the left.
     google.protobuf.DoubleValue yaw = 1;
+    // Orientation to turn to, relative to the orientation at the start of the script. [rad]
+    google.protobuf.DoubleValue absolute_yaw = 5;
     // Should we turn to a yaw in choreography sequence frame?
-    google.protobuf.BoolValue absolute = 2;
+    google.protobuf.BoolValue yaw_is_absolute = 6;
     // Swing parameters to describe the footstep pattern during the turning [height in meters]. Note,
     // a zero (or nearly zero) value will be considered as an unspecified parameter.
     google.protobuf.DoubleValue swing_height = 3;
     // Swing parameter to describe the foot's swing velocity during the turning [m/s]. Note, a zero
     // (or nearly zero) value will be considered as an unspecified parameter.
     google.protobuf.DoubleValue swing_velocity = 4;
+    // How far to move relative to starting position. [m]
+    Vec2Value motion = 7;
+    // Where to move relative to position at start of script. [m]
+    Vec2Value absolute_motion = 8;
+    // Is motion specified relative to pose at start of dance?
+    google.protobuf.BoolValue motion_is_absolute = 9;
+
+    // *** Deprecation Warning ***
+    // DEPRECATED as of 3.0.0: The absolute field has been deprecated and split into the yaw_is_absolute and translation_is_absolute fields.
+    // The following field will be deprecated and moved to 'reserved' in a future release.
+    google.protobuf.BoolValue absolute = 2 [deprecated = true];
 }
 
 // Parameters specific to pace translation.
 message Pace2StepParams {
-    // Where to move.
+    // How far to move relative to starting position. [m]
     Vec2Value motion = 1;
+    // Where to move relative to position at start of script. [m]
+    Vec2Value absolute_motion = 6;
+    // Is motion specified relative to pose at start of dance?
+    google.protobuf.BoolValue motion_is_absolute = 7;
     // Swing parameters to describe the footstep pattern during the pace translation gait. Note, a zero (or nearly zero)
     // value will be considered as an unspecified parameter.
     google.protobuf.DoubleValue swing_height = 3;
     google.protobuf.DoubleValue swing_velocity = 4;
-    // Should the motion be relative to where the dance started (true) rather than relative to the current position (false).
+     // How far to turn, described in radians with a positive value representing a turn to the left.
+    google.protobuf.DoubleValue yaw = 8;
+    // Orientation to turn to, relative to the orientation at the start of the script. [rad]
+    google.protobuf.DoubleValue absolute_yaw = 9;
+    // Should we turn to a yaw in choreography sequence frame?
+    google.protobuf.BoolValue yaw_is_absolute = 10;
+
+    // *** Deprecation Warning ***
+    // DEPRECATED as of 3.0.0: The absolute field has been deprecated and split into the yaw_is_absolute and translation_is_absolute fields.
+    // The following field will be deprecated and moved to 'reserved' in a future release.
     google.protobuf.BoolValue absolute = 5;
 }
 
@@ -448,3 +503,167 @@ message FrontUpParams {
     google.protobuf.BoolValue mirror = 1;
 }
 
+message FidgetStandParams {
+    enum FidgetPreset {
+        PRESET_UNKNOWN = 0;
+        PRESET_CUSTOM = 1;
+        PRESET_INTEREST = 2;
+        PRESET_PLAYFUL = 3;
+        PRESET_FEAR = 4;
+        PRESET_NERVOUS = 5;
+        PRESET_EXHAUSTED = 6;
+    }
+    FidgetPreset preset = 1;
+    google.protobuf.DoubleValue min_gaze_pitch = 2;
+    google.protobuf.DoubleValue max_gaze_pitch = 3;
+    google.protobuf.DoubleValue gaze_mean_period = 4;
+    Vec3Value gaze_center_cfp = 5;
+    google.protobuf.DoubleValue shift_mean_period = 6;
+    google.protobuf.DoubleValue shift_max_transition_time = 7;
+    google.protobuf.DoubleValue breath_min_z = 8;
+    google.protobuf.DoubleValue breath_max_z = 9;
+    google.protobuf.DoubleValue breath_max_period = 10;
+    google.protobuf.DoubleValue leg_gesture_mean_period = 11;
+    google.protobuf.DoubleValue gaze_slew_rate = 12;
+    Vec3Value gaze_position_generation_gain = 13;
+    google.protobuf.DoubleValue gaze_roll_generation_gain = 14;
+}
+
+message FrameSnapshotParams {
+    google.protobuf.Int32Value frame_id = 1;
+    google.protobuf.Int32Value fiducial_number = 2;
+
+    enum Inclusion {
+        INCLUSION_UNKNOWN = 0;
+        INCLUSION_IF_STANCE = 1;
+        INCLUSION_INCLUDED = 2;
+        INCLUSION_EXCLUDED = 3;
+    }
+    Inclusion include_front_left_leg = 3;
+    Inclusion include_front_right_leg = 4;
+    Inclusion include_hind_left_leg = 5;
+    Inclusion include_hind_right_leg = 6;
+    google.protobuf.BoolValue compensated = 7;
+}
+
+message SetColorParams {
+    Color left_color = 1;
+    google.protobuf.BoolValue right_same_as_left = 2;
+    Color right_color = 3;
+    google.protobuf.DoubleValue fade_in_slices = 4;
+    google.protobuf.DoubleValue fade_out_slices = 5;
+}
+
+message FadeColorParams {
+    Color top_color = 1;
+    Color bottom_color = 2;
+    google.protobuf.DoubleValue fade_in_slices = 3;
+    google.protobuf.DoubleValue fade_out_slices = 4;
+}
+
+message IndependentColorParams {
+    Color top_left = 1;
+    Color upper_mid_left = 2;
+    Color lower_mid_left = 3;
+    Color bottom_left = 4;
+    Color top_right = 5;
+    Color upper_mid_right = 6;
+    Color lower_mid_right = 7;
+    Color bottom_right = 8;
+    google.protobuf.DoubleValue fade_in_slices = 9;
+    google.protobuf.DoubleValue fade_out_slices = 10;
+}
+
+enum LedLight {
+    LED_LIGHT_UNKNOWN = 0;
+    LED_LIGHT_LEFT1 = 1;
+    LED_LIGHT_LEFT2 = 2;
+    LED_LIGHT_LEFT3 = 3;
+    LED_LIGHT_LEFT4 = 4;
+    LED_LIGHT_RIGHT1 = 5;
+    LED_LIGHT_RIGHT2 = 6;
+    LED_LIGHT_RIGHT3 = 7;
+    LED_LIGHT_RIGHT4 = 8;
+}
+
+message Color {
+    google.protobuf.DoubleValue red = 1;
+    google.protobuf.DoubleValue green = 2;
+    google.protobuf.DoubleValue blue = 3;
+}
+
+message RippleColorParams {
+    Color main = 1;
+    Color secondary = 2;
+
+    enum Pattern {
+        PATTERN_UNKNOWN = 0;
+        PATTERN_FLASHING = 1;
+        PATTERN_SNAKE = 2;
+        PATTERN_ALTERNATE_COLORS = 3;
+        PATTERN_FINE_GRAINED_ALTERNATE_COLORS = 4;
+    }
+    Pattern pattern = 3;
+
+    enum LightSide {
+        LIGHT_SIDE_UNKNOWN = 0;
+        LIGHT_SIDE_LEFT = 1;
+        LIGHT_SIDE_RIGHT = 2;
+        LIGHT_SIDE_BOTH_IN_SEQUENCE = 3;
+        LIGHT_SIDE_BOTH_MATCHING = 4;
+    }
+    LightSide light_side = 4;
+    google.protobuf.DoubleValue increment_slices = 5;
+}
+
+
+message AnimateParams {
+    // The name of the animated move. There are no default values/bounds associated with this field.
+    string animation_name = 1;
+
+    // How many slices to smoothly transition from previous pose to animation.
+    google.protobuf.DoubleValue body_entry_slices = 2;
+
+    // How many slices to return from animation to nominal pose.  Zero indicates to keep final animated pose.
+    google.protobuf.DoubleValue body_exit_slices = 3;
+
+    // Multiplier for animated translation by axis to exaggerate or suppress motion along specific axes.
+    Vec3Value translation_multiplier = 4;
+
+    // Multiplier for the animated orientation by axis to exaggerate or suppress motion along specific axes.
+    EulerZYXValue rotation_multiplier = 5;
+
+    // How many slices to smoothly transition from previous pose to animation.
+    google.protobuf.DoubleValue arm_entry_slices = 6;
+
+    // Joint angle offsets in radians for the arm joints.
+    google.protobuf.DoubleValue shoulder_0_offset = 7;
+    google.protobuf.DoubleValue shoulder_1_offset = 8;
+    google.protobuf.DoubleValue elbow_0_offset = 9;
+    google.protobuf.DoubleValue elbow_1_offset = 10;
+    google.protobuf.DoubleValue wrist_0_offset = 11;
+    google.protobuf.DoubleValue wrist_1_offset = 12;
+    google.protobuf.DoubleValue gripper_offset = 13;
+
+    // How fast to playback.  1.0 is normal speed. larger is faster.
+    google.protobuf.DoubleValue speed = 14;
+
+    // How late into the nominal script to start.
+    google.protobuf.DoubleValue offset_slices = 15;
+
+    // Multiply all gripper angles by this value.
+    google.protobuf.DoubleValue gripper_multiplier = 16;
+
+    // How hard the gripper can squeeze.  Fraction of full strength.
+    google.protobuf.DoubleValue gripper_strength_fraction = 17;
+
+    // Which dance frame to use as a reference for workspace arm moves. Including this parameter
+    // overrides the animation frame.
+    google.protobuf.Int32Value arm_dance_frame_id = 18;
+
+    // How hard to try to track the animated body motion.
+    // Only applicable to animations that control both the body and the legs.
+    // On a scale of 1 to 10 (11 for a bit extra).
+    // Higher will result in more closely tracking the animated body motion, but possibly at the expense of balance for more difficult animations.
+    google.protobuf.DoubleValue body_tracking_stiffness = 19;
+}

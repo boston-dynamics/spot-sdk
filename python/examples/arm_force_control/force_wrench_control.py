@@ -71,7 +71,9 @@ def force_wrench(config):
             command_client = robot.ensure_client(RobotCommandClient.default_service_name)
             blocking_stand(command_client, timeout_sec=10)
             robot.logger.info("Robot standing.")
-
+            # Send a second stand command with a lowered body height to allow the arm to reach the ground.
+            stand_command = RobotCommandBuilder.synchro_stand_command(body_height=-0.15)
+            command_id = command_client.robot_command(stand_command, timeout=2)
             time.sleep(2.0)
 
             # Unstow the arm
@@ -125,8 +127,8 @@ def force_wrench(config):
             # Hand will start to the left and move to the right.
 
             hand_x = 0.75  # in front of the robot.
-            hand_y_start = 0  # centered
-            hand_y_end = -0.5  # to the right
+            hand_y_start = 0.25  # to the left
+            hand_y_end = -0.25  # to the right
             hand_z = 0  # will be ignored since we'll have a force in the Z axis.
 
             f_z = -5  # Newtons

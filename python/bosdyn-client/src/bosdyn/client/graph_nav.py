@@ -9,6 +9,7 @@ import time
 import collections
 import math
 import os
+from deprecated import deprecated
 from bosdyn.api.graph_nav import graph_nav_service_pb2_grpc
 from bosdyn.api.graph_nav import graph_nav_service_pb2
 from bosdyn.api.graph_nav import graph_nav_pb2
@@ -89,14 +90,15 @@ class GraphNavClient(BaseClient):
         return self.call_async(self._stub.SetLocalization, req, _localization_from_response,
                                _set_localization_error, **kwargs)
 
-    def get_localization_state(self,
-                               request_live_point_cloud=False,
-                               request_live_images=False,
-                               request_live_terrain_maps=False,
-                               request_live_world_objects=False,
-                               request_live_robot_state=False,
-                               waypoint_id=None,
-                               **kwargs):
+    def get_localization_state(
+            self,
+            request_live_point_cloud=False,
+            request_live_images=False,
+            request_live_terrain_maps=False,
+            request_live_world_objects=False,
+            request_live_robot_state=False,
+            waypoint_id=None,
+            **kwargs):
         """Obtain current localization state of the robot.
 
         Returns:
@@ -109,8 +111,7 @@ class GraphNavClient(BaseClient):
             request_live_images=request_live_images,
             request_live_terrain_maps=request_live_terrain_maps,
             request_live_world_objects=request_live_world_objects,
-            request_live_robot_state=request_live_robot_state,
-            waypoint_id=waypoint_id)
+            request_live_robot_state=request_live_robot_state, waypoint_id=waypoint_id)
         return self.call(self._stub.GetLocalizationState, req, None, common_header_errors, **kwargs)
 
     def get_localization_state_async(self, request_live_point_cloud=False,
@@ -127,18 +128,22 @@ class GraphNavClient(BaseClient):
         return self.call_async(self._stub.GetLocalizationState, req, None, common_header_errors,
                                **kwargs)
 
-    def navigate_route(self, route, cmd_duration, travel_params=None, leases=None,
-                       timesync_endpoint=None, command_id=None, **kwargs):
+    def navigate_route(self, route, cmd_duration, route_follow_params=None, travel_params=None,
+                       leases=None, timesync_endpoint=None, command_id=None,
+                       destination_waypoint_tform_body_goal=None, **kwargs):
         """Navigate the given route.
 
         Args:
             route: Route protobuf of the route to follow.
+            route_follow_params: What should the robot do if it is not at the expected point in the
+            route, or the route is blocked.
             travel_params: API TravelParams for the route.
             cmd_duration: Number of seconds the command can run for.
             leases: Leases to show ownership of necessary resources. Will use the client's leases by default.
             timesync_endpoint: Use this endpoint for timesync fields. Will use the client's endpoint by default.
             command_id: If not None, this continues an existing navigate_route command with the given ID. If None,
             a new command_id will be used.
+            destination_waypoint_tform_body_goal: SE2Pose protobuf of an offset relative to the destination waypoint.
             kwargs: Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
         Returns:
             Command ID to use in feedback lookup.
@@ -150,8 +155,9 @@ class GraphNavClient(BaseClient):
             graph_nav.TooDistantError: Time too far in the future.
             graph_nav.RobotImpairedError: Robot cannot travel a route.
             graph_nav.IsRecordingError: Robot cannot navigate while recording.
-            graph_nav.UnkownRouteElementsError: Unknown edges or waypoints
+            graph_nav.UnknownRouteElementsError: Unknown edges or waypoints
             graph_nav.InvalidEdgeError: Mismatch between edges and waypoints.
+            graph_nav.NoPathError: No path to the specified route.
             graph_nav.RobotNotLocalizedToRouteError: The robot is localized somewhere else.
             graph_nav.ConstraintFaultError: The route involves invalid constraints.
             graph_nav.RouteNavigationError: A subclass detailing trouble navigating the route.
@@ -159,22 +165,55 @@ class GraphNavClient(BaseClient):
         used_endpoint = timesync_endpoint or self._timesync_endpoint
         if not used_endpoint:
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
-        request = self._build_navigate_route_request(route, travel_params, cmd_duration, leases,
-                                                     used_endpoint, command_id)
+        request = self._build_navigate_route_request(route, route_follow_params, travel_params,
+                                                     cmd_duration, leases, used_endpoint,
+                                                     command_id,
+                                                     destination_waypoint_tform_body_goal)
         return self.call(self._stub.NavigateRoute, request,
                          _command_id_from_navigate_route_response, _navigate_route_error, **kwargs)
 
-    def navigate_route_async(self, route, cmd_duration, travel_params=None, leases=None,
-                             timesync_endpoint=None, command_id=None, **kwargs):
+    def navigate_route_async(self, route, cmd_duration, route_follow_params=None,
+                             travel_params=None, leases=None, timesync_endpoint=None,
+                             command_id=None, destination_waypoint_tform_body_goal=None, **kwargs):
         """Async version of navigate_route()"""
         used_endpoint = timesync_endpoint or self._timesync_endpoint
         if not used_endpoint:
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
-        request = self._build_navigate_route_request(route, travel_params, cmd_duration, leases,
-                                                     used_endpoint, command_id)
+        request = self._build_navigate_route_request(route, route_follow_params, travel_params,
+                                                     cmd_duration, leases, used_endpoint,
+                                                     command_id,
+                                                     destination_waypoint_tform_body_goal)
         return self.call_async(self._stub.NavigateRoute, request,
                                _command_id_from_navigate_route_response, _navigate_route_error,
                                **kwargs)
+
+    def navigate_route_full(self, route, route_follow_params, cmd_duration, travel_params=None,
+                            leases=None, timesync_endpoint=None, command_id=None,
+                            destination_waypoint_tform_body_goal=None, **kwargs):
+        """Identical to navigate_route(), except will return the full NavigateRouteResponse."""
+        used_endpoint = timesync_endpoint or self._timesync_endpoint
+        if not used_endpoint:
+            raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
+        request = self._build_navigate_route_request(route, route_follow_params, travel_params,
+                                                     cmd_duration, leases, used_endpoint, command_id,
+                                                     destination_waypoint_tform_body_goal)
+        return self.call(self._stub.NavigateRoute, request,
+                         error_from_response=_navigate_route_error, **kwargs)
+
+    def navigate_route_full_async(self, route, cmd_duration, route_follow_params=None,
+                                  travel_params=None, leases=None, timesync_endpoint=None,
+                                  command_id=None, destination_waypoint_tform_body_goal=None,
+                                  **kwargs):
+        """Async version of navigate_route_full()."""
+        used_endpoint = timesync_endpoint or self._timesync_endpoint
+        if not used_endpoint:
+            raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
+        request = self._build_navigate_route_request(route, route_follow_params, travel_params,
+                                                     cmd_duration, leases, used_endpoint,
+                                                     command_id,
+                                                     destination_waypoint_tform_body_goal)
+        return self.call_async(self._stub.NavigateRoute, request,
+                               error_from_response=_navigate_route_error, **kwargs)
 
     def navigate_to(self, destination_waypoint_id, cmd_duration, route_params=None,
                     travel_params=None, leases=None, timesync_endpoint=None, command_id=None,
@@ -210,8 +249,8 @@ class GraphNavClient(BaseClient):
         if not used_endpoint:
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
         request = self._build_navigate_to_request(destination_waypoint_id, travel_params,
-                                                  route_params, cmd_duration, leases, used_endpoint, command_id,
-                                                  destination_waypoint_tform_body_goal)
+                                                  route_params, cmd_duration, leases, used_endpoint,
+                                                  command_id, destination_waypoint_tform_body_goal)
         return self.call(self._stub.NavigateTo, request,
                          value_from_response=_command_id_from_navigate_route_response,
                          error_from_response=_navigate_to_error, **kwargs)
@@ -224,11 +263,96 @@ class GraphNavClient(BaseClient):
         if not used_endpoint:
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
         request = self._build_navigate_to_request(destination_waypoint_id, travel_params,
-                                                  route_params, cmd_duration, leases, used_endpoint, command_id,
-                                                  destination_waypoint_tform_body_goal)
+                                                  route_params, cmd_duration, leases, used_endpoint,
+                                                  command_id, destination_waypoint_tform_body_goal)
         return self.call_async(self._stub.NavigateTo, request,
                                value_from_response=_command_id_from_navigate_route_response,
                                error_from_response=_navigate_to_error, **kwargs)
+
+    def navigate_to_full(self, destination_waypoint_id, cmd_duration, route_params=None,
+                    travel_params=None, leases=None, timesync_endpoint=None, command_id=None,
+                    destination_waypoint_tform_body_goal=None, **kwargs):
+        """Identical to navigate_to(), except will return the full NavigateToResponse."""
+        used_endpoint = timesync_endpoint or self._timesync_endpoint
+        if not used_endpoint:
+            raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
+        request = self._build_navigate_to_request(destination_waypoint_id, travel_params,
+                                                  route_params, cmd_duration, leases, used_endpoint,
+                                                  command_id, destination_waypoint_tform_body_goal)
+        return self.call(self._stub.NavigateTo, request,
+                         error_from_response=_navigate_to_error, **kwargs)
+
+    def navigate_to_full_async(self, destination_waypoint_id, cmd_duration, route_params=None,
+                          travel_params=None, leases=None, timesync_endpoint=None, command_id=None,
+                          destination_waypoint_tform_body_goal=None, **kwargs):
+        """Async version of navigate_to_full()."""
+        used_endpoint = timesync_endpoint or self._timesync_endpoint
+        if not used_endpoint:
+            raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
+        request = self._build_navigate_to_request(destination_waypoint_id, travel_params,
+                                                  route_params, cmd_duration, leases, used_endpoint,
+                                                  command_id, destination_waypoint_tform_body_goal)
+        return self.call_async(self._stub.NavigateTo, request,
+                               error_from_response=_navigate_to_error, **kwargs)
+
+    def navigate_to_anchor(self, seed_tform_goal, cmd_duration, route_params=None,
+                           travel_params=None, leases=None, timesync_endpoint=None,
+                           goal_waypoint_rt_seed_ewrt_seed_tolerance=None, command_id=None,
+                           **kwargs):
+        """Navigate to a pose in seed frame along a route chosen by the GraphNav service.
+
+        Args:
+            seed_tform_goal: SE3Pose protobuf of the goal pose in seed frame.
+            cmd_duration: Number of seconds the command can run for.
+            route_params: API RouteGenParams for the route.
+            travel_params: API TravelParams for the route.
+            leases: Leases to show ownership of necessary resources. Will use the client's leases by default.
+            timesync_endpoint: Use this endpoint for timesync fields. Will use the client's endpoint by default.
+            goal_waypoint_rt_seed_ewrt_seed_tolerance: Vec3 protobuf of the tolerances for goal waypoint selection.
+            command_id: If not None, this continues an existing navigate_to command with the given ID. If None,
+            a new command_id will be used.
+        Returns:
+            int: Command ID to use in feedback lookup.
+        Raises:
+            RpcError: Problem communicating with the robot.
+            LeaseUseError: Error using provided leases.
+            graph_nav.NoTimeSyncError: Missing clock identifier.
+            graph_nav.CommandExpiredError: Command already expired.
+            graph_nav.TooDistantError: Time too far in the future.
+            graph_nav.RobotImpairedError: Robot cannot travel a route.
+            graph_nav.IsRecordingError: Robot cannot navigate while recording.
+            graph_nav.NoAnchoringError: There is no anchoring.
+            graph_nav.NoPathError: No route to goal waypoint, or no goal waypoint found.
+            graph_nav.InvalidPoseError: The requested pose is invalid, or known to be unachievable.
+            graph_nav.RobotNotLocalizedToRouteError: The robot not correctly localized.
+            graph_nav.RouteNavigationError: A subclass detailing trouble navigating the route.
+        """
+        used_endpoint = timesync_endpoint or self._timesync_endpoint
+        if not used_endpoint:
+            raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
+        request = self._build_navigate_to_anchor_request(seed_tform_goal, travel_params,
+                                                         route_params, cmd_duration, leases,
+                                                         used_endpoint, command_id,
+                                                         goal_waypoint_rt_seed_ewrt_seed_tolerance)
+        return self.call(self._stub.NavigateToAnchor, request,
+                         value_from_response=_command_id_from_navigate_route_response,
+                         error_from_response=_navigate_to_anchor_error, **kwargs)
+
+    def navigate_to_anchor_async(self, seed_tform_goal, cmd_duration, route_params=None,
+                                 travel_params=None, leases=None, timesync_endpoint=None,
+                                 goal_waypoint_rt_seed_ewrt_seed_tolerance=None, command_id=None,
+                                 **kwargs):
+        """Async version of navigate_to_anchor()."""
+        used_endpoint = timesync_endpoint or self._timesync_endpoint
+        if not used_endpoint:
+            raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
+        request = self._build_navigate_to_anchor_request(seed_tform_goal, travel_params,
+                                                         route_params, cmd_duration, leases,
+                                                         used_endpoint, command_id,
+                                                         goal_waypoint_rt_seed_ewrt_seed_tolerance)
+        return self.call_async(self._stub.NavigateTo, request,
+                               value_from_response=_command_id_from_navigate_route_response,
+                               error_from_response=_navigate_to_anchor_error, **kwargs)
 
     def navigation_feedback(self, command_id=0, **kwargs):
         """Returns the feedback corresponding to the active route follow command.
@@ -263,35 +387,38 @@ class GraphNavClient(BaseClient):
         """
         request = self._build_clear_graph_request(lease)
         return self.call(self._stub.ClearGraph, request, value_from_response=None,
-                         error_from_response=handle_common_header_errors(common_lease_errors), **kwargs)
+                         error_from_response=handle_common_header_errors(common_lease_errors),
+                         **kwargs)
 
     def clear_graph_async(self, lease=None, **kwargs):
         """Async version of clear_graph()."""
         request = self._build_clear_graph_request(lease)
         return self.call_async(self._stub.ClearGraph, request, value_from_response=None,
-                               error_from_response=handle_common_header_errors(common_lease_errors), **kwargs)
+                               error_from_response=handle_common_header_errors(common_lease_errors),
+                               **kwargs)
 
-    def upload_graph(self, lease=None, graph=None, **kwargs):
+    def upload_graph(self, lease=None, graph=None, generate_new_anchoring=False, **kwargs):
         """Uploads a graph to the server and appends to the existing graph.
 
         Args:
             leases: Leases to show ownership of necessary resources. Will use the client's leases by default.
             graph: Graph protobuf that represents the map with waypoints and edges.
+            generate_new_anchoring: Whether to generate an (overwrite the) anchoring on upload.
         Returns:
             The response, which includes waypoint and edge id's sorted by whether it was cached.
         Raises:
             RpcError: Problem communicating with the robot.
             LeaseUseError: Error using provided lease.
         """
-        request = self._build_upload_graph_request(lease, graph)
+        request = self._build_upload_graph_request(lease, graph, generate_new_anchoring)
         return self.call(self._stub.UploadGraph, request, value_from_response=_get_response,
-                         error_from_response=handle_common_header_errors(common_lease_errors), **kwargs)
+                         error_from_response=_upload_graph_error, **kwargs)
 
-    def upload_graph_async(self, lease=None, graph=None, **kwargs):
+    def upload_graph_async(self, lease=None, graph=None, generate_new_anchoring=False, **kwargs):
         """Async version of upload_graph()."""
-        request = self._build_upload_graph_request(lease, graph)
+        request = self._build_upload_graph_request(lease, graph, generate_new_anchoring)
         return self.call_async(self._stub.UploadGraph, request, value_from_response=_get_response,
-                               error_from_response=handle_common_header_errors(common_lease_errors), **kwargs)
+                               error_from_response=_upload_graph_error, **kwargs)
 
     def upload_waypoint_snapshot(self, waypoint_snapshot, lease=None, **kwargs):
         """Uploads large waypoint snapshot as a stream for a particular waypoint.
@@ -306,10 +433,11 @@ class GraphNavClient(BaseClient):
             LeaseUseError: Error using provided lease.
         """
         serialized = waypoint_snapshot.SerializeToString()
-        self.call(self._stub.UploadWaypointSnapshot,
-                  GraphNavClient._data_chunk_iterator_upload_waypoint_snapshot(
-                      serialized, lease, self._data_chunk_size), value_from_response=None,
-                  error_from_response=handle_common_header_errors(common_lease_errors), **kwargs)
+        self.call(
+            self._stub.UploadWaypointSnapshot,
+            GraphNavClient._data_chunk_iterator_upload_waypoint_snapshot(
+                serialized, lease, self._data_chunk_size), value_from_response=None,
+            error_from_response=handle_common_header_errors(common_lease_errors), **kwargs)
 
     def upload_edge_snapshot(self, edge_snapshot, lease=None, **kwargs):
         """Uploads large edge snapshot as a stream for a particular edge.
@@ -324,10 +452,12 @@ class GraphNavClient(BaseClient):
             LeaseUseError: Error using provided leases.
         """
         serialized = edge_snapshot.SerializeToString()
-        self.call(self._stub.UploadEdgeSnapshot,
-                  GraphNavClient._data_chunk_iterator_upload_edge_snapshot(
-                      serialized, lease, self._data_chunk_size), value_from_response=None,
-                  error_from_response=handle_common_header_errors(common_lease_errors), **kwargs)
+        self.call(
+            self._stub.UploadEdgeSnapshot,
+            GraphNavClient._data_chunk_iterator_upload_edge_snapshot(serialized, lease,
+                                                                     self._data_chunk_size),
+            value_from_response=None,
+            error_from_response=handle_common_header_errors(common_lease_errors), **kwargs)
 
     def download_graph(self, **kwargs):
         """Downloads the graph from the server.
@@ -347,27 +477,32 @@ class GraphNavClient(BaseClient):
         return self.call_async(self._stub.DownloadGraph, request, value_from_response=_get_graph,
                                error_from_response=common_header_errors, **kwargs)
 
-    def download_waypoint_snapshot(self,
-                                    waypoint_snapshot_id,
-                                    download_images=False,
-                                    **kwargs):
+    def download_waypoint_snapshot(
+            self,
+            waypoint_snapshot_id,
+            download_images=False,
+            do_not_download_point_cloud=False,
+            **kwargs):
         """Download a specific waypoint snapshot with streaming from the server.
 
         Args:
             waypoint_snapshot_id: WaypointSnapshot string ID for which snapshot to download from robot.
             download_images: Boolean indicating whether or not to include images in the download.
+            do_not_download_point_cloud: Boolean indicating if point cloud data should not be downloaded.
         Returns:
             The WaypointSnapshot protobuf from the robot's current map.
         Raises:
             RpcError: Problem communicating with the robot
             UnknownMapInformationError: Snapshot id not found
         """
-        request = self._build_download_waypoint_snapshot_request(waypoint_snapshot_id,
-                                                                 download_images
-                                                                )
+        request = self._build_download_waypoint_snapshot_request(
+            waypoint_snapshot_id,
+            download_images,
+            do_not_download_point_cloud)
         return self.call(self._stub.DownloadWaypointSnapshot, request,
                          value_from_response=_get_streamed_waypoint_snapshot,
                          error_from_response=_download_waypoint_snapshot_stream_errors, **kwargs)
+
 
     def download_edge_snapshot(self, edge_snapshot_id, **kwargs):
         """Downloads a specific edge snapshot with streaming from the server.
@@ -399,11 +534,15 @@ class GraphNavClient(BaseClient):
         self._write_bytes(directory, '/graph', graph_bytes)
 
         for waypoint in graph.waypoints:
+            if len(waypoint.snapshot_id) == 0:
+                continue
             waypoint_snapshot = self.download_waypoint_snapshot(waypoint.snapshot_id)
             self._write_bytes(directory + '/waypoint_snapshots', '/' + waypoint.snapshot_id,
                               waypoint_snapshot.SerializeToString())
 
         for edge in graph.edges:
+            if len(edge.snapshot_id) == 0:
+                continue
             edge_snapshot = self.download_edge_snapshot(edge.snapshot_id)
             self._write_bytes(directory + '/edge_snapshots', '/' + edge.snapshot_id,
                               edge_snapshot.SerializeToString())
@@ -432,24 +571,25 @@ class GraphNavClient(BaseClient):
         return request
 
     @staticmethod
-    def _build_get_localization_state_request(request_live_point_cloud,
-                                              request_live_images, request_live_terrain_maps,
-                                              request_live_world_objects, request_live_robot_state,
-                                              waypoint_id):
+    def _build_get_localization_state_request(request_live_point_cloud, request_live_images,
+                                              request_live_terrain_maps, request_live_world_objects,
+                                              request_live_robot_state, waypoint_id):
         return graph_nav_pb2.GetLocalizationStateRequest(
             request_live_point_cloud=request_live_point_cloud,
             request_live_images=request_live_images,
             request_live_terrain_maps=request_live_terrain_maps,
             request_live_world_objects=request_live_world_objects,
-            request_live_robot_state=request_live_robot_state,
-            waypoint_id=waypoint_id)
+            request_live_robot_state=request_live_robot_state, waypoint_id=waypoint_id)
 
     @staticmethod
-    def _build_navigate_route_request(route, travel_params, end_time_secs, leases,
-                                      timesync_endpoint, command_id):
+    def _build_navigate_route_request(route, route_follow_params, travel_params, end_time_secs,
+                                      leases, timesync_endpoint, command_id,
+                                      destination_waypoint_tform_body_goal):
         converter = timesync_endpoint.get_robot_time_converter()
         request = graph_nav_pb2.NavigateRouteRequest(
-            route=route, clock_identifier=timesync_endpoint.clock_identifier)
+            route=route, route_follow_params=route_follow_params,
+            destination_waypoint_tform_body_goal=destination_waypoint_tform_body_goal,
+            clock_identifier=timesync_endpoint.clock_identifier)
         if travel_params is not None:
             request.travel_params.CopyFrom(travel_params)
         request.end_time.CopyFrom(
@@ -478,6 +618,25 @@ class GraphNavClient(BaseClient):
         return request
 
     @staticmethod
+    def _build_navigate_to_anchor_request(seed_tform_goal, travel_params, route_params,
+                                          end_time_secs, leases, timesync_endpoint, command_id,
+                                          goal_waypoint_rt_seed_ewrt_seed_tolerance):
+        converter = timesync_endpoint.get_robot_time_converter()
+        request = graph_nav_pb2.NavigateToAnchorRequest(
+            seed_tform_goal=seed_tform_goal,
+            goal_waypoint_rt_seed_ewrt_seed_tolerance=goal_waypoint_rt_seed_ewrt_seed_tolerance,
+            clock_identifier=timesync_endpoint.clock_identifier)
+        request.end_time.CopyFrom(
+            converter.robot_timestamp_from_local_secs(time.time() + end_time_secs))
+        if travel_params is not None:
+            request.travel_params.CopyFrom(travel_params)
+        if route_params is not None:
+            request.route_params.CopyFrom(route_params)
+        if command_id is not None:
+            request.command_id = command_id
+        return request
+
+    @staticmethod
     def _build_clear_graph_request(lease):
         return graph_nav_pb2.ClearGraphRequest(lease=lease)
 
@@ -486,8 +645,9 @@ class GraphNavClient(BaseClient):
         return graph_nav_pb2.NavigationFeedbackRequest(command_id=command_id)
 
     @staticmethod
-    def _build_upload_graph_request(lease, graph):
-        return graph_nav_pb2.UploadGraphRequest(lease=lease, graph=graph)
+    def _build_upload_graph_request(lease, graph, generate_new_anchoring):
+        return graph_nav_pb2.UploadGraphRequest(lease=lease, graph=graph,
+                                                generate_new_anchoring=generate_new_anchoring)
 
     @staticmethod
     def _data_chunk_iterator_upload_waypoint_snapshot(serialized_waypoint_snapshot, lease,
@@ -526,11 +686,16 @@ class GraphNavClient(BaseClient):
         return graph_nav_pb2.DownloadGraphRequest()
 
     @staticmethod
-    def _build_download_waypoint_snapshot_request(waypoint_snapshot_id, download_images
-                                                  ):
+    def _build_download_waypoint_snapshot_request(
+            waypoint_snapshot_id,
+            download_images,
+        do_not_download_point_cloud=False
+    ):
         return graph_nav_pb2.DownloadWaypointSnapshotRequest(
-            waypoint_snapshot_id=waypoint_snapshot_id, download_images=download_images
-            )
+            waypoint_snapshot_id=waypoint_snapshot_id,
+            download_images=download_images,
+            do_not_download_point_cloud=do_not_download_point_cloud
+        )
 
     @staticmethod
     def _build_download_edge_snapshot_request(edge_snapshot_id):
@@ -591,6 +756,18 @@ class GraphNavServiceResponseError(ResponseError):
     """General class of errors for the GraphNav Recording Service."""
 
 
+class UploadGraphError(GraphNavServiceResponseError):
+    """Errors related to uploading a graph."""
+
+
+class MapTooLargeLicenseError(UploadGraphError):
+    """The map is too large for the license on the robot."""
+
+
+class InvalidGraphError(UploadGraphError):
+    """The graph is invalid topologically, e.g. missing waypoints referenced by edges."""
+
+
 class RequestAbortedError(GraphNavServiceResponseError):
     """Request was aborted by the system."""
 
@@ -609,50 +786,96 @@ class UnknownMapInformationError(GraphNavServiceResponseError):
 
 class TimeError(GraphNavServiceResponseError):
     """Errors associated with timestamps and time sync."""
+
+
 class CommandExpiredError(TimeError):
     """The command was received after its end time had already passed."""
+
+
 class NoTimeSyncError(TimeError):
     """Client has not performed timesync with robot."""
+
+
 class TooDistantError(TimeError):
     """The command was too far in the future."""
 
 
 class RobotStateError(GraphNavServiceResponseError):
     """Errors associated with the current state of the robot."""
+
+
 class IsRecordingError(RobotStateError):
     """Cannot navigate a route while recording a map."""
+
+
 class RobotImpairedError(RobotStateError):
     """Robot has a critical perception or behavior fault and cannot navigate."""
 
 
 class RouteError(GraphNavServiceResponseError):
     """Errors associated with the specified route."""
+
+
 class ConstraintFaultError(RouteError):
     """Route parameters contained a constraint fault."""
+
+
 class InvalidEdgeError(RouteError):
     """One or more edges do not connect to expected waypoints."""
+
+
+@deprecated(reason='Use UnknownRouteElementsError instead', version='3.0.0', action='ignore')
 class UnkownRouteElementsError(RouteError):
     """One or more waypoints/edges are not in the map."""
+
+
+class UnknownRouteElementsError(UnkownRouteElementsError):
+    """One or more waypoints/edges are not in the map."""
+
+
 class NoPathError(RouteError):
     """There is no path to the specified waypoint."""
+
+
 class UnknownWaypointError(RouteError):
     """One or more waypoints are not in the map."""
 
 
+class NoAnchoringError(RouteError):
+    """There is no anchoring."""
+
+
+class InvalidPoseError(RouteError):
+    """The requested pose is invalid, or known to be unachievable."""
+
+
 class RouteNavigationError(GraphNavServiceResponseError):
     """Errors related to how the robot navigates the route."""
+
+
 class FeatureDesertError(RouteNavigationError):
     """Route contained too many waypoints with low-quality features."""
+
+
 class RouteNotUpdatingError(RouteNavigationError):
     """Graph nav was unable to update and follow the specified route."""
+
+
 class RobotLostError(RouteNavigationError):
     """Cannot issue a navigation request when the robot is already lost."""
+
+
 class RobotNotLocalizedToRouteError(RouteNavigationError):
     """The current localization doesn't refer to any waypoint in the route (possibly uninitialized localization)."""
+
+
 class RobotStuckError(RouteNavigationError):
     """The robot is stuck or unable to find a way forward. Resend the command with a new ID, or send a different command to try again."""
+
+
 class UnrecongizedCommandError(RouteNavigationError):
     """Happens when you try to continue a command that was either expired, or had an unrecognized id."""
+
 
 def _localization_from_response(response):
     """Return the localization state from the response."""
@@ -711,6 +934,24 @@ def _get_streamed_edge_snapshot(response):
     return edge_snapshot
 
 
+_UPLOAD_GRAPH_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
+_UPLOAD_GRAPH_STATUS_TO_ERROR.update({
+    graph_nav_pb2.UploadGraphResponse.STATUS_OK: (None, None),
+    graph_nav_pb2.UploadGraphResponse.STATUS_MAP_TOO_LARGE_LICENSE: error_pair(MapTooLargeLicenseError),
+    graph_nav_pb2.UploadGraphResponse.STATUS_INVALID_GRAPH: error_pair(InvalidGraphError),
+})
+
+
+@handle_common_header_errors
+@handle_lease_use_result_errors
+@handle_unset_status_error(unset='STATUS_UNKNOWN')
+def _upload_graph_error(response):
+    """Return a custom exception based on upload graph response, None if no error."""
+    return error_factory(response, response.status,
+                         status_to_string=graph_nav_pb2.UploadGraphResponse.Status.Name,
+                         status_to_error=_UPLOAD_GRAPH_STATUS_TO_ERROR)
+
+
 _SET_LOCALIZATION_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _SET_LOCALIZATION_STATUS_TO_ERROR.update({
     graph_nav_pb2.SetLocalizationResponse.STATUS_OK: (None, None),
@@ -747,9 +988,11 @@ _NAVIGATE_ROUTE_STATUS_TO_ERROR.update({
     graph_nav_pb2.NavigateRouteResponse.STATUS_RECORDING:
         error_pair(IsRecordingError),
     graph_nav_pb2.NavigateRouteResponse.STATUS_UNKNOWN_ROUTE_ELEMENTS:
-        error_pair(UnkownRouteElementsError),
+        error_pair(UnknownRouteElementsError),
     graph_nav_pb2.NavigateRouteResponse.STATUS_INVALID_EDGE:
         error_pair(InvalidEdgeError),
+    graph_nav_pb2.NavigateRouteResponse.STATUS_NO_PATH:
+        error_pair(NoPathError),
     graph_nav_pb2.NavigateRouteResponse.STATUS_CONSTRAINT_FAULT:
         error_pair(ConstraintFaultError),
     graph_nav_pb2.NavigateRouteResponse.STATUS_FEATURE_DESERT:
@@ -757,6 +1000,8 @@ _NAVIGATE_ROUTE_STATUS_TO_ERROR.update({
     graph_nav_pb2.NavigateRouteResponse.STATUS_LOST:
         error_pair(RobotLostError),
     graph_nav_pb2.NavigateRouteResponse.STATUS_NOT_LOCALIZED_TO_ROUTE:
+        error_pair(RobotNotLocalizedToRouteError),
+    graph_nav_pb2.NavigateRouteResponse.STATUS_NOT_LOCALIZED_TO_MAP:
         error_pair(RobotNotLocalizedToRouteError),
     graph_nav_pb2.NavigateRouteResponse.STATUS_COULD_NOT_UPDATE_ROUTE:
         error_pair(RouteNotUpdatingError),
@@ -815,6 +1060,48 @@ def _navigate_to_error(response):
     return error_factory(response, response.status,
                          status_to_string=graph_nav_pb2.NavigateToResponse.Status.Name,
                          status_to_error=_NAVIGATE_TO_STATUS_TO_ERROR)
+
+
+_NAVIGATE_TO_ANCHOR_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
+_NAVIGATE_TO_ANCHOR_STATUS_TO_ERROR.update({
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_OK: (None, None),
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_NO_TIMESYNC:
+        error_pair(NoTimeSyncError),
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_EXPIRED:
+        error_pair(CommandExpiredError),
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_TOO_DISTANT:
+        error_pair(TooDistantError),
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_ROBOT_IMPAIRED:
+        error_pair(RobotImpairedError),
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_RECORDING:
+        error_pair(IsRecordingError),
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_NO_PATH:
+        error_pair(NoPathError),
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_NO_ANCHORING:
+        error_pair(NoAnchoringError),
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_FEATURE_DESERT:
+        error_pair(FeatureDesertError),
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_LOST:
+        error_pair(RobotLostError),
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_NOT_LOCALIZED_TO_MAP:
+        error_pair(RobotNotLocalizedToRouteError),
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_COULD_NOT_UPDATE_ROUTE:
+        error_pair(RouteNotUpdatingError),
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_STUCK:
+        error_pair(RobotStuckError),
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_INVALID_POSE:
+        error_pair(InvalidPoseError)
+})
+
+
+@handle_common_header_errors
+@handle_lease_use_result_errors
+@handle_unset_status_error(unset='STATUS_UNKNOWN')
+def _navigate_to_anchor_error(response):
+    """Return a custom exception based on navigate to anchor response, None if no error."""
+    return error_factory(response, response.status,
+                         status_to_string=graph_nav_pb2.NavigateToAnchorResponse.Status.Name,
+                         status_to_error=_NAVIGATE_TO_ANCHOR_STATUS_TO_ERROR)
 
 
 @handle_common_header_errors

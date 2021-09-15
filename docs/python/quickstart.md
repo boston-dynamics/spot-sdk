@@ -17,7 +17,7 @@ This guide will help you set up your programming environment to successfully com
      * [System Requirements](#system-requirements)
      * [Python Requirements](#python-requirements)
      * [Pip Installation](#pip-installation)
-     * [Manage Multiple Python Environments with virtualenv](#manage-multiple-python-environments)
+     * [Manage Multiple Python Environments with virtualenv](#manage-multiple-python-environments-with-virtualenv)
   * [Install Spot Python Packages](#install-spot-python-packages)
      * [Verify your Spot packages installation](#verify-your-spot-packages-installation)
   * [Verify you can command and query Spot](#verify-you-can-command-and-query-spot)
@@ -121,8 +121,8 @@ Users with multiple python versions, anaconda, etc., are responsible for maintai
 
 ```
 $ python3 -m pip install virtualenv
-$ python3 -m virtualenv my_spot_v2_0_env
-$ source my_spot_v2_0_env/bin/activate
+$ python3 -m virtualenv --python=/usr/bin/python3 my_spot_env
+$ source my_spot_env/bin/activate
 $ (install packages including Spot SDK, code, edit, execute, etc.)
 ```
 
@@ -132,25 +132,23 @@ To exit virtualenv...
 $ deactivate
 ```
 
-**Note:** Please ensure the virtualenv was created using the expected version of python.  If you see:
+**Note:** Please ensure the virtualenv was created and uses the correct version of python by
+starting python after activating the virtual environment.
 
 ```shell
-$ python -m virtualenv my_spot_v2_0_env
-Running virtualenv with interpreter /usr/bin/python2
-...
-```
-Then the wrong interpreter is being used.  You can pass the interpreter as an additional argument, for example:
-
-```shell
-$ python -m virtualenv -p /usr/bin/python3 my_spot_v2_0_env
+(my_spot_env) user@yourcomputer:~/user $ python
+Python 3.6.9 (default, Oct  8 2020, 12:12:24)
+[GCC 8.4.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>>
 ```
 
 **Windows users:**
 
 ```shell
 > py.exe -3 -m pip install virtualenv
-> py.exe -3 -m virtualenv my_spot_v2_0_env
-> .\my_spot_v2_0_env\Scripts\activate.bat
+> py.exe -3 -m virtualenv my_spot_env
+> .\my_spot_env\Scripts\activate.bat
 > (install packages including Spot SDK, code, edit, execute, etc.)
 ```
 
@@ -166,10 +164,10 @@ $ python3 -m pip install --upgrade bosdyn-client bosdyn-mission bosdyn-choreogra
 Installing the `bosdyn-client`, `bosdyn-choreography-client` and `bosdyn-mission` packages will also
 install `bosdyn-api` and `bosdyn-core` packages with the same version. The command above installs
 the latest version of the packages. To install a different version of the packages from PyPI, for
-example 2.2.0, use the following command.
+example 3.0.0, use the following command.
 
 ```shell
-$ python3 -m pip install bosdyn-client==2.2.0 bosdyn-mission==2.2.0 bosdyn-choreography-client==2.2.0
+$ python3 -m pip install bosdyn-client==3.0.0 bosdyn-mission==3.0.0 bosdyn-choreography-client==3.0.0
 ```
 
 **Version incompatibility:**
@@ -178,7 +176,7 @@ If you see a version incompatibility error during pip install such as:
 
 ```shell
 ERROR: bosdyn-core <VERSION_STRING> has requirement bosdyn-api==<VERSION_STRING>, but you
-have bosdyn-api 2.2.0 which is incompatible.
+have bosdyn-api 3.0.0 which is incompatible.
 ```
 
 Try uninstalling the bosdyn packages (Note: unlike install, you will need to explicitly list all 4 packages) and then reinstalling:
@@ -193,12 +191,12 @@ Make sure that the packages have been installed.
 
 ```shell
 $ python3 -m pip list --format=columns | grep bosdyn
-bosdyn-api                    2.3.5
-bosdyn-choreography-client    2.3.5
-bosdyn-choreography-protos    2.3.5
-bosdyn-client                 2.3.5
-bosdyn-core                   2.3.5
-bosdyn-mission                2.3.5
+bosdyn-api                    3.0.0
+bosdyn-choreography-client    3.0.0
+bosdyn-choreography-protos    3.0.0
+bosdyn-client                 3.0.0
+bosdyn-core                   3.0.0
+bosdyn-mission                3.0.0
 ```
 **Windows users:**
 ```shell
@@ -262,7 +260,7 @@ NOTE: The following examples will assume username "user" and password "password.
 
 ### Ping Spot
 
-1. Power on Spot.  Wait for the fans to turn off (and maybe 10-20 seconds after that)
+1. Power on Spot by holding the power button down until the fans start.  Wait for the fans to turn off (and maybe 10-20 seconds after that)
 2. Connect to Spot via wifi.
 3. Ping spot at 192.168.80.3
 
@@ -284,11 +282,15 @@ Installed: 2020-12-11 15:06:57
 
 If this worked for you, SUCCESS!  You are now successfully communicating with Spot via Python!  Note that the output returned shows your Spot robot's unique serial number, its nickname and robot type (Boston Dynamics has multiple robots), the software version, and install date.
 
-If you see the following:
+If you see one of the following:
 
 ```shell
 $ python3 -m bosdyn.client 192.168.80.3 id
 Could not contact robot with hostname "192.168.80.3"
+```
+```shell
+$ python3 -m bosdyn.client 192.168.80.3 id
+RetryableUnavailableError: _InactiveRpcError: gRPC service unavailable. Likely transient and can be resolved by retrying the request.
 ```
 
 The robot is not powered on or is unreachable.  Go back and try to get your ping to work.  You can also try the `-v` or `--verbose` to get more information to debug the issue.
@@ -325,15 +327,14 @@ $ python3 hello_spot.py --username user --password password 192.168.80.3
 Hello_spot will fail because there is not an E-Stop endpoint.
 
 ```shell
-2020-03-30 15:26:36,283 - ERROR - Robot is E-Stopped. Please use an external E-Stop client, such as
+2021-03-30 15:26:36,283 - ERROR - Robot is E-Stopped. Please use an external E-Stop client, such as
 the E-Stop SDK example, to configure E-Stop.
 ```
 
 If you see the following error:
 ```shell
 $ python3 hello_spot.py --username usehername --password pazwierd 192.168.80.3
-2020-04-03 15:10:28,189 - ERROR - Hello, Spot! threw an exception: bosdyn.api.GetAuthTokenResponse:
-Provided username/password is invalid.
+2021-04-03 15:10:28,189 - ERROR - Hello, Spot! threw an exception: InvalidLoginError()
 ```
 
 Your username or password is incorrect. Check your spelling and verify your credentials with your robot administrator.

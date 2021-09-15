@@ -33,7 +33,8 @@ message Localization {
     string waypoint_id = 1;
     // Pose of body in waypoint frame.
     SE3Pose waypoint_tform_body = 2;
-    // Pose of body to starting fiducial frame (origin).
+    // Pose of body in a common reference frame. The common reference frame defaults to the starting
+    // fiducial frame, but can be changed. See Anchoring for more info.
     SE3Pose seed_tform_body = 5;
     // Time (in robot time basis) that this localization was valid.
     google.protobuf.Timestamp timestamp = 3;

@@ -16,6 +16,7 @@ import bosdyn.client.graph_nav
 from bosdyn.client.exceptions import UnsetStatusError, InternalServerError
 from bosdyn.client.time_sync import TimeSyncEndpoint
 
+
 class MockGraphNavServicer(graph_nav_service_pb2_grpc.GraphNavServiceServicer):
     """GraphNav servicer for testing.
 
@@ -26,11 +27,16 @@ class MockGraphNavServicer(graph_nav_service_pb2_grpc.GraphNavServiceServicer):
         super(MockGraphNavServicer, self).__init__()
         self.common_header_code = header_pb2.CommonError.CODE_OK
         self.nav_feedback_status = graph_nav_pb2.NavigationFeedbackResponse.STATUS_REACHED_GOAL
-        self.nav_to_resp = graph_nav_pb2.NavigateToResponse(status=graph_nav_pb2.NavigateToResponse.STATUS_OK)
-        self.nav_route_resp = graph_nav_pb2.NavigateRouteResponse(status=graph_nav_pb2.NavigateRouteResponse.STATUS_OK)
+        self.nav_to_resp = graph_nav_pb2.NavigateToResponse(
+            status=graph_nav_pb2.NavigateToResponse.STATUS_OK)
+        self.nav_route_resp = graph_nav_pb2.NavigateRouteResponse(
+            status=graph_nav_pb2.NavigateRouteResponse.STATUS_OK)
         self.upload_waypoint_resp = graph_nav_pb2.UploadWaypointSnapshotResponse()
         self.upload_edge_resp = graph_nav_pb2.UploadEdgeSnapshotResponse()
-        self.set_loc_resp = graph_nav_pb2.SetLocalizationResponse(status=graph_nav_pb2.SetLocalizationResponse.STATUS_OK)
+        self.set_loc_resp = graph_nav_pb2.SetLocalizationResponse(
+            status=graph_nav_pb2.SetLocalizationResponse.STATUS_OK)
+        self.upload_graph_resp = graph_nav_pb2.UploadGraphResponse(
+            status=graph_nav_pb2.UploadGraphResponse.STATUS_OK)
         self.download_wp_snapshot_status = graph_nav_pb2.DownloadWaypointSnapshotResponse.STATUS_OK
         self.download_edge_snapshot_status = graph_nav_pb2.DownloadEdgeSnapshotResponse.STATUS_OK
         self.lease_use_result = None
@@ -68,6 +74,7 @@ class MockGraphNavServicer(graph_nav_service_pb2_grpc.GraphNavServiceServicer):
 
     def UploadGraph(self, request, context):
         resp = graph_nav_pb2.UploadGraphResponse()
+        resp.CopyFrom(self.upload_graph_resp)
         resp.header.error.code = self.common_header_code
         if self.lease_use_result:
             resp.lease_use_result.CopyFrom(self.lease_use_result)
@@ -106,6 +113,7 @@ class MockGraphNavServicer(graph_nav_service_pb2_grpc.GraphNavServiceServicer):
         resp.status = self.download_edge_snapshot_status
         yield resp
 
+
 @pytest.fixture
 def client(time_sync):
     c = GraphNavClient()
@@ -117,12 +125,14 @@ def client(time_sync):
 def service():
     return MockGraphNavServicer()
 
+
 @pytest.fixture
 def time_sync():
-    ts =  TimeSyncEndpoint(None)
+    ts = TimeSyncEndpoint(None)
     ts._locked_previous_response = time_sync_pb2.TimeSyncUpdateResponse()
     ts.response.state.status = time_sync_pb2.TimeSyncState.STATUS_OK
     return ts
+
 
 @pytest.fixture
 def server(client, service):
@@ -134,6 +144,7 @@ def server(client, service):
     server.start()
     yield server
     server.stop(0)
+
 
 @pytest.mark.parametrize('func', ('navigation_feedback_async', 'navigation_feedback'))
 def test_feedback_exceptions(client, service, server, func):
@@ -168,11 +179,12 @@ def test_feedback_exceptions(client, service, server, func):
 
 
 def test_navigate_to_exceptions(client, service, server):
-    make_call = lambda:client.navigate_to('somewhere-id', 2.0)
+    make_call = lambda: client.navigate_to('somewhere-id', 2.0)
     cmd_id = make_call()
     assert type(cmd_id) is int
 
-    service.lease_use_result = lease_pb2.LeaseUseResult(status=lease_pb2.LeaseUseResult.STATUS_OLDER)
+    service.lease_use_result = lease_pb2.LeaseUseResult(
+        status=lease_pb2.LeaseUseResult.STATUS_OLDER)
     with pytest.raises(bosdyn.client.LeaseUseError):
         make_call()
 
@@ -226,10 +238,11 @@ def test_navigate_to_exceptions(client, service, server):
 
 
 def test_navigate_route_exceptions(client, service, server):
-    make_call = lambda:client.navigate_route(nav_pb2.Route(), 2.0)
+    make_call = lambda: client.navigate_route(nav_pb2.Route(), 2.0)
     cmd_id = make_call()
     assert cmd_id == 0
-    service.lease_use_result = lease_pb2.LeaseUseResult(status=lease_pb2.LeaseUseResult.STATUS_OLDER)
+    service.lease_use_result = lease_pb2.LeaseUseResult(
+        status=lease_pb2.LeaseUseResult.STATUS_OLDER)
     with pytest.raises(bosdyn.client.LeaseUseError):
         make_call()
 
@@ -258,6 +271,9 @@ def test_navigate_route_exceptions(client, service, server):
         make_call()
 
     service.nav_route_resp.status = service.nav_route_resp.STATUS_UNKNOWN_ROUTE_ELEMENTS
+    with pytest.raises(bosdyn.client.graph_nav.UnknownRouteElementsError):
+        make_call()
+    #make sure the misspelled error works for backwards compatibility.
     with pytest.raises(bosdyn.client.graph_nav.UnkownRouteElementsError):
         make_call()
 
@@ -285,12 +301,14 @@ def test_navigate_route_exceptions(client, service, server):
     with pytest.raises(bosdyn.client.graph_nav.RouteNotUpdatingError):
         make_call()
 
+
 def test_clear_graph(client, service, server):
     make_call = lambda: client.clear_graph()
 
     make_call()
 
-    service.lease_use_result = lease_pb2.LeaseUseResult(status=lease_pb2.LeaseUseResult.STATUS_OLDER)
+    service.lease_use_result = lease_pb2.LeaseUseResult(
+        status=lease_pb2.LeaseUseResult.STATUS_OLDER)
     with pytest.raises(bosdyn.client.LeaseUseError):
         make_call()
 
@@ -299,31 +317,49 @@ def test_upload_graph_exceptions(client, service, server):
     make_call = lambda: client.upload_graph(graph=map_pb2.Graph())
     make_call()
 
-    service.lease_use_result = lease_pb2.LeaseUseResult(status=lease_pb2.LeaseUseResult.STATUS_OLDER)
+    service.lease_use_result = lease_pb2.LeaseUseResult(
+        status=lease_pb2.LeaseUseResult.STATUS_OLDER)
     with pytest.raises(bosdyn.client.LeaseUseError):
         make_call()
+
+    service.lease_use_result = lease_pb2.LeaseUseResult(status=lease_pb2.LeaseUseResult.STATUS_OK)
+    make_call()
+
+    service.upload_graph_resp.status = service.upload_graph_resp.STATUS_MAP_TOO_LARGE_LICENSE
+    with pytest.raises(bosdyn.client.graph_nav.MapTooLargeLicenseError):
+        make_call()
+
+    service.upload_graph_resp.status = service.upload_graph_resp.STATUS_INVALID_GRAPH
+    with pytest.raises(bosdyn.client.graph_nav.InvalidGraphError):
+        make_call()
+
 
 def test_upload_waypoint_exceptions(client, service, server):
     make_call = lambda: client.upload_waypoint_snapshot(map_pb2.WaypointSnapshot())
     make_call()
 
-    service.lease_use_result = lease_pb2.LeaseUseResult(status=lease_pb2.LeaseUseResult.STATUS_OLDER)
+    service.lease_use_result = lease_pb2.LeaseUseResult(
+        status=lease_pb2.LeaseUseResult.STATUS_OLDER)
     with pytest.raises(bosdyn.client.LeaseUseError):
         make_call()
+
 
 def test_upload_edge_exceptions(client, service, server):
     make_call = lambda: client.upload_edge_snapshot(map_pb2.EdgeSnapshot())
     make_call()
 
-    service.lease_use_result = lease_pb2.LeaseUseResult(status=lease_pb2.LeaseUseResult.STATUS_OLDER)
+    service.lease_use_result = lease_pb2.LeaseUseResult(
+        status=lease_pb2.LeaseUseResult.STATUS_OLDER)
     with pytest.raises(bosdyn.client.LeaseUseError):
         make_call()
+
 
 def test_set_localization_exceptions(client, service, server):
     make_call = lambda: client.set_localization(nav_pb2.Localization())
     make_call()
 
-    service.lease_use_result = lease_pb2.LeaseUseResult(status=lease_pb2.LeaseUseResult.STATUS_OLDER)
+    service.lease_use_result = lease_pb2.LeaseUseResult(
+        status=lease_pb2.LeaseUseResult.STATUS_OLDER)
     with pytest.raises(bosdyn.client.LeaseUseError):
         make_call()
 
@@ -346,6 +382,7 @@ def test_set_localization_exceptions(client, service, server):
     with pytest.raises(bosdyn.client.graph_nav.RequestFailedError):
         make_call()
 
+
 def test_download_waypoint_snapshot(client, service, server):
     make_call = lambda: client.download_waypoint_snapshot(waypoint_snapshot_id="mywaypoint")
     make_call()
@@ -358,6 +395,7 @@ def test_download_waypoint_snapshot(client, service, server):
     service.download_wp_snapshot_status = graph_nav_pb2.DownloadWaypointSnapshotResponse.STATUS_SNAPSHOT_DOES_NOT_EXIST
     with pytest.raises(bosdyn.client.graph_nav.UnknownMapInformationError):
         make_call()
+
 
 def test_download_edge_snapshot(client, service, server):
     make_call = lambda: client.download_edge_snapshot(edge_snapshot_id="myedge")

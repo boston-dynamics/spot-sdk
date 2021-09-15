@@ -19,6 +19,7 @@ import pkg_resources
 
 from .arm_surface_contact import ArmSurfaceContactClient
 from .auth import AuthClient
+from .auto_return import AutoReturnClient
 from .channel import DEFAULT_MAX_MESSAGE_LENGTH
 from .data_acquisition import DataAcquisitionClient
 from .data_acquisition_store import DataAcquisitionStoreClient
@@ -33,11 +34,13 @@ from .fault import FaultClient
 from .exceptions import Error
 from .graph_nav import GraphNavClient
 from .image import ImageClient
+from .ir_enable_disable import IREnableDisableServiceClient
 from .lease import LeaseClient
 from .license import LicenseClient
 from .log_annotation import LogAnnotationClient
 from .local_grid import LocalGridClient
 from .manipulation_api_client import ManipulationApiClient
+from .map_processing import MapProcessingServiceClient
 from .network_compute_bridge_client import NetworkComputeBridgeClient
 from .payload import PayloadClient
 from .payload_registration import PayloadRegistrationClient
@@ -52,6 +55,7 @@ from .robot_state import RobotStateClient
 from .spot_check import SpotCheckClient
 from .time_sync import TimeSyncClient
 from .world_object import WorldObjectClient
+
 
 class SdkError(Error):
     """General class of errors to handle non-response non-rpc errors."""
@@ -94,6 +98,7 @@ def generate_client_name(prefix=''):
 _DEFAULT_SERVICE_CLIENTS = [
     ArmSurfaceContactClient,
     AuthClient,
+    AutoReturnClient,
     DataAcquisitionClient,
     DataAcquisitionStoreClient,
     DataBufferClient,
@@ -107,11 +112,13 @@ _DEFAULT_SERVICE_CLIENTS = [
     GraphNavClient,
     GraphNavRecordingServiceClient,
     ImageClient,
+    IREnableDisableServiceClient,
     LeaseClient,
     LicenseClient,
     LogAnnotationClient,
     LocalGridClient,
     ManipulationApiClient,
+    MapProcessingServiceClient,
     NetworkComputeBridgeClient,
     PayloadClient,
     PayloadRegistrationClient,
@@ -265,11 +272,20 @@ class Sdk(object):
                 with open(cert_path, 'rb') as cert_file:
                     self.cert += cert_file.read()
 
+    def clear_robots(self):
+        """Remove all cached Robot instances.
+        Subsequent calls to create_robot() will return newly created Robots.
+        Existing robot instances will continue to work, but their time sync and token refresh
+        threads will be stopped.
+        """
+        for robot in self.robots.values():
+            robot._shutdown()
+        self.robots = {}
+
     @staticmethod
     @deprecated(
         reason='App tokens are no longer in use. Authorization is now handled via licenses.',
-        version='2.0.1',
-        action="always")
+        version='2.0.1', action="always")
     def load_app_token(*_):
         """Do nothing, this method is kept only to maintain backwards compatibility."""
         return

@@ -19,7 +19,8 @@ from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
                                                   DirectoryRegistrationKeepAlive)
 from sbp.client.drivers.pyserial_driver import PySerialDriver
 import bosdyn.client.util
-from bosdyn.client.util import GrpcServiceRunner, setup_logging
+from bosdyn.client.util import setup_logging
+from bosdyn.client.server_util import GrpcServiceRunner
 
 from sbp.client import Handler, Framer
 from sbp.navigation import SBP_MSG_POS_LLH_DEP_A, SBP_MSG_POS_LLH
@@ -34,14 +35,18 @@ kChannel = 'piksi_gps'
 kDescription = 'Piksi GPS latitude/longitude coordinates'
 kCapabilities = [Capability(name=kName, description=kDescription, channel_name=kChannel)]
 
+
 class GPSData:
+
     def __init__(self, lat, lon, alt):
         self.lat = lat
         self.lon = lon
         self.alt = alt
 
+
 class GPS_Adapter:
     """Provide access to the latest data from a fake sensor."""
+
     def __init__(self):
         self.data_lock = threading.Lock()
         self.data = None

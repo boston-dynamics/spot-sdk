@@ -14,6 +14,7 @@ from bosdyn.client.spot_cam.health import HealthClient
 
 from bosdyn.api.spot_cam import health_pb2
 
+
 class HealthCommands(Subcommands):
     """Commands related to the Spot CAM's Health service"""
 
@@ -21,7 +22,8 @@ class HealthCommands(Subcommands):
 
     def __init__(self, subparsers, command_dict):
         super(HealthCommands, self).__init__(subparsers, command_dict, [
-            HealthClearBITEventsCommand, HealthGetBITStatusCommand,
+            HealthClearBITEventsCommand,
+            HealthGetBITStatusCommand,
             HealthGetTemperatureCommand,
         ])
 
@@ -47,7 +49,8 @@ class HealthGetBITStatusCommand(Command):
         super(HealthGetBITStatusCommand, self).__init__(subparsers, command_dict)
 
     def _run(self, robot, options):
-        events, degradations = robot.ensure_client(HealthClient.default_service_name).get_bit_status()
+        events, degradations = robot.ensure_client(
+            HealthClient.default_service_name).get_bit_status()
 
         return events, degradations
 

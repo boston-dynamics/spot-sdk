@@ -19,6 +19,18 @@ service ChoreographyService {
     // Upload a dance to the robot.
     rpc UploadChoreography(UploadChoreographyRequest) returns (UploadChoreographyResponse) {}
 
+    // Upload an animation to the robot.
+    rpc UploadAnimatedMove(UploadAnimatedMoveRequest) returns (UploadAnimatedMoveResponse) {}
+
     // Execute the uploaded dance.
     rpc ExecuteChoreography(ExecuteChoreographyRequest) returns (ExecuteChoreographyResponse) {}
+
+    // Manually start (or continue) recording the robot state.
+    rpc StartRecordingState(StartRecordingStateRequest) returns (StartRecordingStateResponse) {}
+
+    // Manually stop recording the robot state.
+    rpc StopRecordingState(StopRecordingStateRequest) returns (StopRecordingStateResponse) {}
+
+    // Download log of the latest recorded robot state information.
+    rpc DownloadRobotStateLog(DownloadRobotStateLogRequest) returns (stream DownloadRobotStateLogResponse) {}
 }

@@ -8,13 +8,15 @@
 import pytest
 
 from bosdyn.client.robot_command import (_robot_command_error, _robot_command_feedback_error,
-                                         _clear_behavior_fault_error, RobotCommandBuilder, _edit_proto,
-                                         EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME, END_TIME_EDIT_TREE)
+                                         _clear_behavior_fault_error, RobotCommandBuilder,
+                                         _edit_proto, EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME,
+                                         END_TIME_EDIT_TREE)
 
 from bosdyn.api import robot_command_pb2, arm_command_pb2, synchronized_command_pb2, geometry_pb2
 from bosdyn.client.frame_helpers import BODY_FRAME_NAME, ODOM_FRAME_NAME
 from bosdyn.client import ResponseError, InternalServerError, LeaseUseError, UnsetStatusError
 from google.protobuf import timestamp_pb2
+
 
 def test_robot_command_error():
     # Test unset header error
@@ -120,6 +122,7 @@ def _test_has_arm(command):
 def _test_has_gripper(command):
     assert isinstance(command, synchronized_command_pb2.SynchronizedCommand.Request)
     assert command.HasField("gripper_command")
+
 
 def test_stop_command():
     command = RobotCommandBuilder.stop_command()
@@ -428,7 +431,9 @@ def test_build_synchro_command():
     with pytest.raises(Exception):
         command = RobotCommandBuilder.build_synchro_command(arm_command, full_body_command)
 
+
 def test_edit_timestamps():
+
     def _set_new_time(key, proto):
         """If proto has a field named key, fill set it to end_time_secs as robot time. """
         if key not in proto.DESCRIPTOR.fields_by_name:
@@ -438,8 +443,8 @@ def test_edit_timestamps():
 
     command = robot_command_pb2.RobotCommand()
     command.synchronized_command.arm_command.arm_cartesian_command.root_frame_name = "test"
-    command.synchronized_command.arm_command.arm_cartesian_command.pose_trajectory_in_task.reference_time.seconds =  25
-    command.synchronized_command.arm_command.arm_cartesian_command.wrench_trajectory_in_task.reference_time.seconds =  25
+    command.synchronized_command.arm_command.arm_cartesian_command.pose_trajectory_in_task.reference_time.seconds = 25
+    command.synchronized_command.arm_command.arm_cartesian_command.wrench_trajectory_in_task.reference_time.seconds = 25
     _edit_proto(command, EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME, _set_new_time)
     assert command.synchronized_command.arm_command.arm_cartesian_command.pose_trajectory_in_task.reference_time.seconds == 10
     assert command.synchronized_command.arm_command.arm_cartesian_command.wrench_trajectory_in_task.reference_time.seconds == 10
@@ -447,15 +452,15 @@ def test_edit_timestamps():
 
     command = robot_command_pb2.RobotCommand()
     command.synchronized_command.arm_command.arm_joint_move_command.trajectory.maximum_velocity.value = 1
-    command.synchronized_command.arm_command.arm_joint_move_command.trajectory.reference_time.seconds =  25
+    command.synchronized_command.arm_command.arm_joint_move_command.trajectory.reference_time.seconds = 25
     _edit_proto(command, EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME, _set_new_time)
     assert command.synchronized_command.arm_command.arm_joint_move_command.trajectory.reference_time.seconds == 10
     assert command.synchronized_command.arm_command.arm_joint_move_command.trajectory.maximum_velocity.value == 1
 
     command = robot_command_pb2.RobotCommand()
     command.synchronized_command.arm_command.arm_gaze_command.frame1_name = "test"
-    command.synchronized_command.arm_command.arm_gaze_command.target_trajectory_in_frame1.reference_time.seconds =  25
-    command.synchronized_command.arm_command.arm_gaze_command.tool_trajectory_in_frame2.reference_time.seconds =  25
+    command.synchronized_command.arm_command.arm_gaze_command.target_trajectory_in_frame1.reference_time.seconds = 25
+    command.synchronized_command.arm_command.arm_gaze_command.tool_trajectory_in_frame2.reference_time.seconds = 25
     _edit_proto(command, EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME, _set_new_time)
     assert command.synchronized_command.arm_command.arm_gaze_command.target_trajectory_in_frame1.reference_time.seconds == 10
     assert command.synchronized_command.arm_command.arm_gaze_command.tool_trajectory_in_frame2.reference_time.seconds == 10
@@ -487,7 +492,6 @@ def test_edit_timestamps():
     command.synchronized_command.mobility_command.stance_request.end_time.seconds = 25
     _edit_proto(command, END_TIME_EDIT_TREE, _set_new_time)
     assert command.synchronized_command.mobility_command.stance_request.end_time.seconds == 10
-
 
     command = robot_command_pb2.RobotCommand()
     command.synchronized_command.arm_command.arm_velocity_command.end_time.seconds = 25

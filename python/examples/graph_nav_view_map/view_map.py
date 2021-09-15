@@ -4,6 +4,7 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
+import argparse
 from vtk.util import numpy_support
 import google.protobuf.timestamp_pb2
 import math
@@ -236,11 +237,18 @@ def load_map(path):
         current_waypoints = {}
         current_waypoint_snapshots = {}
         current_edge_snapshots = {}
+        current_anchors = {}
+        current_anchored_world_objects = {}
 
+        # Load the anchored world objects first so we can look in each waypoint snapshot as we load it.
+        for anchored_world_object in current_graph.anchoring.objects:
+            current_anchored_world_objects[anchored_world_object.id] = (anchored_world_object,)
         # For each waypoint, load any snapshot associated with it.
         for waypoint in current_graph.waypoints:
             current_waypoints[waypoint.id] = waypoint
 
+            if len(waypoint.snapshot_id) == 0:
+                continue
             # Load the snapshot. Note that snapshots contain all of the raw data in a waypoint and may be large.
             file_name = os.path.join(path, "waypoint_snapshots", waypoint.snapshot_id)
             if not os.path.exists(file_name):
@@ -249,8 +257,23 @@ def load_map(path):
                 waypoint_snapshot = map_pb2.WaypointSnapshot()
                 waypoint_snapshot.ParseFromString(snapshot_file.read())
                 current_waypoint_snapshots[waypoint_snapshot.id] = waypoint_snapshot
+
+                for fiducial in waypoint_snapshot.objects:
+                    if not fiducial.HasField("apriltag_properties"):
+                        continue
+
+                    str_id = str(fiducial.apriltag_properties.tag_id)
+                    if (str_id in current_anchored_world_objects and
+                            len(current_anchored_world_objects[str_id]) == 1):
+
+                        # Replace the placeholder tuple with a tuple of (wo, waypoint, fiducial).
+                        anchored_wo = current_anchored_world_objects[str_id][0]
+                        current_anchored_world_objects[str_id] = (anchored_wo, waypoint, fiducial)
+
         # Similarly, edges have snapshot data.
         for edge in current_graph.edges:
+            if len(edge.snapshot_id) == 0:
+                continue
             file_name = os.path.join(path, "edge_snapshots", edge.snapshot_id)
             if not os.path.exists(file_name):
                 continue
@@ -258,10 +281,59 @@ def load_map(path):
                 edge_snapshot = map_pb2.EdgeSnapshot()
                 edge_snapshot.ParseFromString(snapshot_file.read())
                 current_edge_snapshots[edge_snapshot.id] = edge_snapshot
-        print("Loaded graph with {} waypoints and {} edges".format(
-            len(current_graph.waypoints), len(current_graph.edges)))
+        for anchor in current_graph.anchoring.anchors:
+            current_anchors[anchor.id] = anchor
+        print("Loaded graph with {} waypoints, {} edges, {} anchors, and {} anchored world objects".
+              format(len(current_graph.waypoints), len(current_graph.edges),
+                     len(current_graph.anchoring.anchors), len(current_graph.anchoring.objects)))
         return (current_graph, current_waypoints, current_waypoint_snapshots,
-                current_edge_snapshots)
+                current_edge_snapshots, current_anchors, current_anchored_world_objects)
+
+
+def create_anchored_graph_objects(current_graph, current_waypoint_snapshots, current_waypoints,
+                                  current_anchors, current_anchored_world_objects, renderer):
+    """
+    Creates all the VTK objects associated with the graph, in seed frame, if they are anchored.
+    :param current_graph: the graph to use.
+    :param current_waypoint_snapshots: dict from snapshot id to snapshot.
+    :param current_waypoints: dict from waypoint id to waypoint.
+    :param renderer: The VTK renderer
+    :return: the average position in world space of all the waypoints.
+    """
+    waypoint_objects = {}
+    avg_pos = np.array([0.0, 0.0, 0.0])
+    waypoints_in_anchoring = 0
+    # Create VTK objects associated with each waypoint.
+    for waypoint in current_graph.waypoints:
+        if waypoint.id in current_anchors:
+            waypoint_object = create_waypoint_object(renderer, current_waypoints,
+                                                     current_waypoint_snapshots, waypoint.id)
+            seed_tform_waypoint = SE3Pose.from_obj(
+                current_anchors[waypoint.id].seed_tform_waypoint).to_matrix()
+            waypoint_object.SetUserTransform(mat_to_vtk(seed_tform_waypoint))
+            make_text(waypoint.annotations.name, seed_tform_waypoint[:3, 3], renderer)
+            avg_pos += seed_tform_waypoint[:3, 3]
+            waypoints_in_anchoring += 1
+
+    avg_pos /= waypoints_in_anchoring
+
+    # Create VTK objects associated with each edge.
+    for edge in current_graph.edges:
+        if edge.id.from_waypoint in current_anchors and edge.id.to_waypoint in current_anchors:
+            seed_tform_from = SE3Pose.from_obj(
+                current_anchors[edge.id.from_waypoint].seed_tform_waypoint).to_matrix()
+            from_tform_to = SE3Pose.from_obj(edge.from_tform_to).to_matrix()
+            create_edge_object(from_tform_to, seed_tform_from, renderer)
+
+    # Create VTK objects associated with each anchored world object.
+    for anchored_wo in current_anchored_world_objects.values():
+        # anchored_wo is a tuple of (anchored_world_object, waypoint, fiducial).
+        (fiducial_object, _) = create_fiducial_object(anchored_wo[2], anchored_wo[1], renderer)
+        seed_tform_fiducial = SE3Pose.from_obj(anchored_wo[0].seed_tform_object).to_matrix()
+        fiducial_object.SetUserTransform(mat_to_vtk(seed_tform_fiducial))
+        make_text(anchored_wo[0].id, seed_tform_fiducial[:3, 3], renderer)
+
+    return avg_pos
 
 
 def create_graph_objects(current_graph, current_waypoint_snapshots, current_waypoints, renderer):
@@ -295,6 +367,8 @@ def create_graph_objects(current_graph, current_waypoint_snapshots, current_wayp
         curr_element = queue[0]
         queue.pop(0)
         curr_waypoint = curr_element[0]
+        if curr_waypoint.id in visited:
+            continue
         visited[curr_waypoint.id] = True
 
         # We now know the global pose of this waypoint, so set the pose.
@@ -308,15 +382,13 @@ def create_graph_objects(current_graph, current_waypoint_snapshots, current_wayp
             snapshot = current_waypoint_snapshots[curr_waypoint.snapshot_id]
             for fiducial in snapshot.objects:
                 if fiducial.HasField("apriltag_properties"):
-                    (fiducial_object,
-                     curr_wp_tform_fiducial) = create_fiducial_object(fiducial, curr_waypoint,
-                                                                      renderer)
+                    (fiducial_object, curr_wp_tform_fiducial) = create_fiducial_object(
+                        fiducial, curr_waypoint, renderer)
                     world_tform_fiducial = np.dot(world_tform_current_waypoint,
                                                   vtk_to_mat(curr_wp_tform_fiducial))
                     fiducial_object.SetUserTransform(mat_to_vtk(world_tform_fiducial))
-                    make_text(
-                        str(fiducial.apriltag_properties.tag_id), world_tform_fiducial[:3, 3],
-                        renderer)
+                    make_text(str(fiducial.apriltag_properties.tag_id), world_tform_fiducial[:3, 3],
+                              renderer)
 
         # Now, for each edge, walk along the edge and concatenate the transform to the neighbor.
         for edge in current_graph.edges:
@@ -338,24 +410,37 @@ def create_graph_objects(current_graph, current_waypoint_snapshots, current_wayp
                 # Add the neighbor to the queue.
                 queue.append((current_waypoints[edge.id.from_waypoint], world_tform_from_wp))
                 avg_pos += world_tform_from_wp[:3, 3]
+
+    # Compute the average waypoint position to place the camera appropriately.
+    avg_pos /= len(current_waypoints)
     return avg_pos
 
 
 def main(argv):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('path', type=str, help='Map to draw.')
+    parser.add_argument('-a', '--anchoring', action='store_true',
+                        help='Draw the map according to the anchoring (in seed frame).')
+    options = parser.parse_args(argv)
     # Load the map from the given file.
-    path = argv[0]
-    (current_graph, current_waypoints, current_waypoint_snapshots,
-     current_edge_snapshots) = load_map(path)
+    (current_graph, current_waypoints, current_waypoint_snapshots, current_edge_snapshots,
+     current_anchors, current_anchored_world_objects) = load_map(options.path)
 
     # Create the renderer.
     renderer = vtk.vtkRenderer()
     renderer.SetBackground(0.05, 0.1, 0.15)
 
-    avg_pos = create_graph_objects(current_graph, current_waypoint_snapshots, current_waypoints,
-                                   renderer)
+    if options.anchoring:
+        if len(current_graph.anchoring.anchors) == 0:
+            print('No anchors to draw.')
+            sys.exit(-1)
+        avg_pos = create_anchored_graph_objects(current_graph, current_waypoint_snapshots,
+                                                current_waypoints, current_anchors,
+                                                current_anchored_world_objects, renderer)
+    else:
+        avg_pos = create_graph_objects(current_graph, current_waypoint_snapshots, current_waypoints,
+                                       renderer)
 
-    # Compute the average waypoint position to place the camera appropriately.
-    avg_pos /= len(current_waypoints)
     camera_pos = avg_pos + np.array([-1, 0, 5])
 
     camera = renderer.GetActiveCamera()
@@ -364,7 +449,7 @@ def main(argv):
 
     # Create the VTK renderer and interactor.
     renderWindow = vtk.vtkRenderWindow()
-    renderWindow.SetWindowName(path)
+    renderWindow.SetWindowName(options.path)
     renderWindow.AddRenderer(renderer)
     renderWindowInteractor = vtk.vtkRenderWindowInteractor()
     renderWindowInteractor.SetRenderWindow(renderWindow)
@@ -380,7 +465,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if (len(sys.argv) != 2):
-        print("Usage: view_map.py <map_directory>")
-        sys.exit(-1)
     main(sys.argv[1:])

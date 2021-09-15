@@ -13,6 +13,8 @@ option java_outer_classname = "WorldObjectProto";
 import "bosdyn/api/docking/docking.proto";
 import "bosdyn/api/geometry.proto";
 import "bosdyn/api/header.proto";
+import "bosdyn/api/image.proto";
+import "bosdyn/api/sparse_features.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 
@@ -35,7 +37,7 @@ message WorldObject {
 
     // A tree-based collection of transformations, which will include the transformations to each
     // of the returned world objects in addition to transformations to the common frames ("vision",
-    // "body", "odom"). All transforms within the snapshot are at the acquistion time of the world object.
+    // "body", "odom"). All transforms within the snapshot are at the acquisition time of the world object.
     // Note that each object's frame names are defined within the properties submessage. For example,
     // the apriltag frame name is defined in the AprilTagProperties message as "frame_name_fiducial"
     FrameTreeSnapshot transforms_snapshot = 31;
@@ -48,6 +50,11 @@ message WorldObject {
     ImageProperties image_properties = 9;
     // Properties describing a dock
     DockProperties dock_properties = 10;
+    // A ray pointing at the object.  Useful in cases where position is unknown but direction is
+    // known.
+    RayProperties ray_properties = 11;
+    // Bounding box in the world, oriented at the location provided in the transforms_snapshot.
+    BoundingBoxProperties bounding_box_properties = 12;
     // An extra field for application-specific object properties.
     google.protobuf.Any additional_properties = 100;
 }
@@ -149,13 +156,24 @@ message MutateWorldObjectResponse {
   int32 mutated_object_id = 4;
 }
 
-//  World object properties describing image coordinates associated with an object.
+//  World object properties describing image coordinates associated with an object or scene.
 message ImageProperties {
     // Camera Source of such as "back", "frontleft", etc.
     string camera_source = 1;
 
-    // Image Coordinates (pixels of x[row], y[col]) in either clockwise/counter clockwise order
-    Polygon coordinates = 2;
+    oneof image_data {
+        // Image coordinates of the corners of a polygon (pixels of x[row], y[col]) in either
+        // clockwise/counter clockwise order
+        Polygon coordinates = 2;
+
+        // A set of keypoints and their associated metadata.
+        KeypointSet keypoints = 4;
+    }
+
+    // Camera parameters.
+    ImageSource image_source = 5;
+    // Image that produced the data.
+    ImageCapture image_capture = 6;
 
     // Frame name for the object described by image coordinates.
     string frame_name_image_coordinates = 3;
@@ -169,6 +187,8 @@ message DockProperties {
   docking.DockType type = 2;
   // The frame name for the location of dock origin. This will be included in the transform snapshot.
   string frame_name_dock = 3;
+  // Availability if the dock can be used
+  bool unavailable = 4;
 }
 
 //  World object properties describing a fiducial object.
@@ -218,6 +238,25 @@ message AprilTagProperties {
 
 }
 
+message RayProperties {
+    // Ray, usually pointing from the camera to the object.
+    Ray ray = 1;
+
+    // Frame the ray is expressed with respect to.
+    string frame = 2;
+}
+
+message BoundingBoxProperties {
+    // An Oriented Bounding Box, with position and orientation at the frame provided in the
+    // transforms snapshot.
+    //
+    // The size of the box is expressed with respect to the frame.
+    Vec3 size_ewrt_frame = 1;
+
+    // Frame the size is expressed with respect to.
+    string frame = 2;
+}
+
 
 // The drawing and visualization information for a world object.
 message DrawableProperties {
@@ -229,7 +268,7 @@ message DrawableProperties {
         int32 g = 2;
         // Blue value ranging from [0,255].
         int32 b = 3;
-        // Alpha (transparancy) value ranging from [0,1].
+        // Alpha (transparency) value ranging from [0,1].
         double a = 4;
     }
     // Color of the object.

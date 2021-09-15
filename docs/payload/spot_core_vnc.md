@@ -133,7 +133,7 @@ vncserver -kill :15100
 ```
 
 ### Enable vncserver on boot
-In order for vncserver to automatically run on Spot CORE whenever Spot is turned on, use a systemd .service file. Create a servive file named `vncserver@.service` and add the following contents. This file can take a port number as an argument.
+In order for vncserver to automatically run on Spot CORE whenever Spot is turned on, use a systemd .service file. Create a service file named `vncserver@.service` and add the following contents. This file can take a port number as an argument.
 
 ```
 [Unit]

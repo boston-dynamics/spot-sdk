@@ -1,0 +1,1214 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bosdyn.choreography.client.animation_file_to_proto &mdash; Spot 3.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../../../_static/bd-favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https:://dev.bostondynamics.com/_modules/bosdyn/choreography/client/animation_file_to_proto.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../README.html">
+          
+
+          
+            
+            <img src="../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../docs/concepts/README.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/base_services.html">Base services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/robot_services.html">Robot services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/lease_service.html">Lease</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/faults.html">Faults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/docking.html">Docking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav Map Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_map_structure.html#recording-and-modifying-maps">Recording and Modifying Maps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/localization.html">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/network_compute_bridge.html">Network compute bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/auto_return.html">AutoReturn service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/directed_exploration.html">Directed Exploration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/choreography/README.html">Choreography</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/animation_file_specification.html">Animation Files for Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/animation_file_specification.html#file-specification">File Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/animation_file_specification.html#options-file-section">Options File Section</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/animation_file_specification.html#parameters-file-section">Parameters File Section</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/animation_file_specification.html#body-keyframe-file-section">Body Keyframe File Section</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/arm/README.html">Spot Arm</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/arm/arm_specification.html">Arm and Gripper Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/arm/arm_concepts.html">Concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/arm/arm_services.html">Services</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/data.html">Spot Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/data_acquisition_overview.html">Data Acquisition Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/data_acquisition_output.html">Data Acquisition Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/data_buffer_overview.html">Data Buffer Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/bddf.html">BDDF file format</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../docs/python/README.html">Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/python/quickstart.html">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/python/understanding_spot_programming.html">Understanding Spot Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../python/examples/README.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/basic_service_examples.html">Basic Service Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/directory/README.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/estop/README.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/comms_test/README.html">Comms Test</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/disable_ir_emission/README.html">IR Enable/Disable</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/robot_behavior_examples.html">Robot Behavior and Commands Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/stance/README.html">Stance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/upload_choreographed_sequence/README.html">Upload Choreographed Sequence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/xbox_controller/README.html">Xbox Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/wasd/README.html">WASD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/docking/README.html">Docking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/auto_return/README.html">Auto Return</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_simple/README.html">Simple Arm Motion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_stow_unstow/README.html">Stow/unstow Arm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_and_mobility_command/README.html">Arm and Mobility Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_with_body_follow/README.html">Arm Command with Body Following</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_constrained_manipulation/README.html">Arm Constrained Manipulation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_trajectory/README.html">Arm Trajectory Motion Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/payloads/README.html">Payloads</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/service_faults/README.html">Faults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/world_object_with_image_coordinates/README.html">World Object With Image Coordinates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/stitch_front_images/README.html">Stitch front images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/bddf_download/README.html">BDDF Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/data_buffer/README.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/data_service/README.html">Data Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/logging/README.html">Logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/bddf_download/README.html">BDDF Download</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/data_acquisition_examples.html">Data Acquisition Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/data_acquisition_service/README.html">Data Acquisition Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/service_faults/README.html">Faults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/tester_programs/README.html">Tester Programs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/autonomy_and_missions_examples.html">Autonomy and Missions Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_anchoring_optimization/README.html">Graph Nav Anchoring Optimization Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_anchoring_optimization/README.html#setup-dependencies">Setup Dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_anchoring_optimization/README.html#running-the-example">Running the Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_anchoring_optimization/README.html#understanding-the-example-code">Understanding the Example Code</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/mission_question_answerer/README.html">Mission Question Answerer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../python/README.html">Python Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/command_line.html">Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/common.html">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html">Data Acquisition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_helpers.html">Data Acquisition Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin.html">Data Acquisition Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/docking.html">Docking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/door.html">Door</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/processors.html">Processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/recording.html">Recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/robot_command.html">Robot Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/robot_id.html">Robot ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html">PTZ</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/streamquality.html">Stream Quality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html">Version</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_check.html">Spot Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/time_sync.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/README.html">Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/README.html">BDDF</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/base_data_reader.html">Base Data Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/block_writer.html">Block Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/bosdyn.html">BDDF Conventions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/common.html">Common</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/data_reader.html">Data Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/data_writer.html">Data Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/file_indexer.html">File Indexer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/grpc_proto_reader.html">GRPC Proto Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/grpc_reader.html">GRPC Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/grpc_service_reader.html">GRPC Service Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/grpc_service_writer.html">GRPC Service Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/message_reader.html">Message Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/pod_series_reader.html">POD Series Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/pod_series_writer.html">POD Series Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/protobuf_channel_reader.html">Protobuf Channel Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/protobuf_reader.html">Protobuf Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/protobuf_series_writer.html">Protobuf Series Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/bddf/stream_data_reader.html">Stream Data Reader</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-core/src/bosdyn/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/README.html">Choreography</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../docs/payload/README.html">Payloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/payload_configuration_requirements.html">Payload configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/mechanical_interfaces.html">Mechanical interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/robot_mounting_rails.html">Robot mounting rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../docs/protos/README.html">API Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/protos/style_guide.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html">arm_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#arm-surface-contact-proto">arm_surface_contact.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#arm-surface-contact-service-proto">arm_surface_contact_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#auth-proto">auth.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-acquisition-plugin-service-proto">data_acquisition_plugin_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-acquisition-service-proto">data_acquisition_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-acquisition-store-proto">data_acquisition_store.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-acquisition-store-service-proto">data_acquisition_store_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-buffer-proto">data_buffer.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-buffer-service-proto">data_buffer_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-chunk-proto">data_chunk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-index-proto">data_index.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-service-proto">data_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#directory-proto">directory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#directory-registration-proto">directory_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#directory-registration-service-proto">directory_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#directory-service-proto">directory_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#docking-docking-proto">docking/docking.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#docking-docking-service-proto">docking/docking_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#estop-proto">estop.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#estop-service-proto">estop_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-processing-proto">graph_nav/map_processing.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-processing-service-proto">graph_nav/map_processing_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#license-service-proto">license_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#local-grid-proto">local_grid.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-mission-service-proto">mission/mission_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-nodes-proto">mission/nodes.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-remote-proto">mission/remote.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-remote-service-proto">mission/remote_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-util-proto">mission/util.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#network-compute-bridge-proto">network_compute_bridge.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#network-compute-bridge-service-proto">network_compute_bridge_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#network-stats-proto">network_stats.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#payload-estimation-proto">payload_estimation.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#payload-registration-proto">payload_registration.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#payload-registration-service-proto">payload_registration_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#payload-service-proto">payload_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#point-cloud-proto">point_cloud.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#point-cloud-service-proto">point_cloud_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#power-proto">power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#power-service-proto">power_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-command-service-proto">robot_command_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-id-proto">robot_id.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-led-proto">spot_cam/LED.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-health-proto">spot_cam/health.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-network-proto">spot_cam/network.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-power-proto">spot_cam/power.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-ptz-proto">spot_cam/ptz.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-service-proto">spot_cam/service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-streamquality-proto">spot_cam/streamquality.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-version-proto">spot_cam/version.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#stairs-proto">stairs.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#synchronized-command-proto">synchronized_command.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#time-range-proto">time_range.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../choreography_protos/bosdyn/api/README.html">Choreography Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../choreography_protos/bosdyn/api/choreography_reference.html">spot/choreography_params.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../choreography_protos/bosdyn/api/choreography_reference.html#spot-choreography-sequence-proto">spot/choreography_sequence.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../choreography_protos/bosdyn/api/choreography_reference.html#spot-choreography-service-proto">spot/choreography_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../choreography_protos/bosdyn/api/choreography_reference.html#standard-types">Standard Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../docs/release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../README.html">Spot</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../README.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bosdyn.choreography.client.animation_file_to_proto</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bosdyn.choreography.client.animation_file_to_proto</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot;A tool to convert animation files into protobuf messages which can be uploaded to the robot</span>
+<span class="sd">and used within choreography sequences.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">ntpath</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">text_format</span><span class="p">,</span> <span class="n">wrappers_pb2</span>
+
+<span class="kn">import</span> <span class="nn">bosdyn.client</span>
+<span class="kn">import</span> <span class="nn">bosdyn.client.util</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.spot</span> <span class="kn">import</span> <span class="n">choreography_sequence_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.choreography.client.animation_file_conversion_helpers</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># The options keywords represent the first section of the file, and will be parsed into</span>
+<span class="c1"># specific fields within the Animation proto.</span>
+<span class="n">OPTIONS_KEYWORDS_TO_FUNCTION</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;controls&quot;</span><span class="p">:</span> <span class="n">controls_option</span><span class="p">,</span>
+    <span class="s2">&quot;bpm&quot;</span><span class="p">:</span> <span class="n">bpm_option</span><span class="p">,</span>
+    <span class="s2">&quot;extendable&quot;</span><span class="p">:</span> <span class="n">extendable_option</span><span class="p">,</span>
+    <span class="s2">&quot;truncatable&quot;</span><span class="p">:</span> <span class="n">truncatable_option</span><span class="p">,</span>
+    <span class="s2">&quot;neutral_start&quot;</span><span class="p">:</span> <span class="n">neutral_start_option</span><span class="p">,</span>
+    <span class="s2">&quot;precise_steps&quot;</span><span class="p">:</span> <span class="n">precise_steps_option</span><span class="p">,</span>
+    <span class="s2">&quot;precise_timing&quot;</span><span class="p">:</span> <span class="n">precise_timing_option</span><span class="p">,</span>
+    <span class="s2">&quot;no_looping&quot;</span><span class="p">:</span> <span class="n">no_looping_option</span><span class="p">,</span>
+    <span class="s2">&quot;arm_required&quot;</span><span class="p">:</span> <span class="n">arm_required_option</span><span class="p">,</span>
+    <span class="s2">&quot;arm_prohibited&quot;</span><span class="p">:</span> <span class="n">arm_prohibited_option</span><span class="p">,</span>
+    <span class="s2">&quot;track_swing_trajectories&quot;</span><span class="p">:</span> <span class="n">track_swing_trajectories_option</span><span class="p">,</span>
+    <span class="s2">&quot;assume_zero_roll_and_pitch&quot;</span><span class="p">:</span> <span class="n">assume_zero_roll_and_pitch_option</span><span class="p">,</span>
+    <span class="s2">&quot;arm_playback&quot;</span><span class="p">:</span> <span class="n">arm_playback_option</span><span class="p">,</span>
+    <span class="s2">&quot;display_rgb&quot;</span><span class="p">:</span> <span class="n">display_rgb_option</span><span class="p">,</span>
+    <span class="s2">&quot;frequency&quot;</span><span class="p">:</span> <span class="n">frequency_option</span><span class="p">,</span>
+    <span class="s2">&quot;retime_to_integer_slices&quot;</span><span class="p">:</span> <span class="n">retime_to_integer_slices_option</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description_option</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1"># The grouped headers represent animation keyframe values which can be used and specify multiple protobuf</span>
+<span class="c1"># values for a single header keyword. For example, body_pos has x/y/z position values.</span>
+<span class="n">GROUPED_HEADERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;body_pos&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">body_pos_handler</span><span class="p">),</span>
+    <span class="s2">&quot;com_pos&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">com_pos_handler</span><span class="p">),</span>
+    <span class="s2">&quot;body_euler_rpy&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">body_euler_rpy_angles_handler</span><span class="p">),</span>
+    <span class="s2">&quot;body_quat_xyzw&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">body_quaternion_xyzw_handler</span><span class="p">),</span>
+    <span class="s2">&quot;body_quat_wxyz&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">body_quaternion_wxyz_handler</span><span class="p">),</span>
+    <span class="s2">&quot;leg_joints&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="n">leg_angles_handler</span><span class="p">),</span>
+    <span class="s2">&quot;foot_pos&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="n">foot_pos_handler</span><span class="p">),</span>
+    <span class="s2">&quot;hand_pos&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">hand_pos_handler</span><span class="p">),</span>
+    <span class="s2">&quot;hand_euler_rpy&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">hand_euler_rpy_angles_handler</span><span class="p">),</span>
+    <span class="s2">&quot;hand_quat_xyzw&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">hand_quaternion_xyzw_handler</span><span class="p">),</span>
+    <span class="s2">&quot;hand_quat_wxyz&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">hand_quaternion_wxyz_handler</span><span class="p">),</span>
+    <span class="s2">&quot;contact&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">contact_handler</span><span class="p">),</span>
+    <span class="s2">&quot;arm_joints&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">arm_joints_handler</span><span class="p">),</span>
+    <span class="s2">&quot;fl_angles&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">fl_angles_handler</span><span class="p">),</span>
+    <span class="s2">&quot;fr_angles&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">fr_angles_handler</span><span class="p">),</span>
+    <span class="s2">&quot;hl_angles&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">hl_angles_handler</span><span class="p">),</span>
+    <span class="s2">&quot;hr_angles&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">hr_angles_handler</span><span class="p">),</span>
+    <span class="s2">&quot;fl_pos&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">fl_pos_handler</span><span class="p">),</span>
+    <span class="s2">&quot;fr_pos&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">fr_pos_handler</span><span class="p">),</span>
+    <span class="s2">&quot;hl_pos&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">hl_pos_handler</span><span class="p">),</span>
+    <span class="s2">&quot;hr_pos&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">hr_pos_handler</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="c1"># The single grouped headers represent animation keyframe values which can be used and specify a single</span>
+<span class="c1"># protobuf value for the header keyword.</span>
+<span class="n">SINGLE_HEADERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;body_x&quot;</span><span class="p">:</span> <span class="n">body_x_handler</span><span class="p">,</span>
+    <span class="s2">&quot;body_y&quot;</span><span class="p">:</span> <span class="n">body_y_handler</span><span class="p">,</span>
+    <span class="s2">&quot;body_z&quot;</span><span class="p">:</span> <span class="n">body_z_handler</span><span class="p">,</span>
+    <span class="s2">&quot;com_x&quot;</span><span class="p">:</span> <span class="n">com_x_handler</span><span class="p">,</span>
+    <span class="s2">&quot;com_y&quot;</span><span class="p">:</span> <span class="n">com_y_handler</span><span class="p">,</span>
+    <span class="s2">&quot;com_z&quot;</span><span class="p">:</span> <span class="n">com_z_handler</span><span class="p">,</span>
+    <span class="s2">&quot;body_quat_w&quot;</span><span class="p">:</span> <span class="n">body_quat_w_handler</span><span class="p">,</span>
+    <span class="s2">&quot;body_quat_x&quot;</span><span class="p">:</span> <span class="n">body_quat_x_handler</span><span class="p">,</span>
+    <span class="s2">&quot;body_quat_y&quot;</span><span class="p">:</span> <span class="n">body_quat_y_handler</span><span class="p">,</span>
+    <span class="s2">&quot;body_quat_z&quot;</span><span class="p">:</span> <span class="n">body_quat_z_handler</span><span class="p">,</span>
+    <span class="s2">&quot;body_roll&quot;</span><span class="p">:</span> <span class="n">body_roll_handler</span><span class="p">,</span>
+    <span class="s2">&quot;body_pitch&quot;</span><span class="p">:</span> <span class="n">body_pitch_handler</span><span class="p">,</span>
+    <span class="s2">&quot;body_yaw&quot;</span><span class="p">:</span> <span class="n">body_yaw_handler</span><span class="p">,</span>
+    <span class="s2">&quot;fl_hx&quot;</span><span class="p">:</span> <span class="n">fl_hx_handler</span><span class="p">,</span>
+    <span class="s2">&quot;fl_hy&quot;</span><span class="p">:</span> <span class="n">fl_hy_handler</span><span class="p">,</span>
+    <span class="s2">&quot;fl_kn&quot;</span><span class="p">:</span> <span class="n">fl_kn_handler</span><span class="p">,</span>
+    <span class="s2">&quot;fr_hx&quot;</span><span class="p">:</span> <span class="n">fr_hx_handler</span><span class="p">,</span>
+    <span class="s2">&quot;fr_hy&quot;</span><span class="p">:</span> <span class="n">fr_hy_handler</span><span class="p">,</span>
+    <span class="s2">&quot;fr_kn&quot;</span><span class="p">:</span> <span class="n">fr_kn_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hl_hx&quot;</span><span class="p">:</span> <span class="n">hl_hx_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hl_hy&quot;</span><span class="p">:</span> <span class="n">hl_hy_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hl_kn&quot;</span><span class="p">:</span> <span class="n">hl_kn_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hr_hx&quot;</span><span class="p">:</span> <span class="n">hr_hx_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hr_hy&quot;</span><span class="p">:</span> <span class="n">hr_hy_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hr_kn&quot;</span><span class="p">:</span> <span class="n">hr_kn_handler</span><span class="p">,</span>
+    <span class="s2">&quot;fl_x&quot;</span><span class="p">:</span> <span class="n">fl_x_handler</span><span class="p">,</span>
+    <span class="s2">&quot;fl_y&quot;</span><span class="p">:</span> <span class="n">fl_y_handler</span><span class="p">,</span>
+    <span class="s2">&quot;fl_z&quot;</span><span class="p">:</span> <span class="n">fl_z_handler</span><span class="p">,</span>
+    <span class="s2">&quot;fr_x&quot;</span><span class="p">:</span> <span class="n">fr_x_handler</span><span class="p">,</span>
+    <span class="s2">&quot;fr_y&quot;</span><span class="p">:</span> <span class="n">fr_y_handler</span><span class="p">,</span>
+    <span class="s2">&quot;fr_z&quot;</span><span class="p">:</span> <span class="n">fr_z_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hr_x&quot;</span><span class="p">:</span> <span class="n">hr_x_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hr_y&quot;</span><span class="p">:</span> <span class="n">hr_y_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hr_z&quot;</span><span class="p">:</span> <span class="n">hr_z_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hl_x&quot;</span><span class="p">:</span> <span class="n">hl_x_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hl_y&quot;</span><span class="p">:</span> <span class="n">hl_y_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hl_z&quot;</span><span class="p">:</span> <span class="n">hl_z_handler</span><span class="p">,</span>
+    <span class="s2">&quot;fl_contact&quot;</span><span class="p">:</span> <span class="n">fl_contact_handler</span><span class="p">,</span>
+    <span class="s2">&quot;fr_contact&quot;</span><span class="p">:</span> <span class="n">fr_contact_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hl_contact&quot;</span><span class="p">:</span> <span class="n">hl_contact_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hr_contact&quot;</span><span class="p">:</span> <span class="n">hr_contact_handler</span><span class="p">,</span>
+    <span class="s2">&quot;shoulder0&quot;</span><span class="p">:</span> <span class="n">sh0_handler</span><span class="p">,</span>
+    <span class="s2">&quot;shoulder1&quot;</span><span class="p">:</span> <span class="n">sh1_handler</span><span class="p">,</span>
+    <span class="s2">&quot;elbow0&quot;</span><span class="p">:</span> <span class="n">el0_handler</span><span class="p">,</span>
+    <span class="s2">&quot;elbow1&quot;</span><span class="p">:</span> <span class="n">el1_handler</span><span class="p">,</span>
+    <span class="s2">&quot;wrist0&quot;</span><span class="p">:</span> <span class="n">wr0_handler</span><span class="p">,</span>
+    <span class="s2">&quot;wrist1&quot;</span><span class="p">:</span> <span class="n">wr1_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hand_x&quot;</span><span class="p">:</span> <span class="n">hand_x_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hand_y&quot;</span><span class="p">:</span> <span class="n">hand_y_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hand_z&quot;</span><span class="p">:</span> <span class="n">hand_z_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hand_quat_w&quot;</span><span class="p">:</span> <span class="n">hand_quat_w_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hand_quat_x&quot;</span><span class="p">:</span> <span class="n">hand_quat_x_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hand_quat_y&quot;</span><span class="p">:</span> <span class="n">hand_quat_y_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hand_quat_z&quot;</span><span class="p">:</span> <span class="n">hand_quat_z_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hand_roll&quot;</span><span class="p">:</span> <span class="n">hand_roll_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hand_pitch&quot;</span><span class="p">:</span> <span class="n">hand_pitch_handler</span><span class="p">,</span>
+    <span class="s2">&quot;hand_yaw&quot;</span><span class="p">:</span> <span class="n">hand_yaw_handler</span><span class="p">,</span>
+    <span class="s2">&quot;gripper&quot;</span><span class="p">:</span> <span class="n">gripper_handler</span><span class="p">,</span>
+    <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">start_time_handler</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">COMMENT_DELIMITERS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;//&quot;</span><span class="p">,</span> <span class="s2">&quot;#&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="Animation"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html#bosdyn.choreography.client.animation_file_to_proto.Animation">[docs]</a><span class="k">class</span> <span class="nc">Animation</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Helper class to track values read from the animation file that are important to choreographer</span>
+<span class="sd">    and necessary when uploading animated moves.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># The name of the animated move.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># [Optional] The BPM which the move will be performed at.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bpm</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># [Optional] The frequency at which the keyframes occur. If not provided in the CHA file, then</span>
+        <span class="c1"># explicit timestamps must be provided for each keyframe.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frequency</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Default description for the animated move.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Animated dance move.&quot;</span>
+
+        <span class="c1"># The protobuf message representing the animation.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proto</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">Animation</span><span class="p">()</span>
+
+        <span class="c1"># The color of the animated move&#39;s block when loaded in Choreographer.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rgb</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+
+        <span class="c1"># Each individual parameter line as read from a *.cha file.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameter_lines</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Animation.create_move_info_proto"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html#bosdyn.choreography.client.animation_file_to_proto.Animation.create_move_info_proto">[docs]</a>    <span class="k">def</span> <span class="nf">create_move_info_proto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates the MoveInfo protobuf message from the parsed animation file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The choreography_sequence.MoveInfo protobuf message for the animation as generated</span>
+<span class="sd">            by the different animation fields in the Animation proto.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">move_info</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">MoveInfo</span><span class="p">()</span>
+        <span class="n">move_info</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">move_info</span><span class="o">.</span><span class="n">is_extendable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">extendable</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">truncatable</span>  <span class="c1"># &quot;is adjustable&quot;</span>
+
+        <span class="c1"># Should always have move.time, so the duration is the final time of the last frame.</span>
+        <span class="n">move_duration_sec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">animation_keyframes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">time</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bpm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Compute the move length slices using the bpm.</span>
+            <span class="n">slices_per_minute</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bpm</span>
+            <span class="n">move_duration_minutes</span> <span class="o">=</span> <span class="n">move_duration_sec</span> <span class="o">/</span> <span class="mf">60.0</span>
+            <span class="n">move_info</span><span class="o">.</span><span class="n">move_length_slices</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">move_duration_minutes</span> <span class="o">*</span> <span class="n">slices_per_minute</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Just use the time to size the move.</span>
+            <span class="n">move_info</span><span class="o">.</span><span class="n">move_length_time</span> <span class="o">=</span> <span class="n">move_duration_sec</span>
+
+        <span class="c1"># Set the max/min info based on truncatable/extendable flags.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">truncatable</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">extendable</span><span class="p">:</span>
+            <span class="n">move_info</span><span class="o">.</span><span class="n">max_time</span> <span class="o">=</span> <span class="n">move_info</span><span class="o">.</span><span class="n">move_length_time</span>
+            <span class="n">move_info</span><span class="o">.</span><span class="n">max_move_length_slices</span> <span class="o">=</span> <span class="n">move_info</span><span class="o">.</span><span class="n">move_length_slices</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">extendable</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">truncatable</span><span class="p">:</span>
+            <span class="n">move_info</span><span class="o">.</span><span class="n">min_time</span> <span class="o">=</span> <span class="n">move_info</span><span class="o">.</span><span class="n">move_length_time</span>
+            <span class="n">move_info</span><span class="o">.</span><span class="n">min_move_length_slices</span> <span class="o">=</span> <span class="n">move_info</span><span class="o">.</span><span class="n">move_length_slices</span>
+
+        <span class="c1"># Set the different track information</span>
+        <span class="n">move_info</span><span class="o">.</span><span class="n">controls_arm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">controls_arm</span>
+        <span class="n">move_info</span><span class="o">.</span><span class="n">controls_gripper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">controls_gripper</span>
+        <span class="n">move_info</span><span class="o">.</span><span class="n">controls_legs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">controls_legs</span>
+        <span class="n">move_info</span><span class="o">.</span><span class="n">controls_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">controls_body</span>
+
+        <span class="c1"># Set the choreographer-specific display information</span>
+        <span class="n">move_info</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">ChoreographerDisplayInfo</span><span class="o">.</span><span class="n">CATEGORY_ANIMATION</span>
+        <span class="n">move_info</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rgb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">move_info</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rgb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">move_info</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rgb</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">move_info</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">move_info</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span>
+
+        <span class="c1"># Animations are required to start and end in a standing position.</span>
+        <span class="n">move_info</span><span class="o">.</span><span class="n">entrance_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">MoveInfo</span><span class="o">.</span><span class="n">TRANSITION_STATE_STAND</span><span class="p">)</span>
+        <span class="n">move_info</span><span class="o">.</span><span class="n">exit_state</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">MoveInfo</span><span class="o">.</span><span class="n">TRANSITION_STATE_STAND</span>
+
+        <span class="k">return</span> <span class="n">move_info</span></div></div>
+
+
+<div class="viewcode-block" id="set_proto"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html#bosdyn.choreography.client.animation_file_to_proto.set_proto">[docs]</a><span class="k">def</span> <span class="nf">set_proto</span><span class="p">(</span><span class="n">proto_object</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">,</span> <span class="n">attribute_value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper function to set a field to a specific value in the protobuf message.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        proto_object (Protobuf message): Any generic protobuf message.</span>
+<span class="sd">        attribute_name (String): The field name within the protobuf message.</span>
+<span class="sd">        attribute_value: A value with type matching the field type defined in the protobuf</span>
+<span class="sd">            message definition. This will be saved in the attribute_name field.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Nothing. Mutates the input proto_object to update the specified field name to the</span>
+<span class="sd">        provided value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">field_attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">proto_object</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">)</span>
+    <span class="n">field_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">field_attr</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+    <span class="n">field_attr</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">field_type</span><span class="p">(</span><span class="n">attribute_value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="handle_nested_double_value_params"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html#bosdyn.choreography.client.animation_file_to_proto.handle_nested_double_value_params">[docs]</a><span class="k">def</span> <span class="nf">handle_nested_double_value_params</span><span class="p">(</span><span class="n">proto_object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">attribute_value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper function to set a field to a DoubleValue protobuf in a protobuf message.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        proto_object (Protobuf message): Any generic protobuf message.</span>
+<span class="sd">        name (String): The field name within the protobuf message. This name should</span>
+<span class="sd">            be both the field name and sub-field name separated by a period. For example,</span>
+<span class="sd">            for the Vec3 velocity field, the name would be &#39;velocity.x&#39;.</span>
+<span class="sd">        attribute_value: A value with type matching the field type defined in the protobuf</span>
+<span class="sd">            message definition. This will be saved in the attribute_name field.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Nothing. Mutates the input proto_object to update the specified field name to the</span>
+<span class="sd">        provided value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">subfields</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="n">current_attr</span> <span class="o">=</span> <span class="n">proto_object</span>
+    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">subfields</span><span class="p">:</span>
+        <span class="n">current_attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">current_attr</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+    <span class="n">current_attr</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">wrappers_pb2</span><span class="o">.</span><span class="n">DoubleValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">attribute_value</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="read_animation_params"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html#bosdyn.choreography.client.animation_file_to_proto.read_animation_params">[docs]</a><span class="k">def</span> <span class="nf">read_animation_params</span><span class="p">(</span><span class="n">animation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parses the set of lines that are the parameters section of the file.</span>
+
+<span class="sd">    Reads the parameter lines into the min/max/default values in the Animation proto.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        animation (Animation): The animation class structure containing the parameter lines.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The mutated animation class, which now contains populated params fields in the</span>
+<span class="sd">        animation&#39;s protobuf.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">current_params_default</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">default_parameters</span>
+    <span class="n">current_params_min</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">minimum_parameters</span>
+    <span class="n">current_params_max</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">maximum_parameters</span>
+    <span class="n">group_field_splitter</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">animation</span><span class="o">.</span><span class="n">parameter_lines</span><span class="p">:</span>
+        <span class="n">split_line</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">param_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">split_line</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">min_max_default_vals</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">split_line</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">split_line</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1e-6</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Now create the parameter protobuf message.</span>
+        <span class="k">if</span> <span class="n">group_field_splitter</span> <span class="ow">in</span> <span class="n">param_name</span><span class="p">:</span>
+            <span class="c1"># Non-individual fields, so handle slightly differently.</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">handle_nested_double_value_params</span><span class="p">(</span><span class="n">current_params_min</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span>
+                                                  <span class="n">min_max_default_vals</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">handle_nested_double_value_params</span><span class="p">(</span><span class="n">current_params_default</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span>
+                                                  <span class="n">min_max_default_vals</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">handle_nested_double_value_params</span><span class="p">(</span><span class="n">current_params_max</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span>
+                                                  <span class="n">min_max_default_vals</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="n">err</span> <span class="o">=</span> <span class="s2">&quot;Cannot parse file </span><span class="si">%s</span><span class="s2">: unknown parameter field name </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">animation</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                                                  <span class="n">param_name</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Individual field using a DoubleValue proto.</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">set_proto</span><span class="p">(</span><span class="n">current_params_min</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">min_max_default_vals</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">set_proto</span><span class="p">(</span><span class="n">current_params_default</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">min_max_default_vals</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">set_proto</span><span class="p">(</span><span class="n">current_params_max</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">min_max_default_vals</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="n">err</span> <span class="o">=</span> <span class="s2">&quot;Cannot parse file </span><span class="si">%s</span><span class="s2">: unknown parameter field name </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">animation</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                                                  <span class="n">param_name</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">animation</span></div>
+
+
+<div class="viewcode-block" id="read_and_find_animation_params"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html#bosdyn.choreography.client.animation_file_to_proto.read_and_find_animation_params">[docs]</a><span class="k">def</span> <span class="nf">read_and_find_animation_params</span><span class="p">(</span><span class="n">animate_move_params_file</span><span class="p">,</span> <span class="n">filepath_input</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a mapping of the parameter name to the default parameter values.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        animate_move_params_file (string): filepath to the default parameters file, or a string representing the contents</span>
+<span class="sd">            of the parameters file.</span>
+<span class="sd">        filepath_input (boolean): With filepath_input set to True, the animate_move_params_file argument will be interpreted as</span>
+<span class="sd">            a file path to the default parameters file. When set to False, the animate_move_params_file argument will be read as</span>
+<span class="sd">            the information in the default parameters file passed as a string.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A dictionary containing the parameter name as the key, and the full parameter line from</span>
+<span class="sd">        the file as the value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">filepath_input</span><span class="p">):</span>
+        <span class="c1">#if animate_move_params_file is a filepath open the file</span>
+        <span class="n">params_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">animate_move_params_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1">#if animate_move_params_file is a string of parameter information split the string by newline characters</span>
+        <span class="n">params_file</span> <span class="o">=</span> <span class="n">animate_move_params_file</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+
+    <span class="n">reading_animate_params</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">animate_params_vals</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">params_file</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;animate_params&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="c1"># Starting the animate params section.</span>
+            <span class="n">reading_animate_params</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">reading_animate_params</span> <span class="ow">and</span> <span class="n">line</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="c1"># Finished reading the animate_params section.</span>
+            <span class="n">reading_animate_params</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="n">animate_params_vals</span>
+
+        <span class="k">if</span> <span class="n">reading_animate_params</span><span class="p">:</span>
+            <span class="c1"># Set the parameter name as the key, and the full parameter line (as a string) as the value in</span>
+            <span class="c1"># the animate_params_vals dictionary.</span>
+            <span class="n">split_line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">param_name</span> <span class="o">=</span> <span class="n">split_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">animate_params_vals</span><span class="p">[</span><span class="n">param_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span>
+            <span class="k">continue</span>
+    <span class="k">return</span> <span class="n">animate_params_vals</span></div>
+
+
+<div class="viewcode-block" id="convert_animation_file_to_proto"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html#bosdyn.choreography.client.animation_file_to_proto.convert_animation_file_to_proto">[docs]</a><span class="k">def</span> <span class="nf">convert_animation_file_to_proto</span><span class="p">(</span><span class="n">animated_file</span><span class="p">,</span> <span class="n">animate_move_params_file</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parses a file into the animation proto that will be uploaded to the robot.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        animated_file (string): The filepath to the animation text file.</span>
+<span class="sd">        animate_move_params_file (string): [Optional] The filepath to a default set of move parameters.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The Animation class, which contains the animation proto to be uploaded to the robot, as well</span>
+<span class="sd">        as additional information to be used by Choreographer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Create a mapping of the default values for each parameter from the MoveParamsConfig.txt file.</span>
+    <span class="c1"># These will be used if a user doesn&#39;t provide min/max/default, but does include the parameter</span>
+    <span class="c1"># name in the file.</span>
+    <span class="n">maybe_use_default_params</span> <span class="o">=</span> <span class="n">animate_move_params_file</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">default_animate_params_values</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">maybe_use_default_params</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">animate_move_params_file</span><span class="p">):</span>
+            <span class="c1"># if there is a file at the location animate_move_params_file try to read the file</span>
+            <span class="n">default_animate_params_values</span> <span class="o">=</span> <span class="n">read_and_find_animation_params</span><span class="p">(</span><span class="n">animate_move_params_file</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># if animate_move_params_file isn&#39;t a locatable file try to read the string as parameter field data</span>
+            <span class="n">default_animate_params_values</span> <span class="o">=</span> <span class="n">read_and_find_animation_params</span><span class="p">(</span><span class="n">animate_move_params_file</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">animation</span> <span class="o">=</span> <span class="n">Animation</span><span class="p">()</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">animated_file</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.cha&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">animation_specs</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">animated_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Expecting three chunks, separated by a blank line.</span>
+    <span class="n">section_counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># The set of keywords that describe each column in the movement section.</span>
+    <span class="n">movement_columns</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># If the keyframe needs the timestamps set based off the frequency, track that information here.</span>
+    <span class="c1"># Value 1: indicates if it needs the timestamps set, value 2: indicates the current cumulative time</span>
+    <span class="c1"># summed while iterating over each keyframe in the file.</span>
+    <span class="n">set_keyframe_times</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Make up a unique color that is persistent based on the animation name.</span>
+    <span class="n">name_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">animation</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">rgb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">name_hash</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">rgb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">name_hash</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="n">animation</span><span class="o">.</span><span class="n">rgb</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">name_hash</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">animation_specs</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="c1"># The sections are separated by an empty line</span>
+            <span class="n">section_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Check if there are any comments. Comments can be both at the end of an exisiting line, or</span>
+        <span class="c1"># on a line of there own. They are marked with # or //. We want to just ignore them and continue</span>
+        <span class="c1"># parsing the file as normal.</span>
+        <span class="k">for</span> <span class="n">delim</span> <span class="ow">in</span> <span class="n">COMMENT_DELIMITERS</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delim</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Take any content before the comment starts.</span>
+
+        <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="c1"># If after stripping all the comment content there is no line left, then continue.</span>
+            <span class="c1"># We do NOT increment the section counter for comment lines!</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">section_counter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># the first section is the &quot;options section&quot;.</span>
+            <span class="c1"># Take first word of line and use that as the options keyword. Apply whatever function</span>
+            <span class="c1"># is specified for that keyword to the remaining line values.</span>
+            <span class="n">file_line_split</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">keyword</span> <span class="o">=</span> <span class="n">file_line_split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">OPTIONS_KEYWORDS_TO_FUNCTION</span><span class="p">:</span>
+                <span class="c1"># Apply the keywords functionality to the animation class.</span>
+                <span class="n">OPTIONS_KEYWORDS_TO_FUNCTION</span><span class="p">[</span><span class="n">keyword</span><span class="p">](</span><span class="n">file_line_split</span><span class="p">,</span> <span class="n">animation</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">section_counter</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Second section represents the parameters for choreographer. Simply store the lines</span>
+            <span class="c1"># for use by choreographer&#39;s config reader.</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s2">&quot;no parameters&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="c1"># This is the keyword for no parameters, so just skip the section and move on.</span>
+                <span class="k">continue</span>
+            <span class="n">split_line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">split_line</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">maybe_use_default_params</span><span class="p">:</span>
+                <span class="c1"># If the parameter name was provided with no user-specified min/max/default values,</span>
+                <span class="c1"># then attempt to use the default values from MoveParamsConfig.txt.</span>
+                <span class="k">if</span> <span class="n">split_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">default_animate_params_values</span><span class="p">:</span>
+                    <span class="n">animation</span><span class="o">.</span><span class="n">parameter_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">default_animate_params_values</span><span class="p">[</span><span class="n">split_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">err</span> <span class="o">=</span> <span class="s2">&quot;Cannot parse file </span><span class="si">%s</span><span class="s2">: parameter field name </span><span class="si">%s</span><span class="s2"> was provided but is not a default parameter.&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                        <span class="n">animation</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">split_line</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">animation</span><span class="o">.</span><span class="n">parameter_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">section_counter</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># The final section is the animated moves section.</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">movement_columns</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># The first line will contain all the different column headers.</span>
+                <span class="n">movement_columns</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+                <span class="c1"># If &quot;time&quot; is not in the column, then we should set that for every keyframe based on frequency</span>
+                <span class="k">if</span> <span class="s2">&quot;time&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">movement_columns</span><span class="p">:</span>
+                    <span class="n">set_keyframe_times</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">if</span> <span class="n">animation</span><span class="o">.</span><span class="n">frequency</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;Cannot parse file </span><span class="si">%s</span><span class="s2">: &quot;</span> <span class="o">%</span> <span class="n">animation</span><span class="o">.</span><span class="n">name</span>
+                        <span class="n">err</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s2">&quot;Either frequency or keyframe timestamps must be provided. Neither were found.&quot;</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="n">vals</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">animation_keyframe</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">AnimationKeyframe</span><span class="p">()</span>
+            <span class="n">current_index</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">movement_columns</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">GROUPED_HEADERS</span><span class="p">:</span>
+                    <span class="c1"># For grouped headers, get the next N line values, where N is specified by the grouped</span>
+                    <span class="c1"># headers dict, and set those in the animation keyframe protobuf message.</span>
+                    <span class="n">header_activities</span> <span class="o">=</span> <span class="n">GROUPED_HEADERS</span><span class="p">[</span><span class="n">header</span><span class="p">]</span>
+                    <span class="n">header_values</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="n">current_index</span><span class="p">:</span><span class="n">current_index</span> <span class="o">+</span>
+                                         <span class="n">header_activities</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>  <span class="c1"># not inclusive</span>
+                    <span class="n">header_values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">if</span> <span class="n">val</span> <span class="o">!=</span> <span class="s1">&#39;0&#39;</span> <span class="k">else</span> <span class="mf">1e-6</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">header_values</span><span class="p">]</span>
+                    <span class="n">header_activities</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="n">header_values</span><span class="p">,</span> <span class="n">animation_keyframe</span><span class="p">)</span>
+                    <span class="n">current_index</span> <span class="o">=</span> <span class="n">current_index</span> <span class="o">+</span> <span class="n">header_activities</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">SINGLE_HEADERS</span><span class="p">:</span>
+                    <span class="c1"># Add the single value into the animation keyframe protobuf message.</span>
+                    <span class="n">header_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="n">current_index</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">header_value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">header_value</span> <span class="o">=</span> <span class="mf">1e-6</span>
+                    <span class="n">SINGLE_HEADERS</span><span class="p">[</span><span class="n">header</span><span class="p">](</span><span class="n">header_value</span><span class="p">,</span> <span class="n">animation_keyframe</span><span class="p">)</span>
+                    <span class="n">current_index</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Don&#39;t fail silently and mismatch indices of other groups if one group header is not found.</span>
+                    <span class="n">err</span> <span class="o">=</span> <span class="s2">&quot;Cannot parse file </span><span class="si">%s</span><span class="s2">: Unknown body movement keyword </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                        <span class="n">animation</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">set_keyframe_times</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="c1"># Update the timestamp in the keyframe, then increment it based on the frequency</span>
+                <span class="n">animation_keyframe</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">set_keyframe_times</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">set_keyframe_times</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">animation</span><span class="o">.</span><span class="n">frequency</span><span class="p">)</span>
+
+            <span class="c1"># Add the animation frame into the animation proto.</span>
+            <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">animation_keyframes</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">animation_keyframe</span><span class="p">])</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># An animation file should only have 3 sections: the options, the parameters, and the body movement keyframes.</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;Cannot parse file </span><span class="si">%s</span><span class="s2">: Animation file contains more than 3 sections deliniated by whitespace.&quot;</span>
+                <span class="s2">&quot; Make sure all comments are included in a exisiting section.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">animation</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+
+    <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">if</span> <span class="n">animation</span><span class="o">.</span><span class="n">bpm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="o">.</span><span class="n">bpm</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">bpm</span>
+
+    <span class="c1"># Read out the parameters into protobuf messages.</span>
+    <span class="n">read_animation_params</span><span class="p">(</span><span class="n">animation</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">animation</span></div>
+
+
+<div class="viewcode-block" id="write_animation_to_dest"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html#bosdyn.choreography.client.animation_file_to_proto.write_animation_to_dest">[docs]</a><span class="k">def</span> <span class="nf">write_animation_to_dest</span><span class="p">(</span><span class="n">animation</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write the new animation proto to a .cap file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        animation(Animation class): The animation class object generated by the</span>
+<span class="sd">            `cha` file conversion helpers to save the protobuf from.</span>
+<span class="sd">        destination (string): The full filepath to the location to save the animation</span>
+<span class="sd">            protobuf message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">animation</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Invalid file name, cannot save choreography sequence.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Invalid file name, cannot save choreography sequence.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">destination</span><span class="p">):</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Path(</span><span class="si">%s</span><span class="s2">) to save file does not exist. Creating it.&quot;</span> <span class="o">%</span> <span class="n">destination</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">animation_proto_bytes</span> <span class="o">=</span> <span class="n">text_format</span><span class="o">.</span><span class="n">MessageToString</span><span class="p">(</span><span class="n">animation</span><span class="o">.</span><span class="n">proto</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">animation</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.cap&quot;</span><span class="p">)),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">animation_proto_bytes</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html#bosdyn.choreography.client.animation_file_to_proto.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--cha-filepath&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The filename of the animation file.&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--cha-directory&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The filepath to a directory with animation files.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s1">&#39;--config-filepath&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span>
+        <span class="s1">&#39;The filepath for a move params config file. This can be found using the ListAllMoves RPC.&#39;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--destination-filepath&#39;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The file location to save the animation proto.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">cha_filepath</span><span class="p">:</span>
+        <span class="n">animation</span> <span class="o">=</span> <span class="n">convert_animation_file_to_proto</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">cha_filepath</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">config_filepath</span><span class="p">)</span>
+        <span class="n">write_animation_to_dest</span><span class="p">(</span><span class="n">animation</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">destination_filepath</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">options</span><span class="o">.</span><span class="n">cha_directory</span><span class="p">:</span>
+        <span class="n">files_in_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">cha_directory</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">files_in_dir</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.cha&quot;</span><span class="p">):</span>
+                <span class="n">animation</span> <span class="o">=</span> <span class="n">convert_animation_file_to_proto</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">cha_directory</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="n">options</span><span class="o">.</span><span class="n">config_filepath</span><span class="p">)</span>
+                <span class="n">write_animation_to_dest</span><span class="p">(</span><span class="n">animation</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">destination_filepath</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;Please provide either the --cha-filepath argument for a single animation file, or the --cha-directory argument&quot;</span>
+            <span class="s2">&quot; for a full directory of animation files.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">main</span><span class="p">():</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      
+      &copy; Copyright 2021 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXXXX-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

@@ -15,6 +15,7 @@ import "bosdyn/api/local_grid.proto";
 import "bosdyn/api/point_cloud.proto";
 import "bosdyn/api/robot_state.proto";
 import "bosdyn/api/spot/robot_command.proto";
+import "bosdyn/api/stairs.proto";
 import "bosdyn/api/world_object.proto";
 
 import "google/protobuf/field_mask.proto";
@@ -135,6 +136,10 @@ message WaypointSnapshot {
     // If this snapshot is a modified version of the raw snapshot with the given ID (for example, it has been processed),
     // a new unique ID will we assigned to this field. If the field is empty, this is the raw version of the snapshot.
     string version_id = 9;
+
+    // If true, the point cloud contains data from a remote point cloud service,
+    // such as LIDAR.
+    bool has_remote_point_cloud_sensor = 10;
 }
 
 // A base element of the graph nav map. Edges consist of a directed edge from one
@@ -171,52 +176,24 @@ message Edge {
         EDGE_SOURCE_FIDUCIAL_LOOP_CLOSURE = 3;
         // Edges that may help find alternate routes.
         EDGE_SOURCE_ALTERNATE_ROUTE_FINDING = 4;
+        // Created via a CreateEdge RPC.
+        EDGE_SOURCE_USER_REQUEST = 5;
     };
 
     // Annotations understood by BostonDynamics systems.
     message Annotations {
         // Velocity limits to use while traversing the edge.
         // These are maxima and minima, NOT target speeds.
-        SE2VelocityLimit vel_limit = 1;
+        // NOTE: as of 2.4 this is deprecated. Please use mobility_params.vel_limit.
+        SE2VelocityLimit vel_limit = 1 [deprecated = true];
 
         // Defines any parameters of the stairs
         message StairData {
             // Check this before reading other fields.
             AnnotationState state = 1;
 
-            message StraightStaircase {
-                // The staircase origin is the bottom-center of the first rise.
-                // It is expressed in ko frame of the from_waypoint.
-                bosdyn.api.SE3Pose from_ko_tform_stairs = 1;
-
-                // A single stair from a staircase.
-                message Stair {
-                    // Height of each stair.
-                    float rise = 1;
-                    // Depth of each stair.
-                    float run = 2;
-                }
-                // Straight staircases have two landings, one at the top and one at the bottom.
-                // Landings are areas of free space before and after the stairs, and are represented
-                // as oriented bounding boxes.
-                message Landing {
-                    // Pose of the landing's center relative to the stairs frame.
-                    bosdyn.api.SE3Pose stairs_tform_landing_center = 1;
-                    // The half-size of the box representing the landing in the x axis.
-                    double landing_extent_x = 2;
-                    // The half-size of the box representing the landing in the y axis.
-                    double landing_extent_y = 3;
-                }
-                // Each stair should be rise followed by run. The last stair will have zero run.
-                repeated Stair stairs = 2;
-                // The lowermost landing of the stairs. The robot will try to
-                // align itself to the stairs while on this landing.
-                Landing bottom_landing = 3;
-                // The uppermost landing of the stairs.
-                Landing top_landing = 4;
-            }
             //  Parameters describing a straight staircase.
-            StraightStaircase straight_staircase = 2;
+            bosdyn.api.StraightStaircase straight_staircase = 2;
         }
         // Stairs information/parameters specific to the edge.
         StairData stairs = 2;
@@ -259,7 +236,8 @@ message Edge {
         // stored in the map. For example, if this FieldMask contains "stair_hint" and
         // "terrain_params.enable_grated_floor", then the map will be
         // annotated with "stair_hint" and "enable_grated_floor" settings. An empty FieldMask means all fields are active
-        // annotations.
+        // annotations. Note that the more conservative of the velocity limit stored in the mobility parameters and the
+        // TravelParams of the entire route will be used for this edge (regardless of what override_mobility_params says).
         google.protobuf.FieldMask override_mobility_params = 9;
         // Contains terrain parameters, swing height, obstacle avoidance parameters, etc.
         // When the robot crosses this edge, it will use the mobility parameters here.
@@ -301,6 +279,33 @@ message EdgeSnapshot {
     repeated Stance stances = 2;
 }
 
+// This associates a waypoint with a common reference frame, which is not necessarily metric.
+message Anchor {
+    // Identifier of the waypoint.
+    string id = 1;
+
+    // Pose of the waypoint in the seed frame.
+    SE3Pose seed_tform_waypoint = 2;
+}
+
+// This associates a world object with a common reference frame, which is not necessarily metric.
+message AnchoredWorldObject {
+    // Identifier of the world object.
+    string id = 1;
+
+    // Pose of the object in the seed frame.
+    SE3Pose seed_tform_object = 2;
+}
+
+message Anchoring {
+    // The waypoint ids for the graph, expressed in a common reference frame, which is not
+    // necessarily metric. If there is no anchoring, this is empty.
+    repeated Anchor anchors = 1;
+
+    // World objects, located in the common reference frame.
+    repeated AnchoredWorldObject objects = 2;
+}
+
 // This is an arbitrary collection of waypoints and edges. The edges and waypoints are not required
 // to be connected. A waypoint may belong to multiple graphs. This message is used to pass around
 // information about a graph's topology, and is used to serialize map topology to and from files.
@@ -311,4 +316,7 @@ message Graph {
     repeated Waypoint waypoints = 1;
     // The edges connecting the graph's waypoints.
     repeated Edge edges = 2;
+
+    // The anchoring (mapping from waypoints to their pose in a shared reference frame).
+    Anchoring anchoring = 3;
 }

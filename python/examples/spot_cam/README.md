@@ -71,9 +71,25 @@ seq 10 | xargs -I{} python -m command_line --username=$USERNAME --password=$PASS
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz list
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz set_position mech 0 0 1
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz get_position mech
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz set_focus auto_focus
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz set_focus one_shot
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz set_focus one_shot_full_scan
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz set_focus manual_focus --distance 10
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz get_focus
 
 # You should see a ptz jpeg image
 python -m command_line --username=$USERNAME --password=$PASSWORD -$ROBOT_IP media_log store_retrieve ptz
+
+# Network Service
+# Get Spot CAM network settings
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP network settings
+# Set Spot CAM network settings (examples arguments below are the default values)
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP network set 192.168.50.6 255.255.255.0 192.168.50.3 1500
+
+# Get Spot CAM ICE settings
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP network ice_settings
+# Set Spot CAM ICE settings (example JSON file provided)
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP network set_ice ice.json
 
 # WebRTC Service
 # Save images to .jpg files

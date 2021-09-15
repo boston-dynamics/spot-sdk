@@ -61,7 +61,8 @@ class TokenManager:
                 try:
                     self.robot.authenticate_with_token(self.robot.user_token)
                 except WriteFailedError:
-                    _LOGGER.exception("Failed to save the token to the cache.  Continuing without caching.")
+                    _LOGGER.exception(
+                        "Failed to save the token to the cache.  Continuing without caching.")
                 except (InvalidTokenError, ResponseError, RpcError):
                     _LOGGER.exception("Error refreshing the token.  Retry in %s", retry_interval)
 

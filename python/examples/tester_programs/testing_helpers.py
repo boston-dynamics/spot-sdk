@@ -8,7 +8,7 @@ import logging
 import sys
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.client.util import strip_large_bytes_fields
+from bosdyn.client.server_util import strip_large_bytes_fields
 from bosdyn.client.exceptions import (ResponseError, ServiceUnavailableError, TimedOutError,
                                       InvalidRequestError, UnableToConnectToRobotError)
 from bosdyn.client.directory import (DirectoryClient, NonexistentServiceError)

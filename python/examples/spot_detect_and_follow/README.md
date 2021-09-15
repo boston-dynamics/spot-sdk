@@ -17,6 +17,10 @@ The program is organized as three sets of Python processes communicating with th
 <img src="documentation/Detect_and_Follow.png" alt="Process Diagram" width="800"/>
 
 ## User Guide
+
+This example depends on a Tensorflow model. As an example, the `faster_rcnn_inception_v2_coco` Tensorflow model pre-trained on COCO dataset can be obtained [here](http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz). That model is not supported on Windows or MacOS.
+The pre-trained models may not be good at detecting some classes when using the robot's cameras, as the fisheye distortion, low resolution, and black and white images affect image quality. For example, pre-trained models may not perform well at detecting "sports balls" due to the lack of color. The [ssd_mobilenet_v2_coco](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz) and [faster_rcnn_inception_v2_coco](http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz) have been tested to work well at detecting humans.
+
 ### Installation (Only if you want to run without Docker)
 To install this example on Ubuntu 18.04, follow these instructions:
 - Install python3: `sudo apt-get install python3.6`
@@ -46,9 +50,12 @@ On top of those arguments, it also needs the following arguments:
 - --sleep-between-capture (optional) argument that specifies the amount to sleep in seconds between each image capture iteration. Increasing the value of this argument reduces the size of the queues, but also reduces the rate of command updates at the end of the pipeline; defaults to 1.0.
 - --max-processing-delay (optional) argument that specifies max delay in seconds allowed for each image before being processed; images with greater latency will not be processed; defaults to 7.0.
 
+The simple command to run with the default values is:
 ```
-python3 spot_detect_and_follow.py --username USER --password PASSWORD --model-path <path_to_pb> --detection-class <integer cladd id> ROBOT_IP
+python3 spot_detect_and_follow.py --username USER --password PASSWORD --model-path <path_to_pb> --detection-class <integer class id> ROBOT_IP
 ```
+For example, run the example with `--model-path` pointing to the `frozen_inference_graph.pb` file in the `faster_rcnn_inception_v2_coco_2018_01_28` folder created from untar-ing the model file downloaded from the instructions above, and with `--detection-classes` argument set to `1` to detect people in the camera images.
+
 
 #### Running in Docker
 Please refer to this [document](../../../docs/payload/docker_containers.md) for general instructions on how to run software applications on SpotCORE as docker containers.
@@ -59,22 +66,19 @@ Nvidia Docker is preinstalled on the Spot CORE AI.
 
 To build the image, you'll need to first copy over the tensorflow detector file first:
 ```sh
-cp /path/to/examples/spot_tensorflow_detector/tensorflow_object_detector.py .
+cp ../spot_tensorflow_detector/tensorflow_object_detection.py .
 sudo docker build -t spot_detect_and_follow .
 ```
 
-To run a container:
+To run a container, replace ROBOT_HOSTNAME and <absolute_path_to_pb> with the full path to the pb model file in the command below:
 ```sh
-sudo docker run --gpus all -it \
+sudo docker run -it \
 --network=host \
 -v <absolute_path_to_pb>:/model.pb \
--v <absolute_path_to_classes>:/classes.json \
 spot_detect_and_follow \
 --model-path /model.pb \
 --detection-class 1
-<typical other arguments after "python spot_detect_and_follow.py">
 ROBOT_HOSTNAME
 ```
 
-As an example, the `faster_rcnn_inception_v2_coco` Tensorflow model pre-trained on COCO dataset can be obtained [here](http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz). Run the example with `--model-path` pointing to the `pb` file in that model and with `--detection-classes` argument set to `1` to detect people in the camera images. That model is not supported on Windows or MacOS.
-The pre-trained models may not be good at detecting some classes when using the robot's cameras, as the fisheye distortion, low resolution, and black and white images affect image quality. For example, pre-trained models may not perform well at detecting "sports balls" due to the lack of color. The [ssd_mobilenet_v2_coco](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz) and [faster_rcnn_inception_v2_coco](http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz) have been tested to work well at detecting humans.
+To take advantage of GPU support if it is available on your system, add `--gpus all` in the command above.

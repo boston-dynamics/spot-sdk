@@ -36,7 +36,7 @@ class XboxJoystickWindows(XboxJoystick):
             refresh_rate: Determines the maximum rate at which events are polled from xboxdrv.
         """
 
-        super()
+        super().__init__()
         self.latest_state = None
         self.connected_controller_idx = None
         self.refresh_time = 0

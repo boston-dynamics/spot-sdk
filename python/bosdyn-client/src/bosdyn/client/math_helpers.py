@@ -18,6 +18,7 @@ def angle_diff(a1, a2):
         v += 2 * math.pi
     return v
 
+
 def angle_diff_degrees(a1, a2):
     v = a1 - a2
     while v > 180:
@@ -25,6 +26,7 @@ def angle_diff_degrees(a1, a2):
     while v < -180:
         v += 360
     return v
+
 
 class SE2Pose(object):
     """Class representing an SE2Pose with position and angle."""
@@ -64,8 +66,8 @@ class SE2Pose(object):
 
     def to_proto(self):
         """Converts the math_helpers.SE2Pose into an output of the protobuf geometry_pb2.SE2Pose."""
-        return geometry_pb2.SE2Pose(
-            position=geometry_pb2.Vec2(x=self.x, y=self.y), angle=self.angle)
+        return geometry_pb2.SE2Pose(position=geometry_pb2.Vec2(x=self.x, y=self.y),
+                                    angle=self.angle)
 
     def inverse(self):
         """
@@ -159,13 +161,14 @@ class SE2Pose(object):
         # the correct height is passed into the function as height_z.
         return SE3Pose(x=self.x, y=self.y, z=height_z, rot=Quat.from_yaw(self.angle))
 
+
 class SE2Velocity(object):
     """Class representing an SE2Velocity with linear velocity and angular velocity."""
 
     def __init__(self, x, y, angular):
-        self.linear_velocity_x = x
-        self.linear_velocity_y = y
-        self.angular_velocity = angular
+        self.linear_velocity_x = float(x)
+        self.linear_velocity_y = float(y)
+        self.angular_velocity = float(angular)
 
     def __str__(self):
         return 'Linear velocity -- X: %0.3f Y: %0.3f Angular velocity -- %0.3f ' % (
@@ -186,7 +189,8 @@ class SE2Velocity(object):
     def to_vector(self):
         """Creates a 3x1 velocity vector as a numpy array."""
         # Create a 3x1 vector of [x_d, y_d, r_d]
-        return numpy.array([self.linear_velocity_x, self.linear_velocity_y, self.angular_velocity]).reshape((3,1))
+        return numpy.array([self.linear_velocity_x, self.linear_velocity_y,
+                            self.angular_velocity]).reshape((3, 1))
 
     @staticmethod
     def from_vector(se2_vel_vector):
@@ -194,12 +198,12 @@ class SE2Velocity(object):
         if type(se2_vel_vector) == list:
             if len(se2_vel_vector) != 3:
                 # Must have 3 elements to be a complete SE2Velocity
-                print(
-                    "Velocity list must have 3 elements. The input has the wrong dimension of: "
-                    + str(len(se2_vel_vector)))
+                print("Velocity list must have 3 elements. The input has the wrong dimension of: " +
+                      str(len(se2_vel_vector)))
                 return None
             else:
-                return SE2Velocity(x=se2_vel_vector[0], y=se2_vel_vector[1], angular=se2_vel_vector[2])
+                return SE2Velocity(x=se2_vel_vector[0], y=se2_vel_vector[1],
+                                   angular=se2_vel_vector[2])
         if type(se2_vel_vector) == numpy.ndarray:
             if se2_vel_vector.shape[0] != 3:
                 # Must have 3 elements to be a complete SE2Velocity
@@ -233,12 +237,12 @@ class SE3Velocity(object):
     """Class representing an SE3Velocity with linear velocity and angular velocity."""
 
     def __init__(self, lin_x, lin_y, lin_z, ang_x, ang_y, ang_z):
-        self.linear_velocity_x = lin_x
-        self.linear_velocity_y = lin_y
-        self.linear_velocity_z = lin_z
-        self.angular_velocity_x = ang_x
-        self.angular_velocity_y = ang_y
-        self.angular_velocity_z = ang_z
+        self.linear_velocity_x = float(lin_x)
+        self.linear_velocity_y = float(lin_y)
+        self.linear_velocity_z = float(lin_z)
+        self.angular_velocity_x = float(ang_x)
+        self.angular_velocity_y = float(ang_y)
+        self.angular_velocity_z = float(ang_z)
 
     def __str__(self):
         return 'Linear velocity -- X: %0.3f Y: %0.3f Z: %0.3f Angular velocity -- X: %0.3f Y: %0.3f Z: %0.3f' % (
@@ -268,7 +272,7 @@ class SE3Velocity(object):
         return numpy.array([
             self.linear_velocity_x, self.linear_velocity_y, self.linear_velocity_z,
             self.angular_velocity_x, self.angular_velocity_y, self.angular_velocity_z
-        ]).reshape((6,1))
+        ]).reshape((6, 1))
 
     @property
     def linear(self):
@@ -296,9 +300,8 @@ class SE3Velocity(object):
         if type(se3_vel_vector) == list:
             if len(se3_vel_vector) != 6:
                 # Must have 6 elements to be a complete SE3Velocity
-                print(
-                    "Velocity list must have 6 elements. The input has the wrong dimension of: "
-                    + str(len(se3_vel_vector)))
+                print("Velocity list must have 6 elements. The input has the wrong dimension of: " +
+                      str(len(se3_vel_vector)))
                 return None
             else:
                 return SE3Velocity(lin_x=se3_vel_vector[0], lin_y=se3_vel_vector[1],
@@ -474,6 +477,7 @@ class SE3Pose(object):
         rot = Quat.from_matrix(mat[0:3, 0:3])
         return SE3Pose(x, y, z, rot)
 
+
     @staticmethod
     def from_identity():
         """Create a math_helpers.SE3Pose representing the identity SE(3) pose."""
@@ -497,7 +501,7 @@ class SE3Pose(object):
         a_R_b = self.rot.to_matrix()
         position_skew_mat = skew_matrix_3d(self.position)
         mat = numpy.matmul(position_skew_mat, a_R_b)
-        a_adjoint_b = numpy.block([[a_R_b, mat], [numpy.zeros((3,3)), a_R_b]])
+        a_adjoint_b = numpy.block([[a_R_b, mat], [numpy.zeros((3, 3)), a_R_b]])
         return a_adjoint_b
 
     def get_closest_se2_transform(self):
@@ -507,6 +511,24 @@ class SE3Pose(object):
         # an SE3Pose to an SE2Pose with minimal loss of height information.
         se2_angle = (self.rot.closest_yaw_only_quaternion()).to_yaw()
         return SE2Pose(x=self.x, y=self.y, angle=se2_angle)
+
+    @staticmethod
+    def interp(a, b, fraction):
+        """
+        Performs a blend of two SE3Poses.  Out = a * (1 - fraction) + b * fraction
+
+        Args:
+            a(SE3Pose): Lower blend input.
+            b(SE3Pose): Upper blend input.
+            fraction(float): The blending factor.  Should be inside [0, 1]
+        Returns:
+            SE3Pose
+        """
+        x = a.x * (1.0 - fraction) + b.x * fraction
+        y = a.y * (1.0 - fraction) + b.y * fraction
+        z = a.z * (1.0 - fraction) + b.z * fraction
+        rot = Quat.slerp(a.rot, b.rot, fraction)
+        return SE3Pose(x, y, z, rot)
 
 
 class Quat(object):
@@ -591,25 +613,22 @@ class Quat(object):
     def _from_matrix_x(rot):
         """Computes the value of the quaternion for the x-axis from a numpy 3x3 rotation matrix."""
         x = math.sqrt(1 + rot[0, 0] - rot[1, 1] - rot[2, 2]) * 0.5
-        return Quat(
-            w=(rot[2, 1] - rot[1, 2]) / (4.0 * x), x=x, y=(rot[0, 1] + rot[1, 0]) / (4.0 * x),
-            z=(rot[0, 2] + rot[2, 0]) / (4.0 * x))
+        return Quat(w=(rot[2, 1] - rot[1, 2]) / (4.0 * x), x=x,
+                    y=(rot[0, 1] + rot[1, 0]) / (4.0 * x), z=(rot[0, 2] + rot[2, 0]) / (4.0 * x))
 
     @staticmethod
     def _from_matrix_y(rot):
         """Computes the value of the quaternion for the y-axis from a numpy 3x3 rotation matrix."""
         y = math.sqrt(1 - rot[0, 0] + rot[1, 1] - rot[2, 2]) * 0.5
-        return Quat(
-            w=(rot[0, 2] - rot[2, 0]) / (4.0 * y), x=(rot[0, 1] + rot[1, 0]) / (4.0 * y), y=y,
-            z=(rot[1, 2] + rot[2, 1]) / (4.0 * y))
+        return Quat(w=(rot[0, 2] - rot[2, 0]) / (4.0 * y), x=(rot[0, 1] + rot[1, 0]) / (4.0 * y),
+                    y=y, z=(rot[1, 2] + rot[2, 1]) / (4.0 * y))
 
     @staticmethod
     def _from_matrix_z(rot):
         """Computes the value of the quaternion for the z-axis from a numpy 3x3 rotation matrix."""
         z = math.sqrt(1 - rot[0, 0] - rot[1, 1] + rot[2, 2]) * 0.5
-        return Quat(
-            w=(rot[1, 0] - rot[0, 1]) / (4.0 * z), x=(rot[0, 2] + rot[2, 0]) / (4.0 * z),
-            y=(rot[1, 2] + rot[2, 1]) / (4.0 * z), z=z)
+        return Quat(w=(rot[1, 0] - rot[0, 1]) / (4.0 * z), x=(rot[0, 2] + rot[2, 0]) / (4.0 * z),
+                    y=(rot[1, 2] + rot[2, 1]) / (4.0 * z), z=z)
 
     @staticmethod
     def from_roll(angle):
@@ -685,17 +704,23 @@ class Quat(object):
 
     def mult(self, other_quat):
         """Computes the multiplication of two math_helpers.Quats."""
-        return Quat(self.w * other_quat.w - self.x * other_quat.x - self.y * other_quat.y - self.z * other_quat.z,
-                    self.w * other_quat.x + self.x * other_quat.w + self.y * other_quat.z - self.z * other_quat.y,
-                    self.w * other_quat.y - self.x * other_quat.z + self.y * other_quat.w + self.z * other_quat.x,
-                    self.w * other_quat.z + self.x * other_quat.y - self.y * other_quat.x + self.z * other_quat.w)
+        return Quat(
+            self.w * other_quat.w - self.x * other_quat.x - self.y * other_quat.y -
+            self.z * other_quat.z, self.w * other_quat.x + self.x * other_quat.w +
+            self.y * other_quat.z - self.z * other_quat.y, self.w * other_quat.y -
+            self.x * other_quat.z + self.y * other_quat.w + self.z * other_quat.x,
+            self.w * other_quat.z + self.x * other_quat.y - self.y * other_quat.x +
+            self.z * other_quat.w)
 
     def __mul__(self, other_quat):
         """Overrides the '*' symbol to compute the multiplication between two math_helpers.Quats."""
-        return Quat(self.w * other_quat.w - self.x * other_quat.x - self.y * other_quat.y - self.z * other_quat.z,
-                    self.w * other_quat.x + self.x * other_quat.w + self.y * other_quat.z - self.z * other_quat.y,
-                    self.w * other_quat.y - self.x * other_quat.z + self.y * other_quat.w + self.z * other_quat.x,
-                    self.w * other_quat.z + self.x * other_quat.y - self.y * other_quat.x + self.z * other_quat.w)
+        return Quat(
+            self.w * other_quat.w - self.x * other_quat.x - self.y * other_quat.y -
+            self.z * other_quat.z, self.w * other_quat.x + self.x * other_quat.w +
+            self.y * other_quat.z - self.z * other_quat.y, self.w * other_quat.y -
+            self.x * other_quat.z + self.y * other_quat.w + self.z * other_quat.x,
+            self.w * other_quat.z + self.x * other_quat.y - self.y * other_quat.x +
+            self.z * other_quat.w)
 
     def normalize(self):
         """Normalizes the quaternion."""
@@ -715,11 +740,44 @@ class Quat(object):
         """Computes a yaw-only math_helpers.Quat from the current roll/pitch/yaw math_helpers.Quat"""
         mag = math.sqrt(self.w * self.w + self.z * self.z)
         if mag > 0:
-            return Quat(w=self.w/mag, x=0, y=0, z=self.z/mag)
+            return Quat(w=self.w / mag, x=0, y=0, z=self.z / mag)
         else:
             # If the problem is ill posed (i.e. z-axis of quaternion is [0, 0, -1], then preserve old
             # behavior and always rotate 180 degrees around the y-axis.
             return Quat(w=0, x=0, y=1, z=0)
+
+    @staticmethod
+    def slerp(a, b, fraction):
+        v0 = numpy.array([a.w, a.x, a.y, a.z])
+        v1 = numpy.array([b.w, b.x, b.y, b.z])
+        dot = numpy.dot(v0.transpose(), v1)
+        # If the dot product is negative, slerp will not take
+        # the shorter path. Note that v1 and -v1 are equivalent when
+        # the negation is applied to all four components. Fix by
+        # reversing one quaternion.
+        if dot < 0.0:
+            v0 *= -1.0
+            dot = -dot
+
+        DOT_THRESHOLD = 1.0 - 1e-4
+        if dot > DOT_THRESHOLD:
+            # If the inputs are too close for comfort, linearly interpolate
+            # and normalize the result.
+            result = v0 + fraction * (v1 - v0)
+            result /= numpy.sqrt(numpy.dot(result.transpose(), result))
+        else:
+            # Since dot is in range [0, DOT_THRESHOLD], acos is safe
+            theta_0 = math.acos(dot)  # theta_0 = angle between input vectors
+            theta = theta_0 * fraction  # theta = angle between v0 and result
+            sin_theta = math.sin(theta)  # compute this value only once
+            sin_theta_0 = math.sin(theta_0)  # compute this value only once
+
+            s0 = math.cos(
+                theta) - dot * sin_theta / sin_theta_0  # == sin(theta_0 - theta) / sin(theta_0)
+            s1 = sin_theta / sin_theta_0
+
+            result = (s0 * v0) + (s1 * v1)
+        return Quat(result[0], result[1], result[2], result[3])
 
 
 def pose_to_xyz_yaw(A_tform_B):
@@ -738,23 +796,28 @@ def is_within_threshold(pose_3d, max_translation_meters, max_yaw_degrees):
     angle_deg = math.degrees(abs(delta.angle))
     return (dist_2d < max_translation_meters) and (angle_deg < max_yaw_degrees)
 
+
 def recenter_angle(q, lower_limit, upper_limit):
     recenter_range = upper_limit - lower_limit
-    while q >= upper_limit: q -= recenter_range
-    while q < lower_limit:  q += recenter_range
+    while q >= upper_limit:
+        q -= recenter_range
+    while q < lower_limit:
+        q += recenter_range
     return q
+
 
 def skew_matrix_3d(vec3_proto):
     """Creates a 3x3 numpy matrix representing the skew symmetric matrix for a vec3.
        These are used to create the adjoint matrices for SE3Pose's, among other things."""
-    return numpy.array([[0, -vec3_proto.z, vec3_proto.y],
-                    [vec3_proto.z, 0, -vec3_proto.x],
-                    [-vec3_proto.y, vec3_proto.x, 0]])
+    return numpy.array([[0, -vec3_proto.z, vec3_proto.y], [vec3_proto.z, 0, -vec3_proto.x],
+                        [-vec3_proto.y, vec3_proto.x, 0]])
+
 
 def skew_matrix_2d(vec2_proto):
     """Creates a 2x1 numpy matrix representing the skew symmetric matrix for a vec2.
        These are used to create the adjoint matrices for SE2Pose's, among other things."""
     return numpy.array([[vec2_proto.y, -vec2_proto.x]])
+
 
 def transform_se2velocity(a_adjoint_b_matrix, se2_velocity_in_b):
     """
@@ -774,9 +837,11 @@ def transform_se2velocity(a_adjoint_b_matrix, se2_velocity_in_b):
         se2_velocity_in_b_vector = se2_velocity_in_b.to_vector()
     else:
         return None
-    se2_velocity_in_a_vector = numpy.asarray(numpy.matmul(a_adjoint_b_matrix, se2_velocity_in_b_vector))
+    se2_velocity_in_a_vector = numpy.asarray(
+        numpy.matmul(a_adjoint_b_matrix, se2_velocity_in_b_vector))
     se2_velocity_in_a = SE2Velocity.from_vector(se2_velocity_in_a_vector)
     return se2_velocity_in_a
+
 
 def transform_se3velocity(a_adjoint_b_matrix, se3_velocity_in_b):
     """

@@ -14,6 +14,7 @@ import google.protobuf.message
 import google.protobuf.text_format
 
 from bosdyn.api.mission import mission_pb2, nodes_pb2, util_pb2
+from bosdyn.api.docking import docking_pb2
 from bosdyn.api.graph_nav import graph_nav_pb2
 from bosdyn.mission import constants
 
@@ -33,7 +34,8 @@ class InvalidConversion(Error):
         self.destination_typename = destination_typename
 
     def __str__(self):
-        return 'Could not convert "{}" to type "{}"'.format(self.original_value, self.destination_typename)
+        return 'Could not convert "{}" to type "{}"'.format(self.original_value,
+                                                            self.destination_typename)
 
 
 _python_identifier_regex = re.compile('[A-Za-z_]\w*$')
@@ -45,7 +47,8 @@ def tree_to_string(root, start_level=0, include_status=False):
     if start_level == 0:
         string += '\n'
     prefix = '|' + '-' * start_level
-    string += prefix + text(root) + (' ' if text(root) else '') + '(' + root.__class__.__name__ + ')'
+    string += prefix + text(root) + (' '
+                                     if text(root) else '') + '(' + root.__class__.__name__ + ')'
     if include_status:
         string += '\n' + prefix + 'Status code: [{}]'.format(root.last_result)
     for child in root.children:
@@ -121,20 +124,21 @@ def proto_from_tuple(tup):
     if hasattr(inner_proto, 'children'):
         if num_children == 0:
             raise Error('Proto "{}" of type "{}" has no children!'.format(node.name, inner_type))
+        for child_tup in children:
+            child_node = proto_from_tuple(child_tup)
+            inner_proto.children.add().CopyFrom(child_node)
     elif hasattr(inner_proto, 'child'):
-        if num_children != 1:
+        if isinstance(inner_proto, nodes_pb2.ForDuration) and num_children == 2:
+            inner_proto.child.CopyFrom(proto_from_tuple(children[0]))
+            inner_proto.timeout_child.CopyFrom(proto_from_tuple(children[1]))
+        elif num_children == 1:
+            inner_proto.child.CopyFrom(proto_from_tuple(children[0]))
+        else:
             raise Error('Proto "{}" of type "{}" has {} children!'.format(
                 node.name, inner_type, num_children))
     elif num_children != 0:
         raise Error('Proto "{}" of type "{}" was given {} children, but I do not know how to add'
                     ' them!'.format(node.name, inner_type, num_children))
-
-    for child_tup in children:
-        child_node = proto_from_tuple(child_tup)
-        if hasattr(inner_proto, 'children'):
-            inner_proto.children.add().CopyFrom(child_node)
-        elif hasattr(inner_proto, 'child'):
-            inner_proto.child.CopyFrom(child_node)
 
     node.impl.Pack(inner_proto)
     return node
@@ -249,7 +253,9 @@ def result_constant_to_proto_enum(result):
         raise InvalidConversion(result, util_pb2.Result.DESCRIPTOR.full_name)
 
 
-def most_restrictive_travel_params(travel_params, vel_limit=None):
+def most_restrictive_travel_params(travel_params, vel_limit=None,
+                                   disable_directed_exploration=False,
+                                   disable_alternate_route_finding=False):
     if travel_params is None:
         travel_params = graph_nav_pb2.TravelParams()
     else:
@@ -281,6 +287,10 @@ def most_restrictive_travel_params(travel_params, vel_limit=None):
 
     if vel_limit is not None:
         take_velocity_limit(travel_params.velocity_limit, vel_limit)
+
+    travel_params.disable_directed_exploration = travel_params.disable_directed_exploration or disable_directed_exploration
+    travel_params.disable_alternate_route_finding = travel_params.disable_alternate_route_finding or disable_alternate_route_finding
+
     return travel_params
 
 

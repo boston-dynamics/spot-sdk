@@ -8,9 +8,10 @@ syntax = "proto3";
 
 package bosdyn.api;
 
-option java_outer_classname = "GeometryProto";
-
 import "google/protobuf/wrappers.proto";
+
+option go_package = "bosdyn/api";
+option java_outer_classname = "GeometryProto";
 
 // Two dimensional vector primitive.
 message Vec2 {
@@ -47,6 +48,24 @@ message Quaternion {
 message Plane {
   Vec3 point = 1;  // A point on the plane.
   Vec3 normal = 2; // The direction of the planes normal.
+}
+
+// A square oriented in 3D space.
+message Quad {
+    // The center of the quad and the orientation of the normal.
+    // The normal axis is [0, 0, 1].
+    SE3Pose pose = 1;
+    // The side length of the quad.
+    double size = 2;
+}
+
+// A ray in 3D space.
+message Ray {
+    // Base of ray.
+    Vec3 origin = 1;
+
+    // Unit vector defining the direction of the ray.
+    Vec3 direction = 2;
 }
 
 // Geometric primitive to describe 2D position and rotation.

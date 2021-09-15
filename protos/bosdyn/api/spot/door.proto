@@ -128,12 +128,29 @@ message DoorCommand {
         HandleType handle_type = 3;
     }
 
+    // Open doors that do not require a grasp, just a push. This could be a door with no latching
+    // mechanism that just requires a push, or a door with a pushbar.
+    // The robot will automatically push the door open and walk through.
+    message AutoPushCommand {
+        // The name of the frame that the following fields are expressed in.
+        string frame_name = 1;
+
+        // The point that the robot will push on.
+        Vec3 push_point_in_frame = 2;
+
+        // The side of the hinge with respect to the robot when facing the door.
+        HingeSide hinge_side = 3;
+    }
+
     message Request {
         oneof command {
             AutoGraspCommand auto_grasp_command = 10;
 
             WarmstartCommand warmstart_command = 11;
+
+            AutoPushCommand auto_push_command = 12;
         }
+
     }
 
     message Feedback {

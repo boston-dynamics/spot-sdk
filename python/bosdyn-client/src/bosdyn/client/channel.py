@@ -10,10 +10,10 @@ import grpc
 
 from .exceptions import (
     RpcError, ClientCancelledOperationError, InvalidAppTokenError, InvalidClientCertificateError,
-    RetryableUnavailableError, NonexistentAuthorityError, NotFoundError, PermissionDeniedError,
-    ProxyConnectionError, ResponseTooLargeError, ServiceFailedDuringExecutionError,
+    NonexistentAuthorityError, NotFoundError, PermissionDeniedError, ProxyConnectionError,
+    RetryableUnavailableError, ResponseTooLargeError, ServiceFailedDuringExecutionError,
     ServiceUnavailableError, TimedOutError, UnableToConnectToRobotError, UnauthenticatedError,
-    UnknownDnsNameError, UnimplementedError, TransientFailureError)
+    UnknownDnsNameError, UnimplementedError, TooManyRequestsError, TransientFailureError)
 
 TransportError = grpc.RpcError
 
@@ -21,7 +21,7 @@ _LOGGER = logging.getLogger(__name__)
 
 # Set default max message length for sending and receiving to 100MB. This value is used when
 # creating channels in the bosdyn.client.Robot class.
-DEFAULT_MAX_MESSAGE_LENGTH = 100 * (1024 ** 2)
+DEFAULT_MAX_MESSAGE_LENGTH = 100 * (1024**2)
 
 
 class RefreshingAccessTokenAuthMetadataPlugin(grpc.AuthMetadataPlugin):
@@ -31,6 +31,7 @@ class RefreshingAccessTokenAuthMetadataPlugin(grpc.AuthMetadataPlugin):
         token_cb: Callable that returns a tuple of (app_token, user_token)
         add_app_token (bool): Whether to include an app token in the metadata. This is necessary for compatibility with old robot software.
     """
+
     def __init__(self, token_cb, add_app_token):
         self._token_cb = token_cb
         self._add_app_token = add_app_token
@@ -125,6 +126,8 @@ def translate_exception(rpc_error):
             return InvalidAppTokenError(rpc_error, InvalidAppTokenError.__doc__)
         elif str(404) in details:
             return NotFoundError(rpc_error, NotFoundError.__doc__)
+        elif str(429) in details:
+            return TooManyRequestsError(rpc_error, TooManyRequestsError.__doc__)
         elif str(502) in details:
             return ServiceUnavailableError(rpc_error, ServiceUnavailableError.__doc__)
         elif str(504) in details:
@@ -161,16 +164,19 @@ def translate_exception(rpc_error):
         elif 'Connect Failed' in debug or 'Failed to pick subchannel' in debug:
             # This error should be checked last because a lot of grpc errors contain said substrings.
             return UnableToConnectToRobotError(rpc_error, UnableToConnectToRobotError.__doc__)
-    
+
     if code is grpc.StatusCode.UNAVAILABLE:
-        if 'Socket closed' in debug:
+        if 'Socket closed' in debug or 'Connection reset by peer' in debug:
             return RetryableUnavailableError(rpc_error, RetryableUnavailableError.__doc__)
+        if str(502) in details:
+            return ServiceUnavailableError(rpc_error, ServiceUnavailableError.__doc__)
 
     _LOGGER.warning('Unclassified exception: %s', rpc_error)
 
     return RpcError(rpc_error, RpcError.__doc__)
 
-def generate_channel_options(max_send_message_length = None, max_receive_message_length = None):
+
+def generate_channel_options(max_send_message_length=None, max_receive_message_length=None):
     """Generate the array of options to specify in the creation of a client channel or server.
 
     The list contains the values for max allowed message length for both sending and
@@ -185,5 +191,5 @@ def generate_channel_options(max_send_message_length = None, max_receive_message
     """
 
     return [('grpc.max_send_message_length', max_send_message_length or DEFAULT_MAX_MESSAGE_LENGTH),
-        ('grpc.max_receive_message_length',
-            max_receive_message_length or DEFAULT_MAX_MESSAGE_LENGTH)]
+            ('grpc.max_receive_message_length', max_receive_message_length or
+             DEFAULT_MAX_MESSAGE_LENGTH)]

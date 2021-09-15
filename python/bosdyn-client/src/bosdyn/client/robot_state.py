@@ -146,6 +146,7 @@ def _get_robot_hardware_configuration_value(response):
 def _get_robot_link_model_value(response):
     return response.link_model
 
+
 def has_arm(state_client, timeout=None):
     """Check if the robot has an arm attached.
 

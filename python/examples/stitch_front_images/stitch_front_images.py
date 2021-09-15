@@ -24,8 +24,10 @@ from bosdyn.client.frame_helpers import BODY_FRAME_NAME, get_vision_tform_body, 
 from ctypes import *
 from pygame.locals import *
 
+
 class ImagePreppedForOpenGL():
     """Prep image for OpenGL from Spot image_response."""
+
     def extract_image(self, image_response):
         """Return numpy_array of input image_response image."""
         image_format = image_response.shot.image.format
@@ -72,8 +74,10 @@ class ImagePreppedForOpenGL():
 
         self.MVP = camera_projection_mat.dot(sensor_T_vo.to_matrix())
 
+
 class ImageInsideOpenGL():
     """Create OpenGL Texture"""
+
     def __init__(self, numpy_array):
         glEnable(GL_TEXTURE_2D)
         self.pointer = glGenTextures(1)
@@ -86,8 +90,10 @@ class ImageInsideOpenGL():
     def update(self, numpy_array):
         """Update texture (no-op)"""
 
+
 class CompiledShader():
     """OpenGL shader compile"""
+
     def __init__(self, vert_shader, frag_shader):
         self.program = shaders.compileProgram( \
             shaders.compileShader(vert_shader, GL_VERTEX_SHADER), \
@@ -143,6 +149,7 @@ class CompiledShader():
             self.image2.update(image)
         self.set_texture(self.image2.pointer, self.image2_texture, 1)
 
+
 def load_get_image_response_from_binary_file(file_path):
     """Read in image from image response"""
     if not os.path.exists(file_path):
@@ -155,18 +162,22 @@ def load_get_image_response_from_binary_file(file_path):
 
     return _images
 
+
 def proto_vec_T_numpy(vec):
     return numpy.array([vec.x, vec.y, vec.z])
+
 
 def mat4mul3(mat, vec, vec4=1):
     ret = numpy.matmul(mat, numpy.append(vec, vec4))
     return ret[:-1]
 
+
 def normalize(vec):
     norm = numpy.linalg.norm(vec)
     if norm == 0:
         raise ValueError("norm function returned 0.")
-    return vec/norm
+    return vec / norm
+
 
 def draw_geometry(plane_wrt_vo, plane_norm_wrt_vo, sz_meters):
     """Draw as GL_TRIANGLES."""
@@ -185,7 +196,7 @@ def draw_geometry(plane_wrt_vo, plane_norm_wrt_vo, sz_meters):
         plane_wrt_vo + plane_left_wrt_vo + plane_up_wrt_vo,
         plane_wrt_vo - plane_left_wrt_vo + plane_up_wrt_vo,
         plane_wrt_vo - plane_left_wrt_vo - plane_up_wrt_vo,
-        )
+    )
 
     indices = (0, 1, 2, 0, 2, 3)
 
@@ -193,6 +204,7 @@ def draw_geometry(plane_wrt_vo, plane_norm_wrt_vo, sz_meters):
     for index in indices:
         glVertex3fv(vertices[index])
     glEnd()
+
 
 def draw_routine(display, image_1, image_2, program):
     """OpenGL Draw"""
@@ -208,7 +220,7 @@ def draw_routine(display, image_1, image_2, program):
     eye_norm_wrt_body = numpy.array(image_1.body_T_image_sensor.rot.transform_point(0, 0, 1)) \
                       + numpy.array(image_2.body_T_image_sensor.rot.transform_point(0, 0, 1))
 
-     # Make the virtual camera centered.
+    # Make the virtual camera centered.
     eye_wrt_body[1] = 0
     eye_norm_wrt_body[1] = 0
 
@@ -225,7 +237,7 @@ def draw_routine(display, image_1, image_2, program):
 
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    gluPerspective(110, (display[0]/display[1]), 0.1, 50.0)
+    gluPerspective(110, (display[0] / display[1]), 0.1, 50.0)
 
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
@@ -241,12 +253,13 @@ def draw_routine(display, image_1, image_2, program):
 
     draw_geometry(plane_wrt_vo, plane_norm_wrt_vo, rect_sz_meters)
 
+
 def stitch(image_1, image_2, vert_shader, frag_shader):
     """Stitch two front fisheye images together"""
     pygame.init()
 
     display = (1080, 720)
-    pygame.display.set_mode(display, pygame.DOUBLEBUF|pygame.OPENGL)
+    pygame.display.set_mode(display, pygame.DOUBLEBUF | pygame.OPENGL)
     clock = pygame.time.Clock()
 
     program = CompiledShader(vert_shader, frag_shader)
@@ -258,16 +271,17 @@ def stitch(image_1, image_2, vert_shader, frag_shader):
                 running = False
 
         glClearColor(0, 0, 255, 0)
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
         draw_routine(display, image_1, image_2, program)
 
         pygame.display.flip()
         clock.tick(60)
 
+
 def main():
     """Top-level function to stitch together two Spot front camera images."""
-    print("") # Separate output from imported package messages.
+    print("")  # Separate output from imported package messages.
     import argparse
 
     parser = argparse.ArgumentParser(description=__doc__)
@@ -295,6 +309,7 @@ def main():
     stitch(front_right, front_left, vert_shader, frag_shader)
 
     return True
+
 
 if __name__ == '__main__':
     main()

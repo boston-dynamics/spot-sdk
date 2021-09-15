@@ -144,6 +144,15 @@ class PtzClient(BaseClient):
     def _initialize_lens_from_response(response):
         return response
 
+    # Focus methods
+    @staticmethod
+    def _get_ptz_focus_from_response(response):
+        return response.ptz_focus
+
+    @staticmethod
+    def _set_ptz_focus_from_response(response):
+        return response.ptz_focus
+
 def shift_pan_angle(pan):
     """Shift the pan angle (degrees) so that it is in the [0,360] range."""
     return recenter_angle(pan, 0, 360)

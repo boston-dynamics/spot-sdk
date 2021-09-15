@@ -12,11 +12,12 @@ The following examples demonstrate how to use the mission service and the autono
 
 ## Contents
 
+* [Graph Nav Anchoring Optimization](../graph_nav_anchoring_optimization/README.md)
 * [Graph Nav Command Line](../graph_nav_command_line/README.md)
+* [Graph Nav Extract Point Cloud](../graph_nav_extract_point_cloud/README.md)
 * [Graph Nav View Map](../graph_nav_view_map/README.md)
 * [Get Mission State](../get_mission_state/README.md)
 * [Remote Mission Service](../remote_mission_service/README.md)
 * [Mission Question Answerer](../mission_question_answerer/README.md)
 * [Mission Recorder](../mission_recorder/README.md)
 * [Replay Mission](../replay_mission/README.md)
-* [Machine Learning with the Network Compute Bridge](../network_compute_bridge/README.md)

@@ -53,6 +53,8 @@ There is an optional string argument `--codec` to specify a four character video
 ```
 This error was fixed for a linux experiment by providing the video codec argument as `--codec mjpg`.
 
+There are optional arguments to change the camera's resolution if it is possible. The arguments `--res-width` and `--res-height` can adjust the image resolution for all captures completed by the service. If the input resolution is not achievable by the camera, the nearest/most similar resolution will be chosen and used. If no resolution is provided, the image service will use the camera's defaults.
+
 Lastly, the command line argument `--show-debug-info` will allow a user to live-view the OpenCV output of the web cam video capture on their local computer. Only use this flag for debug purposes, as it will likely slow down the main example operation and reduce the performance of the image service.
 
 ## Debugging Tips
