@@ -25,7 +25,7 @@ from bosdyn.client.power import safe_power_off, PowerClient, power_on
 from bosdyn.client.exceptions import ResponseError
 from bosdyn.client.graph_nav import GraphNavClient
 from bosdyn.client.frame_helpers import get_odom_tform_body
-from bosdyn.client.lease import LeaseClient, LeaseKeepAlive, LeaseWallet
+from bosdyn.client.lease import LeaseClient, LeaseKeepAlive, LeaseWallet, ResourceAlreadyClaimedError
 from bosdyn.client.math_helpers import Quat, SE3Pose
 from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder
 from bosdyn.client.robot_state import RobotStateClient
@@ -47,7 +47,11 @@ class GraphNavInterface(object):
         # Create the lease client with keep-alive, then acquire the lease.
         self._lease_client = self._robot.ensure_client(LeaseClient.default_service_name)
         self._lease_wallet = self._lease_client.lease_wallet
-        self._lease = self._lease_client.acquire()
+        try:
+            self._lease = self._lease_client.acquire()
+        except ResourceAlreadyClaimedError as err:
+            print("The robot's lease is currently in use. Check for a tablet connection or try again in a few seconds.")
+            os._exit(1)
         self._lease_keepalive = LeaseKeepAlive(self._lease_client)
 
         # Create robot state and command clients.

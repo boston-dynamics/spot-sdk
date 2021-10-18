@@ -12,28 +12,31 @@ option java_outer_classname = "CameraProto";
 
 import "bosdyn/api/geometry.proto";
 
-// Description of the details of a particular camera.
 message Camera {
     // Identifier for the camera.
     string name = 1;
     // Resolution of the sensor, where x = width and y = height.
     bosdyn.api.Vec2 resolution=2;
 
-    // The frame name for the image sensor source. This frame will show up in the FrameTreeSnapshot
+    // The frame name for the parent frame of this camera. This frame will show up in the FrameTreeSnapshot
     // grabbed from the payload registration service.
     string base_frame_name = 3;
 
-    // The transform from the base of spot cam to this specific camera.
-    SE3Pose base_tfrom_sensor = 4;
+    // 'base_tfrom_sensor' defines the transform from the specific camera to the named base from.
+    // This is deprecated in favor of 'base_tform_sensor' which follows the intended naming convention
+    // and FrameTree directionality convention of the Spot system as defined in geometry.proto.
+    SE3Pose base_tfrom_sensor = 4[deprecated=true];
 
-    // Parameters for a pinhole model of distortion.
+    // The transform from the named base frame to this specific camera
+    SE3Pose base_tform_sensor = 7;
+
     message PinholeIntrinsics {
         // Focal_length in pixels
         bosdyn.api.Vec2 focal_length=1;
         // Center point in pixels
         bosdyn.api.Vec2 center_point=2;
         // The following 4 parameters are radial distortion coefficeints to 4 orders.
-        // See https://en.wikipedia.org/wiki/Distortion_(optics)#Software_correction
+        // See: https://en.wikipedia.org/wiki/Distortion_(optics)#Software_correction
         // If all 4 of these values are 0, do not apply any correction.
         float k1=3;
         float k2=4;
@@ -41,14 +44,12 @@ message Camera {
         float k4=6;
     }
 
-    // Spherical limits are the minimum and maximum angle of the image;
+    // Spherical limits are the minimum and maximum angle of the image.
     // IE the upper left pixel is at min_angle.x, min_angle.y
     // and the lower right pixel is at max_angle.x, max_angle.y
     // for a full-FOV image this will be (-180, 90) and (180, -90)
     message SphericalLimits {
-        // Upper left pixel location in degrees.
         bosdyn.api.Vec2 min_angle=1;
-        // Lower right pixel location in degrees.
         bosdyn.api.Vec2 max_angle=2;
     }
 
@@ -59,5 +60,3 @@ message Camera {
         SphericalLimits spherical=6;
     }
 }
-
-

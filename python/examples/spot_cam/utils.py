@@ -72,12 +72,12 @@ class UtilitySaveCalibrationCommand(Command):
                 out_file.write('k2= {:.8f}\n'.format(camera.pinhole.k2))
                 out_file.write('k3= {:.8f}\n'.format(camera.pinhole.k3))
                 out_file.write('k4= {:.8f}\n'.format(camera.pinhole.k4))
-                q = Quat(camera.base_tfrom_sensor.rotation.w, camera.base_tfrom_sensor.rotation.x,
-                         camera.base_tfrom_sensor.rotation.y, camera.base_tfrom_sensor.rotation.z)
+                q = Quat(camera.base_tform_sensor.rotation.w, camera.base_tform_sensor.rotation.x,
+                         camera.base_tform_sensor.rotation.y, camera.base_tform_sensor.rotation.z)
                 R = q.to_matrix()
                 T = [
-                    camera.base_tfrom_sensor.position.x, camera.base_tfrom_sensor.position.y,
-                    camera.base_tfrom_sensor.position.z
+                    camera.base_tform_sensor.position.x, camera.base_tform_sensor.position.y,
+                    camera.base_tform_sensor.position.z
                 ]
 
                 for i in range(3):

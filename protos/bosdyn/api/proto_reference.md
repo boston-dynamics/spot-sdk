@@ -17728,16 +17728,15 @@ Audio capture channel
 
 ### Camera
 
-Description of the details of a particular camera.
-
 
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | name | [string](#string) | Identifier for the camera. |
 | resolution | [bosdyn.api.Vec2](#bosdyn.api.Vec2) | Resolution of the sensor, where x = width and y = height. |
-| base_frame_name | [string](#string) | The frame name for the image sensor source. This frame will show up in the FrameTreeSnapshot grabbed from the payload registration service. |
-| base_tfrom_sensor | [bosdyn.api.SE3Pose](#bosdyn.api.SE3Pose) | The transform from the base of spot cam to this specific camera. |
+| base_frame_name | [string](#string) | The frame name for the parent frame of this camera. This frame will show up in the FrameTreeSnapshot grabbed from the payload registration service. |
+| base_tfrom_sensor | [bosdyn.api.SE3Pose](#bosdyn.api.SE3Pose) | 'base_tfrom_sensor' defines the transform from the specific camera to the named base from. This is deprecated in favor of 'base_tform_sensor' which follows the intended naming convention and FrameTree directionality convention of the Spot system as defined in geometry.proto. |
+| base_tform_sensor | [bosdyn.api.SE3Pose](#bosdyn.api.SE3Pose) | The transform from the named base frame to this specific camera |
 | pinhole | [Camera.PinholeIntrinsics](#bosdyn.api.spot_cam.Camera.PinholeIntrinsics) | Physical cameras |
 | spherical | [Camera.SphericalLimits](#bosdyn.api.spot_cam.Camera.SphericalLimits) | Only synthetic spherical panoramas |
 
@@ -17750,15 +17749,13 @@ Description of the details of a particular camera.
 
 ### Camera.PinholeIntrinsics
 
-Parameters for a pinhole model of distortion.
-
 
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | focal_length | [bosdyn.api.Vec2](#bosdyn.api.Vec2) | Focal_length in pixels |
 | center_point | [bosdyn.api.Vec2](#bosdyn.api.Vec2) | Center point in pixels |
-| k1 | [float](#float) | The following 4 parameters are radial distortion coefficeints to 4 orders. See https://en.wikipedia.org/wiki/Distortion_(optics)#Software_correction If all 4 of these values are 0, do not apply any correction. |
+| k1 | [float](#float) | The following 4 parameters are radial distortion coefficeints to 4 orders. See: https://en.wikipedia.org/wiki/Distortion_(optics)#Software_correction If all 4 of these values are 0, do not apply any correction. |
 | k2 | [float](#float) |  |
 | k3 | [float](#float) |  |
 | k4 | [float](#float) |  |
@@ -17772,7 +17769,7 @@ Parameters for a pinhole model of distortion.
 
 ### Camera.SphericalLimits
 
-Spherical limits are the minimum and maximum angle of the image;
+Spherical limits are the minimum and maximum angle of the image.
 IE the upper left pixel is at min_angle.x, min_angle.y
 and the lower right pixel is at max_angle.x, max_angle.y
 for a full-FOV image this will be (-180, 90) and (180, -90)
@@ -17781,8 +17778,8 @@ for a full-FOV image this will be (-180, 90) and (180, -90)
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| min_angle | [bosdyn.api.Vec2](#bosdyn.api.Vec2) | Upper left pixel location in degrees. |
-| max_angle | [bosdyn.api.Vec2](#bosdyn.api.Vec2) | Lower right pixel location in degrees. |
+| min_angle | [bosdyn.api.Vec2](#bosdyn.api.Vec2) |  |
+| max_angle | [bosdyn.api.Vec2](#bosdyn.api.Vec2) |  |
 
 
 
@@ -18181,6 +18178,8 @@ Result of setting the camera layout.
 | COLORMAP_UNKNOWN | 0 |  |
 | COLORMAP_GREYSCALE | 1 | the greyscale colormap maps the minimum value (defined below) to black and the maximum value (defined below) to white |
 | COLORMAP_JET | 2 | the jet colormap uses blues for values closer to the minimum, and red values for values closer to the maximum. |
+| COLORMAP_INFERNO | 3 | the inferno colormap maps the minimum value to black and the maximum value to light yellow RGB(252, 252, 164). It is also easier to view by those with color blindness |
+| COLORMAP_TURBO | 4 | the turbo colormap uses blues for values closer to the minumum, red values for values closer to the maximum, and addresses some short comings of the jet color map such as false detail, banding and color blindness |
 
 
  <!-- end enums -->
@@ -18588,7 +18587,8 @@ Data describing the camera intrinsics and extrinsics for a window of the image.
 | width | [int32](#int32) |  |
 | height | [int32](#int32) |  |
 | base_frame_name | [string](#string) |  |
-| base_tfrom_sensor | [bosdyn.api.SE3Pose](#bosdyn.api.SE3Pose) |  |
+| base_tfrom_sensor | [bosdyn.api.SE3Pose](#bosdyn.api.SE3Pose) | 'base_tfrom_sensor' defines the transform from the specific camera to the named base from. This is deprecated in favor of 'base_tform_sensor' which follows the intended naming convention and FrameTree directionality convention of the Spot system as defined in geometry.proto. |
+| base_tform_sensor | [bosdyn.api.SE3Pose](#bosdyn.api.SE3Pose) | The transform from the named base frame to this specific camera |
 | intrinsics | [Camera.PinholeIntrinsics](#bosdyn.api.spot_cam.Camera.PinholeIntrinsics) |  |
 
 
@@ -19408,7 +19408,7 @@ Doubles as a description of current state, or a command for a new position.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| ptz | [PtzDescription](#bosdyn.api.spot_cam.PtzDescription) | The "mech" ptz can pan [0, 360] degrees, tilt [-20, 217] degrees where 0 is the horizon, and zoom between 1x and 30x. |
+| ptz | [PtzDescription](#bosdyn.api.spot_cam.PtzDescription) | The "mech" ptz can pan [0, 360] degrees, tilt approximately [-30, 100] degrees where 0 is the horizon, IR and PTZ models differ and zoom between 1x and 30x. |
 | pan | [google.protobuf.FloatValue](#google.protobuf.FloatValue) | degrees |
 | tilt | [google.protobuf.FloatValue](#google.protobuf.FloatValue) | degrees |
 | zoom | [google.protobuf.FloatValue](#google.protobuf.FloatValue) | zoom level |

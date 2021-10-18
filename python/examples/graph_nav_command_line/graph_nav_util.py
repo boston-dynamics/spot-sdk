@@ -27,6 +27,10 @@ def pretty_print_waypoints(waypoint_id, waypoint_name, short_code_to_count, loca
 
 def find_unique_waypoint_id(short_code, graph, name_to_id):
     """Convert either a 2 letter short code or an annotation name into the associated unique id."""
+    if graph is None:
+        print("Please list the waypoints in the map before trying to navigate to a specific one (Option #4).")
+        return
+
     if len(short_code) != 2:
         # Not a short code, check if it is an annotation name (instead of the waypoint id).
         if short_code in name_to_id:

@@ -108,11 +108,17 @@ message SetScreenResponse {
 //the colormap is a mapping of radiometric data to color, to make the images easier for people to look at in real time.
 message IrColorMap {
     enum ColorMap {
-	 COLORMAP_UNKNOWN = 0;
-	 //the greyscale colormap maps the minimum value (defined below) to black and the maximum value (defined below) to white
-	 COLORMAP_GREYSCALE = 1;
-	 //the jet colormap uses blues for values closer to the minimum, and red values for values closer to the maximum.
-	 COLORMAP_JET = 2;
+        COLORMAP_UNKNOWN = 0;
+        //the greyscale colormap maps the minimum value (defined below) to black and the maximum value (defined below) to white
+        COLORMAP_GREYSCALE = 1;
+        //the jet colormap uses blues for values closer to the minimum, and red values for values closer to the maximum.
+        COLORMAP_JET = 2;
+        //the inferno colormap maps the minimum value to black and the maximum value to light yellow RGB(252, 252, 164). It is also
+        //easier to view by those with color blindness
+        COLORMAP_INFERNO = 3;
+        //the turbo colormap uses blues for values closer to the minumum, red values for values closer to the maximum,
+        //and addresses some short comings of the jet color map such as false detail, banding and color blindness
+        COLORMAP_TURBO = 4;
     }
     ColorMap colormap = 1;
 

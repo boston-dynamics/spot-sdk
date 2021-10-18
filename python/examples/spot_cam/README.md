@@ -34,7 +34,7 @@ python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP versi
 # Audio Service
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio set_volume 1
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio get_volume
-python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio load autonomous_robot_en autonomous_robot_en.wav
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio load autonomous_robot_en data/autonomous_robot_en.wav
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio list
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio play autonomous_robot_en
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP audio delete autonomous_robot_en
@@ -46,7 +46,7 @@ python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP compo
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP compositor set mech
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP compositor visible
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP compositor get_colormap
-python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP compositor set_colormap color jet
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP compositor set_colormap jet
 
 # Lighting Service
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP lighting set 0.1 0.2 0.3 0.4
@@ -55,6 +55,7 @@ python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP light
 # Media Log Service
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP media_log list_cameras
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP media_log store pano
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP media_log store_retrieve ptz
 # The UUID is given by the 'store' command
 IMAGE_UUID=f0e835c2-54d4-11ea-9365-00044be03a91
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP media_log status $IMAGE_UUID
@@ -77,9 +78,6 @@ python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz s
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz set_focus manual_focus --distance 10
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP ptz get_focus
 
-# You should see a ptz jpeg image
-python -m command_line --username=$USERNAME --password=$PASSWORD -$ROBOT_IP media_log store_retrieve ptz
-
 # Network Service
 # Get Spot CAM network settings
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP network settings
@@ -94,6 +92,8 @@ python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP netwo
 # WebRTC Service
 # Save images to .jpg files
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP webrtc save
+# Display stream
+python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP webrtc save --count 0
 # Save 10 seconds of video (no audio)
 python -m command_line --username=$USERNAME --password=$PASSWORD $ROBOT_IP webrtc record --time 10
 # Save 10 seconds of audio

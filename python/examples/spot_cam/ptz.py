@@ -90,8 +90,8 @@ class PtzSetPtzPositionCommand(Command):
             'ptz_name', default='digi', const='digi', nargs='?',
             choices=['digi', 'full_digi', 'mech', 'overlay_digi', 'full_pano', 'overlay_pano'])
         self._parser.add_argument('pan', help='[0, 360] Degrees', default=0.0, type=float)
-        self._parser.add_argument('tilt', help='[-90, 90] Degrees', default=0.0, type=float)
-        self._parser.add_argument('zoom', help='[0, 0x4000]', default=0.0, type=float)
+        self._parser.add_argument('tilt', help='[-30, 100] Degrees', default=0.0, type=float)
+        self._parser.add_argument('zoom', help='[1, 30]', default=1.0, type=float)
 
     def _run(self, robot, options):
         ptz_desc = ptz_pb2.PtzDescription(name=options.ptz_name)

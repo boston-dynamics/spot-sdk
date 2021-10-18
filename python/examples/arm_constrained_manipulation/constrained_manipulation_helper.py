@@ -33,6 +33,7 @@ def construct_lever_task(velocity_normalized, force_limit=40, torque_limit=5):
     or use the ball valve task types, which assume a specific grasp and specify
     what the initial torque_direction is.
     """
+    velocity_normalized = max(min(velocity_normalized, 1.0), -1.0)
     velocity_limit = scale_velocity_lim_given_force_lim(force_limit)
     tangential_velocity = velocity_normalized * velocity_limit
     frame_name = "hand"
@@ -67,6 +68,7 @@ def construct_right_handed_ballvalve_task(velocity_normalized, force_limit=40, t
     If the grasp is such that the hand x axis is not parallel to the axis
     of rotation of the ball valve, then use the lever task.
     """
+    velocity_normalized = max(min(velocity_normalized, 1.0), -1.0)
     velocity_limit = scale_velocity_lim_given_force_lim(force_limit)
     tangential_velocity = velocity_normalized * velocity_limit
     frame_name = "hand"
@@ -105,6 +107,7 @@ def construct_left_handed_ballvalve_task(velocity_normalized, force_limit=40, to
     If the grasp is such that the hand x axis is not parallel to the axis
     of rotation of the ball valve, then use the lever task.
     """
+    velocity_normalized = max(min(velocity_normalized, 1.0), -1.0)
     velocity_limit = scale_velocity_lim_given_force_lim(force_limit)
     tangential_velocity = velocity_normalized * velocity_limit
     frame_name = "hand"
@@ -140,6 +143,7 @@ def construct_crank_task(velocity_normalized, force_limit=40):
     grasp is such that the initial motion needs to be something else,
     change the force direction.
     """
+    velocity_normalized = max(min(velocity_normalized, 1.0), -1.0)
     velocity_limit = scale_velocity_lim_given_force_lim(force_limit)
     tangential_velocity = velocity_normalized * velocity_limit
     frame_name = "hand"
@@ -177,6 +181,7 @@ def construct_cabinet_task(velocity_normalized, force_limit=40):
     grasp is such that the initial motion needs to be something else,
     change the force direction.
     """
+    velocity_normalized = max(min(velocity_normalized, 1.0), -1.0)
     velocity_limit = scale_velocity_lim_given_force_lim(force_limit)
     tangential_velocity = velocity_normalized * velocity_limit
     frame_name = "hand"
@@ -211,6 +216,7 @@ def construct_drawer_task(velocity_normalized, force_limit=40):
     grasp is such that the initial motion needs to be something else,
     change the force direction.
     """
+    velocity_normalized = max(min(velocity_normalized, 1.0), -1.0)
     velocity_limit = scale_velocity_lim_given_force_lim(force_limit)
     tangential_velocity = velocity_normalized * velocity_limit
     frame_name = "hand"
@@ -245,6 +251,7 @@ def construct_wheel_task(velocity_normalized, force_limit=40):
     This assumes initial motion will be along the y axis of the hand,
     which is often the case. Change force_direction if that is not true.
     """
+    velocity_normalized = max(min(velocity_normalized, 1.0), -1.0)
     velocity_limit = scale_velocity_lim_given_force_lim(force_limit)
     tangential_velocity = velocity_normalized * velocity_limit
     frame_name = "hand"
@@ -263,12 +270,12 @@ def construct_wheel_task(velocity_normalized, force_limit=40):
     return command
 
 
-def construct_knob_task(rotational_velocity, torque_limit=5):
+def construct_knob_task(velocity_normalized, torque_limit=5):
     """ Helper function for turning purely rotational knobs
     Use this for turning knobs/valves that do not have a lever arm
 
     params:
-    + rotational_velocity: commanded rotational velocity (does not have to be in [-1, 1])
+    + velocity_normalized: normalized task rotational velocity in range [-1.0, 1.0]
     + torque_limit (optional): positive value denoting max torque robot will exert along axis of
                             rotation of the task
 
@@ -279,6 +286,9 @@ def construct_knob_task(rotational_velocity, torque_limit=5):
     This assumes that the axis of rotation of of the knob is roughly parallel
     to the x axis of the hand. Change torque_direction if that is not the case.
     """
+    velocity_normalized = max(min(velocity_normalized, 1.0), -1.0)
+    rot_velocity_limit = scale_rot_velocity_lim_given_torque_lim(torque_limit)
+    rotational_velocity = velocity_normalized * rot_velocity_limit
     frame_name = "hand"
     # Setting a placeholder value that doesn't matter, since we don't
     # apply a pure force in this task.
@@ -323,4 +333,13 @@ def construct_hold_pose_task():
 def scale_velocity_lim_given_force_lim(force_limit):
     internal_vel_tracking_gain = 7000.0/333.0
     vel_limit = force_limit / internal_vel_tracking_gain
+    return vel_limit
+
+# This function is used to scale the rotational velocity limit given
+# the torque limit. This scaling ensures that when the measured arm
+# velocity is zero but desired velocity is max (vel_limit), we request
+# max (torque_limit) amount of torque in that direction.
+def scale_rot_velocity_lim_given_torque_lim(torque_limit):
+    internal_vel_tracking_gain = 300.0/333.0
+    vel_limit = torque_limit / internal_vel_tracking_gain
     return vel_limit

@@ -56,7 +56,7 @@ class CompositorSetScreenCommand(Command):
                                            'mech_full',
                                            'mech_overlay',
                                            'mech_ir',
-                                           'mech_ir_full'])
+                                           'mech_full_ir'])
 
     def _run(self, robot, options):
         result = robot.ensure_client(CompositorClient.default_service_name).set_screen(options.name)
@@ -127,8 +127,8 @@ class CompositorSetIrColorMapCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         super(CompositorSetIrColorMapCommand, self).__init__(subparsers, command_dict)
-        self._parser.add_argument('color', default='jet', const='jet', nargs='?',
-                                  choices=['jet', 'greyscale', 'grayscale'])
+        self._parser.add_argument('color', default='inferno', const='inferno', nargs='?',
+                                  choices=['jet', 'inferno', 'turbo', 'greyscale', 'grayscale'])
         self._parser.add_argument('--min-temp', default=0.0, type=float,
                                   help='minimum temperature on the temperature scale')
         self._parser.add_argument('--max-temp', default=100.0, type=float,
@@ -136,9 +136,14 @@ class CompositorSetIrColorMapCommand(Command):
         add_bool_arg(self._parser, 'auto_scale', default=True)
 
     def _run(self, robot, options):
-        color = compositor_pb2.IrColorMap.COLORMAP_GREYSCALE
-        if options.color == 'jet':
-            color = compositor_pb2.IrColorMap.COLORMAP_JET
+        string_to_colormap_enum = {
+            'jet': compositor_pb2.IrColorMap.COLORMAP_JET,
+            'inferno': compositor_pb2.IrColorMap.COLORMAP_INFERNO,
+            'turbo': compositor_pb2.IrColorMap.COLORMAP_TURBO,
+            'greyscale': compositor_pb2.IrColorMap.COLORMAP_GREYSCALE,
+            'grayscale': compositor_pb2.IrColorMap.COLORMAP_GREYSCALE,
+        }
+        color = string_to_colormap_enum[options.color]
         result = robot.ensure_client(CompositorClient.default_service_name).set_ir_colormap(
             color, options.min_temp, options.max_temp, options.auto_scale)
 

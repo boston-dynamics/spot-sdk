@@ -290,7 +290,9 @@ class Sdk(object):
         """Do nothing, this method is kept only to maintain backwards compatibility."""
         return
 
-
+@deprecated(
+    reason='Decoding tokens is no longer supported in the sdk.  Use pyjwt directly instead.',
+    version='3.0.1', action="always")
 def decode_token(token):
     """Decodes a JWT token without verification.
 
@@ -305,23 +307,15 @@ def decode_token(token):
         UnableToLoadAppTokenError: If the token cannot be read.
     """
     try:
-        values = jwt.decode(token, verify=False)
+        values = jwt.decode(token, options={"verify_signature": False})
         return values
-    except jwt.exceptions.DecodeError as err:
-        # This error could be occurring because PyJWT 2.0.0 requires the "algorithms" argument to be provided unless
-        # the option to "verify_signature" is disabled (it is True by default). Try once more to decode the token
-        # using 2.0.0 function signature.
-        try:
-            values = jwt.decode(token, options={"verify_signature": False})
-            return values
-        except Exception as exe:
-            # If this also fails, then raise the UnableToLoadAppTokenError.
-            pass
-        raise UnableToLoadAppTokenError('Incorrectly formatted token {} --- {}'.format(token, err))
-    except Exception as err:
-        raise UnableToLoadAppTokenError('Problem decoding token {} --- {}'.format(token, err))
+    except Exception as exc:
+        raise UnableToLoadAppTokenError('Incorrectly formatted token {} --- {}'.format(token, exc))
 
 
+@deprecated(
+    reason='Decoding tokens is no longer supported in the sdk.  Use pyjwt directly instead.',
+    version='3.0.1', action="always")
 def log_token_time_remaining(token):
     """Log the time remaining until app token expires.
 

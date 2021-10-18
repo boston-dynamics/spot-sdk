@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.sdk &mdash; Spot 3.0.0 documentation</title>
+  <title>bosdyn.client.sdk &mdash; Spot 3.0.1 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                3.0.0
+                3.0.1
               </div>
             
           
@@ -878,8 +878,10 @@
         <span class="sd">&quot;&quot;&quot;Do nothing, this method is kept only to maintain backwards compatibility.&quot;&quot;&quot;</span>
         <span class="k">return</span></div></div>
 
-
-<div class="viewcode-block" id="decode_token"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html#bosdyn.client.sdk.decode_token">[docs]</a><span class="k">def</span> <span class="nf">decode_token</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+<div class="viewcode-block" id="decode_token"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html#bosdyn.client.sdk.decode_token">[docs]</a><span class="nd">@deprecated</span><span class="p">(</span>
+    <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Decoding tokens is no longer supported in the sdk.  Use pyjwt directly instead.&#39;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s1">&#39;3.0.1&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">decode_token</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Decodes a JWT token without verification.</span>
 
 <span class="sd">    Args:</span>
@@ -893,24 +895,16 @@
 <span class="sd">        UnableToLoadAppTokenError: If the token cannot be read.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">values</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;verify_signature&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">values</span>
-    <span class="k">except</span> <span class="n">jwt</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">DecodeError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-        <span class="c1"># This error could be occurring because PyJWT 2.0.0 requires the &quot;algorithms&quot; argument to be provided unless</span>
-        <span class="c1"># the option to &quot;verify_signature&quot; is disabled (it is True by default). Try once more to decode the token</span>
-        <span class="c1"># using 2.0.0 function signature.</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;verify_signature&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
-            <span class="k">return</span> <span class="n">values</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exe</span><span class="p">:</span>
-            <span class="c1"># If this also fails, then raise the UnableToLoadAppTokenError.</span>
-            <span class="k">pass</span>
-        <span class="k">raise</span> <span class="n">UnableToLoadAppTokenError</span><span class="p">(</span><span class="s1">&#39;Incorrectly formatted token </span><span class="si">{}</span><span class="s1"> --- </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">err</span><span class="p">))</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">UnableToLoadAppTokenError</span><span class="p">(</span><span class="s1">&#39;Problem decoding token </span><span class="si">{}</span><span class="s1"> --- </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">err</span><span class="p">))</span></div>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">UnableToLoadAppTokenError</span><span class="p">(</span><span class="s1">&#39;Incorrectly formatted token </span><span class="si">{}</span><span class="s1"> --- </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">exc</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="log_token_time_remaining"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html#bosdyn.client.sdk.log_token_time_remaining">[docs]</a><span class="k">def</span> <span class="nf">log_token_time_remaining</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+<div class="viewcode-block" id="log_token_time_remaining"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html#bosdyn.client.sdk.log_token_time_remaining">[docs]</a><span class="nd">@deprecated</span><span class="p">(</span>
+    <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Decoding tokens is no longer supported in the sdk.  Use pyjwt directly instead.&#39;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s1">&#39;3.0.1&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">log_token_time_remaining</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Log the time remaining until app token expires.</span>
 
 <span class="sd">    Arguments:</span>

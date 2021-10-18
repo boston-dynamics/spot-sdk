@@ -12,6 +12,40 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 3.0.1
+
+### New Features
+
+Added `COLORMAP_INFERNO` and `COLORMAP_TURBO` as SpotCAM IR color map options.
+
+### Bug fixes and improvements
+
+The new `base_tform_sensor` fields in SpotCAM protos have the transform in the right direction. The old `base_tfrom_sensor` fields, now deprecated, had the inverse transform.
+
+### Deprecations
+
+Deprecated field `base_tfrom_sensor` in SpotCAM camera proto and added field `base_tform_sensor` so it follows the intended naming convention.
+
+Deprecated field `base_tfrom_sensor` in SpotCAM logging proto and added field `base_tform_sensor` so it follows the intended naming convention.
+
+Deprecated the `decode_token()` and `log_token_time_remaining()` functions in `bosdyn.client.sdk`. The SDK no longer supports decoding tokens. If you need to decode one, use pyjwt directly.
+
+### Known Issues
+
+Same as 3.0.0
+
+### Sample Code
+
+[**Arm Constrained Manipulation (updated)**](../python/examples/arm_constrained_manipulation/README.md)
+Cleanup to clamp normalized velocity and also use normalized velocity for knob.
+
+[**GraphNav Command Line (updated)**](../python/examples/graph_nav_command_line/README.md)
+Improved handling in certain failure cases
+
+[**Spot Cam (updated)**](../python/examples/spot_cam/README.md)
+Handle new IR color map options and removed the usage of the deprecated pose fields
+
+
 ## 3.0.0
 
 ### New Features

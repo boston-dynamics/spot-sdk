@@ -122,34 +122,5 @@ Spam, Spam, Spam, Spam!
 
 
 
-class SdkHelpersTest(unittest.TestCase):
-
-    expired_token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJCb3N0b24gRHluYW1pY3MiLCJp\
-        YXQiOjE1NzMxMzM0NTMsImV4cCI6MTU3MzEzMzQ1MywicGVyIjpbImF1dGgiLCJlc3RvcCIsImltYWdlIiwibG\
-        Vhc2UiLCJsb2ctYW5ub3RhdGlvbiIsInBvd2VyIiwicm9ib3QtY29tbWFuZCIsInJvYm90LWlkIiwicm9ib3Qt\
-        c3RhdGUiLCJzcG90LWNoZWNrIiwidGltZS1zeW5jIiwicGF5bG9hZCIsInBheWxvYWQtcmVnaXN0cmF0aW9uIl\
-        19.YqLUh05lGhU5f989Pn30rpRqLnO5g2Ys4moTFWwyrGWSWTgB44LUas3P_0eCu_ywB6x7paztX_g5J7pY-Hw\
-        cimslkETOQQLCc4A2XmI4d6FsXnigWMXjIs-KJhRe9MFwaAhtuR2OhlhdDh5uM8gbWYwcGvXIJ0D_tiXWFwb_t\
-        EccIfHoxTrMqTDp9pmd-cFeJZoMPv_UxVtPUhB3Wifhpdq3XphwTqV8qF1F0CCZz1tZcwumcWHCdGi8ChB_iiV\
-        LQxrw8gkKZcbO8oiJn6t-6h8xnJMMEQTKLl3IiNTCYefoPHv28AF7HYo3lRDjwkkRy7Q9-jGEABnaV_PRIrILOA'
-
-    def test_decode_token(self):
-        with self.assertRaises(bosdyn.client.sdk.UnableToLoadAppTokenError):
-            bosdyn.client.sdk.decode_token('invalid')
-
-        try:
-            bosdyn.client.sdk.decode_token(self.expired_token)
-        except bosdyn.client.sdk.UnableToLoadAppTokenError:
-            self.fail("decode_token() raised UnableToLoadAppTokenError unexpectedly.")
-
-    def test_log_token_time_remaining(self):
-        with self.assertRaises(bosdyn.client.sdk.UnableToLoadAppTokenError):
-            bosdyn.client.sdk.log_token_time_remaining('invalid')
-        try:
-            bosdyn.client.sdk.log_token_time_remaining(self.expired_token)
-        except bosdyn.client.sdk.UnableToLoadAppTokenError:
-            self.fail("log_token_time_remaining() raised UnableToLoadAppTokenError unexpectedly.")
-
-
 if __name__ == '__main__':
     unittest.main()

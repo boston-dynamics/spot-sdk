@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>arm_command.proto &mdash; Spot 3.0.0 documentation</title>
+  <title>arm_command.proto &mdash; Spot 3.0.1 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.0.0
+                3.0.1
               </div>
             
           
@@ -29456,7 +29456,6 @@ run periodically in order to keep the system running in the best possible condit
 <p><a name="bosdyn.api.spot_cam.Camera"></a></p>
 <section id="camera">
 <h2>Camera<a class="headerlink" href="#camera" title="Permalink to this headline">¶</a></h2>
-<p>Description of the details of a particular camera.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -29479,12 +29478,17 @@ run periodically in order to keep the system running in the best possible condit
 <tr>
 <td>base_frame_name</td>
 <td><a href="#string">string</a></td>
-<td>The frame name for the image sensor source. This frame will show up in the FrameTreeSnapshot grabbed from the payload registration service.</td>
+<td>The frame name for the parent frame of this camera. This frame will show up in the FrameTreeSnapshot grabbed from the payload registration service.</td>
 </tr>
 <tr>
 <td>base_tfrom_sensor</td>
 <td><a href="#bosdyn.api.SE3Pose">bosdyn.api.SE3Pose</a></td>
-<td>The transform from the base of spot cam to this specific camera.</td>
+<td>'base_tfrom_sensor' defines the transform from the specific camera to the named base from. This is deprecated in favor of 'base_tform_sensor' which follows the intended naming convention and FrameTree directionality convention of the Spot system as defined in geometry.proto.</td>
+</tr>
+<tr>
+<td>base_tform_sensor</td>
+<td><a href="#bosdyn.api.SE3Pose">bosdyn.api.SE3Pose</a></td>
+<td>The transform from the named base frame to this specific camera</td>
 </tr>
 <tr>
 <td>pinhole</td>
@@ -29501,7 +29505,6 @@ run periodically in order to keep the system running in the best possible condit
 </section>
 <section id="camera-pinholeintrinsics">
 <h2>Camera.PinholeIntrinsics<a class="headerlink" href="#camera-pinholeintrinsics" title="Permalink to this headline">¶</a></h2>
-<p>Parameters for a pinhole model of distortion.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -29524,7 +29527,7 @@ run periodically in order to keep the system running in the best possible condit
 <tr>
 <td>k1</td>
 <td><a href="#float">float</a></td>
-<td>The following 4 parameters are radial distortion coefficeints to 4 orders. See https://en.wikipedia.org/wiki/Distortion_(optics)#Software_correction If all 4 of these values are 0, do not apply any correction.</td>
+<td>The following 4 parameters are radial distortion coefficeints to 4 orders. See: https://en.wikipedia.org/wiki/Distortion_(optics)#Software_correction If all 4 of these values are 0, do not apply any correction.</td>
 </tr>
 <tr>
 <td>k2</td>
@@ -29546,7 +29549,7 @@ run periodically in order to keep the system running in the best possible condit
 </section>
 <section id="camera-sphericallimits">
 <h2>Camera.SphericalLimits<a class="headerlink" href="#camera-sphericallimits" title="Permalink to this headline">¶</a></h2>
-<p>Spherical limits are the minimum and maximum angle of the image;
+<p>Spherical limits are the minimum and maximum angle of the image.
 IE the upper left pixel is at min_angle.x, min_angle.y
 and the lower right pixel is at max_angle.x, max_angle.y
 for a full-FOV image this will be (-180, 90) and (180, -90)</p>
@@ -29562,12 +29565,12 @@ for a full-FOV image this will be (-180, 90) and (180, -90)</p>
 <tr>
 <td>min_angle</td>
 <td><a href="#bosdyn.api.Vec2">bosdyn.api.Vec2</a></td>
-<td>Upper left pixel location in degrees.</td>
+<td></td>
 </tr>
 <tr>
 <td>max_angle</td>
 <td><a href="#bosdyn.api.Vec2">bosdyn.api.Vec2</a></td>
-<td>Lower right pixel location in degrees.</td>
+<td></td>
 </tr>
 </tbody>
 </table> <!-- end messages --> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn/api/spot_cam/compositor.proto"></a></p>
@@ -30103,6 +30106,16 @@ used by the video stream.</p>
 <td>COLORMAP_JET</td>
 <td>2</td>
 <td>the jet colormap uses blues for values closer to the minimum, and red values for values closer to the maximum.</td>
+</tr>
+<tr>
+<td>COLORMAP_INFERNO</td>
+<td>3</td>
+<td>the inferno colormap maps the minimum value to black and the maximum value to light yellow RGB(252, 252, 164). It is also easier to view by those with color blindness</td>
+</tr>
+<tr>
+<td>COLORMAP_TURBO</td>
+<td>4</td>
+<td>the turbo colormap uses blues for values closer to the minumum, red values for values closer to the maximum, and addresses some short comings of the jet color map such as false detail, banding and color blindness</td>
 </tr>
 </tbody>
 </table> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn/api/spot_cam/health.proto"></a></p>
@@ -30676,7 +30689,12 @@ but nothing’s actually wrong.</p>
 <tr>
 <td>base_tfrom_sensor</td>
 <td><a href="#bosdyn.api.SE3Pose">bosdyn.api.SE3Pose</a></td>
-<td></td>
+<td>'base_tfrom_sensor' defines the transform from the specific camera to the named base from. This is deprecated in favor of 'base_tform_sensor' which follows the intended naming convention and FrameTree directionality convention of the Spot system as defined in geometry.proto.</td>
+</tr>
+<tr>
+<td>base_tform_sensor</td>
+<td><a href="#bosdyn.api.SE3Pose">bosdyn.api.SE3Pose</a></td>
+<td>The transform from the named base frame to this specific camera</td>
 </tr>
 <tr>
 <td>intrinsics</td>
@@ -31789,7 +31807,7 @@ describe a PTZ, but ListPtzResponse will include more information.</p>
 <tr>
 <td>ptz</td>
 <td><a href="#bosdyn.api.spot_cam.PtzDescription">PtzDescription</a></td>
-<td>The "mech" ptz can pan [0, 360] degrees, tilt [-20, 217] degrees where 0 is the horizon, and zoom between 1x and 30x.</td>
+<td>The "mech" ptz can pan [0, 360] degrees, tilt approximately [-30, 100] degrees where 0 is the horizon, IR and PTZ models differ and zoom between 1x and 30x.</td>
 </tr>
 <tr>
 <td>pan</td>

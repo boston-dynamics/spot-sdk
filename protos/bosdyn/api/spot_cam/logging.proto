@@ -62,7 +62,12 @@ message Logpoint {
         int32 width=3;
         int32 height=4;
         string base_frame_name = 7;
-        SE3Pose base_tfrom_sensor = 5;
+        // 'base_tfrom_sensor' defines the transform from the specific camera to the named base from.
+        // This is deprecated in favor of 'base_tform_sensor' which follows the intended naming convention
+        // and FrameTree directionality convention of the Spot system as defined in geometry.proto.
+        SE3Pose base_tfrom_sensor = 5[deprecated=true];
+        // The transform from the named base frame to this specific camera
+        SE3Pose base_tform_sensor = 8;
         bosdyn.api.spot_cam.Camera.PinholeIntrinsics intrinsics=6;
     }
     // Camera data for all sub-images contained within the image data.
