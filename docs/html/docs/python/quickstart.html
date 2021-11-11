@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>QuickStart &mdash; Spot 3.0.1 documentation</title>
+  <title>QuickStart &mdash; Spot 3.0.2 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.0.1
+                3.0.2
               </div>
             
           
@@ -619,11 +619,11 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><a class="reference external" href="#get-a-spot-robot">Get a Spot Robot</a></p></li>
 <li><p><a class="reference external" href="#get-a-user-account-on-the-robot">Get a user account on the robot</a></p></li>
 <li><p><a class="reference external" href="#ping-spot">Ping Spot</a></p></li>
-<li><p><a class="reference external" href="#request-a-spot-robot-s-id">Request Spot’s ID from Spot</a></p></li>
+<li><p><a class="reference external" href="#request-spot-robots-id">Request Spot robot’s ID</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference external" href="#Get-a-copy-of-the-full-sdk-distribution-from-github">Get a copy of the full SDK distribution from github</a></p></li>
-<li><p><a class="reference external" href="#run-hello-spot-let-s-see-the-robot-move">Run Hello Spot - let’s see the robot move!</a></p>
+<li><p><a class="reference external" href="#get-a-copy-of-the-full-sdk-distribution-from-github">Get a copy of the full SDK distribution from github</a></p></li>
+<li><p><a class="reference external" href="#run-hello-spot---lets-see-the-robot-move">Run Hello Spot - let’s see the robot move!</a></p>
 <ul>
 <li><p><a class="reference external" href="#run-an-independent-e-stop">Run an Independent E-Stop</a></p></li>
 <li><p><a class="reference external" href="#run-hello-spot-take-2">Run Hello Spot (Take 2)</a></p></li>
@@ -738,14 +738,14 @@ or upgraded from PyPI with the following command.</p>
 <p>Installing the <code class="docutils literal notranslate"><span class="pre">bosdyn-client</span></code>, <code class="docutils literal notranslate"><span class="pre">bosdyn-choreography-client</span></code> and <code class="docutils literal notranslate"><span class="pre">bosdyn-mission</span></code> packages will also
 install <code class="docutils literal notranslate"><span class="pre">bosdyn-api</span></code> and <code class="docutils literal notranslate"><span class="pre">bosdyn-core</span></code> packages with the same version. The command above installs
 the latest version of the packages. To install a different version of the packages from PyPI, for
-example 3.0.1, use the following command.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ python3 -m pip install bosdyn-client<span class="o">==</span><span class="m">3</span>.0.1 bosdyn-mission<span class="o">==</span><span class="m">3</span>.0.1 bosdyn-choreography-client<span class="o">==</span><span class="m">3</span>.0.1
+example 3.0.2, use the following command.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ python3 -m pip install bosdyn-client<span class="o">==</span><span class="m">3</span>.0.2 bosdyn-mission<span class="o">==</span><span class="m">3</span>.0.2 bosdyn-choreography-client<span class="o">==</span><span class="m">3</span>.0.2
 </pre></div>
 </div>
 <p><strong>Version incompatibility:</strong></p>
 <p>If you see a version incompatibility error during pip install such as:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ERROR: bosdyn-core &lt;VERSION_STRING&gt; has requirement bosdyn-api<span class="o">==</span>&lt;VERSION_STRING&gt;, but you
-have bosdyn-api <span class="m">3</span>.0.1 which is incompatible.
+have bosdyn-api <span class="m">3</span>.0.2 which is incompatible.
 </pre></div>
 </div>
 <p>Try uninstalling the bosdyn packages (Note: unlike install, you will need to explicitly list all 4 packages) and then reinstalling:</p>
@@ -757,12 +757,12 @@ $ python3 -m pip install bosdyn-client bosdyn-mission
 <h3>Verify your Spot packages installation<a class="headerlink" href="#verify-your-spot-packages-installation" title="Permalink to this headline">¶</a></h3>
 <p>Make sure that the packages have been installed.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ python3 -m pip list --format<span class="o">=</span>columns <span class="p">|</span> grep bosdyn
-bosdyn-api                    <span class="m">3</span>.0.1
-bosdyn-choreography-client    <span class="m">3</span>.0.1
-bosdyn-choreography-protos    <span class="m">3</span>.0.1
-bosdyn-client                 <span class="m">3</span>.0.1
-bosdyn-core                   <span class="m">3</span>.0.1
-bosdyn-mission                <span class="m">3</span>.0.1
+bosdyn-api                    <span class="m">3</span>.0.2
+bosdyn-choreography-client    <span class="m">3</span>.0.2
+bosdyn-choreography-protos    <span class="m">3</span>.0.2
+bosdyn-client                 <span class="m">3</span>.0.2
+bosdyn-core                   <span class="m">3</span>.0.2
+bosdyn-mission                <span class="m">3</span>.0.2
 </pre></div>
 </div>
 <p><strong>Windows users:</strong></p>
@@ -830,8 +830,8 @@ PACKAGE CONTENTS
 </pre></div>
 </div>
 </section>
-<section id="request-a-spot-robot-s-id">
-<h3>Request a Spot robot’s ID<a class="headerlink" href="#request-a-spot-robot-s-id" title="Permalink to this headline">¶</a></h3>
+<section id="request-spot-robot-s-id">
+<h3>Request Spot robot’s ID<a class="headerlink" href="#request-spot-robot-s-id" title="Permalink to this headline">¶</a></h3>
 <p>Issue the following command to get your Spot robot’s ID:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ python3 -m bosdyn.client <span class="m">192</span>.168.80.3 id
 beta-BD-90490007     <span class="m">02</span>-19904-9903   beta29     spot <span class="o">(</span>V3<span class="o">)</span>
@@ -853,7 +853,7 @@ RetryableUnavailableError: _InactiveRpcError: gRPC service unavailable. Likely t
 </section>
 <section id="get-a-copy-of-the-full-sdk-distribution-from-github">
 <h3>Get a copy of the full SDK distribution from github<a class="headerlink" href="#get-a-copy-of-the-full-sdk-distribution-from-github" title="Permalink to this headline">¶</a></h3>
-<p>While simply installing the Boston Dynamics Python packages is sufficient to deploy solutions, developers need to download the full Spot SDK distribution to actually develop solutions.  The distribution con contains programming examples, protobuf definitions and API documentation.</p>
+<p>While simply installing the Boston Dynamics Python packages is sufficient to deploy solutions, developers need to download the full Spot SDK distribution to actually develop solutions.  The distribution contains programming examples, protobuf definitions and API documentation.</p>
 <p>The Spot Python SDK distribution is available at https://github.com/boston-dynamics/spot-sdk.</p>
 <p>Users can either:</p>
 <ul class="simple">

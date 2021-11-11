@@ -678,7 +678,7 @@ class GraphNavClient(BaseClient):
                 chunk.data = serialized_edge_snapshot[start_index:total_bytes_size]
             else:
                 chunk.data = serialized_edge_snapshot[start_index:end_index]
-            req = graph_nav_pb2.UploadWaypointSnapshotRequest(lease=lease, chunk=chunk)
+            req = graph_nav_pb2.UploadEdgeSnapshotRequest(lease=lease, chunk=chunk)
             yield req
 
     @staticmethod

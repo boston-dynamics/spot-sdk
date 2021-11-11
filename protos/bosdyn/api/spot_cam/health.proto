@@ -12,6 +12,7 @@ option java_outer_classname = "HealthProto";
 
 import "bosdyn/api/header.proto";
 import "bosdyn/api/robot_state.proto";
+import "bosdyn/api/data_chunk.proto";
 
 // The temperature of a particular component.
 message Temperature {
@@ -79,4 +80,13 @@ message GetTemperatureResponse {
 
     // List of all temperatures measured.
     repeated Temperature temps = 2;
+}
+
+message GetSystemLogRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message GetSystemLogResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    bosdyn.api.DataChunk data = 2;
 }

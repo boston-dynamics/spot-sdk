@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>arm_command.proto &mdash; Spot 3.0.1 documentation</title>
+  <title>arm_command.proto &mdash; Spot 3.0.2 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.0.1
+                3.0.2
               </div>
             
           
@@ -30239,6 +30239,49 @@ but nothing’s actually wrong.</p>
 <td>Description of the kind of degradation being experienced.</td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn.api.spot_cam.GetSystemLogRequest"></a></p>
+</section>
+<section id="getsystemlogrequest">
+<h2>GetSystemLogRequest<a class="headerlink" href="#getsystemlogrequest" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.RequestHeader">bosdyn.api.RequestHeader</a></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot_cam.GetSystemLogResponse"></a></p>
+</section>
+<section id="getsystemlogresponse">
+<h2>GetSystemLogResponse<a class="headerlink" href="#getsystemlogresponse" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.ResponseHeader">bosdyn.api.ResponseHeader</a></td>
+<td></td>
+</tr>
+<tr>
+<td>data</td>
+<td><a href="#bosdyn.api.DataChunk">bosdyn.api.DataChunk</a></td>
+<td></td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn.api.spot_cam.GetTemperatureRequest"></a></p>
 </section>
 <section id="gettemperaturerequest">
@@ -32130,6 +32173,12 @@ describe a PTZ, but ListPtzResponse will include more information.</p>
 <td><a href="#bosdyn.api.spot_cam.ClearBITEventsRequest">ClearBITEventsRequest</a></td>
 <td><a href="#bosdyn.api.spot_cam.ClearBITEventsResponse">ClearBITEventsResponse</a></td>
 <td>ClearBitEvents clears out the events list of the BITStatus structure.</td>
+</tr>
+<tr>
+<td>GetSystemLog</td>
+<td><a href="#bosdyn.api.spot_cam.GetSystemLogRequest">GetSystemLogRequest</a></td>
+<td><a href="#bosdyn.api.spot_cam.GetSystemLogResponse">GetSystemLogResponse</a> stream</td>
+<td>GetSystemLog retrieves an encrypted log of system events, for factory diagnosis of possible issues. The data streamed back should be concatenated to a single file, before sending to the manufacturer.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.spot_cam.LightingService"></a></p>

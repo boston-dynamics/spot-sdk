@@ -24,9 +24,9 @@ This guide will help you set up your programming environment to successfully com
      * [Get a Spot Robot](#get-a-spot-robot)
      * [Get a user account on the robot](#get-a-user-account-on-the-robot)
      * [Ping Spot](#ping-spot)
-     * [Request Spot's ID from Spot](#request-a-spot-robot-s-id)
-  * [Get a copy of the full SDK distribution from github](#Get-a-copy-of-the-full-sdk-distribution-from-github)
-  * [Run Hello Spot - let's see the robot move!](#run-hello-spot-let-s-see-the-robot-move)
+     * [Request Spot robot's ID](#request-spot-robots-id)
+  * [Get a copy of the full SDK distribution from github](#get-a-copy-of-the-full-sdk-distribution-from-github)
+  * [Run Hello Spot - let's see the robot move!](#run-hello-spot---lets-see-the-robot-move)
      * [Run an Independent E-Stop](#run-an-independent-e-stop)
      * [Run Hello Spot (Take 2)](#run-hello-spot-take-2)
   * [Next Steps](#next-steps)
@@ -164,10 +164,10 @@ $ python3 -m pip install --upgrade bosdyn-client bosdyn-mission bosdyn-choreogra
 Installing the `bosdyn-client`, `bosdyn-choreography-client` and `bosdyn-mission` packages will also
 install `bosdyn-api` and `bosdyn-core` packages with the same version. The command above installs
 the latest version of the packages. To install a different version of the packages from PyPI, for
-example 3.0.1, use the following command.
+example 3.0.2, use the following command.
 
 ```shell
-$ python3 -m pip install bosdyn-client==3.0.1 bosdyn-mission==3.0.1 bosdyn-choreography-client==3.0.1
+$ python3 -m pip install bosdyn-client==3.0.2 bosdyn-mission==3.0.2 bosdyn-choreography-client==3.0.2
 ```
 
 **Version incompatibility:**
@@ -176,7 +176,7 @@ If you see a version incompatibility error during pip install such as:
 
 ```shell
 ERROR: bosdyn-core <VERSION_STRING> has requirement bosdyn-api==<VERSION_STRING>, but you
-have bosdyn-api 3.0.1 which is incompatible.
+have bosdyn-api 3.0.2 which is incompatible.
 ```
 
 Try uninstalling the bosdyn packages (Note: unlike install, you will need to explicitly list all 4 packages) and then reinstalling:
@@ -191,12 +191,12 @@ Make sure that the packages have been installed.
 
 ```shell
 $ python3 -m pip list --format=columns | grep bosdyn
-bosdyn-api                    3.0.1
-bosdyn-choreography-client    3.0.1
-bosdyn-choreography-protos    3.0.1
-bosdyn-client                 3.0.1
-bosdyn-core                   3.0.1
-bosdyn-mission                3.0.1
+bosdyn-api                    3.0.2
+bosdyn-choreography-client    3.0.2
+bosdyn-choreography-protos    3.0.2
+bosdyn-client                 3.0.2
+bosdyn-core                   3.0.2
+bosdyn-mission                3.0.2
 ```
 **Windows users:**
 ```shell
@@ -269,7 +269,7 @@ NOTE: The following examples will assume username "user" and password "password.
 $ ping 192.168.80.3
 ```
 
-### Request a Spot robot's ID
+### Request Spot robot's ID
 
 Issue the following command to get your Spot robot's ID:
 
@@ -297,7 +297,7 @@ The robot is not powered on or is unreachable.  Go back and try to get your ping
 
 ### Get a copy of the full SDK distribution from github
 
-While simply installing the Boston Dynamics Python packages is sufficient to deploy solutions, developers need to download the full Spot SDK distribution to actually develop solutions.  The distribution con contains programming examples, protobuf definitions and API documentation.
+While simply installing the Boston Dynamics Python packages is sufficient to deploy solutions, developers need to download the full Spot SDK distribution to actually develop solutions.  The distribution contains programming examples, protobuf definitions and API documentation.
 
 The Spot Python SDK distribution is available at https://github.com/boston-dynamics/spot-sdk.
 

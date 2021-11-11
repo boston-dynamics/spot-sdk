@@ -25,6 +25,7 @@ class HealthCommands(Subcommands):
             HealthClearBITEventsCommand,
             HealthGetBITStatusCommand,
             HealthGetTemperatureCommand,
+            HealthGetSystemLogCommand,
         ])
 
 
@@ -67,3 +68,18 @@ class HealthGetTemperatureCommand(Command):
         temp = robot.ensure_client(HealthClient.default_service_name).get_temperature()
 
         return temp
+
+
+
+class HealthGetSystemLogCommand(Command):
+    """Get encrypted system log"""
+
+    NAME = 'system_log'
+
+    def __init__(self, subparsers, command_dict):
+        super(HealthGetSystemLogCommand, self).__init__(subparsers, command_dict)
+
+    def _run(self, robot, options):
+        logs = robot.ensure_client(HealthClient.default_service_name).get_system_log()
+
+        return logs

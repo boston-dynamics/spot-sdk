@@ -138,6 +138,9 @@ service HealthService {
     rpc GetBITStatus (GetBITStatusRequest) returns (GetBITStatusResponse);
     //ClearBitEvents clears out the events list of the BITStatus structure.
     rpc ClearBITEvents (ClearBITEventsRequest) returns (ClearBITEventsResponse);
+    //GetSystemLog retrieves an encrypted log of system events, for factory diagnosis of possible issues.
+    //The data streamed back should be concatenated to a single file, before sending to the manufacturer.
+    rpc GetSystemLog (GetSystemLogRequest) returns (stream GetSystemLogResponse);
 }
 
 

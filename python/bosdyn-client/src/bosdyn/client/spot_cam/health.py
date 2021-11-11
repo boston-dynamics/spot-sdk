@@ -62,6 +62,19 @@ class HealthClient(BaseClient):
                                self._get_temperature_from_response,
                                self._health_error_from_response, **kwargs)
 
+    def get_system_log(self, **kwargs):
+        """Retrieve a list of thermometers measuring the temperature (mC) of corresponding on-board devices."""
+        request = health_pb2.GetSystemLogRequest()
+        return self.call(self._stub.GetSystemLog, request, self._get_system_log_from_response,
+                         self._health_error_from_response, **kwargs)
+
+    def get_system_log_async(self, **kwargs):
+        """Async version of get_system_log()."""
+        request = health_pb2.GetSystemLogRequest()
+        return self.call_async(self._stub.GetSystemLog, request,
+                               self._get_system_log_from_response,
+                               self._health_error_from_response, **kwargs)
+
     @staticmethod
     def _clear_bit_events_from_response(response):
         pass
@@ -73,6 +86,19 @@ class HealthClient(BaseClient):
     @staticmethod
     def _get_temperature_from_response(response):
         return response.temps
+
+    @staticmethod
+    def _get_system_log_from_response(responses):
+        total = 0
+
+        local_chunks = []
+        for response in responses:
+            chunk = response.data
+            total += len(chunk.data)
+            _LOGGER.debug('Retrieved {} bytes ({}/{})'.format(len(chunk.data), total,
+                                                              chunk.total_size))
+            local_chunks.append(chunk)
+        return b''.join(chunk.data for chunk in local_chunks)
 
     @staticmethod
     @handle_common_header_errors

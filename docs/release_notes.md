@@ -12,6 +12,22 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 3.0.2
+
+### New Features
+
+Added `GetSystemLog` RPC in SpotCAM Health service to retrieve an encrypted log of system events, for factory diagnosis of possible issues.
+
+### Bug fixes and improvements
+
+Fixed UploadEdgeSnapshot typo in GraphNav client.
+
+Fixed usage of `SE2Trajectory` robot commands in mission service.
+### Known Issues
+
+Same as 3.0.0
+
+
 ## 3.0.1
 
 ### New Features

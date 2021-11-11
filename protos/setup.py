@@ -6,7 +6,7 @@
 
 from __future__ import print_function
 
-import distutils.command.build_py
+import setuptools.command.build_py
 import distutils.cmd
 import os
 import pkg_resources
@@ -21,7 +21,7 @@ except KeyError:
 
 
 
-class BuildPy(distutils.command.build_py.build_py, object):
+class BuildPy(setuptools.command.build_py.build_py, object):
     """Grabs and overwrites the package directory."""
 
     def finalize_options(self):

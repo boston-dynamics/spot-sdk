@@ -18286,6 +18286,37 @@ but nothing's actually wrong.
 
 
 
+<a name="bosdyn.api.spot_cam.GetSystemLogRequest"></a>
+
+### GetSystemLogRequest
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.spot_cam.GetSystemLogResponse"></a>
+
+### GetSystemLogResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) |  |
+| data | [bosdyn.api.DataChunk](#bosdyn.api.DataChunk) |  |
+
+
+
+
+
+
 <a name="bosdyn.api.spot_cam.GetTemperatureRequest"></a>
 
 ### GetTemperatureRequest
@@ -19585,6 +19616,7 @@ Query temperature and built-in test results.
 | GetTemperature | [GetTemperatureRequest](#bosdyn.api.spot_cam.GetTemperatureRequest) | [GetTemperatureResponse](#bosdyn.api.spot_cam.GetTemperatureResponse) | GetTemperature returns a list of thermometers in the system, and the temperature that they measure. |
 | GetBITStatus | [GetBITStatusRequest](#bosdyn.api.spot_cam.GetBITStatusRequest) | [GetBITStatusResponse](#bosdyn.api.spot_cam.GetBITStatusResponse) | GetBitStatus returns two lists; a list of system events, and a list of ways that the system is degraded; for instance, a degredation may include a missing PTZ unit, or a missing USB storage device. |
 | ClearBITEvents | [ClearBITEventsRequest](#bosdyn.api.spot_cam.ClearBITEventsRequest) | [ClearBITEventsResponse](#bosdyn.api.spot_cam.ClearBITEventsResponse) | ClearBitEvents clears out the events list of the BITStatus structure. |
+| GetSystemLog | [GetSystemLogRequest](#bosdyn.api.spot_cam.GetSystemLogRequest) | [GetSystemLogResponse](#bosdyn.api.spot_cam.GetSystemLogResponse) stream | GetSystemLog retrieves an encrypted log of system events, for factory diagnosis of possible issues. The data streamed back should be concatenated to a single file, before sending to the manufacturer. |
 
 
 <a name="bosdyn.api.spot_cam.LightingService"></a>
