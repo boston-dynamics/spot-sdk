@@ -12,7 +12,8 @@ from abc import ABC, abstractmethod
 
 import bosdyn.util
 from bosdyn.util import seconds_to_duration, sec_to_nsec
-from bosdyn.client.fault import FaultClient, ServiceFaultDoesNotExistError
+from bosdyn.client.exceptions import RpcError
+from bosdyn.client.fault import FaultClient, ServiceFaultDoesNotExistError, ServiceFaultAlreadyExistsError
 from bosdyn.client.server_util import populate_response_header
 from bosdyn.client.util import setup_logging
 
@@ -24,6 +25,7 @@ from bosdyn.api import image_service_pb2_grpc
 
 _LOGGER = logging.getLogger(__name__)
 
+CLEAR_FAULT_RPC_TIMEOUT_SECS = 0.1
 
 class CameraInterface(ABC):
     """Abstract class interface for capturing and decoding images from a camera.
@@ -117,6 +119,9 @@ class VisualImageSource():
         self.decode_data_fault = service_fault_pb2.ServiceFault(
             fault_id=decode_data_fault_id, severity=service_fault_pb2.ServiceFault.SEVERITY_WARN)
 
+        # This is the set of active fault id names that can potentially get cleared.
+        self.active_fault_id_names = set()
+
         # Logger for warning messages and the last error message (used only when the background thread
         # is capturing such that error messages from the last capture can be shown still).
         self.logger = logger or _LOGGER
@@ -127,7 +132,7 @@ class VisualImageSource():
         if logger is not None:
             self.logger = logger
 
-    def create_capture_thread(self, capture_period=0):
+    def create_capture_thread(self):
         """Initialize a background thread to continuously capture images.
 
         Args:
@@ -135,8 +140,7 @@ class VisualImageSource():
                                   before triggering the next capture. Defaults to
                                   "no wait" between captures.
         """
-        self.capture_thread = ImageCaptureThread(self.image_source_name, self.capture_function,
-                                                 capture_period)
+        self.capture_thread = ImageCaptureThread(self.image_source_name, self.capture_function)
         self.capture_thread.start_capturing()
 
     def initialize_faults(self, fault_client, image_service):
@@ -157,9 +161,14 @@ class VisualImageSource():
 
         # Attempt to clear any previous faults for the image service.
         if self.fault_client is not None:
-            self.fault_client.clear_service_fault_async(
-                service_fault_pb2.ServiceFaultId(service_name=image_service),
-                clear_all_service_faults=True)
+            try:
+                self.fault_client.clear_service_fault(
+                    service_fault_pb2.ServiceFaultId(service_name=image_service),
+                    clear_all_service_faults=True)
+            except ServiceFaultDoesNotExistError:
+                self.active_fault_id_names.clear()
+            except RpcError as exc:
+                self.logger.error("RPC error in initialize_faults: %s.", exc)
 
     def trigger_fault(self, error_message, fault):
         """Trigger a service fault for a failure to the fault service.
@@ -170,7 +179,12 @@ class VisualImageSource():
         """
         if self.fault_client is not None and fault is not None:
             fault.error_message = error_message
-            self.fault_client.trigger_service_fault_async(fault)
+            try:
+                self.fault_client.trigger_service_fault(fault)
+                self.active_fault_id_names.add(fault.fault_id.fault_name)
+            except ServiceFaultAlreadyExistsError: pass
+            except RpcError as exc:
+                self.logger.error("RPC error in trigger_fault: %s.", exc)
 
     def clear_fault(self, fault):
         """Attempts to clear the camera capture fault from the fault service.
@@ -179,7 +193,15 @@ class VisualImageSource():
             fault (service_fault_pb2.ServiceFault): The fault (which contains an ID) to be cleared.
         """
         if self.fault_client is not None and fault is not None:
-            self.fault_client.clear_service_fault_async(fault.fault_id)
+            try:
+                if fault.fault_id.fault_name in self.active_fault_id_names:
+                    self.fault_client.clear_service_fault(
+                        fault.fault_id, timeout=CLEAR_FAULT_RPC_TIMEOUT_SECS)
+                    self.active_fault_id_names.remove(fault.fault_id.fault_name)
+            except ServiceFaultDoesNotExistError:
+                self.logger.warn("No service fault found to clear.")
+            except RpcError as exc:
+                self.logger.error("RPC error in clear_fault: %s.", exc)
 
     def _maybe_log_error(self, error_message=None, show_last_error=False):
         """Logs the error message if it is new (to prevent spam).
@@ -349,10 +371,10 @@ class ImageCaptureThread():
                                                          data and timestamp.
         capture_period_secs (int): Amount of time (in seconds) between captures to wait
                                    before triggering the next capture. Defaults to
-                                   "no wait" between captures.
+                                   0.05s between captures.
     """
 
-    def __init__(self, image_source_name, capture_func, capture_period_secs=0):
+    def __init__(self, image_source_name, capture_func, capture_period_secs=0.05):
         # Name of the image source that is being requested from.
         self.image_source_name = image_source_name
 

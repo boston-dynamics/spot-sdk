@@ -21,3 +21,4 @@ The following examples demonstrate how to use the mission service and the autono
 * [Mission Question Answerer](../mission_question_answerer/README.md)
 * [Mission Recorder](../mission_recorder/README.md)
 * [Replay Mission](../replay_mission/README.md)
+* [Post Docking Callbacks](../post_docking_callbacks/README.md)

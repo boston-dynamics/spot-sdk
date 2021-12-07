@@ -11,7 +11,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 This example demonstrates how to use the map processing service to align a graph nav map to a blueprint. This assumes that you have a running robot connected to the client.
 
-# Setup Dependencies
+## Setup Dependencies
 
 These examples require the bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:
 
@@ -21,7 +21,7 @@ python3 -m pip install -r requirements.txt
 
 The example also requires matplotlib.  Depending on your system you may need to set up a [backend](https://matplotlib.org/stable/tutorials/introductory/usage.html#what-is-a-backend) for it to display properly.  One possible backend to use is Qt5: `python3 -m pip install pyqt5` and set the environment variable `MPLBACKEND` to `qt5agg`.
 
-# Running the Example
+## Running the Example
 
 Run the example using:
 
@@ -37,9 +37,9 @@ The red lines are the anchoring of the map before optimization (this is the defa
 
 After the example runs, a new map will have been saved to the data folder containing the optimized anchoring associated with the blueprint.
 
-# Understanding the Example Code
+## Understanding the Example Code
 
-## Background on Anchorings and Metric Consistency
+### Background on Anchorings and Metric Consistency
 
 Graph Nav maps are a collection of waypoints and edges. Waypoints define named locations in the world, and edges define how to get from one waypoint to another. Normally, there is no requirement that Graph Nav maps have what is called "metric accuracy," or "metric consistency." That is, there is actually no fixed reference frame that Graph Nav maps can be displayed in.
 
@@ -77,13 +77,13 @@ Graph Nav maps normally become metrically inconsistent due to *odometry drift* a
 
 To solve this problem, Graph Nav provides a concept called *anchorings*. Anchorings are a mapping from waypoint to its pose in a metrically consistent reference frame.  A graph may have many anchorings, for example to a blueprint, BIM model, or point cloud. By providing an anchoring to a graph nav graph, you can more easily display and manipulate Graph Nav maps for your specific application.
 
-## Anchoring Optimization
+### Anchoring Optimization
 
 The *Map Processing Service* can be used to find metrically consistent anchorings using anchoring optimization, and can be used to align Graph Nav maps to other data sources such as blueprints.
 
 In this example, we will show how to use the *Anchoring Optimization Service* to align graph nav maps to a blueprint. Graph Nav maps can be aligned to any data source so long as we have good guesses for where either an April Tag or a specific waypoint is with respect to that data. In this example, we will align an April Tag to a blueprint, and use that as a hint for anchoring optimization -- but you could also align individual waypoints to a blueprint, or use another data source such as a digital twin or BIM model.
 
-### Step 1: setting up a connection to the robot
+#### Step 1: setting up a connection to the robot
 
 The Map Processing Service runs on the robot. Therefore, we will need a connection to the robot, and a lease.
 
@@ -107,7 +107,7 @@ The Map Processing Service runs on the robot. Therefore, we will need a connecti
 
 ```
 
-### Step 2: loading and uploading a graph_nav graph and data
+#### Step 2: loading and uploading a graph_nav graph and data
 
 The map processing service requires us to upload a graph nav graph and associated snapshot data. The service uses these data to create a metrically consistent anchoring. Maps are stored in the graph nav service, which requires a graph nav client connection. Once inside the graph nav service, maps are accessible to the map processing service.
 
@@ -119,7 +119,7 @@ The map processing service requires us to upload a graph nav graph and associate
 
 ```
 
-### Step 3: Defining the optimization problem
+#### Step 3: Defining the optimization problem
 
 Now that we have a connection to the robot and have loaded the graph and snapshots, we can tell the map processing service to optimize the graph's anchoring.
 
@@ -175,7 +175,7 @@ By convention, we will assume that the origin of the anchoring is the bottom lef
 
 We pass this in as an initial hint to the anchoring optimizer, which it will use to align our map to the blueprint (and to ensure that it is metrically consistent).
 
-## Running the optimization and interpreting the results
+### Running the optimization and interpreting the results
 We can now send a ProcessAnchoringRequest to the Map Processing Service with our initial guess, and get a result back.
 ```python
     return client.process_anchoring(params=map_processing_pb2.ProcessAnchoringRequest.Params(
@@ -209,7 +209,7 @@ The image in `data/optimized_anchoring.png` shows the anchoring before optimizat
 
 Note that in the optimized anchoring, the apparent path of the robot is from the upper left bedroom into the living room on the lower right, and then back.
 
-## Other ways of viewing anchorings
+### Other ways of viewing anchorings
 
 The `view_map.py` example now takes in an argument `-a`, which can be used to draw a map in its anchoring frame. We can also draw the newly optimized map in the anchoring frame after saving it by calling from this directory:
 

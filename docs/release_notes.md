@@ -12,6 +12,18 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 3.0.3
+
+### Bug fixes and improvements
+
+Reduced RPC calls to the Fault service in `image_service_helpers.py`.
+
+Example documentation cleanup and improvements.
+
+### Known Issues
+
+Same as 3.0.0
+
 ## 3.0.2
 
 ### New Features

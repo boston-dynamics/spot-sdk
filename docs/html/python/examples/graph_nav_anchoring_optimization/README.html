@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Graph Nav Anchoring Optimization Example &mdash; Spot 3.0.2 documentation</title>
+  <title>Graph Nav Anchoring Optimization Example &mdash; Spot 3.0.3 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.0.2
+                3.0.3
               </div>
             
           
@@ -221,8 +221,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_cam/README.html">Spot CAM</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../stitch_front_images/README.html">Stitch Front Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../stitch_front_images/README.html">Stitch front images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -235,7 +235,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../data_buffer/README.html">Data Buffer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../data_service/README.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../logging/README.html">Logging</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../bddf_download/README.html">BDDF Download</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../docs/data_acquisition_examples.html">Data Acquisition Examples</a><ul>
@@ -244,16 +243,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../get_image/README.html">Test Image Service Implementation with Get Image</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cloud_upload/README.html">Cloud Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../tester_programs/README.html">Tester Programs</a></li>
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="../docs/autonomy_and_missions_examples.html">Autonomy and Missions Examples</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Graph Nav Anchoring Optimization Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#setup-dependencies">Setup Dependencies</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#running-the-example">Running the Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#understanding-the-example-code">Understanding the Example Code</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Graph Nav Anchoring Optimization</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../graph_nav_command_line/README.html">Graph Nav Command Line</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../graph_nav_view_map/README.html">Graph Nav View Map</a></li>
@@ -262,6 +258,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../mission_question_answerer/README.html">Mission Question Answerer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../replay_mission/README.html">Replay Mission</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 </ul>
 </li>
 </ul>
@@ -603,9 +600,8 @@ Development Kit License (20191101-BDSDK-SL).
 --><section id="graph-nav-anchoring-optimization-example">
 <h1>Graph Nav Anchoring Optimization Example<a class="headerlink" href="#graph-nav-anchoring-optimization-example" title="Permalink to this headline">¶</a></h1>
 <p>This example demonstrates how to use the map processing service to align a graph nav map to a blueprint. This assumes that you have a running robot connected to the client.</p>
-</section>
 <section id="setup-dependencies">
-<h1>Setup Dependencies<a class="headerlink" href="#setup-dependencies" title="Permalink to this headline">¶</a></h1>
+<h2>Setup Dependencies<a class="headerlink" href="#setup-dependencies" title="Permalink to this headline">¶</a></h2>
 <p>These examples require the bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
@@ -613,7 +609,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The example also requires matplotlib.  Depending on your system you may need to set up a <a class="reference external" href="https://matplotlib.org/stable/tutorials/introductory/usage.html#what-is-a-backend">backend</a> for it to display properly.  One possible backend to use is Qt5: <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pyqt5</span></code> and set the environment variable <code class="docutils literal notranslate"><span class="pre">MPLBACKEND</span></code> to <code class="docutils literal notranslate"><span class="pre">qt5agg</span></code>.</p>
 </section>
 <section id="running-the-example">
-<h1>Running the Example<a class="headerlink" href="#running-the-example" title="Permalink to this headline">¶</a></h1>
+<h2>Running the Example<a class="headerlink" href="#running-the-example" title="Permalink to this headline">¶</a></h2>
 <p>Run the example using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">graph_nav_anchoring_optimization</span> <span class="o">--</span><span class="n">username</span> <span class="n">USER</span> <span class="o">--</span><span class="n">password</span> <span class="n">PASSWORD</span> <span class="n">ROBOT_IP</span>
 </pre></div>
@@ -624,9 +620,9 @@ Development Kit License (20191101-BDSDK-SL).
 <p>After the example runs, a new map will have been saved to the data folder containing the optimized anchoring associated with the blueprint.</p>
 </section>
 <section id="understanding-the-example-code">
-<h1>Understanding the Example Code<a class="headerlink" href="#understanding-the-example-code" title="Permalink to this headline">¶</a></h1>
+<h2>Understanding the Example Code<a class="headerlink" href="#understanding-the-example-code" title="Permalink to this headline">¶</a></h2>
 <section id="background-on-anchorings-and-metric-consistency">
-<h2>Background on Anchorings and Metric Consistency<a class="headerlink" href="#background-on-anchorings-and-metric-consistency" title="Permalink to this headline">¶</a></h2>
+<h3>Background on Anchorings and Metric Consistency<a class="headerlink" href="#background-on-anchorings-and-metric-consistency" title="Permalink to this headline">¶</a></h3>
 <p>Graph Nav maps are a collection of waypoints and edges. Waypoints define named locations in the world, and edges define how to get from one waypoint to another. Normally, there is no requirement that Graph Nav maps have what is called “metric accuracy,” or “metric consistency.” That is, there is actually no fixed reference frame that Graph Nav maps can be displayed in.</p>
 <p>For example, let’s suppose we have three waypoints w1 and w2, and w3 connected by the edges (w1, w2), (w2, w3) and (w1, w3). Topologically, this is a triangle:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">w1</span> <span class="o">-</span> <span class="n">w2</span>
@@ -652,11 +648,11 @@ Development Kit License (20191101-BDSDK-SL).
 <p>To solve this problem, Graph Nav provides a concept called <em>anchorings</em>. Anchorings are a mapping from waypoint to its pose in a metrically consistent reference frame.  A graph may have many anchorings, for example to a blueprint, BIM model, or point cloud. By providing an anchoring to a graph nav graph, you can more easily display and manipulate Graph Nav maps for your specific application.</p>
 </section>
 <section id="anchoring-optimization">
-<h2>Anchoring Optimization<a class="headerlink" href="#anchoring-optimization" title="Permalink to this headline">¶</a></h2>
+<h3>Anchoring Optimization<a class="headerlink" href="#anchoring-optimization" title="Permalink to this headline">¶</a></h3>
 <p>The <em>Map Processing Service</em> can be used to find metrically consistent anchorings using anchoring optimization, and can be used to align Graph Nav maps to other data sources such as blueprints.</p>
 <p>In this example, we will show how to use the <em>Anchoring Optimization Service</em> to align graph nav maps to a blueprint. Graph Nav maps can be aligned to any data source so long as we have good guesses for where either an April Tag or a specific waypoint is with respect to that data. In this example, we will align an April Tag to a blueprint, and use that as a hint for anchoring optimization – but you could also align individual waypoints to a blueprint, or use another data source such as a digital twin or BIM model.</p>
 <section id="step-1-setting-up-a-connection-to-the-robot">
-<h3>Step 1: setting up a connection to the robot<a class="headerlink" href="#step-1-setting-up-a-connection-to-the-robot" title="Permalink to this headline">¶</a></h3>
+<h4>Step 1: setting up a connection to the robot<a class="headerlink" href="#step-1-setting-up-a-connection-to-the-robot" title="Permalink to this headline">¶</a></h4>
 <p>The Map Processing Service runs on the robot. Therefore, we will need a connection to the robot, and a lease.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="c1"># Setup and authenticate the robot.</span>
     <span class="n">sdk</span> <span class="o">=</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">create_standard_sdk</span><span class="p">(</span><span class="s1">&#39;Anchoring Optimization Example&#39;</span><span class="p">)</span>
@@ -677,7 +673,7 @@ Development Kit License (20191101-BDSDK-SL).
 </div>
 </section>
 <section id="step-2-loading-and-uploading-a-graph-nav-graph-and-data">
-<h3>Step 2: loading and uploading a graph_nav graph and data<a class="headerlink" href="#step-2-loading-and-uploading-a-graph-nav-graph-and-data" title="Permalink to this headline">¶</a></h3>
+<h4>Step 2: loading and uploading a graph_nav graph and data<a class="headerlink" href="#step-2-loading-and-uploading-a-graph-nav-graph-and-data" title="Permalink to this headline">¶</a></h4>
 <p>The map processing service requires us to upload a graph nav graph and associated snapshot data. The service uses these data to create a metrically consistent anchoring. Maps are stored in the graph nav service, which requires a graph nav client connection. Once inside the graph nav service, maps are accessible to the map processing service.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="c1"># Load the graph from the disk and upload it to the robot.</span>
     <span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">waypoint_snapshots</span><span class="p">,</span> <span class="n">edge_snapshots</span><span class="p">)</span> <span class="o">=</span> <span class="n">load_graph_and_snapshots</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">input_map</span><span class="p">)</span>
@@ -686,7 +682,7 @@ Development Kit License (20191101-BDSDK-SL).
 </div>
 </section>
 <section id="step-3-defining-the-optimization-problem">
-<h3>Step 3: Defining the optimization problem<a class="headerlink" href="#step-3-defining-the-optimization-problem" title="Permalink to this headline">¶</a></h3>
+<h4>Step 3: Defining the optimization problem<a class="headerlink" href="#step-3-defining-the-optimization-problem" title="Permalink to this headline">¶</a></h4>
 <p>Now that we have a connection to the robot and have loaded the graph and snapshots, we can tell the map processing service to optimize the graph’s anchoring.</p>
 <p>We can provide <em>parameters</em> for the optimizer and <em>hints</em>. Parameters control how many iterations the optimizer will run, and what data sources it will use for optimization. If no parameters are provided, the optimizer will use reasonable defaults. Hints tell the optimizer information about the anchoring – for example where a particular April Tag is, or a particular waypoint. If we provide no hints at all, the Map Processing Service will choose an arbitrary waypoint to be the origin.</p>
 <p>In this case, we will provide a single hint to the service – the location of a fiducial (April Tag).</p>
@@ -736,7 +732,7 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 </section>
 <section id="running-the-optimization-and-interpreting-the-results">
-<h2>Running the optimization and interpreting the results<a class="headerlink" href="#running-the-optimization-and-interpreting-the-results" title="Permalink to this headline">¶</a></h2>
+<h3>Running the optimization and interpreting the results<a class="headerlink" href="#running-the-optimization-and-interpreting-the-results" title="Permalink to this headline">¶</a></h3>
 <p>We can now send a ProcessAnchoringRequest to the Map Processing Service with our initial guess, and get a result back.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">process_anchoring</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">map_processing_pb2</span><span class="o">.</span><span class="n">ProcessAnchoringRequest</span><span class="o">.</span><span class="n">Params</span><span class="p">(</span>
                                         <span class="n">optimize_existing_anchoring</span><span class="o">=</span><span class="n">BoolValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -763,12 +759,13 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Note that in the optimized anchoring, the apparent path of the robot is from the upper left bedroom into the living room on the lower right, and then back.</p>
 </section>
 <section id="other-ways-of-viewing-anchorings">
-<h2>Other ways of viewing anchorings<a class="headerlink" href="#other-ways-of-viewing-anchorings" title="Permalink to this headline">¶</a></h2>
+<h3>Other ways of viewing anchorings<a class="headerlink" href="#other-ways-of-viewing-anchorings" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">view_map.py</span></code> example now takes in an argument <code class="docutils literal notranslate"><span class="pre">-a</span></code>, which can be used to draw a map in its anchoring frame. We can also draw the newly optimized map in the anchoring frame after saving it by calling from this directory:</p>
 <p><code class="docutils literal notranslate"><span class="pre">view_map</span> <span class="pre">-a</span> <span class="pre">./data/blueprint_example_optimized.walk</span></code></p>
 <p>An example can be seen in the image stored in this example: <code class="docutils literal notranslate"><span class="pre">data/optimized_anchoring_viewer.png</span></code>, where we can see the point clouds of the map drawn in the anchoring frame.</p>
 <p>When <code class="docutils literal notranslate"><span class="pre">-a</span></code> is not passed as an argument, the map is shown by chaining edges together starting from an arbitrary origin. As discussed in the first section, this results in an inconsistent drawing.</p>
 <p>The difference is subtle – in the unoptimized map, we can see that there is significant height drift between the robot’s initial path from the upper left bedroom to the living room and back. This is made most apparent by looking at fiducial 319, which appears in multiple places (with different heights) depending on which waypoint is observing it. In the optimized anchoring, this drift is totally corrected.</p>
+</section>
 </section>
 </section>
 

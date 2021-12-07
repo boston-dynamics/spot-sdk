@@ -12,7 +12,7 @@ import threading
 
 from bosdyn.api import service_fault_pb2
 from bosdyn.api import image_pb2, header_pb2
-from bosdyn.client.fault import FaultClient
+from bosdyn.client.fault import FaultClient, ServiceFaultDoesNotExistError
 from bosdyn.client.image_service_helpers import (VisualImageSource, ImageCaptureThread,
                                                  CameraBaseImageServicer, CameraInterface)
 from google.protobuf import timestamp_pb2
@@ -22,8 +22,9 @@ class MockFaultClient:
 
     def __init__(self):
         self.service_fault_counts = dict()  # key=fault id name, value = count
+        self.clear_service_fault_called_count = 0
 
-    def trigger_service_fault_async(self, service_fault, **kwargs):
+    def trigger_service_fault(self, service_fault, **kwargs):
         fault = service_fault.fault_id.fault_name
         if fault in self.service_fault_counts:
             self.service_fault_counts[fault] += 1
@@ -31,7 +32,7 @@ class MockFaultClient:
             self.service_fault_counts[fault] = 1
         return service_fault_pb2.TriggerServiceFaultResponse()
 
-    def clear_service_fault_async(self, service_fault_id, clear_all_service_faults=False,
+    def clear_service_fault(self, service_fault_id, clear_all_service_faults=False,
                                   clear_all_payload_faults=False, **kwargs):
         # This function makes the assumption that every fault in this mock fault client's dictionary
         # has the same service_name in the fault id.
@@ -39,6 +40,7 @@ class MockFaultClient:
             self.service_fault_counts = dict()
         elif service_fault_id.fault_name is not None:
             self.service_fault_counts[service_fault_id.fault_name] = 0
+        self.clear_service_fault_called_count += 1
         return service_fault_pb2.ClearServiceFaultResponse()
 
     def get_total_fault_count(self):
@@ -128,7 +130,7 @@ def test_faults_in_visual_source():
     fault_client = MockFaultClient()
 
     # Populate fault client with at least one "old" fault.
-    fault_client.trigger_service_fault_async(
+    fault_client.trigger_service_fault(
         service_fault_pb2.ServiceFault(fault_id=service_fault_pb2.ServiceFaultId(
             fault_name="fault1")))
     init_fault_amount = fault_client.get_total_fault_count()
@@ -167,6 +169,50 @@ def test_faults_in_visual_source():
     assert fault_client.service_fault_counts[visual_src.decode_data_fault.fault_id.fault_name] == 1
     assert not success
 
+def test_clear_not_active_faults():
+    # Check that clearing faults works with non active faults.
+
+    class MockFaultClientFaultNotActive:
+        def clear_service_fault(self, service_fault_id, clear_all_service_faults=False,
+                                clear_all_payload_faults=False, **kwargs):
+            raise ServiceFaultDoesNotExistError(None, "error")
+
+    visual_src = VisualImageSource("source1", FakeCamera(capture_with_error, decode_with_error))
+    fault_client = MockFaultClientFaultNotActive()
+    visual_src.initialize_faults(fault_client, "service1")
+    assert len(visual_src.active_fault_id_names) == 0
+
+def test_active_faults():
+    # Check that active faults are managed correctly.
+
+    visual_src = VisualImageSource("source1", FakeCamera(capture_with_error, decode_with_error))
+    fault_client = MockFaultClient()
+    visual_src.initialize_faults(fault_client, "service1")
+    # Initialize function calls the clear_service_fault RPC.
+    assert fault_client.clear_service_fault_called_count == 1
+    assert len(visual_src.active_fault_id_names) == 0
+
+    fake_fault_id = service_fault_pb2.ServiceFaultId(fault_name="Fake Capture Failure")
+    fake_fault = service_fault_pb2.ServiceFault(
+        fault_id=fake_fault_id, severity=service_fault_pb2.ServiceFault.SEVERITY_WARN)
+
+    # Make sure we don't call clear_service_fault RPC because the fake fault is not active yet.
+    visual_src.clear_fault(fake_fault)
+    assert len(visual_src.active_fault_id_names) == 0
+    assert fault_client.clear_service_fault_called_count == 1
+
+    # Make the fake fault active.
+    visual_src.trigger_fault("error", fake_fault)
+    assert len(visual_src.active_fault_id_names) == 1
+    assert fault_client.service_fault_counts[fake_fault.fault_id.fault_name] == 1
+
+    # Clear the fake fault, but make sure RPC is only called once.
+    visual_src.clear_fault(fake_fault)
+    assert fault_client.clear_service_fault_called_count == 2
+    visual_src.clear_fault(fake_fault)
+    # Make sure clear_service_fault is not called for a cleared fault.
+    assert fault_client.clear_service_fault_called_count == 2
+    assert len(visual_src.active_fault_id_names) == 0
 
 def test_faults_are_cleared_on_success():
     # Check that captures/decodes that fail and then later succeed will cause the faults to get cleared.
