@@ -600,12 +600,12 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="synchronizedcommand">
 <h2>SynchronizedCommand<a class="headerlink" href="#synchronizedcommand" title="Permalink to this headline">¶</a></h2>
 <p>Arm and gripper commands have been incorporated into the SynchronizedCommand message.  This top level request allows you to specify any combination of mobility, arm, and gripper command.  By packing the individual commands into a single message, we guarantee that all commands arrive to the robot at the same time.  For robots without arms, any arm_command or gripper_command will be ignored.</p>
-<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="kd">message</span> <span class="nc">SynchronizedCommand</span> <span class="p">{</span>
-    <span class="kd">message</span> <span class="nc">Request</span> <span class="p">{</span>
-        <span class="n">ArmCommand.Request</span> <span class="na">arm_command</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-        <span class="n">MobilityCommand.Request</span> <span class="na">mobility_command</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-        <span class="n">GripperCommand.Request</span> <span class="na">gripper_command</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
-    <span class="p">}</span>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="kd">message</span><span class="w"> </span><span class="nc">SynchronizedCommand</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">message</span><span class="w"> </span><span class="nc">Request</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ArmCommand.Request</span><span class="w"> </span><span class="na">arm_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="n">MobilityCommand.Request</span><span class="w"> </span><span class="na">mobility_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">        </span><span class="n">GripperCommand.Request</span><span class="w"> </span><span class="na">gripper_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -626,20 +626,20 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="requests">
 <h3>Requests<a class="headerlink" href="#requests" title="Permalink to this headline">¶</a></h3>
 <p>If you send a <code class="docutils literal notranslate"><span class="pre">SynchronizedCommand</span></code> with only a subset of the messages filled out, only those commands will be overwritten.  For example, consider the following pseudo-code:</p>
-<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="n">Time</span> <span class="na">t</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="kd">message</span> <span class="nc">SynchronizedCommand</span> <span class="p">{</span>
-   <span class="kd">message</span> <span class="nc">Request</span> <span class="p">{</span>
-      <span class="n">ArmCommand.Request</span> <span class="na">arm_command</span> <span class="o">=</span> <span class="n">stow</span><span class="p">;</span>
-      <span class="n">MobilityCommand.Request</span> <span class="na">mobility_command</span> <span class="o">=</span> <span class="n">stand</span><span class="p">;</span>
-      <span class="n">GripperCommand.Request</span> <span class="na">gripper_command</span> <span class="o">=</span> <span class="n">close</span><span class="p">;</span>
-   <span class="p">}</span>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="n">Time</span><span class="w"> </span><span class="na">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="kd">message</span><span class="w"> </span><span class="nc">SynchronizedCommand</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="kd">message</span><span class="w"> </span><span class="nc">Request</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">ArmCommand.Request</span><span class="w"> </span><span class="na">arm_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stow</span><span class="p">;</span>
+<span class="w">      </span><span class="n">MobilityCommand.Request</span><span class="w"> </span><span class="na">mobility_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stand</span><span class="p">;</span>
+<span class="w">      </span><span class="n">GripperCommand.Request</span><span class="w"> </span><span class="na">gripper_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">close</span><span class="p">;</span>
+<span class="w">   </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="n">Time</span> <span class="na">t</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="kd">message</span> <span class="nc">SynchronizedCommand</span> <span class="p">{</span>
-   <span class="kd">message</span> <span class="nc">Request</span> <span class="p">{</span>
-      <span class="n">MobilityCommand.Request</span> <span class="na">mobility_command</span> <span class="o">=</span> <span class="n">se2_trajectory_request</span><span class="p">;</span>
-   <span class="p">}</span>
+<span class="n">Time</span><span class="w"> </span><span class="na">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="kd">message</span><span class="w"> </span><span class="nc">SynchronizedCommand</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="kd">message</span><span class="w"> </span><span class="nc">Request</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">MobilityCommand.Request</span><span class="w"> </span><span class="na">mobility_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">se2_trajectory_request</span><span class="p">;</span>
+<span class="w">   </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -659,9 +659,9 @@ Development Kit License (20191101-BDSDK-SL).
 <p>When specifying a pose for the hand to move to, the user is able to specify 2 frames, and then a transform between those 2 frames. This fully defines the position and orientation the robot will move its hand to.</p>
 <p>The first frame is the “root” frame, which is the frame that the hand moves with respect to. Common choices for this frame are the “odom”, “vision” and “flat_body” frames. The second frame is a “tool” frame. If trying to grasp something or just move the arm around, this can often be left unset, and this will default to the <a class="reference external" href="#hand-frame">hand frame</a>. However, if a pointing device or sensor is attached to the end effector of the arm, setting the tool frame to be a transform to the point of interest can allow the user to directly move the sensor to a desired pose.</p>
 <p>As an example, if we wanted to have the robot touch the center of a fiducial with a 0.5m stick it is holding, we would set the following transforms:</p>
-<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="n">root_frame_name</span><span class="o">:</span> <span class="n">fiducial_001</span>
-<span class="n">wrist_tform_tool</span><span class="o">:</span> <span class="p">{</span><span class="n">position</span><span class="o">:</span> <span class="p">{</span><span class="n">x</span><span class="o">:</span> <span class="mf">0.5</span> <span class="n">y</span><span class="o">:</span> <span class="mi">0</span> <span class="n">z</span><span class="o">:</span> <span class="mi">0</span><span class="p">}</span> <span class="n">rotation</span><span class="o">:</span> <span class="p">{</span><span class="n">w</span><span class="o">:</span> <span class="o">-</span><span class="mf">0.7071</span> <span class="n">x</span><span class="o">:</span> <span class="mi">0</span> <span class="n">y</span><span class="o">:</span> <span class="mf">0.7071</span> <span class="n">z</span><span class="o">:</span> <span class="mi">0</span><span class="p">}}</span>
-<span class="n">root_tform_task</span><span class="o">:</span> <span class="p">{</span><span class="n">position</span><span class="o">:</span> <span class="p">{</span><span class="n">x</span><span class="o">:</span> <span class="mi">0</span> <span class="n">y</span><span class="o">:</span> <span class="mi">0</span> <span class="n">z</span><span class="o">:</span> <span class="mi">0</span><span class="p">}</span> <span class="n">rotation</span><span class="o">:</span> <span class="p">{</span><span class="n">w</span><span class="o">:</span> <span class="mi">1</span> <span class="n">x</span><span class="o">:</span> <span class="mi">0</span> <span class="n">y</span><span class="o">:</span> <span class="mi">0</span> <span class="n">z</span><span class="o">:</span> <span class="mi">0</span><span class="p">}}</span>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="n">root_frame_name</span><span class="o">:</span><span class="w"> </span><span class="n">fiducial_001</span>
+<span class="n">wrist_tform_tool</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="n">position</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="mf">0.5</span><span class="w"> </span><span class="n">y</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">z</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}</span><span class="w"> </span><span class="n">rotation</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="n">w</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">0.7071</span><span class="w"> </span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">y</span><span class="o">:</span><span class="w"> </span><span class="mf">0.7071</span><span class="w"> </span><span class="n">z</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}}</span>
+<span class="n">root_tform_task</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="n">position</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">y</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">z</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}</span><span class="w"> </span><span class="n">rotation</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="n">w</span><span class="o">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">y</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">z</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}}</span>
 </pre></div>
 </div>
 <p>Note that users can also send sequences of poses with times, specify max velocity and acceleration, and add other options as well. See arm_command.proto for more details</p>
@@ -754,7 +754,7 @@ The rotation between the hand frame and the wrist is the identity matrix. When s
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2021 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2022 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 
