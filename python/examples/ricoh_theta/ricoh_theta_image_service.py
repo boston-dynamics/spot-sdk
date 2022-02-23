@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -12,6 +12,7 @@ from datetime import datetime
 import io
 import sys
 import json
+import numpy as np
 from PIL import Image
 import time
 
@@ -22,7 +23,8 @@ from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
 from bosdyn.client.util import setup_logging
 from bosdyn.client.server_util import GrpcServiceRunner
 from bosdyn.client.fault import FaultClient
-from bosdyn.client.image_service_helpers import VisualImageSource, CameraBaseImageServicer, CameraInterface
+from bosdyn.client.image_service_helpers import (VisualImageSource, CameraBaseImageServicer,
+                                                 CameraInterface, convert_RGB_to_grayscale)
 
 from bosdyn.api import image_pb2
 from bosdyn.api import image_service_pb2_grpc
@@ -194,33 +196,51 @@ class RicohThetaServiceHelper(CameraInterface):
         # only be performed one time unless it is converted to a stream or copied.
         return buffer_bytes.read(), capture_time_secs
 
-    def image_decode(self, image_data, image_proto, image_format, quality_percent):
-        # Ricoh Theta takes colored JPEG images, so it's pixel type is RGB.
-        image_proto.pixel_format = image_pb2.Image.PIXEL_FORMAT_RGB_U8
+    def image_decode(self, image_data, image_proto, image_req):
+        pixel_format = image_req.pixel_format
+        image_format = image_req.image_format
+
+        converted_image_data = Image.open(io.BytesIO(image_data))
+        if pixel_format == image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8:
+            converted_image_data_np = convert_RGB_to_grayscale(np.asarray(converted_image_data))
+            # Convert back to Pillow.
+            converted_image_data = Image.fromarray(np.uint8(converted_image_data_np))
+            image_proto.pixel_format = pixel_format
+        else:
+            image_proto.pixel_format = image_pb2.Image.PIXEL_FORMAT_RGB_U8
 
         # Note, we are currently not setting any information for the transform snapshot or the frame
         # name for an image sensor since this information can't be determined with HTTP calls to ricoh
         # theta's api.
+
+        resize_ratio = image_req.resize_ratio
+        quality_percent = image_req.quality_percent
+
+        compressed_byte_buffer = io.BytesIO()
+        if resize_ratio < 0 or resize_ratio > 1:
+            raise ValueError("Resize ratio %s is out of bounds." % resize_ratio)
+        if resize_ratio != 1.0 and resize_ratio != 0:
+            new_width = int(converted_image_data.size[0])
+            new_height = int(converted_image_data.size[1])
+            converted_image_data = converted_image_data.resize((new_width, new_height), Image.ANTIALIAS)
+            image_proto.cols = new_width
+            image_proto.rows = new_height
 
         # Set the image data.
         if image_format == image_pb2.Image.FORMAT_RAW:
             # Note, the returned raw bytes array from the Ricoh Theta camera is often around 8MB, so the GRPC server
             # must be setup to have an increased message size limit. The run_ricoh_image_service script does increase
             # the size to allow for the larger raw images.
-            pil_image = Image.open(io.BytesIO(image_data))
-            compressed_byte_buffer = io.BytesIO()
             # PIL will not do any JPEG compression if the quality is specified as 100. It effectively treats
             # requests with quality > 95 as a request for a raw image.
-            pil_image.save(compressed_byte_buffer, format=pil_image.format, quality=100)
+            converted_image_data.save(compressed_byte_buffer, format=converted_image_data.format, quality=100)
             image_proto.data = compressed_byte_buffer.getvalue()
             image_proto.format = image_pb2.Image.FORMAT_RAW
-        elif image_format == image_pb2.Image.FORMAT_JPEG or image_format is None:
+        elif image_format == image_pb2.Image.FORMAT_JPEG or image_format == image_pb2.Image.FORMAT_UNKNOWN or image_format is None:
             # Choose the best image format if the request does not specify the image format, which is JPEG since
             # it matches the output of the ricoh theta camera and is compact enough to transmit.
             # Decode the bytes into a PIL jpeg image. This allows for the formatting to be compressed. This is then
             # converted back into a bytes array.
-            pil_image = Image.open(io.BytesIO(image_data))
-            compressed_byte_buffer = io.BytesIO()
             checked_quality = self.default_jpeg_quality
             if quality_percent > 0 and quality_percent <= 100:
                 # A valid image quality percentage was passed with the image request,
@@ -231,8 +251,8 @@ class RicohThetaServiceHelper(CameraInterface):
                     checked_quality = 95
                 else:
                     checked_quality = quality_percent
-            pil_image.save(compressed_byte_buffer, format=pil_image.format,
-                           quality=int(checked_quality))
+            converted_image_data.save(compressed_byte_buffer, "JPEG",
+                                      quality=int(checked_quality))
             image_proto.data = compressed_byte_buffer.getvalue()
             # Set the format as JPEG because the incoming requested format could've initially been None/unknown
             # in this case.
@@ -276,7 +296,9 @@ def make_ricoh_theta_image_service(theta_ssid, theta_password, theta_client, rob
                                            use_background_capture_thread)
     img_src = VisualImageSource(ricoh_helper.image_source_name, ricoh_helper, ricoh_helper.rows,
                                 ricoh_helper.cols, ricoh_helper.camera_gain,
-                                ricoh_helper.camera_exposure, logger)
+                                ricoh_helper.camera_exposure,
+                                [image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8, image_pb2.Image.PIXEL_FORMAT_RGB_U8],
+                                logger)
     return True, CameraBaseImageServicer(robot, DIRECTORY_NAME, [img_src], logger,
                                          use_background_capture_thread)
 
@@ -335,8 +357,8 @@ if __name__ == '__main__':
     # Create and authenticate a bosdyn robot object.
     sdk = bosdyn.client.create_standard_sdk("RicohThetaImageServiceSDK")
     robot = sdk.create_robot(options.hostname)
-    PLACEHOLDER_PAYLOAD.GUID = options.guid
-    robot.register_payload_and_authenticate(PLACEHOLDER_PAYLOAD, options.secret)
+    PLACEHOLDER_PAYLOAD.GUID, secret = bosdyn.client.util.get_guid_and_secret(options)
+    robot.register_payload_and_authenticate(PLACEHOLDER_PAYLOAD, secret)
 
     # Create a service runner to start and maintain the service on background thread. This helper function
     # also returns the servicer associated with the service runner, such that the initialize_camera function

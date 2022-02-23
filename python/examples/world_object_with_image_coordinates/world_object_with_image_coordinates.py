@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -22,13 +22,13 @@ from bosdyn.util import now_timestamp
 def main(argv):
     """An example using the API demonstrating adding image coordinates to the world object service."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     options = parser.parse_args(argv)
 
     # Create robot object with a world object client.
     sdk = bosdyn.client.create_standard_sdk('WorldObjectClient')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     # Time sync is necessary so that time-based filter requests can be converted.
     robot.time_sync.wait_for_sync()
 
@@ -44,8 +44,8 @@ def main(argv):
     timestamp = now_timestamp()
 
     # Create the image coordinate object. This type of object does not require a base frame for the world object.
-    # Since we are not providing a transform to the object expressed by the image coordinates, than it is not necessary
-    # to set the frame_name_image_properties, as this describes the frame used in a transform (such as world_tform_image_coords)
+    # Since we are not providing a transform to the object expressed by the image coordinates, it is not necessary
+    # to set the frame_name_image_properties, as this describes the frame used in a transform (such as world_tform_image_coords).
     img_coord = wo.ImageProperties(camera_source="back",
                                    coordinates=geom.Polygon(vertexes=[geom.Vec2(x=100, y=100)]))
     wo_obj = wo.WorldObject(id=2, name="img_coord_tester", acquisition_time=timestamp,

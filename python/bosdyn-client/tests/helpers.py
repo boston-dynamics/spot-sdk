@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -14,7 +14,7 @@ import bosdyn.api.header_pb2 as HeaderProto
 def setup_client_and_service(client, service, service_adder):
     """Starts a service listening on a port and points client to it.
 
-    The service should have already been instantiated. It will be 
+    The service should have already been instantiated. It will be
     attached to a server listening on an ephemeral port and started.
 
     The client will have a networking channel which points to that service.
@@ -59,7 +59,10 @@ def make_async(fn):
 
     def output_fn(*args, **kwargs):
         future = concurrent.futures.Future()
-        future.set_result(fn())
+        try:
+            future.set_result(fn(*args, **kwargs))
+        except Exception as exc:
+            future.set_exception(exc)
         return future
 
     return output_fn

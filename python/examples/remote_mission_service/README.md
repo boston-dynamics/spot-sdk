@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -64,19 +64,19 @@ The server will print out "Hello Spot!" instead of "Hello World!"
 
 There is another example servicer that will power the robot down safely. To run this example, you will need a connection between a robot and the computer running the examples.
 ```
-python3 power_off_mission_service.py ROBOT_IP --port {PORT} --host-ip {ENDPOINT_IP}  --username {USER} --password {PASSWORD}
+python3 power_off_mission_service.py ROBOT_IP --port {PORT} --host-ip {ENDPOINT_IP}
 ```
 A port number for the service can be specified using the --port argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a services listening port. This port number will be used with the host-ip ("ENDPOINT_IP") to fully specify where the service is running. The port must be open and cannot be blocked by a local firewall. If the port is blocked, the service will be unreachable from the robot and the directory registration service.
 
 This example takes two different IP addresses as arguments. The `--host-ip` argument describes the IP address for the computer that will be running the service. A helper exists to try to determine the correct IP address. This command must be run on the same computer that will be running the remote mission service:
 ```
-python3 -m bosdyn.client --username {USER} --password {PASSWORD} {ROBOT_IP} self-ip
+python3 -m bosdyn.client {ROBOT_IP} self-ip
 ```
 The other IP address is the traditional robot hostname ("ROBOT_IP") argument, which describes the IP address of the robot hosting the directory service.
 
 Now if you run the example client with:
 ```
-python3 remote_mission_client.py --power-off robot ROBOT_IP --username {USER} --password {PASSWORD}
+python3 remote_mission_client.py --power-off robot ROBOT_IP
 ```
 
 The robot should shut down and you will see this output from the client:
@@ -100,9 +100,9 @@ The mission service examples will work as part of an Autowalk mission, performin
 The following two command lines show starting the service on a CORE or a wifi laptop
 
 ```
-(on core) python3 hello_world_mission_service.py robot --host-ip 192.168.50.5 --username {USER} --password {PASSWORD} 192.168.50.3
+(on core) python3 hello_world_mission_service.py robot --host-ip 192.168.50.5 192.168.50.3
 
-(on laptop over wifi) python3 hello_world_mission_service.py robot --host-ip {YOUR_IP} --port {OPEN_PORT} --username {USER} --password {PASSWORD} 192.168.80.3
+(on laptop over wifi) python3 hello_world_mission_service.py robot --host-ip {YOUR_IP} --port {OPEN_PORT} 192.168.80.3
 ```
 both commands should output something like:
 

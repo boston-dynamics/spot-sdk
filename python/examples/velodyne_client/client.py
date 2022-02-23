@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -107,12 +107,12 @@ def main(argv):
     # The last argument should be the IP address of the robot. The app will use the directory to find
     # the velodyne and start getting data from it.
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     options = parser.parse_args(argv)
 
     sdk = bosdyn.client.create_standard_sdk('VelodyneClient')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     robot.sync_with_directory()
 
     _point_cloud_client = robot.ensure_client('velodyne-point-cloud')

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -72,15 +72,15 @@ def download_data(  # pylint: disable=too-many-arguments,too-many-locals
     Download data from robot in bddf format
 
     Args:
-      robot           API robot object
-      hostname        hostname/ip-address of robot
-      start_nsec      start time of log
-      end_nsec        end time of log
-      timespan_spec   if start_time, end_time are None, string representing the timespan to download
-      robot_time      if True, timespan is in robot_clock, if False, in host clock
-      channel         if set, limit data to download to a specific channel
-      message_type    if set, limit data by specified message-type
-      grpc_service    if set, limit GRPC log data by name of service
+      robot:          API robot object
+      hostname:       hostname/ip-address of robot
+      start_nsec:     start time of log
+      end_nsec:       end time of log
+      timespan_spec:  if start_time, end_time are None, string representing the timespan to download
+      robot_time:     if True, timespan is in robot_clock, if False, in host clock
+      channel:        if set, limit data to download to a specific channel
+      message_type:   if set, limit data by specified message-type
+      grpc_service:   if set, limit GRPC log data by name of service
 
     Returns:
       output filename, or None on error
@@ -150,7 +150,7 @@ def main():
     # pylint: disable=import-outside-toplevel
     import argparse
     from bosdyn.client import create_standard_sdk, InvalidLoginError
-    from bosdyn.client.util import add_common_arguments
+    from bosdyn.client.util import add_common_arguments, authenticate
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-T', '--timespan', default='5m', help='Time span (default last 5 minutes)')
@@ -163,7 +163,7 @@ def main():
     parser.add_argument('-R', '--robot-time', action='store_true',
                         help='Specified timespan is in robot time')
 
-    add_common_arguments(parser)
+    add_common_arguments(parser, credentials_no_warn=True)
     options = parser.parse_args()
 
     options.verbose = level = logging.DEBUG if options.verbose else logging.INFO
@@ -180,7 +180,10 @@ def main():
     # Use the robot object to authenticate to the robot.
     # A JWT Token is required to download log data.
     try:
-        robot.authenticate(options.username, options.password)
+        if options.username or options.password:
+            robot.authenticate(options.username, options.password)
+        else:
+            authenticate(robot)
     except InvalidLoginError as err:
         LOGGER.error("Cannot authenticate to robot to obtain token: %s", err)
         return 1

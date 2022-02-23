@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -73,7 +73,7 @@ def add_event(robot):
 def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
 
     subparsers = parser.add_subparsers(help='commands', dest='command')
     operator_parser = subparsers.add_parser('operator', help='add operator comment')
@@ -95,7 +95,7 @@ def main():
 
     sdk = bosdyn.client.create_standard_sdk('DataBufferClientExample')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
 
     if options.command == 'operator':
         # If timestamp is not given, robot uses current time on message receipt.

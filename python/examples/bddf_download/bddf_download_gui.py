@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -54,7 +54,7 @@ def simple_ping(hostname):
         parameter = "-n"
     else:
         parameter = "-c"
-    exit_code = subprocess.call(['ping', parameter, '1', '-w2', hostname],
+    exit_code = subprocess.call(['ping', parameter, '1', '-w', '2', hostname],
                                 stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
     return exit_code
 
@@ -303,8 +303,8 @@ class BDDFDownloadGui(QtWidgets.QMainWindow):
         if channel:
             use_channel = channel.split()  # for multiple channels, split by space character
 
-        url, headers, params = prepare_download(hostname, username, password, timespan, \
-                                                channel=use_channel, message_type=None, service=None)
+        url, headers, params = prepare_download(robot, timespan, channel=use_channel,
+                                                message_type=None, service=None)
 
         self.pb.setValue(0)
         number_of_bytes_processed = 0

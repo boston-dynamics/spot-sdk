@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -104,7 +104,7 @@ if __name__ == '__main__':
 
     # Create the parser for the "robot" command.
     robot_parser = subparsers.add_parser('robot', help='Run this example with a robot in the loop.')
-    bosdyn.client.util.add_common_arguments(robot_parser)
+    bosdyn.client.util.add_base_arguments(robot_parser)
     bosdyn.client.util.add_service_endpoint_arguments(robot_parser)
 
     options = parser.parse_args()
@@ -128,7 +128,7 @@ if __name__ == '__main__':
     # Create and authenticate a bosdyn robot object.
     sdk = bosdyn.client.create_standard_sdk("HelloWorldMissionServiceSDK")
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
 
     # Create a service runner to start and maintain the service on background thread.
     service_runner = run_service(options.port, logger=_LOGGER)

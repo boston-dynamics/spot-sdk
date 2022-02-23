@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -17,7 +17,7 @@ import bosdyn.api.basic_command_pb2 as basic_command_pb2
 import bosdyn.client
 import bosdyn.client.util
 import bosdyn.client.estop
-from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
+from bosdyn.client.lease import LeaseClient, ResourceAlreadyClaimedError
 from bosdyn.client.estop import EstopClient
 from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient
 from bosdyn.geometry import EulerZXY
@@ -79,6 +79,7 @@ class XboxController:
         self.robot = None
         self.command_client = None
         self.lease_client = None
+        self.lease_keep_alive = None
         self.estop_client = None
         self.estop_keepalive = None
         self.estop_buttons_pressed = False
@@ -108,7 +109,7 @@ class XboxController:
 
         sdk = bosdyn.client.create_standard_sdk(self.client_name)
         self.robot = sdk.create_robot(config.hostname)
-        self.robot.authenticate(config.username, config.password)
+        bosdyn.client.util.authenticate(self.robot)
         self.robot.time_sync.wait_for_sync()
         self.command_client = self.robot.ensure_client(RobotCommandClient.default_service_name)
         self.lease_client = self.robot.ensure_client(LeaseClient.default_service_name)
@@ -155,16 +156,11 @@ class XboxController:
             "\t1. Acquire a software E-Stop (Left Button + Right Button + B). \n" + \
             "\t2. Obtain a lease and power on the robot's motors (Start button).")
 
-    def _force_safe_power_off(self):
-        """Safely powers off the robot.
+    def _shutdown(self):
+        """Returns lease to power off.
         """
-
-        if self.robot.is_powered_on():
-            lease = self.lease_client.take()
-            with LeaseKeepAlive(self.lease_client):
-                cmd = RobotCommandBuilder.safe_power_off_command()
-                self.command_client.robot_command(cmd)
-            self.lease_client.return_lease(lease)
+        if self.lease_keep_alive:
+            self.lease_keep_alive.shutdown()
 
     def _toggle_estop(self):
         """Toggles on/off E-Stop.
@@ -185,7 +181,7 @@ class XboxController:
             self.estop_keepalive.stop()
             self.estop_keepalive.shutdown()
             self.estop_keepalive = None
-            self._force_safe_power_off()
+            self._shutdown()
             sys.exit('E-Stop')
 
     def _gain_control(self):
@@ -194,16 +190,15 @@ class XboxController:
 
         if self.has_robot_control or not self.estop_keepalive:
             return
-        leases = self.lease_client.list_leases()
-        lease_owner = str(leases[0].lease_owner).strip()
-        if lease_owner != "":
-            print("Another controller " + lease_owner + " has a lease. Close that controller"\
+        try:
+            self.lease_client.acquire()
+        except ResourceAlreadyClaimedError as exc:
+            print("Another controller " + exc.response.lease_owner.client_name + " has a lease. Close that controller"
             ", wait a few seconds and press the Start button again.")
             return
-
-        _ = bosdyn.client.lease.LeaseKeepAlive(self.lease_client)
-        _ = self.lease_client.acquire()
-        self.has_robot_control = True
+        else:
+            self.lease_keep_alive = bosdyn.client.lease.LeaseKeepAlive(self.lease_client, return_at_exit=True)
+            self.has_robot_control = True
 
     def _power_motors(self):
         """Powers the motors on in the robot.
@@ -640,7 +635,7 @@ class XboxController:
             joy.close()
         finally:
             # Close out when done
-            self._force_safe_power_off()
+            self._shutdown()
 
 
 def main(argv):
@@ -661,7 +656,7 @@ def main(argv):
                         help="Max frequency in Hz to send commands to robot")
     parser.add_argument("--logging", action='store_true', help="Turn on logging output")
 
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     options = parser.parse_args(argv)
     if options.logging:
         bosdyn.client.util.setup_logging(options.verbose)

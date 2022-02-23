@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -82,6 +82,7 @@ class MockGraphNavServicer(graph_nav_service_pb2_grpc.GraphNavServiceServicer):
 
     def UploadWaypointSnapshot(self, request_iterator, context):
         resp = graph_nav_pb2.UploadWaypointSnapshotResponse()
+        resp.status = graph_nav_pb2.UploadWaypointSnapshotResponse.STATUS_OK
         resp.header.error.code = self.common_header_code
         if self.lease_use_result:
             resp.lease_use_result.CopyFrom(self.lease_use_result)

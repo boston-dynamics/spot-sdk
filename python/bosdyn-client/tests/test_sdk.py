@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -74,7 +74,7 @@ Spam, Spam, Spam, Spam!
         self.assertNotIn(response_p, robot.request_processors)
         self.assertEqual(sdk.robots[kAddress], sdk.create_robot(kAddress))
 
-    def test_client_name_propogation(self):
+    def test_client_name_propagation(self):
         sdk = self._create_sdk()
         sdk.request_processors.append(
             bosdyn.client.processors.AddRequestHeader(lambda: sdk.client_name))

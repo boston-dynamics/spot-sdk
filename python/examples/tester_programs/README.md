@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -38,7 +38,7 @@ The script runs through a series of tests checking:
 
 To use the image service tester script, the new image service must be running. Then, the tester script can be run using the following command:
 ```
-python3 image_service_tester.py --username {USER} --password {PASSWORD} {ROBOT_IP} --service-name {SERVICE_NAME}
+python3 image_service_tester.py {ROBOT_IP} --service-name {SERVICE_NAME}
 ```
 
 The command line argument `--service-name` is the name for the image service that is used for directory registration. In the example image services (e.g. the web cam example, the ricoh theta example), the service name is defined near the top of each plugin file by the variable `DIRECTORY_NAME`.
@@ -63,7 +63,7 @@ The plugin tester script (`plugin_tester.py`) can be used while developing a new
 
 To use the data acquisition plugin service tester script, the new image service must be running. Then, the tester script can be run using the following command:
 ```
-python3 plugin_tester.py --username {USER} --password {PASSWORD} {ROBOT_IP} --service-name {SERVICE_NAME}
+python3 plugin_tester.py {ROBOT_IP} --service-name {SERVICE_NAME}
 ```
 
 The command line argument `--service-name` is the name for the data acquisition plugin service that is used for directory registration. In the example plugins, the service name is defined near the top of each plugin file by the variable `DIRECTORY_NAME`.

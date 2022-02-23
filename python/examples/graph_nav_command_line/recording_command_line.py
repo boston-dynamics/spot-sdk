@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -16,7 +16,6 @@ from bosdyn.api.graph_nav import map_pb2, map_processing_pb2, recording_pb2
 from bosdyn.client import create_standard_sdk, ResponseError, RpcError
 import bosdyn.client.channel
 from bosdyn.client.graph_nav import GraphNavClient
-from bosdyn.client.lease import LeaseClient, LeaseKeepAlive, LeaseWallet
 from bosdyn.client.math_helpers import SE3Pose, Quat
 from bosdyn.client.recording import GraphNavRecordingServiceClient
 from bosdyn.client.map_processing import MapProcessingServiceClient
@@ -94,9 +93,7 @@ class RecordingInterface(object):
 
     def _clear_map(self, *args):
         """Clear the state of the map on the robot, removing all waypoints and edges."""
-        self._lease_client = self._robot.ensure_client(LeaseClient.default_service_name)
-        self._lease = self._lease_client.acquire()
-        return self._graph_nav_client.clear_graph(lease=self._lease.lease_proto)
+        return self._graph_nav_client.clear_graph()
 
     def _start_recording(self, *args):
         """Start recording a map."""
@@ -114,11 +111,23 @@ class RecordingInterface(object):
 
     def _stop_recording(self, *args):
         """Stop or pause recording a map."""
-        try:
-            status = self._recording_client.stop_recording()
-            print("Successfully stopped recording a map.")
-        except Exception as err:
-            print("Stop recording failed: " + str(err))
+        first_iter = True
+        while True:
+            try:
+                status = self._recording_client.stop_recording()
+                print("Successfully stopped recording a map.")
+                break
+            except bosdyn.client.recording.NotReadyYetError as err:
+                # It is possible that we are not finished recording yet due to
+                # background processing. Try again every 1 second.
+                if first_iter:
+                    print("Cleaning up recording...")
+                first_iter = False
+                time.sleep(1.0)
+                continue
+            except Exception as err:
+                print("Stop recording failed: " + str(err))
+                break
 
     def _get_recording_status(self, *args):
         """Get the recording service's status."""
@@ -391,7 +400,7 @@ class RecordingInterface(object):
 def main(argv):
     """Run the command-line interface."""
     parser = argparse.ArgumentParser(description=__doc__)
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('-d', '--download-filepath',
                         help='Full filepath for where to download graph and snapshots.',
                         default=os.getcwd())
@@ -400,7 +409,7 @@ def main(argv):
     # Create robot object.
     sdk = bosdyn.client.create_standard_sdk('RecordingClient')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     recording_command_line = RecordingInterface(robot, options.download_filepath)
 
     try:

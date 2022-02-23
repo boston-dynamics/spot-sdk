@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -116,6 +116,7 @@ class GraphNavInterface(object):
         self._graph_nav_client.set_localization(initial_guess_localization=localization,
                                                 ko_tform_body=current_odom_tform_body)
 
+
     def _set_initial_localization_waypoint(self, *args):
         """Trigger localization to a waypoint."""
         # Take the first argument as the localization waypoint.
@@ -203,7 +204,7 @@ class GraphNavInterface(object):
             print("Uploaded {}".format(edge_snapshot.id))
 
         # The upload is complete! Check that the robot is localized to the graph,
-        # and it if is not, prompt the user to localize the robot before attempting
+        # and if it is not, prompt the user to localize the robot before attempting
         # any navigation commands.
         localization_state = self._graph_nav_client.get_localization_state()
         if not localization_state.localization.waypoint_id:
@@ -430,7 +431,7 @@ class GraphNavInterface(object):
     def _check_success(self, command_id=-1):
         """Use a navigation command id to get feedback from the robot and sit when command succeeds."""
         if command_id == -1:
-            # No command, so we have not status to check.
+            # No command, so we have no status to check.
             return False
         status = self._graph_nav_client.navigation_feedback(command_id)
         if status.status == graph_nav_pb2.NavigationFeedbackResponse.STATUS_REACHED_GOAL:
@@ -482,7 +483,8 @@ class GraphNavInterface(object):
             Options:
             (1) Get localization state.
             (2) Initialize localization to the nearest fiducial (must be in sight of a fiducial).
-            (3) Initialize localization to a specific waypoint (must be exactly at the waypoint).
+            (3) Initialize localization to a specific waypoint (must be exactly at the waypoint)."""
+                  """
             (4) List the waypoint ids and edge ids of the map on the robot.
             (5) Upload the graph and its snapshots.
             (6) Navigate to. The destination waypoint id is the second argument.
@@ -520,13 +522,13 @@ def main(argv):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-u', '--upload-filepath',
                         help='Full filepath to graph and snapshots to be uploaded.', required=True)
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     options = parser.parse_args(argv)
 
     # Setup and authenticate the robot.
     sdk = bosdyn.client.create_standard_sdk('GraphNavClient')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
 
     graph_nav_command_line = GraphNavInterface(robot, options.upload_filepath)
     try:

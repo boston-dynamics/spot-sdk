@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -64,7 +64,7 @@ python3 -m pip install -r requirements_client.txt
 To run this example, first launch the server and direct it to your Spot:
 
 ```
-python3 tensorflow_server.py --username <USERNAME> --password <PASSWORD> -d <MODEL DIRECTORY> <ROBOT ADDRESS>
+python3 tensorflow_server.py -d <MODEL DIRECTORY> <ROBOT ADDRESS>
 ```
 
 - `USERNAME` and `PASSWORD` are your user credentials for your Spot.
@@ -87,11 +87,11 @@ An example CSV file for the Faster R-CNN model described above is included in th
 After launching tensorflow_server.py, the user may post requests to it using the `identify_object.py` client example. To run this example with the above example server and model, run:
 
 ```
-python3 identify_object.py --username <USERNAME> --password <PASSWORD> --service <SERVICE_NAME>  --model <MODEL_NAME> <ROBOT_IP>
+python3 identify_object.py --service <SERVICE_NAME>  --model <MODEL_NAME> <ROBOT_IP>
 
 For example:
 
-python3 identify_object.py --username <USERNAME> --password <PASSWORD> --service tensorflow-server --confidence 0.5 --model frozen_inference_graph --image-source frontleft_fisheye_image <ROBOT_IP>
+python3 identify_object.py --service tensorflow-server --confidence 0.5 --model frozen_inference_graph --image-source frontleft_fisheye_image <ROBOT_IP>
 ```
 
 Note, the `USERNAME` and `PASSWORD` are your user credentials for your Spot.
@@ -128,15 +128,15 @@ Example output:
 
 ## Docker Execution
 
-This example contains the configuration files to run the python scripts described above also in Docker containers. The docker containers accept the same arguments descrined above. For example, to run the server_cpu docker container and the client docker container, follow the steps below with the correct values for the <> variables:
+This example contains the configuration files to run the python scripts described above also in Docker containers. The docker containers accept the same arguments described above. For example, to run the server_cpu docker container and the client docker container, follow the steps below with the correct values for the <> variables:
 
 ```
 sudo docker build -t ncb_server_cpu -f Dockerfile.server_cpu .
-sudo docker run -it --network=host -v <MODEL_DIRECTORY>:/model_dir/ ncb_server_cpu --model-dir /model_dir/ --username <USERNAME> --password <PASSWORD> <ROBOT_IP>
+sudo docker run -it --network=host --env BOSDYN_CLIENT_USERNAME --env BOSDYN_CLIENT_PASSWORD -v <MODEL_DIRECTORY>:/model_dir/ ncb_server_cpu --model-dir /model_dir/ <ROBOT_IP>
 
 
 sudo docker build -t ncb_client -f Dockerfile.client .
-sudo docker run -it --network=host ncb_client --username <USERNAME> --password <PASSWORD> --service tensorflow-server --confidence 0.5 --model frozen_inference_graph --image-source frontleft_fisheye_image <ROBOT_IP>
+sudo docker run -it --network=host --env BOSDYN_CLIENT_USERNAME --env BOSDYN_CLIENT_PASSWORD ncb_client --service tensorflow-server --confidence 0.5 --model frozen_inference_graph --image-source frontleft_fisheye_image <ROBOT_IP>
 ```
 
 ## Troubleshooting

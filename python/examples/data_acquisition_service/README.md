@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -10,7 +10,12 @@ Development Kit License (20191101-BDSDK-SL).
 
 The example programs demonstrate how to create a data acquisition plugin service and run the service such that it can communicate with the data acquisition service on-robot. A data acquisition plugin service is used to communicate with external payloads and hardware, retrieve the data from these sensors, and save the data in the data acquisition store service.
 
-The DataAcquisitionPluginService base class (defined in `data_acquisition_plugin_service.py`) can be used to create the data acquisition plugin services. The example directory contains multiple different example plugins, each contained in their own folder, which use these helper functions to create plugin services which can collect data from various sensors (including a Piksi GPS or a point-cloud producing service, such as a Velodyne), or save json-formatted metadata relating to a sensor (`gps_metadata_plugin_service.py`).
+The DataAcquisitionPluginService base class (defined in `data_acquisition_plugin_service.py`) can be used to create the data acquisition plugin services. The example directory contains multiple different example plugins, each contained in their own folder:
+
+ * **battery_service**: A very simple plugin which reads and saves the battery information out of the robot state as json-formatted metadata.  This plugin is used as part of the [Data collection tutorial](../../../docs/python/daq_tutorial/daq1.md).
+ * **pointclound_plugin**: Reads from a point cloud service (such as a Velodyne) and saves the point cloud data as a binary protobuf.
+ * **network_compute_bridge_plugin**: Used to call a Network Compute Bridge model to process data, and save the results.  Customize this example for when the built-in network compute support in the Data Acquisition Service is not expressive enough for your case.
+ * **gps_metadata_plugin** and **piksi_gps_plugin**: Used to store GPS coordinates as json-formatted metadata.  gps_metadata_plugin just inserts random data and is meant to be customized for individual hardware.  piksi_gps_plugin reads from a Piksi unit.
 
 ## Setup Dependencies
 Each example plugin requires the Spot SDK to be installed, and must be run using python3. Within the example plugin's directory and using pip, these dependencies can be installed using:
@@ -33,7 +38,7 @@ python3 {PLUGIN_FILE_NAME} --guid {GUID} --secret {SECRET} --host-ip {IP_WHERE_P
 
 This example takes two different IP addresses as arguments. The `--host-ip` argument describes the IP address for the computer that will be running the data acquisition plugin service. A helper exists to try to determine the correct IP address. This command must be run on the same computer that will be running the plugin service:
 ```
-python3 -m bosdyn.client --username {USER} --password {PASSWORD} {ROBOT_IP} self-ip
+python3 -m bosdyn.client {ROBOT_IP} self-ip
 ```
 The other IP address is the traditional robot hostname ("ROBOT_IP") argument, which describes the IP address of the robot hosting the directory service.
 
@@ -53,7 +58,7 @@ sudo ufw allow {PORT_NUMBER}
 ### Point Cloud and Network Compute Bridge Plugins
 The pointcloud and network compute bridge plugin will require you to pass the associated registered service name. You can find this by running:
 ```
-python -m bosdyn.client --username {USER} --password {PASSWORD} {ROBOT_IP} dir list`
+python -m bosdyn.client {ROBOT_IP} dir list`
 ```
 This will list all the services registered to the robot.  Use `--pointcloud-service` to provide the registered service name for pointcloud plugin.  Use `---worker-name` to provide the registered service name for network compute bridge plugin.
 
@@ -64,7 +69,7 @@ name                                 type                                       
 fire-extinguisher-server             bosdyn.api.NetworkComputeBridgeWorker                     auth.spot.robot                                 user
 ```
 
-The command to start the network compute bridge pluging would be:
+The command to start the network compute bridge plugin would be:
 ```
 python3 {PLUGIN_FILE_NAME} --guid {GUID} --secret {SECRET} --host-ip {IP_WHERE_PLUGIN_WILL_RUN} --port {PORT_THE_PLUGIN_WILL_MONITOR} --worker-name fire-extinguisher-server {ROBOT_IP}
 ```
@@ -79,14 +84,14 @@ The data acquisition example shows a program which communicates with the data ac
 
 Run the example that communicates with the data acquisition service:
 ```
-python3 data_acquisition_example.py --username {USER} --password {PASSWORD} {ROBOT_IP}
+python3 data_acquisition_example.py {ROBOT_IP}
 ```
 
 ## Downloading from the Data Acquisition Store
 
 The data acquisition download script allows users to download data from the DataAcquisitionStore service using REST calls. The script supports only time-based queries for filtering which data is downloaded and saved locally. The following command is an example of a time-based query and download. The timestamps are specified in RFC 3339 date string format (YYYY-MM-DDTHH:MM::SS.SZ, Y:year, M:month, D:day, H:hours, M:minutes, S:seconds as double, Z:zulu timezone)
 ```
-python3 data_acquisition_download.py --username {USER} --password {PASSWORD} {ROBOT_IP} --query-from-timestamp 2020-09-01T00:00:00.0Z --query-to-timestamp 2020-09-04T00:00:00.0Z
+python3 data_acquisition_download.py {ROBOT_IP} --query-from-timestamp 2020-09-01T00:00:00.0Z --query-to-timestamp 2020-09-04T00:00:00.0Z
 ```
 
 Note, by default, the download script will save the data to the current directory, however the `--destination-folder` argument can be used to change where the downloaded data is saved.

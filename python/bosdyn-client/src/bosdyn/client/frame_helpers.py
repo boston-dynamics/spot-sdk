@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -46,7 +46,7 @@ def validate_frame_tree_snapshot(frame_tree_snapshot):
     services can misuse the syntax to construct other data structures. The
     syntax prevents DAGs from forming, but the data structure could
 
-    Valid FrameTrees must be a single rooted tree. However, the general format of
+    Valid FrameTrees must be a single-rooted tree. However, the general format of
     repeated edges may not actually be valid - there could be cycles, disjoint
     trees, or missing edges in the actual data structure.
 
@@ -141,7 +141,7 @@ def get_a_tform_b(frame_tree_snapshot, frame_a, frame_b, validate=True):
     def _accumulate_transforms(parent_edges):
         ret = math_helpers.SE3Pose.from_identity()
         for parent_edge in parent_edges:
-            ret = math_helpers.SE3Pose.from_obj(parent_edge.parent_tform_child) * ret
+            ret = math_helpers.SE3Pose.from_proto(parent_edge.parent_tform_child) * ret
         return ret
 
     frame_a_tform_root_frame = _accumulate_transforms(inverse_edges).inverse()

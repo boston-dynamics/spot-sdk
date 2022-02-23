@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,6 +13,9 @@ from bosdyn.client.robot_command import NoTimeSyncError, _TimeConverter
 from bosdyn.api import world_object_pb2
 from bosdyn.api import world_object_service_pb2
 from bosdyn.api import world_object_service_pb2_grpc as world_object_service
+from bosdyn.api import geometry_pb2 as geom
+from bosdyn.client.frame_helpers import *
+from bosdyn.util import now_timestamp
 
 
 class WorldObjectClient(BaseClient):
@@ -149,6 +152,114 @@ class WorldObjectClient(BaseClient):
         converter.convert_timestamp_from_local_to_robot(timestamp)
         return timestamp
 
+    def draw_sphere(self, name, x_rt_frame_name, y_rt_frame_name, z_rt_frame_name, frame_name,
+                    radius=0.05, rgba=(255, 0, 0, 1), list_objects_now=True):
+        """Create a drawable sphere world object that will be sent to the world object service
+        with a mutation request.
+
+        Args:
+            name (string): The human-readable name of the world object.
+            sphere_frame_name (string):  The frame name for the drawable sphere frame.
+            x_rt_frame_name,y_rt_frame_name,z_rt_frame_name (int): The coordinate position (x,y,z) of
+                the drawable sphere.
+            frame_name (string): the frame in which the sphere's position is described.
+            radius (float): The radius for the drawn sphere.
+            color (4 valued tuple): The RGBA color, where RGB are int values in [0,255] and A is a float in [0,1].
+            list_objects_now (boolean): Should the ListWorldObjects request be made after creating
+                the sphere world object.
+
+        Returns:
+            The MutateWorldObjectResponse for the addition of the sphere world object.
+        """
+        vision_tform_drawable = geom.SE3Pose(position=geom.Vec3(x=x_rt_frame_name,
+                                                                y=y_rt_frame_name,
+                                                                z=z_rt_frame_name),
+                                             rotation=geom.Quaternion(w=1, x=0, y=0, z=0))
+        # Create a map between the child frame name and the parent frame name/SE3Pose parent_tform_child
+        edges = {}
+        # Create an edge in the frame tree snapshot that includes vision_tform_drawable
+        drawable_frame_name = name
+        edges = add_edge_to_tree(edges, vision_tform_drawable, frame_name, drawable_frame_name)
+        snapshot = geom.FrameTreeSnapshot(child_to_parent_edge_map=edges)
+
+        # Set the acquisition time for the sphere using a function to get google.protobuf.Timestamp of the current system time.
+        time_now = now_timestamp()
+
+        # Create the sphere drawable object
+        sphere = world_object_pb2.DrawableSphere(radius=radius)
+        draw_color = world_object_pb2.DrawableProperties.Color(r=rgba[0], g=rgba[1], b=rgba[2], a=rgba[3])
+        sphere_drawable_prop = world_object_pb2.DrawableProperties(
+            color=draw_color, label=name, wireframe=False, sphere=sphere,
+            frame_name_drawable=drawable_frame_name)
+
+        # Create the complete world object with transform information, a unique name, and the drawable sphere properties.
+        sphere_to_add = world_object_pb2.WorldObject(name=name,
+                                                     transforms_snapshot=snapshot,
+                                                     acquisition_time=time_now,
+                                                     drawable_properties=[sphere_drawable_prop])
+        # Add the sphere to the robot's world object service
+        add_sphere = make_add_world_object_req(sphere_to_add)
+        resp = self.mutate_world_objects(mutation_req=add_sphere)
+
+        if list_objects_now:
+            # Request a listing of the world objects so that the sphere shows up in the log.
+            self.list_world_objects()
+
+        return resp
+
+    def draw_oriented_bounding_box(self, name, drawable_box_frame_name, frame_name,
+                                   frame_name_tform_drawable_box, size_ewrt_box_vec3,
+                                   rgba=(255, 0, 0, 1), wireframe=True,
+                                   list_objects_now=False):
+        """Create a drawable 3D box world object that will be sent to the world object service
+        with a mutation request.
+
+        Args:
+            name (string): The human-readable name of the world object.
+            drawable_box_frame_name (string): The frame name for the drawable box frame.
+            frame_name (string): The frame name which the drawable box is described relative to.
+            frame_name_tform_drawable_box (geometry_pb2.SE3Pose): the SE3 pose of the drawable box relative to frame name.
+            size_ewrt_drawable_box_vec3 (float): The size of the box (x,y,z) expressed with respect to the
+                drawable box frame.
+            rgba (4 valued tuple): The RGBA color, where RGB are int values in [0,255] and A is a float in [0,1].
+            wireframe  (boolean): Should this be drawn as a wireframe [wireframe=true] or a solid object [wireframe=false].
+            list_objects_now (boolean): Should the ListWorldObjects request be made after creating
+                the sphere world object.
+
+        Returns:
+            The MutateWorldObjectResponse for the addition of the sphere world object.
+        """
+        # Create a map between the child frame name and the parent frame name/SE3Pose parent_tform_child
+        edges = {}
+        # Create an edge in the frame tree snapshot that includes frame_tform_box
+        drawable_frame_name = name
+        edges = add_edge_to_tree(edges, frame_name_tform_drawable_box, frame_name, drawable_frame_name)
+        snapshot = geom.FrameTreeSnapshot(child_to_parent_edge_map=edges)
+
+        # Set the acquisition time for the box using a function to get google.protobuf.Timestamp of the current system time.
+        time_now = now_timestamp()
+
+        # Create the box drawable object
+        box = world_object_pb2.DrawableBox(size=size_ewrt_box_vec3)
+        draw_color = world_object_pb2.DrawableProperties.Color(r=rgba[0], g=rgba[1], b=rgba[2], a=rgba[3])
+        box_drawable_prop = world_object_pb2.DrawableProperties(
+            color=draw_color, label=name, wireframe=wireframe, box=box,
+            frame_name_drawable=drawable_box_frame_name)
+
+        # Create the complete world object with transform information, a unique name, and the drawable box properties.
+        box_to_add = world_object_pb2.WorldObject(name=name,
+                                                  transforms_snapshot=snapshot,
+                                                  acquisition_time=time_now,
+                                                  drawable_properties=[box_drawable_prop])
+        # Add the box to the robot's world object service
+        add_box = make_add_world_object_req(box_to_add)
+        resp = self.mutate_world_objects(mutation_req=add_box)
+
+        if list_objects_now:
+            # Request a listing of the world objects so that the box shows up in the log.
+            self.list_world_objects()
+
+        return resp
 
 def _get_world_object_value(response):
     return response
@@ -190,7 +301,7 @@ def make_delete_world_object_req(world_obj):
     '''Delete a world object from the scene.
 
     Args:
-        world_obj (WorldObject): The world object to be delete in the robot's perception scene. The
+        world_obj (WorldObject): The world object to be deleted in the robot's perception scene. The
                                  object must be a client-added object and have the correct world object
                                  id returned by the service after adding the object.
 

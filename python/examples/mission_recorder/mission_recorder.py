@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -36,7 +36,7 @@ from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 from bosdyn.client.map_processing import MapProcessingServiceClient
 from bosdyn.client.power import PowerClient
 from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder
-from bosdyn.client.recording import GraphNavRecordingServiceClient, NotLocalizedToEndError
+from bosdyn.client.recording import GraphNavRecordingServiceClient, NotLocalizedToEndError, NotReadyYetError
 from bosdyn.client.robot_state import RobotStateClient
 from bosdyn.client.time_sync import TimeSyncError
 import bosdyn.client.util
@@ -161,11 +161,11 @@ class RecorderInterface(object):
         self._robot_command_client = robot.ensure_client(RobotCommandClient.default_service_name)
         self._world_object_client = robot.ensure_client(WorldObjectClient.default_service_name)
 
-        # Setup the recording service client.
+        # Set up the recording service client.
         self._recording_client = self._robot.ensure_client(
             GraphNavRecordingServiceClient.default_service_name)
 
-        # Setup the graph nav service client.
+        # Set up the graph nav service client.
         self._graph_nav_client = robot.ensure_client(GraphNavClient.default_service_name)
 
         # Local copy of the graph.
@@ -203,12 +203,11 @@ class RecorderInterface(object):
 
         # Stuff that is set in start()
         self._robot_id = None
-        self._lease = None
+        self._lease_keep_alive = None
 
-    def start(self):
+    def start(self, lease_keep_alive):
         """Begin communication with the robot."""
-        self._lease = self._lease_client.acquire()
-
+        self._lease_keep_alive = lease_keep_alive
         self._robot_id = self._robot.get_id()
         if self._estop_endpoint is not None:
             self._estop_endpoint.force_simple_setup(
@@ -223,9 +222,6 @@ class RecorderInterface(object):
         if self._estop_keepalive:
             # This stops the check-in thread but does not stop the robot.
             self._estop_keepalive.shutdown()
-        if self._lease:
-            _grpc_or_log("returning lease", lambda: self._lease_client.return_lease(self._lease))
-            self._lease = None
 
     def __del__(self):
         self.shutdown()
@@ -255,8 +251,7 @@ class RecorderInterface(object):
 
     def drive(self, stdscr):
         """User interface to control the robot via the passed-in curses screen interface object."""
-        with LeaseKeepAlive(self._lease_client) as lease_keep_alive, \
-             ExitCheck() as self._exit_check:
+        with ExitCheck() as self._exit_check:
             curses_handler = CursesHandler(self)
             curses_handler.setLevel(logging.INFO)
             LOGGER.addHandler(curses_handler)
@@ -271,7 +266,7 @@ class RecorderInterface(object):
             try:
                 while not self._exit_check.kill_now:
                     self._async_tasks.update()
-                    self._drive_draw(stdscr, lease_keep_alive)
+                    self._drive_draw(stdscr, self._lease_keep_alive)
 
                     try:
                         cmd = stdscr.getch()
@@ -442,7 +437,8 @@ class RecorderInterface(object):
 
     def _lease_str(self, lease_keep_alive):
         alive = 'RUNNING' if lease_keep_alive.is_alive() else 'STOPPED'
-        lease = '{}:{}'.format(self._lease.lease_proto.resource, self._lease.lease_proto.sequence)
+        lease_proto = lease_keep_alive.lease_wallet.get_lease_state().lease_original.lease_proto
+        lease = '{}:{}'.format(lease_proto.resource, lease_proto.sequence)
         return 'Lease {} THREAD:{}'.format(lease, alive)
 
     def _power_state_str(self):
@@ -586,16 +582,25 @@ class RecorderInterface(object):
             self._waypoint_commands += [self._waypoint_id]
 
         try:
-            status = self._recording_client.stop_recording()
-            if status != recording_pb2.StopRecordingResponse.STATUS_OK:
-                self.add_message("Stop recording failed.")
-                return False
+            finished_recording = False
+            status = recording_pb2.StopRecordingResponse.STATUS_UNKNOWN
+            while True:
+                try:
+                    status = self._recording_client.stop_recording()
+                except NotReadyYetError:
+                    # The recording service always takes some time to complete. stop_recording
+                    # must be called multiple times to ensure recording has finished.
+                    self.add_message("Stopping...")
+                    time.sleep(1.0)
+                    continue
+                break
 
             self.add_message("Successfully stopped recording a map.")
             return True
 
         except NotLocalizedToEndError:
-            self.add_message("ERROR: Move to final waypoint before stopping recording.")
+            # This should never happen unless there's an internal error on the robot.
+            self.add_message("There was a problem while trying to stop recording. Please try again.")
             return False
 
     def _relocalize(self):
@@ -929,7 +934,7 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('directory', help='Output directory for graph map and mission file.')
     parser.add_argument('--time-sync-interval-sec',
                         help='The interval (seconds) that time-sync estimate should be updated.',
@@ -949,7 +954,7 @@ def main():
     sdk = create_standard_sdk('MissionRecorderClient')
     robot = sdk.create_robot(options.hostname)
     try:
-        robot.authenticate(options.username, options.password)
+        bosdyn.client.util.authenticate(robot)
         robot.start_time_sync(options.time_sync_interval_sec)
     except RpcError as err:
         LOGGER.error("Failed to communicate with robot: %s" % err)
@@ -975,23 +980,24 @@ def main():
         write_mission(mission, mission_filepath)
         return True
 
-    try:
-        recorder_interface.start()
-    except (ResponseError, RpcError) as err:
-        LOGGER.error("Failed to initialize robot communication: %s" % err)
-        return False
+    with LeaseKeepAlive(recorder_interface._lease_client, must_acquire=True, return_at_exit=True) as lease_keep_alive:
+        try:
+            recorder_interface.start(lease_keep_alive)
+        except (ResponseError, RpcError) as err:
+            LOGGER.error("Failed to initialize robot communication: %s" % err)
+            return False
 
-    try:
-        # Prevent curses from introducing a 1 second delay for ESC key
-        os.environ.setdefault('ESCDELAY', '0')
-        # Run recorder interface in curses mode, then restore terminal config.
-        curses.wrapper(recorder_interface.drive)
-    except Exception as e:
-        LOGGER.error("Mission recorder has thrown an error: %s" % repr(e))
-        LOGGER.error(traceback.format_exc())
-    finally:
-        # Restore stream handler after curses mode.
-        LOGGER.addHandler(stream_handler)
+        try:
+            # Prevent curses from introducing a 1 second delay for ESC key
+            os.environ.setdefault('ESCDELAY', '0')
+            # Run recorder interface in curses mode, then restore terminal config.
+            curses.wrapper(recorder_interface.drive)
+        except Exception as e:
+            LOGGER.error("Mission recorder has thrown an error: %s" % repr(e))
+            LOGGER.error(traceback.format_exc())
+        finally:
+            # Restore stream handler after curses mode.
+            LOGGER.addHandler(stream_handler)
 
     return True
 

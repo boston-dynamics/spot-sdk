@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -178,7 +178,7 @@ class PointCloudClient(BaseClient):
 
 
 def build_pc_request(point_cloud_source_name):
-    """Helper function which builds an PointCloudRequest from an point cloud source name.
+    """Helper function which builds an PointCloudRequest from a point cloud source name.
 
     Args:
         point_cloud_source_name (string): The point cloud source to query.

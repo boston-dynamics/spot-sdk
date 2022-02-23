@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -129,7 +129,7 @@ class BaseDataReader:  # pylint: disable=too-many-instance-attributes
         elif checksum_type != bddf.FileFormatDescriptor.CHECKSUM_TYPE_SHA1:
             raise DataFormatError("Unknown checksum type {}".format(checksum_type))
         if self._file_descriptor.checksum_num_bytes != SHA1_DIGEST_NBYTES:
-            raise DataFormatError("Unexpected checksm num_bytes ({} != {}).".format(
+            raise DataFormatError("Unexpected checksum num_bytes ({} != {}).".format(
                 self._file_descriptor.checksum_num_bytes, SHA1_DIGEST_NBYTES))
 
     def _read_proto(self, proto_type, nbytes):

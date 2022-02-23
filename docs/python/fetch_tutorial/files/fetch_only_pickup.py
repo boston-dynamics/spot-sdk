@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -199,7 +199,7 @@ def block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=None, verbose=F
 
 def main(argv):
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument(
         '-s',
         '--ml-service',
@@ -231,7 +231,7 @@ def main(argv):
     sdk = bosdyn.client.create_standard_sdk('SpotFetchClient')
     sdk.register_service_client(NetworkComputeBridgeClient)
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
 
     # Time sync is necessary so that time-based filter requests can be converted
     robot.time_sync.wait_for_sync()

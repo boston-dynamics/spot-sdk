@@ -2,6 +2,58 @@
 
 
 
+<a name="bosdyn/api/alerts.proto"></a>
+
+# alerts.proto
+
+
+
+<a name="bosdyn.api.AlertData"></a>
+
+### AlertData
+
+Structured data indicating an alert detected off the robot that can be stored in the DataBuffer
+and associated with with previously stored data.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| severity | [AlertData.SeverityLevel](#bosdyn.api.AlertData.SeverityLevel) | Severity of this alert. |
+| title | [string](#string) | Human readable alert title/summary. |
+| source | [string](#string) | The source that triggered the alert. |
+| additional_data | [google.protobuf.Struct](#google.protobuf.Struct) | JSON data for any additional info attached to this alert. |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="bosdyn.api.AlertData.SeverityLevel"></a>
+
+### AlertData.SeverityLevel
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| SEVERITY_LEVEL_UNKNOWN | 0 |  |
+| SEVERITY_LEVEL_INFO | 1 |  |
+| SEVERITY_LEVEL_WARN | 2 |  |
+| SEVERITY_LEVEL_ERROR | 3 |  |
+| SEVERITY_LEVEL_CRITICAL | 4 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="bosdyn/api/arm_command.proto"></a>
 
 # arm_command.proto
@@ -15,7 +67,7 @@
 Command the end effector of the arm.  Each axis in the task frame is allowed to be set to
 position mode (default) or Force mode.  If the axis is set to position, the desired value is read
 from the pose_trajectory_in_task. If the axis is set to force, the desired value is read from
-the rench_trajectory. This supports hybrid control of the arm where users can specify, for
+the wrench_trajectory. This supports hybrid control of the arm where users can specify, for
 example, Z to be in force control with X and Y in position control.
 
 
@@ -1218,6 +1270,7 @@ Get the robot into a convenient pose for changing the battery
 | torque_limit | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) | The limit on the torque that is applied on any rotational direction Value must be positive If unspecified, a default value of 4 Nm will be used. |
 | task_type | [ConstrainedManipulationCommand.Request.TaskType](#bosdyn.api.ConstrainedManipulationCommand.Request.TaskType) |  |
 | end_time | [google.protobuf.Timestamp](#google.protobuf.Timestamp) | The timestamp (in robot time) by which a command must finish executing. This is a required field and used to prevent runaway commands. |
+| enable_robot_locomotion | [google.protobuf.BoolValue](#google.protobuf.BoolValue) | Whether to enable the robot to take steps during constrained manip to keep the hand in the workspace. |
 
 
 
@@ -1259,7 +1312,7 @@ FollowArmCommand commands provide no feedback.
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | body_offset_from_hand | [Vec3](#bosdyn.api.Vec3) | Optional body offset from the hand. For example, to have the body 0.75 meters behind the hand, use (0.75, 0, 0) |
-| disable_walking | [bool](#bool) | Optional. If true, the body will be restricted to body orientation offsets only. |
+| disable_walking | [bool](#bool) | DEPRECATED as of 3.1. To reproduce the robot's behavior of disable_walking == true, issue a StandCommand setting the enable_body_yaw_assist_for_manipulation and enable_hip_height_assist_for_manipulation MobilityParams to true. Any combination of the enable_*_for_manipulation are accepted in stand giving finer control of the robot's behavior. |
 
 
 
@@ -1407,8 +1460,9 @@ Planar velocity commands provide no feedback.
 ### SafePowerOffCommand
 
 Get robot into a position where it is safe to power down, then power down. If the robot has
-fallen, it will power down directly. If the robot is not in a safe position, it will get to a
-safe position before powering down. The robot will not power down until it is in a safe state.
+fallen, it will power down directly. If the robot is standing, it will first sit then power down.
+With appropriate request parameters and under limited scenarios, the robot may take additional
+steps to move to a safe position. The robot will not power down until it is in a sitting state.
 
 
 
@@ -1438,8 +1492,11 @@ the robot yet.
 
 ### SafePowerOffCommand.Request
 
-SafePowerOff command request takes no additional arguments.
 
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| unsafe_action | [SafePowerOffCommand.Request.UnsafeAction](#bosdyn.api.SafePowerOffCommand.Request.UnsafeAction) |  |
 
 
 
@@ -1462,8 +1519,11 @@ Move the robot into a "ready" position from which it can sit or stand up.
 
 ### SelfRightCommand.Feedback
 
-SelfRight command request provides no feedback.
 
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| status | [SelfRightCommand.Feedback.Status](#bosdyn.api.SelfRightCommand.Feedback.Status) |  |
 
 
 
@@ -1614,14 +1674,16 @@ The stand the robot up in its current position.
 
 ### StandCommand.Feedback
 
-The StandCommand will provide feedback on whether or not the robot has finished
-standing up.
+The StandCommand will provide two feedback fields: status, and standing_state. Status
+reflects if the robot has four legs on the ground and is near a final pose. StandingState
+reflects if the robot has converged to a final pose and does not expect future movement.
 
 
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | status | [StandCommand.Feedback.Status](#bosdyn.api.StandCommand.Feedback.Status) | Current status of the command. |
+| standing_state | [StandCommand.Feedback.StandingState](#bosdyn.api.StandCommand.Feedback.StandingState) | What type of standing the robot is doing currently. |
 
 
 
@@ -1819,6 +1881,37 @@ to lever type objects.
 
 
 
+<a name="bosdyn.api.SafePowerOffCommand.Request.UnsafeAction"></a>
+
+### SafePowerOffCommand.Request.UnsafeAction
+
+Robot action in response to a command received while in an unsafe position. If not 
+specified, UNSAFE_MOVE_TO_SAFE_POSITION will be used
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| UNSAFE_UNKNOWN | 0 |  |
+| UNSAFE_MOVE_TO_SAFE_POSITION | 1 | Robot may attempt to move to a safe position (i.e. descends stairs) before sitting and powering off. |
+| UNSAFE_FORCE_COMMAND | 2 | Force sit and power off regardless of positioning. Robot will not take additional steps |
+
+
+
+<a name="bosdyn.api.SelfRightCommand.Feedback.Status"></a>
+
+### SelfRightCommand.Feedback.Status
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_COMPLETED | 1 | Self-right has completed |
+| STATUS_IN_PROGRESS | 2 | Robot is in progress of attempting to self-right |
+
+
+
 <a name="bosdyn.api.SitCommand.Feedback.Status"></a>
 
 ### SitCommand.Feedback.Status
@@ -1848,6 +1941,20 @@ to lever type objects.
 
 
 
+<a name="bosdyn.api.StandCommand.Feedback.StandingState"></a>
+
+### StandCommand.Feedback.StandingState
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STANDING_UNKNOWN | 0 | STANDING_UNKNOWN should never be used. If used, an internal error has happened. |
+| STANDING_CONTROLLED | 1 | Robot is standing up and actively controlling its body so it may occasionally make small body adjustments. |
+| STANDING_FROZEN | 2 | Robot is standing still with its body frozen in place so it should not move unless commanded to. Motion sensitive tasks like laser scanning should be performed in this state. |
+
+
+
 <a name="bosdyn.api.StandCommand.Feedback.Status"></a>
 
 ### StandCommand.Feedback.Status
@@ -1857,7 +1964,7 @@ to lever type objects.
 | Name | Number | Description |
 | ---- | ------ | ----------- |
 | STATUS_UNKNOWN | 0 | STATUS_UNKNOWN should never be used. If used, an internal error has happened. |
-| STATUS_IS_STANDING | 1 | Robot has finished standing up and has completed desired body trajectory. Robot is not attempting to move. |
+| STATUS_IS_STANDING | 1 | Robot has finished standing up and has completed desired body trajectory. |
 | STATUS_IN_PROGRESS | 2 | Robot is trying to come to a steady stand. |
 
 
@@ -2350,6 +2457,7 @@ acquire and save the data specified in each capability.
 | ----- | ---- | ----------- |
 | data_sources | [DataAcquisitionCapability](#bosdyn.api.DataAcquisitionCapability) | List of non-image data acquisition capabilities. |
 | image_sources | [ImageAcquisitionCapability](#bosdyn.api.ImageAcquisitionCapability) | List of image data acquisition capabilities. |
+| network_compute_sources | [NetworkComputeCapability](#bosdyn.api.NetworkComputeCapability) | List of network compute capabilities. |
 
 
 
@@ -2368,6 +2476,26 @@ The grouping of all individual image and data captures for a given capture actio
 | ----- | ---- | ----------- |
 | image_captures | [ImageSourceCapture](#bosdyn.api.ImageSourceCapture) | List of image requests. |
 | data_captures | [DataCapture](#bosdyn.api.DataCapture) | List of non-image data and metadata requests. |
+| network_compute_captures | [NetworkComputeCapture](#bosdyn.api.NetworkComputeCapture) | List of Network Compute Bridge requests |
+
+
+
+
+
+
+<a name="bosdyn.api.AssociatedAlertData"></a>
+
+### AssociatedAlertData
+
+This message can be stored as a DataBlob in the data buffer in order to be recognized as
+AlertData that is associated with previously stored data.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| reference_id | [DataIdentifier](#bosdyn.api.DataIdentifier) | The data that this AlertData refers to. The timestamp field is ignored. If only the action_id is filled out, this AlertData is associated with the entire capture action. |
+| alert_data | [AlertData](#bosdyn.api.AlertData) | AlertData message to be stored. |
 
 
 
@@ -2582,6 +2710,7 @@ A way to identify an individual piece of data stored in the data buffer.
 | data_saved | [DataIdentifier](#bosdyn.api.DataIdentifier) | Data that has been successfully saved into the data buffer for the capture action. |
 | data_errors | [DataError](#bosdyn.api.DataError) | A list of data captures which have failed in some way during the action. For example, the data acquisition plugin is unable to communicate to a sensor and responds with a data error for that specific data capture. |
 | service_errors | [PluginServiceError](#bosdyn.api.PluginServiceError) | Services which failed independent of a particular data id. For example, if a plugin times out or crashes, it could be reported here. |
+| network_compute_errors | [NetworkComputeError](#bosdyn.api.NetworkComputeError) | Network compute services which failed independent of a particular data id. For example, if a worker times out or crashes, it could be reported here. |
 
 
 
@@ -2601,7 +2730,8 @@ services registered to the robot's directory.
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | service_name | [string](#string) | The image service's service name used in directory registration. |
-| image_source_names | [string](#string) | List of the image source names reported by the image service (through the ListImageSources RPC). |
+| image_source_names | [string](#string) | (Depricate) Please use "image_sources" below for information regarding the image source associated with the service. |
+| image_sources | [ImageSource](#bosdyn.api.ImageSource) | List of image sources reported by the image service (through the ListImageSources RPC). |
 
 
 
@@ -2621,6 +2751,7 @@ image data to be collected.
 | ----- | ---- | ----------- |
 | image_service | [string](#string) | Name of the image service that the data should be requested from. |
 | image_source | [string](#string) | Specific image source to use from the list reported by the image service within the ImageAcquisitionCapability message. |
+| pixel_format | [Image.PixelFormat](#bosdyn.api.Image.PixelFormat) | Specific pixel format to capture reported by the ImageAcquisitionCapability message. |
 
 
 
@@ -2639,6 +2770,57 @@ that capture action.
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | data | [google.protobuf.Struct](#google.protobuf.Struct) | JSON representation of metadata. |
+
+
+
+
+
+
+<a name="bosdyn.api.NetworkComputeCapability"></a>
+
+### NetworkComputeCapability
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| server_config | [NetworkComputeServerConfiguration](#bosdyn.api.NetworkComputeServerConfiguration) | Service information. |
+| available_models | [string](#string) | Provide list of available models |
+| labels | [ModelLabels](#bosdyn.api.ModelLabels) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.NetworkComputeCapture"></a>
+
+### NetworkComputeCapture
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| input_data | [NetworkComputeInputData](#bosdyn.api.NetworkComputeInputData) | Data source and model. |
+| server_config | [NetworkComputeServerConfiguration](#bosdyn.api.NetworkComputeServerConfiguration) | Which service to use. |
+
+
+
+
+
+
+<a name="bosdyn.api.NetworkComputeError"></a>
+
+### NetworkComputeError
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| service_name | [string](#string) | Name of the service with the error |
+| error | [NetworkComputeError.ErrorCode](#bosdyn.api.NetworkComputeError.ErrorCode) | General type of error that occurred. |
+| network_compute_status | [NetworkComputeStatus](#bosdyn.api.NetworkComputeStatus) | Any particular failure mode reported. |
+| message | [string](#string) | Description of the error. |
 
 
 
@@ -2728,6 +2910,21 @@ An error associated with a particular data acquisition plugin service that was
 | STATUS_INTERNAL_ERROR | 12 | [Error - AcquireData] An error occurred such that we don't even know our status. |
 | STATUS_CANCEL_ACQUISITION_FAILED | 30 | [Error -CancelAcquisition] The cancellation request failed to complete. |
 | STATUS_REQUEST_ID_DOES_NOT_EXIST | 20 | [Error - GetStatus] The request_id does not exist. |
+
+
+
+<a name="bosdyn.api.NetworkComputeError.ErrorCode"></a>
+
+### NetworkComputeError.ErrorCode
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_REQUEST_ERROR | 1 | The request was rejected. |
+| STATUS_NETWORK_ERROR | 2 | The request had an error reaching the worker. |
+| STATUS_INTERNAL_ERROR | 3 | Some other problem prevented the request from succeeding. |
 
 
 
@@ -2896,6 +3093,38 @@ the ListData requests.
 
 
 
+<a name="bosdyn.api.ListStoredAlertDataRequest"></a>
+
+### ListStoredAlertDataRequest
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [RequestHeader](#bosdyn.api.RequestHeader) | Common request header. |
+| query | [DataQueryParams](#bosdyn.api.DataQueryParams) | Query parameters for finding AlertData. |
+
+
+
+
+
+
+<a name="bosdyn.api.ListStoredAlertDataResponse"></a>
+
+### ListStoredAlertDataResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+| data_ids | [DataIdentifier](#bosdyn.api.DataIdentifier) | List of AlertData data identifiers that satisfied the query parameters. |
+
+
+
+
+
+
 <a name="bosdyn.api.ListStoredDataRequest"></a>
 
 ### ListStoredDataRequest
@@ -2986,6 +3215,38 @@ the ListData requests.
 | ----- | ---- | ----------- |
 | header | [ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
 | data_ids | [DataIdentifier](#bosdyn.api.DataIdentifier) | List of metadata data identifiers that satisfied the query parameters. |
+
+
+
+
+
+
+<a name="bosdyn.api.StoreAlertDataRequest"></a>
+
+### StoreAlertDataRequest
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [RequestHeader](#bosdyn.api.RequestHeader) | Common request header. |
+| alert_data | [AssociatedAlertData](#bosdyn.api.AssociatedAlertData) | AlertData to store. |
+| data_id | [DataIdentifier](#bosdyn.api.DataIdentifier) | Data identifier of the alert. |
+
+
+
+
+
+
+<a name="bosdyn.api.StoreAlertDataResponse"></a>
+
+### StoreAlertDataResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
 
 
 
@@ -3149,6 +3410,8 @@ capture actions which match query parameters, such as time ranges or action/grou
 | StoreImage | [StoreImageRequest](#bosdyn.api.StoreImageRequest) | [StoreImageResponse](#bosdyn.api.StoreImageResponse) | Type-safe to images: store image data associated with a DataIdentifier. |
 | ListStoredMetadata | [ListStoredMetadataRequest](#bosdyn.api.ListStoredMetadataRequest) | [ListStoredMetadataResponse](#bosdyn.api.ListStoredMetadataResponse) | Type-safe to JSON metadata: list data identifiers (which identify specific metadata from an action) for stored metadata that satisfy the query parameters in the request. |
 | StoreMetadata | [StoreMetadataRequest](#bosdyn.api.StoreMetadataRequest) | [StoreMetadataResponse](#bosdyn.api.StoreMetadataResponse) | Type-safe to JSON metadata: store metadata associated with a DataIdentifier. |
+| ListStoredAlertData | [ListStoredAlertDataRequest](#bosdyn.api.ListStoredAlertDataRequest) | [ListStoredAlertDataResponse](#bosdyn.api.ListStoredAlertDataResponse) | List data identifiers (which identify specific AlertData from an action) for stored AlertData that satisfy the query parameters in the request. |
+| StoreAlertData | [StoreAlertDataRequest](#bosdyn.api.StoreAlertDataRequest) | [StoreAlertDataResponse](#bosdyn.api.StoreAlertDataResponse) | Store AlertData associated with a DataIdentifier. |
 
  <!-- end services -->
 
@@ -3638,8 +3901,8 @@ Level, or similarly "visibility," "importance," or "weight" of event.
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| LEVEL_UNSET | 0 | Non-critical events |
-| LEVEL_LOW | 1 |  |
+| LEVEL_UNSET | 0 |  |
+| LEVEL_LOW | 1 | Non-critical events |
 | LEVEL_MEDIUM | 2 |  |
 | LEVEL_HIGH | 3 |  |
 | LEVEL_MISSION_CRITICAL | 4 | Critical events |
@@ -4070,6 +4333,8 @@ Requested Events and/or OperatorComments.
 | time_range | [TimeRange](#bosdyn.api.TimeRange) | Timespan for data |
 | events | [Event](#bosdyn.api.Event) |  |
 | operator_comments | [OperatorComment](#bosdyn.api.OperatorComment) |  |
+| events_limited | [bool](#bool) | True if the number of events returned was limited by query maximum. |
+| operator_comments_limited | [bool](#bool) | True if the number of comments returned was limited by query maximum. |
 
 
 
@@ -4089,6 +4354,8 @@ A request for Events and/or OperatorComments over a given time range.
 | time_range | [TimeRange](#bosdyn.api.TimeRange) | Timespan for data we want to query |
 | events | [EventSpec](#bosdyn.api.EventSpec) | Return events which match the request. |
 | comments | [bool](#bool) | Return operator comments which match the request. |
+| max_events | [uint32](#uint32) | Maximum number of events to return (limited to 1024). |
+| max_comments | [uint32](#uint32) | Maximum number of comments to return (limited to 1024). |
 
 
 
@@ -5043,6 +5310,7 @@ Type of dock
 | STATUS_ERROR_NO_TIMESYNC | 7 | ERROR: No Timesync with system. |
 | STATUS_ERROR_TOO_DISTANT | 8 | ERROR: Provided end time too far in the future. |
 | STATUS_ERROR_NOT_AVAILABLE | 12 | ERROR: The dock is not available for docking. |
+| STATUS_ERROR_UNREFINED_PRIOR | 13 | ERROR: The prior could not be confirmed as a real dock |
 | STATUS_ERROR_SYSTEM | 9 | ERROR: Internal system error during execution This error cannot be resolved by issuing a new DockingCommand Check the returned message for details |
 
 
@@ -5927,7 +6195,7 @@ ParentEdge represents the relationship from a child frame to a parent frame.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| parent_frame_name | [string](#string) | The name of the parent frame. Must be non-empty. If parent_frame_name is not a key in edge_map, it is the root of the tree. |
+| parent_frame_name | [string](#string) | The name of the parent frame. If a frame has no parent (parent_frame_name is empty), it is the root of the tree. |
 | parent_tform_child | [SE3Pose](#bosdyn.api.SE3Pose) | Transform representing the pose of the child frame in the parent's frame. |
 
 
@@ -6348,7 +6616,7 @@ Geometric primitive used to specify forces and torques.
 
 Clears the graph on the server. Also clears GraphNav's localization to the graph.
 Note that waypoint and edge snapshots may still be cached on the server after this
-operation.
+operation. This RPC may not be used while recording a map.
 
 
 
@@ -6374,6 +6642,7 @@ The results of the ClearGraphRequest.
 | ----- | ---- | ----------- |
 | header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
 | lease_use_result | [bosdyn.api.LeaseUseResult](#bosdyn.api.LeaseUseResult) | Details about how the lease was used. |
+| status | [ClearGraphResponse.Status](#bosdyn.api.graph_nav.ClearGraphResponse.Status) | Status of the ClearGraphResponse. |
 
 
 
@@ -6834,6 +7103,25 @@ For each enum in this message, if UNKNOWN is passed in, we default to one of the
 
 
 
+<a name="bosdyn.api.graph_nav.SensorCompatibilityStatus"></a>
+
+### SensorCompatibilityStatus
+
+Info on whether the robot's current sensor setup is compatible with the recorded data
+in the map.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| map_has_lidar_data | [bool](#bool) | If true, the loaded map has LIDAR data in it. |
+| robot_configured_for_lidar | [bool](#bool) | If true, the robot is currently configured to use LIDAR data. |
+
+
+
+
+
+
 <a name="bosdyn.api.graph_nav.SetLocalizationRequest"></a>
 
 ### SetLocalizationRequest
@@ -6884,6 +7172,7 @@ The SetLocalization response message contains the resulting localization to the 
 | localization | [Localization](#bosdyn.api.graph_nav.Localization) | Result of localization. |
 | suspected_ambiguity | [SetLocalizationResponse.SuspectedAmbiguity](#bosdyn.api.graph_nav.SetLocalizationResponse.SuspectedAmbiguity) | Alternative information if the localization is ambiguous. |
 | impaired_state | [bosdyn.api.RobotImpairedState](#bosdyn.api.RobotImpairedState) | If the status is ROBOT_IMPAIRED, this is why the robot is impaired. |
+| sensor_status | [SensorCompatibilityStatus](#bosdyn.api.graph_nav.SensorCompatibilityStatus) | This status determines whether the robot has compatible sensors for the map that was recorded. Note that if sensors aren't working, STATUS_IMPARIED will be returned, rather than STATUS_INCOMPATIBLE_SENSORS. |
 
 
 
@@ -7011,6 +7300,7 @@ be uploaded by the client.
 | loaded_edge_snapshot_ids | [string](#string) | The edge snapshot ids for which there was cached data. |
 | unknown_edge_snapshot_ids | [string](#string) | The edge snapshot ids for which there was no cached data. |
 | license_status | [bosdyn.api.LicenseInfo.Status](#bosdyn.api.LicenseInfo.Status) | Large graphs can only be uploaded if the license permits them. |
+| sensor_status | [SensorCompatibilityStatus](#bosdyn.api.graph_nav.SensorCompatibilityStatus) |  |
 
 
 
@@ -7052,12 +7342,28 @@ been concatenated and deserialized.
 | ----- | ---- | ----------- |
 | header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
 | lease_use_result | [bosdyn.api.LeaseUseResult](#bosdyn.api.LeaseUseResult) | Details about how the lease was used. |
+| status | [UploadWaypointSnapshotResponse.Status](#bosdyn.api.graph_nav.UploadWaypointSnapshotResponse.Status) |  |
+| sensor_status | [SensorCompatibilityStatus](#bosdyn.api.graph_nav.SensorCompatibilityStatus) |  |
 
 
 
 
 
  <!-- end messages -->
+
+
+<a name="bosdyn.api.graph_nav.ClearGraphResponse.Status"></a>
+
+### ClearGraphResponse.Status
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_OK | 1 |  |
+| STATUS_RECORDING | 2 | Graph Nav is currently recording a map. You must call StopRecording from the recording service to continue. |
+
 
 
 <a name="bosdyn.api.graph_nav.DownloadEdgeSnapshotResponse.Status"></a>
@@ -7280,6 +7586,7 @@ final-waypoint-offset), and command_id indicates a new command.
 | STATUS_FIDUCIAL_TOO_OLD | 7 | Failed to localize because the fiducial requested by 'use_fiducial_id' had a detection time that was too far in the past. |
 | STATUS_NO_MATCHING_FIDUCIAL | 8 | Failed to localize because the fiducial requested by 'use_fiducial_id' did not exist in the map at the required location. |
 | STATUS_FIDUCIAL_POSE_UNCERTAIN | 9 | Failed to localize because the fiducial requested by 'use_fiducial_id' had an unreliable pose estimation, either in the current detection of that fiducial, or in detections that were saved in the map. Note that when using FIDUCIAL_INIT_SPECIFIC, fiducial detections at the target waypoint will be used so long as they are not uncertain -- otherwise, detections at adjacent waypoints may be used. If there exists no uncertain detection of the fiducial near the target waypoint in the map, the service returns this status. |
+| STATUS_INCOMPATIBLE_SENSORS | 10 | The localization could not be set, because the map was recorded using a different sensor setup than the robot currently has onboard. See SensorStatus for more details. |
 
 
 
@@ -7311,6 +7618,21 @@ Indicates whether robot will navigate through areas with poor quality features
 | STATUS_OK | 1 |  |
 | STATUS_MAP_TOO_LARGE_LICENSE | 3 | Can't upload the graph because it was too large for the license. |
 | STATUS_INVALID_GRAPH | 4 | The graph is invalid topologically, for example containing missing waypoints referenced by edges. |
+| STATUS_INCOMPATIBLE_SENSORS | 5 |  |
+
+
+
+<a name="bosdyn.api.graph_nav.UploadWaypointSnapshotResponse.Status"></a>
+
+### UploadWaypointSnapshotResponse.Status
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Unset. |
+| STATUS_OK | 1 | Success. |
+| STATUS_INCOMPATIBLE_SENSORS | 2 | The data in this waypoint snapshot is not compatible with the current configuration of the robot. Check sensor_status for more details. |
 
 
  <!-- end enums -->
@@ -8731,6 +9053,237 @@ from the GraphNavService to download the large sensor data with the map.
 
 
 
+<a name="bosdyn/api/gripper_camera_param.proto"></a>
+
+# gripper_camera_param.proto
+
+
+
+<a name="bosdyn.api.GripperCameraGetParamRequest"></a>
+
+### GripperCameraGetParamRequest
+
+The GripperCameraGetParam request message queries the robot for the current gripper sensor parameters.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [RequestHeader](#bosdyn.api.RequestHeader) | Common request header. |
+
+
+
+
+
+
+<a name="bosdyn.api.GripperCameraGetParamResponse"></a>
+
+### GripperCameraGetParamResponse
+
+The GripperCameraGetParam response message contains the current gripper sensor parameters. Gripper sensor parameters do not persist across reboots.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [ResponseHeader](#bosdyn.api.ResponseHeader) | Common request header. |
+| params | [GripperCameraParams](#bosdyn.api.GripperCameraParams) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.GripperCameraParamRequest"></a>
+
+### GripperCameraParamRequest
+
+The GripperCameraParam request message sets new gripper sensor parameters. Gripper sensor parameters do not persist across reboots.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [RequestHeader](#bosdyn.api.RequestHeader) | Common request header. |
+| params | [GripperCameraParams](#bosdyn.api.GripperCameraParams) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.GripperCameraParamResponse"></a>
+
+### GripperCameraParamResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+
+
+
+
+
+
+<a name="bosdyn.api.GripperCameraParams"></a>
+
+### GripperCameraParams
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| camera_mode | [GripperCameraParams.CameraMode](#bosdyn.api.GripperCameraParams.CameraMode) | CameraMode sets the resolution, frame rate and image format. |
+| brightness | [google.protobuf.FloatValue](#google.protobuf.FloatValue) | Set the image brightness level. Min 0, max 1 |
+| contrast | [google.protobuf.FloatValue](#google.protobuf.FloatValue) | Set the image contrast level. Min 0, max 1 |
+| saturation | [google.protobuf.FloatValue](#google.protobuf.FloatValue) | Set the image saturation level. Min 0, max 1 |
+| gain | [google.protobuf.FloatValue](#google.protobuf.FloatValue) | Set the image gain level. Min 0, max 1 |
+| exposure_auto | [google.protobuf.BoolValue](#google.protobuf.BoolValue) | Whether the camera should use auto exposure. Defaults to true. |
+| exposure_absolute | [google.protobuf.FloatValue](#google.protobuf.FloatValue) | Manually set the image exposure level. This value is only used if exposure_auto is false. Min 0, max 1 |
+| exposure_roi | [RoiParameters](#bosdyn.api.RoiParameters) | Region of interest for exposure. Specify a spot exposure on a certain part of the image. Only used in auto-exposure mode. |
+| focus_auto | [google.protobuf.BoolValue](#google.protobuf.BoolValue) | Whether the camera should automatically focus the image. Default true |
+| focus_absolute | [google.protobuf.FloatValue](#google.protobuf.FloatValue) | Manually set the image focus. This value is only used if focus_auto is false. Min 0, max 1 0 corresponds to focus at infinity, 1 corresponds to a focal point close to the camera. |
+| focus_roi | [RoiParameters](#bosdyn.api.RoiParameters) | Region of interest for focus. Only used when in auto-focus mode. |
+| draw_focus_roi_rectangle | [google.protobuf.BoolValue](#google.protobuf.BoolValue) | Set to true to draw a rectangle in the image where the focus ROI is. Default: false |
+| hdr | [HdrParameters](#bosdyn.api.HdrParameters) | High dynamic range (HDR) mode sets the camera to take multiple frames to get exposure in a large range. HDR will reduce framerate in high-framerate modes. |
+| led_mode | [GripperCameraParams.LedMode](#bosdyn.api.GripperCameraParams.LedMode) | Set the LED mode. |
+| led_torch_brightness | [google.protobuf.FloatValue](#google.protobuf.FloatValue) | Brightness of the LED in torch mode. Min = 0, max = 1. Note: A brightness value of 0 is *not* off, but is the minimum brightness. To turn off the LED, set the led_mode to LED_MODE_OFF |
+
+
+
+
+
+
+<a name="bosdyn.api.RoiParameters"></a>
+
+### RoiParameters
+
+Region of interest (ROI) indicates the region within the image that should be used for
+determination of automatic focus or exposure.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| roi_percentage_in_image | [Vec2](#bosdyn.api.Vec2) | Center point of the ROI in the image. The upper lefthand corner of the image is (0, 0) and the lower righthand corner is (1, 1). The middle of the image is (0.5, 0.5). |
+| window_size | [RoiParameters.RoiWindowSize](#bosdyn.api.RoiParameters.RoiWindowSize) | Size of the region of interest. |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="bosdyn.api.GripperCameraParams.CameraMode"></a>
+
+### GripperCameraParams.CameraMode
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| MODE_UNKNOWN | 0 | MODE_UNKNOWN should not be used. |
+| MODE_1280_720_60FPS_UYVY | 1 | 1280x720 pixels at 60 frames per second in UYVY format |
+| MODE_640_480_120FPS_UYVY | 11 | 640x480 pixels at 120 frames per second in UYVY format Warning: this frame rate may not be achievable with long exposure times. |
+| MODE_1920_1080_60FPS_MJPG | 14 | 1920x1080 pixels at 60 frames per second in Motion JPG format |
+| MODE_3840_2160_30FPS_MJPG | 15 | 3840x2160 pixels at 30 frames per second in Motion JPG format |
+| MODE_4208_3120_20FPS_MJPG | 16 | 4208x3120 pixels at 20 frames per second in Motion JPG format |
+| MODE_4096_2160_30FPS_MJPG | 17 | 4096x2160 pixels at 30 frames per second in Motion JPG format |
+
+
+
+<a name="bosdyn.api.GripperCameraParams.LedMode"></a>
+
+### GripperCameraParams.LedMode
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| LED_MODE_UNKNOWN | 0 | LED_MODE_UNKNOWN should not be used. |
+| LED_MODE_OFF | 1 | Off |
+| LED_MODE_TORCH | 2 | Constantly on. Brightness level can be set in the led_torch_brightness field. |
+
+
+
+<a name="bosdyn.api.HdrParameters"></a>
+
+### HdrParameters
+
+High dynamic range (HDR) modes available. HDR sets the camera to take multiple frames to
+get exposure in a large range.  HDR will reduce framerate in high-framerate modes.
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| HDR_UNKNOWN | 0 | (or not set): will not change HDR settings. |
+| HDR_OFF | 1 | HDR disabled |
+| HDR_AUTO | 2 | Camera's on-board processor determines how much HDR is needed |
+| HDR_MANUAL_1 | 3 | Manual HDR enabled (minimum) |
+| HDR_MANUAL_2 | 4 |  |
+| HDR_MANUAL_3 | 5 |  |
+| HDR_MANUAL_4 | 6 | Manual HDR enabled (maximum) |
+
+
+
+<a name="bosdyn.api.RoiParameters.RoiWindowSize"></a>
+
+### RoiParameters.RoiWindowSize
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| ROI_WINDOW_SIZE_UNKNOWN | 0 | ROI window size, 1 is the smallest, 8 is the largest. |
+| ROI_WINDOW_SIZE_1 | 1 |  |
+| ROI_WINDOW_SIZE_2 | 2 |  |
+| ROI_WINDOW_SIZE_3 | 3 |  |
+| ROI_WINDOW_SIZE_4 | 4 |  |
+| ROI_WINDOW_SIZE_5 | 5 |  |
+| ROI_WINDOW_SIZE_6 | 6 |  |
+| ROI_WINDOW_SIZE_7 | 7 |  |
+| ROI_WINDOW_SIZE_8 | 8 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn/api/gripper_camera_param_service.proto"></a>
+
+# gripper_camera_param_service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="bosdyn.api.GripperCameraParamService"></a>
+
+### GripperCameraParamService
+
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| SetParams | [GripperCameraParamRequest](#bosdyn.api.GripperCameraParamRequest) | [GripperCameraParamResponse](#bosdyn.api.GripperCameraParamResponse) |  |
+| GetParams | [GripperCameraGetParamRequest](#bosdyn.api.GripperCameraGetParamRequest) | [GripperCameraGetParamResponse](#bosdyn.api.GripperCameraGetParamResponse) |  |
+
+ <!-- end services -->
+
+
+
 <a name="bosdyn/api/gripper_command.proto"></a>
 
 # gripper_command.proto
@@ -9062,6 +9615,8 @@ The image request specifying the image source and data format desired.
 | image_source_name | [string](#string) | The string name of the image source to get image data from. |
 | quality_percent | [double](#double) | Image quality: a number from 0 (worst) to 100 (highest). Note that jpeg quality 100 is still lossy. |
 | image_format | [Image.Format](#bosdyn.api.Image.Format) | Specify the desired image encoding (e.g. JPEG, RAW). If no format is specified (e.g. FORMAT_UNKNOWN), the image service will choose the best format for the data. |
+| resize_ratio | [double](#double) | Optional specification of the desired image dimensions. If the original image is 1920x1080, a resize_ratio of (2/3) will return an image with size 1280x720 The range is clipped to [0.01, 1] while maintaining the original aspect ratio. For backwards compatibliity, a value of 0 means no resizing. |
+| pixel_format | [Image.PixelFormat](#bosdyn.api.Image.PixelFormat) | Specify the desired pixel format (e.g. GREYSCALE_U8, RGB_U8). If no format is specified (e.g. PIXEL_FORMAT_UNKNOWN), the image service will choose the best format for the data. |
 
 
 
@@ -9100,9 +9655,11 @@ Proto for a description of an image source on the robot.
 | name | [string](#string) | The name of this image source used to get images. |
 | cols | [int32](#int32) | Number of columns in the image (in pixels). |
 | rows | [int32](#int32) | Number of rows in the image (in pixels). |
-| depth_scale | [double](#double) | The depth scale for the image data. Typically 1000, which converts it from mm to m. |
+| depth_scale | [double](#double) | For depth images, the pixel value that represents a depth of one meter. Depth in meters can be computed by dividing the raw pixel value by this scale factor. |
 | pinhole | [ImageSource.PinholeModel](#bosdyn.api.ImageSource.PinholeModel) | Rectilinear camera model. |
 | image_type | [ImageSource.ImageType](#bosdyn.api.ImageSource.ImageType) | The kind of images returned by this image source. |
+| pixel_formats | [Image.PixelFormat](#bosdyn.api.Image.PixelFormat) | The pixel formats a specific image source supports. |
+| image_formats | [Image.Format](#bosdyn.api.Image.Format) | The image formats a specific image source supports. |
 
 
 
@@ -9232,6 +9789,8 @@ The ListImageSources response message which contains all known image sources for
 | STATUS_SOURCE_DATA_ERROR | 3 | Failed to fill out ImageSource. All the other fields are not filled out. |
 | STATUS_IMAGE_DATA_ERROR | 4 | There was a problem with the image data. Only the ImageSource is filled out. |
 | STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED | 5 | The requested image format is unsupported for the image-source named. The image data will not be filled out. Note, if an image request has "FORMAT_UNKNOWN", the service should choose the best format to provide the data in. |
+| STATUS_UNSUPPORTED_PIXEL_FORMAT_REQUESTED | 6 | The requested pixel format is unsupported for the image-source named. The image data will not be filled out. Note, if an image request has "PIXEL_FORMAT_UNKNOWN", the service should choose the best format to provide the data in. |
+| STATUS_UNSUPPORTED_RESIZE_RATIO_REQUESTED | 7 | The requested ratio is out of bounds [0,1] or unsupported by the image service |
 
 
 
@@ -9478,6 +10037,11 @@ active lease, and which application is the owner of a lease.
 | resource | [string](#string) | The resource name. |
 | lease | [Lease](#bosdyn.api.Lease) | The active lease, if any. |
 | lease_owner | [LeaseOwner](#bosdyn.api.LeaseOwner) | The Lease Owner, if there is a Lease. |
+| stale_time | [google.protobuf.Timestamp](#google.protobuf.Timestamp) | The robot time when this lease will become stale. A stale lease can be acquired with an AcquireLeaseRequest OR a TakeLeaseRequest, while a lease that is not stale can only be acquired with a TakeLeaseRequest.
+
+Leases get marked stale when they haven't been used in a while. If you want to prevent your lease from being marked stale, you need to either: - Periodically send RetainLeaseRequests. - Periodically send valid commands to the robot using the lease. Note that only some types of commands will actually cause explicit lease retention.
+
+Commands & RetainLeaseRequests issued with a stale lease will still be accepted. Stale leases, when used, will cause the used lease to no longer be stale. |
 
 
 
@@ -11818,6 +12382,28 @@ Get state from the robot.
 
 
 
+<a name="bosdyn.api.mission.ClearBehaviorFaults"></a>
+
+### ClearBehaviorFaults
+
+This node will:
+  1. Check if there are behavior faults.  If there are none, it will return success.
+  2. Check if all behavior faults are clearable.  If not, it will return failure.
+  3. Try to clear the clearable behavior faults.  If it cannot, it will return failure.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| service_name | [string](#string) | Name of the service to use. |
+| host | [string](#string) | Host machine the service is running on. |
+| robot_state_blackboard_name | [string](#string) | Name of a robot state message defined in the blackboard. Usually provided by embedding this node in a [BosdynRobotState] node. |
+
+
+
+
+
+
 <a name="bosdyn.api.mission.Condition"></a>
 
 ### Condition
@@ -13085,6 +13671,7 @@ The mobility request must be one of the basic command primitives.
 Note that the image returned is *not* rotated, regardless of if it was rotated for processing. This ensures that all other calibration and metadata remains valid. |
 | other_data | [google.protobuf.Any](#google.protobuf.Any) | Non image-type data that can optionally be returned by a remote server. |
 | status | [NetworkComputeStatus](#bosdyn.api.NetworkComputeStatus) | Command status |
+| alert_data | [AlertData](#bosdyn.api.AlertData) | Optional field to indicate an alert detected by this model. |
 
 
 
@@ -14366,6 +14953,139 @@ The power service for the robot that can power on/off the robot's motors.
 
 
 
+<a name="bosdyn/api/ray_cast.proto"></a>
+
+# ray_cast.proto
+
+
+
+<a name="bosdyn.api.RayIntersection"></a>
+
+### RayIntersection
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| type | [RayIntersection.Type](#bosdyn.api.RayIntersection.Type) | Type of the raycast intersection that was performed. |
+| hit_position_in_hit_frame | [Vec3](#bosdyn.api.Vec3) | Position of ray cast hit in the RaycastResponse hit_frame. |
+| distance_meters | [double](#double) | Distance of hit from ray origin. |
+
+
+
+
+
+
+<a name="bosdyn.api.RaycastRequest"></a>
+
+### RaycastRequest
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [RequestHeader](#bosdyn.api.RequestHeader) | Common request header. |
+| ray_frame_name | [string](#string) | The ray's coordinate frame. When unset, this will default to vision frame. |
+| ray | [Ray](#bosdyn.api.Ray) | The ray, containing and origin and an direction. |
+| min_intersection_distance | [float](#float) | Ignore intersections closer than this location on the ray. Defaults to 0 if not provided. |
+| intersection_types | [RayIntersection.Type](#bosdyn.api.RayIntersection.Type) | Type of the raycast you want to perform. If multiple are set, the result will wait until all raycasts are complete and return a single result proto.
+
+If this field is left empty, all available sources are used. |
+
+
+
+
+
+
+<a name="bosdyn.api.RaycastResponse"></a>
+
+### RaycastResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+| status | [RaycastResponse.Status](#bosdyn.api.RaycastResponse.Status) | Return status for a request. |
+| message | [string](#string) | Human-readable error description. Not for programmatic analysis. |
+| hit_frame_name | [string](#string) | The frame raycast hits are returned in. Generally this should be the same frame the client initially requested in. |
+| hits | [RayIntersection](#bosdyn.api.RayIntersection) | Ray cast hits, sorted with the closest hit first along the ray's extent. |
+| transforms_snapshot | [FrameTreeSnapshot](#bosdyn.api.FrameTreeSnapshot) | A tree-based collection of transformations, which will include the transformations to each of the returned world objects in addition to transformations to the common frames ("vision", "body", "odom"). All transforms within the snapshot are taken at the time when the request is received.
+
+Note that each object's frame names are defined within the properties submessage e.g. "frame_name". |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="bosdyn.api.RayIntersection.Type"></a>
+
+### RayIntersection.Type
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| TYPE_UNKNOWN | 0 | TYPE_UNKNOWN should not be used. |
+| TYPE_GROUND_PLANE | 1 | Intersected against estimated ground plane. |
+| TYPE_TERRAIN_MAP | 2 | Intersected against the terrain map. |
+| TYPE_VOXEL_MAP | 3 | Intersected against the full 3D voxel map. |
+| TYPE_HAND_DEPTH | 4 | Intersected against the hand depth data. |
+
+
+
+<a name="bosdyn.api.RaycastResponse.Status"></a>
+
+### RaycastResponse.Status
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | An unknown / unexpected error occurred. |
+| STATUS_OK | 1 | Request was accepted. |
+| STATUS_INVALID_REQUEST | 2 | [Programming Error] Request was invalid / malformed in some way. |
+| STATUS_INVALID_INTERSECTION_TYPE | 3 | [Programming Error] Requested source not valid for current robot configuration. |
+| STATUS_UNKNOWN_FRAME | 4 | [Frame Error] The frame_name for a command was not a known frame. |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn/api/ray_cast_service.proto"></a>
+
+# ray_cast_service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="bosdyn.api.RayCastService"></a>
+
+### RayCastService
+
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| Raycast | [RaycastRequest](#bosdyn.api.RaycastRequest) | [RaycastResponse](#bosdyn.api.RaycastResponse) | Asks robot to cast the desired ray against its map of the surrounding environment to find the nearest intersection point. |
+
+ <!-- end services -->
+
+
+
 <a name="bosdyn/api/robot_command.proto"></a>
 
 # robot_command.proto
@@ -14583,6 +15303,7 @@ robot command service for feedback on the state of the command.
 | STATUS_TOO_DISTANT | 6 | [Timesync Error] The command end time was too far in the future. |
 | STATUS_NOT_POWERED_ON | 7 | [Hardware Error] The robot must be powered on to accept a command. |
 | STATUS_BEHAVIOR_FAULT | 9 | [Robot State Error] The robot must not have behavior faults. |
+| STATUS_DOCKED | 10 | [Robot State Error] The robot cannot be docked for certain commands. |
 | STATUS_UNKNOWN_FRAME | 8 | [Frame Error] The frame_name for a command was not a known frame. |
 
 
@@ -15208,6 +15929,7 @@ The current state of the robot.
 | foot_state | [FootState](#bosdyn.api.FootState) | The foot states (and contact information). |
 | manipulator_state | [ManipulatorState](#bosdyn.api.ManipulatorState) | State of the manipulator, only populated if an arm is attached to the robot. |
 | service_fault_state | [ServiceFaultState](#bosdyn.api.ServiceFaultState) | Service faults for services registered with the robot. |
+| terrain_state | [TerrainState](#bosdyn.api.TerrainState) | Relevant terrain data beneath and around the robot |
 
 
 
@@ -15403,6 +16125,23 @@ Historical faults are useful to diagnose robot behavior subject to intermittent 
 | ----- | ---- | ----------- |
 | key | [string](#string) |  |
 | value | [SystemFault.Severity](#bosdyn.api.SystemFault.Severity) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.TerrainState"></a>
+
+### TerrainState
+
+Relevant terrain data beneath and around the robot
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| is_unsafe_to_sit | [bool](#bool) | Is the terrain immediately under the robot such that sitting or powering off the robot may cause the robot to be in an unstable position? |
 
 
 
@@ -16277,7 +17016,9 @@ Specify if the door is push or pull, when looking at the door.
 | ---- | ------ | ----------- |
 | SWING_DIRECTION_UNKNOWN | 0 |  |
 | SWING_DIRECTION_INSWING | 1 |  |
+| SWING_DIRECTION_PULL | 1 |  |
 | SWING_DIRECTION_OUTSWING | 2 |  |
+| SWING_DIRECTION_PUSH | 2 |  |
 
 
 
@@ -16346,7 +17087,28 @@ Parameters for offsetting the body from the normal default.
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | base_offset_rt_footprint | [bosdyn.api.SE3Trajectory](#bosdyn.api.SE3Trajectory) | Desired base offset relative to the footprint pseudo-frame. The footprint pseudo-frame is a gravity aligned frame with its origin located at the geometric center of the feet in the X-Y axis, and at the nominal height of the hips in the Z axis. The yaw of the frame (wrt the world) is calcuated by the average foot locations, and is aligned with the feet. |
-| rotation_setting | [BodyControlParams.RotationSetting](#bosdyn.api.spot.BodyControlParams.RotationSetting) | The rotation setting for the robot body. |
+| body_assist_for_manipulation | [BodyControlParams.BodyAssistForManipulation](#bosdyn.api.spot.BodyControlParams.BodyAssistForManipulation) | The base will adjust to assist with manipulation, adjusting its height, pitch, and yaw as a function of the hand's location. Note, manipulation assisted body control is only available for ArmCommand requests that control the end-effector, and are expressed in an inertial frame. For example, sending a ArmCartesianCommand request with root_frame_name set to "odom" will allow the robot to compute a body adjustment. However, sending a ArmCartesianCommand request with root_frame_name set to "body" or sending an ArmJointMoveCommand request is incompatible, and the body will reset to default height and orientation. |
+| rotation_setting | [BodyControlParams.RotationSetting](#bosdyn.api.spot.BodyControlParams.RotationSetting) | The rotation setting for the robot body. Ignored if body_assist_for_manipulation is requested. |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.BodyControlParams.BodyAssistForManipulation"></a>
+
+### BodyControlParams.BodyAssistForManipulation
+
+Instead of directly specify the base offset trajectory, these options allow the robot to calcuate offsets
+based on the hand's location.  If the robot does not have a SpotArm attached, sending this request will
+hvae no effect.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| enable_body_yaw_assist | [bool](#bool) | Enable the use of body yaw to assist with manipulation. |
+| enable_hip_height_assist | [bool](#bool) | Enable use of hip height (e.g. body height/pitch) to assist with manipulation. |
 
 
 
@@ -16392,6 +17154,7 @@ Params common across spot movement and mobility.
 | swing_height | [SwingHeight](#bosdyn.api.spot.SwingHeight) | Swing height setting |
 | terrain_params | [TerrainParams](#bosdyn.api.spot.TerrainParams) | Ground terrain parameters. |
 | disallow_stair_tracker | [bool](#bool) | Prevent the robot from using StairTracker even if in stairs mode. |
+| disable_stair_error_auto_descent | [bool](#bool) | Prevent the robot from automatically walking off a staircase in the case of an error (ex: e-stop settle_then_cut, critical battery level) |
 | external_force_params | [BodyExternalForceParams](#bosdyn.api.spot.BodyExternalForceParams) | Robot Body External Force parameters |
 | disallow_non_stairs_pitch_limiting | [bool](#bool) | Prevent the robot from pitching to get a better look at rearward terrain except in stairs mode. |
 | disable_nearmap_cliff_avoidance | [bool](#bool) | Disable the secondary nearmap-based cliff avoidance that runs while on stairs. |
@@ -17046,6 +17809,7 @@ Errors reflect an issue with robot hardware.
 | ERROR_UNKNOWN | 0 | Unused enum. |
 | ERROR_NONE | 1 | No hardware error detected. |
 | ERROR_CLUTCH_SLIP | 2 | Error detected in clutch performance. |
+| ERROR_INVALID_RANGE_OF_MOTION | 3 | Error if a joint has an incorrect range of motion. |
 
 
 
@@ -17150,6 +17914,7 @@ This reflects an error in the routine.
 | ERROR_POWER_OFF_FAILURE | 11 | Robot failed to power off. |
 | ERROR_REVERT_FAILURE | 12 | Robot failed to revert calibration. |
 | ERROR_FGKC_FAILURE | 13 | Robot failed to do flat ground kinematic calibration. |
+| ERROR_GRIPPER_CAL_TIMEOUT | 14 | Timeout during gripper calibration. |
 
 
 
@@ -17173,6 +17938,8 @@ This reflects an error in the routine.
 | STATE_ERROR | 9 | Error occurred while running spotcheck. Inspect error for more info. |
 | STATE_WAITING_FOR_COMMAND | 10 | Waiting for user command. |
 | STATE_HIP_RANGE_OF_MOTION_CHECK | 11 | Hip range of motion check underway. |
+| STATE_GRIPPER_CAL | 12 | Gripper calibration underway. |
+| STATE_SIT_DOWN_AFTER_RUN | 13 | Sitting down after run. |
 
 
  <!-- end enums -->
@@ -20604,6 +21371,7 @@ World object properties describing a dock
 | type | [docking.DockType](#bosdyn.api.docking.DockType) | Type of dock. |
 | frame_name_dock | [string](#string) | The frame name for the location of dock origin. This will be included in the transform snapshot. |
 | unavailable | [bool](#bool) | Availability if the dock can be used |
+| from_prior | [bool](#bool) | The dock is an unconfirmed prior detection |
 
 
 

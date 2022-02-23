@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -19,21 +19,18 @@ import time
 import cv2
 import numpy as np
 
-from bosdyn.api import manipulation_api_pb2
-from bosdyn.api.manipulation_api_pb2 import (WalkToObjectInImage, ManipulationApiRequest,
-                                             ManipulationApiFeedbackRequest)
-from bosdyn.api import basic_command_pb2
-from bosdyn.api.spot import door_pb2
-from bosdyn.api import geometry_pb2
-
 from bosdyn import geometry
+from bosdyn.api import basic_command_pb2, geometry_pb2, manipulation_api_pb2
+from bosdyn.api.manipulation_api_pb2 import (ManipulationApiFeedbackRequest, ManipulationApiRequest,
+                                             WalkToObjectInImage)
+from bosdyn.api.spot import door_pb2
 from bosdyn.client import create_standard_sdk, frame_helpers
+from bosdyn.client.door import DoorClient
 from bosdyn.client.image import ImageClient
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
-from bosdyn.client.door import DoorClient
-from bosdyn.client.robot_command import RobotCommandClient, blocking_stand, RobotCommandBuilder
-from bosdyn.client.util import add_common_arguments, setup_logging
 from bosdyn.client.manipulation_api_client import ManipulationApiClient
+from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient, blocking_stand
+from bosdyn.client.util import add_base_arguments, setup_logging
 
 
 def power_on(robot):
@@ -113,7 +110,7 @@ def walk_to_object_in_image(robot, request_manager, debug):
     Args:
         robot: (Robot) Interface to Spot robot.
         request_manager: (RequestManager) Object for bookkeeping user touch points.
-        debug (bool): Show intermediate debug image..
+        debug (bool): Show intermediate debug image.
 
     Returns:
         ManipulationApiResponse: Feedback from WalkToObjectInImage request.
@@ -170,7 +167,7 @@ class RequestManager:
 
     Args:
         image_dict: (dict) Dictionary from image source name to (image proto, CV2 image) pairs.
-        window_name: (str) Name of display window..
+        window_name: (str) Name of display window.
     """
 
     def __init__(self, image_dict, window_name):
@@ -214,7 +211,7 @@ class RequestManager:
                 self.hinge_position_side_by_side = (x, y)
 
     def get_user_input_handle_and_hinge(self):
-        """Open window showing the side by side fisheye images with on screen prompts for user."""
+        """Open window showing the side by side fisheye images with on-screen prompts for user."""
         _draw_text_on_image(self.side_by_side, "Click handle.")
         cv2.imshow(self.window_name, self.side_by_side)
         cv2.setMouseCallback(self.window_name, self._on_mouse)
@@ -227,7 +224,7 @@ class RequestManager:
         Optionally show debug image of touch point.
 
         Args:
-            debug (bool): Show intermediate debug image..
+            debug (bool): Show intermediate debug image.
 
         Returns:
             ManipulationApiRequest: Request with WalkToObjectInImage info populated.
@@ -432,7 +429,7 @@ def initialize_robot(options):
     """
     sdk = create_standard_sdk('DoorExample')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     robot.time_sync.wait_for_sync()
     return robot
 
@@ -452,9 +449,9 @@ def open_door_main(options):
     # Note that the take lease API is used, rather than acquire. Using acquire is typically a
     # better practice, but in this example, a user might want to switch back and forth between
     # using the tablet and using this script. Using take make this a bit less painful.
-    lease = lease_client.take()
+    lease_client.take()
     try:
-        with LeaseKeepAlive(lease_client):
+        with LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
             # Execute open door command sequence.
             execute_open_door(robot, options)
             comment = "Opened door successfully."
@@ -465,15 +462,13 @@ def open_door_main(options):
         robot.operator_comment(comment)
         robot.logger.info(comment)
         raise
-    finally:
-        lease_client.return_lease(lease)
     return True
 
 
 def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser(description=__doc__)
-    add_common_arguments(parser)
+    add_base_arguments(parser)
     parser.add_argument('--debug', action='store_true', help='Show intermediate debug data.')
 
     options = parser.parse_args(argv)

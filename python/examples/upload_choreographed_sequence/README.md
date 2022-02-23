@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -26,7 +26,7 @@ python3 -m pip install -r requirements.txt
 To run the example:
 
 ```
-python3 upload_choreographed_sequence.py --username USER --password PASSWORD ROBOT_IP
+python3 upload_choreographed_sequence.py ROBOT_IP
 ```
 
 There is an optional argument `--choreography-filepath` which can be used to pass an absolute (or relative) filepath to a choreographed routine that is saved as a protobuf text file. If this argument is not provided, then the example program will use the default_dance.csq file as the choreographed sequence to be loaded to the robot.

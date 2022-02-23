@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -9,6 +9,7 @@ syntax = "proto3";
 package bosdyn.api;
 option java_outer_classname = "NetworkComputeBridgeProto";
 
+import "bosdyn/api/alerts.proto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/image.proto";
 import "bosdyn/api/world_object.proto";
@@ -137,6 +138,9 @@ message NetworkComputeResponse {
 
     // Command status
     NetworkComputeStatus status = 5;
+
+    // Optional field to indicate an alert detected by this model.
+    AlertData alert_data = 7;
 }
 
 enum NetworkComputeStatus {

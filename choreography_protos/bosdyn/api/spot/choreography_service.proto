@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -15,6 +15,9 @@ import "bosdyn/api/spot/choreography_sequence.proto";
 service ChoreographyService {
     // List the available dance moves and their parameter information.
     rpc ListAllMoves(ListAllMovesRequest) returns (ListAllMovesResponse) {}
+
+    // List the available choreography sequences currently on the robot.
+    rpc ListAllSequences(ListAllSequencesRequest) returns (ListAllSequencesResponse) {}
 
     // Upload a dance to the robot.
     rpc UploadChoreography(UploadChoreographyRequest) returns (UploadChoreographyResponse) {}
@@ -33,4 +36,5 @@ service ChoreographyService {
 
     // Download log of the latest recorded robot state information.
     rpc DownloadRobotStateLog(DownloadRobotStateLogRequest) returns (stream DownloadRobotStateLogResponse) {}
+
 }

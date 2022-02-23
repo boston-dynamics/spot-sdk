@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -37,16 +37,32 @@ message ListAllMovesResponse {
     string move_param_config = 3;
 }
 
-message UploadChoreographyRequest {
+//Request a list of all playable choreography sequences that the robot knows about
+message ListAllSequencesRequest {
     // Common request header
+    RequestHeader header = 1;
+}
+
+// 
+message ListAllSequencesResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // List of choreography sequences the robot knows about.
+    repeated string known_sequences = 2;
+
+}
+
+message UploadChoreographyRequest {
+    // Common request header.
     RequestHeader header = 1;
 
     // ChoreographySequence to upload and store in memory
     ChoreographySequence choreography_sequence = 2;
 
-    // Should we run a script that has correctable errors?
+    // Should we run a sequences that has correctable errors?
     // If true, the service will fix any correctable errors and run the corrected choreography
-    // script. If false, the service will reject a choreography script that has any errors.
+    // sequence. If false, the service will reject a choreography sequence that has any errors.
     bool non_strict_parsing = 3;
 }
 
@@ -202,6 +218,7 @@ message DownloadRobotStateLogRequest {
     // Which data should we download.
     LogType log_type = 2;
 }
+
 
 message LoggedJoints {
     LegJointAngles fl = 1; // front left leg joint angles.

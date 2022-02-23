@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -125,20 +125,8 @@ def output_filename(output, response):
     return match.group(1)
 
 
-def prepare_download(hostname, username, password, timespan, channel, message_type, service):
+def prepare_download(robot, timespan, channel, message_type, service):
     """Prepares all arguments for http get request."""
-
-    # Create a robot object.
-    sdk = create_standard_sdk('bddf')
-    robot = sdk.create_robot(hostname)
-
-    # Use the robot object to authenticate to the robot.
-    # A JWT Token is required to download log data.
-    try:
-        robot.authenticate(username, password)
-    except RpcError as err:
-        LOGGER.error("Cannot authenticate to robot to obtain token: %s", err)
-        return 1
 
     # Establish time sync with robot to obtain skew.
     time_sync_client = robot.ensure_client(TimeSyncClient.default_service_name)
@@ -149,7 +137,7 @@ def prepare_download(hostname, username, password, timespan, channel, message_ty
                      time_sync_endpoint.clock_skew.seconds, time_sync_endpoint.clock_skew.nanos)
 
     # Now assemble the query to obtain a bddf file.
-    url = 'https://{}/v1/data-buffer/bddf/'.format(hostname)
+    url = 'https://{}/v1/data-buffer/bddf/'.format(robot.address)
     headers = {"Authorization": "Bearer {}".format(robot.user_token)}
 
     # Get the parameters for limiting the timespan of the response.
@@ -201,7 +189,7 @@ def main():  # pylint: disable=too-many-locals
     parser.add_argument('-s', '--service', help='Specify service name (default=all)')
     parser.add_argument('-o', '--output', help='Output file name (default is "download.bddf"')
 
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     options = parser.parse_args()
 
     if options.verbose:
@@ -211,9 +199,12 @@ def main():  # pylint: disable=too-many-locals
         _print_help_timespan()
         return 0
 
-    url, headers, params = prepare_download(options.hostname, options.username, options.password, \
-                                                options.timespan, \
-                                                options.channel, options.type, options.service)
+    # Create a robot object.
+    sdk = create_standard_sdk('bddf')
+    robot = sdk.create_robot(options.hostname)
+    bosdyn.client.util.authenticate(robot)
+    url, headers, params = prepare_download(robot, options.timespan, options.channel,
+                                            options.type, options.service)
 
     number_of_bytes_processed = 0
     for chunk, total_content_length, response_status_code in collect_and_write_file(

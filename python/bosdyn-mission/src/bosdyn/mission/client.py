@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -105,7 +105,7 @@ class MissionClient(BaseClient):
     def answer_question(self, question_id, code, **kwargs):
         """Specify an answer to the question asked by the mission.
         Args:
-            question_id (int): Id of the question to answer.
+            question_id (int): ID of the question to answer.
             code (int): Answer code.
 
         Raises:

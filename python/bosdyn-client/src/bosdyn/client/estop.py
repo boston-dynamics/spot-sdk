@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -261,7 +261,7 @@ class EstopEndpoint(object):
             self._locked_first_checkin = val
 
     def _set_challenge_without_exception_from_future(self, fut):
-        """Set challenge from response in future, if at all possible."""
+        """Set challenge from the response in the future, if at all possible."""
         new_challenge = None
         try:
             # Try to get the FutureWrapper.result()

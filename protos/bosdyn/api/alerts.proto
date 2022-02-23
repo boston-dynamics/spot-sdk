@@ -1,0 +1,37 @@
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "AlertsProto";
+
+import "google/protobuf/struct.proto";
+
+// Structured data indicating an alert detected off the robot that can be stored in the DataBuffer
+// and associated with with previously stored data.
+message AlertData {
+    enum SeverityLevel {
+        SEVERITY_LEVEL_UNKNOWN = 0;
+        SEVERITY_LEVEL_INFO = 1;
+        SEVERITY_LEVEL_WARN = 2;
+        SEVERITY_LEVEL_ERROR = 3;
+        SEVERITY_LEVEL_CRITICAL = 4;
+    }
+
+    // Severity of this alert.
+    SeverityLevel severity = 1;
+
+    // Human readable alert title/summary.
+    string title = 2;
+
+    // The source that triggered the alert.
+    string source = 3;
+
+    // JSON data for any additional info attached to this alert.
+    google.protobuf.Struct additional_data = 4;
+}

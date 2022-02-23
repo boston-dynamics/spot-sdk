@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -174,18 +174,24 @@ async def process_frame(client, options, shutdown_flag):
 
             if options.count == 0:
                 pil_image = frame.to_image()
-                cv_image = np.array(pil_image) 
+                cv_image = np.array(pil_image)
+                # OpenCV needs BGR
+                cv_image = cv2.cvtColor(cv_image, cv2.COLOR_RGB2BGR)
                 cv2.imshow('display', cv_image)
                 cv2.waitKey(1)
-                continue
-
-            frame.to_image().save(f'{options.dst_prefix}-{count}.jpg')
-            count += 1
-
-            if count >= options.count:
-                break
-        except:
-            pass
+            else:
+                frame.to_image().save(f'{options.dst_prefix}-{count}.jpg')
+                count += 1
+                if count >= options.count:
+                    break
+        except Exception as e:
+            print(e)
+        try:
+            # discard audio frames
+            while not client.audio_frame_queue.empty():
+                await client.audio_frame_queue.get()
+        except Exception as e:
+            print(e)
 
     shutdown_flag.set()
 

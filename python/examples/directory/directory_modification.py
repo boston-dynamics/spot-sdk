@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -25,7 +25,7 @@ import bosdyn.api.directory_registration_pb2 as directory_registration_protos
 
 def directory_spot(config):
     """A simple example of using the Boston Dynamics API to read/modify service configs with spot.
-    
+
     Lists all known services with a robot, adds a service, lists all, modifies the service, lists
     all, deletes the service, lists all.
     """
@@ -34,7 +34,7 @@ def directory_spot(config):
     robot = sdk.create_robot(config.hostname)
 
     # Authenticate robot before being able to use it
-    robot.authenticate(config.username, config.password)
+    bosdyn.client.util.authenticate(robot)
 
     directory_client = robot.ensure_client(
         bosdyn.client.directory.DirectoryClient.default_service_name)
@@ -71,7 +71,7 @@ def print_services(services):
 def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     options = parser.parse_args(argv)
 
     directory_spot(options)

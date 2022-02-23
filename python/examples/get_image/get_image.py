@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -12,7 +12,7 @@ import sys
 from bosdyn.api import image_pb2
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.client.image import ImageClient
+from bosdyn.client.image import ImageClient, build_image_request
 from bosdyn.api import image_pb2
 import cv2
 import numpy as np
@@ -27,22 +27,36 @@ ROTATION_ANGLE = {
     'right_fisheye_image': 180
 }
 
+
+def pixel_format_type_strings():
+    names = image_pb2.Image.PixelFormat.keys()
+    return names[1:]
+
+
+def pixel_format_string_to_enum(enum_string):
+    return dict(image_pb2.Image.PixelFormat.items()).get(enum_string)
+
+
 def main(argv):
     # Parse args
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('--list', help='list image sources', action='store_true')
     parser.add_argument('--auto-rotate', help='rotate right and front images to be upright',
                         action='store_true')
     parser.add_argument('--image-sources', help='Get image from source(s)', action='append')
     parser.add_argument('--image-service', help='Name of the image service to query.',
                         default=ImageClient.default_service_name)
+    parser.add_argument(
+        '--pixel-format', choices=pixel_format_type_strings(),
+        help='Requested pixel format of image. If supplied, will be used for all sources.')
+
     options = parser.parse_args(argv)
 
     # Create robot object with an image client.
     sdk = bosdyn.client.create_standard_sdk('image_capture')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     robot.sync_with_directory()
     robot.time_sync.wait_for_sync()
 
@@ -62,7 +76,12 @@ def main(argv):
     # Optionally capture one or more images.
     if options.image_sources:
         # Capture and save images to disk
-        image_responses = image_client.get_image_from_sources(options.image_sources)
+        pixel_format = pixel_format_string_to_enum(options.pixel_format)
+        image_request = [
+            build_image_request(source, pixel_format=pixel_format)
+            for source in options.image_sources
+        ]
+        image_responses = image_client.get_image(image_request)
 
         for image in image_responses:
             num_bytes = 1  # Assume a default of 1 byte encodings.
@@ -94,7 +113,6 @@ def main(argv):
 
             if options.auto_rotate:
                 img = ndimage.rotate(img, ROTATION_ANGLE[image.source.name])
-
 
             # Save the image from the GetImage request to the current directory with the filename
             # matching that of the image source.

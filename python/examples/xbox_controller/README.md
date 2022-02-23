@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -70,9 +70,8 @@ To install this example on Ubuntu 18.04 and Windows, follow these instructions:
 
 ### Execution
 This example follows the common pattern for expected arguments. It needs the common arguments used to configure the SDK and connect to a Spot:
-- --username 
-- --password
 - hostname passed as the last argument
+- username and password should be set in the environment variables `BOSDYN_CLIENT_USERNAME` and `BOSDYN_CLIENT_PASSWORD`.
 
 **1)** The example needs to be run as sudo. To run a python program as sudo within a virtual environment, you need to specify the python executable in the virtualenv folder:
 

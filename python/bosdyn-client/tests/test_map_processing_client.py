@@ -1,10 +1,10 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""Unit tests for the map prcoessing module."""
+"""Unit tests for the map processing module."""
 import concurrent
 import grpc
 import pytest
@@ -83,7 +83,7 @@ def server(client, service):
     server.stop(0)
 
 
-def test_processs_topology_exceptions(client, service, server):
+def test_process_topology_exceptions(client, service, server):
     make_call = lambda: client.process_topology(map_processing_pb2.ProcessTopologyRequest.Params(),
                                                 True)
     make_call()

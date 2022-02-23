@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -64,7 +64,6 @@ Once the upload completes, go to the "Containers" tab in Portainer and add a con
 set the follow fields:
 * "Name" = Name of the container. This should be set to a unique string that describes the container.
 * "Image" = {IMAGE_NAME}:latest. {IMAGE_NAME} represents the image name used to build the docker image.
-* "Publish all exposed network ports to random host ports" = True. This reduces port conflicts.
 * Under the "Command & logging" tab in the container configuration page, add all of the arguments in the "Command" field. Specifically, these arguments `--host-ip {HOST_COMPUTER_IP} --guid {PAYLOAD_GUID} --secret {PAYLOAD_SECRET} ROBOT_IP` should be required by all software applications running on Spot CORE that need to communicate with on-board services. Make sure the {HOST_COMPUTER_IP} matches the computation payload's IP (by default, this is `192.168.50.5` for the rear-mounted payloads), and ROBOT_IP matches the robot IP from the perspective of the Spot CORE (by default, this is `192.168.50.3`). {PAYLOAD_GUID} and {PAYLOAD_SECRET} should correspond to the computation payload credentials. The list of arguments specified in this section should also include additional arguments expected by the application.
 * Under the "Network" tab in the container configuration page, set the "Network" field to `host` so ports are forwarded correctly between the host OS and the docker container.
 * Under the "Restart policy" tab in the container configuration page, set the policy to "Unless stopped". This will allow the docker container to continue to keep running all the time (even after rebooting the spot core) unless it is manually stopped by a user in Portainer.

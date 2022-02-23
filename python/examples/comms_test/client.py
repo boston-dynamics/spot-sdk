@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -102,7 +102,7 @@ class AsyncMissionState(AsyncPeriodicQuery):
 
 def main(argv):
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('--protocol', default='tcp', type=str, choices=['tcp', 'udp'],
                         help='IP Protocol to use, either tcp or udp.')
     parser.add_argument('--server-port', default=5201, type=int,
@@ -116,7 +116,7 @@ def main(argv):
 
     sdk = bosdyn.client.create_standard_sdk('CommsTestingClient', [MissionClient])
     robot = sdk.create_robot(options.hostname)  #ROBOT_IP
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     robot.sync_with_directory()
 
     _robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
@@ -199,7 +199,7 @@ def main(argv):
                         data_list.append(data_entry)
                         print(data_list[-1])
 
-                        # Create csv with header if it doesn't exist, then write latest row
+                        # Create csv with header if it doesn't exist, then write the latest row
                         keys = data_list[0].keys()
                         if curr_fname == '':
                             curr_fname = create_csv_filename(options.protocol)

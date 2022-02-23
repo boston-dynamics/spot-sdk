@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -33,7 +33,7 @@ See the protobuf's documentation for more details.
 There are some limitations on the configuration:
 
 1) There must be exactly one Endpoint with a role set to `PDB_rooted`.
-2) The `PDB_rooted` Endpoint must have a timeout of 60 seconds or less.
+2) The `PDB_rooted` Endpoint must have a `timeout` of 65530 seconds or less.
 
 The `PDB_rooted` endpoint has its communications verified in the firmware, which is why it has special requirements on its configuration.
 

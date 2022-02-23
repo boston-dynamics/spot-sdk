@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -33,6 +33,7 @@ from .estop import EstopClient
 from .fault import FaultClient
 from .exceptions import Error
 from .graph_nav import GraphNavClient
+from .gripper_camera_param import GripperCameraParamClient
 from .image import ImageClient
 from .ir_enable_disable import IREnableDisableServiceClient
 from .lease import LeaseClient
@@ -48,6 +49,7 @@ from .point_cloud import PointCloudClient
 from .power import PowerClient
 from .processors import AddRequestHeader
 from .recording import GraphNavRecordingServiceClient
+from .ray_cast import RayCastClient
 from .robot import Robot
 from .robot_command import RobotCommandClient
 from .robot_id import RobotIdClient
@@ -111,6 +113,7 @@ _DEFAULT_SERVICE_CLIENTS = [
     FaultClient,
     GraphNavClient,
     GraphNavRecordingServiceClient,
+    GripperCameraParamClient,
     ImageClient,
     IREnableDisableServiceClient,
     LeaseClient,
@@ -124,6 +127,7 @@ _DEFAULT_SERVICE_CLIENTS = [
     PayloadRegistrationClient,
     PointCloudClient,
     PowerClient,
+    RayCastClient,
     RobotCommandClient,
     RobotIdClient,
     RobotStateClient,

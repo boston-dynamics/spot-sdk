@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -28,33 +28,29 @@ def run_docking(config):
     sdk = bosdyn.client.create_standard_sdk('DockingClient')
 
     robot = sdk.create_robot(config.hostname)
-    robot.authenticate(config.username, config.password)
+    bosdyn.client.util.authenticate(robot)
     robot.time_sync.wait_for_sync()
 
     lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
-    # To steal the lease on a running robot you'd like to dock, change this to `lease_client.take()`
-    lease = lease_client.acquire()
-
     command_client = robot.ensure_client(robot_command.RobotCommandClient.default_service_name)
-    try:
-        with bosdyn.client.lease.LeaseKeepAlive(lease_client):
-            # make sure we're powered on and standing
-            robot.power_on()
-            robot_command.blocking_stand(command_client)
 
-            # Dock the robot
-            blocking_dock_robot(robot, config.dock_id)
+    # To steal control away from another user to dock the robot, uncomment the line below.
+    # lease_client.take()
+    with bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
+        # make sure we're powered on and standing
+        robot.power_on()
+        robot_command.blocking_stand(command_client)
 
-            print("Docking Success")
+        # Dock the robot
+        blocking_dock_robot(robot, config.dock_id)
 
-    finally:
-        lease_client.return_lease(lease)
+        print("Docking Success")
 
 
 def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('--dock-id', required=True, type=int, help='Docking station ID to dock at')
     options = parser.parse_args(argv)
     run_docking(options)

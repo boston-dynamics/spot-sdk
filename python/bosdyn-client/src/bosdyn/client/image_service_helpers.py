@@ -1,19 +1,19 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 import logging
+import numpy as np
 import threading
 import time
-from enum import Enum
 from abc import ABC, abstractmethod
 
-import bosdyn.util
 from bosdyn.util import seconds_to_duration, sec_to_nsec
 from bosdyn.client.exceptions import RpcError
 from bosdyn.client.fault import FaultClient, ServiceFaultDoesNotExistError, ServiceFaultAlreadyExistsError
+from bosdyn.client.image import UnsupportedPixelFormatRequestedError
 from bosdyn.client.server_util import populate_response_header
 from bosdyn.client.util import setup_logging
 
@@ -26,6 +26,23 @@ from bosdyn.api import image_service_pb2_grpc
 _LOGGER = logging.getLogger(__name__)
 
 CLEAR_FAULT_RPC_TIMEOUT_SECS = 0.1
+
+def convert_RGB_to_grayscale(image_data_RGB_np):
+    """Convert numpy image from RGB to grayscale using Pillow's formula.
+
+    Args:
+        image_data_RGB_np (numpy array): The RGB image data output from a capture as a 3D numpy
+        array with R, G, B channels in that order in the array.
+    Returns:
+        Converted image_data_np as another 2D numpy array.
+    """
+
+    # gray = 0.299 * red + 0.587 * green + 0.114 * blue
+    # This code performs the above math using integer math and bit shifts for speed.
+    # The constants below are the same as the ones in the above equation multiplied by 2^16
+    # The final addition makes it round the correct direction when it gets truncated by the bit shift.
+    rgb = image_data_RGB_np.astype(np.uint32)
+    return ((rgb[:,:,0] * 19595 + rgb[:,:,1] * 38470 + rgb[:,:,2] * 7471 + 0x8000)>>16).astype(np.uint8)
 
 class CameraInterface(ABC):
     """Abstract class interface for capturing and decoding images from a camera.
@@ -45,16 +62,13 @@ class CameraInterface(ABC):
         pass
 
     @abstractmethod
-    def image_decode(self, image_data, image_proto, image_format, quality_percent):
+    def image_decode(self, image_data, image_proto, image_req):
         """Decode the image data into an Image proto based on the requested format and quality.
 
         Args:
             image_data (Same format as the output of blocking_capture): The image data output from a capture.
             image_proto (image_pb2.Image): The proto message to populate with decoded image data.
-            image_format (image_pb2.Image.Format): Requested image format (e.g. raw, jpeg) for the decoded data. Note,
-                                                   if the image_format is None, the image service should
-                                                   return the appropriate format for the requested image.
-            quality_percent (int): The desired quality percent for decoding the data.
+            image_req (image_pb2.ImageRequest): The image request associated with the image_data.
 
         Returns:
             None.  Mutates the image_proto message with the decoded data. This function should set the image data,
@@ -62,7 +76,6 @@ class CameraInterface(ABC):
             protobuf message.
         """
         pass
-
 
 class VisualImageSource():
     """Helper class to represent a single image source.
@@ -84,13 +97,15 @@ class VisualImageSource():
                                  which returns the gain as a float.
         exposure (float | function): The exposure time for an image in seconds. This can be a fixed
                                      value or a function which returns the exposure time as a float.
+        pixel_formats (image_pb2.Image.PixelFormat[]): Supported pixel formats.
         logger (logging.Logger): Logger for debug and warning messages.
     """
 
     def __init__(self, image_name, camera_interface, rows=None, cols=None, gain=None, exposure=None,
-                 logger=None):
+                 pixel_formats=[], logger=None):
         self.image_source_name = image_name
-        self.image_source_proto = self.make_image_source(image_name, rows, cols)
+        self.supported_pixel_formats = pixel_formats
+        self.image_source_proto = self.make_image_source(image_name, rows, cols, self.supported_pixel_formats)
         self.get_image_capture_params = lambda: self.make_capture_parameters(gain, exposure)
 
         # Ensure the camera_interface is a subclass of CameraInterface and has the defined capture and
@@ -264,30 +279,41 @@ class VisualImageSource():
             # Call the capture function (which is wrapped with an error checker) to block and get the data.
             return self.capture_function()
 
-    def image_decode_with_error_checking(self, image_data, image_proto, decode_format,
-                                         quality_percent):
+    def image_decode_with_error_checking(self, image_data, image_proto, image_req):
         """Decode the image data into an Image proto based on the requested format and quality.
 
         Args:
             image_data(any format): The image data returned by the camera interface's
                                     blocking_capture function.
             image_proto (image_pb2.Image): The image proto to be mutated with the decoded data.
-            decode_format (image_pb2.Image.Format): The requested image format (e.g. jpeg, raw)
-            quality_percent (int): The decode quality percent.
+            img_req (image_pb2.ImageRequest): The image request associated with the image_data.
 
         Returns:
-            Boolean indicating if the decode succeeds. Throws a decode data fault if the image cannot be
-            decoded to the desired format. Mutates the image_proto Image proto with the decoded data
-            if successful.
+            image_pb2.ImageResponse.Status indicating if the decode succeeds, or image format conversion or
+            pixel conversion failed. Throws a decode data fault if the image or
+            pixels cannot be decoded to the desired format. Mutates the image_proto Image proto
+            with the decoded data if successful.
         """
+        decode_format = None
+        quality_percent = None
+        pixel_format = None
+        if image_req:
+            decode_format = image_req.image_format
+            quality_percent = image_req.quality_percent
+            pixel_format = image_req.pixel_format
+            if pixel_format and (pixel_format not in self.supported_pixel_formats):
+                return image_pb2.ImageResponse.STATUS_UNSUPPORTED_PIXEL_FORMAT_REQUESTED
         try:
-            if decode_format == image_pb2.Image.FORMAT_UNKNOWN:
-                decode_format = None
-            self.camera_interface.image_decode(image_data, image_proto, decode_format,
-                                               quality_percent)
+            # Older function definition did not have image_req
+            # Try/except for backwards compatibility
+            try:
+                self.camera_interface.image_decode(image_data, image_proto, image_req)
+            except TypeError:
+                self.camera_interface.image_decode(image_data, image_proto, decode_format,
+                                                   quality_percent)
             # Clear any previous decode data faults after a successful decoding by this image source.
             self.clear_fault(self.decode_data_fault)
-            return True
+            return image_pb2.ImageResponse.STATUS_OK
         except Exception as err:
             decode_format_str = None
             if decode_format is None:
@@ -298,7 +324,7 @@ class VisualImageSource():
                 self.image_source_name, decode_format_str, type(err), err)
             self._maybe_log_error(error_message)
             self.trigger_fault(error_message, self.decode_data_fault)
-            return False
+            return image_pb2.ImageResponse.STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED
 
     def stop_capturing(self, timeout_secs=10):
         """Stop the image capture thread if one exists.
@@ -310,8 +336,9 @@ class VisualImageSource():
             self.capture_thread.stop_capturing(timeout_secs)
 
     @staticmethod
-    def make_image_source(source_name, rows=None, cols=None,
-                          image_type=image_pb2.ImageSource.IMAGE_TYPE_VISUAL):
+    def make_image_source(source_name, rows=None, cols=None, pixel_formats=[],
+                          image_type=image_pb2.ImageSource.IMAGE_TYPE_VISUAL,
+                          image_formats=[image_pb2.Image.FORMAT_JPEG]):
         """Create an instance of the image_pb2.ImageSource for a given source name.
 
         Args:
@@ -319,6 +346,8 @@ class VisualImageSource():
             rows (int): The number of rows of pixels in the image.
             cols (int): The number of cols of pixels in the image.
             image_type (image_pb2.ImageType): The type of image (e.g. visual, depth).
+            image_formats (image_pb2.Image.Format): The image formats supported (jpeg, raw)
+            pixel_formats (image_pb2.Image.PixelFormat): The pixel formats supported
 
         Returns:
             An ImageSource with the cols, rows, and image type populated.
@@ -332,6 +361,8 @@ class VisualImageSource():
 
         # Image from the ricoh theta is a JPEG, which is considered a visual image source (no depth data).
         source.image_type = image_type
+        source.image_formats.extend(image_formats)
+        source.pixel_formats.extend(pixel_formats)
         return source
 
     @staticmethod
@@ -362,7 +393,7 @@ class VisualImageSource():
 
 
 class ImageCaptureThread():
-    """Continuously query and store the last successfully captured image and it's
+    """Continuously query and store the last successfully captured image and its
     associated timestamp for a single camera device.
 
     Args:
@@ -454,7 +485,7 @@ class CameraBaseImageServicer(image_service_pb2_grpc.ImageServiceServicer):
                  use_background_capture_thread=True):
         super(CameraBaseImageServicer, self).__init__()
         if logger is None:
-            # Setup the logger to remove duplicated messages and use a specific logging format.
+            # Set up the logger to remove duplicated messages and use a specific logging format.
             setup_logging(include_dedup_filter=True)
             self.logger = _LOGGER
         else:
@@ -477,7 +508,7 @@ class CameraBaseImageServicer(image_service_pb2_grpc.ImageServiceServicer):
         for source in image_sources:
             # Set the logger for each visual image source to be the logger of the camera service class.
             source.set_logger(self.logger)
-            # Setup the fault client so service faults can be created.
+            # Set up the fault client so service faults can be created.
             source.initialize_faults(self.fault_client, self.service_name)
             # Potentially start the capture threads in the background.
             if use_background_capture_thread:
@@ -502,12 +533,11 @@ class CameraBaseImageServicer(image_service_pb2_grpc.ImageServiceServicer):
         populate_response_header(response, request)
         return response
 
-    def _set_format_and_decode(self, image_data, img_proto, img_format, quality_percent,
-                               image_source_name):
-        """Calls the image_decode_with_error_checking function, which returns a bool if the decode succeeds."""
+    def _set_format_and_decode(self, image_data, img_proto, img_req):
+        """Calls the image_decode_with_error_checking function, which returns a (Boolean, Boolean) if the decode succeeds."""
         # This function should set the image data, pixel format, image format, and transform snapshot fields.
-        return self.image_sources_mapped[image_source_name].image_decode_with_error_checking(
-            image_data, img_proto, img_format, quality_percent)
+        return self.image_sources_mapped[img_req.image_source_name].image_decode_with_error_checking(
+            image_data, img_proto, img_req)
 
     def GetImage(self, request, context):
         """Gets the latest image capture from all the image sources specified in the request.
@@ -526,10 +556,15 @@ class CameraBaseImageServicer(image_service_pb2_grpc.ImageServiceServicer):
             img_resp = response.image_responses.add()
             src_name = img_req.image_source_name
             if src_name not in self.image_sources_mapped:
-                # The requested camera source does not match the name of the Ricoh Theta camera, so if cannot
+                # The requested camera source does not match the name of the Ricoh Theta camera, so it cannot
                 # be completed and will have a failure status in the response message.
                 img_resp.status = image_pb2.ImageResponse.STATUS_UNKNOWN_CAMERA
                 self.logger.warning("Camera source '%s' is unknown.", src_name)
+                continue
+
+            if img_req.resize_ratio < 0 or img_req.resize_ratio > 1:
+                img_resp.status = image_pb2.ImageResponse.STATUS_UNSUPPORTED_RESIZE_RATIO_REQUESTED
+                self.logger.warning("Resize ratio %f is unsupported.", img_req.resize_ratio)
                 continue
 
             # Set the image source information in the response.
@@ -559,11 +594,9 @@ class CameraBaseImageServicer(image_service_pb2_grpc.ImageServiceServicer):
 
             # Set the image data.
             img_resp.shot.image.format = img_req.image_format
-            success = self._set_format_and_decode(captured_image, img_resp.shot.image,
-                                                  img_req.image_format, img_req.quality_percent,
-                                                  src_name)
-            if not success:
-                img_resp.status = image_pb2.ImageResponse.STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED
+            decode_status = self._set_format_and_decode(captured_image, img_resp.shot.image, img_req)
+            if decode_status != image_pb2.ImageResponse.STATUS_OK:
+                img_resp.status = decode_status
 
             # Set that we successfully got the image.
             if img_resp.status == image_pb2.ImageResponse.STATUS_UNKNOWN:

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -14,16 +14,19 @@ import signal
 import threading
 import time
 import os
+import sys
 
 import six
 
 from bosdyn.api.data_buffer_pb2 import Event, TextMessage
 from bosdyn.api.data_index_pb2 import EventsCommentsSpec
 from bosdyn.api import data_acquisition_pb2
+from bosdyn.api import image_pb2
 import bosdyn.client
 from bosdyn.util import (duration_str, timestamp_to_datetime)
+from google.protobuf import json_format
 
-from .auth import InvalidLoginError
+from .auth import InvalidLoginError, InvalidTokenError
 from .exceptions import Error, InvalidAppTokenError, InvalidRequestError, ProxyConnectionError
 from .data_acquisition import DataAcquisitionClient
 from .data_acquisition_helpers import acquire_and_process_request
@@ -47,7 +50,7 @@ from .robot_id import RobotIdClient
 from .robot_state import RobotStateClient
 from .time_sync import TimeSyncClient, TimeSyncEndpoint, TimeSyncError, timespec_to_robot_timespan
 
-from .util import (add_common_arguments, setup_logging)
+from .util import (add_common_arguments, authenticate, setup_logging)
 
 
 # pylint: disable=too-few-public-methods
@@ -80,17 +83,24 @@ class Command(object, six.with_metaclass(abc.ABCMeta)):
 
         try:
             if self.NEED_AUTHENTICATION:
-                robot.authenticate(options.username, options.password)
+                if options.username or options.password:
+                    robot.authenticate(options.username, options.password)
+                else:
+                    authenticate(robot)
                 robot.sync_with_directory()  # Make sure that we can use all registered services.
             return self._run(robot, options)
         except ProxyConnectionError:
-            print('Could not contact robot with hostname "{}".'.format(options.hostname))
+            print('Could not contact robot with hostname "{}".'.format(options.hostname),
+                  file=sys.stderr)
         except InvalidAppTokenError:
-            print('The provided app token "{}" is invalid.'.format(options.app_token))
+            print('The provided app token "{}" is invalid.'.format(options.app_token),
+                  file=sys.stderr)
+        except InvalidTokenError:
+            print('The provided user token is invalid.', file=sys.stderr)
         except InvalidLoginError:
-            print('Username "{}" and/or password are invalid.'.format(options.username))
+            print('Username and/or password are invalid.', file=sys.stderr)
         except Error as err:
-            print('{}: {}'.format(type(err).__name__, err))
+            print('{}: {}'.format(type(err).__name__, err), file=sys.stderr)
 
     @abc.abstractmethod
     def _run(self, robot, options):
@@ -1225,6 +1235,21 @@ class MetricsCommand(Command):
         return '{:.2f} km'.format(float(meters) / 1000)
 
     @staticmethod
+    def _timestamp_str(timestamp):
+        """Converts a timestamp to a human-readable string.
+
+        Args:
+            timestamp: Protobuf timestamp to convert
+
+        Returns:
+             Timestamp string in ISO 8601 format
+
+        """
+        # The json format of a timestamp is a string that looks like '"2022-01-12T21:56:05Z"',
+        # so we strip off the outer quotes and return that.
+        return json_format.MessageToJson(timestamp).strip('"')
+
+    @staticmethod
     def _format_metric(metric):  # pylint: disable=too-many-return-statements
         """Convert metric input to human-readable string.
 
@@ -1234,22 +1259,23 @@ class MetricsCommand(Command):
         Returns:
             String in the format: Label float_value units.
         """
-        if metric.HasField('float_value'):
+        field = metric.WhichOneof('values')
+        if field is None:
+            return '{:20} missing value'.format(metric.label)
+        value = getattr(metric, field)
+
+        # Special case formatting
+        if field == 'duration':
+            return '{:20} {}'.format(metric.label, MetricsCommand._secs_to_hms(value.seconds))
+        elif field == 'timestamp':
+            return '{:20} {}'.format(metric.label, MetricsCommand._timestamp_str(value))
+        elif field == 'float_value':
             if metric.units == 'm':
-                return '{:20} {}'.format(metric.label,
-                                         MetricsCommand._distance_str(metric.float_value))
-            return '{:20} {:.2f} {}'.format(metric.label, metric.float_value, metric.units)
-        elif metric.HasField('int_value'):
-            return '{:20} {} {}'.format(metric.label, metric.int_value, metric.units)
-        elif metric.HasField('bool_value'):
-            return '{:20} {} {}'.format(metric.label, metric.bool_value, metric.units)
-        elif metric.HasField('duration'):
-            return '{:20} {}'.format(metric.label,
-                                     MetricsCommand._secs_to_hms(metric.duration.seconds))
-        elif metric.HasField('string'):
-            return '{:20} {}'.format(metric.label, metric.string_value)
-        # ??
-        return '{:20} {} {}'.format(metric.label, metric.value, metric.units)
+                return '{:20} {}'.format(metric.label, MetricsCommand._distance_str(value))
+            return '{:20} {:.2f} {}'.format(metric.label, value, metric.units)
+        else:
+            # Default formatting
+            return '{:20} {} {}'.format(metric.label, value, metric.units)
 
 
 class TimeSyncCommand(Command):
@@ -1511,8 +1537,12 @@ def _show_image_sources_list(robot, as_proto=False, service_name=None):
         print(proto)
     else:
         for image_source in proto:
-            print("{:30s} ({:d}x{:d})".format(image_source.name, image_source.rows,
-                                              image_source.cols))
+            image_formats = [image_pb2.Image.Format.Name(i)[7:] for i in image_source.image_formats]
+            pixel_formats = [image_pb2.Image.PixelFormat.Name(i)[13:] for i in image_source.pixel_formats]
+            print("{:30s} ({:d}x{:d}) {:15s} {:15s}".format(image_source.name, image_source.rows,
+                                                            image_source.cols,
+                                                            ','.join(image_formats),
+                                                            ','.join(pixel_formats)))
     return True
 
 
@@ -1919,7 +1949,7 @@ class PowerRobotCommand(Command):
     def __init__(self, subparsers, command_dict):
         """Power cycle or power off robot computers.
 
-        Note that this is only compatbile with certain robots. Check HardwareConfiguration for details.
+        Note that this is only compatible with certain robots. Check HardwareConfiguration for details.
 
         Args:
             subparsers: List of argument parsers.
@@ -1937,8 +1967,7 @@ class PowerRobotCommand(Command):
         """
         robot.time_sync.wait_for_sync(timeout_sec=1.0)
         lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
-        lease = lease_client.acquire()
-        with bosdyn.client.lease.LeaseKeepAlive(lease_client):
+        with bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
             power_client = robot.ensure_client(PowerClient.default_service_name)
             if options.cmd == 'cycle':
                 power_cycle_robot(power_client)
@@ -1954,7 +1983,7 @@ class PowerPayloadsCommand(Command):
     def __init__(self, subparsers, command_dict):
         """Power on or off robot payloads.
 
-        Note that this is only compatbile with certain robots. Check HardwareConfiguration for details.
+        Note that this is only compatible with certain robots. Check HardwareConfiguration for details.
 
         Args:
             subparsers: List of argument parsers.
@@ -1972,8 +2001,7 @@ class PowerPayloadsCommand(Command):
 
         robot.time_sync.wait_for_sync(timeout_sec=1.0)
         lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
-        lease = lease_client.acquire()
-        with bosdyn.client.lease.LeaseKeepAlive(lease_client):
+        with bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
             power_client = robot.ensure_client(PowerClient.default_service_name)
             if options.on_off == 'on':
                 power_on_payload_ports(power_client)
@@ -1988,7 +2016,7 @@ class PowerWifiRadioCommand(Command):
     def __init__(self, subparsers, command_dict):
         """Power on or off robot LTE radio.
 
-        Note that this is only compatbile with certain robots. Check HardwareConfiguration for details.
+        Note that this is only compatible with certain robots. Check HardwareConfiguration for details.
 
         Args:
             subparsers: List of argument parsers.
@@ -2006,8 +2034,7 @@ class PowerWifiRadioCommand(Command):
 
         robot.time_sync.wait_for_sync(timeout_sec=1.0)
         lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
-        lease = lease_client.acquire()
-        with bosdyn.client.lease.LeaseKeepAlive(lease_client):
+        with bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
             power_client = robot.ensure_client(PowerClient.default_service_name)
             if options.on_off == 'on':
                 power_on_wifi_radio(power_client)
@@ -2018,7 +2045,7 @@ class PowerWifiRadioCommand(Command):
 def main(args=None):
     """Command-line interface for interacting with robot services."""
     parser = argparse.ArgumentParser(prog='bosdyn.client', description=main.__doc__)
-    add_common_arguments(parser)
+    add_common_arguments(parser, credentials_no_warn=True)
 
     command_dict = {}  # command name to fn which takes parsed options
     subparsers = parser.add_subparsers(title='commands', dest='command')

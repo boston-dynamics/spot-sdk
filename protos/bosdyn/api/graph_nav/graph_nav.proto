@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -19,6 +19,7 @@ import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
 import "bosdyn/api/license.proto";
 import "bosdyn/api/robot_state.proto";
+import "bosdyn/api/world_object.proto";
 
 import "google/protobuf/timestamp.proto";
 
@@ -72,6 +73,7 @@ message SetLocalizationRequest {
     // was used for an initial guess.
     bool refine_fiducial_result_with_icp = 9;
 
+
     // If true, consider how nearby localizations appear (like turned 180).
     bool do_ambiguity_check = 10;
 
@@ -80,6 +82,16 @@ message SetLocalizationRequest {
     // target waypoint does not contain a good measurement of the desired fiducial, nearby waypoints
     // may be used to infer the robot's location.
     bool restrict_fiducial_detections_to_target_waypoint = 11;
+
+}
+
+// Info on whether the robot's current sensor setup is compatible with the recorded data
+// in the map.
+message SensorCompatibilityStatus {
+    // If true, the loaded map has LIDAR data in it.
+    bool map_has_lidar_data = 1;
+    // If true, the robot is currently configured to use LIDAR data.
+    bool robot_configured_for_lidar = 2;
 }
 
 // The SetLocalization response message contains the resulting localization to the map.
@@ -122,6 +134,9 @@ message SetLocalizationResponse {
         // at adjacent waypoints may be used. If there exists no uncertain detection of the fiducial
         // near the target waypoint in the map, the service returns this status.
         STATUS_FIDUCIAL_POSE_UNCERTAIN = 9;
+        // The localization could not be set, because the map was recorded using a different sensor
+        // setup than the robot currently has onboard. See SensorStatus for more details.
+        STATUS_INCOMPATIBLE_SENSORS = 10;
     }
     // Return status for the request.
     Status status = 3;
@@ -144,6 +159,11 @@ message SetLocalizationResponse {
 
     // If the status is ROBOT_IMPAIRED, this is why the robot is impaired.
     RobotImpairedState impaired_state = 8;
+
+    // This status determines whether the robot has compatible sensors for the
+    // map that was recorded. Note that if sensors aren't working, STATUS_IMPARIED
+    // will be returned, rather than STATUS_INCOMPATIBLE_SENSORS.
+    SensorCompatibilityStatus sensor_status = 9;
 }
 
 message RouteGenParams {
@@ -717,7 +737,7 @@ message GetLocalizationStateResponse {
 
 // Clears the graph on the server. Also clears GraphNav's localization to the graph.
 // Note that waypoint and edge snapshots may still be cached on the server after this
-// operation.
+// operation. This RPC may not be used while recording a map.
 message ClearGraphRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -727,10 +747,19 @@ message ClearGraphRequest {
 
 // The results of the ClearGraphRequest.
 message ClearGraphResponse {
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        // Graph Nav is currently recording a map. You must call
+        // StopRecording from the recording service to continue.
+        STATUS_RECORDING = 2;
+    }
     // Common response header.
     ResponseHeader header = 1;
     // Details about how the lease was used.
     LeaseUseResult lease_use_result = 2;
+    // Status of the ClearGraphResponse.
+    Status status = 3;
 }
 
 // Uploads a graph to the server. This graph will be appended to the graph that
@@ -762,6 +791,7 @@ message UploadGraphResponse {
         STATUS_MAP_TOO_LARGE_LICENSE = 3;
         // The graph is invalid topologically, for example containing missing waypoints referenced by edges.
         STATUS_INVALID_GRAPH = 4;
+        STATUS_INCOMPATIBLE_SENSORS = 5;
     };
     // Status for an upload request.
     Status status = 8;
@@ -777,6 +807,7 @@ message UploadGraphResponse {
     repeated string unknown_edge_snapshot_ids = 6;
     // Large graphs can only be uploaded if the license permits them.
     LicenseInfo.Status license_status = 7;
+    SensorCompatibilityStatus sensor_status = 9;
 }
 
 // The DownloadGraphRequest requests that the server send the graph (waypoints and edges)
@@ -820,6 +851,19 @@ message UploadWaypointSnapshotResponse {
     ResponseHeader header = 1;
     // Details about how the lease was used.
     LeaseUseResult lease_use_result = 2;
+
+    enum Status {
+        // Unset.
+        STATUS_UNKNOWN = 0;
+        // Success.
+        STATUS_OK = 1;
+        // The data in this waypoint snapshot is not compatible with the
+        // current configuration of the robot. Check sensor_status for
+        // more details.
+        STATUS_INCOMPATIBLE_SENSORS = 2;
+    }
+    Status status = 3;
+    SensorCompatibilityStatus sensor_status = 4;
 }
 
 // Used to upload edge data in chunks for a specific edge snapshot. Edge snapshots contain
@@ -924,3 +968,4 @@ message DownloadEdgeSnapshotResponse {
     // EdgeSnapshot object.
     DataChunk chunk = 5;
 }
+

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -10,7 +10,10 @@ package bosdyn.api;
 
 option java_outer_classname = "DataAcquisitionProto";
 
+import "bosdyn/api/alerts.proto";
 import "bosdyn/api/header.proto";
+import "bosdyn/api/image.proto";
+import "bosdyn/api/network_compute_bridge.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/struct.proto";
@@ -41,8 +44,22 @@ message ImageAcquisitionCapability {
     // The image service's service name used in directory registration.
     string service_name = 1;
 
-    // List of the image source names reported by the image service (through the ListImageSources RPC).
+    // (Depricate) Please use "image_sources" below for information regarding the image source
+    // associated with the service.
     repeated string image_source_names = 2;
+    
+    // List of image sources reported by the image service (through the ListImageSources RPC).
+    repeated ImageSource image_sources = 3;
+}
+
+message NetworkComputeCapability {
+    // Service information.
+    NetworkComputeServerConfiguration server_config = 1;
+
+    // Provide list of available models
+    repeated string available_models = 2;
+
+    repeated ModelLabels labels = 6;
 }
 
 // A list of all capabilities (data and images) that a specific data acquisition plugin service can successfully
@@ -53,6 +70,9 @@ message AcquisitionCapabilityList {
 
     // List of image data acquisition capabilities.
     repeated ImageAcquisitionCapability image_sources = 3;
+
+    // List of network compute capabilities.
+    repeated NetworkComputeCapability network_compute_sources = 5;
 }
 
 // The CaptureActionId describes the entire capture action for an AcquireData request and will be used
@@ -109,6 +129,18 @@ message AssociatedMetadata {
     Metadata metadata = 2;
 }
 
+// This message can be stored as a DataBlob in the data buffer in order to be recognized as
+// AlertData that is associated with previously stored data.
+message AssociatedAlertData {
+    // The data that this AlertData refers to.
+    // The timestamp field is ignored.
+    // If only the action_id is filled out, this AlertData is associated with the entire capture action.
+    DataIdentifier reference_id = 1;
+
+    // AlertData message to be stored.
+    AlertData alert_data = 2;
+}
+
 // An individual capture which can be specified in the AcquireData request to identify a piece of
 // image data to be collected.
 message ImageSourceCapture {
@@ -118,6 +150,9 @@ message ImageSourceCapture {
     // Specific image source to use from the list reported by the image service within the
     // ImageAcquisitionCapability message.
     string image_source = 2;
+
+    // Specific pixel format to capture reported by the ImageAcquisitionCapability message. 
+    Image.PixelFormat pixel_format = 3;
 }
 
 // An individual capture which can be specified in the AcquireData request to identify a piece of
@@ -128,6 +163,13 @@ message DataCapture {
     string name = 1;
 }
 
+message NetworkComputeCapture {
+    // Data source and model.
+    NetworkComputeInputData input_data = 1;
+    // Which service to use.
+    NetworkComputeServerConfiguration server_config = 2;
+}
+
 // The grouping of all individual image and data captures for a given capture action.
 message AcquisitionRequestList {
     // List of image requests.
@@ -135,6 +177,9 @@ message AcquisitionRequestList {
 
     // List of non-image data and metadata requests.
     repeated DataCapture data_captures = 2;
+
+    // List of Network Compute Bridge requests
+    repeated NetworkComputeCapture network_compute_captures = 4;
 }
 
 // An error associated with a particular capture action and piece of data.
@@ -168,6 +213,30 @@ message PluginServiceError {
 
     // Description of the error.
     string message = 3;
+}
+
+message NetworkComputeError {
+    // Name of the service with the error
+    string service_name = 1;
+
+    enum ErrorCode{
+        STATUS_UNKNOWN = 0;
+        // The request was rejected.
+        STATUS_REQUEST_ERROR = 1;
+        // The request had an error reaching the worker.
+        STATUS_NETWORK_ERROR = 2;
+        // Some other problem prevented the request from succeeding.
+        STATUS_INTERNAL_ERROR = 3;
+    }
+    // General type of error that occurred.
+    ErrorCode error = 2;
+
+    // Any particular failure mode reported.
+    NetworkComputeStatus network_compute_status = 3;
+
+    // Description of the error.
+    string message = 4;
+
 }
 
 message AcquireDataRequest {
@@ -290,6 +359,9 @@ message GetStatusResponse {
     // Services which failed independent of a particular data id.
     // For example, if a plugin times out or crashes, it could be reported here.
     repeated PluginServiceError service_errors = 10;
+    // Network compute services which failed independent of a particular data id.
+    // For example, if a worker times out or crashes, it could be reported here.
+    repeated NetworkComputeError network_compute_errors = 11;
 }
 
 message GetServiceInfoRequest {

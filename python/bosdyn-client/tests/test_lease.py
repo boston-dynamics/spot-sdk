@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -10,6 +10,7 @@ import random
 import threading
 import time
 
+import bosdyn.client
 from bosdyn.client.lease import Lease
 from bosdyn.client.lease import LeaseKeepAlive
 from bosdyn.client.lease import LeaseState
@@ -500,6 +501,14 @@ class MockLeaseClient(object):
         else:
             return None
 
+    def acquire(self, resource):
+        lease = Lease(LeaseProto.Lease(resource=resource, sequence=[1], epoch='1', client_names=['root']))
+        self.lease_wallet.add(lease)
+        return lease
+
+    def return_lease(self, lease):
+        pass
+
 
 class MaxKeepAliveLoops(object):
 
@@ -514,10 +523,24 @@ class MaxKeepAliveLoops(object):
         return True
 
 
-def test_lease_keep_alive_empty_wallet():
+def test_lease_keep_alive_empty_wallet_with_acquire():
     # There should be no calls to RetainLease if the wallet is empty
     lease_wallet = LeaseWallet()
     lease_client = MockLeaseClient(lease_wallet)
+    max_loops = MaxKeepAliveLoops(3)
+    keep_alive = LeaseKeepAlive(lease_client, resource='A', rpc_interval_seconds=.1,
+                                keep_running_cb=max_loops)
+    keep_alive.wait_until_done()
+    assert 3 == max_loops.cur_loops
+    assert 3 == lease_client.retain_lease_calls
+
+def test_lease_keep_alive_empty_wallet_no_acquire():
+    # There should be no calls to RetainLease if the wallet is empty
+    lease_wallet = LeaseWallet()
+    lease_client = MockLeaseClient(lease_wallet)
+    def no_acquire(resource):
+        raise bosdyn.client.Error('No lease given')
+    lease_client.acquire = no_acquire
     max_loops = MaxKeepAliveLoops(3)
     keep_alive = LeaseKeepAlive(lease_client, resource='A', rpc_interval_seconds=.1,
                                 keep_running_cb=max_loops)

@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -26,7 +26,7 @@ The example also requires matplotlib.  Depending on your system you may need to 
 Run the example using:
 
 ```
-python3 -m graph_nav_anchoring_optimization --username USER --password PASSWORD ROBOT_IP
+python3 -m graph_nav_anchoring_optimization ROBOT_IP
 ```
 
 This will load the example map from the data directory, upload it to your robot, and then align it to the provided blueprint.
@@ -92,18 +92,17 @@ The Map Processing Service runs on the robot. Therefore, we will need a connecti
     # Setup and authenticate the robot.
     sdk = bosdyn.client.create_standard_sdk('Anchoring Optimization Example')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     _lease_client = robot.ensure_client(LeaseClient.default_service_name)
 
     # We need a lease for the robot to access the map services. This prevents multiple
     # clients from fighting over the map data.
     _lease_wallet = _lease_client.lease_wallet
-    _lease = _lease_client.acquire()
-    _lease_keepalive = LeaseKeepAlive(_lease_client)
+    with LeaseKeepAlive(_lease_client, return_at_exit=True):
 
-    # Create clients for graph nav and map processing.
-    graph_nav_client = robot.ensure_client(GraphNavClient.default_service_name)
-    map_processing_client = robot.ensure_client(MapProcessingServiceClient.default_service_name)
+        # Create clients for graph nav and map processing.
+        graph_nav_client = robot.ensure_client(GraphNavClient.default_service_name)
+        map_processing_client = robot.ensure_client(MapProcessingServiceClient.default_service_name)
 
 ```
 
@@ -113,9 +112,10 @@ The map processing service requires us to upload a graph nav graph and associate
 
 
 ```python
-    # Load the graph from the disk and upload it to the robot.
-    (graph, waypoint_snapshots, edge_snapshots) = load_graph_and_snapshots(options.input_map)
-    upload_graph_and_snapshots(graph_nav_client, graph, waypoint_snapshots, edge_snapshots)
+        # ... Inside the LeaseKeepAlive context manager
+        # Load the graph from the disk and upload it to the robot.
+        (graph, waypoint_snapshots, edge_snapshots) = load_graph_and_snapshots(options.input_map)
+        upload_graph_and_snapshots(graph_nav_client, graph, waypoint_snapshots, edge_snapshots)
 
 ```
 
@@ -160,7 +160,7 @@ To get the location of a fiducial, we start with a blueprint image (an example i
         # the zy vectors pointing to the left and up respectively.
         # Note that the image origin has z pointing out of the page,
         # y up and x to the right.
-        # Therefore the z axis is equal to (cos(t), sin(t)) and the y axis is
+        # Therefore, the z axis is equal to (cos(t), sin(t)) and the y axis is
         #  (sin(t), -cos(t)).
         rot_matrix = np.array([[0, np.sin(theta), np.cos(theta)],
                                [0, -np.cos(theta),  np.sin(theta)],

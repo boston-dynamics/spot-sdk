@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -24,7 +24,7 @@ class DoorClient(BaseClient):
         super(DoorClient, self).__init__(door_service_pb2_grpc.DoorServiceStub)
 
     def open_door(self, request, **kwargs):
-        """Issue a open door command to the robot.
+        """Issue an open door command to the robot.
 
         Args:
             request (door_pb2.OpenDoorCommandRequest): The door command.

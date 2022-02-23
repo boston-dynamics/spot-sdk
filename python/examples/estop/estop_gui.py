@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -253,7 +253,7 @@ def build_and_run_app(hostname, estop_client, options):
 
 def main(argv):
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('-t', '--timeout', default=5, type=float, help='Timeout in seconds')
     parser.add_argument('--no-on-top', help='Allow window to be hidden.', dest='on_top',
                         action='store_false', default=True)
@@ -265,7 +265,7 @@ def main(argv):
     # Create robot object
     sdk = bosdyn.client.create_standard_sdk('estop_gui')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
 
     # Create estop client for the robot
     estop_client = robot.ensure_client(EstopClient.default_service_name)

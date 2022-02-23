@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -17,6 +17,7 @@ from math import sin, cos, pi, fabs, sqrt
 # The following set of tests are for the math_helpers
 # Still needing tests: Quat class, se3_times_vec3
 
+EPSILON = 0.0001
 
 def test_create_se2_pose():
     # Test creating an SE2Pose from a proto with from_obj()
@@ -664,3 +665,191 @@ def test_quat_to_euler():
     euler_zyx_6 = [round(a, 3) for a in euler_zyx_6]
     assert euler_zyx_5[0] == euler_zyx_6[0]
     assert euler_zyx_5[1] == euler_zyx_6[1]
+
+
+def test_vec2():
+    a_proto = geometry_pb2.Vec2(x=1, y=2)
+    b_proto = geometry_pb2.Vec2(x=-3, y=6)
+
+    # Test from_proto()
+    a = Vec2.from_proto(a_proto)
+    b = Vec2.from_proto(b_proto)
+
+    # Test addition operand
+    result = a + b
+    assert result.x == -2
+    assert result.y == 8
+
+    # Test subtraction operand
+    result = a - b
+    assert result.x == 4
+    assert result.y == -4
+
+    # Test mult operand
+    result = a * 3
+    assert result.x == 3
+    assert result.y == 6
+
+    # Test division operand
+    result = a / 0.5 + b
+    assert result.x == -1
+    assert result.y == 10
+
+    # Test negative operand
+    result = -b
+    assert result.x == 3
+    assert result.y == -6
+
+    # Test rmult
+    result = -2 * b
+    assert result.x == 6
+    assert result.y == -12
+
+    # Test to_proto()
+    a_proto_2 = a.to_proto()
+    assert a_proto_2.x == a_proto.x
+    assert a_proto_2.y == a_proto.y
+
+    # Test .length()
+    assert a.length() == sqrt(5)
+
+    # Test .dot()
+    assert a.dot(b) == 9
+
+    # Test .cross()
+    assert a.cross(b) == 12
+    assert b.cross(a) == -12
+
+
+def test_vec3():
+    a_proto = geometry_pb2.Vec3(x=1, y=2, z=3)
+    b_proto = geometry_pb2.Vec3(x=-3, y=6, z=-9)
+
+    # Test from_proto()
+    a = Vec3.from_proto(a_proto)
+    b = Vec3.from_proto(b_proto)
+
+    # Test addition operand
+    result = a + b
+    assert result.x == -2
+    assert result.y == 8
+    assert result.z == -6
+
+    # Test subtraction operand
+    result = a - b
+    assert result.x == 4
+    assert result.y == -4
+    assert result.z == 12
+
+    # Test mult operand
+    result = a * 3
+    assert result.x == 3
+    assert result.y == 6
+    assert result.z == 9
+
+    # Test division operand
+    result = a / 0.5 + b
+    assert result.x == -1
+    assert result.y == 10
+    assert result.z == -3
+
+    # Test negative operand
+    result = -b
+    assert result.x == 3
+    assert result.y == -6
+    assert result.z == 9
+
+    # Test rmult
+    result = -2 * b
+    assert result.x == 6
+    assert result.y == -12
+    assert result.z == 18
+
+    # Test to_proto()
+    a_proto_2 = a.to_proto()
+    assert a_proto_2.x == a_proto.x
+    assert a_proto_2.y == a_proto.y
+    assert a_proto_2.z == a_proto.z
+
+    # Test .length()
+    assert a.length() == sqrt(14)
+
+    # Test .dot()
+    assert a.dot(b) == -18
+
+    # Test .cross()
+    assert a.cross(b).x == -36
+    assert a.cross(b).y == 0
+    assert a.cross(b).z == 12
+    assert b.cross(a).x == 36
+    assert b.cross(a).y == 0
+    assert b.cross(a).z == -12
+
+
+@pytest.mark.parametrize('desired_x, desired_y, angle', [
+    # Rotate 45 degrees, and see an offset of y on x axis
+    (3, 7, 0.785398),
+    # Rotate -45 degrees, and see an offset of 2 on x axis
+    (5, 5, -0.785398),
+])
+
+
+def test_se2_vec2_mult(desired_x, desired_y, angle):
+    vec_proto = geometry_pb2.Vec2(x=sqrt(2), y=sqrt(2))
+    vec = Vec2.from_proto(vec_proto)
+    se2_proto = geometry_pb2.SE2Pose(position=geometry_pb2.Vec2(x=3, y=5), angle=angle)
+    se2 = SE2Pose.from_proto(se2_proto)
+    result = se2 * vec
+    assert abs(result.x - desired_x) < EPSILON
+    assert abs(result.y - desired_y) < EPSILON
+    assert isinstance(result, Vec2)
+
+
+def test_se3_vec3_mult():
+    vec_proto = geometry_pb2.Vec3(x=sqrt(3), y=sqrt(3), z=sqrt(3))
+    vec = Vec3.from_proto(vec_proto)
+
+    root2o2 = sqrt(2) /2
+    se3_proto = geometry_pb2.SE3Pose(position=geometry_pb2.Vec3(x=1, y=2, z=3),
+                                     rotation=geometry_pb2.Quaternion(w=0, x=root2o2, y=0, z=-root2o2))
+    se3 = SE3Pose.from_proto(se3_proto)
+    result = se3 * vec
+    assert abs(result.x - -0.7320508) < EPSILON
+    assert abs(result.y - 0.2679491) < EPSILON
+    assert abs(result.z - 1.2679491) < EPSILON
+    assert isinstance(result, Vec3)
+
+def test_se2_vec2_mult_exceptions():
+    vec_proto = geometry_pb2.Vec2(x=sqrt(2), y=sqrt(2))
+    vec = Vec2.from_proto(vec_proto)
+    se2_proto = geometry_pb2.SE2Pose(position=geometry_pb2.Vec2(x=3, y=5), angle=0.7)
+    se2 = SE2Pose.from_proto(se2_proto)
+    with pytest.raises(TypeError):
+        vec + " "
+    with pytest.raises(TypeError):
+        vec - " "
+    with pytest.raises(TypeError):
+        vec * " "
+    with pytest.raises(TypeError):
+        vec / " "
+    with pytest.raises(TypeError):
+        " " * vec
+    with pytest.raises(TypeError):
+        se2 * ""
+
+def test_se3_vec3_mult_exceptions():
+    vec_proto = geometry_pb2.Vec3(x=sqrt(2), y=sqrt(2), z=10)
+    vec = Vec3.from_proto(vec_proto)
+    se3 = SE3Pose.from_proto(geometry_pb2.SE3Pose())
+    with pytest.raises(TypeError):
+        vec + " "
+    with pytest.raises(TypeError):
+        vec - " "
+    with pytest.raises(TypeError):
+        vec * " "
+    with pytest.raises(TypeError):
+        vec / " "
+    with pytest.raises(TypeError):
+        " " * vec
+    with pytest.raises(TypeError):
+        se3 * ""

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -33,7 +33,7 @@ setuptools.setup(
     },
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
-    install_requires=['bosdyn-api=={}'.format(SDK_VERSION)],
+    install_requires=['bosdyn-api=={}'.format(SDK_VERSION), 'Deprecated~=1.2.10'],
     classifiers=[
         "Programming Language :: Python :: 3.6",
         "License :: Other/Proprietary License",

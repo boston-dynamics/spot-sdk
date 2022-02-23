@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -6,31 +6,24 @@
 
 """Tutorial to show how to use Spot's arm.
 """
-from __future__ import print_function
 import argparse
 import sys
+import time
+
+import cv2
+import numpy as np
 
 import bosdyn.client
 import bosdyn.client.estop
 import bosdyn.client.lease
 import bosdyn.client.util
-
-from bosdyn.client.robot_command import RobotCommandClient, blocking_stand
-from bosdyn.client.manipulation_api_client import ManipulationApiClient
-from bosdyn.api import manipulation_api_pb2
-from bosdyn.client.frame_helpers import *
-from bosdyn.api import geometry_pb2
-from bosdyn.client.robot_state import RobotStateClient
-from bosdyn.client.image import ImageClient
-from bosdyn.api import image_pb2
+from bosdyn.api import estop_pb2, geometry_pb2, image_pb2, manipulation_api_pb2
 from bosdyn.client.estop import EstopClient
-from bosdyn.api import estop_pb2
-
-import traceback
-import time
-
-import numpy as np
-import cv2
+from bosdyn.client.frame_helpers import VISION_FRAME_NAME, get_vision_tform_body, math_helpers
+from bosdyn.client.image import ImageClient
+from bosdyn.client.manipulation_api_client import ManipulationApiClient
+from bosdyn.client.robot_command import RobotCommandClient, blocking_stand
+from bosdyn.client.robot_state import RobotStateClient
 
 g_image_click = None
 g_image_display = None
@@ -55,7 +48,7 @@ def arm_object_grasp(config):
 
     sdk = bosdyn.client.create_standard_sdk('ArmObjectGraspClient')
     robot = sdk.create_robot(config.hostname)
-    robot.authenticate(config.username, config.password)
+    bosdyn.client.util.authenticate(robot)
     robot.time_sync.wait_for_sync()
 
     assert robot.has_arm(), "Robot requires an arm to run this example."
@@ -70,115 +63,108 @@ def arm_object_grasp(config):
 
     manipulation_api_client = robot.ensure_client(ManipulationApiClient.default_service_name)
 
-    lease = lease_client.acquire()
-    try:
-        with bosdyn.client.lease.LeaseKeepAlive(lease_client):
-            # Now, we are ready to power on the robot. This call will block until the power
-            # is on. Commands would fail if this did not happen. We can also check that the robot is
-            # powered at any point.
-            robot.logger.info("Powering on robot... This may take a several seconds.")
-            robot.power_on(timeout_sec=20)
-            assert robot.is_powered_on(), "Robot power on failed."
-            robot.logger.info("Robot powered on.")
+    with bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
+        # Now, we are ready to power on the robot. This call will block until the power
+        # is on. Commands would fail if this did not happen. We can also check that the robot is
+        # powered at any point.
+        robot.logger.info("Powering on robot... This may take a several seconds.")
+        robot.power_on(timeout_sec=20)
+        assert robot.is_powered_on(), "Robot power on failed."
+        robot.logger.info("Robot powered on.")
 
-            # Tell the robot to stand up. The command service is used to issue commands to a robot.
-            # The set of valid commands for a robot depends on hardware configuration. See
-            # SpotCommandHelper for more detailed examples on command building. The robot
-            # command service requires timesync between the robot and the client.
-            robot.logger.info("Commanding robot to stand...")
-            command_client = robot.ensure_client(RobotCommandClient.default_service_name)
-            blocking_stand(command_client, timeout_sec=10)
-            robot.logger.info("Robot standing.")
+        # Tell the robot to stand up. The command service is used to issue commands to a robot.
+        # The set of valid commands for a robot depends on hardware configuration. See
+        # SpotCommandHelper for more detailed examples on command building. The robot
+        # command service requires timesync between the robot and the client.
+        robot.logger.info("Commanding robot to stand...")
+        command_client = robot.ensure_client(RobotCommandClient.default_service_name)
+        blocking_stand(command_client, timeout_sec=10)
+        robot.logger.info("Robot standing.")
 
-            time.sleep(2.0)
+        # Take a picture with a camera
+        robot.logger.info('Getting an image from: ' + config.image_source)
+        image_responses = image_client.get_image_from_sources([config.image_source])
 
-            # Take a picture with a camera
-            robot.logger.info('Getting an image from: ' + config.image_source)
-            image_responses = image_client.get_image_from_sources([config.image_source])
+        if len(image_responses) != 1:
+            print('Got invalid number of images: ' + str(len(image_responses)))
+            print(image_responses)
+            assert False
 
-            if len(image_responses) != 1:
-                print('Got invalid number of images: ' + str(len(image_responses)))
-                print(image_responses)
-                assert False
+        image = image_responses[0]
+        if image.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_DEPTH_U16:
+            dtype = np.uint16
+        else:
+            dtype = np.uint8
+        img = np.fromstring(image.shot.image.data, dtype=dtype)
+        if image.shot.image.format == image_pb2.Image.FORMAT_RAW:
+            img = img.reshape(image.shot.image.rows, image.shot.image.cols)
+        else:
+            img = cv2.imdecode(img, -1)
 
-            image = image_responses[0]
-            if image.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_DEPTH_U16:
-                dtype = np.uint16
-            else:
-                dtype = np.uint8
-            img = np.fromstring(image.shot.image.data, dtype=dtype)
-            if image.shot.image.format == image_pb2.Image.FORMAT_RAW:
-                img = img.reshape(image.shot.image.rows, image.shot.image.cols)
-            else:
-                img = cv2.imdecode(img, -1)
+        # Show the image to the user and wait for them to click on a pixel
+        robot.logger.info('Click on an object to start grasping...')
+        image_title = 'Click to grasp'
+        cv2.namedWindow(image_title)
+        cv2.setMouseCallback(image_title, cv_mouse_callback)
 
-            # Show the image to the user and wait for them to click on a pixel
-            robot.logger.info('Click on an object to start grasping...')
-            image_title = 'Click to grasp'
-            cv2.namedWindow(image_title)
-            cv2.setMouseCallback(image_title, cv_mouse_callback)
+        global g_image_click, g_image_display
+        g_image_display = img
+        cv2.imshow(image_title, g_image_display)
+        while g_image_click is None:
+            key = cv2.waitKey(1) & 0xFF
+            if key == ord('q') or key == ord('Q'):
+                # Quit
+                print('"q" pressed, exiting.')
+                exit(0)
 
-            global g_image_click, g_image_display
-            g_image_display = img
-            cv2.imshow(image_title, g_image_display)
-            while g_image_click is None:
-                key = cv2.waitKey(1) & 0xFF
-                if key == ord('q') or key == ord('Q'):
-                    # Quit
-                    print('"q" pressed, exiting.')
-                    exit(0)
+        robot.logger.info('Picking object at image location (' + str(g_image_click[0]) + ', ' +
+                          str(g_image_click[1]) + ')')
 
-            robot.logger.info('Picking object at image location (' + str(g_image_click[0]) + ', ' +
-                              str(g_image_click[1]) + ')')
+        pick_vec = geometry_pb2.Vec2(x=g_image_click[0], y=g_image_click[1])
 
-            pick_vec = geometry_pb2.Vec2(x=g_image_click[0], y=g_image_click[1])
+        # Build the proto
+        grasp = manipulation_api_pb2.PickObjectInImage(
+            pixel_xy=pick_vec, transforms_snapshot_for_camera=image.shot.transforms_snapshot,
+            frame_name_image_sensor=image.shot.frame_name_image_sensor,
+            camera_model=image.source.pinhole)
 
-            # Build the proto
-            grasp = manipulation_api_pb2.PickObjectInImage(
-                pixel_xy=pick_vec, transforms_snapshot_for_camera=image.shot.transforms_snapshot,
-                frame_name_image_sensor=image.shot.frame_name_image_sensor,
-                camera_model=image.source.pinhole)
+        # Optionally add a grasp constraint.  This lets you tell the robot you only want top-down grasps or side-on grasps.
+        add_grasp_constraint(config, grasp, robot_state_client)
 
-            # Optionally add a grasp constraint.  This lets you tell the robot you only want top-down grasps or side-on grasps.
-            add_grasp_constraint(config, grasp, robot_state_client)
+        # Ask the robot to pick up the object
+        grasp_request = manipulation_api_pb2.ManipulationApiRequest(pick_object_in_image=grasp)
 
-            # Ask the robot to pick up the object
-            grasp_request = manipulation_api_pb2.ManipulationApiRequest(pick_object_in_image=grasp)
+        # Send the request
+        cmd_response = manipulation_api_client.manipulation_api_command(
+            manipulation_api_request=grasp_request)
+
+        # Get feedback from the robot
+        while True:
+            feedback_request = manipulation_api_pb2.ManipulationApiFeedbackRequest(
+                manipulation_cmd_id=cmd_response.manipulation_cmd_id)
 
             # Send the request
-            cmd_response = manipulation_api_client.manipulation_api_command(
-                manipulation_api_request=grasp_request)
+            response = manipulation_api_client.manipulation_api_feedback_command(
+                manipulation_api_feedback_request=feedback_request)
 
-            # Get feedback from the robot
-            while True:
-                feedback_request = manipulation_api_pb2.ManipulationApiFeedbackRequest(
-                    manipulation_cmd_id=cmd_response.manipulation_cmd_id)
+            print('Current state: ',
+                  manipulation_api_pb2.ManipulationFeedbackState.Name(response.current_state))
 
-                # Send the request
-                response = manipulation_api_client.manipulation_api_feedback_command(
-                    manipulation_api_feedback_request=feedback_request)
+            if response.current_state == manipulation_api_pb2.MANIP_STATE_GRASP_SUCCEEDED or response.current_state == manipulation_api_pb2.MANIP_STATE_GRASP_FAILED:
+                break
 
-                print('Current state: ',
-                      manipulation_api_pb2.ManipulationFeedbackState.Name(response.current_state))
+            time.sleep(0.25)
 
-                if response.current_state == manipulation_api_pb2.MANIP_STATE_GRASP_SUCCEEDED or response.current_state == manipulation_api_pb2.MANIP_STATE_GRASP_FAILED:
-                    break
+        robot.logger.info('Finished grasp.')
+        time.sleep(4.0)
 
-                time.sleep(0.25)
+        robot.logger.info('Sitting down and turning off.')
 
-            robot.logger.info('Finished grasp.')
-            time.sleep(4.0)
-
-            robot.logger.info('Sitting down and turning off.')
-
-            # Power the robot off. By specifying "cut_immediately=False", a safe power off command
-            # is issued to the robot. This will attempt to sit the robot before powering off.
-            robot.power_off(cut_immediately=False, timeout_sec=20)
-            assert not robot.is_powered_on(), "Robot power off failed."
-            robot.logger.info("Robot safely powered off.")
-    finally:
-        # If we successfully acquired a lease, return it.
-        lease_client.return_lease(lease)
+        # Power the robot off. By specifying "cut_immediately=False", a safe power off command
+        # is issued to the robot. This will attempt to sit the robot before powering off.
+        robot.power_off(cut_immediately=False, timeout_sec=20)
+        assert not robot.is_powered_on(), "Robot power off failed."
+        robot.logger.info("Robot safely powered off.")
 
 
 def cv_mouse_callback(event, x, y, flags, param):
@@ -279,7 +265,7 @@ def add_grasp_constraint(config, grasp, robot_state_client):
 def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('-i', '--image-source', help='Get image from source',
                         default='frontleft_fisheye_image')
     parser.add_argument('-t', '--force-top-down-grasp',

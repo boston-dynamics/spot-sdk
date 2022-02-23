@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -35,7 +35,7 @@ To run this example on a Spot CORE, run:
 Otherwise, run:
 
 ```
-sudo docker run -d --name retinanet_server --network host --restart unless-stopped fire_ext_detector -d . --username $USERNAME --password $PASSWORD --port $PORT $ROBOT_IP
+sudo docker run -d --name retinanet_server --network host --env BOSDYN_CLIENT_USERNAME --env BOSDYN_CLIENT_PASSWORD --restart unless-stopped fire_ext_detector -d . --port $PORT $ROBOT_IP
 ```
 
 - `$PORT` is the port to use for the server on the machine the server is running on

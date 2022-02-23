@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -38,6 +38,33 @@ class NetworkComputeBridgeClient(BaseClient):
     def __init__(self):
         super(NetworkComputeBridgeClient,
               self).__init__(network_compute_bridge_service_pb2_grpc.NetworkComputeBridgeStub)
+
+    def list_available_models(self, service_name, **kwargs):
+        """List all available models that the service knows.
+
+        Args:
+            service_name (str): The service to query for models.
+
+        Returns:
+            The full ListAvailableModelsResponse, which contains any models the service or worker
+            service advertise.
+
+        Raises:
+            RpcError: Problem communicating with the robot.
+            ExternalServiceNotFoundError: The network compute bridge worker service was not found in
+                the robot's directory.
+            ExternalServerError: Either the service or worker service threw an error when responding with
+                the set of all models.
+        """
+        request = network_compute_bridge_pb2.ListAvailableModelsRequest()
+        request.server_config.service_name = service_name
+        return self.list_available_models_command(request, **kwargs)
+
+    def list_available_models_async(self, service_name, **kwargs):
+        """Async version of list_available_models()."""
+        request = network_compute_bridge_pb2.ListAvailableModelsRequest()
+        request.server_config.service_name = service_name
+        return self.list_available_models_command_async(request, **kwargs)
 
     def list_available_models_command(self, list_request, **kwargs):
         """List all available models that the service knows.

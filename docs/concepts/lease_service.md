@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -10,7 +10,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 Leases represent ownership of the robot for the purpose of issuing commands to control the robot. There can only ever be a single owner of a specific robot resource at any given time, however an application can delegate the lease to other systems to perform various tasks. Leases can be returned by one application and subsequently acquired by a different application to change ownership. Alternatively, a lease can be revoked by another application to change ownership forcefully.
 
-In addition to identifying ownership, the lease system is used to confirm that a robot is still being controlled and that there are valid communications to the owner. If an owner can no longer be reached within a certain period of time, the lease will automatically be revoked from that owner.
+In addition to identifying ownership, the lease system is used to confirm that a robot is still being controlled and that there are valid communications to the owner. If an owner can no longer be reached within a certain period of time, the lease will become "stale" and may be acquired by another client.  If the owner returns to valid communications before another client acquires, the lease will become "fresh" again.
 
 ## Basic Lease Usage
 
@@ -18,11 +18,21 @@ Services which command or control the robot require a lease. These services will
 
 Applications which want to control the robot will begin by acquiring a lease to the robot. A lease can be acquired with the `AcquireLease` RPC when it has no existing owner.
 
-Throughout the duration of the application, the client should continue to send “keep-alive” signals to continue ownership of the robot’s resources. The “keep-alive” signal is sent as the `RetainLease` RPC. If enough time passes between the last retain lease request received, the robot will revoke ownership of the lease such that other applications can acquire ownership.
+Throughout the duration of the application, the client should continue to send “keep-alive” signals to continue ownership of the robot’s resources. The “keep-alive” signal is sent as the `RetainLease` RPC. If enough time passes between the last retain lease request received, ownership of the lease will be marked "stale" such that other applications can acquire ownership.
 
 When issuing robot commands, the robot will be sent a version of the lease with the specific command to permit the robot to complete the desired command. This lease will automatically be included with the command request when using the SDK
 
-Finally, when the application is complete, it should return the lease. The `ReturnLease` RPC should be used when a client is finished with their ownership to indicate that the robot is no longer owned without waiting for a revocation timeout. Note, applications should only return the lease when it was the one who acquired the lease using the `AcquireLease` RPC. In the case of a remote mission service callback or other services which are delegated the lease by a different main service, the application's service should *not* return the lease when finished - the main service acquired the lease and will return it when complete.
+Finally, when the application is complete, it should return the lease. The `ReturnLease` RPC should be used when a client is finished with their ownership to indicate that the robot is no longer owned without waiting for a revocation timeout. Note, an application should only return the lease when it was the one who acquired the lease using the `AcquireLease` RPC. In the case of a remote mission service callback or other services which are delegated the lease by a different main service, the application's service should *not* return the lease when finished - the main service acquired the lease and will return it when complete.
+
+## [Advanced] Understanding Lease Errors
+
+When a command is sent including a lease, the service checks the following things before accepting the command:
+ - The incoming lease is valid: contains the current epoch, has known robot resources and the resources are correct for this type of command, has a non-empty sequence with a root lease number which has been issued by the lease service.
+ - The incoming lease shows ownership as the newest lease: compares the incoming lease with the service’s current known lease.
+
+The service will then respond to the command with a `LeaseUseResult` proto that indicates whether the incoming lease passed the checks and includes additional information to aid in debugging.
+
+When a command with a lease fails with a lease error, the status within the lease use result provides the root-cause of the failure. In addition to the status, the `LeaseUseResult` proto contains information about the current lease owner of the incoming lease’s resource, the most recent lease known to the system for the incoming lease’s resource, the latest leases for each leaf resource (since these can be different depending on the types of commands sent). This information can be used to react to the lease failure within the client application.
 
 ## [Advanced] Lease Resources
 
@@ -58,12 +68,4 @@ Consider the example below.
 
 A client application took the lease from the tablet (or the tablet lost communication) and now owns the robot. The client application delegates control to graph-nav by creating a sub-lease, and graph-nav again creates a sub-lease to give control to the robot command service. When the tablet attempts to issue a robot command, it will be rejected because it is now considered older.
 
-## [Advanced] Understanding Lease Errors
 
-When a command is sent including a lease, the service checks the following things before accepting the command:
- - The incoming lease is valid: contains the current epoch, has known robot resources and the resources are correct for this type of command, has a non-empty sequence with a root lease number which has been issued by the lease service.
- - The incoming lease shows ownership as the newest lease: compares the incoming lease with the service’s current known lease.
-
-The service will then respond to the command with a `LeaseUseResult` proto that indicates whether the incoming lease passed the checks and includes additional information to aid in debugging.
-
-When a command with a lease fails with a lease error, the status within the lease use result provides the root-cause of the failure. In addition to the status, the LeaseUseResult proto contains information about the current lease owner of the incoming lease’s resource, the most recent lease known to the system for the incoming lease’s resource, the latest leases for each leaf resource (since these can be different depending on the types of commands sent). This information can be used to react to the lease failure within the client application.

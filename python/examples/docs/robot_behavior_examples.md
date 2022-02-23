@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -19,6 +19,5 @@ The following examples show how to command the robot to complete different behav
 * [Xbox Controller](../xbox_controller/README.md)
 * [WASD](../wasd/README.md)
 * [Docking](../docking/README.md)
-* [Post Docking Callbacks](../post_docking_callbacks/README.md)
 * [Animation Recorder](../animation_recorder/README.md)
 * [Auto Return](../auto_return/README.md)

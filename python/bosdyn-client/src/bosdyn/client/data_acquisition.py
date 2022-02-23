@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -97,7 +97,7 @@ class DataAcquisitionClient(BaseClient):
             If the RPC is successful, then it will return the acquire data request id, which can be
             used to check the status of the acquisition and get feedback.
         """
-        request = self.make_acquire_data_request(acquisition_requests, action_name, group_name, 
+        request = self.make_acquire_data_request(acquisition_requests, action_name, group_name,
                                             data_timestamp, metadata)
         return self.call(self._stub.AcquireData, request, value_from_response=get_request_id,
                          error_from_response=acquire_data_error, **kwargs)
@@ -105,18 +105,18 @@ class DataAcquisitionClient(BaseClient):
     def acquire_data_async(self, acquisition_requests, action_name, group_name, data_timestamp=None,
                            metadata=None, **kwargs):
         """Async version of the acquire_data() RPC."""
-        request = self.make_acquire_data_request(acquisition_requests, action_name, group_name, 
+        request = self.make_acquire_data_request(acquisition_requests, action_name, group_name,
                                             data_timestamp, metadata)
         return self.call_async(self._stub.AcquireData, request, value_from_response=get_request_id,
                                error_from_response=acquire_data_error, **kwargs)
 
     def acquire_data_from_request(self, request, **kwargs):
         """Alternate version of acquire_data() that takes an AcquireDataRequest directly.
-           
+
         Returns:
             If the RPC is successful, then it will return the AcquireDataResponse.
         """
-        return self.call(self._stub.AcquireData, request, 
+        return self.call(self._stub.AcquireData, request,
                          error_from_response=acquire_data_error, **kwargs)
 
     def acquire_data_from_request_async(self, request, **kwargs):
@@ -150,7 +150,7 @@ class DataAcquisitionClient(BaseClient):
                                **kwargs)
 
     def get_service_info(self, **kwargs):
-        """Get information from a DAQ service to list it's capabilities - which data, metadata,
+        """Get information from a DAQ service to list its capabilities - which data, metadata,
         or processing the DAQ service will perform.
 
         Raises:

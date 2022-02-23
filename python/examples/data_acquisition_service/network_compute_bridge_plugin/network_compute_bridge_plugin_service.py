@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -24,7 +24,7 @@ from bosdyn.client.network_compute_bridge_client import (NetworkComputeBridgeCli
                                                          ExternalServerError)
 import bosdyn.client.util
 from bosdyn.client.util import setup_logging, GrpcServiceRunner
-# from bosdyn.client.server_util import 
+# from bosdyn.client.server_util import
 
 
 AUTHORITY = 'data-acquisition-ncb-plugin'
@@ -77,7 +77,7 @@ class NetworkComputeBrideAdapter:
             _LOGGER.info('Available models from %s:', self._worker_name)
             for model in response.available_models:
                 _LOGGER.info('   %s', model)
-        
+
         # Compose the list of data capture options.
         capabilities = []
         _LOGGER.info('Available data capture options:')
@@ -103,7 +103,7 @@ class NetworkComputeBrideAdapter:
             _LOGGER.info("Requesting data from %s...", self._worker_name)
             network_compute_bridge_metadata = request.metadata.data["network_compute_bridge"]
             response = self._request_data(request, network_compute_bridge_metadata, store_helper)
-            
+
             for capture in request.acquisition_requests.data_captures:
                 data_id = self._get_data_id(request, capture.name)
 
@@ -112,7 +112,7 @@ class NetworkComputeBrideAdapter:
                     _LOGGER.info("Storing image with data id %s...", data_id)
                     store_helper.state.set_status(data_acquisition_pb2.GetStatusResponse.STATUS_SAVING)
                     store_helper.store_image(response.image_response.shot, data_id)
-                    
+
                 elif capture.name == kCapabilityObjectInImage:
                     store_helper.cancel_check()
                     _LOGGER.info("Storing detection info with data id %s...", data_id)
@@ -143,7 +143,7 @@ class NetworkComputeBrideAdapter:
         Args:
             request (bosdyn.api.AcquirePluginDataRequest): Plugin request.
             capability_name (string):  Name of the capability to get data id for.
-        
+
         Returns:
             The data id associated with the given capability name.
         """
@@ -157,7 +157,7 @@ class NetworkComputeBrideAdapter:
 
         Args:
             request (bosdyn.api.AcquirePluginDataRequest): Plugin request.
-            network_compute_bridge_metadata (google.protobuf.Struct): Metadata containing 
+            network_compute_bridge_metadata (google.protobuf.Struct): Metadata containing
                 information needed for the request
             store_helper (bosdyn.client.DataAcquisitionStoreHelper): Helper used to manage storage
                 of objects in data acquisition store service.
@@ -221,30 +221,15 @@ def add_network_compute_bridge_plugin_arguments(parser):
                         help="Name of the network compute bridge worker to get data from.", required=True)
 
 
-def get_guid_and_secret():
-    # Returns the GUID and secret on the Spot CORE
-    kGuidAndSecretPath = '/opt/payload_credentials/payload_guid_and_secret'
-    try:
-        payload_file = open(kGuidAndSecretPath)
-        guid = payload_file.readline().strip('\n')
-        secret = payload_file.readline().strip('\n')
-    except IOError as io_error:
-        print("Unable to get the GUID/Secret for Spot Core: IOError when reading the file at: "+kGuidAndSecretPath)
-        raise io_error
-    return guid, secret
-
-
 if __name__ == '__main__':
     # Define all arguments used by this service.
     import argparse
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
+    bosdyn.client.util.add_payload_credentials_arguments(parser)
     default_port = 50052
     parser.add_argument('-p', '--port', help=f'Server\'s port number, default: {default_port}',
                         default=default_port)
-    parser.add_argument('--on-spot-core', help='Use SpotCore GUID to register the server with Spot', action='store_true')
-    parser.add_argument('--guid', help='Unique GUID of the payload, new one will be generated if none specified')
-    parser.add_argument('--secret', help='Secret of the payload, new one will be generated if none specified')
     add_network_compute_bridge_plugin_arguments(parser)
     options = parser.parse_args()
 
@@ -256,16 +241,7 @@ if __name__ == '__main__':
     print('Detected IP address as: ' + self_ip)
     sdk = bosdyn.client.create_standard_sdk("PointcloudPluginServiceSDK")
     robot = sdk.create_robot(options.hostname)
-
-    if options.on_spot_core:
-        guid, secret = get_guid_and_secret()
-        robot.authenticate_from_payload_credentials(guid, secret)
-    else:
-        if not options.guid or not options.secret:
-            _LOGGER.error('GUID and secret need to both be specified.')
-            exit(1)
-        else:
-            robot.authenticate_from_payload_credentials(options.guid, options.secret)
+    robot.authenticate_from_payload_credentials(*bosdyn.client.util.get_guid_and_secret(options))
     robot.sync_with_directory()
 
     # Create a service runner to start and maintain the service on background thread.

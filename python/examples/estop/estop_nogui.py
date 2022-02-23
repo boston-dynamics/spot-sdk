@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -21,7 +21,7 @@ import bosdyn.client.util
 
 class EstopNoGui():
     """Provides a software estop without a GUI.
-    
+
     To use this estop, create an instance of the EstopNoGui class and use the stop() and allow()
     functions programmatically.
     """
@@ -62,14 +62,14 @@ def main(argv):
     any way to trigger an estop from the terminal.
     """
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('-t', '--timeout', type=float, default=5, help='Timeout in seconds')
     options = parser.parse_args(argv)
 
     # Create robot object
     sdk = bosdyn.client.create_standard_sdk('estop_nogui')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
 
     # Create estop client for the robot
     estop_client = robot.ensure_client(EstopClient.default_service_name)

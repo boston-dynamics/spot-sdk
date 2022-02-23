@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,8 +13,10 @@ import six
 import google.protobuf.message
 import google.protobuf.text_format
 
+
 from bosdyn.api.mission import mission_pb2, nodes_pb2, util_pb2
 from bosdyn.api.docking import docking_pb2
+from bosdyn.api import geometry_pb2
 from bosdyn.api.graph_nav import graph_nav_pb2
 from bosdyn.mission import constants
 

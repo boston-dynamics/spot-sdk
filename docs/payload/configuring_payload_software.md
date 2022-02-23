@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -79,7 +79,7 @@ This code snippet example uses the API to communicate payload configuration sett
 
     ...
     # Authenticate robot before being able to use it
-    robot.authenticate(config.username, config.password)
+    bosdyn.client.util.authenticate(robot)
 
     # Create a payload registration client
     payload_registration_client = robot.ensure_client(
@@ -158,6 +158,12 @@ Devices on the payload network can reach the robot at 192.168.50.3 via port 443.
 2. TCP/UDP traffic sent to the robot’s IP address  on ports 21000-22000 will be forwarded to 192.168.50.5 on that same port.
 3. TCP traffic sent to the robot's IP address on ports 30022, 30080, or 30443 will be forwarded to 192.168.50.6 on ports 22, 80, or 443.
 4. TCP/UDP traffic sent to the robot on ports 31000-32000 will be forwarded to 192.168.50.6.
+5. TCP traffic sent to the robot's IP address on ports 23022, 23080, or 23443 will be forwarded to 192.168.50.7 on ports 22, 80, or 443.
+6. TCP/UDP traffic sent to the robot’s IP address  on ports 23100-23199 will be forwarded to 192.168.50.7 on that same port.
+7. TCP traffic sent to the robot's IP address on ports 24022, 24080, or 24443 will be forwarded to 192.168.50.8 on ports 22, 80, or 443.
+8. TCP/UDP traffic sent to the robot’s IP address  on ports 24100-24199 will be forwarded to 192.168.50.8 on that same port.
+9. TCP traffic sent to the robot's IP address on ports 25022, 25080, or 25443 will be forwarded to 192.168.50.9 on ports 22, 80, or 443.
+10. TCP/UDP traffic sent to the robot’s IP address  on ports 25100-25199 will be forwarded to 192.168.50.9 on that same port.
 
 
 ## Payload port forwarding table
@@ -165,12 +171,18 @@ Devices on the payload network can reach the robot at 192.168.50.3 via port 443.
 | Description | Robot port  | Target | Protocol |
 | ----------- | ----------- | ------ | -------- |
 | Standard Forwards 1 |	20000 + [22, 80, 443] |	192.168.50.5:[22, 80, 443] |	TCP
-| Fixed Forwards 1 |	21000-22000 |	192.168.50.5:21000-22000 |	TCP/UDP
+|    Fixed Forwards 1 |	21000-22000           |	192.168.50.5:21000-22000   |	TCP/UDP
 | Standard Forwards 2 | 30000 + [22, 80, 443] |	192.168.50.6:[22, 80, 443] |	TCP
-| Fixed Forwards 2 |	31000-32000 |	192.168.50.6:31000-32000 |	TCP/UDP
+|    Fixed Forwards 2 |	31000-32000           |	192.168.50.6:31000-32000   |	TCP/UDP
+| Standard Forwards 3 | 23000 + [22, 80, 443] |	192.168.50.7:[22, 80, 443] |	TCP
+|    Fixed Forwards 3 |	23100-23199           |	192.168.50.7:23100-23199   |	TCP/UDP
+| Standard Forwards 3 | 24000 + [22, 80, 443] |	192.168.50.8:[22, 80, 443] |	TCP
+|    Fixed Forwards 3 |	24100-24199           |	192.168.50.8:24100-24199   |	TCP/UDP
+| Standard Forwards 3 | 25000 + [22, 80, 443] |	192.168.50.9:[22, 80, 443] |	TCP
+|    Fixed Forwards 3 |	25100-25199           |	192.168.50.9:25100-25199   |	TCP/UDP
 
 
-Robot port forwards for ports 20443, 20022, 30443, and 30022 now masquerade. They should allow the payload to respond to forwarded traffic to the robot on any of the robot's ports.
+Robot port forwards for ports ending in 443, 22, and 80 now masquerade. They should allow the payload to respond to forwarded traffic to the robot on any of the robot's interfaces.
 
 All other forwarded ports are purely port forwarded, meaning that packets received by the payload still have the original address of the sender. These port forwards will only connect for hosts on one of the LANs attached to the robot OR for hosts located on the default route as configured in the robot network page.
 

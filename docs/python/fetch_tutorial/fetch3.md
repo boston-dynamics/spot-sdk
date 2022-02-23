@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -447,7 +447,7 @@ kServiceAuthority = "fetch-tutorial-worker.spot.robot"
     robot = sdk.create_robot(options.hostname)
 
     # Authenticate robot before being able to use it
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
 
     directory_client = robot.ensure_client(
         bosdyn.client.directory.DirectoryClient.default_service_name)
@@ -483,7 +483,7 @@ kServiceAuthority = "fetch-tutorial-worker.spot.robot"
                         default=default_port)
     parser.add_argument('-d', '--no-debug', help='Disable writing debug images.', action='store_true')
     parser.add_argument('-n', '--name', help='Service name', default='fetch-server')
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
 
     options = parser.parse_args(argv)
 
@@ -551,7 +551,7 @@ if __name__ == '__main__':
     Run the script:
 </p>
 
-<pre><code class="language-text wrap">python network_compute_server.py -m dogtoy/exported-models/dogtoy-model/saved_model dogtoy/annotations/label_map.pbtxt --username user --password YOUR_ROBOTS_PASSWORD 192.168.80.3
+<pre><code class="language-text wrap">python network_compute_server.py -m dogtoy/exported-models/dogtoy-model/saved_model dogtoy/annotations/label_map.pbtxt 192.168.80.3
 </code></pre>
 
 <p>
@@ -570,7 +570,7 @@ if __name__ == '__main__':
 </p>
 
 <pre><code class="language-text wrap">source my_spot_env/bin/activate
-python -m bosdyn.client 192.168.80.3 --username user --password YOUR_ROBOTS_PASSWORD dir list</code></pre>
+python -m bosdyn.client 192.168.80.3 dir list</code></pre>
 <p>
     Fill in your IP, username, and password.  If it worked, you should see an entry like this:
 </p>

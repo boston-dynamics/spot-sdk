@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -19,14 +19,14 @@ def main():
     commands = set(['state', 'hardware', 'metrics'])
 
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('command', choices=list(commands), help='Command to run')
     options = parser.parse_args()
 
     # Create robot object with an image client.
     sdk = bosdyn.client.create_standard_sdk('RobotStateClient')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
 
     # Make a robot state request

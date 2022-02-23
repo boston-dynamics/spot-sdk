@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -56,7 +56,7 @@ class MySpot(object):
 
         # Use the SDK to create a robot
         self._robot = self._sdk.create_robot(config.hostname)
-        self._robot.authenticate(config.username, config.password)
+        bosdyn.client.util.authenticate(self._robot)
 
     def get_image(self):
         """

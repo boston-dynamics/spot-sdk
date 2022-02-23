@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -286,7 +286,7 @@ kImageSources = [
 
 <pre><code class="language-python">def main(argv):
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument(
         '-s',
         '--ml-service',
@@ -324,7 +324,7 @@ kImageSources = [
 <pre><code class="language-python">    sdk = bosdyn.client.create_standard_sdk('SpotFetchClient')
     sdk.register_service_client(NetworkComputeBridgeClient)
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
 
     # Time sync is necessary so that time-based filter requests can be converted
     robot.time_sync.wait_for_sync()
@@ -626,7 +626,7 @@ if __name__ == '__main__':
 
 <h4>Start (or keep running) your <code>network_compute_server.py</code></h4>
 
-<pre><code class="language-text wrap">python network_compute_server.py -m dogtoy/exported-models/dogtoy-model/saved_model -l dogtoy/annotations/label_map.pbtxt --username user --password YOUR_ROBOTS_PASSWORD 192.168.80.3
+<pre><code class="language-text wrap">python network_compute_server.py -m dogtoy/exported-models/dogtoy-model/saved_model -l dogtoy/annotations/label_map.pbtxt 192.168.80.3
 </code></pre>
 
 <h4>Run <code>fetch.py</code></h4>
@@ -652,7 +652,7 @@ if __name__ == '__main__':
 </aside>
 <br />
 
-<pre><code class="language-text wrap">python fetch.py --username user --password YOUR_ROBOTS_PASSWORD -s fetch-server -m dogtoy-model 192.168.80.3
+<pre><code class="language-text wrap">python fetch.py -s fetch-server -m dogtoy-model 192.168.80.3
 </code></pre>
 <p>
     Upon success, your robot should autonomously find and pick up the dog-toy!

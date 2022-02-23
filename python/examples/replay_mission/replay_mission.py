@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -47,7 +47,7 @@ def main(raw_args=None):
     # Parse command-line arguments
     parser = argparse.ArgumentParser()
 
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
 
     parser.add_argument('--timeout', type=float, default=3.0, dest='timeout',
                         help='Mission client timeout (s).')
@@ -107,7 +107,7 @@ def main(raw_args=None):
             mission_file, map_directory, args.hostname))
 
     # Initialize robot object
-    robot = init_robot(args.hostname, args.username, args.password)
+    robot = init_robot(args.hostname)
 
     # Acquire robot lease
     robot.logger.info('Acquiring lease...')
@@ -177,7 +177,7 @@ def main(raw_args=None):
         lease_client.return_lease(body_lease)
 
 
-def init_robot(hostname, username, password):
+def init_robot(hostname):
     """Initialize robot object"""
 
     # Initialize SDK
@@ -187,7 +187,7 @@ def init_robot(hostname, username, password):
     robot = sdk.create_robot(hostname)
 
     # Authenticate with robot
-    robot.authenticate(username, password)
+    bosdyn.client.util.authenticate(robot)
 
     # Establish time sync with the robot
     robot.time_sync.wait_for_sync()

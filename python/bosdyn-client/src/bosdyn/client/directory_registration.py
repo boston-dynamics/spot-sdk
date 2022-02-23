@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -47,7 +47,9 @@ class DirectoryRegistrationClient(BaseClient):
             directory_registration_service_pb2_grpc.DirectoryRegistrationServiceStub)
 
     def register(self, name, service_type, authority, host_ip, port, user_token_required=True,
-                 application_token_required=False, liveness_timeout_secs=0, **kwargs):
+                 application_token_required=False,
+                 liveness_timeout_secs=0,
+                 **kwargs):
         """Register a service routing with the robot.
 
         If service name already registered, no change will be applied and will raise ServiceAlreadyExistsError.
@@ -88,7 +90,9 @@ class DirectoryRegistrationClient(BaseClient):
                          error_from_response=_directory_register_error, **kwargs)
 
     def update(self, name, service_type, authority, host_ip, port, user_token_required=True,
-               application_token_required=False, liveness_timeout_secs=0, **kwargs):
+               application_token_required=False,
+               liveness_timeout_secs=0,
+               **kwargs):
         """Update a service definition of an existing service that matches the service name.
 
         If service name is not registered, will raise ServiceDoesNotExistError.
@@ -203,7 +207,8 @@ def _directory_unregister_error(response):
 
 
 def reset_service_registration(directory_registration_client, name, service_type, authority,
-                               host_ip, port, user_token_required=True, liveness_timeout_secs=0):
+                               host_ip, port, user_token_required=True,
+                               liveness_timeout_secs=0):
     """Reset a service registration by unregistering the service and then re-registering it.
 
     This is useful when a program wants to register a new service but there may be an old entry
@@ -270,7 +275,8 @@ class DirectoryRegistrationKeepAlive(object):
         self.unregister()
 
     def start(self, directory_name, service_type, authority, host, port, liveness_timeout_secs=None,
-              user_token_required=True, reset_service=True):
+              user_token_required=True,
+              reset_service=True):
         """Register, optionally update, and then kick off thread.
 
         Can not be restarted with this method after a shutdown.
@@ -311,6 +317,7 @@ class DirectoryRegistrationKeepAlive(object):
         self.host = host
         self.port = port
         self.service_type = service_type
+        self.user_token_required = user_token_required
         self.liveness_timeout_secs = liveness_timeout_secs
 
         # This will raise an exception if the thread has already started.
@@ -353,6 +360,7 @@ class DirectoryRegistrationKeepAlive(object):
             try:
                 self.dir_reg_client.register(self.directory_name, self.service_type, self.authority,
                                              self.host, self.port,
+                                             user_token_required=self.user_token_required,
                                              liveness_timeout_secs=self.liveness_timeout_secs,
                                              timeout=self._rpc_timeout)
             except ServiceAlreadyExistsError:

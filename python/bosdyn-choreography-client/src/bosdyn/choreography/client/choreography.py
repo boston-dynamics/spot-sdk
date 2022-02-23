@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -25,10 +25,10 @@ from google.protobuf.wrappers_pb2 import StringValue
 
 LOGGER = logging.getLogger('__name__')
 
-
 class ChoreographyClient(BaseClient):
     """Client for Choreography Service."""
     default_service_name = 'choreography'
+    license_name = 'choreography'
     service_type = 'bosdyn.api.spot.ChoreographyService'
 
     def __init__(self):
@@ -73,6 +73,26 @@ class ChoreographyClient(BaseClient):
             error_from_response=common_header_errors,
             **kwargs)
 
+    def list_all_sequences(self, **kwargs):
+        """Get a list of all sequences currently known about by the robot."""
+        req = choreography_sequence_pb2.ListAllSequencesRequest()
+        return self.call(
+            self._stub.ListAllSequences,
+            req,
+            value_from_response=None,  # Return the complete response message
+            error_from_response=common_header_errors,
+            **kwargs)
+
+    def list_all_sequences_async(self, **kwargs):
+        """Async version of list_all_sequences()."""
+        req = choreography_sequence_pb2.ListAllSequencesRequest()
+        return self.call_async(
+            self._stub.ListAllSequences,
+            req,
+            value_from_response=None,  # Return the complete response message
+            error_from_response=common_header_errors,
+            **kwargs)
+
     def upload_choreography(self, choreography_seq, non_strict_parsing=True, **kwargs):
         """Upload the choreography sequence to the robot.
 
@@ -80,7 +100,7 @@ class ChoreographyClient(BaseClient):
             choreography_seq (choreography_sequence_pb2.ChoreographySequence proto): The
                 dance sequence to be sent and stored on the robot.
             non_strict_parsing (boolean): If true, the robot will fix any correctable errors within
-                the choreogrpahy and allow users to run the dance. If false, if there are errors
+                the choreography and allow users to run the dance. If false, if there are errors
                 the robot will reject the choreography when attempting to run the dance.
 
         Returns:
@@ -173,7 +193,7 @@ class ChoreographyClient(BaseClient):
                     x.append(i)
             return x
 
-        def list_to_formated_string(alist, space):
+        def list_to_formatted_string(alist, space):
             """Helper function for formatting the `cha` file columns."""
             format_str = ''.join(space for _ in alist)
             return format_str.format(*alist)
@@ -207,7 +227,7 @@ class ChoreographyClient(BaseClient):
             header = header + option + "\n"
 
         header = header + ("\n"
-                            "no parameters\n\n" + list_to_formated_string(joint_type_list, joint_spacer) + "\n")
+                            "no parameters\n\n" + list_to_formatted_string(joint_type_list, joint_spacer) + "\n")
 
         spacer_val = '{:<30}'
         ext=".cha"
@@ -300,7 +320,7 @@ class ChoreographyClient(BaseClient):
                     list_values.append(k.joint_angles.gripper_angle.value)
 
                 #format the values of the keyframe and write them to the *.cha animation file
-                f.write(list_to_formated_string(list_values, spacer_val))
+                f.write(list_to_formatted_string(list_values, spacer_val))
                 f.write("\n")
 
         print("Animation *.cha file downloaded to: %s" % file_path)
@@ -353,7 +373,7 @@ class ChoreographyClient(BaseClient):
 
         Args:
             duration_secs (float): The duration of the recording request in seconds. This will
-                apply from when the StartRecording rpc is recieved.
+                apply from when the StartRecording rpc is received.
             continue_session_id (int): If provided, the RPC will continue the recording
                 session associated with that ID.
 
@@ -402,13 +422,14 @@ class ChoreographyClient(BaseClient):
             error_from_response=common_header_errors,
             **kwargs)
 
+
     @staticmethod
     def build_start_recording_state_request(duration_seconds=None, continue_session_id=0):
         """Generate a StartRecordingStateRequest proto.
 
         Args:
             duration_seconds (float): The duration of the recording request in seconds. This will
-                apply from when the StartRecording rpc is recieved.
+                apply from when the StartRecording rpc is received.
             continue_session_id (int): If provided, the RPC will continue the recording
                 session associated with that ID.
 
@@ -463,7 +484,7 @@ class ChoreographyClient(BaseClient):
 
 
 class AnimationUploadHelper:
-    """Helper class to reduce reuploading animations to a robot multiple times.
+    """Helper class to reduce re-uploading animations to a robot multiple times.
 
     This class will generate a hash (unique ID built from the animation protobuf
     message's contents) for each animation proto, and include this hash when initially
@@ -497,7 +518,7 @@ class AnimationUploadHelper:
 
     def initialize(self):
         """Determine which animations are already uploaded on robot."""
-        # Get a list of all the exisiting animations on robot.
+        # Get a list of all the existing animations on robot.
         initial_move_list = self.choreography_client.list_all_moves()
 
         # Iterate over the list of moves the robot currently has. Track any animation moves
@@ -547,13 +568,13 @@ class AnimationUploadHelper:
         NOTE: Protobuf's serialization will not be consistent across protobuf versions or
         even just different languages serializing the same protobuf message. This means that for a
         single protobuf message, there could be multiple different serializations. This is ok for the
-        use-case of the AnimationUploadHelper since the id's are only used for a specific
+        use-case of the AnimationUploadHelper since the ids are only used for a specific
         "session" of Choreographer and the robot's boot session. These are not meant to be the same
         for forever and ever due to the potential inconsistencies mentioned, and should not be used
         with that expectation.
 
         Further, if a single animation proto does not generate the same ID for one "session", then
-        it will just be reuploaded and processed by the robot again.
+        it will just be re-uploaded and processed by the robot again.
 
         Args:
             animation_proto(choreography_sequence_pb2.Animation): Animation to generate a hash for.

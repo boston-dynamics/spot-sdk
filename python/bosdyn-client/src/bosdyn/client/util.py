@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -6,6 +6,7 @@
 
 """Helper functions and classes for creating client applications."""
 
+from __future__ import print_function
 from concurrent import futures
 import copy
 from deprecated import deprecated
@@ -16,12 +17,13 @@ import logging
 import os
 import six
 import signal
+import sys
 import time
 import threading
 
 import bosdyn.client.server_util
 from bosdyn.client.channel import generate_channel_options
-from bosdyn.client.auth import InvalidLoginError
+from bosdyn.client.auth import InvalidLoginError, InvalidTokenError
 from bosdyn.client.exceptions import Error
 import google.protobuf.descriptor
 
@@ -31,13 +33,15 @@ _LOGGER = logging.getLogger(__name__)
 def cli_login_prompt(username=None, password=None):
     """Interactive CLI for scripting conveniences."""
     if username is None:
-        username = six.moves.input('Username for robot: ')
-    else:
-        name = six.moves.input('Username for robot [{}]: '.format(username))
+        print('Username: ', end='', file=sys.stderr)
+        username = six.moves.input('')
+    elif password is None:
+        print('Username for robot [{}]: '.format(username), end='', file=sys.stderr)
+        name = six.moves.input('')
         if name:
             username = name
 
-    password = password or getpass.getpass()
+    password = getpass.getpass(prompt='[{}] Password: '.format(username), stream=sys.stderr)
     return (username, password)
 
 
@@ -51,6 +55,47 @@ def cli_auth(robot, username=None, password=None):
             successful = True
         except (InvalidLoginError, Error) as e:
             _LOGGER.exception(e)
+
+
+def authenticate(robot, askpass=None):
+    """Generic function for authenticating with the robot.
+
+    Tries to authenticate using the following methods, in order:
+        - An existing auth token
+        - Username/Password supplied in the environment
+        - With a specified callback function, returning a username and password.
+        - A command line prompt, if possible (stdin is a tty).
+
+    Args:
+        askpass: A function that retrieves authentication credentials if none are specified via
+                 environment variables.
+    """
+    # Try to re-authenticate with token. Continue if token expired or invalid.
+    if robot.user_token:
+        try:
+            robot.authenticate_with_token(robot.user_token)
+            return
+        except InvalidTokenError as e:
+            pass
+
+    # Try to authenticate with credentials specified in environment.
+    username = os.environ.get('BOSDYN_CLIENT_USERNAME')
+    password = os.environ.get('BOSDYN_CLIENT_PASSWORD')
+    if username and password:
+        robot.authenticate(username, password)
+        return
+
+    # Fail if no way to ask for credentials.
+    if not sys.stdin.isatty() and askpass is None:
+        raise RuntimeError('Stdin is not a tty and no askpass specified.')
+
+    # Get credentials and try to authenticate.
+    if askpass is None:
+        username, password = cli_login_prompt()
+    else:
+        username, password = askpass()
+
+    robot.authenticate(username, password)
 
 
 class DedupLoggingMessages(logging.Filter):
@@ -84,7 +129,7 @@ class DedupLoggingMessages(logging.Filter):
 
 def setup_logging(verbose=False, include_dedup_filter=False,
                   always_print_logger_levels={logging.CRITICAL, logging.ERROR}):
-    """Setup a basic streaming console handler at the root logger.
+    """Set up a basic streaming console handler at the root logger.
 
     Args:
         verbose (boolean): if False (default) show messages at INFO level and above,
@@ -163,26 +208,109 @@ def add_base_arguments(parser):
     parser.add_argument('-v', '--verbose', action='store_true', help='Print debug-level messages')
 
 
-def add_common_arguments(parser):
-    """Add arguments common to most applications used for authentication.
+def add_credentials_arguments(parser, credentials_no_warn=False):
+    """Add username/password flags to parser.
+
+    This function is marked deprecated and will be removed in a future release.
 
     Args:
         parser: Argument parser object.
     """
-    parser.add_argument('--username', help='User name of account to get credentials for.')
-    parser.add_argument('--password', help='Password to get credentials for.')
+
+    def deprecated_username(arg):
+        print(
+            'Command line credentials deprecated! '
+            'Please use BOSDYN_CLIENT_USERNAME and BOSDYN_CLIENT_PASSWORD env vars instead.',
+            file=sys.stderr)
+        return arg
+
+    def deprecated_password(arg):
+        print(
+            'Command line credentials deprecated! '
+            'Please use BOSDYN_CLIENT_USERNAME and BOSDYN_CLIENT_PASSWORD env vars instead.',
+            file=sys.stderr)
+        return arg
+
+    if (not credentials_no_warn):
+        _LOGGER.warn('Credentials in program options is deprecated. '
+                     'Obtain credentials securely, such as with an environment variable, '
+                     'interactive prompt, etc.')
+    parser.add_argument('--username', type=deprecated_username,
+                        help='[DEPRECATED] Username to use for authentication.')
+    parser.add_argument('--password', type=deprecated_password,
+                        help='[DEPRECATED] Password to use for authentication.')
+
+
+def add_common_arguments(parser, credentials_no_warn=False):
+    """Add arguments common to most applications used for authentication.
+
+    This function is marked deprecated and will be removed in a future release.  Users should use
+    add_base_arguments instead.
+
+    Args:
+        parser: Argument parser object.
+    """
+    add_credentials_arguments(parser, credentials_no_warn=credentials_no_warn)
     add_base_arguments(parser)
+
+
+def read_payload_credentials(filename):
+    """Read the guid and secret from a file.  The file should have the guid and secret
+    as the first and second lines in the file.
+
+    Args:
+        filename: Name of the file to read.
+
+    Returns:
+        Tuple of (guid, secret)
+
+    Raises:
+         OSError if the credential file cannot be read.
+         ValueError if the guid or secret are missing from the file.
+    """
+    with open(filename, 'r') as credentials_file:
+        guid = credentials_file.readline().strip()
+        secret = credentials_file.readline().strip()
+    if not guid or not secret:
+        raise ValueError('Failed to load GUID ({}) and/or secret ({}).'.format(guid, secret))
+    return guid, secret
+
+
+def get_guid_and_secret(parsed_options):
+    """Get the guid and secret for a payload, based on the options that were added
+    via add_payload_credentials_arguments().
+
+    Args:
+        parsed_options: Namespace result of parser.parse_args()
+
+    Returns:
+        Tuple of (guid, secret)
+
+    Raises:
+         OSError if the credential file cannot be read.
+         Exception if no applicable arguments are given.
+    """
+    if parsed_options.guid or parsed_options.secret:
+        return parsed_options.guid, parsed_options.secret
+    if parsed_options.payload_credentials_file:
+        return read_payload_credentials(parsed_options.payload_credentials_file)
+    raise Exception('No payload credentials provided. Use --guid and --secret'
+                    ' or --payload-credentials-file.')
 
 
 def add_payload_credentials_arguments(parser, required=True):
     """Add arguments common to most payload related applications.
+    Use get_guid_and_secret() to get the guid and secret from the resulting parse.
 
     Args:
         parser: Argument parser object.
-        required: Require all arguments to be populated.
+        required: Require either the guid/secret or file arguments to be provided.
     """
-    parser.add_argument('--guid', required=required, help='Unique GUID of the payload.')
-    parser.add_argument('--secret', required=required, help='Secret of the payload.')
+    group = parser.add_mutually_exclusive_group(required=required)
+    group.add_argument('--guid', help='Unique GUID of the payload.')
+    parser.add_argument('--secret', help='Secret of the payload.')
+    group.add_argument('--payload-credentials-file',
+                       help='File from which to read payload guid and secret')
 
 
 def add_service_hosting_arguments(parser):

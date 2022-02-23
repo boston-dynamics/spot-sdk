@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -587,7 +587,7 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument("--distance-margin", default=.5,
                         help="Distance [meters] that the robot should stop from the fiducial.")
     parser.add_argument("--limit-speed", default=True, type=lambda x: (str(x).lower() == 'true'),
@@ -617,7 +617,7 @@ def main():
     image_viewer = None
     try:
         with Exit():
-            robot.authenticate(options.username, options.password)
+            bosdyn.client.util.authenticate(robot)
             robot.start_time_sync()
 
             # Verify the robot is not estopped.

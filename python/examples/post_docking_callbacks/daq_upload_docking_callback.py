@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -272,7 +272,7 @@ def run_service(bosdyn_sdk_robot, options, logger=None):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     bosdyn.client.util.add_service_endpoint_arguments(parser)
     parser.add_argument('--destination', default='local', choices=['aws', 'gcp', 'local'])
     parser.add_argument('--time-period', help=('How far back to download DAQ data in minutes.'),
@@ -307,7 +307,7 @@ if __name__ == '__main__':
     # Create and authenticate a bosdyn robot object.
     sdk = bosdyn.client.create_standard_sdk("DaqUploadMissionServiceSDK")
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     robot.time_sync.wait_for_sync()
 
     # Create a service runner to start and maintain the service on background thread.

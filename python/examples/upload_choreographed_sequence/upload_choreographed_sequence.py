@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -14,6 +14,7 @@ import bosdyn.client.util
 from bosdyn.client import create_standard_sdk, RpcError, ResponseError
 from bosdyn.client.exceptions import UnauthenticatedError
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
+from bosdyn.client.license import LicenseClient
 from bosdyn.choreography.client.choreography import ChoreographyClient, load_choreography_sequence_from_txt_file
 
 DEFAULT_DANCE = "default_dance.csq"
@@ -22,16 +23,23 @@ DEFAULT_DANCE = "default_dance.csq"
 def main(argv):
     # Parse args
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('--choreography-filepath',
                         help='The filepath to load the choreographed sequence text file from.')
+    parser.add_argument('--upload-only', action='store_true',
+                        help='Only upload, without executing.')
     options = parser.parse_args(argv)
 
     # Create robot object with the ability to access the ChoreographyClient
     sdk = bosdyn.client.create_standard_sdk('UploadChoreography')
     sdk.register_service_client(ChoreographyClient)
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
+
+    license_client = robot.ensure_client(LicenseClient.default_service_name)
+    if not license_client.get_feature_enabled([ChoreographyClient.license_name])[ChoreographyClient.license_name]:
+        print("This robot is not licensed for choreography.")
+        sys.exit(1)
 
     # Check that an estop is connected with the robot so that the robot commands can be executed.
     assert not robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client, " \
@@ -80,6 +88,12 @@ def main(argv):
         for warn in err.response.warnings:
             error_msg += warn
         print(error_msg)
+        return True
+
+    sequences_on_robot = choreography_client.list_all_sequences()
+    print('Sequence uploaded. All sequences on the robot:\n{}'.format('\n'.join(
+        sequences_on_robot.known_sequences)))
+    if options.upload_only:
         return True
 
     # If the routine was valid, then we can now execute the routine on robot.

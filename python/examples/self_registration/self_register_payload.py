@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -27,7 +27,7 @@ def define_payload(guid, name, description):
     """Return an arbitrary bosdyn.api.Payload object."""
 
     # Populate the fields specified by the input arguments.
-    # Secret does not need to be human readable.
+    # Secret does not need to be human-readable.
     payload = payload_protos.Payload()
     payload.GUID = guid
     payload.name = name
@@ -163,7 +163,7 @@ def self_register_payload(config):
               format(payload.GUID))
 
     # Wait here until the admin authorizes the payload.
-    robot.authenticate_from_payload_credentials(config.guid, config.secret)
+    robot.authenticate_from_payload_credentials(*bosdyn.client.util.get_guid_and_secret(config))
     print('Payload has been authorized by admin.')
 
     return True

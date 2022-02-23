@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -138,7 +138,7 @@ def direct_faulting(robot):
 def main(argv):
     """Demonstrate usage of service faults."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     bosdyn.client.util.add_payload_credentials_arguments(parser, required=False)
     config = parser.parse_args(argv)
 
@@ -151,10 +151,10 @@ def main(argv):
     # We want to register the fake service with a payload, so that future fault reporting can
     # display associated payload info. The GUID provided will be associated with the service
     # and all future service faults.
-    if config.guid and config.secret:
-        robot.authenticate_from_payload_credentials(config.guid, config.secret)
+    if (config.guid and config.secret) or config.payload_credentials_file:
+        robot.authenticate_from_payload_credentials(*bosdyn.client.util.get_guid_and_secret(config))
     elif config.username and config.password:
-        robot.authenticate(config.username, config.password)
+        bosdyn.client.util.authenticate(robot)
     else:
         _LOGGER.error('Must provide either a set of username/password or guid/secret.\nExiting...')
         exit(1)

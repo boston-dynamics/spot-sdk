@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -6,20 +6,16 @@
 
 """Tutorial to show how to use Spot's arm.
 """
-from __future__ import print_function
 import argparse
 import sys
 
-from bosdyn.api import estop_pb2
-
 import bosdyn.client
-from bosdyn.client.estop import EstopClient
 import bosdyn.client.lease
 import bosdyn.client.util
-from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient, blocking_stand
-
-import traceback
-import time
+from bosdyn.api import estop_pb2
+from bosdyn.client.estop import EstopClient
+from bosdyn.client.robot_command import (RobotCommandBuilder, RobotCommandClient,
+                                         block_until_arm_arrives, blocking_stand)
 
 
 def verify_estop(robot):
@@ -41,7 +37,7 @@ def hello_arm(config):
 
     sdk = bosdyn.client.create_standard_sdk('StowUnstowClient')
     robot = sdk.create_robot(config.hostname)
-    robot.authenticate(config.username, config.password)
+    bosdyn.client.util.authenticate(robot)
     robot.time_sync.wait_for_sync()
 
     assert robot.has_arm(), "Robot requires an arm to run this example."
@@ -51,61 +47,54 @@ def hello_arm(config):
     verify_estop(robot)
 
     lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
-    lease = lease_client.acquire()
-    try:
-        with bosdyn.client.lease.LeaseKeepAlive(lease_client):
-            # Now, we are ready to power on the robot. This call will block until the power
-            # is on. Commands would fail if this did not happen. We can also check that the robot is
-            # powered at any point.
-            robot.logger.info("Powering on robot... This may take a several seconds.")
-            robot.power_on(timeout_sec=20)
-            assert robot.is_powered_on(), "Robot power on failed."
-            robot.logger.info("Robot powered on.")
+    with bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
+        # Now, we are ready to power on the robot. This call will block until the power
+        # is on. Commands would fail if this did not happen. We can also check that the robot is
+        # powered at any point.
+        robot.logger.info("Powering on robot... This may take a several seconds.")
+        robot.power_on(timeout_sec=20)
+        assert robot.is_powered_on(), "Robot power on failed."
+        robot.logger.info("Robot powered on.")
 
-            # Tell the robot to stand up. The command service is used to issue commands to a robot.
-            # The set of valid commands for a robot depends on hardware configuration. See
-            # SpotCommandHelper for more detailed examples on command building. The robot
-            # command service requires timesync between the robot and the client.
-            robot.logger.info("Commanding robot to stand...")
-            command_client = robot.ensure_client(RobotCommandClient.default_service_name)
-            blocking_stand(command_client, timeout_sec=10)
-            robot.logger.info("Robot standing.")
+        # Tell the robot to stand up. The command service is used to issue commands to a robot.
+        # The set of valid commands for a robot depends on hardware configuration. See
+        # SpotCommandHelper for more detailed examples on command building. The robot
+        # command service requires timesync between the robot and the client.
+        robot.logger.info("Commanding robot to stand...")
+        command_client = robot.ensure_client(RobotCommandClient.default_service_name)
+        blocking_stand(command_client, timeout_sec=10)
+        robot.logger.info("Robot standing.")
 
-            time.sleep(2.0)
+        # Unstow the arm
+        unstow = RobotCommandBuilder.arm_ready_command()
 
-            # Unstow the arm
-            unstow = RobotCommandBuilder.arm_ready_command()
+        # Issue the command via the RobotCommandClient
+        unstow_command_id = command_client.robot_command(unstow)
 
-            # Issue the command via the RobotCommandClient
-            command_client.robot_command(unstow)
+        robot.logger.info("Unstow command issued.")
+        block_until_arm_arrives(command_client, unstow_command_id, 3.0)
 
-            robot.logger.info("Unstow command issued.")
-            time.sleep(3.0)
+        # Stow the arm
+        # Build the stow command using RobotCommandBuilder
+        stow = RobotCommandBuilder.arm_stow_command()
 
-            # Stow the arm
-            # Build the stow command using RobotCommandBuilder
-            stow = RobotCommandBuilder.arm_stow_command()
+        # Issue the command via the RobotCommandClient
+        stow_command_id = command_client.robot_command(stow)
 
-            # Issue the command via the RobotCommandClient
-            command_client.robot_command(stow)
+        robot.logger.info("Stow command issued.")
+        block_until_arm_arrives(command_client, stow_command_id, 3.0)
 
-            robot.logger.info("Stow command issued.")
-            time.sleep(3.0)
-
-            # Power the robot off. By specifying "cut_immediately=False", a safe power off command
-            # is issued to the robot. This will attempt to sit the robot before powering off.
-            robot.power_off(cut_immediately=False, timeout_sec=20)
-            assert not robot.is_powered_on(), "Robot power off failed."
-            robot.logger.info("Robot safely powered off.")
-    finally:
-        # If we successfully acquired a lease, return it.
-        lease_client.return_lease(lease)
+        # Power the robot off. By specifying "cut_immediately=False", a safe power off command
+        # is issued to the robot. This will attempt to sit the robot before powering off.
+        robot.power_off(cut_immediately=False, timeout_sec=20)
+        assert not robot.is_powered_on(), "Robot power off failed."
+        robot.logger.info("Robot safely powered off.")
 
 
 def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     options = parser.parse_args(argv)
     try:
         hello_arm(options)

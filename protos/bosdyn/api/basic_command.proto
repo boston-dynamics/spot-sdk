@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -74,7 +74,14 @@ message SelfRightCommand {
     }
 
     message Feedback {
-        // SelfRight command request provides no feedback.
+        enum Status {
+            STATUS_UNKNOWN = 0;
+            // Self-right has completed
+            STATUS_COMPLETED = 1;
+            // Robot is in progress of attempting to self-right
+            STATUS_IN_PROGRESS = 2;
+        }
+        Status status = 1;
     }
 }
 
@@ -101,11 +108,22 @@ message FreezeCommand {
 }
 
 // Get robot into a position where it is safe to power down, then power down. If the robot has
-// fallen, it will power down directly. If the robot is not in a safe position, it will get to a
-// safe position before powering down. The robot will not power down until it is in a safe state.
+// fallen, it will power down directly. If the robot is standing, it will first sit then power down.
+// With appropriate request parameters and under limited scenarios, the robot may take additional
+// steps to move to a safe position. The robot will not power down until it is in a sitting state.
 message SafePowerOffCommand {
     message Request {
-        // SafePowerOff command request takes no additional arguments.
+        // Robot action in response to a command received while in an unsafe position. If not 
+        // specified, UNSAFE_MOVE_TO_SAFE_POSITION will be used
+        enum UnsafeAction {
+            UNSAFE_UNKNOWN = 0;
+            // Robot may attempt to move to a safe position (i.e. descends stairs) before sitting
+            // and powering off.
+            UNSAFE_MOVE_TO_SAFE_POSITION = 1; 
+            // Force sit and power off regardless of positioning. Robot will not take additional steps
+            UNSAFE_FORCE_COMMAND = 2;
+        }
+        UnsafeAction unsafe_action = 1;
     }
 
     message Feedback {
@@ -236,20 +254,34 @@ message StandCommand {
     }
 
     message Feedback {
-        // The StandCommand will provide feedback on whether or not the robot has finished
-        // standing up.
+        // The StandCommand will provide two feedback fields: status, and standing_state. Status
+        // reflects if the robot has four legs on the ground and is near a final pose. StandingState
+        // reflects if the robot has converged to a final pose and does not expect future movement.
 
         enum Status {
             // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
             STATUS_UNKNOWN = 0;
             // Robot has finished standing up and has completed desired body trajectory.
-            // Robot is not attempting to move.
             STATUS_IS_STANDING = 1;
             // Robot is trying to come to a steady stand.
             STATUS_IN_PROGRESS = 2;
         }
         // Current status of the command.
         Status status = 1;
+
+        enum StandingState {
+            // STANDING_UNKNOWN should never be used. If used, an internal error has happened.
+            STANDING_UNKNOWN = 0;
+            // Robot is standing up and actively controlling its body so it may occasionally make
+            // small body adjustments.
+            STANDING_CONTROLLED = 1;
+            // Robot is standing still with its body frozen in place so it should not move unless
+            // commanded to. Motion sensitive tasks like laser scanning should be performed in this
+            // state.
+            STANDING_FROZEN = 2;
+        }
+        // What type of standing the robot is doing currently.
+        StandingState standing_state = 2;
     }
 }
 
@@ -305,8 +337,13 @@ message FollowArmCommand {
         // For example, to have the body 0.75 meters behind the hand, use (0.75, 0, 0)
         Vec3 body_offset_from_hand = 1;
 
-        // Optional. If true, the body will be restricted to body orientation offsets only.
-        bool disable_walking = 2;
+        // DEPRECATED as of 3.1.
+        // To reproduce the robot's behavior of disable_walking == true,
+        // issue a StandCommand setting the enable_body_yaw_assist_for_manipulation and
+        // enable_hip_height_assist_for_manipulation MobilityParams to true.  Any combination
+        // of the enable_*_for_manipulation are accepted in stand giving finer control of
+        // the robot's behavior.
+        bool disable_walking = 2 [deprecated = true];
     }
 
     message Feedback {
@@ -447,6 +484,8 @@ message ConstrainedManipulationCommand {
         // This is a required field and used to prevent runaway commands.
         google.protobuf.Timestamp end_time = 8;
 
+        // Whether to enable the robot to take steps during constrained manip to keep the hand in the workspace.
+        google.protobuf.BoolValue enable_robot_locomotion = 9;
     }
 
     message Feedback {

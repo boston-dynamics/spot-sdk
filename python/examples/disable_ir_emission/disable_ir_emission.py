@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -19,7 +19,7 @@ from bosdyn.api import header_pb2
 def main(argv):
     # Parse args
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
 
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--enable', action='store_true', dest='enable', help='Enable IR emissions')
@@ -31,7 +31,7 @@ def main(argv):
     # Create robot object with an IREnableDisableServiceClient client.
     sdk = bosdyn.client.create_standard_sdk('ir_emission_test')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     ir_enable_disable_client = robot.ensure_client(
         IREnableDisableServiceClient.default_service_name)
 

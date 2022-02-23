@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -54,7 +54,7 @@ def get_all_network_compute_services(directory_client):
 def main(argv):
     """An example using the API to list and get specific objects."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('-i', '--image-source', help='Image source on the robot to use.')
     parser.add_argument(
         '-q', '--image-source-service', help=
@@ -93,7 +93,7 @@ def main(argv):
     # Create robot object with a world object client
     sdk = bosdyn.client.create_standard_sdk('IdentifyObjectClient')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
 
     #Time sync is necessary so that time-based filter requests can be converted
     robot.time_sync.wait_for_sync()

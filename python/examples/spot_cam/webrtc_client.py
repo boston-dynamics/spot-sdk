@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -14,6 +14,7 @@ from aiortc import (
     MediaStreamTrack,
 )
 
+from aiortc.contrib.media import MediaBlackhole
 
 class SpotCAMMediaStreamTrack(MediaStreamTrack):
 
@@ -44,6 +45,7 @@ class WebRTCClient:
         self.password = password
         self.sdp_port = sdp_port
         self.media_recorder = media_recorder
+        self.media_black_hole = None
         self.recorder_type = recorder_type
         self.sdp_filename = sdp_filename
         self.cam_ssl_cert = cam_ssl_cert
@@ -111,11 +113,23 @@ class WebRTCClient:
             if self.media_recorder:
                 if track.kind == self.recorder_type:
                     self.media_recorder.addTrack(track)
+                else:
+                    # We only care about the track we are recording.
+                    self.media_black_hole = MediaBlackhole()
+                    self.media_black_hole.addTrack(track)
+                    loop = asyncio.get_event_loop()
+                    loop.create_task(self.media_black_hole.start())
+            else:
+                if track.kind == 'video':
+                    video_track = SpotCAMMediaStreamTrack(track, self.video_frame_queue)
+                    video_track.kind = 'video'
+                    self.pc.addTrack(video_track)
 
-            if track.kind == 'video':
-                video_track = SpotCAMMediaStreamTrack(track, self.video_frame_queue)
-                video_track.kind = 'video'
-                self.pc.addTrack(video_track)
+                if track.kind == 'audio':
+                    self.media_recorder = MediaBlackhole()
+                    self.media_recorder.addTrack(track)
+                    loop = asyncio.get_event_loop()
+                    loop.create_task(self.media_recorder.start())
 
         desc = RTCSessionDescription(sdp_offer, 'offer')
         await self.pc.setRemoteDescription(desc)

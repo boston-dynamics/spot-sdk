@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -20,6 +20,7 @@ from bosdyn.api import local_grid_pb2
 from bosdyn.api import world_object_pb2
 import bosdyn.client
 from bosdyn.client.frame_helpers import *
+from bosdyn.client.image import ImageClient, depth_image_to_pointcloud
 from bosdyn.client.local_grid import LocalGridClient
 from bosdyn.client.robot_state import RobotStateClient
 from bosdyn.client.world_object import WorldObjectClient
@@ -254,6 +255,64 @@ class RobotStateTimedCallbackEvent(object):
             self.robot_state.kinematic_state.transforms_snapshot).to_proto()
         vision_tform_body = se3pose_proto_to_vtk_tf(vision_tform_body_proto)
         self.state_actor.SetUserTransform(vision_tform_body)
+        renwin.Render()
+        renwin.GetRenderWindow().Render()
+
+
+class ImageServiceTimedCallbackEvent(object):
+    """VTK Callback event for Images."""
+
+    def __init__(self, client, image_sources):
+        self.client = client
+        self.image_sources = image_sources
+        self.point_cloud_data = vtk.vtkPolyData()
+        self.image_actor = self.init_image_actor()
+
+    def get_actor(self):
+        """Get the VTK actor for the robot state."""
+        return self.image_actor
+
+    def init_image_actor(self):
+        """Initialize VTK actor objects for the current image."""
+        mapper = vtk.vtkPolyDataMapper()
+        mapper.SetInputData(self.point_cloud_data)
+        mapper.SetScalarVisibility(1)
+        mapper.SetColorModeToDefault()
+
+        actor = vtk.vtkActor()
+        actor.SetMapper(mapper)
+        return actor
+
+    def update_image_actor(self, renwin, event):
+        """Request the most recent image and update the VTK renderer."""
+        image_responses = self.client.get_image_from_sources(self.image_sources)
+
+        # Create storage for the point cloud.
+        vtkPoints = vtk.vtkPoints()
+        vtkCells = vtk.vtkCellArray()
+        vtkDepth = vtk.vtkDoubleArray()
+        vtkDepth.SetName('DepthArray')
+        self.point_cloud_data.SetPoints(vtkPoints)
+        self.point_cloud_data.SetVerts(vtkCells)
+        self.point_cloud_data.GetPointData().SetScalars(vtkDepth)
+        self.point_cloud_data.GetPointData().SetActiveScalars('DepthArray')
+
+        # We requested a single image (hand depth) in the get_image_from_sources call, the first response returned is the result.
+        image = image_responses[0]
+        pts_in_sensor = depth_image_to_pointcloud(image)
+
+        for pt in pts_in_sensor:
+            pointId = vtkPoints.InsertNextPoint(pt[:])
+            vtkDepth.InsertNextValue(pt[2])
+            vtkCells.InsertNextCell(1)
+            vtkCells.InsertCellPoint(pointId)
+
+        # Use the transforms snapshot to get the vision_T_sensor transform to draw the points in the correct reference frame.
+        vision_tform_sensor_proto = get_a_tform_b(image.shot.transforms_snapshot, VISION_FRAME_NAME,
+                                                  image.shot.frame_name_image_sensor).to_proto()
+        vision_tform_sensor = se3pose_proto_to_vtk_tf(vision_tform_sensor_proto)
+        self.image_actor.SetUserTransform(vision_tform_sensor)
+
         renwin.Render()
         renwin.GetRenderWindow().Render()
 
@@ -587,19 +646,23 @@ def main(argv):
     """Main rendering loop for the API streaming visualizer."""
     # Setup the robot.
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('--local-grid', choices=['no-step', 'obstacle-distance', 'terrain'],
                         help='Which local grid to visualize', default=['terrain'], action='append')
+    parser.add_argument('--show-hand-depth',
+                        help='Draw the hand depth data as a point cloud (requires SpotArm)',
+                        action='store_true')
     options = parser.parse_args(argv)
     sdk = bosdyn.client.create_standard_sdk('SpotViz')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     robot.time_sync.wait_for_sync()
 
     # Set up the clients for getting Spot's perception scene.
     local_grid_client = robot.ensure_client(LocalGridClient.default_service_name)
     robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
     world_object_client = robot.ensure_client(WorldObjectClient.default_service_name)
+    image_service_client = robot.ensure_client(ImageClient.default_service_name)
 
     # Create the renderer and camera.
     renderer = vtk.vtkRenderer()
@@ -614,7 +677,7 @@ def main(argv):
 
     renderWindowInteractor = vtk.vtkRenderWindowInteractor()
     renderWindowInteractor.SetRenderWindow(renderWindow)
-    renderWindowInteractor.SetInteractorStyle(vtk.vtkInteractorStyleTerrain())
+    renderWindowInteractor.SetInteractorStyle(vtk.vtkInteractorStyleTrackballCamera())
 
     # Setup the time-based event callbacks for each vtk actor to be visualized.
     robot_state_timer = RobotStateTimedCallbackEvent(robot_state_client)
@@ -632,6 +695,11 @@ def main(argv):
     for actor in world_object_actors:
         renderer.AddActor(actor)
 
+    if robot.has_arm() and options.show_hand_depth:
+        image_service_timer = ImageServiceTimedCallbackEvent(image_service_client, ["hand_depth"])
+        image_service_actor = image_service_timer.get_actor()
+        renderer.AddActor(image_service_actor)
+
     renderWindow.AddRenderer(renderer)
     renderer.ResetCamera()
     renderWindow.Render()
@@ -644,6 +712,10 @@ def main(argv):
                                        local_grid_timer.update_local_grid_actors)
     renderWindowInteractor.AddObserver(vtk.vtkCommand.TimerEvent,
                                        world_object_timer.update_world_object_actor)
+    if robot.has_arm() and options.show_hand_depth:
+        renderWindowInteractor.AddObserver(vtk.vtkCommand.TimerEvent,
+                                           image_service_timer.update_image_actor)
+
     timerId = renderWindowInteractor.CreateRepeatingTimer(100)
     renderWindowInteractor.Start()
     return True

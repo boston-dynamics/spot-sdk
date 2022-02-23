@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -28,30 +28,26 @@ Another useful resource is this simple gcode simulator:
 """
 
 import argparse
+import configparser
 import sys
+import time
+
+import numpy as np
+from google.protobuf import duration_pb2, wrappers_pb2
 
 import bosdyn.client
 import bosdyn.client.lease
 import bosdyn.client.util
-
-from bosdyn.client.image import ImageClient
-from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder, blocking_stand, block_until_arm_arrives
-
-import configparser
-from bosdyn.client.robot_state import RobotStateClient
-from bosdyn.api import arm_surface_contact_pb2
-from bosdyn.api import arm_surface_contact_service_pb2
+from bosdyn.api import (arm_surface_contact_pb2, arm_surface_contact_service_pb2, basic_command_pb2,
+                        geometry_pb2, trajectory_pb2)
 from bosdyn.client.arm_surface_contact import ArmSurfaceContactClient
-from bosdyn.api import geometry_pb2
-from bosdyn.api import trajectory_pb2
-from google.protobuf import duration_pb2
-from google.protobuf import wrappers_pb2
-import time
-import traceback
-import numpy as np
-import copy
-from bosdyn.client.math_helpers import *
-from bosdyn.client.frame_helpers import *
+from bosdyn.client.frame_helpers import (GRAV_ALIGNED_BODY_FRAME_NAME, ODOM_FRAME_NAME,
+                                         VISION_FRAME_NAME, get_a_tform_b, math_helpers)
+from bosdyn.client.math_helpers import Quat, SE2Pose, SE3Pose, math
+from bosdyn.client.robot_command import (RobotCommandBuilder, RobotCommandClient,
+                                         block_for_trajectory_cmd, block_until_arm_arrives,
+                                         blocking_stand)
+from bosdyn.client.robot_state import RobotStateClient
 
 
 def make_orthogonal(primary, secondary):
@@ -150,7 +146,7 @@ class GcodeReader:
 
     def convert_gcode_to_origin_T_goals(self, line):
         raw_line = line
-        comments = ['(', '%']
+        comments = ['(', '%', ';']
 
         for c in comments:
             # Remove anything after a comment
@@ -164,7 +160,7 @@ class GcodeReader:
             # Empty line
             return None
 
-        if array[0] == 'G00' or array[0] == 'G01':
+        if array[0] in ('G00', 'G01', 'G1', 'G0'):
             x = self.last_x
             y = self.last_y
             z = self.last_z
@@ -190,7 +186,7 @@ class GcodeReader:
 
             return [origin_T_goal]
 
-        elif array[0] == 'G02' or array[0] == 'G03':
+        elif array[0] in ('G02', 'G03', 'G2', 'G3'):
             # Circles
             x = self.last_x
             y = self.last_y
@@ -397,6 +393,15 @@ class GcodeReader:
 
         return (self.is_admittance(), world_T_goals, False)
 
+    def test_file_parsing(self):
+        """Parse the file.
+
+        Relies on any errors being logged by self.logger
+        """
+        for line in self.file:
+            self.logger.debug('Line: %s', line.strip())
+            self.convert_gcode_to_origin_T_goals(line)
+
 
 def move_along_trajectory(frame, velocity, se3_poses):
     """ Builds an ArmSE3PoseCommand the arm to a point at a specific speed.  Builds a
@@ -566,8 +571,15 @@ def run_gcode_program(config):
     # (e.g. spot.intranet.example.com) or an IP literal (e.g. 10.0.63.1)
     robot = sdk.create_robot(config.hostname)
 
+    gcode = GcodeReader(gcode_file, scale, robot.logger, below_z_is_admittance, travel_z,
+                        draw_on_wall, gcode_start_x, gcode_start_y)
+
+    if config.test_file_parsing:
+        gcode.test_file_parsing()
+        return
+
     # Clients need to authenticate to a robot before being able to use it.
-    robot.authenticate(config.username, config.password)
+    bosdyn.client.util.authenticate(robot)
 
     # Establish time sync with the robot. This kicks off a background thread to establish time sync.
     # Time sync is required to issue commands to the robot. After starting time sync thread, block
@@ -591,286 +603,282 @@ def run_gcode_program(config):
     # control it. Note that the lease is returned as the "finally" condition in this
     # try-catch-finally block.
     lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
-    lease = lease_client.acquire()
-    try:
-        with bosdyn.client.lease.LeaseKeepAlive(lease_client):
-            # Now, we are ready to power on the robot. This call will block until the power
-            # is on. Commands would fail if this did not happen. We can also check that the robot is
-            # powered at any point.
-            robot.logger.info("Powering on robot... This may take a several seconds.")
-            robot.power_on(timeout_sec=20)
-            assert robot.is_powered_on(), "Robot power on failed."
-            robot.logger.info("Robot powered on.")
+    with bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
+        # Now, we are ready to power on the robot. This call will block until the power
+        # is on. Commands would fail if this did not happen. We can also check that the robot is
+        # powered at any point.
+        robot.logger.info("Powering on robot... This may take a several seconds.")
+        robot.power_on(timeout_sec=20)
+        assert robot.is_powered_on(), "Robot power on failed."
+        robot.logger.info("Robot powered on.")
 
-            # Tell the robot to stand up. The command service is used to issue commands to a robot.
-            # The set of valid commands for a robot depends on hardware configuration. See
-            # SpotCommandHelper for more detailed examples on command building. The robot
-            # command service requires timesync between the robot and the client.
-            robot.logger.info("Commanding robot to stand...")
-            command_client = robot.ensure_client(RobotCommandClient.default_service_name)
-            blocking_stand(command_client, timeout_sec=10)
-            robot.logger.info("Robot standing.")
+        # Tell the robot to stand up. The command service is used to issue commands to a robot.
+        # The set of valid commands for a robot depends on hardware configuration. See
+        # SpotCommandHelper for more detailed examples on command building. The robot
+        # command service requires timesync between the robot and the client.
+        robot.logger.info("Commanding robot to stand...")
+        command_client = robot.ensure_client(RobotCommandClient.default_service_name)
+        blocking_stand(command_client, timeout_sec=10)
+        robot.logger.info("Robot standing.")
 
-            robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
+        robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
+        # Update state
+        robot_state = robot_state_client.get_robot_state()
+
+        # Prep arm
+
+        # Build a position to move the arm to (in meters, relative to the body frame's origin)
+        x = 0.75
+        y = 0
+
+        if not draw_on_wall:
+            z = -0.35
+
+            qw = .707
+            qx = 0
+            qy = .707
+            qz = 0
+        else:
+            z = -0.25
+
+            qw = 1
+            qx = 0
+            qy = 0
+            qz = 0
+
+        flat_body_T_hand = math_helpers.SE3Pose(x, y, z,
+                                                math_helpers.Quat(w=qw, x=qx, y=qy, z=qz))
+        odom_T_flat_body = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot,
+                                         ODOM_FRAME_NAME, GRAV_ALIGNED_BODY_FRAME_NAME)
+        odom_T_hand = odom_T_flat_body * flat_body_T_hand
+
+        robot.logger.info('Moving arm to starting position.')
+
+        # Send the request
+        odom_T_hand_obj = odom_T_hand.to_proto()
+
+        move_time = 0.000001  # move as fast as possible because we will use (default) velocity/accel limiting.
+
+        arm_command = RobotCommandBuilder.arm_pose_command(
+            odom_T_hand_obj.position.x, odom_T_hand_obj.position.y, odom_T_hand_obj.position.z,
+            odom_T_hand_obj.rotation.w, odom_T_hand_obj.rotation.x, odom_T_hand_obj.rotation.y,
+            odom_T_hand_obj.rotation.z, ODOM_FRAME_NAME, move_time)
+
+        command = RobotCommandBuilder.build_synchro_command(arm_command)
+
+        cmd_id = command_client.robot_command(command)
+
+        # Wait for the move to complete
+        block_until_arm_arrives(command_client, cmd_id)
+
+        # Update state and Get the hand position
+        robot_state = robot_state_client.get_robot_state()
+        (world_T_body, body_T_hand, world_T_hand, odom_T_body) = get_transforms(
+            use_vision_frame, robot_state)
+
+        world_T_admittance_frame = geometry_pb2.SE3Pose(
+            position=geometry_pb2.Vec3(x=0, y=0, z=0),
+            rotation=geometry_pb2.Quaternion(w=1, x=0, y=0, z=0))
+        if draw_on_wall:
+            # Create an admittance frame that has Z- along the robot's X axis
+            xhat_ewrt_robot = [0, 0, 1]
+            xhat_ewrt_vo = [0, 0, 0]
+            (xhat_ewrt_vo[0],
+             xhat_ewrt_vo[1], xhat_ewrt_vo[2]) = world_T_body.rot.transform_point(
+                 xhat_ewrt_robot[0], xhat_ewrt_robot[1], xhat_ewrt_robot[2])
+            (z1, z2, z3) = world_T_body.rot.transform_point(-1, 0, 0)
+            zhat_temp = [z1, z2, z3]
+            zhat = make_orthogonal(xhat_ewrt_vo, zhat_temp)
+            yhat = np.cross(zhat, xhat_ewrt_vo)
+            mat = np.array([xhat_ewrt_vo, yhat, zhat]).transpose()
+            q_wall = Quat.from_matrix(mat)
+
+            zero_vec3 = geometry_pb2.Vec3(x=0, y=0, z=0)
+            q_wall_proto = geometry_pb2.Quaternion(w=q_wall.w, x=q_wall.x, y=q_wall.y,
+                                                   z=q_wall.z)
+
+            world_T_admittance_frame = geometry_pb2.SE3Pose(position=zero_vec3,
+                                                            rotation=q_wall_proto)
+
+        # Touch the ground/wall
+        move_arm(robot_state, True, [world_T_hand], arm_surface_contact_client, velocity,
+                 allow_walking, world_T_admittance_frame, press_force_percent, api_send_frame,
+                 use_xy_to_z_cross_term, bias_force_x)
+
+        time.sleep(4.0)
+        last_admittance = True
+
+        # Update state
+        robot_state = robot_state_client.get_robot_state()
+
+        # Get the hand position
+        (world_T_body, body_T_hand, world_T_hand, odom_T_body) = get_transforms(
+            use_vision_frame, robot_state)
+
+        odom_T_ground_plane = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot,
+                                            "odom", "gpe")
+        world_T_odom = world_T_body * odom_T_body.inverse()
+
+        (gx, gy, gz) = world_T_odom.transform_point(odom_T_ground_plane.x,
+                                                    odom_T_ground_plane.y,
+                                                    odom_T_ground_plane.z)
+        ground_plane_rt_vo = [gx, gy, gz]
+
+        # Compute the robot's position on the ground plane.
+        #ground_plane_T_robot = odom_T_ground_plane.inverse() *
+
+        # Compute an origin.
+        if not draw_on_wall:
+            # For on the ground:
+            #   xhat = body x
+            #   zhat = (0,0,1)
+
+            # Ensure the origin is gravity aligned, otherwise we get some height drift.
+            zhat = [0.0, 0.0, 1.0]
+            (x1, x2, x3) = world_T_body.rot.transform_point(1.0, 0.0, 0.0)
+            xhat_temp = [x1, x2, x3]
+            xhat = make_orthogonal(zhat, xhat_temp)
+            yhat = np.cross(zhat, xhat)
+            mat = np.array([xhat, yhat, zhat]).transpose()
+            vo_Q_origin = Quat.from_matrix(mat)
+
+            world_T_origin = SE3Pose(world_T_hand.x, world_T_hand.y, world_T_hand.z,
+                                     vo_Q_origin)
+        else:
+            # todo should I use the same one?
+            world_T_origin = world_T_hand
+
+        gcode.set_origin(world_T_origin, world_T_admittance_frame)
+        robot.logger.info('Origin set')
+
+        (is_admittance, world_T_goals,
+         is_pause) = gcode.get_next_world_T_goals(ground_plane_rt_vo)
+
+        while is_pause:
+            do_pause()
+            (is_admittance, world_T_goals,
+             is_pause) = gcode.get_next_world_T_goals(ground_plane_rt_vo)
+
+        if world_T_goals is None:
+            # we're done!
+            done = True
+
+        move_arm(robot_state, is_admittance, world_T_goals, arm_surface_contact_client,
+                 velocity, allow_walking, world_T_admittance_frame, press_force_percent,
+                 api_send_frame, use_xy_to_z_cross_term, bias_force_x)
+        odom_T_hand_goal = world_T_odom.inverse() * world_T_goals[-1]
+        last_admittance = is_admittance
+
+        done = False
+        while not done:
+
             # Update state
             robot_state = robot_state_client.get_robot_state()
 
-            gcode = GcodeReader(gcode_file, scale, robot.logger, below_z_is_admittance, travel_z,
-                                draw_on_wall, gcode_start_x, gcode_start_y)
-
-            # Prep arm
-
-            # Build a position to move the arm to (in meters, relative to the body frame's origin)
-            x = 0.75
-            y = 0
-
-            if not draw_on_wall:
-                z = -0.35
-
-                qw = .707
-                qx = 0
-                qy = .707
-                qz = 0
-            else:
-                z = -0.25
-
-                qw = 1
-                qx = 0
-                qy = 0
-                qz = 0
-
-            flat_body_T_hand = math_helpers.SE3Pose(x, y, z,
-                                                    math_helpers.Quat(w=qw, x=qx, y=qy, z=qz))
-            odom_T_flat_body = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot,
-                                             ODOM_FRAME_NAME, GRAV_ALIGNED_BODY_FRAME_NAME)
-            odom_T_hand = odom_T_flat_body * flat_body_T_hand
-
-            robot.logger.info('Moving arm to starting position.')
-
-            # Send the request
-            odom_T_hand_obj = odom_T_hand.to_proto()
-
-            move_time = 0.000001  # move as fast as possible because we will use (default) velocity/accel limiting.
-
-            arm_command = RobotCommandBuilder.arm_pose_command(
-                odom_T_hand_obj.position.x, odom_T_hand_obj.position.y, odom_T_hand_obj.position.z,
-                odom_T_hand_obj.rotation.w, odom_T_hand_obj.rotation.x, odom_T_hand_obj.rotation.y,
-                odom_T_hand_obj.rotation.z, ODOM_FRAME_NAME, move_time)
-
-            command = RobotCommandBuilder.build_synchro_command(arm_command)
-
-            cmd_id = command_client.robot_command(command)
-
-            # Wait for the move to complete
-            block_until_arm_arrives(command_client, cmd_id)
-
-            # Update state and Get the hand position
-            robot_state = robot_state_client.get_robot_state()
+            # Determine if we are at the goal point
             (world_T_body, body_T_hand, world_T_hand, odom_T_body) = get_transforms(
                 use_vision_frame, robot_state)
-
-            world_T_admittance_frame = geometry_pb2.SE3Pose(
-                position=geometry_pb2.Vec3(x=0, y=0, z=0),
-                rotation=geometry_pb2.Quaternion(w=1, x=0, y=0, z=0))
-            if draw_on_wall:
-                # Create an admittance frame that has Z- along the robot's X axis
-                xhat_ewrt_robot = [0, 0, 1]
-                xhat_ewrt_vo = [0, 0, 0]
-                (xhat_ewrt_vo[0],
-                 xhat_ewrt_vo[1], xhat_ewrt_vo[2]) = world_T_body.rot.transform_point(
-                     xhat_ewrt_robot[0], xhat_ewrt_robot[1], xhat_ewrt_robot[2])
-                (z1, z2, z3) = world_T_body.rot.transform_point(-1, 0, 0)
-                zhat_temp = [z1, z2, z3]
-                zhat = make_orthogonal(xhat_ewrt_vo, zhat_temp)
-                yhat = np.cross(zhat, xhat_ewrt_vo)
-                mat = np.array([xhat_ewrt_vo, yhat, zhat]).transpose()
-                q_wall = Quat.from_matrix(mat)
-
-                zero_vec3 = geometry_pb2.Vec3(x=0, y=0, z=0)
-                q_wall_proto = geometry_pb2.Quaternion(w=q_wall.w, x=q_wall.x, y=q_wall.y,
-                                                       z=q_wall.z)
-
-                world_T_admittance_frame = geometry_pb2.SE3Pose(position=zero_vec3,
-                                                                rotation=q_wall_proto)
-
-            # Touch the ground/wall
-            move_arm(robot_state, True, [world_T_hand], arm_surface_contact_client, velocity,
-                     allow_walking, world_T_admittance_frame, press_force_percent, api_send_frame,
-                     use_xy_to_z_cross_term, bias_force_x)
-
-            time.sleep(4.0)
-            last_admittance = True
-
-            # Update state
-            robot_state = robot_state_client.get_robot_state()
-
-            # Get the hand position
-            (world_T_body, body_T_hand, world_T_hand, odom_T_body) = get_transforms(
-                use_vision_frame, robot_state)
-
-            odom_T_ground_plane = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot,
-                                                "odom", "gpe")
-            world_T_odom = world_T_body * odom_T_body.inverse()
 
             (gx, gy, gz) = world_T_odom.transform_point(odom_T_ground_plane.x,
                                                         odom_T_ground_plane.y,
                                                         odom_T_ground_plane.z)
             ground_plane_rt_vo = [gx, gy, gz]
 
-            # Compute the robot's position on the ground plane.
-            #ground_plane_T_robot = odom_T_ground_plane.inverse() *
+            world_T_odom = world_T_body * odom_T_body.inverse()
+            odom_T_hand = odom_T_body * body_T_hand
 
-            # Compute an origin.
-            if not draw_on_wall:
-                # For on the ground:
-                #   xhat = body x
-                #   zhat = (0,0,1)
+            admittance_frame_T_world = math_helpers.SE3Pose.from_obj(
+                world_T_admittance_frame).inverse()
+            admit_frame_T_hand = admittance_frame_T_world * world_T_odom * odom_T_body * body_T_hand
+            admit_frame_T_hand_goal = admittance_frame_T_world * world_T_odom * odom_T_hand_goal
 
-                # Ensure the origin is gravity aligned, otherwise we get some height drift.
-                zhat = [0.0, 0.0, 1.0]
-                (x1, x2, x3) = world_T_body.rot.transform_point(1.0, 0.0, 0.0)
-                xhat_temp = [x1, x2, x3]
-                xhat = make_orthogonal(zhat, xhat_temp)
-                yhat = np.cross(zhat, xhat)
-                mat = np.array([xhat, yhat, zhat]).transpose()
-                vo_Q_origin = Quat.from_matrix(mat)
-
-                world_T_origin = SE3Pose(world_T_hand.x, world_T_hand.y, world_T_hand.z,
-                                         vo_Q_origin)
+            if is_admittance:
+                dist = math.sqrt((admit_frame_T_hand.x - admit_frame_T_hand_goal.x)**2 +
+                                 (admit_frame_T_hand.y - admit_frame_T_hand_goal.y)**2)
+                #+ (admit_frame_T_hand.z - admit_frame_T_hand_goal.z)**2 )
             else:
-                # todo should I use the same one?
-                world_T_origin = world_T_hand
+                dist = math.sqrt((admit_frame_T_hand.x - admit_frame_T_hand_goal.x)**2 +
+                                 (admit_frame_T_hand.y - admit_frame_T_hand_goal.y)**2 +
+                                 (admit_frame_T_hand.z - admit_frame_T_hand_goal.z)**2)
 
-            gcode.set_origin(world_T_origin, world_T_admittance_frame)
-            robot.logger.info('Origin set')
+            arm_near_goal = dist < min_dist_to_goal
 
-            (is_admittance, world_T_goals,
-             is_pause) = gcode.get_next_world_T_goals(ground_plane_rt_vo)
-
-            while is_pause:
-                do_pause()
+            if arm_near_goal:
+                # Compute where to go.
                 (is_admittance, world_T_goals,
                  is_pause) = gcode.get_next_world_T_goals(ground_plane_rt_vo)
 
-            if world_T_goals is None:
-                # we're done!
-                done = True
-
-            move_arm(robot_state, is_admittance, world_T_goals, arm_surface_contact_client,
-                     velocity, allow_walking, world_T_admittance_frame, press_force_percent,
-                     api_send_frame, use_xy_to_z_cross_term, bias_force_x)
-            odom_T_hand_goal = world_T_odom.inverse() * world_T_goals[-1]
-            last_admittance = is_admittance
-
-            done = False
-            while not done:
-
-                # Update state
-                robot_state = robot_state_client.get_robot_state()
-
-                # Determine if we are at the goal point
-                (world_T_body, body_T_hand, world_T_hand, odom_T_body) = get_transforms(
-                    use_vision_frame, robot_state)
-
-                (gx, gy, gz) = world_T_odom.transform_point(odom_T_ground_plane.x,
-                                                            odom_T_ground_plane.y,
-                                                            odom_T_ground_plane.z)
-                ground_plane_rt_vo = [gx, gy, gz]
-
-                world_T_odom = world_T_body * odom_T_body.inverse()
-                odom_T_hand = odom_T_body * body_T_hand
-
-                admittance_frame_T_world = math_helpers.SE3Pose.from_obj(
-                    world_T_admittance_frame).inverse()
-                admit_frame_T_hand = admittance_frame_T_world * world_T_odom * odom_T_body * body_T_hand
-                admit_frame_T_hand_goal = admittance_frame_T_world * world_T_odom * odom_T_hand_goal
-
-                if is_admittance:
-                    dist = math.sqrt((admit_frame_T_hand.x - admit_frame_T_hand_goal.x)**2 +
-                                     (admit_frame_T_hand.y - admit_frame_T_hand_goal.y)**2)
-                    #+ (admit_frame_T_hand.z - admit_frame_T_hand_goal.z)**2 )
-                else:
-                    dist = math.sqrt((admit_frame_T_hand.x - admit_frame_T_hand_goal.x)**2 +
-                                     (admit_frame_T_hand.y - admit_frame_T_hand_goal.y)**2 +
-                                     (admit_frame_T_hand.z - admit_frame_T_hand_goal.z)**2)
-
-                arm_near_goal = dist < min_dist_to_goal
-
-                if arm_near_goal:
-                    # Compute where to go.
+                while is_pause:
+                    do_pause()
                     (is_admittance, world_T_goals,
                      is_pause) = gcode.get_next_world_T_goals(ground_plane_rt_vo)
 
-                    while is_pause:
-                        do_pause()
-                        (is_admittance, world_T_goals,
-                         is_pause) = gcode.get_next_world_T_goals(ground_plane_rt_vo)
+                if world_T_goals is None:
+                    # we're done!
+                    done = True
+                    robot.logger.info("Gcode program finished.")
+                    break
 
-                    if world_T_goals is None:
-                        # we're done!
-                        done = True
-                        robot.logger.info("Gcode program finished.")
-                        break
+                move_arm(robot_state, is_admittance, world_T_goals, arm_surface_contact_client,
+                         velocity, allow_walking, world_T_admittance_frame, press_force_percent,
+                         api_send_frame, use_xy_to_z_cross_term, bias_force_x)
+                odom_T_hand_goal = world_T_odom.inverse() * world_T_goals[-1]
 
-                    move_arm(robot_state, is_admittance, world_T_goals, arm_surface_contact_client,
-                             velocity, allow_walking, world_T_admittance_frame, press_force_percent,
-                             api_send_frame, use_xy_to_z_cross_term, bias_force_x)
-                    odom_T_hand_goal = world_T_odom.inverse() * world_T_goals[-1]
+                if is_admittance != last_admittance:
+                    if is_admittance:
+                        print('Waiting for touchdown...')
+                        time.sleep(3.0)  # pause to wait for touchdown
+                    else:
+                        time.sleep(1.0)
+                last_admittance = is_admittance
+            elif not is_admittance:
+                # We are in a travel move, so we'll keep updating to account for a changing
+                # ground plane.
+                (is_admittance, world_T_goals, is_pause) = gcode.get_next_world_T_goals(
+                    ground_plane_rt_vo, read_new_line=False)
 
-                    if is_admittance != last_admittance:
-                        if is_admittance:
-                            print('Waiting for touchdown...')
-                            time.sleep(3.0)  # pause to wait for touchdown
-                        else:
-                            time.sleep(1.0)
-                    last_admittance = is_admittance
-                elif not is_admittance:
-                    # We are in a travel move, so we'll keep updating to account for a changing
-                    # ground plane.
-                    (is_admittance, world_T_goals, is_pause) = gcode.get_next_world_T_goals(
-                        ground_plane_rt_vo, read_new_line=False)
+        # At the end, walk back to the start.
+        robot.logger.info('Done with gcode, going to stand...')
+        blocking_stand(command_client, timeout_sec=10)
+        robot.logger.info("Robot standing")
 
-            # At the end, walk back to the start.
-            robot.logger.info('Done with gcode, going to stand...')
-            blocking_stand(command_client, timeout_sec=10)
-            robot.logger.info("Robot standing")
+        # Compute walking location
+        if walk_to_at_end_rt_gcode_origin_x is not None and walk_to_at_end_rt_gcode_origin_y is not None:
+            robot.logger.info("Walking to end position...")
+            gcode_origin_T_walk = SE3Pose(walk_to_at_end_rt_gcode_origin_x * scale,
+                                          walk_to_at_end_rt_gcode_origin_y * scale, 0,
+                                          Quat(1, 0, 0, 0))
 
-            # Compute walking location
-            if walk_to_at_end_rt_gcode_origin_x is not None and walk_to_at_end_rt_gcode_origin_y is not None:
-                robot.logger.info("Walking to end position...")
-                gcode_origin_T_walk = SE3Pose(walk_to_at_end_rt_gcode_origin_x * scale,
-                                              walk_to_at_end_rt_gcode_origin_y * scale, 0,
-                                              Quat(1, 0, 0, 0))
+            odom_T_walk = world_T_odom.inverse() * gcode.world_T_origin * gcode_origin_T_walk
 
-                odom_T_walk = world_T_odom.inverse() * gcode.world_T_origin * gcode_origin_T_walk
+            odom_T_walk_se2 = SE2Pose.flatten(odom_T_walk)
 
-                odom_T_walk_se2 = SE2Pose.flatten(odom_T_walk)
+            # Command the robot to go to the end point.
+            walk_cmd = RobotCommandBuilder.trajectory_command(
+                goal_x=odom_T_walk_se2.x, goal_y=odom_T_walk_se2.y,
+                goal_heading=odom_T_walk_se2.angle, frame_name="odom")
+            end_time = 15.0
+            #Issue the command to the robot
+            command_client.robot_command(command=walk_cmd, end_time_secs=time.time() + end_time)
+            block_for_trajectory_cmd(
+                command_client, 1,
+                basic_command_pb2.SE2TrajectoryCommand.Feedback.STATUS_At_Goal, None, 0.1, 15.0)
 
-                # Command the robot to go to the end point.
-                walk_cmd = RobotCommandBuilder.trajectory_command(
-                    goal_x=odom_T_walk_se2.x, goal_y=odom_T_walk_se2.y,
-                    goal_heading=odom_T_walk_se2.angle, frame_name="odom")
-                end_time = 15.0
-                #Issue the command to the robot
-                command_client.robot_command(command=walk_cmd, end_time_secs=time.time() + end_time)
-                time.sleep(end_time)
+        robot.logger.info('Done.')
 
-            robot.logger.info('Done.')
-
-            # Power the robot off. By specifying "cut_immediately=False", a safe power off command
-            # is issued to the robot. This will attempt to sit the robot before powering off.
-            robot.power_off(cut_immediately=False, timeout_sec=20)
-            assert not robot.is_powered_on(), "Robot power off failed."
-            robot.logger.info("Robot safely powered off.")
-    finally:
-        # If we successfully acquired a lease, return it.
-        lease_client.return_lease(lease)
+        # Power the robot off. By specifying "cut_immediately=False", a safe power off command
+        # is issued to the robot. This will attempt to sit the robot before powering off.
+        robot.power_off(cut_immediately=False, timeout_sec=20)
+        assert not robot.is_powered_on(), "Robot power off failed."
+        robot.logger.info("Robot safely powered off.")
 
 
 def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
+    parser.add_argument('--test-file-parsing', action='store_true',
+                        help='Try parsing the gcode, without executing on a robot')
     options = parser.parse_args(argv)
     try:
         run_gcode_program(options)

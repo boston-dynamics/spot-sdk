@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -25,7 +25,7 @@ python3 service_faults.py --guid GUID --secret SECRET ROBOT_IP
 ```
 OR
 ```
-python3 service_faults.py --username USER --password PASSWORD ROBOT_IP 
+python3 service_faults.py ROBOT_IP 
 
 ```
 

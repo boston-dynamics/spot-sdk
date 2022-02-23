@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -18,6 +18,7 @@ The following examples show how to use Spot's perception system, through image s
 * [World Object Mutations](../world_object_mutations/README.md)
 * [Visualizer](../visualizer/README.md)
 * [Ricoh Theta](../ricoh_theta/README.md)
+* [Gripper Camera Parameters](../gripper_camera_params/README.md)
 * [Spot CAM](../spot_cam/README.md)
 * [Stitch Front Images](../stitch_front_images/README.md)
 * [Project Depth Data on Visual Images](../get_depth_plus_visual_image/README.md)
@@ -27,3 +28,4 @@ The following examples show how to use Spot's perception system, through image s
 * [Tensorflow Detector](../spot_tensorflow_detector/README.md)
 * [Machine Learning with the Network Compute Bridge](../network_compute_bridge/README.md)
 * [Fire Extinguisher Detector with the Network Compute Bridge](../network_compute_bridge/fire_extinguisher_server/README.md)
+* [Ray Cast](../ray_cast/README.md)

@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -34,22 +34,22 @@ iperf3 -s
 On the Spot CORE running the client (from the Spot CORE, ROBOT_IP will always be 192.168.50.3):
 Run:
 ```
-python3 client.py --username ROBOT_USER --password ROBOT_PASSWORD ROBOT_IP --server-hostname SERVER_IP
+python3 client.py ROBOT_IP --server-hostname SERVER_IP
 ```
 
 Specifying a UDP test:
 ```
-python3 client.py --username ROBOT_USER --password ROBOT_PASSWORD ROBOT_IP --protocol udp --server-hostname SERVER_IP
+python3 client.py ROBOT_IP --protocol udp --server-hostname SERVER_IP
 ```
 
 Specifying a different iperf3 server port:
 ```
-python3 client.py --username ROBOT_USER --password ROBOT_PASSWORD ROBOT_IP --server-port 1234 --server-hostname SERVER_IP
+python3 client.py ROBOT_IP --server-port 1234 --server-hostname SERVER_IP
 ```
 
 Running the test without running an Autowalk mission:
 ```
-python3 client.py --username ROBOT_USER --password ROBOT_PASSWORD ROBOT_IP --server-hostname SERVER_IP --run-without-mission
+python3 client.py ROBOT_IP --server-hostname SERVER_IP --run-without-mission
 ```
 
 ### Running with Docker
@@ -63,7 +63,7 @@ sudo docker build -t comms_test .
 
 Run the image:
 ```
-sudo docker run -v $(pwd):/comms_out/ comms_test --username ROBOT_USER --password ROBOT_PASSWORD ROBOT_IP --server-hostname SERVER_IP
+sudo docker run -v $(pwd):/comms_out/ --env BOSDYN_CLIENT_USERNAME --env BOSDYN_CLIENT_PASSWORD comms_test ROBOT_IP --server-hostname SERVER_IP
 ```
 
 The argument `-v $(pwd):/comms_out/` allows the Docker container to save files to the current directory, so the resulting csv output file will be in the directory you just ran from. For different configurations of the comms test, see above.

@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -8,8 +8,9 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Arm JointMove Command
 
-An example of commanding a JointMove with Spot's arm. The example initializes the SDK to talk to robot and then
-requests Spot to stand before executing the JointMove trajectory.
+An example of commanding a JointMove with Spot's arm. The basic example initializes the SDK to talk to robot and 
+then requests Spot to stand before executing the JointMove trajectory. There is also a more advanced example that 
+shows how to send a continuous joint trajectory with many points using the API
 
 ## Understanding Spot Programming
 For your best learning experience, please use the [Quickstart Guide](../../../docs/python/quickstart.md)
@@ -27,8 +28,14 @@ This example requires the bosdyn API and client to be installed, and must be run
 python3 -m pip install -r requirements.txt
 ```
 
-## Run the Example
+## Running the basic example
 To run the example:
 ```
-python3 arm_joint_move.py --username USER --password PASSWORD ROBOT_IP
+python3 arm_joint_move.py ROBOT_IP
+```
+
+## Running the long trajectory example
+To run the example:
+```
+python3 arm_joint_long_trajectory.py ROBOT_IP
 ```

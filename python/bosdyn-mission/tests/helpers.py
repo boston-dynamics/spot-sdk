@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -21,10 +21,12 @@ else:
     import mock
 
 import bosdyn.api.header_pb2 as HeaderProto
-from bosdyn.client.robot_command import RobotCommandBuilder
+import bosdyn.api.mission.nodes_pb2 as nodes_pb2
 import bosdyn.util
+import bosdyn.mission.util
 
 from bosdyn.api import lease_pb2
+from bosdyn.client.robot_command import RobotCommandBuilder
 
 CONSTANT_TIMESTAMP = timestamp_pb2.Timestamp(seconds=12345, nanos=6789)
 
@@ -110,3 +112,23 @@ def build_lease(sequence, epoch='foo', resource='bar'):
     lease = lease_pb2.Lease(resource=resource, epoch=epoch)
     lease.sequence.extend(sequence)
     return lease
+
+
+def create_value(v):
+    return bosdyn.api.mission.util_pb2.Value(constant=bosdyn.mission.util.python_var_to_value(v))
+
+
+def define_blackboard(dict_values):
+    node_to_return = nodes_pb2.DefineBlackboard()
+    for (key, value) in dict_values.items():
+        node_to_return.blackboard_variables.add().CopyFrom(
+            bosdyn.api.mission.util_pb2.KeyValue(key=key, value=value))
+    return node_to_return
+
+
+def set_blackboard(dict_values):
+    node_to_return = nodes_pb2.SetBlackboard()
+    for (key, value) in dict_values.items():
+        node_to_return.blackboard_variables.add().CopyFrom(
+            bosdyn.api.mission.util_pb2.KeyValue(key=key, value=value))
+    return node_to_return

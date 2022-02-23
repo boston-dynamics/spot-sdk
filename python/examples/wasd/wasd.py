@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -57,7 +57,7 @@ def _grpc_or_log(desc, thunk):
 
 
 def _image_to_ascii(image, new_width):
-    """Convert an rgb image to a ASCII 'image' that can be displayed in a terminal."""
+    """Convert an rgb image to an ASCII 'image' that can be displayed in a terminal."""
 
     ASCII_CHARS = '@#S%?*+;:,.'
 
@@ -245,7 +245,7 @@ class WasdInterface(object):
             )  # Set this endpoint as the robot's sole estop.
 
     def shutdown(self):
-        """Release control of robot as gracefully as posssible."""
+        """Release control of robot as gracefully as possible."""
         LOGGER.info("Shutting down WasdInterface.")
         if self._estop_keepalive:
             # This stops the check-in thread but does not stop the robot.
@@ -616,7 +616,7 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('--time-sync-interval-sec',
                         help='The interval (seconds) that time-sync estimate should be updated.',
                         type=float)
@@ -628,7 +628,7 @@ def main():
     sdk = create_standard_sdk('WASDClient')
     robot = sdk.create_robot(options.hostname)
     try:
-        robot.authenticate(options.username, options.password)
+        bosdyn.client.util.authenticate(robot)
         robot.start_time_sync(options.time_sync_interval_sec)
     except RpcError as err:
         LOGGER.error("Failed to communicate with robot: %s" % err)

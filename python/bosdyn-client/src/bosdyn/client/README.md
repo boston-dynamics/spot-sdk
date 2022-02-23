@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -37,6 +37,7 @@ Client code and interfaces for the Boston Dynamics robot API.
 * [Fault](fault)
 * [Frame Helpers](frame_helpers)
 * [Graph Nav](graph_nav)
+* [Gripper Camera Params](gripper_camera_param)
 * [Image](image)
 * [Image Service Helpers](image_service_helpers)
 * [IR Enable/Disable](ir_enable_disable)
@@ -53,6 +54,7 @@ Client code and interfaces for the Boston Dynamics robot API.
 * [Point Cloud](point_cloud)
 * [Power](power)
 * [Processors](processors)
+* [Ray casting](ray_cast)
 * [Recording](recording)
 * [Robot Command](robot_command)
 * [Robot ID](robot_id)
@@ -90,6 +92,7 @@ The table below specifies the protobuf service definitions supported by each cli
 | [**Estop**](./estop.py) | [estop_service.proto](../../../../../protos/bosdyn/api/estop_service.proto) |
 | [**Fault**](./fault.py) | [fault_service.proto](../../../../../protos/bosdyn/api/fault_service.proto) |
 | [**GraphNav**](./graph_nav.py) | [graph_nav/graph_nav_service.proto](../../../../../protos/bosdyn/api/graph_nav/graph_nav_service.proto) |
+| [**Gripper Camera Params**](./gripper_camera_param.py) | [gripper_camera_param_service.proto](../../../../../protos/bosdyn/api/gripper_camera_param_service.proto) |
 | [**Image**](./image.py) | [image_service.proto](../../../../../protos/bosdyn/api/image_service.proto) |
 | [**IR Enable/Disable**](./ir_enable_disable.py) | [ir_enable_disable_service.proto](../../../../../protos/bosdyn/api/ir_enable_disable_service.proto) |
 | [**Lease**](./lease.py) | [lease_service.proto](../../../../../protos/bosdyn/api/lease_service.proto) |
@@ -103,6 +106,7 @@ The table below specifies the protobuf service definitions supported by each cli
 | [**Payload**](./payload.py) | [payload_service.proto](../../../../../protos/bosdyn/api/payload_service.proto) |
 | [**Point Cloud**](./point_cloud.py) | [point_cloud_service.proto](../../../../../protos/bosdyn/api/point_cloud_service.proto) |
 | [**Power**](./power.py) | [power_service.proto](../../../../../protos/bosdyn/api/power_service.proto) |
+| [**Ray Casting**](./ray_cast.py) | [ras_cast_service.proto](../../../../../protos/bosdyn/api/ray_cast_service.proto) |
 | [**Recording**](./recording.py) | [graph_nav/recording_service.proto](../../../../../protos/bosdyn/api/graph_nav/recording_service.proto) |
 | [**Robot Command**](./robot_command.py) | [robot_command_service.proto](../../../../../protos/bosdyn/api/robot_command_service.proto) |
 | [**Robot Id**](./robot_id.py) | [robot_id_service.proto](../../../../../protos/bosdyn/api/robot_id_service.proto) |

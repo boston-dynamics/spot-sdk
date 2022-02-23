@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -26,7 +26,7 @@ One of the goals for Choreographer is to provide a tool that gives the user as m
 
 Beginner mode provides a more controlled experience that will be more likely to yield reliable results. This mode has smaller parameter ranges which allows for less energetic but generally more reliable dances. Additionally, it has some of the more dynamic dance moves removed from the Moves List and does not provide any support for animated dance moves.
 
-By default, in the 2.4 released Choreographer executable, it will automatically load in Beginner mode. You can enable it by using the `--restricted` argument when starting Choreographer from the command line. As well, if you are in Advanced mode and go to the Settings menu and select load in Beginner mode, it will take effect and load in this mode next time you open Choreographer.
+By default, Choreographer will automatically load in Beginner mode. You can enable it by using the `--restricted` argument when starting Choreographer from the command line. As well, if you are in Advanced mode and go to the Settings menu and select load in Beginner mode, it will take effect and load in this mode next time you open Choreographer.
 
 You can switch to Advanced mode by selecting the load in Advanced mode checkbox in Choreographer's welcome menu, or navigating to "Settings" and selecting load in Advanced mode (which will take effect next time you open Choreographer). Note that if you create a dance in Advanced mode, Choreographer may not be able to load it while in Beginner mode if the dance’s parameters are outside its reduced range.
 
@@ -53,18 +53,23 @@ The Choreographer interface consists of the following important key sections/but
 1) **Dance Selector** - Drop down menu to choose which of the open choreographies the robot will execute when both checked (in the "Selected" column) and start choreography is clicked.
 1) **Health Stats** - Columns which show the power state (on/off), battery state of charge, and any faults for each robot.
 
+## Tracks
 
-## Choreography File Basics
+Choreographer has several tracks, each describing some aspect of Spot's behavior.  The Legs, Body, Arm, and Gripper tracks describe the physical motion of the robot.  The Lights track describes the behavior of the lights near Spot's front cameras.  The Annotations track modifies the behavior of the other tracks.  The Music track shows the audio to be played by the Choreographer application itself (not played by the robot).  All dance moves control one or more tracks.  Moves that control any of the same tracks can not run simultaneously, but moves that use different tracks can be run simultaneously.  This modular approach to defining behavior helps make it easy to produce a wide variety of behaviors from a manageable number of component moves.
 
-Spot choreography sequence files consist mainly of a sequence of predefined moves that can be arranged in the timeline of Choreographer. Each move can contain any combination of Gripper, Arm, Body, Legs, Lights or multiple body parts that it affects, and will appear on the appropriate track(s) within the timeline. You can mix and match so that the legs can do a move such as Step while the body does a move such as Rotate Body. However, moves may not overlap on any tracks.
+## Slices, Beats, BPM, and Measures
 
-All choreography files are assumed to be 4/4 signatures in the Choreographer UI. The timeline is broken up into quarter notes (thick vertical lines), each of which is broken up by four lighter vertical lines. Each of those 16th-note intervals is known as a Slice. All moves must be a whole number of slices, and each move must begin and end at a slice boundary. How many slices a move takes is dependent on the BPM (Beats Per Minute) of your song. See Loading Music for more information on how to change your BPM.
+Choreographer divides time into slices, represented by the thin, dashed vertical lines in the timeline, and all moves take an integer number of slices.  For convenience, we consider 4 slices a beat, and adjust the pace of the dance by setting the BPM (Beats Per Minute) in the "Music Controls" bar.  Beats are delineated by the medium-thickness vertical lines on the timeline.  Every 4th beat is marked with a thick vertical line and numbered.
 
-All choreography files are assumed to be 4/4 signatures in the Choreographer UI. The timeline is broken up into quarter notes (thick, vertical lines labeled with the note number). Each quarter note is further divided into four beats (light grey, vertical lines). Then, each 16th-note interval is known as a slice (dotted, vertical lines). Specifically, Choreographer considers there to be 4 slices per every beat, and 4 beats per every note. All moves must be a whole number of slices, and each move must begin and end at a slice boundary. The number of slices a move will take is dependent on the BPM (beats per minute) of your song. This can be adjusted in the "Music Controls" bar; see the Loading Music section for more information.
+For a song with a 4/4 time signature, a slice corresponds to a 16th-note, a beat to a quarter note, and the thicker lines to a measure or whole note.  For songs that are not 4/4, the thicker lines can be ignored.
 
-For example, this "Running Man" move has been extended from the default number of slices, and will now control the legs track for the first 12 slices of this script:
+Some moves take a fixed number of slices.  Other moves take a fixed amount of time, so the number of slices will depend on the BPM.  Some are adjustable, but of those, some have maximum or minimum durations.  For example, this "Running Man" move has been extended from the default number of slices, and will now control the legs track for the first 16 slices (4 beats; 1 measure) of this sequence:
 
 ![Slice Diagram](images/running_man.png)
+
+## Dance Timeline
+
+The dance timeline portrays the choreography sequence on a grid.  The rows of the grid represent the various Tracks or aspects of the behavior (see Tracks section above).  Time is represented from left to right with the columns representing individual slices (see Slices, Beats, BPM, and Measures section above).  A dance sequence consists of any number of dance moves.  Each move will be represented on the timeline by a rectangle.  The left and right edges of the rectangle give the start and stop time of the move, so the width represents the duration.  The vertical extent of the rectangle shows which tracks the move controls.  Moves that are stacked vertically occur simultaneously, each controlling a different aspect of the behavior to produce some combination.  Moves that are arrayed horizontally occur in sequence, one after the other.
 
 ## Adding Moves
 
@@ -113,7 +118,7 @@ After loading a dance, you must manually set the BPM (Beats Per Minute) of your 
 
 ## Red Slider
 
-The red slider allows the user to start the dance at a different location than the beginning; the dance will start at the move associated with the closest slice to the slider's location and the music will start at the timestamp within the song associated with the slider's location. The line drawn at the center of the sliders show exactly where in the timeline the slider's location is, as shown in the image below. It can be moved by clicking on the colored boxes and dragging it to the desired location.
+The red slider defines where within the sequence Spot should begin execution, and from when the audio should begin playing.  It defaults to the beginning, but can be moved to start from the middle.  This can be useful for testing just a portion of a long sequence.  Any moves that start before the slider will be skipped even if they are scheduled to complete after the slider.  The line drawn at the center of the sliders show exactly where in the timeline the slider's location is, as shown in the image below. It can be moved by clicking on the colored boxes and dragging it to the desired location.
 
 ![Slider](images/red_slider.png)
 
@@ -142,6 +147,8 @@ Additionally, you can append an existing choreography sequence at the end of you
 
 Choreographer has specific hotkey mappings available to make common actions used when editing choreographies more easily accessible While using Choreographer, a table of available keystrokes can be accessed as a reminder using the menus Help->Hotkeys Documentation.
 
+
+### Sequence Editing
 Key | Function
 ----|-----
 i | Enter "insert" mode
@@ -153,3 +160,42 @@ Shift + Left/Right Arrow Keys | Expand a move on the left/right side by one slic
 Ctrl + Left/Right Arrow Keys | Shrink a move on the left/right side by one slice if possible. This only works when a single move is selected (and not a group of moves).
 Ctrl+C | Copy the move (or group of selected moves).
 Ctrl+V | Paste the copied move (or group of selected moves).
+### Robot Control
+Key | Function
+----|-----
+Space | Stop the robot (and music if playing)
+k | Power on the robot.
+l | Power off the robot.
+y | Stand the robot up.
+x | Start the choreography.
+[ | Sit the robot down.
+] | Self-Right the robot.
+v | Enable WASD driving.
+b | Enable joystick mode.
+### WASD Driving Mode
+Key | Function
+----|-----
+w | Walk Forward
+a | Sidestep Left
+s | Walk Backward
+d | Sidestep Right
+q | Turn Left
+e | Turn Right
+
+## Command-line Arguments
+When running Choreographer from the command line, several options are available.
+Argument | Description
+----|-----
+-h, --help | Print this information to the console.
+--hostname HOSTNAME | Hostname or address of robot(s) to initially connect to (e.g. "beta25-p" or "192.168.80.3")
+--username USERNAME | User name(s) of the account(s) to get credentials for when initially connecting to one or more robots.
+--password PASSWORD | Pasword for the account(s) when initially connecting to one or more robots.
+--restricted | Load Choreographer in Beginner (Restricted) Mode (also available through the Help menu)
+--delay DELAY | How long to delay in seconds after pressing the Start Choreography button before starting the sequence.  Defaults to 3.0.
+--not-vebose | Prevent printing error messages to the console.
+--obs-padding DISTANCE | Sets the obstacle avoidance padding in meters.  Note: obstacle avoidance not available during most dance moves.
+--estop-timeout TIME | Sets the duration of the e-stop timeout in seconds.  This is how long between losing communication with the robot and when it will sit down and power off.  Defaults to 9.0.
+<br>
+The hostname, username, and password arguments can be especially convenient when repeatedly connecting to the same large set of robots.  For example, the command: <br>
+`./choreographer --hostname hn1 --username un1 --password pw1 --hostname hn2 --username un2 --password pw2 --hostname hn3 --username un3 --password pw3` <br>
+will open Choreographer and immediately attempt to connect to robots hn1, hn2, and hn3, which can be much faster than using the interface for each individual robot.

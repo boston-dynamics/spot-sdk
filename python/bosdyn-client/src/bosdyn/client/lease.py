@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -22,8 +22,9 @@ from bosdyn.api.lease_pb2 import (LeaseUseResult, ListLeasesRequest, RetainLease
 from bosdyn.api.lease_service_pb2_grpc import LeaseServiceStub
 
 from . import common
-from .exceptions import ResponseError
+from .exceptions import ResponseError, RpcError, Error as BaseError
 
+_LOGGER = logging.getLogger(__name__)
 
 class LeaseResponseError(ResponseError):
     """General class of errors for LeaseResponseError service."""
@@ -50,7 +51,7 @@ class ResourceAlreadyClaimedError(LeaseResponseError):
 
 
 class RevokedLeaseError(LeaseResponseError):
-    """Lease is stale cause lease holder did not check in regularly enough."""
+    """Lease is stale because the lease holder did not check in regularly enough."""
 
 
 class UnmanagedResourceError(LeaseResponseError):
@@ -654,7 +655,6 @@ class LeaseClient(common.BaseClient):
         return self.call_async(self._stub.ListLeases, req, None,
                                common.common_header_errors, **kwargs)
 
-
     @staticmethod
     def _make_acquire_request(resource):
         """Return AcquireLeaseRequest message with the given resource."""
@@ -719,7 +719,7 @@ class LeaseWalletRequestProcessor(object):
 
     Args:
         lease_wallet: The LeaseWallet to read leases from.
-        resource_list: List of resources this processors should add to requests. Default None
+        resource_list: List of resources this processor should add to requests. Default None
                         to use the default resource.
     """
 
@@ -786,7 +786,6 @@ class LeaseWalletResponseProcessor(object):
 
     def mutate(self, response):
         """Update the wallet if a response has a lease_use_result."""
-        lease_use_results = None
         try:
             # AttributeError will occur if the response does not have a field named 'lease_use_result'
             lease_use_results = [response.lease_use_result]
@@ -851,12 +850,14 @@ class LeaseKeepAlive(object):
                 which takes the error/exception as an input. The  function does not
                 need to return anything. This function can be used to action on any
                 failures during the keepalive from the RetainLease RPC.
-        warnings: Boolean used to determine if the _periodic_check_in function will print lease check-in errors.
+        warnings(bool): Used to determine if the _periodic_check_in function will print lease check-in errors.
+        must_acquire(bool): If True, exceptions when trying to acquire the lease will not be caught.
+        return_at_exit(bool): If True, return the lease when shutting down.
     """
 
     def __init__(self, lease_client, lease_wallet=None, resource=_RESOURCE_BODY,
                  rpc_interval_seconds=2, keep_running_cb=None, host_name="",
-                 on_failure_callback=None, warnings=True, return_at_exit=False):
+                 on_failure_callback=None, warnings=True, must_acquire=False, return_at_exit=False):
         """Create a new LeaseKeepAlive object."""
         self.host_name = host_name
         self.print_warnings = warnings
@@ -874,6 +875,17 @@ class LeaseKeepAlive(object):
         if not resource:
             raise ValueError("resource must be set")
         self._resource = resource
+
+        # If we don't have the lease, acquire it.
+        try:
+            self._lease_wallet.get_lease(self._resource)
+        except Error:
+            try:
+                self._lease_client.acquire(self._resource)
+            except BaseError as exc:
+                if must_acquire:
+                    raise
+                _LOGGER.error('Failed to acquire the lease in LeaseKeepAlive: %s', exc)
 
         if rpc_interval_seconds <= 0.0:
             raise ValueError("rpc_interval_seconds must be > 0, was %f" % rpc_interval_seconds)
@@ -902,6 +914,14 @@ class LeaseKeepAlive(object):
         self.logger.debug('Shutting down')
         self._end_periodic_check_in()
         self.wait_until_done()
+        if self._return_at_exit:
+            try:
+                self._lease_client.return_lease(self.lease_wallet.get_lease(self._resource), timeout=2)
+            except (LeaseResponseError, NoSuchLease, LeaseNotOwnedByWallet):
+                pass  # These all mean that we don't own the lease anymore, which is fine.
+            except RpcError as exc:
+                _LOGGER.error('Failed to return the lease at the end: %s', exc)
+
 
     def is_alive(self):
         return self._thread.is_alive()
@@ -930,8 +950,6 @@ class LeaseKeepAlive(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.shutdown()
-        if self._return_at_exit:
-            self._lease_client.return_lease(self.lease_wallet.get_lease(self._resource))
 
     def _ok(self):
         self.logger.debug('Check-in successful')

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -217,7 +217,7 @@ def test_frame_tree_math_single_edge():
     assert not frame_helpers.get_a_tform_b(frame_tree, 'omega', 'alpha')
     assert not frame_helpers.get_a_tform_b(frame_tree, 'alpha', 'omega')
     assert not frame_helpers.get_a_tform_b(frame_tree, 'omega', 'omega')
-    assert not frame_helpers.get_a_tform_b(frame_tree, 'omaga', 'psi')
+    assert not frame_helpers.get_a_tform_b(frame_tree, 'omega', 'psi')
 
 
 def test_frame_tree_math_two_edges():

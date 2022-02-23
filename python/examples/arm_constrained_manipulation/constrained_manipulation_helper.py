@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -7,9 +7,9 @@
 """Test script to run constrained manipulation
 """
 
+from bosdyn.api import basic_command_pb2, geometry_pb2
 from bosdyn.client.robot_command import RobotCommandBuilder
-from bosdyn.api import geometry_pb2
-from bosdyn.api import basic_command_pb2
+
 
 def construct_lever_task(velocity_normalized, force_limit=40, torque_limit=5):
     """ Helper function for manipulating levers
@@ -43,11 +43,13 @@ def construct_lever_task(velocity_normalized, force_limit=40, torque_limit=5):
     torque_direction = geometry_pb2.Vec3(x=0.0, y=0.0, z=0.0)
     init_wrench_dir = geometry_pb2.Wrench(force=force_direction, torque=torque_direction)
     task_type = basic_command_pb2.ConstrainedManipulationCommand.Request.TASK_TYPE_SE3_CIRCLE_FORCE_TORQUE
-    
+
     command = RobotCommandBuilder.constrained_manipulation_command(
-        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir, force_limit=force_lim,
-        torque_limit=torque_lim, tangential_speed=tangential_velocity, frame_name=frame_name)
+        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir,
+        force_limit=force_lim, torque_limit=torque_lim, tangential_speed=tangential_velocity,
+        frame_name=frame_name)
     return command
+
 
 def construct_right_handed_ballvalve_task(velocity_normalized, force_limit=40, torque_limit=5):
     """ Helper function for manipulating right-handed ball valves
@@ -81,10 +83,11 @@ def construct_right_handed_ballvalve_task(velocity_normalized, force_limit=40, t
     torque_direction = geometry_pb2.Vec3(x=-1.0, y=0.0, z=0.0)
     init_wrench_dir = geometry_pb2.Wrench(force=force_direction, torque=torque_direction)
     task_type = basic_command_pb2.ConstrainedManipulationCommand.Request.TASK_TYPE_SE3_CIRCLE_FORCE_TORQUE
-    
+
     command = RobotCommandBuilder.constrained_manipulation_command(
-        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir, force_limit=force_lim,
-        torque_limit=torque_lim, tangential_speed=tangential_velocity, frame_name=frame_name)
+        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir,
+        force_limit=force_lim, torque_limit=torque_lim, tangential_speed=tangential_velocity,
+        frame_name=frame_name)
     return command
 
 
@@ -122,8 +125,9 @@ def construct_left_handed_ballvalve_task(velocity_normalized, force_limit=40, to
     task_type = basic_command_pb2.ConstrainedManipulationCommand.Request.TASK_TYPE_SE3_CIRCLE_FORCE_TORQUE
 
     command = RobotCommandBuilder.constrained_manipulation_command(
-        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir, force_limit=force_lim,
-        torque_limit=torque_lim, tangential_speed=tangential_velocity, frame_name=frame_name)
+        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir,
+        force_limit=force_lim, torque_limit=torque_lim, tangential_speed=tangential_velocity,
+        frame_name=frame_name)
     return command
 
 
@@ -151,7 +155,7 @@ def construct_crank_task(velocity_normalized, force_limit=40):
     # Setting a placeholder value that doesn't matter, since we don't
     # apply a pure torque in this task.
     torque_lim = 5.0
-    # This assumes the grasp of crank is such that the crank will initially 
+    # This assumes the grasp of crank is such that the crank will initially
     # move along the hand y axis. Change if that is not the case.
     force_direction = geometry_pb2.Vec3(x=0.0, y=1.0, z=0.0)
     torque_direction = geometry_pb2.Vec3(x=0.0, y=0.0, z=0.0)
@@ -159,8 +163,9 @@ def construct_crank_task(velocity_normalized, force_limit=40):
     task_type = basic_command_pb2.ConstrainedManipulationCommand.Request.TASK_TYPE_R3_CIRCLE_EXTRADOF_FORCE
 
     command = RobotCommandBuilder.constrained_manipulation_command(
-        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir, force_limit=force_lim,
-        torque_limit=torque_lim, tangential_speed=tangential_velocity, frame_name=frame_name)
+        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir,
+        force_limit=force_lim, torque_limit=torque_lim, tangential_speed=tangential_velocity,
+        frame_name=frame_name)
 
     return command
 
@@ -195,8 +200,9 @@ def construct_cabinet_task(velocity_normalized, force_limit=40):
     task_type = basic_command_pb2.ConstrainedManipulationCommand.Request.TASK_TYPE_R3_CIRCLE_FORCE
 
     command = RobotCommandBuilder.constrained_manipulation_command(
-        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir, force_limit=force_lim,
-        torque_limit=torque_lim, tangential_speed=tangential_velocity, frame_name=frame_name)
+        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir,
+        force_limit=force_lim, torque_limit=torque_lim, tangential_speed=tangential_velocity,
+        frame_name=frame_name)
     return command
 
 
@@ -230,9 +236,11 @@ def construct_drawer_task(velocity_normalized, force_limit=40):
     task_type = basic_command_pb2.ConstrainedManipulationCommand.Request.TASK_TYPE_R3_LINEAR_FORCE
 
     command = RobotCommandBuilder.constrained_manipulation_command(
-        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir, force_limit=force_lim,
-        torque_limit=torque_lim, tangential_speed=tangential_velocity, frame_name=frame_name)
+        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir,
+        force_limit=force_lim, torque_limit=torque_lim, tangential_speed=tangential_velocity,
+        frame_name=frame_name)
     return command
+
 
 def construct_wheel_task(velocity_normalized, force_limit=40):
     """ Helper function for turning wheels while grasping the rim
@@ -265,8 +273,9 @@ def construct_wheel_task(velocity_normalized, force_limit=40):
     task_type = basic_command_pb2.ConstrainedManipulationCommand.Request.TASK_TYPE_R3_CIRCLE_FORCE
 
     command = RobotCommandBuilder.constrained_manipulation_command(
-        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir, force_limit=force_lim,
-        torque_limit=torque_lim, tangential_speed=tangential_velocity, frame_name=frame_name)
+        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir,
+        force_limit=force_lim, torque_limit=torque_lim, tangential_speed=tangential_velocity,
+        frame_name=frame_name)
     return command
 
 
@@ -283,7 +292,7 @@ def construct_knob_task(velocity_normalized, torque_limit=5):
     + command: api command object
 
     Notes:
-    This assumes that the axis of rotation of of the knob is roughly parallel
+    This assumes that the axis of rotation of the knob is roughly parallel
     to the x axis of the hand. Change torque_direction if that is not the case.
     """
     velocity_normalized = max(min(velocity_normalized, 1.0), -1.0)
@@ -300,9 +309,11 @@ def construct_knob_task(velocity_normalized, torque_limit=5):
     task_type = basic_command_pb2.ConstrainedManipulationCommand.Request.TASK_TYPE_SE3_ROTATIONAL_TORQUE
 
     command = RobotCommandBuilder.constrained_manipulation_command(
-        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir, force_limit=force_lim,
-        torque_limit=torque_lim, rotational_speed=rotational_velocity, frame_name=frame_name)
+        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir,
+        force_limit=force_lim, torque_limit=torque_lim, rotational_speed=rotational_velocity,
+        frame_name=frame_name)
     return command
+
 
 def construct_hold_pose_task():
     """ Helper function for holding the pose of the hand
@@ -321,25 +332,26 @@ def construct_hold_pose_task():
     task_type = basic_command_pb2.ConstrainedManipulationCommand.Request.TASK_TYPE_HOLD_POSE
 
     command = RobotCommandBuilder.constrained_manipulation_command(
-        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir, force_limit=force_lim,
-        torque_limit=torque_lim, tangential_speed=0.0, frame_name=frame_name)
+        task_type=task_type, init_wrench_direction_in_frame_name=init_wrench_dir,
+        force_limit=force_lim, torque_limit=torque_lim, tangential_speed=0.0, frame_name=frame_name)
     return command
 
 
 # This function is used to scale the velocity limit given
-# the force limit. This scaling ensures that when the measured arm 
+# the force limit. This scaling ensures that when the measured arm
 # velocity is zero but desired velocity is max (vel_limit), we request
 # max (force_limit) amount of force in that direction.
 def scale_velocity_lim_given_force_lim(force_limit):
-    internal_vel_tracking_gain = 7000.0/333.0
+    internal_vel_tracking_gain = 7000.0 / 333.0
     vel_limit = force_limit / internal_vel_tracking_gain
     return vel_limit
+
 
 # This function is used to scale the rotational velocity limit given
 # the torque limit. This scaling ensures that when the measured arm
 # velocity is zero but desired velocity is max (vel_limit), we request
 # max (torque_limit) amount of torque in that direction.
 def scale_rot_velocity_lim_given_torque_lim(torque_limit):
-    internal_vel_tracking_gain = 300.0/333.0
+    internal_vel_tracking_gain = 300.0 / 333.0
     vel_limit = torque_limit / internal_vel_tracking_gain
     return vel_limit

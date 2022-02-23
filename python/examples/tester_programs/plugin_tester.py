@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -510,7 +510,7 @@ def test_downloading_all_data_via_REST(data_store_client, group_name, robot_host
 def main(argv):
     """Main testing interface."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument(
         "--service-name", required=True, type=str,
         help="Unique service name for the data acquisition plugin service being tested.")
@@ -530,7 +530,7 @@ def main(argv):
     sdk = bosdyn.client.create_standard_sdk('TestDAQPlugin')
     sdk.register_service_client(DataAcquisitionPluginClient)
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     robot.time_sync.wait_for_sync()
     robot.sync_with_directory()
 

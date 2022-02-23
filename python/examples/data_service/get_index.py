@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -23,7 +23,7 @@ def run_query(options, query):
     bosdyn.client.util.setup_logging(options.verbose)
     sdk = bosdyn.client.create_standard_sdk('GetIndexClient')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     service_client = robot.ensure_client(DataServiceClient.default_service_name)
 
     time_sync_endpoint = None
@@ -78,7 +78,7 @@ def get_comments(options):
 def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
 
     def _add_common_args(subparser):
         subparser.add_argument('-T', '--timespan', default='5m',

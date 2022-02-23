@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -111,7 +111,7 @@ def nsec_to_sec(secs):
     Args:
      secs: Time in nanoseconds
     Returns:
-     The time in seconds, as a .
+     The time in seconds, as a float.
     """
     return float(secs) / NSEC_PER_SEC
 
@@ -334,7 +334,7 @@ class RobotTimeConverter:
         """Returns a robot-clock Timestamp proto for a local time in nanoseconds.
 
         Args:
-          local_time_nsecs:  Local system time time, in integer of nanoseconds from the unix epoch.
+          local_time_nsecs:  Local system time, in integer of nanoseconds from the unix epoch.
         """
         return nsec_to_timestamp(local_time_nsecs + self._clock_skew_nsec)
 
@@ -342,7 +342,7 @@ class RobotTimeConverter:
         """Returns a robot-clock Timestamp proto for a local time in seconds.
 
         Args:
-          local_time_secs:  Local system time time, in seconds from the unix epoch.
+          local_time_secs:  Local system time, in seconds from the unix epoch.
         """
         return self.robot_timestamp_from_local_nsecs(sec_to_nsec(local_time_secs))
 
@@ -359,7 +359,7 @@ class RobotTimeConverter:
         """Edits timestamp_proto in place to convert it from the local clock to the robot_clock.
 
         Args:
-          timestamp_proto[in/out] (google.protobuf.Timestamp): local system time time
+          timestamp_proto[in/out] (google.protobuf.Timestamp): local system time
         """
         timestamp_proto.CopyFrom(self.robot_timestamp_from_local(timestamp_proto))
 
@@ -367,6 +367,6 @@ class RobotTimeConverter:
         """Returns the robot time in seconds from a local time in seconds.
 
         Args:
-          local_time_secs:  Local system time time, in seconds from the unix epoch.
+          local_time_secs:  Local system time, in seconds from the unix epoch.
         """
         return local_time_secs + nsec_to_sec(self._clock_skew_nsec)

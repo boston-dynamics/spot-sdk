@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -53,7 +53,7 @@ class PodSeriesWriter:  # pylint: disable=too-many-instance-attributes
             raise DataFormatError('{} expect {} elements but got {})'.format(
                 self._series_spec, self._bytes_per_sample, len(serialized_sample)))
         if self._bytes_per_sample >= self._data_block_size:
-            # We should always immediately write data data
+            # We should always immediately write data.
             self._data_writer.write_data(self._series_index, timestamp_nsec, serialized_sample)
             return
 

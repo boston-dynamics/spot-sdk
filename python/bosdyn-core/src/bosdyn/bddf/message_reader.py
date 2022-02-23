@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -7,7 +7,7 @@
 """A class for reading message data from a DataFile."""
 
 from .common import PROTOBUF_CONTENT_TYPE
-
+from deprecated import deprecated
 
 class MessageReader:
     """A class for reading message data from a DataFile.
@@ -39,8 +39,14 @@ class MessageReader:
         return self._data_reader
 
     @property
+    def channel_name_to_series_descriptor(self):
+        """Return a mapping of {channel name -> series descriptor} for message series."""
+        return self._channel_name_to_series_descriptor
+
+    @property
+    @deprecated(reason='Use channel_name_to_series_descriptor instead', version='3.1.0')
     def channel_name_to_series_decriptor(self):
-        """Return a mapping of {chanel name -> series descriptor} for message series."""
+        """Return a mapping of {channel name -> series descriptor} for message series."""
         return self._channel_name_to_series_descriptor
 
     def series_index(self, channel_name, message_type=None):

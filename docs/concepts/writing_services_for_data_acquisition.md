@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -193,5 +193,5 @@ For DataAcquisitionPluginService and ImageService services, there are [tester pr
 For other types of services, the general service checking helper functions are available within the tester_programs example and can be used to check directory registration, gRPC communication with the service, and if there are active service faults for the service. Other debugging tools include the different API examples that exercise a specific service type (e.g. the [get_image example](../../python/examples/get_image/README.md)) or the command line, which can list the full set of options and actions available by running the command:
 
 ```
-python3 -m bosdyn.client --username {USERNAME}  --password {PASSWORD} {ROBOT_IP} --help
+python3 -m bosdyn.client {ROBOT_IP} --help
 ```

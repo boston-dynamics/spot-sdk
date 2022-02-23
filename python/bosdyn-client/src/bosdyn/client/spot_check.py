@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -161,7 +161,7 @@ class SpotCheckClient(BaseClient):
                                _calibration_feedback_error_from_response, **kwargs)
 
 
-def run_spot_check(spot_check_client, lease, timeout_sec=180, update_frequency=0.25, verbose=False):
+def run_spot_check(spot_check_client, lease, timeout_sec=212, update_frequency=0.25, verbose=False):
     """Run full spot check routine. The robot should be sitting on flat ground when this routine is
     started. This routine calibrates robot joints and checks camera health.
 

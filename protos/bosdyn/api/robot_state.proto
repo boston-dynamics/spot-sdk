@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -89,6 +89,9 @@ message RobotState {
 
     // Service faults for services registered with the robot.
     ServiceFaultState service_fault_state = 10;
+
+    // Relevant terrain data beneath and around the robot
+    TerrainState terrain_state = 12;
 
 
     reserved 9;
@@ -611,6 +614,13 @@ message ServiceFaultState {
     // This provides a very quick way of determining if there any "locomotion" or
     // "vision" faults above a certain severity level.
     map<string, ServiceFault.Severity> aggregated = 3;
+}
+
+// Relevant terrain data beneath and around the robot
+message TerrainState {
+    // Is the terrain immediately under the robot such that sitting or powering off 
+    // the robot may cause the robot to be in an unstable position?
+    bool is_unsafe_to_sit = 1;
 }
 
 // The RobotState request message to get the current state of the robot.

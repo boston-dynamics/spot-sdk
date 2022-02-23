@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -65,7 +65,7 @@ class CommandTimedOutError(PowerError):
 
 class PowerClient(BaseClient):
     """A client for enabling / disabling robot motor power.
-    Commands are non blocking. Clients are expected to issue a power command and then periodically
+    Commands are non-blocking. Clients are expected to issue a power command and then periodically
     check the status of this command.
     This service requires ownership over the robot, in the form of a lease.
     """

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -19,7 +19,7 @@ from bosdyn.util import seconds_to_duration
 def main():
     """Run program."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('--disp', type=float, help='Maximum displacement to travel (m)',
                         default=12.5)
     parser.add_argument('--duration', type=float, help='Maximum duration (s)')
@@ -28,9 +28,10 @@ def main():
 
     sdk = bosdyn.client.create_standard_sdk('AutoReturnExample')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
 
-    # Forcibly take the lease.
+    # Forcibly take the lease.  This is bad practice, but for this example we want to
+    # steal control away from the owner of the robot in order to immediately trigger auto return.
     lease_client = robot.ensure_client(LeaseClient.default_service_name)
     lease_client.take()
 

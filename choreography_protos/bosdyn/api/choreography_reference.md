@@ -1418,6 +1418,39 @@ Response for ListAllMoves that defines the list of available moves and their par
 
 
 
+<a name="bosdyn.api.spot.ListAllSequencesRequest"></a>
+
+### ListAllSequencesRequest
+
+Request a list of all playable choreography sequences that the robot knows about
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common request header |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.ListAllSequencesResponse"></a>
+
+### ListAllSequencesResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+| known_sequences | [string](#string) | List of choreography sequences the robot knows about. |
+
+
+
+
+
+
 <a name="bosdyn.api.spot.LoggedFootContacts"></a>
 
 ### LoggedFootContacts
@@ -1666,9 +1699,9 @@ Defines varying parameters for a particular instance of a move.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common request header |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common request header. |
 | choreography_sequence | [ChoreographySequence](#bosdyn.api.spot.ChoreographySequence) | ChoreographySequence to upload and store in memory |
-| non_strict_parsing | [bool](#bool) | Should we run a script that has correctable errors? If true, the service will fix any correctable errors and run the corrected choreography script. If false, the service will reject a choreography script that has any errors. |
+| non_strict_parsing | [bool](#bool) | Should we run a sequences that has correctable errors? If true, the service will fix any correctable errors and run the corrected choreography sequence. If false, the service will reject a choreography sequence that has any errors. |
 
 
 
@@ -1857,6 +1890,7 @@ The status for the start recording request.
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | ListAllMoves | [ListAllMovesRequest](#bosdyn.api.spot.ListAllMovesRequest) | [ListAllMovesResponse](#bosdyn.api.spot.ListAllMovesResponse) | List the available dance moves and their parameter information. |
+| ListAllSequences | [ListAllSequencesRequest](#bosdyn.api.spot.ListAllSequencesRequest) | [ListAllSequencesResponse](#bosdyn.api.spot.ListAllSequencesResponse) | List the available choreography sequences currently on the robot. |
 | UploadChoreography | [UploadChoreographyRequest](#bosdyn.api.spot.UploadChoreographyRequest) | [UploadChoreographyResponse](#bosdyn.api.spot.UploadChoreographyResponse) | Upload a dance to the robot. |
 | UploadAnimatedMove | [UploadAnimatedMoveRequest](#bosdyn.api.spot.UploadAnimatedMoveRequest) | [UploadAnimatedMoveResponse](#bosdyn.api.spot.UploadAnimatedMoveResponse) | Upload an animation to the robot. |
 | ExecuteChoreography | [ExecuteChoreographyRequest](#bosdyn.api.spot.ExecuteChoreographyRequest) | [ExecuteChoreographyResponse](#bosdyn.api.spot.ExecuteChoreographyResponse) | Execute the uploaded dance. |

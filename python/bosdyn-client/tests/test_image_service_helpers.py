@@ -1,22 +1,24 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
+import cv2
 from unittest import mock
-import time
+import os
 import pytest
-import logging
 import threading
+import numpy as np
 
 from bosdyn.api import service_fault_pb2
 from bosdyn.api import image_pb2, header_pb2
 from bosdyn.client.fault import FaultClient, ServiceFaultDoesNotExistError
 from bosdyn.client.image_service_helpers import (VisualImageSource, ImageCaptureThread,
-                                                 CameraBaseImageServicer, CameraInterface)
+                                                 CameraBaseImageServicer, CameraInterface,
+                                                 convert_RGB_to_grayscale)
 from google.protobuf import timestamp_pb2
-
+from PIL import Image
 
 class MockFaultClient:
 
@@ -85,16 +87,31 @@ class FakeCamera(CameraInterface):
     def blocking_capture(self):
         return self.capture_func()
 
+    def image_decode(self, image_data, image_proto, image_req):
+        return self.decode_func(image_data, image_proto, image_req)
+
+# Old definition, pre 3.1.0
+class OldFakeCamera(CameraInterface):
+
+    def __init__(self, capture_func, decode_func):
+        self.capture_func = capture_func
+        self.decode_func = decode_func
+
+    def blocking_capture(self):
+        return self.capture_func()
+
     def image_decode(self, image_data, image_proto, image_format, quality_percent):
         return self.decode_func(image_data, image_proto, image_format, quality_percent)
-
 
 def capture_fake():
     return "image", 1
 
 
-def decode_fake(img_data, img_proto, img_format, quality):
+def decode_fake(img_data, img_proto, img_req):
     img_proto.rows = 15
+
+def decode_fake_no_resize(img_data, img_proto, img_format, quality):
+    img_proto.rows = 16
 
 
 def capture_return_onething():
@@ -109,7 +126,7 @@ def capture_with_error():
     raise Exception("Failed Capture.")
 
 
-def decode_with_error(img_data, img_proto, img_format, quality):
+def decode_with_error(img_data, img_proto, img_req):
     img_proto.rows = 15
     raise Exception("Failed Decode.")
 
@@ -145,9 +162,9 @@ def test_faults_in_visual_source():
 
     # attempt to decode an image with no fault client enabled. Make sure no error is raised.
     im_proto = image_pb2.Image(rows=10)
-    success = visual_src.image_decode_with_error_checking(None, im_proto, None, None)
+    status = visual_src.image_decode_with_error_checking(None, im_proto, None)
     assert im_proto.rows == 15
-    assert not success
+    assert status == image_pb2.ImageResponse.STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED
 
     # Setup faults
     visual_src.initialize_faults(fault_client, "service1")
@@ -164,10 +181,10 @@ def test_faults_in_visual_source():
     assert fault_client.service_fault_counts[
         visual_src.camera_capture_fault.fault_id.fault_name] == 1
     im_proto = image_pb2.Image(rows=21)
-    success = visual_src.image_decode_with_error_checking(None, im_proto, None, None)
+    status = visual_src.image_decode_with_error_checking(None, im_proto, None)
     assert im_proto.rows == 15
     assert fault_client.service_fault_counts[visual_src.decode_data_fault.fault_id.fault_name] == 1
-    assert not success
+    assert status == image_pb2.ImageResponse.STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED
 
 def test_clear_not_active_faults():
     # Check that clearing faults works with non active faults.
@@ -228,7 +245,7 @@ def test_faults_are_cleared_on_success():
                 raise Exception("Fake bad capture.")
             return "image", 1
 
-        def image_decode(self, image_data, image_proto, image_format, quality_percent):
+        def image_decode(self, image_data, image_proto, image_req):
             self.decode_count += 1
             if self.decode_count == 1:
                 raise Exception("Fake bad decode.")
@@ -240,16 +257,14 @@ def test_faults_are_cleared_on_success():
     image, timestamp = visual_src.get_image_and_timestamp()
     assert fault_client.service_fault_counts[
         visual_src.camera_capture_fault.fault_id.fault_name] == 1
-    success = visual_src.image_decode_with_error_checking(None, image_pb2.Image(rows=21), None,
-                                                          None)
+    success = visual_src.image_decode_with_error_checking(None, image_pb2.Image(rows=21), None)
     assert fault_client.service_fault_counts[visual_src.decode_data_fault.fault_id.fault_name] == 1
 
     # The second calls will succeed, and now cause the faults to be cleared.
     image, timestamp = visual_src.get_image_and_timestamp()
     assert fault_client.service_fault_counts[
         visual_src.camera_capture_fault.fault_id.fault_name] == 0
-    success = visual_src.image_decode_with_error_checking(None, image_pb2.Image(rows=21), None,
-                                                          None)
+    success = visual_src.image_decode_with_error_checking(None, image_pb2.Image(rows=21), None)
     assert fault_client.service_fault_counts[visual_src.decode_data_fault.fault_id.fault_name] == 0
 
 
@@ -278,7 +293,7 @@ def test_make_image_source():
     src_rows3 = 10
     src_cols3 = 15
     src_type3 = image_pb2.ImageSource.IMAGE_TYPE_DEPTH
-    img_proto = VisualImageSource.make_image_source(src_name3, src_rows3, src_cols3, src_type3)
+    img_proto = VisualImageSource.make_image_source(src_name3, src_rows3, src_cols3, [], src_type3)
     assert img_proto.name == src_name3
     assert img_proto.image_type == src_type3
     assert img_proto.rows == src_rows3
@@ -558,3 +573,92 @@ def test_gain_and_exposure_as_functions():
     capture_params = visual_src.get_image_capture_params()
     assert capture_params.gain == 2
     assert capture_params.exposure_duration.seconds == 2
+
+
+def test_decode_backwards_compatibility():
+    # Check that new decode call signature works with older camera interface that have specific
+    # arguments and no resize_ratio.
+    visual_src = VisualImageSource("source1", OldFakeCamera(capture_fake, decode_fake_no_resize))
+    capture_params = visual_src.get_image_capture_params()
+    im_proto = image_pb2.Image(rows=15)
+    success = visual_src.image_decode_with_error_checking(None, im_proto, None)
+    assert im_proto.rows == 16
+    assert success
+
+
+def test_convert_pixel_format():
+
+    empty_visual_src = VisualImageSource(
+        "source1", FakeCamera(capture_fake, decode_fake), rows=None, cols=None, gain=None,
+        exposure=None, pixel_formats=[])
+    grayscale_visual_src = VisualImageSource(
+        "source1", FakeCamera(capture_fake, decode_fake), rows=None, cols=None, gain=None,
+        exposure=None, pixel_formats=[image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8])
+    rgb_visual_src = VisualImageSource(
+        "source1", FakeCamera(capture_fake, decode_fake), rows=None, cols=None, gain=None,
+        exposure=None, pixel_formats=[image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8,
+        image_pb2.Image.PIXEL_FORMAT_RGB_U8])
+
+    im_proto = image_pb2.Image(rows=15)
+    grayscale_im_req = image_pb2.ImageRequest(pixel_format=image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8)
+    rgb_im_req = image_pb2.ImageRequest(pixel_format=image_pb2.Image.PIXEL_FORMAT_RGB_U8)
+    unknown_im_req = image_pb2.ImageRequest(pixel_format=image_pb2.Image.PIXEL_FORMAT_UNKNOWN)
+
+    # Test VisualImageSource with empty pixel formats.
+    status = empty_visual_src.image_decode_with_error_checking(None, im_proto, None)
+    assert im_proto.rows == 15
+    assert status == image_pb2.ImageResponse.STATUS_OK
+    status = empty_visual_src.image_decode_with_error_checking(None, im_proto, unknown_im_req)
+    assert im_proto.rows == 15
+    assert status == image_pb2.ImageResponse.STATUS_OK
+    status = empty_visual_src.image_decode_with_error_checking(None, im_proto, grayscale_im_req)
+    assert im_proto.rows == 15
+    assert status == image_pb2.ImageResponse.STATUS_UNSUPPORTED_PIXEL_FORMAT_REQUESTED
+    status = empty_visual_src.image_decode_with_error_checking(None, im_proto, rgb_im_req)
+    assert im_proto.rows == 15
+    assert status == image_pb2.ImageResponse.STATUS_UNSUPPORTED_PIXEL_FORMAT_REQUESTED
+
+    # Test VisualImageSource with only grayscale pixel format.
+    status = grayscale_visual_src.image_decode_with_error_checking(None, im_proto, None)
+    assert im_proto.rows == 15
+    assert status == image_pb2.ImageResponse.STATUS_OK
+    status = grayscale_visual_src.image_decode_with_error_checking(None, im_proto, unknown_im_req)
+    assert im_proto.rows == 15
+    assert status == image_pb2.ImageResponse.STATUS_OK
+    status = grayscale_visual_src.image_decode_with_error_checking(None, im_proto, grayscale_im_req)
+    assert im_proto.rows == 15
+    assert status == image_pb2.ImageResponse.STATUS_OK
+    status = grayscale_visual_src.image_decode_with_error_checking(None, im_proto, rgb_im_req)
+    assert im_proto.rows == 15
+    assert status == image_pb2.ImageResponse.STATUS_UNSUPPORTED_PIXEL_FORMAT_REQUESTED
+
+    # Test VisualImageSource with grayscale and rgb pixel format.
+    status = rgb_visual_src.image_decode_with_error_checking(None, im_proto, None)
+    assert im_proto.rows == 15
+    assert status == image_pb2.ImageResponse.STATUS_OK
+    status = rgb_visual_src.image_decode_with_error_checking(None, im_proto, unknown_im_req)
+    assert im_proto.rows == 15
+    assert status == image_pb2.ImageResponse.STATUS_OK
+    status = rgb_visual_src.image_decode_with_error_checking(None, im_proto, grayscale_im_req)
+    assert im_proto.rows == 15
+    assert status == image_pb2.ImageResponse.STATUS_OK
+    status = rgb_visual_src.image_decode_with_error_checking(None, im_proto, rgb_im_req)
+    assert im_proto.rows == 15
+    assert status == image_pb2.ImageResponse.STATUS_OK
+
+
+def test_convert_pixel_format_comparisons():
+    im = np.zeros((3, 3, 3), np.uint8)
+    for x in range(0,2):
+        for y in range(0,2):
+            for i in range(0,2):
+                im[x, y, i] = x + y + 1
+    converted_im = convert_RGB_to_grayscale(im)
+
+    cv_converted_im = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
+    assert converted_im.all() == cv_converted_im.all()
+
+    pil_im = Image.fromarray(np.uint8(im))
+    pil_converted_im = pil_im.convert('L')
+    pil_converted_im = np.asarray(pil_converted_im)
+    assert converted_im.all() == pil_converted_im.all()

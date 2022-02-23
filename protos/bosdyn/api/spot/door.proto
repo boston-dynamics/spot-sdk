@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -83,9 +83,12 @@ message DoorCommand {
 
     // Specify if the door is push or pull, when looking at the door.
     enum SwingDirection {
+        option allow_alias = true;
         SWING_DIRECTION_UNKNOWN = 0;
-        SWING_DIRECTION_INSWING = 1;
-        SWING_DIRECTION_OUTSWING = 2;
+        SWING_DIRECTION_INSWING = 1 [deprecated = true];
+        SWING_DIRECTION_PULL = 1;
+        SWING_DIRECTION_OUTSWING = 2 [deprecated = true];
+        SWING_DIRECTION_PUSH = 2;
     }
 
     // Specify type of door handle.
@@ -142,6 +145,7 @@ message DoorCommand {
         HingeSide hinge_side = 3;
     }
 
+
     message Request {
         oneof command {
             AutoGraspCommand auto_grasp_command = 10;
@@ -149,6 +153,7 @@ message DoorCommand {
             WarmstartCommand warmstart_command = 11;
 
             AutoPushCommand auto_push_command = 12;
+
         }
 
     }

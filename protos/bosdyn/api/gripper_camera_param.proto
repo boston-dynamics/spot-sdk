@@ -1,0 +1,175 @@
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option java_outer_classname = "GripperCameraParamProto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/geometry.proto";
+import "google/protobuf/wrappers.proto";
+
+// The GripperCameraParam request message sets new gripper sensor parameters. Gripper sensor parameters do not persist across reboots. 
+message GripperCameraParamRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    GripperCameraParams params = 2;
+}
+
+message GripperCameraParamResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+}
+
+// The GripperCameraGetParam request message queries the robot for the current gripper sensor parameters. 
+message GripperCameraGetParamRequest {
+    // Common request header.
+    RequestHeader header = 1;
+}
+
+// The GripperCameraGetParam response message contains the current gripper sensor parameters. Gripper sensor parameters do not persist across reboots. 
+message GripperCameraGetParamResponse {
+    // Common request header.
+    ResponseHeader header = 1;
+
+    GripperCameraParams params = 2;
+}
+
+message GripperCameraParams {
+    enum CameraMode {
+        // MODE_UNKNOWN should not be used.
+        MODE_UNKNOWN = 0;
+
+        // 1280x720 pixels at 60 frames per second in UYVY format
+        MODE_1280_720_60FPS_UYVY = 1;
+
+        // 640x480 pixels at 120 frames per second in UYVY format
+        // Warning: this frame rate may not be achievable with long exposure times.
+        MODE_640_480_120FPS_UYVY = 11;
+
+        // 1920x1080 pixels at 60 frames per second in Motion JPG format
+        MODE_1920_1080_60FPS_MJPG = 14;
+
+        // 3840x2160 pixels at 30 frames per second in Motion JPG format
+        MODE_3840_2160_30FPS_MJPG = 15;
+
+        // 4208x3120 pixels at 20 frames per second in Motion JPG format
+        MODE_4208_3120_20FPS_MJPG = 16;
+
+        // 4096x2160 pixels at 30 frames per second in Motion JPG format
+        MODE_4096_2160_30FPS_MJPG = 17;
+
+    }
+
+    // CameraMode sets the resolution, frame rate and image format.
+    CameraMode camera_mode = 1;
+
+    // Set the image brightness level.
+    // Min 0, max 1
+    google.protobuf.FloatValue brightness = 2;
+
+    // Set the image contrast level.
+    // Min 0, max 1
+    google.protobuf.FloatValue contrast = 3;
+
+    // Set the image saturation level.
+    // Min 0, max 1
+    google.protobuf.FloatValue saturation = 4;
+
+    // Set the image gain level.
+    // Min 0, max 1
+    google.protobuf.FloatValue gain = 7;
+
+    // Whether the camera should use auto exposure.
+    // Defaults to true.
+    google.protobuf.BoolValue exposure_auto = 10;
+
+    // Manually set the image exposure level. This value is only used if exposure_auto is false.
+    // Min 0, max 1
+    google.protobuf.FloatValue exposure_absolute = 11;
+
+    // Region of interest for exposure.  Specify a spot exposure on a
+    // certain part of the image.  Only used in auto-exposure mode.
+    RoiParameters exposure_roi = 16;
+
+    // Whether the camera should automatically focus the image.
+    // Default true
+    google.protobuf.BoolValue focus_auto = 13;
+
+    // Manually set the image focus. This value is only used if focus_auto is false.
+    // Min 0, max 1
+    // 0 corresponds to focus at infinity, 1 corresponds to a focal point close to the camera.
+    google.protobuf.FloatValue focus_absolute = 12;
+
+    // Region of interest for focus.  Only used when in auto-focus mode.
+    RoiParameters focus_roi = 14;
+
+    // Set to true to draw a rectangle in the image where the focus ROI is.
+    // Default: false
+    google.protobuf.BoolValue draw_focus_roi_rectangle = 18;
+
+    // High dynamic range (HDR) mode sets the camera to take multiple frames to get exposure
+    // in a large range.  HDR will reduce framerate in high-framerate modes.
+    HdrParameters hdr = 17;
+
+    enum LedMode {
+        // LED_MODE_UNKNOWN should not be used.
+        LED_MODE_UNKNOWN = 0;
+
+        // Off
+        LED_MODE_OFF = 1;
+
+        // Constantly on. Brightness level can be set in the led_torch_brightness field.
+        LED_MODE_TORCH = 2;
+
+    }
+    // Set the LED mode.
+    LedMode led_mode = 19;
+
+    // Brightness of the LED in torch mode.  Min = 0, max = 1.
+    // Note: A brightness value of 0 is *not* off, but is the minimum brightness.
+    //       To turn off the LED, set the led_mode to LED_MODE_OFF
+    google.protobuf.FloatValue led_torch_brightness = 20;
+
+}
+
+// High dynamic range (HDR) modes available. HDR sets the camera to take multiple frames to
+// get exposure in a large range.  HDR will reduce framerate in high-framerate modes.
+enum HdrParameters {
+    HDR_UNKNOWN = 0;   // (or not set): will not change HDR settings.
+    HDR_OFF = 1;       // HDR disabled
+    HDR_AUTO = 2;      // Camera's on-board processor determines how much HDR is needed
+    HDR_MANUAL_1 = 3;  // Manual HDR enabled (minimum)
+    HDR_MANUAL_2 = 4;  //
+    HDR_MANUAL_3 = 5;  //
+    HDR_MANUAL_4 = 6;  // Manual HDR enabled (maximum)
+}
+
+// Region of interest (ROI) indicates the region within the image that should be used for
+// determination of automatic focus or exposure.
+message RoiParameters {
+    // Center point of the ROI in the image. The upper lefthand corner of the image is (0, 0) and
+    // the lower righthand corner is (1, 1). The middle of the image is (0.5, 0.5).
+    Vec2 roi_percentage_in_image = 1;
+
+    enum RoiWindowSize {
+        // ROI window size, 1 is the smallest, 8 is the largest.
+        ROI_WINDOW_SIZE_UNKNOWN = 0;
+        ROI_WINDOW_SIZE_1 = 1;
+        ROI_WINDOW_SIZE_2 = 2;
+        ROI_WINDOW_SIZE_3 = 3;
+        ROI_WINDOW_SIZE_4 = 4;
+        ROI_WINDOW_SIZE_5 = 5;
+        ROI_WINDOW_SIZE_6 = 6;
+        ROI_WINDOW_SIZE_7 = 7;
+        ROI_WINDOW_SIZE_8 = 8;
+    }
+
+    // Size of the region of interest.
+    RoiWindowSize window_size = 2;
+}

@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -42,3 +42,4 @@ Python 2.7 is _not_ supported, since the [Python 2 End-Of-Life](https://www.pyth
 * [Examples](../../python/examples/README.md)
 * [Python Reference Guide](../../python/README.md)
 * [Fetch Tutorial](fetch_tutorial/fetch1.md)
+* [Data Collection Tutorial](daq_tutorial/daq1.md)

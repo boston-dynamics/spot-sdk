@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -48,7 +48,7 @@ def run_announce_client(config):
 
     # Get a user token for this payload.
     # This request will block if the payload has not been authorized by an admin via the web UI.
-    robot.authenticate_from_payload_credentials(config.guid, config.secret)
+    robot.authenticate_from_payload_credentials(*bosdyn.client.util.get_guid_and_secret(config))
 
     # Create the announce client.
     announce_client = robot.ensure_client(AnnounceClient.default_service_name)

@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -83,7 +83,7 @@ Once you have successfully made Spot move using the API, you're ready to go.
 
 <pre><code class="language-bash">source my_spot_env/bin/activate # enter your virtualenv
 cd ~/spot-sdk/python/examples/hello_spot # or wherever you installed Spot SDK
-python3 hello_spot.py --username user --password YOUR_ROBOTS_PASSWORD 192.168.80.3
+python3 hello_spot.py 192.168.80.3
 </code></pre>
 
 <video autoplay loop muted playsinline class="tutorial-video">
@@ -150,7 +150,7 @@ import time
 
 <pre><code class="language-python">def main(argv):
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('--image-source', help='Get image from source(s)', default='frontleft_fisheye_image')
     parser.add_argument('--folder', help='Path to write images to', default='')
     options = parser.parse_args(argv)
@@ -165,7 +165,7 @@ Next, setup the client to talk to Spot:
 <pre><code class="language-python">    # Create robot object with an image client.
     sdk = bosdyn.client.create_standard_sdk('image_capture')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     robot.sync_with_directory()
     robot.time_sync.wait_for_sync()
 
@@ -242,7 +242,7 @@ if __name__ == "__main__":
 
 <pre>
 <code class="language-text wrap">mkdir -p dogtoy/images
-python capture_images.py --username user --password YOUR_ROBOTS_PASSWORD 192.168.80.3 --image-source right_fisheye_image --folder dogtoy/images
+python capture_images.py 192.168.80.3 --image-source right_fisheye_image --folder dogtoy/images
 </code></pre>
 
 <pre><code class="language-text">Wrote: dogtoy/images/right_fisheye_image_0000.jpg

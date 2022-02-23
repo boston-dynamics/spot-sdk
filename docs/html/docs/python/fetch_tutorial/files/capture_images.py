@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -16,7 +16,7 @@ import time
 
 def main(argv):
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('--image-source', help='Get image from source(s)', default='frontleft_fisheye_image')
     parser.add_argument('--folder', help='Path to write images to', default='')
     options = parser.parse_args(argv)
@@ -24,7 +24,7 @@ def main(argv):
     # Create robot object with an image client.
     sdk = bosdyn.client.create_standard_sdk('image_capture')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     robot.sync_with_directory()
     robot.time_sync.wait_for_sync()
 

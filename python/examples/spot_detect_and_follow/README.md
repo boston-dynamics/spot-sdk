@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -36,11 +36,10 @@ To install this example on Ubuntu 18.04, follow these instructions:
 - To exit the virtual environment, run `deactivate`
 
 ### Execution
-Prior to running the example, you will need to acquire estop access from another source such as from a connected laptop or tablet. This allows you to to emergency stop the robot since this application does not have a GUI.
+Prior to running the example, you will need to acquire estop access from another source such as from a connected laptop or tablet. This allows you to emergency stop the robot since this application does not have a GUI.
 This example follows the common pattern for expected arguments. It needs the common arguments used to configure the SDK and connect to a Spot:
-- --username 
-- --password 
 - hostname passed as the last argument
+- username and password should be set in the environment variables `BOSDYN_CLIENT_USERNAME` and `BOSDYN_CLIENT_PASSWORD`.
 
 On top of those arguments, it also needs the following arguments:
 - --model-path (required) argument that specifies the path of the Tensorflow model (a file in .pb format)
@@ -52,7 +51,7 @@ On top of those arguments, it also needs the following arguments:
 
 The simple command to run with the default values is:
 ```
-python3 spot_detect_and_follow.py --username USER --password PASSWORD --model-path <path_to_pb> --detection-class <integer class id> ROBOT_IP
+python3 spot_detect_and_follow.py --model-path <path_to_pb> --detection-class <integer class id> ROBOT_IP
 ```
 For example, run the example with `--model-path` pointing to the `frozen_inference_graph.pb` file in the `faster_rcnn_inception_v2_coco_2018_01_28` folder created from untar-ing the model file downloaded from the instructions above, and with `--detection-classes` argument set to `1` to detect people in the camera images.
 

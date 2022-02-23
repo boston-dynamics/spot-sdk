@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -25,12 +25,12 @@ dance_directory/
 3. The python script `animation_file_to_proto.py` (in the bosdyn-choreography-client package) will parse the text file and can be used to output a protobuf message.
 
 
-# File Specification
+## File Specification
 
-## File Name and Extension
+### File Name and Extension
 The animation text file will have the *.cha extension. The filename will become the move name, which can be referenced in choreography sequences. Choreographer will display the animated move name with underscores converted to spaces and each word capitalized.
 
-## Structure
+### Structure
 The animation cha file consists of three sections. Each section must be present and separated by a blank line such that the animation file parser can succeed. In all three sections, values within the same line can be separated by any combination of spaces and tabs.
 
 The file sections are:
@@ -38,16 +38,16 @@ The file sections are:
 - **Parameters:** adjustable values to customize the animated move further. These values appear in the Parameters section of Choreographer.
 - **Body Keyframes:** the complete set of key frames, either densely or sparsely specified, for a fixed amount of time. The move duration/keyframe timestamps are indicated by either a timestamp in this section, or computed from the frequency defined in the options section). The keyframes consist of either joint angles or poses for the body parts being controlled.
 
-## Units
+### Units
 All units are in:
 - Distance: meters
 - Angles: radians
 - Time: seconds. Sometimes time is measured in “slices” (¼ beat), so the duration is dependent on the sequence's BPM (beats per minute).
 
-## Commenting Support
+### Commenting Support
 We support comments within the animation files. A comment is marked with either “#” or “//” and can take up an entire line in the file or be at the end of an existing line. Comments must be within one of the three main sections of the file, and they cannot create a new section.
 
-# Options File Section
+## Options File Section
 The options section defines how the animated move is controlled and interpreted by both Choreographer and the robot. The section consists of lines with a keyword at the beginning of the line, and a fixed number of values separated by spaces following the keyword. The number of values is specific to the keyword used and defined below. Some keywords, like “neutral_start”, have no values following the keyword.
 
 The options section must contain a definition for which tracks the animation controls. This is specified by the “controls” keyword, and a line structured as follows:
@@ -56,7 +56,7 @@ controls TRACK1... TRACK_N
 ```
 Following the keyword "controls", the fields TRACK1 … TRACK_N are one or more of [legs, body, arm, gripper] (e.g. `controls legs body` for a move that controls the legs and body but not the arm or gripper.)
 
-## Supported Keywords for the Options Section
+### Supported Keywords for the Options Section
 Other than the “controls” tracks keyword, the other keywords in the options section are optional. The following are the supported key words and defining values for this section and what they define about the animated move:
 
 `bpm VALUE`: Where `VALUE` is the nominal beats per minute of the animation.  If the script is at a different BPM, the animation will be time-scaled so it takes the same number of beats.  If not specified, the animation will play at the nominal speed regardless of script BPM, taking a variable number of beats.
@@ -91,7 +91,7 @@ Other than the “controls” tracks keyword, the other keywords in the options 
 
 `no_looping`: If the animation completes before the move's duration, freeze rather than looping.  Without this option, the animation might loop because either the move duration was extended or because the `speed` parameter was set to a value greater than 1.
 
-# Parameters File Section
+## Parameters File Section
 The parameters section defines adjustable values for the animated move. Each parameter value specified will show in the parameters panel in Choreographer when the animation is selected to be edited/added. The parameter names coincide with the values present in the `AnimateParams` protobuf message (in choreography_params.proto). The animation parameters may only apply for moves which control specific tracks (arm, gripper, body,legs). Each parameter is described on a single line and can be specified two different ways:
 
 1. The parameter name, followed by the minimum, default, and maximum value (in that order).
@@ -105,13 +105,13 @@ PARAMETER_NAME
 ```
 Note: If no parameters are needed, put the keywords “no parameters” as the parameter section such that the file will still be parsed correctly.
 
-## Supported parameters pertaining to all tracks
+### Supported parameters pertaining to all tracks
 
 `speed`: Play the animation at this time multiplier.
 
 `offset_slices`: Start the move with the script at this slice.
 
-## Supported parameters when controlling the body track
+### Supported parameters when controlling the body track
 
 `body_entry_slices`: How many slices to spend transitioning smoothly from the previous pose to the animated pose trajectory for body motion.
 
@@ -131,7 +131,7 @@ Note: If no parameters are needed, put the keywords “no parameters” as the p
 
 `body_tracking_stiffness`: How hard to try to track the animated body motion.  Only applicable to animations that control both the body and the legs.  On a scale of 1 to 10 (11 for a bit extra).  Higher will result in more closely tracking the animated body motion, but possibly at the expense of balance for more difficult animations.
 
-## Supported parameters when controlling the arm track
+### Supported parameters when controlling the arm track
 
 `arm_entry_slices`: How many slices to spend transitioning smoothly from the previous pose to the animated pose trajectory for arm and gripper motion.
 
@@ -151,7 +151,7 @@ Note: If no parameters are needed, put the keywords “no parameters” as the p
 
 `arm_prohibited`: Prevents a robot with an arm from loading the animation.
 
-## Supported parameters when controlling the gripper track
+### Supported parameters when controlling the gripper track
 
 `gripper_offset`: Offset to add to the gripper angle in all animation keyframes.
 
@@ -159,11 +159,11 @@ Note: If no parameters are needed, put the keywords “no parameters” as the p
 
 `gripper_strength_fraction`: How hard the gripper can squeeze.  Fraction of full strength.
 
-## Supported parameters when controlling either (or both) the arm and gripper tracks
+### Supported parameters when controlling either (or both) the arm and gripper tracks
 
 `arm_dance_frame_id`: Dance frame to reference for workspace arm moves. Only valid in combination with the option `arm_playback workspace_dance_frame` (specified in the options section of the file).
 
-# Body Keyframe File Section
+## Body Keyframe File Section
 
 The body keyframe section defines the actual animated move through keyframes describing either the pose or joint angles at each keyframe timestamp. Each keyframe is a single line consisting of a number of fields determined by the number of columns specified. The first line will specify what value is in each column and how many columns there will be; it is written as a series of key words (space separated) where each keyword has an fixed number of columns that the parser expects.
 
@@ -173,17 +173,17 @@ The same column value cannot be specified multiple times. Column values are only
 
 Column definitions are required for each track that is being controlled (as specified in the options section). If additional columns controlled unspecified tracks are included, they will be ignored when the animated move is executed.
 
-## Supported Columns Not Pertaining to a Particular Track
+### Supported Columns Not Pertaining to a Particular Track
 
 `time`: The timestamp of each frame. The start of the animation is 0.  This column and the “frequency” option are mutually exclusive, but one is required.
 
-## Supported Columns Pertaining to Gripper Track
+### Supported Columns Pertaining to Gripper Track
 
 `gripper`: Gripper joint angle. Required.
 
 The field gripper is required.
 
-## Supported Columns Pertaining to Arm Track
+### Supported Columns Pertaining to Arm Track
 
 `arm_joints`: Grouping of 6 columns [shoulder0 shoulder1 elbow0 elbow1 wrist0 wrist1]. Represents the arm joint angles.  Any columns not included will be held constant at the previous joint angle. Mutually exclusive with hand_pos and hand orientation specifications.
 
@@ -195,7 +195,7 @@ The field gripper is required.
 
 `hand_euler_rpy`: Grouping of [hand_roll hand_pitch hand_yaw] Mutually exclusive with other orientation specifications.
 
-## Supported Columns Pertaining to Body Track
+### Supported Columns Pertaining to Body Track
 
 `body_pos`: Grouping of [body_x body_y body_z]. Body position in the animation frame.  Mutually exclusive with com_pos.
 
@@ -209,7 +209,7 @@ The field gripper is required.
 
 At least one dimension of the body must be specified.
 
-## Supported Columns Pertaining to Legs Track
+### Supported Columns Pertaining to Legs Track
 
 `leg_joints`: Grouping of [fl_hx fl_hy fl_kn fr_hx fr_hy fr_kn hl_hx hl_hy hl_kn hr_hx hr_hy hr_kn].  Can also be grouped by leg as [fl_angles fr_angles hl_angles hr_angles]  Mutually exclusive (by leg) with foot_pos.
 

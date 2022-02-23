@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -406,8 +406,8 @@ def convert_animation_file_to_proto(animated_file, animate_move_params_file=""):
             section_counter += 1
             continue
 
-        # Check if there are any comments. Comments can be both at the end of an exisiting line, or
-        # on a line of there own. They are marked with # or //. We want to just ignore them and continue
+        # Check if there are any comments. Comments can be both at the end of an existing line, or
+        # on a line of their own. They are marked with # or //. We want to just ignore them and continue
         # parsing the file as normal.
         for delim in COMMENT_DELIMITERS:
             line = line.split(delim)[0]  # Take any content before the comment starts.
@@ -499,8 +499,8 @@ def convert_animation_file_to_proto(animated_file, animate_move_params_file=""):
         else:
             # An animation file should only have 3 sections: the options, the parameters, and the body movement keyframes.
             err = (
-                "Cannot parse file %s: Animation file contains more than 3 sections deliniated by whitespace."
-                " Make sure all comments are included in a exisiting section." % (animation.name))
+                "Cannot parse file %s: Animation file contains more than 3 sections delineated by whitespace."
+                " Make sure all comments are included in a existing section." % (animation.name))
             raise Exception(err)
 
     animation.proto.name = animation.name

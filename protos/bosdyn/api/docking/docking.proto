@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -41,6 +41,7 @@ message DockingCommandRequest {
 
     // [Optional] Specify the prep pose behavior
     PrepPoseBehavior prep_pose_behavior = 9;
+
 }
 
 // Response to a DockingCommandRequest
@@ -136,6 +137,9 @@ message DockingCommandFeedbackResponse {
 
         // ERROR: The dock is not available for docking.
         STATUS_ERROR_NOT_AVAILABLE =   12;
+
+        // ERROR: The prior could not be confirmed as a real dock
+        STATUS_ERROR_UNREFINED_PRIOR = 13;
 
         // ERROR: Internal system error during execution
         // This error cannot be resolved by issuing a new DockingCommand

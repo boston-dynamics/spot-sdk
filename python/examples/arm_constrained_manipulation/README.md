@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -16,7 +16,7 @@ Examples include ball valves, switches, cabinets and drawers.
 These examples need to be run with python3, and have the Spot SDK installed.
 
 ## Constrained Manipulation Example
-Before running this example, we need to setup the
+Before running this example, we need to set up the
 grasp of the object. Once the object is successfully grasped, 
 we can run the constrained manipulation example.
 
@@ -50,6 +50,6 @@ Please look in the file constrained_manipulation_helper.py
 for more details on how the velocity is scaled with the force limit.
 
 ```
-python3 run_constrained_manipulation.py --username USER --password PASSWORD ROBOT_IP --task-type crank  --task-velocity 0.5 --force-limit 40
+python3 run_constrained_manipulation.py ROBOT_IP --task-type crank  --task-velocity 0.5 --force-limit 40
 
 ```

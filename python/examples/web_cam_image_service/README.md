@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -10,7 +10,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 This example implements the standard Boston Dynamics API image service and communicates to common web cameras using OpenCV. The example will run the web cam image service locally and register it with the robot's directory service using the payload service registration procedure. The web cam image service is an implementation of the GRPC image service, which has the ListImageSources RPC and the GetImage RPC. The service can encode information from the OpenCV camera connection into a protobuf message.
 
-This example will register the service from a payload, which could be the Spot CORE or a different external computer; therefore, it will require knowing the guid, secret, and IP address of the computer the service will be running off of. See the [self registration payloads example](../self_registration/README.md) for a higher level overview of how to setup and register a payload, as well as how to register a simple announcing service.
+This example will register the service from a payload, which could be the Spot CORE or a different external computer; therefore, it will require knowing the guid, secret, and IP address of the computer the service will be running off of. See the [self registration payloads example](../self_registration/README.md) for a higher level overview of how to set up and register a payload, as well as how to register a simple announcing service.
 
 ## Prerequisites
 
@@ -37,7 +37,7 @@ The example can be safely exited by issuing a SIGINT (Ctrl + C) to the caller.
 
 This example takes two different IP addresses as arguments. The `--host-ip` argument describes the IP address for the computer that will be running the web cam image service. A helper exists to try to determine the correct IP address. This command must be run on the same computer that will be running the web cam image service:
 ```
-python3 -m bosdyn.client --username {USER} --password {PASSWORD} {ROBOT_IP} self-ip
+python3 -m bosdyn.client {ROBOT_IP} self-ip
 ```
 The other IP address is the traditional robot hostname ("ROBOT_IP") argument, which describes the IP address of the robot hosting the directory service.
 
@@ -64,7 +64,7 @@ Here are a couple suggestions for debugging the web cam image service:
 - Ensure the camera is powered on and plugged in.
 - Check that your web cam is working separate from the api connections. For linux, the program `Cheese` allows you to stream from the camera. Run `cheese /dev/video0` (or the name of your cameras USB location) to verify the image appears.
 - Use the command line argument `--show-debug-info` which will display the openCV capture output before encoded it into the image service protobuf message. If the image is unable to show here, then the device name is likely incorrect or unreachable.
-- Check that the image service appears in the directory using the command line tool: `python3 -m bosdyn.client --username {USER} --password {PWD} {ROBOT_IP} dir list`
+- Check that the image service appears in the directory using the command line tool: `python3 -m bosdyn.client {ROBOT_IP} dir list`
 - Use the [image service tester program](../tester_programs/README.md) to ensure the service can successfully be communicated with and that each RPC will complete correctly.
 - When all tests pass for the image service tester program, check that the tablet is detecting the web cam image service by looking in the camera sources drop down menu (top-left of the status bar) and then check that the images are appearing by selecting the "Web Cam" camera source.
 

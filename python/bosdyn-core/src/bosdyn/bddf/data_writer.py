@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -49,7 +49,7 @@ class DataWriter:
 
         Args:
          series_type:   the kind of spec, corresponding to the set of keys expected in series_spec.
-         series_spec:   dict of {key (string) -> value (string)| describing the series.
+         series_spec:   dict of {key (string) -> value (string)} describing the series.
          content_type:  data encoding, like http content-type header (string)
          type_name:     string describing the kind of data
          is_metadata:   Metadata messages are needed to interpret other messages which
@@ -91,7 +91,7 @@ class DataWriter:
 
         Args:
          series_type:   the kind of spec, corresponding to the set of keys expected in series_spec.
-         series_spec:   dict of {key (string) -> value (string)| describing the series.
+         series_spec:   dict of {key (string) -> value (string)} describing the series.
          message_type:  MessageTypeDescriptor (need EITHER this OR pod_type)
          pod_type:      PodTypeDescriptor (need EITHER this OR pod_type)
          annotations:   optional dict of key (string) -> value (string) pairs to
@@ -111,11 +111,12 @@ class DataWriter:
 
         Args:
          series_index:   integer returned when series was registered with the file.
-         timestamp_nsec: nsec since unix epoch to timestamp the data
-         data:           binary data to store
-         additional_indexes: additional timestamps if needed for this channel
+         timestamp_nsec: nsec since unix epoch to timestamp the data.
+         data:           binary data to store.
+         additional_indexes: additional timestamps if needed for this channel.
 
-        Raises DataFormatError if the data or additional_indexes are not valid for this series.
+        Raises:
+            DataFormatError if the data or additional_indexes are not valid for this series.
         """
         self._indexer.index_data_block(series_index, timestamp_nsec, self._writer.tell(), len(data),
                                        additional_indexes)

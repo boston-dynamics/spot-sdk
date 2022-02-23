@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -179,7 +179,7 @@ class Robot(object):
         self.token_cache = token_cache or self.token_cache
 
     def update_from(self, other):
-        """Adds to this object's processors, etc based on other"""
+        """Adds to this object's processors, etc. based on other"""
         self.request_processors = other.request_processors + self.request_processors
         self.response_processors = other.response_processors + self.response_processors
         self.service_client_factories_by_type.update(other.service_client_factories_by_type)

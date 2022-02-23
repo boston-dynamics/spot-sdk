@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -129,7 +129,8 @@ message ImageSource {
     // Number of rows in the image (in pixels).
     int32 rows = 5;
 
-    // The depth scale for the image data. Typically 1000, which converts it from mm to m.
+    // For depth images, the pixel value that represents a depth of one meter.
+    // Depth in meters can be computed by dividing the raw pixel value by this scale factor.
     double depth_scale = 6;
 
     // Fields reserved for deprecated messages.
@@ -152,6 +153,12 @@ message ImageSource {
     };
     // The kind of images returned by this image source.
     ImageType image_type = 9;
+
+    // The pixel formats a specific image source supports.
+    repeated Image.PixelFormat pixel_formats = 10;
+
+    // The image formats a specific image source supports.
+    repeated Image.Format image_formats = 11;
 }
 
 // The ListImageSources request message for the robot image service.
@@ -182,6 +189,16 @@ message ImageRequest {
     // Specify the desired image encoding (e.g. JPEG, RAW). If no format is specified (e.g. FORMAT_UNKNOWN), the image
     // service will choose the best format for the data.
     Image.Format image_format = 3;
+
+    // Optional specification of the desired image dimensions.
+    // If the original image is 1920x1080, a resize_ratio of (2/3) will return an image with size 1280x720
+    // The range is clipped to [0.01, 1] while maintaining the original aspect ratio.
+    // For backwards compatibliity, a value of 0 means no resizing.
+    double resize_ratio = 4;
+
+    // Specify the desired pixel format (e.g. GREYSCALE_U8, RGB_U8). If no format is specified
+    // (e.g. PIXEL_FORMAT_UNKNOWN), the image service will choose the best format for the data.
+    Image.PixelFormat pixel_format = 5;
 }
 
 // The GetImage request message which can send multiple different image source requests at once.
@@ -224,6 +241,14 @@ message ImageResponse {
         // not be filled out. Note, if an image request has "FORMAT_UNKNOWN", the service should choose the
         // best format to provide the data in.
         STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED = 5;
+
+        // The requested pixel format is unsupported for the image-source named. The image data will
+        // not be filled out. Note, if an image request has "PIXEL_FORMAT_UNKNOWN", the service
+        // should choose the best format to provide the data in.
+        STATUS_UNSUPPORTED_PIXEL_FORMAT_REQUESTED = 6;
+
+        // The requested ratio is out of bounds [0,1] or unsupported by the image service
+        STATUS_UNSUPPORTED_RESIZE_RATIO_REQUESTED = 7;
     }
     // Return status of the request.
     Status status = 4;

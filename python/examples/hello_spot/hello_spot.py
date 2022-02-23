@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -40,7 +40,7 @@ def hello_spot(config):
     robot = sdk.create_robot(config.hostname)
 
     # Clients need to authenticate to a robot before being able to use it.
-    robot.authenticate(config.username, config.password)
+    bosdyn.client.util.authenticate(robot)
 
     # Establish time sync with the robot. This kicks off a background thread to establish time sync.
     # Time sync is required to issue commands to the robot. After starting time sync thread, block
@@ -56,83 +56,78 @@ def hello_spot(config):
     # indicate that they want to control a robot. Acquiring may fail if another
     # client is currently controlling the robot. When the client is done
     # controlling the robot, it should return the lease so other clients can
-    # control it. Note that the lease is returned as the "finally" condition in this
-    # try-catch-finally block.
+    # control it. The LeaseKeepAlive object takes care of acquiring and returning
+    # the lease for us.
     lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
-    lease = lease_client.acquire()
-    try:
-        with bosdyn.client.lease.LeaseKeepAlive(lease_client):
-            # Now, we are ready to power on the robot. This call will block until the power
-            # is on. Commands would fail if this did not happen. We can also check that the robot is
-            # powered at any point.
-            robot.logger.info("Powering on robot... This may take several seconds.")
-            robot.power_on(timeout_sec=20)
-            assert robot.is_powered_on(), "Robot power on failed."
-            robot.logger.info("Robot powered on.")
+    with bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
+        # Now, we are ready to power on the robot. This call will block until the power
+        # is on. Commands would fail if this did not happen. We can also check that the robot is
+        # powered at any point.
+        robot.logger.info("Powering on robot... This may take several seconds.")
+        robot.power_on(timeout_sec=20)
+        assert robot.is_powered_on(), "Robot power on failed."
+        robot.logger.info("Robot powered on.")
 
-            # Tell the robot to stand up. The command service is used to issue commands to a robot.
-            # The set of valid commands for a robot depends on hardware configuration. See
-            # SpotCommandHelper for more detailed examples on command building. The robot
-            # command service requires timesync between the robot and the client.
-            robot.logger.info("Commanding robot to stand...")
-            command_client = robot.ensure_client(RobotCommandClient.default_service_name)
-            blocking_stand(command_client, timeout_sec=10)
-            robot.logger.info("Robot standing.")
-            time.sleep(3)
+        # Tell the robot to stand up. The command service is used to issue commands to a robot.
+        # The set of valid commands for a robot depends on hardware configuration. See
+        # SpotCommandHelper for more detailed examples on command building. The robot
+        # command service requires timesync between the robot and the client.
+        robot.logger.info("Commanding robot to stand...")
+        command_client = robot.ensure_client(RobotCommandClient.default_service_name)
+        blocking_stand(command_client, timeout_sec=10)
+        robot.logger.info("Robot standing.")
+        time.sleep(3)
 
-            # Tell the robot to stand in a twisted position.
-            #
-            # The RobotCommandBuilder constructs command messages, which are then
-            # issued to the robot using "robot_command" on the command client.
-            #
-            # In this example, the RobotCommandBuilder generates a stand command
-            # message with a non-default rotation in the footprint frame. The footprint
-            # frame is a gravity aligned frame with its origin located at the geometric
-            # center of the feet. The X axis of the footprint frame points forward along
-            # the robot's length, the Z axis points up aligned with gravity, and the Y
-            # axis is the cross-product of the two.
-            footprint_R_body = bosdyn.geometry.EulerZXY(yaw=0.4, roll=0.0, pitch=0.0)
-            cmd = RobotCommandBuilder.synchro_stand_command(footprint_R_body=footprint_R_body)
-            command_client.robot_command(cmd)
-            robot.logger.info("Robot standing twisted.")
-            time.sleep(3)
+        # Tell the robot to stand in a twisted position.
+        #
+        # The RobotCommandBuilder constructs command messages, which are then
+        # issued to the robot using "robot_command" on the command client.
+        #
+        # In this example, the RobotCommandBuilder generates a stand command
+        # message with a non-default rotation in the footprint frame. The footprint
+        # frame is a gravity aligned frame with its origin located at the geometric
+        # center of the feet. The X axis of the footprint frame points forward along
+        # the robot's length, the Z axis points up aligned with gravity, and the Y
+        # axis is the cross-product of the two.
+        footprint_R_body = bosdyn.geometry.EulerZXY(yaw=0.4, roll=0.0, pitch=0.0)
+        cmd = RobotCommandBuilder.synchro_stand_command(footprint_R_body=footprint_R_body)
+        command_client.robot_command(cmd)
+        robot.logger.info("Robot standing twisted.")
+        time.sleep(3)
 
-            # Now tell the robot to stand taller, using the same approach of constructing
-            # a command message with the RobotCommandBuilder and issuing it with
-            # robot_command.
-            cmd = RobotCommandBuilder.synchro_stand_command(body_height=0.1)
-            command_client.robot_command(cmd)
-            robot.logger.info("Robot standing tall.")
-            time.sleep(3)
+        # Now tell the robot to stand taller, using the same approach of constructing
+        # a command message with the RobotCommandBuilder and issuing it with
+        # robot_command.
+        cmd = RobotCommandBuilder.synchro_stand_command(body_height=0.1)
+        command_client.robot_command(cmd)
+        robot.logger.info("Robot standing tall.")
+        time.sleep(3)
 
-            # Capture an image.
-            # Spot has five sensors around the body. Each sensor consists of a stereo pair and a
-            # fisheye camera. The list_image_sources RPC gives a list of image sources which are
-            # available to the API client. Images are captured via calls to the get_image RPC.
-            # Images can be requested from multiple image sources in one call.
-            image_client = robot.ensure_client(ImageClient.default_service_name)
-            sources = image_client.list_image_sources()
-            image_response = image_client.get_image_from_sources(['frontleft_fisheye_image'])
-            _maybe_display_image(image_response[0].shot.image)
-            if config.save or config.save_path is not None:
-                _maybe_save_image(image_response[0].shot.image, config.save_path)
+        # Capture an image.
+        # Spot has five sensors around the body. Each sensor consists of a stereo pair and a
+        # fisheye camera. The list_image_sources RPC gives a list of image sources which are
+        # available to the API client. Images are captured via calls to the get_image RPC.
+        # Images can be requested from multiple image sources in one call.
+        image_client = robot.ensure_client(ImageClient.default_service_name)
+        sources = image_client.list_image_sources()
+        image_response = image_client.get_image_from_sources(['frontleft_fisheye_image'])
+        _maybe_display_image(image_response[0].shot.image)
+        if config.save or config.save_path is not None:
+            _maybe_save_image(image_response[0].shot.image, config.save_path)
 
-            # Log a comment.
-            # Comments logged via this API are written to the robots test log. This is the best way
-            # to mark a log as "interesting". These comments will be available to Boston Dynamics
-            # devs when diagnosing customer issues.
-            log_comment = "HelloSpot tutorial user comment."
-            robot.operator_comment(log_comment)
-            robot.logger.info('Added comment "%s" to robot log.', log_comment)
+        # Log a comment.
+        # Comments logged via this API are written to the robots test log. This is the best way
+        # to mark a log as "interesting". These comments will be available to Boston Dynamics
+        # devs when diagnosing customer issues.
+        log_comment = "HelloSpot tutorial user comment."
+        robot.operator_comment(log_comment)
+        robot.logger.info('Added comment "%s" to robot log.', log_comment)
 
-            # Power the robot off. By specifying "cut_immediately=False", a safe power off command
-            # is issued to the robot. This will attempt to sit the robot before powering off.
-            robot.power_off(cut_immediately=False, timeout_sec=20)
-            assert not robot.is_powered_on(), "Robot power off failed."
-            robot.logger.info("Robot safely powered off.")
-    finally:
-        # If we successfully acquired a lease, return it.
-        lease_client.return_lease(lease)
+        # Power the robot off. By specifying "cut_immediately=False", a safe power off command
+        # is issued to the robot. This will attempt to sit the robot before powering off.
+        robot.power_off(cut_immediately=False, timeout_sec=20)
+        assert not robot.is_powered_on(), "Robot power off failed."
+        robot.logger.info("Robot safely powered off.")
 
 
 def _maybe_display_image(image, display_time=3.0):
@@ -180,7 +175,7 @@ def _maybe_save_image(image, path):
 def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument(
         '-s', '--save', action='store_true', help=
         'Save the image captured by Spot to the working directory. To chose the save location, use --save_path instead.'

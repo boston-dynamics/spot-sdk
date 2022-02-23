@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -19,6 +19,7 @@ Linux:
 ```
 python -m pip install -r requirements.txt
 sudo apt install python3-pyqt5 python3-pyqt5.qtopengl qt5-style-plugins
+python3 -m pip install PyQt5-sip --upgrade
 ```
 
 Windows:
@@ -31,5 +32,5 @@ py.exe -3 -m pip install PyOpenGL pyqt5
 ## Running the Example
 To run the examples:
 ```
-python client.py --username USER --password PASSWORD ROBOT_HOSTNAME
+python client.py ROBOT_HOSTNAME
 ```

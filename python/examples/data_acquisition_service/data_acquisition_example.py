@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -37,7 +37,7 @@ def data_acquisition(config):
     bosdyn.client.util.setup_logging(config.verbose)
     sdk = bosdyn.client.create_standard_sdk('DataAcquisitionClientExample')
     robot = sdk.create_robot(config.hostname)
-    robot.authenticate(config.username, config.password)
+    bosdyn.client.util.authenticate(robot)
     robot.time_sync.wait_for_sync()
 
     # Create data acquisition clients
@@ -138,7 +138,7 @@ def data_acquisition(config):
 def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     options = parser.parse_args(argv)
 
     data_acquisition(options)

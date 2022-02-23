@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -90,9 +90,9 @@ The API defines a choreography sequence by a unique name, the number of slices p
 
 Once a choreography sequence is created, the `UploadChoreography` RPC will send the routine to the robot. The choreography service will validate and check the structure of the routine to ensure it is feasible and within bounds.
 
-The service will return a list of warnings and failures related to the uploaded choreography sequence. A failure is something the choreography service could not automatically correct and must be fixed before the routine can be executed. A warning is something that could be automatically corrected for and won’t block the execution of the routine in certain scenarios. If the boolean `non_strict_parsing` is set to true in the `UploadChoreography` RPC, then the service will fix any correctable errors within the routine (ex. rounding down values the maximum allowed value) and allow a choreography sequence with warnings to be completed.
+The service will return a list of warnings and failures related to the uploaded choreography sequence. A failure is something the choreography service could not automatically correct and must be fixed before the routine can be executed. A warning is something that could be automatically corrected for and won’t block the execution of the routine in certain scenarios. If the boolean `non_strict_parsing` is set to true in the `UploadChoreography` RPC, then the service will fix any correctable errors within the routine (e.g. limiting parameters to the acceptable range) and allow a choreography sequence with warnings to be completed.
 
-The `ExecuteChoreography` RPC will run the choreography sequence to completion on the robot. A choreography sequence is identified by the unique name of the sequence that was uploaded to the robot. Additionally, a starting time (in robot’s time) and a starting slice will fully specify to the robot when to start the choreography sequence and at which move.
+The `ExecuteChoreography` RPC will run the choreography sequence to completion on the robot. A choreography sequence is identified by the unique name of the sequence that was uploaded to the robot. Additionally, a starting time (in robot’s time) and a starting slice will fully specify to the robot when to start the choreography sequence and at which move.  The list of named sequences that the robot currently knows about can be found using the `ListAllSequences` RPC.
 
 ### Animation API Interface
 

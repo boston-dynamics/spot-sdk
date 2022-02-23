@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -40,9 +40,8 @@ To install this example on Ubuntu 18.04, follow these instructions:
 
 ### Execution
 This example follows the common pattern for expected arguments. It needs the common arguments used to configure the SDK and connect to a Spot:
-- --username 
-- --password 
 - hostname passed as the last argument
+- username and password should be set in the environment variables `BOSDYN_CLIENT_USERNAME` and `BOSDYN_CLIENT_PASSWORD`.
 
 On top of those arguments, it also needs the following arguments:
 - --model-path (required) argument that specifies the path of the Tensorflow model (a file in .pb format)
@@ -54,7 +53,7 @@ On top of those arguments, it also needs the following arguments:
 - --max-display-delay (optional) argument that specifies max delay in seconds allowed for each image before being displayed; images with greater latency will not be displayed. Setting this to a larger value can help the model run faster. 
 
 ```
-python3 spot_tensorflow_detector.py --username USER --password PASSWORD --model-path <path_to_pb> ROBOT_IP
+python3 spot_tensorflow_detector.py --model-path <path_to_pb> ROBOT_IP
 ```
 
 

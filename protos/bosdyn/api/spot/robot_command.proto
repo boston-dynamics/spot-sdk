@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -85,6 +85,10 @@ message MobilityParams {
     // Prevent the robot from using StairTracker even if in stairs mode.
     bool disallow_stair_tracker = 9;
 
+    // Prevent the robot from automatically walking off a staircase in the case of an error 
+    // (ex: e-stop settle_then_cut, critical battery level)
+    bool disable_stair_error_auto_descent = 16;
+
     // Robot Body External Force parameters
     BodyExternalForceParams external_force_params = 10;
 
@@ -98,11 +102,23 @@ message MobilityParams {
 
 // Parameters for offsetting the body from the normal default.
 message BodyControlParams {
-    // Desired base offset relative to the footprint pseudo-frame.
-    // The footprint pseudo-frame is a gravity aligned frame with its origin located at the
-    // geometric center of the feet in the X-Y axis, and at the nominal height of the hips in the Z axis.
-    // The yaw of the frame (wrt the world) is calcuated by the average foot locations, and is aligned with the feet.
-    SE3Trajectory base_offset_rt_footprint = 1;
+    
+    oneof param {
+        // Desired base offset relative to the footprint pseudo-frame.
+        // The footprint pseudo-frame is a gravity aligned frame with its origin located at the
+        // geometric center of the feet in the X-Y axis, and at the nominal height of the hips in the Z axis.
+        // The yaw of the frame (wrt the world) is calcuated by the average foot locations, and is aligned with the feet.
+        SE3Trajectory base_offset_rt_footprint = 1;
+        
+        // The base will adjust to assist with manipulation, adjusting its height, pitch, and yaw as a function of
+        // the hand's location.  Note, manipulation assisted body control is only available for ArmCommand requests
+        // that control the end-effector, and are expressed in an inertial frame.  For example, sending a
+        // ArmCartesianCommand request with root_frame_name set to "odom" will allow the robot to compute a body
+        // adjustment.  However, sending a ArmCartesianCommand request with root_frame_name set to "body" or
+        // sending an ArmJointMoveCommand request is incompatible, and the body will reset to default height
+        // and orientation. 
+        BodyAssistForManipulation body_assist_for_manipulation = 3;
+    }
 
     // Setting for how the robot interprets base offset pitch & roll components.
     // In the default case (ROTATION_SETTING_OFFSET) the robot will naturally align the body to the pitch of the current terrain.
@@ -114,8 +130,19 @@ message BodyControlParams {
         ROTATION_SETTING_OFFSET = 1;     // Pitch & Roll are offset with respect to orientation of the footprint.
         ROTATION_SETTING_ABSOLUTE = 2;   // Pitch & Roll are offset with respect to gravity.
     }
-    // The rotation setting for the robot body.
+    // The rotation setting for the robot body.  Ignored if body_assist_for_manipulation is requested.
     RotationSetting rotation_setting = 2;
+
+    // Instead of directly specify the base offset trajectory, these options allow the robot to calcuate offsets
+    // based on the hand's location.  If the robot does not have a SpotArm attached, sending this request will
+    // hvae no effect.
+    message BodyAssistForManipulation {
+        // Enable the use of body yaw to assist with manipulation.
+        bool enable_body_yaw_assist = 1;
+
+        // Enable use of hip height (e.g. body height/pitch) to assist with manipulation.
+        bool enable_hip_height_assist = 2;
+    }  
 }
 
 // Parameters for obstacle avoidance types.

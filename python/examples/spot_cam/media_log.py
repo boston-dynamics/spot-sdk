@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -187,7 +187,7 @@ class MediaLogRetrieveCommand(Command):
             dst_filename = os.path.basename(src_filename)
 
         # Pano and IR both come in as JPEG from retrieve command
-        if lp.image_params.height == 4800 or (lp.image_params.width == 640 and
+        if lp.image_params.height == 4800 or lp.image_params.height == 2400 or (lp.image_params.width == 640 and
                                               lp.image_params.height == 512):
             shutil.move(src_filename, '{}.jpg'.format(dst_filename))
         else:

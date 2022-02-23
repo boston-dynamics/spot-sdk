@@ -1,0 +1,106 @@
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option java_outer_classname = "RayCastProto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/geometry.proto";
+
+message RaycastRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The ray's coordinate frame. When unset, this will default to vision frame.
+    string ray_frame_name = 5;
+
+    // The ray, containing and origin and an direction.
+    Ray ray = 2;
+
+    // Ignore intersections closer than this location on the ray.
+    // Defaults to 0 if not provided.
+    float min_intersection_distance = 4;
+
+    // Type of the raycast you want to perform.  If multiple are set, the result will wait until
+    // all raycasts are complete and return a single result proto.
+    //
+    // If this field is left empty, all available sources are used.
+    repeated RayIntersection.Type intersection_types = 7;
+
+}
+
+message RayIntersection {
+    enum Type {
+        // TYPE_UNKNOWN should not be used.
+        TYPE_UNKNOWN = 0;
+
+        // Intersected against estimated ground plane.
+        TYPE_GROUND_PLANE = 1;
+
+        // Intersected against the terrain map.
+        TYPE_TERRAIN_MAP = 2;
+
+        // Intersected against the full 3D voxel map.
+        TYPE_VOXEL_MAP = 3;
+
+        // Intersected against the hand depth data.
+        TYPE_HAND_DEPTH = 4;
+    }
+    // Type of the raycast intersection that was performed.
+    Type type = 1;
+
+    // Position of ray cast hit in the RaycastResponse hit_frame.
+    Vec3 hit_position_in_hit_frame = 2;
+
+    // Distance of hit from ray origin.
+    double distance_meters = 3;
+}
+
+message RaycastResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        // An unknown / unexpected error occurred.
+        STATUS_UNKNOWN = 0;
+
+        // Request was accepted.
+        STATUS_OK = 1;
+
+        // [Programming Error] Request was invalid / malformed in some way.
+        STATUS_INVALID_REQUEST = 2;
+
+        // [Programming Error] Requested source not valid for current robot configuration.
+        STATUS_INVALID_INTERSECTION_TYPE = 3;
+
+        // [Frame Error] The frame_name for a command was not a known frame.
+        STATUS_UNKNOWN_FRAME = 4;
+    }
+    // Return status for a request.
+    Status status = 5;
+
+    // Human-readable error description.  Not for programmatic analysis.
+    string message = 6;
+
+    // The frame raycast hits are returned in. Generally this should be the same frame the client
+    // initially requested in.
+    string hit_frame_name = 3;
+
+    // Ray cast hits, sorted with the closest hit first along the ray's extent.
+    repeated RayIntersection hits = 2;
+
+    // A tree-based collection of transformations, which will include the
+    // transformations to each of the returned world objects in addition to
+    // transformations to the common frames ("vision", "body", "odom").  All
+    // transforms within the snapshot are taken at the time when the request is received.
+    //
+    // Note that each object's frame names are defined within the properties
+    // submessage e.g. "frame_name".
+    FrameTreeSnapshot transforms_snapshot = 4;
+}

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -50,8 +50,8 @@ def ask_user_for_answer(question_proto):
         user_options.append(('{}) {}'.format(selection_number, option.text), option.answer_code))
         selection_number += 1
 
-    text = 'Question: "{}"\n\nChoose one: '.format(question_proto.text)
-    text += '\n'.join(opt[0] for opt in user_options)
+    text = 'Question: "{}"\n\nChoose one:\n'.format(question_proto.text)
+    text += ''.join(opt[0]+'\n' for opt in user_options)
     idx = int(six.moves.input(text)) - 1
     return user_options[idx][1]
 
@@ -59,14 +59,14 @@ def ask_user_for_answer(question_proto):
 def main():
     """Run the program."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     options = parser.parse_args()
     bosdyn.client.util.setup_logging(options.verbose)
 
     # Create an SDK that knows about the MissionClient type.
     sdk = bosdyn.client.create_standard_sdk('mission-Q&A-code-example', [MissionClient])
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     client = robot.ensure_client(MissionClient.default_service_name)
     LOGGER.info('Beginning mission monitoring...')
     try:

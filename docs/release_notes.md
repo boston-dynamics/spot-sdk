@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -11,6 +11,218 @@ Development Kit License (20191101-BDSDK-SL).
 </p>
 
 # Spot Release Notes
+
+## 3.1.0
+
+### New Features
+
+#### Safely powering off on staircases.
+To improve safety when operating on stairs, the robot may now autonomously walk off staircases in scenarios where it may have previously entered a sit. In the event of communication loss, critically low battery state of charge, or a Safe Power Off Request, the robot will walk off the staircase before sitting and powering off. The direction of travel will generally be to descend the stairs unless the robot has already reached the top landing. This includes automatic sit-and-power-off cases such as from low battery or the E-stop `SETTLE_THEN_CUT` level, as well as any client SafePowerOff commands.  It does *not* affect immediate power cut cases such the PowerOff command or the E-stop CUT level.  
+To override this behavior for SafePowerOff commands, there is a new unsafe_action field in `SafePowerOffCommand` which can be set to `UNSAFE_FORCE_COMMAND` to force the command to take place immediately.  To override this behavior for E-stop or battery power off, set the `disable_stair_error_auto_descent` field in the mobility params for the robot commands.
+As part of this change, a new `TerrainState` message in `RobotState` contains the `is_unsafe_to_sit` value to report when the robot considers the terrain unsafe to sit on.
+
+#### Lease timeout changes.
+The behavior of the robot and leases is changed when the lease owner fails to retain the lease.  Prior to 3.1, the robot would sit down and power off, and the lease would be revoked.  This behavior allowed a new owner to smoothly take control of the robot in the case that a previous owner left without first returning the lease, but has proved to be frustrating when short comms losses trigger this behavior.
+Starting in 3.1, failing to retain the lease will cause the lease to become “stale”.  If the lease is stale, another client can acquire the lease and begin using the robot.  However, if the original owner returns and begins retaining the lease or sending commands before another client acquires ownership, the lease will become “fresh” again without the original owner needing to re-acquire the robot.  This staleness is reported via the new `stale_time` field in the `LeaseResource` message.
+This change means that **the robot will no longer sit down and power off if the lease owner disappears.**  For clients that still want that behavior, it is recommended to use an E-stop endpoint with the owner (which is already the common case), so that a comms interruption will cause the robot to sit and power off via the E-stop system. 
+
+#### Data Acquisition
+A [new tutorial](python/daq_tutorial/daq1.md) provides a walk-through of integrating new sensors with the data acquisition system.  It explains how to write, deploy, and use image services and data acquisition plugins with Spot, and how to process the resulting data.
+
+In addition to images and data capabilities, DataAcquisitionRequests can specify network compute actions to perform on captured images by adding a [NetworkComputeCapture](../protos/bosdyn/api/data_acquisition.proto) in the acquisition request list.  This capture will save the image and any computed data from the network compute response.  This currently only operates on images and will only save the data returned in the response.  For use cases that require sending other input data or saving other kinds of output data, it is still recommended to implement a data acquisition plugin to do that work.
+
+Robot image services now report which image formats and pixel formats they support via new fields in the `ImageSource` message. When requesting images, clients can specify a desired pixel format, and also a resize ratio.  These options allow for reduced bandwidth in cases where the client only needs a smaller image or a grayscale image.  New status errors `STATUS_UNSUPPORTED_PIXEL_FORMAT_REQUESTED` and `STATUS_UNSUPPORTED_RESIZE_RATIO_REQUESTED` can now be returned if the client makes a request that is unsupported.  User image services should also report the options they support.  The `VisualImageSource` constructor now includes an optional argument for a list of supported pixel formats.
+
+#### Alerts
+A new [AlertData](../protos/bosdyn/api/alertdata.proto) message has been added for the purpose of triggering live alerts for various events that can happen during a mission.  These alerts can be saved into the `DataAcquisitionStore` service using the new `StoreAlertData` RPC and queried using the `ListStoredAlertData` RPC.  Additionally, the alert data can be added to the response from a network compute bridge worker, where it will be automatically saved into the data acquisition store when captured as part of a data acquisition request.  If a client calls the network compute bridge service itself, the alert data will be returned to the client in the response but not automatically saved to the data acquisition store.
+
+#### New Services
+[**GripperCameraParamService**](../protos/bosdyn/api/gripper_camera_param.proto) – Set or query various modes and options on the camera in the robot’s gripper.
+
+[**RayCastService**](../protos/bosdyn/api/ray_cast.proto) – Find intersections between a ray and the robot’s representation of the environment.
+
+#### Control and Feedback
+The Self-Right command now provides feedback in the `SelfRightCommand.Feedback` message as to whether it has successfully completed.
+
+When Stand commands come to rest at their final pose, they will now enter a “frozen” state with locked joints.  This keeps the robot more stationary for sensor data collection.  Disturbances will still cause the robot to adjust and react to recover its position.  The status of this “frozen” state is provided by the new `StandingState` enum in `StandCommand.Feedback`.
+
+A new option, `enable_robot_locomotion` has been added to `ConstrainedManipulationCommand.Request`.  When set to true, the robot will take steps to keep the hand in the workspace during a constrained manipulation command.
+
+A new message, `BodyAssistForManipulation`, has been added to the BodyControlParams to allow clients to specify whether the body height or yaw should be used to assist the arm in manipulation.  This new option cannot be used together with body offset trajectories specified in the `base_offset_rt_footprint` field.
+
+#### Python Helpers
+* `image.depth_image_to_pointcloud()` to convert depth images to numpy point clouds.
+* `image_service_helpers.convert_RGB_to_grayscale()` to convert color images to grayscale.
+* `math_helpers` now includes `Vec2` and `Vec3` objects.
+* `robot_command.arm_joint_move_helper()` constructs RobotCommands for joint trajectories.
+
+* `robot_command.blocking_sit()` and `robot_command.blocking_selfright()` command sit and self-right commands and block until they complete.
+
+* `robot_command.block_for_trajectory_cmd()` will block until the feedback for a given body trajectory command indicates that it is complete.
+
+* `util.add_payload_credentials_arguments()` adds a `–payloads-credentials-file` argument that can be used in place of the `–guid` and `–secret` arguments.  This simplifies deployment to payload computers that contain a file with the correct credentials.
+
+* `util.read_payload_credentials()` reads payload GUID and secret values from a file for use with payload registration and authentication.
+
+* `util.get_guid_and_secret()` is a helper that will return the guid and secret, regardless of if the user used `–guid` and `--secret` or `--payload-credentials-file`.
+
+* `world_object.draw_sphere()` and `world_object.draw_oriented_bounding_box()` can be used to set objects in the world object service for debugging purposes.
+
+#### Choreography
+A new `ListAllSequences` RPC allows clients to list all of the available sequences that are known to the robot and can be executed.
+
+#### Missions
+A new node type, `ClearBehaviorFaults` will allow a mission to autonomously clear behavior faults when desired.
+
+### Bug Fixes and Improvements
+In the python client library the [LeaseKeepAlive](../python/bosdyn-client/src/bosdyn/client/lease.py) context manager continually sends RetainLease commands to the robot to keep ownership of a lease.  It has been upgraded to support more complete lease management by acquiring the lease if it is not owned when created and an option to return it when it exits.  To preserve backwards compatibility, the initial acquisition is allowed to fail, and it does not return it by default.  There are two options that control this behavior: `must_acquire=True` means that any exceptions that are raised during acquisition are not caught and are raised to the code creating the keep-alive, and `return_at_exit=True` means that the lease will be returned when exiting or shutting down the keep-alive.  Both of these options default to `False` currently.
+
+Arm joint trajectories now include self-collision avoidance to prevent hitting the body or payload with the arm.
+
+The DockProperties of the docks from the World Object Service have an additional `from_prior` field that can indicate when that particular object comes from prior map knowledge and was not directly detected.  Docking Feedback includes a new failure case `STATUS_ERROR_UNREFINED_PRIOR`, for situations in which the dock prior could not be confirmed as a real dock.
+
+Certain commands may be unavailable when the robot is docked (such as rolling over to change the battery).  In those cases, the command response will fail with the new `STATUS_DOCKED`.
+
+Many gRPC services on the robot have now enabled support gRPC compression, which will be used if the client gRPC library supports it.  
+
+The `bosdyn.client` `metrics` command will print the metrics correctly again.
+
+#### Graph Nav
+When localizing to a graph nav map, the `SetLocalization`, `UploadGraph`, and `UploadWaypointSnapshot` RPCs can fail with the new `STATUS_INCOMPATIBLE_SENSORS` if the map was recorded using a different sensor setup than the robot currently has onboard.  For example, if the map was recorded with a lidar scanner, and the robot does not currently have one equipped.  For `UploadWaypointSnapshot`, the new status enum will not be known to clients using older versions of the SDK and thus they will not recognize it as an error.
+The new `SensorCompatibilityStatus` in the responses will report whether the map and/or robot have lidar data for these error cases.  
+
+Clearing the map when in the middle of recording would break the recording process.  Requesting to clear the map in this case will now return `STATUS_RECORDING`.  Clients using older versions of the SDK will not know about this new status field and will not treat it as an error case.
+
+#### Spot Check
+Spot Check now has two extra states that it can report being in: `STATE_GRIPPER_CAL` and `STATE_SIT_DOWN_AFTER_RUN`.  It also has two extra error types it can detect and report: `ERROR_GRIPPER_CAL_TIMEOUT` as a top-level error and `ERROR_INVALID_RANGE_OF_MOTION` for joints.
+
+### Deprecations
+Automatic data buffer logging of gRPC messages is deprecated.  The gRPC messages will continue to be available for download via HTTP in 3.1, but support will be removed in a future release.
+
+FollowArmCommand’s `disable_walking` is deprecated.  To reproduce the robot's behavior of `disable_walking == true`, issue a StandCommand setting the `enable_body_yaw_assist_for_manipulation` and `enable_hip_height_assist_for_manipulation` MobilityParams to true.  Any combination of the `enable_*_for_manipulation` are accepted in stand giving finer control of the robot's behavior.
+
+When commanding door opening, the options `SWING_DIRECTION_INSWING` and `SWING_DIRECTION_OUTSWING` have been renamed to `SWING_DIRECTION_PULL` and `SWING_DIRECTION_PUSH`.
+
+The signature of `CameraInterface.image_decode()` for user image services has changed from passing individual parameters such as `image_format` and `quality_percent` to directly passing in the image request proto.  This change makes it easier to add new options to image requests without breaking existing image service implementations.  Services can access the previous parameters via the image request proto, as well as accessing new parameters such as `pixel_format` and `resize_ratio`.
+
+The `–username` and `–password` command line options are deprecated in the Python SDK.  There are security concerns with using usernames and passwords on the command line.  Instead of using `bosdyn.client.util.add_common_arguments(parser)` we recommend using `bosdyn.client.util.add_base_arguments(parser)` which will not include those options, and then authenticating via `bosdyn.client.util.authenticate(robot)`, which will read from the `BOSDYN_CLIENT_USERNAME` and `BOSDYN_CLIENT_PASSWORD` environment variables.  The `bosdyn.client` and `bosdyn.client.bddf_download` programs will continue to support the old options for now but usage should be switched to the environment variable method instead.
+
+We have changed the [LeaseKeepAlive](../python/bosdyn-client/src/bosdyn/client/lease.py#bosdyn.client.lease.LeaseKeepAlive) helper to handle more of the lease life-cycle management, where it can acquire and return the lease itself.  However, we have kept its default behavior largely unchanged for now to not break existing code. In a future release we may change the defaults for `return_at_exit` and `must_acquire` to `True`. Applications the desire the previous behavior should explicitly set `must_acquire` and `return_at_exit` to `False` to preserve that behavior across a change in the defaults.
+
+The `DARK` option for auto white balance for the Spot CAM stream has been deprecated.
+
+#### Renamed functions and classes
+The original names still exist, but are deprecated.
+
+`bosdyn.client.graph_nav.UnrecongizedCommandError` has been renamed to  `bosdyn.client.graph_nav.UnrecognizedCommandError`.
+
+`bosdyn.bddf.message_reader.channel_name_to_series_decriptor()` has been renamed to `bosdyn.bddf.message_reader.channel_name_to_series_descriptor()`
+
+The `from_obj()` methods on the math helper classes have been renamed to `from_proto()`.
+
+### Breaking Changes
+
+#### Behavior change on lease timeout
+Because leases are no longer revoked when the owner fails to check in, there are two changes that must be accounted for:
+1. The robot will not automatically sit down and power off if the owner times out.  It will still sit down and power off if an E-stop endpoint times out.  For use cases that want the owner’s absence to cause the robot to sit and power off, make sure that the owner is also maintaining an E-stop endpoint.
+2. Any client calling `ListLeases` to try to determine if the robot is owned will need to check the `stale_time` of the `LeaseResource`.  Instead of calling `ListLeases` before `AcquireLease`, we recommend just calling `AcquireLease` first, and reacting to any `STATUS_RESOURCE_ALREADY_CLAIMED` status in the response.
+
+#### Behavior change of powering off on stairs
+The new safety features to avoid powering off and sliding down stairs means that there is a behavioral change to SafePowerOff commands, powering off due to low battery, and powering off due to an E-stop `LEVEL_SETTLE_THEN_CUT`.  While the new behavior should be safer, be aware that these commands will now cause locomotion before sitting and powering off.
+
+#### Disallowed Commands
+The robot may not be commanded to go to the battery change pose when docked.
+
+The Graph Nav map may not be cleared in the middle of recording.
+
+#### Data Acquisition
+The DataAcquisitionStore service is queryable for the IDs of items that have been stored by it. It would previously track everything that had been stored since the last time that the robot had been restarted.  As of 3.1, it will track only the last 10,000 items stored.
+
+### Dependencies
+The `bosdyn-client` package no longer depends on `requests`.
+
+### Known Issues
+
+**When a network transport failure occurs,** depending on the particular operating system and version of gRPC installed, the error from the python SDK may not always be the most specific error possible, such as `UnknownDnsNameError`.  It may instead be raised as either a generic `RpcError`, or another generic failure type such as `UnableToConnectToRobotError`.
+
+**Spot CAM LED illumination levels** are not currently recorded or played back in Autowalk missions.
+
+**If you write a custom data acquisition plugin or image service,** do not change its `DataAcquisitionCapability` or `ImageSource` set once it is running and registered. New capabilities may not be detected, and old capabilities may still be listed as available in the Data Acquisition service. To change the capabilities of a service: unregister it from the directory, wait until its capabilities are no longer listed in the Data Acquisition service, and then re-register it. This waiting also applies to restarting a service if its capabilities will be different upon restart.
+
+**If you write a custom data acquisition plugin without using our helper class,** its `GetStatus()` rpc is expected to complete immediately. If it takes too long to complete it can cause timeouts when requesting `GetStatus()` of the data acquisition service.
+
+**If you register a new service with the robot**, calling `robot.ensure_client()` to create a client for that service may result in a `UnregisteredServiceNameError`.
+
+  * Workaround: call `robot.sync_with_directory()` before `robot.ensure_client()`
+
+**SE2VelocityLimits require care**.  Correct usage of the `SE2VelocityLimit` message requires the user to fully fill out all the fields, setting unlimited values to a large number, say 1e6.
+
+### Sample Code
+All examples have been changed to read the username and password from environment variables instead of taking `--username` and `--password` arguments.
+
+Additionally, most examples now use the LeaseKeepAlive for complete lease management by setting the `must_acquire` and `return_at_exit` arguments to `True` at construction.  This helps ensure that the lease is properly returned when the example is complete.
+
+The arm and manipulation examples have been updated to use the new `block_until_arm_arrives()` helper instead of `sleep()` calls.
+
+The included Dockerfiles now contain default command line arguments for their entrypoints where appropriate.  This means that it is not necessary to specify any command line arguments when running them in their default configuration (on the Spot CORE).  However when running in a non-default configuration, _all_ command line arguments will need to be specified.
+
+[**Comms Mapping (new)**](../python/examples/comms_mapping/README.md)
+Creates an image service that can be selected on the tablet controller that displays a map of wifi signal strength.
+
+[**Gripper Camera Params (new)**](../python/examples/gripper_camera_params/README.md)
+Demonstrates how to control the capture parameters for the gripper camera.
+
+[**Ray Cast (new)**](../python/examples/ray_cast/README.md)
+Demonstrates how to perform ray-casting queries using the new RayCastService.
+
+[**Animation Recorder (updated)**](../python/examples/animation_recorder/README.md)
+First checks if the robot has the correct license for choreography.
+
+[**Arm Force Control (updated)**](../python/examples/arm_force_control/README.md)
+Updated to use the new `BodyAssistForManipulation` parameters.
+
+[**Arm Gcode (updated)**](../python/examples/arm_gcode/README.md)
+Some updates to parsing gcode files.  Added a new `--test-file-parsing` option to only try to read the file, without executing it.
+
+[**Arm joint move (updated)**](../python/examples/arm_joint_move/README.md)
+Added a more advanced example that shows how to send a continuous trajectory with many points.
+
+[**BDDF download (updated)**](../python/examples/bddf_download/README.md)
+Fixed the ping check on Windows.
+
+[**Data Acquisition (updated)**](../python/examples/data_acquisition_service/README.md)
+Includes a new example plugin that saves battery data.  This is used as part of the [Data Collection Tutorial](python/daq_tutorial/daq1.md)
+
+[**Get Image (updated)**](../python/examples/get_image/README.md)
+Supports a new `--pixel-format` option to be able to specify the desired format.
+
+[**Graph Nav Command Line (updated)**](../python/examples/graph_nav_command_line/README.md)
+The recording example correctly handles the `NotReadyYetError` response when stopping recording.
+
+[**Ricoh Theta (updated)**](../python/examples/ricoh_theta/README.md)
+Includes support for pixel format and resize ratio.
+
+[**Spot CAM (updated)**](../python/examples/spot_cam/README.md)
+Fixed a memory leak related to audio streams.
+
+[**Tester Programs (updated)**](../python/examples/tester_programs/README.md)
+The image service tester only requests image and pixel formats that the service reports that it supports, and it will check that the returned type matches the requested type.  It will also report a summary at the end of all errors and warnings it found.
+
+[**Upload Choreographed Sequence (updated)**](../python/examples/upload_choreographed_sequence/README.md)
+Checks that the robot is correctly licensed for choreography before running.
+Includes a new `--upload-only` option that will upload the sequence without running it.
+
+[**Basic Streaming Visualizer (updated)**](../python/examples/visualizer/README.md)
+Added an example to draw gripper depth data as a point cloud.
+
+[**Web Cam Image Service (updated)**](../python/examples/web_cam_image_service/README.md)
+Includes support for pixel format and resize ratio.
+
+[**World Object Mutations (updated)**](../python/examples/world_object_mutations/README.md)
+Demonstrate using the new drawing helper.
+
+[**Xbox Controller (updated)**](../python/examples/xbox_controller/README.md)
+Cleaner lease usage throughout.
 
 ## 3.0.3
 

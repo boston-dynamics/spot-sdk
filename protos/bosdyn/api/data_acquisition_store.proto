@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -80,6 +80,22 @@ message StoreMetadataResponse {
     ResponseHeader header = 1;
 }
 
+message StoreAlertDataRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // AlertData to store.
+    AssociatedAlertData alert_data = 2;
+
+    // Data identifier of the alert.
+    DataIdentifier data_id = 3;
+}
+
+message StoreAlertDataResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+}
+
 message StoreDataRequest{
     // Common request header.
     RequestHeader header = 1;
@@ -143,6 +159,22 @@ message ListStoredMetadataResponse {
     ResponseHeader header = 1;
 
     // List of metadata data identifiers that satisfied the query parameters.
+    repeated DataIdentifier data_ids = 2;
+}
+
+message ListStoredAlertDataRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Query parameters for finding AlertData.
+    DataQueryParams query = 2;
+}
+
+message ListStoredAlertDataResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // List of AlertData data identifiers that satisfied the query parameters.
     repeated DataIdentifier data_ids = 2;
 }
 

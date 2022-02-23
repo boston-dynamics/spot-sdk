@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -164,10 +164,10 @@ $ python3 -m pip install --upgrade bosdyn-client bosdyn-mission bosdyn-choreogra
 Installing the `bosdyn-client`, `bosdyn-choreography-client` and `bosdyn-mission` packages will also
 install `bosdyn-api` and `bosdyn-core` packages with the same version. The command above installs
 the latest version of the packages. To install a different version of the packages from PyPI, for
-example 3.0.3, use the following command.
+example 3.1.0, use the following command.
 
 ```shell
-$ python3 -m pip install bosdyn-client==3.0.3 bosdyn-mission==3.0.3 bosdyn-choreography-client==3.0.3
+$ python3 -m pip install bosdyn-client==3.1.0 bosdyn-mission==3.1.0 bosdyn-choreography-client==3.1.0
 ```
 
 **Version incompatibility:**
@@ -176,7 +176,7 @@ If you see a version incompatibility error during pip install such as:
 
 ```shell
 ERROR: bosdyn-core <VERSION_STRING> has requirement bosdyn-api==<VERSION_STRING>, but you
-have bosdyn-api 3.0.3 which is incompatible.
+have bosdyn-api 3.1.0 which is incompatible.
 ```
 
 Try uninstalling the bosdyn packages (Note: unlike install, you will need to explicitly list all 4 packages) and then reinstalling:
@@ -191,12 +191,12 @@ Make sure that the packages have been installed.
 
 ```shell
 $ python3 -m pip list --format=columns | grep bosdyn
-bosdyn-api                    3.0.3
-bosdyn-choreography-client    3.0.3
-bosdyn-choreography-protos    3.0.3
-bosdyn-client                 3.0.3
-bosdyn-core                   3.0.3
-bosdyn-mission                3.0.3
+bosdyn-api                    3.1.0
+bosdyn-choreography-client    3.1.0
+bosdyn-choreography-protos    3.1.0
+bosdyn-client                 3.1.0
+bosdyn-core                   3.1.0
+bosdyn-mission                3.1.0
 ```
 **Windows users:**
 ```shell
@@ -321,7 +321,9 @@ Change your working directory to the hello_spot example in the distribution. Do 
 ```shell
 $ cd ~/spot-sdk/python/examples/hello_spot # or wherever you installed Spot SDK
 $ python3 -m pip install -r requirements.txt # will install dependent packages
-$ python3 hello_spot.py --username user --password password 192.168.80.3
+$ export BOSDYN_CLIENT_USERNAME=user 
+$ export BOSDYN_CLIENT_PASSWORD=password 
+$ python3 hello_spot.py 192.168.80.3
 ```
 
 Hello_spot will fail because there is not an E-Stop endpoint.
@@ -333,7 +335,7 @@ the E-Stop SDK example, to configure E-Stop.
 
 If you see the following error:
 ```shell
-$ python3 hello_spot.py --username usehername --password pazwierd 192.168.80.3
+$ python3 hello_spot.py 192.168.80.3
 2021-04-03 15:10:28,189 - ERROR - Hello, Spot! threw an exception: InvalidLoginError()
 ```
 
@@ -346,12 +348,12 @@ Change your working directory to the E-Stop example and run the nogui version:
 ```shell
 $ cd ~/spot-sdk/python/examples/estop # or wherever you installed Spot SDK
 $ python3 -m pip install -r requirements.txt # will install dependent packages
-$ python3 estop_nogui.py --username user --password password 192.168.80.3
+$ python3 estop_nogui.py 192.168.80.3
 ```
 
 Now try to run the estop_gui version:
 ```shell
-$ python3 estop_gui.py --username user --password password 192.168.80.3
+$ python3 estop_gui.py 192.168.80.3
 ```
 
 
@@ -364,7 +366,7 @@ OK, now we have an E-Stop. Leave it running, and open a second python window, an
 
 ```shell
 $ cd ~/spot-sdk/python/examples/hello_spot # or wherever you installed Spot SDK
-$ python3 hello_spot.py --username user --password password 192.168.80.3
+$ python3 hello_spot.py 192.168.80.3
 ```
 
 

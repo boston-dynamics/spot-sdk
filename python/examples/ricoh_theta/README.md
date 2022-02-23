@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -42,7 +42,7 @@ python3 test_driver.py
 ```
 
 ### Connect Ricoh Theta to Spot
-Perform the following steps on your PC to setup Ricoh Theta client mode, which means the Ricoh Theta will be connected to a different network (in this case, Spot's WiFI) instead of broadcasting its own network (which is the direct mode). The python script below is required for this example to set the static ip, which the App does not allow.
+Perform the following steps on your PC to set up Ricoh Theta client mode, which means the Ricoh Theta will be connected to a different network (in this case, Spot's WiFI) instead of broadcasting its own network (which is the direct mode). The python script below is required for this example to set the static ip, which the App does not allow.
 
 1. Enable wireless connection on the Ricoh Theta and connect your PC to the Ricoh Theta via WiFi.
 1. Run `ricoh_client_mode.py` on your PC via the CLI. Replace the capitalized letters in the command below with your Ricoh Theta SSID **with the .OSC removed from the end**, Spot's WiFi SSID, and Spot's WiFi password. The `disable-sleep-mode` will disable the Ricoh Theta's automatic sleep with inactivity mode. Note, this can also be done through the Ricoh Theta's phone application, in which case this argument does not need to be provided when running the client mode script.
@@ -78,7 +78,7 @@ python3 ricoh_theta_image_service.py --theta-ssid THETA_SSID --theta-client --ho
 
 This example takes two different IP addresses as arguments. The `--host-ip` argument describes the IP address for the computer that will be running the web cam image service. A helper exists to try to determine the correct IP address. This command must be run on the same computer that will be running the ricoh theta image service:
 ```
-python3 -m bosdyn.client --username {USER} --password {PASSWORD} {ROBOT_IP} self-ip
+python3 -m bosdyn.client {ROBOT_IP} self-ip
 ```
 The other IP address is the traditional robot hostname ("ROBOT_IP") argument, which describes the IP address of the robot hosting the directory service.
 
@@ -88,7 +88,7 @@ If the `--theta-client` argument is provided, the Ricoh Theta will be connected 
 
 The `--theta-ssid` argument is used to pass the SSID for the Ricoh Theta camera that will take the images and **should have the .OSC removed**. This will be set as the image source name for the service. Additionally, if the password for the Ricoh Theta is different from the default password of the camera, this can be provided using the `--theta-password` argument.
 
-The Ricoh Theta image service will default to only attempting to capture an image from the Ricoh Theta camera when requested with a GetImage gRPC call. To have the Ricoh Theta attempt to continuously capture images, pass the command line argument `--capture-continuously`. This will cause the image service to create a background thread and attempt to query the ricoh theta at a high rate. Note, the Ricoh Theta images are very high resolution and the stitching process to go from the fisheye image to the processed image is time consuming, so sometimes the continuous captures will drain the camera's battery quickly or overwhelm the camera processors.
+The Ricoh Theta image service will default to only attempting to capture an image from the Ricoh Theta camera when requested with a GetImage gRPC call. To have the Ricoh Theta attempt to continuously capture images, pass the command line argument `--capture-continuously`. This will cause the image service to create a background thread and attempt to query the ricoh theta at a high rate. Note, the Ricoh Theta images are very high resolution and the stitching process to go from the fisheye image to the processed image is time-consuming, so sometimes the continuous captures will drain the camera's battery quickly or overwhelm the camera processors.
 
 The `--live-stream` argument can be provided to use a quicker image capturing method. This will create a stream that reads from the live preview results, which can then use a different, lower quality image stitching algorithm that allows a faster, live stream return of images.
 
@@ -109,7 +109,7 @@ Note, the Ricoh Theta image requests can be slow due to the time it takes to sti
 Here are a couple suggestions for debugging the Ricoh Theta image service:
 
 - Check that the Ricoh Theta is configured properly. If running the image service locally, the Ricoh Theta can be in direct-ip mode and the local computer can connect to the Ricoh Theta's network. If running on the Spot CORE or a different spot payload computer, the Ricoh Theta should be in client mode. For the Ricoh Theta V, the wireless indicator should be solid green; for the Ricoh Theta Z, the OLED display will have a 'CL' icon near the wireless indicator. It may help to just rerun the `ricoh_client_mode.py` script to fully ensure that it is setup for communicating on Spot's network.
-- Check that the image service appears in the directory using the command line tool: `python3 -m bosdyn.client --username {USER} --password {PWD} {ROBOT_IP} dir list`
+- Check that the image service appears in the directory using the command line tool: `python3 -m bosdyn.client {ROBOT_IP} dir list`
 - Use the [image service tester program](../tester_programs/README.md) to ensure the service can successfully be communicated with and that each RPC will complete correctly.
 - When all tests pass for the image service tester program, check that the tablet is detecting the Ricoh Theta image service by looking in the camera sources drop down menu (top-left of the status bar) and then check that the images are appearing by selecting the Ricoh Theta.
 

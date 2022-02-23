@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -37,7 +37,7 @@ def payload_spot(config):
     robot = sdk.create_robot(config.hostname)
 
     # Authenticate robot before being able to use it
-    robot.authenticate(config.username, config.password)
+    bosdyn.client.util.authenticate(robot)
 
     # Create a payload registration client
     payload_registration_client = robot.ensure_client(
@@ -110,7 +110,7 @@ def payload_spot(config):
 def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     options = parser.parse_args(argv)
 
     payload_spot(options)

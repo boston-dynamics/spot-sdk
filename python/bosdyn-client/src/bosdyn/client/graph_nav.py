@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -16,6 +16,7 @@ from bosdyn.api.graph_nav import graph_nav_pb2
 from bosdyn.api.graph_nav import nav_pb2
 from bosdyn.api.graph_nav import map_pb2
 from bosdyn.api import data_chunk_pb2
+from bosdyn.api import lease_pb2
 from bosdyn.client.common import BaseClient, error_pair
 from bosdyn.client.common import (common_header_errors, common_lease_errors, error_factory,
                                   handle_common_header_errors, handle_unset_status_error,
@@ -49,7 +50,8 @@ class GraphNavClient(BaseClient):
                          max_yaw=None,
                          fiducial_init=graph_nav_pb2.SetLocalizationRequest.FIDUCIAL_INIT_NEAREST,
                          use_fiducial_id=None, refine_fiducial_result_with_icp=False,
-                         do_ambiguity_check=False, **kwargs):
+                         do_ambiguity_check=False,
+                         **kwargs):
         """Trigger a manual localization. Typically done to provide the initial localization.
 
         Args:
@@ -67,13 +69,14 @@ class GraphNavClient(BaseClient):
             RpcError: Problem communicating with the robot
             RobotFaultedError: Robot is experiencing a fault condition that prevents localization.
             UnknownMapInformationError: Specified waypoint is unknown.
-            InvalidRequestError: The data provided is incomplete or invalid
+            bosdyn.client.exceptions.InvalidRequestError: The data provided is incomplete or invalid
             GraphNavServiceResponseError: Localization was aborted or failed.
         """
         req = self._build_set_localization_request(initial_guess_localization, ko_tform_body,
                                                    max_distance, max_yaw, fiducial_init,
                                                    use_fiducial_id, refine_fiducial_result_with_icp,
-                                                   do_ambiguity_check)
+                                                   do_ambiguity_check
+                                                   )
         return self.call(self._stub.SetLocalization, req, _localization_from_response,
                          _set_localization_error, **kwargs)
 
@@ -86,7 +89,8 @@ class GraphNavClient(BaseClient):
         req = self._build_set_localization_request(initial_guess_localization, ko_tform_body,
                                                    max_distance, max_yaw, fiducial_init,
                                                    use_fiducial_id, refine_fiducial_result_with_icp,
-                                                   do_ambiguity_check)
+                                                   do_ambiguity_check
+                                                   )
         return self.call_async(self._stub.SetLocalization, req, _localization_from_response,
                                _set_localization_error, **kwargs)
 
@@ -387,7 +391,7 @@ class GraphNavClient(BaseClient):
         """
         request = self._build_clear_graph_request(lease)
         return self.call(self._stub.ClearGraph, request, value_from_response=None,
-                         error_from_response=handle_common_header_errors(common_lease_errors),
+                         error_from_response=_clear_graph_error,
                          **kwargs)
 
     def clear_graph_async(self, lease=None, **kwargs):
@@ -425,32 +429,34 @@ class GraphNavClient(BaseClient):
 
         Args:
             leases: Leases to show ownership of necessary resources. Will use the client's leases by default.
-            waypoint_snapshot: WaypointSnapshot protobuf that will be stream uploaded to the robot.
+            waypoint_snapshot: WaypointSnapshot protobuf that will be stream-uploaded to the robot.
         Returns:
             The status of the upload request.
         Raises:
             RpcError: Problem communicating with the robot.
             LeaseUseError: Error using provided lease.
         """
+        lease = lease or lease_pb2.Lease()
         serialized = waypoint_snapshot.SerializeToString()
         self.call(
             self._stub.UploadWaypointSnapshot,
             GraphNavClient._data_chunk_iterator_upload_waypoint_snapshot(
                 serialized, lease, self._data_chunk_size), value_from_response=None,
-            error_from_response=handle_common_header_errors(common_lease_errors), **kwargs)
+            error_from_response=_upload_waypoint_snapshot_error, **kwargs)
 
     def upload_edge_snapshot(self, edge_snapshot, lease=None, **kwargs):
         """Uploads large edge snapshot as a stream for a particular edge.
 
         Args:
             leases: Leases to show ownership of necessary resources. Will use the client's leases by default.
-            edge_snapshot: EdgeSnapshot protobuf that will be stream uploaded to the robot.
+            edge_snapshot: EdgeSnapshot protobuf that will be stream-uploaded to the robot.
         Returns:
             The status of the upload request.
         Raises:
             RpcError: Problem communicating with the robot.
             LeaseUseError: Error using provided leases.
         """
+        lease = lease or lease_pb2.Lease()
         serialized = edge_snapshot.SerializeToString()
         self.call(
             self._stub.UploadEdgeSnapshot,
@@ -487,7 +493,7 @@ class GraphNavClient(BaseClient):
 
         Args:
             waypoint_snapshot_id: WaypointSnapshot string ID for which snapshot to download from robot.
-            download_images: Boolean indicating whether or not to include images in the download.
+            download_images: Boolean indicating whether to include images in the download.
             do_not_download_point_cloud: Boolean indicating if point cloud data should not be downloaded.
         Returns:
             The WaypointSnapshot protobuf from the robot's current map.
@@ -551,7 +557,8 @@ class GraphNavClient(BaseClient):
     def _build_set_localization_request(
             initial_guess_localization, ko_tform_body=None, max_distance=None, max_yaw=None,
             fiducial_init=graph_nav_pb2.SetLocalizationRequest.FIDUCIAL_INIT_NEAREST,
-            use_fiducial_id=None, refine_fiducial_result_with_icp=False, do_ambiguity_check=False):
+            use_fiducial_id=None, refine_fiducial_result_with_icp=False, do_ambiguity_check=False
+            ):
         request = graph_nav_pb2.SetLocalizationRequest(fiducial_init=fiducial_init)
         request.initial_guess.CopyFrom(initial_guess_localization)
         if ko_tform_body is not None:
@@ -638,6 +645,7 @@ class GraphNavClient(BaseClient):
 
     @staticmethod
     def _build_clear_graph_request(lease):
+        lease = lease or lease_pb2.Lease()
         return graph_nav_pb2.ClearGraphRequest(lease=lease)
 
     @staticmethod
@@ -646,6 +654,7 @@ class GraphNavClient(BaseClient):
 
     @staticmethod
     def _build_upload_graph_request(lease, graph, generate_new_anchoring):
+        lease = lease or lease_pb2.Lease()
         return graph_nav_pb2.UploadGraphRequest(lease=lease, graph=graph,
                                                 generate_new_anchoring=generate_new_anchoring)
 
@@ -755,10 +764,11 @@ Static helper methods for handing responses and errors.
 class GraphNavServiceResponseError(ResponseError):
     """General class of errors for the GraphNav Recording Service."""
 
+class UploadWaypointSnapshotError(GraphNavServiceResponseError):
+    """Errors related to uploading a waypoint snapshot"""
 
 class UploadGraphError(GraphNavServiceResponseError):
     """Errors related to uploading a graph."""
-
 
 class MapTooLargeLicenseError(UploadGraphError):
     """The map is too large for the license on the robot."""
@@ -767,6 +777,8 @@ class MapTooLargeLicenseError(UploadGraphError):
 class InvalidGraphError(UploadGraphError):
     """The graph is invalid topologically, e.g. missing waypoints referenced by edges."""
 
+class IncompatibleSensorsError(ResponseError):
+    """The map was recorded with using a sensor configuration which is incompatible with the robot (for example, LIDAR configuration)."""
 
 class RequestAbortedError(GraphNavServiceResponseError):
     """Request was aborted by the system."""
@@ -806,6 +818,10 @@ class RobotStateError(GraphNavServiceResponseError):
 
 class IsRecordingError(RobotStateError):
     """Cannot navigate a route while recording a map."""
+
+
+class CannotModifyMapDuringRecordingError(RobotStateError):
+    """Cannot clear the map during recording. Call StopRecording first."""
 
 
 class RobotImpairedError(RobotStateError):
@@ -873,7 +889,11 @@ class RobotStuckError(RouteNavigationError):
     """The robot is stuck or unable to find a way forward. Resend the command with a new ID, or send a different command to try again."""
 
 
+@deprecated(reason='Use UnrecognizedCommandError instead', version='3.1.0', action='ignore')
 class UnrecongizedCommandError(RouteNavigationError):
+    """Happens when you try to continue a command that was either expired, or had an unrecognized id."""
+
+class UnrecognizedCommandError(UnrecongizedCommandError):
     """Happens when you try to continue a command that was either expired, or had an unrecognized id."""
 
 
@@ -919,7 +939,7 @@ def _get_streamed_waypoint_snapshot(response):
 
 
 def _get_streamed_edge_snapshot(response):
-    """Reads a streamed response to recreate a edge snapshot."""
+    """Reads a streamed response to recreate an edge snapshot."""
     data = ''
     num_chunks = 0
     for resp in response:
@@ -939,6 +959,7 @@ _UPLOAD_GRAPH_STATUS_TO_ERROR.update({
     graph_nav_pb2.UploadGraphResponse.STATUS_OK: (None, None),
     graph_nav_pb2.UploadGraphResponse.STATUS_MAP_TOO_LARGE_LICENSE: error_pair(MapTooLargeLicenseError),
     graph_nav_pb2.UploadGraphResponse.STATUS_INVALID_GRAPH: error_pair(InvalidGraphError),
+    graph_nav_pb2.UploadGraphResponse.STATUS_INCOMPATIBLE_SENSORS: error_pair(IncompatibleSensorsError)
 })
 
 
@@ -951,6 +972,37 @@ def _upload_graph_error(response):
                          status_to_string=graph_nav_pb2.UploadGraphResponse.Status.Name,
                          status_to_error=_UPLOAD_GRAPH_STATUS_TO_ERROR)
 
+_UPLOAD_WAYPOINT_SNAPSHOT_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
+_UPLOAD_WAYPOINT_SNAPSHOT_TO_ERROR.update({
+    graph_nav_pb2.UploadWaypointSnapshotResponse.STATUS_UNKNOWN: (None, None),
+    graph_nav_pb2.UploadWaypointSnapshotResponse.STATUS_OK: (None, None),
+    graph_nav_pb2.UploadWaypointSnapshotResponse.STATUS_INCOMPATIBLE_SENSORS : error_pair(IncompatibleSensorsError)
+})
+
+
+_CLEAR_GRAPH_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
+_CLEAR_GRAPH_STATUS_TO_ERROR.update({
+    # Unknown should not produce an error for backwards compatability purposes (introduced in 3.1).
+    graph_nav_pb2.ClearGraphResponse.STATUS_UNKNOWN: (None, None),
+    graph_nav_pb2.ClearGraphResponse.STATUS_OK: (None, None),
+    graph_nav_pb2.ClearGraphResponse.STATUS_RECORDING: error_pair(CannotModifyMapDuringRecordingError),
+})
+
+@handle_common_header_errors
+@handle_lease_use_result_errors
+def _clear_graph_error(response):
+    """Return a custom exception based on upload graph response, None if no error."""
+    return error_factory(response, response.status,
+                         status_to_string=graph_nav_pb2.ClearGraphResponse.Status.Name,
+                         status_to_error=_CLEAR_GRAPH_STATUS_TO_ERROR)
+
+@handle_common_header_errors
+@handle_lease_use_result_errors
+def _upload_waypoint_snapshot_error(response):
+    """Return a custom exception based on upload graph response, None if no error."""
+    return error_factory(response, response.status,
+                         status_to_string=graph_nav_pb2.UploadWaypointSnapshotResponse.Status.Name,
+                         status_to_error=_UPLOAD_WAYPOINT_SNAPSHOT_TO_ERROR)
 
 _SET_LOCALIZATION_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _SET_LOCALIZATION_STATUS_TO_ERROR.update({
@@ -961,6 +1013,7 @@ _SET_LOCALIZATION_STATUS_TO_ERROR.update({
          UnknownMapInformationError.__doc__ + " The waypoint is unknown."),
     graph_nav_pb2.SetLocalizationResponse.STATUS_ABORTED: error_pair(RequestAbortedError),
     graph_nav_pb2.SetLocalizationResponse.STATUS_FAILED: error_pair(RequestFailedError),
+    graph_nav_pb2.SetLocalizationResponse.STATUS_INCOMPATIBLE_SENSORS: error_pair(IncompatibleSensorsError)
 })
 
 
@@ -1008,7 +1061,7 @@ _NAVIGATE_ROUTE_STATUS_TO_ERROR.update({
     graph_nav_pb2.NavigateRouteResponse.STATUS_STUCK:
         error_pair(RobotStuckError),
     graph_nav_pb2.NavigateRouteResponse.STATUS_UNRECOGNIZED_COMMAND:
-        error_pair(UnrecongizedCommandError)
+        error_pair(UnrecognizedCommandError)
 })
 
 

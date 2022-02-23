@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -186,7 +186,7 @@ class SpotImageCapture:
         self.image_client = None
         self.source_list = []
 
-    def initialize_sdk_no_motor_control(self, address, username, password):
+    def initialize_sdk_no_motor_control(self, address):
         """Initializes the SDK and the robot without motor control.
 
         Args:
@@ -199,7 +199,7 @@ class SpotImageCapture:
 
         # Create robot and authenticate
         self.robot = sdk.create_robot(address)
-        self.robot.authenticate(username, password)
+        bosdyn.client.util.authenticate(self.robot)
         self.robot.time_sync.wait_for_sync()
 
         self.image_client = self.robot.ensure_client(ImageClient.default_service_name)
@@ -268,7 +268,7 @@ def main(argv):
         help="Maximum allowed delay for displaying an image; " +
         "any image older than this value will be skipped")
 
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     options = parser.parse_args(argv)
     try:
         detection_classes = []
@@ -284,8 +284,7 @@ def main(argv):
             sys.exit(1)
 
         image_capture = SpotImageCapture()
-        image_capture.initialize_sdk_no_motor_control(options.hostname, options.username,
-                                                      options.password)
+        image_capture.initialize_sdk_no_motor_control(options.hostname)
 
         # Start Tensorflow processes
         start_tensorflow_processes(options.number_tensorflow_processes, options.model_path,

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -232,7 +232,7 @@ def register_with_robot(options):
     robot = sdk.create_robot(options.hostname)
 
     # Authenticate robot before being able to use it
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
 
     directory_client = robot.ensure_client(
         bosdyn.client.directory.DirectoryClient.default_service_name)
@@ -262,7 +262,7 @@ def main(argv):
                         default=default_port)
     parser.add_argument('-d', '--no-debug', help='Disable writing debug images.', action='store_true')
     parser.add_argument('-n', '--name', help='Service name', default='fetch-server')
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
 
     options = parser.parse_args(argv)
 

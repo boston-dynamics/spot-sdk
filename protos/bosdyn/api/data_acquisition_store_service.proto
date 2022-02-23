@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -39,4 +39,10 @@ service DataAcquisitionStoreService {
     rpc ListStoredMetadata(ListStoredMetadataRequest) returns (ListStoredMetadataResponse);
     // Type-safe to JSON metadata: store metadata associated with a DataIdentifier.
     rpc StoreMetadata(StoreMetadataRequest) returns (StoreMetadataResponse);
+
+    // List data identifiers (which identify specific AlertData from
+    // an action) for stored AlertData that satisfy the query parameters in the request.
+    rpc ListStoredAlertData(ListStoredAlertDataRequest) returns (ListStoredAlertDataResponse);
+    // Store AlertData associated with a DataIdentifier.
+    rpc StoreAlertData(StoreAlertDataRequest) returns (StoreAlertDataResponse);
 }

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -257,7 +257,7 @@ def main(argv):
     parser.add_argument('-fr', '--fiducial-rotation-degrees', type=float, default=180.0,
                         help='The rotation of the fiducial, assuming 0 degrees is pointing to the right. The fiducial will be assumed to be vertically mounted on a wall, perfectly orthogonal to the ground.')
 
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     options = parser.parse_args(argv)
 
     opt_info = OptInfo(fiducial_id=options.fiducial_id,
@@ -267,23 +267,21 @@ def main(argv):
     # Setup and authenticate the robot.
     sdk = bosdyn.client.create_standard_sdk('GraphNavClient')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     _lease_client = robot.ensure_client(LeaseClient.default_service_name)
 
     # We need a lease for the robot to access the map services. This prevents multiple
     # clients from fighting over the map data.
     _lease_wallet = _lease_client.lease_wallet
-    _lease = _lease_client.acquire()
-    _lease_keepalive = LeaseKeepAlive(_lease_client)
+    with LeaseKeepAlive(_lease_client, must_acquire=True, return_at_exit=True):
+        (graph, waypoint_snapshots, edge_snapshots) = load_graph_and_snapshots(options.input_map)
+        graph_nav_client = robot.ensure_client(GraphNavClient.default_service_name)
+        map_processing_client = robot.ensure_client(MapProcessingServiceClient.default_service_name)
+        upload_graph_and_snapshots(graph_nav_client, graph, waypoint_snapshots, edge_snapshots)
 
-    (graph, waypoint_snapshots, edge_snapshots) = load_graph_and_snapshots(options.input_map)
-    graph_nav_client = robot.ensure_client(GraphNavClient.default_service_name)
-    map_processing_client = robot.ensure_client(MapProcessingServiceClient.default_service_name)
-    upload_graph_and_snapshots(graph_nav_client, graph, waypoint_snapshots, edge_snapshots)
-
-    print("Optimizing...")
-    anchoring_response = optimize_anchoring(opt_info, map_processing_client)
-    print("Status: {}, Iterations: {}, Cost: {}".format(anchoring_response.status, anchoring_response.iteration, anchoring_response.cost))
+        print("Optimizing...")
+        anchoring_response = optimize_anchoring(opt_info, map_processing_client)
+        print("Status: {}, Iterations: {}, Cost: {}".format(anchoring_response.status, anchoring_response.iteration, anchoring_response.cost))
 
     # Extract the anchoring from the RPC response.
     optimized_anchoring = map_pb2.Anchoring()

@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -34,6 +34,7 @@ Link lengths are in mm.
 - **Peak clamp force (at tip of opening)**:  130 N                                          
 - **Integrated sensors**:                    ToF, IMU, 4K RGB                               
 - **Accessory port**:                        Gigabit Ethernet, 50W power, camera sync (PPS) 
+- **Max Camera FOV**:                        RGB: 60.2° x 46.4°; Depth: 55.9° x 44°
 
 ## How big an object can the gripper grasp
 The robot Arm is capable of holding any object it can fit the gripper jaws around. In general, this means that objects a person can pick up are also manageable by the robot. 

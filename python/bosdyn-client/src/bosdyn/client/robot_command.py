@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -66,6 +66,10 @@ class NotPoweredOnError(RobotCommandResponseError):
 
 class BehaviorFaultError(RobotCommandResponseError):
     """The robot may not be commanded with uncleared behavior faults."""
+
+
+class DockedError(RobotCommandResponseError):
+    """The command cannot be executed while the robot is docked."""
 
 
 class NotClearedError(RobotCommandResponseError):
@@ -300,11 +304,11 @@ class RobotCommandClient(BaseClient):
             lease: Lease object to use for the command.
 
         Returns:
-            Id of the issued robot command.
+            ID of the issued robot command.
 
         Raises:
             RpcError: Problem communicating with the robot.
-            InvalidRequestError: Invalid request received by the robot.
+            bosdyn.client.exceptions.InvalidRequestError: Invalid request received by the robot.
             UnsupportedError: The API supports this request, but the system does not support this
                               request.
             bosdyn.client.robot_command.NoTimeSyncError: Client has not done timesync with robot.
@@ -312,7 +316,8 @@ class RobotCommandClient(BaseClient):
             bosdyn.client.robot_command.TooDistantError: The command end time was too far in the future.
             NotPoweredOnError: The robot must be powered on to accept a command.
             BehaviorFaultError: The robot is faulted and the fault must be cleared first.
-            UnknownFrameError: Robot does not know how to handle supplied frame.
+            DockedError: The command cannot be executed while the robot is docked.
+            bosdyn.client.robot_command.UnknownFrameError: Robot does not know how to handle supplied frame.
         """
 
         req = self._get_robot_command_request(lease, command)
@@ -332,22 +337,22 @@ class RobotCommandClient(BaseClient):
             lease: Lease object to use for the command.
 
         Returns:
-            Id of the issued robot command.
+            ID of the issued robot command.
 
         Raises:
             RpcError: Problem communicating with the robot.
-            InvalidRequestError: Invalid request received by the robot.
+            bosdyn.client.exceptions.InvalidRequestError: Invalid request received by the robot.
             UnsupportedError: The API supports this request, but the system does not support this
                               request.
             bosdyn.client.robot_command.NoTimeSyncError: Client has not done timesync with robot.
             ExpiredError: The command was received after its max_duration had already passed.
             bosdyn.client.robot_command.TooDistantError: The command end time was too far in the future.
             NotPoweredOnError: The robot must be powered on to accept a command.
-            UnknownFrameError: Robot does not know how to handle supplied frame.
+            bosdyn.client.robot_command.UnknownFrameError: Robot does not know how to handle supplied frame.
         """
 
         req = self._get_robot_command_request(lease, command)
-        # Update req.command instead of command so that we don't modify an input this this function.
+        # Update req.command instead of command so that we don't modify an input to this function.
         self._update_command_timestamps(req.command, end_time_secs, timesync_endpoint)
         return self.call_async(self._stub.RobotCommand, req, _robot_command_value,
                                _robot_command_error, **kwargs)
@@ -356,7 +361,7 @@ class RobotCommandClient(BaseClient):
         """Get feedback from a previously issued command.
 
         Args:
-            robot_command_id: Id of the robot command to get feedback on.
+            robot_command_id: ID of the robot command to get feedback on.
 
         Raises:
             RpcError: Problem communicating with the robot.
@@ -370,7 +375,7 @@ class RobotCommandClient(BaseClient):
         """Async version of robot_command_feedback().
 
         Args:
-            robot_command_id: Id of the robot command to get feedback on.
+            robot_command_id: ID of the robot command to get feedback on.
 
         Raises:
             RpcError: Problem communicating with the robot.
@@ -380,11 +385,12 @@ class RobotCommandClient(BaseClient):
         return self.call_async(self._stub.RobotCommandFeedback, req, None,
                                _robot_command_feedback_error, **kwargs)
 
+
     def clear_behavior_fault(self, behavior_fault_id, lease=None, **kwargs):
         """Clear a behavior fault on the robot.
 
         Args:
-            behavior_fault_id: Id of the behavior fault.
+            behavior_fault_id: ID of the behavior fault.
             lease: Lease information to use in the message.
 
         Returns:
@@ -405,7 +411,7 @@ class RobotCommandClient(BaseClient):
         Args:
             behavior_fault_id:
             lease:
-            behavior_fault_id: Id of the behavior fault.
+            behavior_fault_id: ID of the behavior fault.
             lease: Lease information to use in the message.
 
         Returns:
@@ -519,6 +525,7 @@ _ROBOT_COMMAND_STATUS_TO_ERROR.update({
     robot_command_pb2.RobotCommandResponse.STATUS_TOO_DISTANT: error_pair(TooDistantError),
     robot_command_pb2.RobotCommandResponse.STATUS_NOT_POWERED_ON: error_pair(NotPoweredOnError),
     robot_command_pb2.RobotCommandResponse.STATUS_BEHAVIOR_FAULT: error_pair(BehaviorFaultError),
+    robot_command_pb2.RobotCommandResponse.STATUS_DOCKED: error_pair(DockedError),
     robot_command_pb2.RobotCommandResponse.STATUS_UNKNOWN_FRAME: error_pair(UnknownFrameError),
 })
 # yapf: enable
@@ -606,7 +613,7 @@ class RobotCommandBuilder(object):
 
     A RobotCommand is composed of one or more commands. The set of valid commands is robot /
     hardware specific. An armless spot only accepts one command at a time. Each command may or may
-    not takes a generic param object. These params are also robot / hardware dependent.
+    not take a generic param object. These params are also robot / hardware dependent.
     """
 
     ######################
@@ -712,7 +719,7 @@ class RobotCommandBuilder(object):
     def trajectory_command(goal_x, goal_y, goal_heading, frame_name, params=None, body_height=0.0,
                            locomotion_hint=spot_command_pb2.HINT_AUTO):
         """
-        Command robot to move to pose along a 2D plane. Pose can specified in the world
+        Command robot to move to pose along a 2D plane. Pose can be specified in the world
         (kinematic odometry) frame or the robot body frame. The arguments body_height and
         locomotion_hint are ignored if params argument is passed.
 
@@ -726,7 +733,7 @@ class RobotCommandBuilder(object):
             frame_name: Name of the frame to use.
             params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,
                 this will be constructed using other args.
-            body_height: Body height in meters.
+            body_height: Height, meters, relative to a nominal stand height.
             locomotion_hint: Locomotion hint to use for the trajectory command.
 
         Returns:
@@ -766,7 +773,7 @@ class RobotCommandBuilder(object):
             v_rot: Velocity heading in radians.
             params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,
                 this will be constructed using other args.
-            body_height: Body height in meters.
+            body_height: Height, meters, relative to a nominal stand height.
             locomotion_hint: Locomotion hint to use for the velocity command.
             frame_name: Name of the frame to use.
         """
@@ -846,7 +853,7 @@ class RobotCommandBuilder(object):
                                              locomotion_hint=spot_command_pb2.HINT_AUTO,
                                              build_on_command=None):
         """
-        Command robot to move to pose along a 2D plane. Pose can specified in the world
+        Command robot to move to pose along a 2D plane. Pose can be specified in the world
         (kinematic odometry) frame or the robot body frame. The arguments body_height and
         locomotion_hint are ignored if params argument is passed.
 
@@ -860,7 +867,7 @@ class RobotCommandBuilder(object):
             frame_name: Name of the frame to use.
             params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,
                 this will be constructed using other args.
-            body_height: Body height in meters.
+            body_height: Height, meters, relative to a nominal stand height.
             locomotion_hint: Locomotion hint to use for the trajectory command.
             build_on_command: Option to input a RobotCommand (not containing a full_body_command). An
                 arm_command and gripper_command from this incoming RobotCommand will be added
@@ -879,7 +886,7 @@ class RobotCommandBuilder(object):
     def synchro_se2_trajectory_command(goal_se2, frame_name, params=None, body_height=0.0,
                                        locomotion_hint=spot_command_pb2.HINT_AUTO,
                                        build_on_command=None):
-        """Command robot to move to pose along a 2D plane. Pose can specified in the world
+        """Command robot to move to pose along a 2D plane. Pose can be specified in the world
         (kinematic odometry or vision world) frames. The arguments body_height and
         locomotion_hint are ignored if params argument is passed.
 
@@ -891,7 +898,7 @@ class RobotCommandBuilder(object):
             frame_name: Name of the frame to use.
             params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,
                 this will be constructed using other args.
-            body_height: Body height in meters.
+            body_height: Height, meters, relative to a nominal stand height.
             locomotion_hint: Locomotion hint to use for the trajectory command.
             build_on_command: Option to input a RobotCommand (not containing a full_body_command). An
                 arm_command and gripper_command from this incoming RobotCommand will be added
@@ -939,7 +946,7 @@ class RobotCommandBuilder(object):
                                  the robot object's helper function robot.get_frame_tree_snapshot().
             params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,
                 this will be constructed using other args.
-            body_height: Body height in meters.
+            body_height: Height, meters, relative to a nominal stand height.
             locomotion_hint: Locomotion hint to use for the trajectory command.
 
         Returns:
@@ -972,7 +979,7 @@ class RobotCommandBuilder(object):
             v_rot: Velocity heading in radians.
             params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,
                 this will be constructed using other args.
-            body_height: Body height in meters.
+            body_height: Height, meters, relative to a nominal stand height.
             locomotion_hint: Locomotion hint to use for the velocity command.
             frame_name: Name of the frame to use.
             build_on_command: Option to input a RobotCommand (not containing a full_body_command). An
@@ -1066,7 +1073,7 @@ class RobotCommandBuilder(object):
                        pos_hr_rt_frame, accuracy=0.05, params=None, body_height=0.0,
                        footprint_R_body=geometry.EulerZXY(), build_on_command=None):
         """Command robot to stance with the feet at specified positions.
-        This will cause the robot to reposition it's feet. This is not intended to be a mobility
+        This will cause the robot to reposition its feet. This is not intended to be a mobility
         command and will reject commands where the foot position is out of reach without locomoting.
         To stance at a far location, try using SE2TrajectoryCommand to safely put the robot at the
         correct location first.
@@ -1340,6 +1347,93 @@ class RobotCommandBuilder(object):
             return RobotCommandBuilder.build_synchro_command(build_on_command, arm_sync_robot_cmd)
         return arm_sync_robot_cmd
 
+    @staticmethod
+    def arm_joint_move_helper(joint_positions, times, joint_velocities=None, ref_time=None,
+                              max_acc=None, max_vel=None):
+        """Given a set of joint positions, times, and optional velocity, create a synchro command.
+
+        Args:
+            joint_positions: A list of length N with joint positions at each knot point in our
+                            trajectory. Each knot joint position is represented as a list of length 6,
+                            representing the 6 joint angles [sh0, sh1, el0, el1, wr0, wr1]
+            times: A list of length N with the corresponding time_since_reference for each of our knots
+            joint_velocities: Optional joint velocities at each knot. Same structure as joint_positions
+            ref_time: Optional robot reference time. If unset, we'll use the current synchronized robot
+                        time. Setting this is useful for getting a consistent trajectory over a long
+                        period of time when many ArmJointMoveRequest commands are chained together.
+            max_acc: Optional maximum allowable joint acceleration. Not setting this will lead to the
+                        robot using a relatively safe low default. If the user is sure their joint
+                        trajectory is safe and achievable, this can be set to a large value so it
+                        doesn't get in the way.
+            max_vel: Optional maximum allowable joint velocity. Same thing about defaults as max_acc
+
+        Returns:
+            robot_command_pb2.RobotCommand with an arm_joint_move_command filled out.
+        """
+
+        assert len(joint_positions) == len(
+            times), "Number of joint positions must match number of times"
+        if joint_velocities is not None:
+            assert len(joint_velocities) == len(
+                times), "Number of joint velocities must match number of times"
+
+        # Create an arm joint move command, and set the trajectory
+        robot_cmd = robot_command_pb2.RobotCommand()
+        arm_joint_traj = (
+            robot_cmd.synchronized_command.arm_command.arm_joint_move_command.trajectory)
+
+        for i in range(len(times)):
+            # Add a new trajectory point to our trajectory
+            traj_point = arm_joint_traj.points.add()
+
+            joints = joint_positions[i]
+            assert len(joints) == 6, "Need 6 joint positions per knot point for this helper"
+            # Note that although we're setting all 6 joint angles here, the actual
+            # ArmJointTrajectory command doesn't require this. Any unset joint angles
+            # will stay at the joint angle the robot is currently at
+            position = traj_point.position
+            position.sh0.value = joints[0]
+            position.sh1.value = joints[1]
+            position.el0.value = joints[2]
+            position.el1.value = joints[3]
+            position.wr0.value = joints[4]
+            position.wr1.value = joints[5]
+
+            if joint_velocities is not None:
+                vels = joint_velocities[i]
+                assert len(vels) == 6, "Need 6 joint velocities per knot point for this helper"
+                # Note that although we're setting all 6 joint velocities here, the actual
+                # ArmJointTrajectory command doesn't require this. If at least 1 joint
+                # velocity is specified, any unset joint velocities will be set to 0.
+                # If no `velocity` is specified for this point, the robot will not constrain
+                # the velocity of the trajectory at this point.
+                velocity = traj_point.velocity
+                velocity.sh0.value = vels[0]
+                velocity.sh1.value = vels[1]
+                velocity.el0.value = vels[2]
+                velocity.el1.value = vels[3]
+                velocity.wr0.value = vels[4]
+                velocity.wr1.value = vels[5]
+
+            # Set our time_since_reference for this trajectory point
+            traj_point.time_since_reference.CopyFrom(seconds_to_duration(times[i]))
+
+        # Set our other optional arguments
+        if ref_time is not None:
+            # Set a reference time if desired. If not, we'll automatically set the reference time
+            # to be the current robot-synchronized time
+            arm_joint_traj.reference_time.CopyFrom(ref_time)
+        if max_acc is not None:
+            # Set a maximum allowable joint acceleration if desired.
+            # If unset, a safe default will be used
+            arm_joint_traj.maximum_acceleration.value = max_acc
+        if max_vel is not None:
+            # Set a maximum allowable joint velocity if desired.
+            # If unset, a safe default will be used
+            arm_joint_traj.maximum_velocity.value = max_vel
+
+        return robot_cmd
+
     ########################
     # Spot mobility params #
     ########################
@@ -1354,7 +1448,7 @@ class RobotCommandBuilder(object):
         chosen by the robot.
 
         Args:
-            body_height: Body height in meters.
+            body_height: Height, meters, relative to a nominal stand height.
             footprint_R_body(EulerZXY): The orientation of the body frame with respect to the
                                         footprint frame (gravity aligned framed with yaw computed
                                         from the stance feet)
@@ -1465,7 +1559,7 @@ class RobotCommandBuilder(object):
         return robot_command
 
 
-def blocking_stand(command_client, timeout_sec=10, update_frequency=1.0):
+def blocking_stand(command_client, timeout_sec=10, update_frequency=1.0, params=None):
     """Helper function which uses the RobotCommandService to stand.
 
     Blocks until robot is standing, or raises an exception if the command times out or fails.
@@ -1474,6 +1568,7 @@ def blocking_stand(command_client, timeout_sec=10, update_frequency=1.0):
         command_client: RobotCommand client.
         timeout_sec: Timeout for the command in seconds.
         update_frequency: Update frequency for the command in Hz.
+        params(spot.MobilityParams): Spot specific parameters for mobility commands to optionally set say body_height
 
     Raises:
         CommandFailedError: Command feedback from robot is not STATUS_PROCESSING.
@@ -1485,7 +1580,7 @@ def blocking_stand(command_client, timeout_sec=10, update_frequency=1.0):
     end_time = start_time + timeout_sec
     update_time = 1.0 / update_frequency
 
-    stand_command = RobotCommandBuilder.synchro_stand_command()
+    stand_command = RobotCommandBuilder.synchro_stand_command(params=params)
     command_id = command_client.robot_command(stand_command, timeout=timeout_sec)
 
     now = time.time()
@@ -1514,6 +1609,109 @@ def blocking_stand(command_client, timeout_sec=10, update_frequency=1.0):
 
     raise CommandTimedOutError(
         "Took longer than {:.1f} seconds to assure the robot stood.".format(now - start_time))
+
+
+def blocking_sit(command_client, timeout_sec=10, update_frequency=1.0):
+    """Helper function which uses the RobotCommandService to sit.
+
+    Blocks until robot is sitting, or raises an exception if the command times out or fails.
+
+    Args:
+        command_client: RobotCommand client.
+        timeout_sec: Timeout for the command in seconds.
+        update_frequency: Update frequency for the command in Hz.
+
+    Raises:
+        CommandFailedError: Command feedback from robot is not STATUS_PROCESSING.
+        bosdyn.client.robot_command.CommandTimedOutError: Command took longer than provided
+            timeout.
+    """
+
+    start_time = time.time()
+    end_time = start_time + timeout_sec
+    update_time = 1.0 / update_frequency
+
+    sit_command = RobotCommandBuilder.synchro_sit_command()
+    command_id = command_client.robot_command(sit_command, timeout=timeout_sec)
+
+    now = time.time()
+    while now < end_time:
+        time_until_timeout = end_time - now
+        rpc_timeout = max(time_until_timeout, 1)
+        start_call_time = time.time()
+        try:
+            response = command_client.robot_command_feedback(command_id, timeout=rpc_timeout)
+            mob_feedback = response.feedback.synchronized_feedback.mobility_command_feedback
+            mob_status = mob_feedback.status
+            sit_status = mob_feedback.sit_feedback.status
+        except TimedOutError:
+            # Excuse the TimedOutError and let the while check bail us out if we're out of time.
+            pass
+        else:
+            if mob_status != basic_command_pb2.RobotCommandFeedbackStatus.STATUS_PROCESSING:
+                raise CommandFailedError('Sit (ID {}) no longer processing (now {})'.format(
+                    command_id,
+                    basic_command_pb2.RobotCommandFeedbackStatus.Status.Name(mob_status)))
+            if sit_status == basic_command_pb2.SitCommand.Feedback.STATUS_IS_SITTING:
+                return
+        delta_t = time.time() - start_call_time
+        time.sleep(max(min(delta_t, update_time), 0.0))
+        now = time.time()
+
+    raise CommandTimedOutError(
+        "Took longer than {:.1f} seconds to assure the robot sat.".format(now - start_time))
+
+
+def blocking_selfright(command_client, timeout_sec=30, update_frequency=1.0):
+    """Helper function which uses the RobotCommandService to self-right.
+
+    Blocks until self-right has completed, or raises an exception if the command times out or fails.
+
+    Args:
+        command_client: RobotCommand client.
+        timeout_sec: Timeout for the command in seconds.
+        update_frequency: Update frequency for the command in Hz.
+
+    Raises:
+        CommandFailedError: Command feedback from robot is not STATUS_PROCESSING.
+        bosdyn.client.robot_command.CommandTimedOutError: Command took longer than provided
+            timeout.
+    """
+
+    start_time = time.time()
+    end_time = start_time + timeout_sec
+    update_time = 1.0 / update_frequency
+
+    selfright_command = RobotCommandBuilder.selfright_command()
+    command_id = command_client.robot_command(selfright_command, timeout=timeout_sec)
+
+    now = time.time()
+    while now < end_time:
+        time_until_timeout = end_time - now
+        rpc_timeout = max(time_until_timeout, 1)
+        start_call_time = time.time()
+        try:
+            response = command_client.robot_command_feedback(command_id, timeout=rpc_timeout)
+            full_body_feedback = response.feedback.full_body_feedback
+            full_body_status = full_body_feedback.status
+            selfright_status = full_body_feedback.selfright_feedback.status
+        except TimedOutError:
+            # Excuse the TimedOutError and let the while check bail us out if we're out of time.
+            pass
+        else:
+            if full_body_status != basic_command_pb2.RobotCommandFeedbackStatus.STATUS_PROCESSING:
+                raise CommandFailedError('Self-right (ID {}) no longer processing (now {})'.format(
+                    command_id,
+                    basic_command_pb2.RobotCommandFeedbackStatus.Status.Name(full_body_status)))
+            if selfright_status == basic_command_pb2.SelfRightCommand.Feedback.STATUS_COMPLETED:
+                return
+        delta_t = time.time() - start_call_time
+        time.sleep(max(min(delta_t, update_time), 0.0))
+        now = time.time()
+
+    raise CommandTimedOutError(
+        "Took longer than {:.1f} seconds to assure the robot completed self-right.".format(
+            now - start_time))
 
 
 def block_until_arm_arrives(command_client, cmd_id, timeout_sec=None):
@@ -1562,4 +1760,67 @@ def block_until_arm_arrives(command_client, cmd_id, timeout_sec=None):
 
         time.sleep(0.1)
         now = time.time()
+    return False
+
+
+def block_for_trajectory_cmd(
+        command_client, cmd_id,
+        trajectory_end_statuses=(basic_command_pb2.SE2TrajectoryCommand.Feedback.STATUS_AT_GOAL,),
+        body_movement_statuses=None, feedback_interval_secs=0.1, timeout_sec=None, logger=None):
+    """Helper that blocks until a trajectory command reaches a desired goal state or a timeout is reached.
+
+       Args:
+        command_client (RobotCommandClient): the client used to request feedback
+        cmd_id (int): command ID returned by the robot when the trajectory command was sent
+        acceptable_statuses (set of SE2TrajectoryCommand.Feedback.Status): the feedback must have a
+            status which is included in this set of statuses to be considered successfully complete.
+            By default, this includes only the "STATUS_AT_GOAL" end condition.
+        body_movement_statuses (set of SE2TrajectoryCommand.Feedback.BodyMovementStatus): the body
+            movement status must be one of these statuses to be considered successfully complete. By
+            default, this is "None", which means any body movement status will be accepted.
+        feedback_interval_secs (float): The time (in seconds) to wait before each feedback request checking
+            if the trajectory is complete. Defaults to checking at 10 Hz (requests every 0.1 seconds).
+        timeout_sec (float): optional number of seconds after which we'll return no matter what the
+            robot's state is.
+        logger (logging.Logger): The logger print debug statements with. If none, no debug printouts
+            will be sent.
+
+       Return values:
+        True if reaches STATUS_AT_GOAL, False otherwise.
+    """
+
+    if timeout_sec is not None:
+        start_time = time.time()
+        end_time = start_time + timeout_sec
+        now = time.time()
+
+    while timeout_sec is None or now < end_time:
+        feedback_resp = command_client.robot_command_feedback(cmd_id)
+
+        current_trajectory_state = feedback_resp.feedback.synchronized_feedback.mobility_command_feedback.se2_trajectory_feedback.status
+        body_movement_state = feedback_resp.feedback.synchronized_feedback.mobility_command_feedback.se2_trajectory_feedback.body_movement_status
+
+        if logger is not None:
+            current_state_str = basic_command_pb2.SE2TrajectoryCommand.Feedback.Status.Name(
+                current_trajectory_state)
+            logger.info('block_for_trajectory_cmd: ' + current_state_str)
+
+        if current_trajectory_state in trajectory_end_statuses:
+            # Met the baseline trajectory statuses to be considered complete.
+            # Check if there are any conditions on the body movement status.
+            if body_movement_statuses is not None:
+                if len(body_movement_statuses
+                      ) > 0 and body_movement_state in body_movement_statuses:
+                    return True
+            else:
+                # There were no body movement statuses provided, so don't gate the completion of the
+                # trajectory on this field.
+                return True
+
+        time.sleep(feedback_interval_secs)
+        now = time.time()
+
+    if logger is not None:
+        logger.info('block_for_trajectory_cmd: timeout exceeded.')
+
     return False

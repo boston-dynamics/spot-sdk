@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -22,7 +22,7 @@ A new service can be registered in the robot directory, which requires a user to
 Service registration needs to be done after each power cycle, as the robot directory is reset when the robot is powered down.
 
 ## Communication Between Client & Service
-All endpoint details for routing requests to a service should have been provided at service registration time. When any client makes a request to the robot with an authority & service type matching a registered service, the request will be forwarded to the associated endpoint. It is assumed that a service will be running and available at the given endpoint to handle the request. Responses will be automatically routed back to the calling client. If no service is available, the request will timeout.
+All endpoint details for routing requests to a service should have been provided at service registration time. When any client makes a request to the robot with an authority & service type matching a registered service, the request will be forwarded to the associated endpoint. It is assumed that a service will be running and available at the given endpoint to handle the request. Responses will be automatically routed back to the calling client. If no service is available, the request will time out.
 
 ## Spot CORE
 If you are working with a Spot CORE, this example demonstrates how you can set up a simple service on your Spot CORE and communicate to it through a client. Copy these example files onto the Spot CORE and set up the payload registration, service creation, and service registration there. Then run the client on a laptop connected to the robot.
@@ -57,7 +57,7 @@ Setting up a payload and onboard services requires defining at least one payload
 **Endpoint**
 - ENDPOINT_IP - IP address of the system running the service. Note, the command line utility provides a helper function for determining the correct IP address. This command must be run on the same computer that will be running the service:
 ```
-python3 -m bosdyn.client --username {USER} --password {PASSWORD} {ROBOT_IP} self-ip
+python3 -m bosdyn.client {ROBOT_IP} self-ip
 ```
 - Port - A free port on the system to access to the service through.
 

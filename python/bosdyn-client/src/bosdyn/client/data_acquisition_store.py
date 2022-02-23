@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -109,6 +109,27 @@ class DataAcquisitionStoreClient(BaseClient):
                                value_from_response=_get_data_ids,
                                error_from_response=common_header_errors, **kwargs)
 
+    def list_stored_alertdata(self, query, **kwargs):
+        """List AlertData that satisfy the query parameters.
+
+        Args:
+             query (bosdyn.api.DataQueryParams) : Query parameters.
+
+        Returns:
+             DataIdentifiers for the AlertData matching the query parameters.
+        """
+
+        request = data_acquisition_store.ListStoredAlertDataRequest(query=query)
+        return self.call(self._stub.ListStoredAlertData, request, value_from_response=_get_data_ids,
+                         error_from_response=common_header_errors, **kwargs)
+
+    def list_stored_alertdata_async(self, query, **kwargs):
+        """Async version of the list_stored_alertdata() RPC."""
+        request = data_acquisition_store.ListStoredAlertDataRequest(query=query)
+        return self.call_async(self._stub.ListStoredAlertData, request,
+                               value_from_response=_get_data_ids,
+                               error_from_response=common_header_errors, **kwargs)
+
     def list_stored_data(self, query, **kwargs):
         """List data that satisfy the query parameters.
 
@@ -175,6 +196,32 @@ class DataAcquisitionStoreClient(BaseClient):
         request = data_acquisition_store.StoreMetadataRequest(metadata=associated_metadata,
                                                               data_id=data_id)
         return self.call_async(self._stub.StoreMetadata, request,
+                               error_from_response=common_header_errors, **kwargs)
+
+    def store_alertdata(self, associated_alert_data, data_id, **kwargs):
+        """Store AlertData.
+
+        Args:
+            associated_alertdata (bosdyn.api.AssociatedAlertData) : AlertData to store. If AlertData is
+                not associated with a particular piece of data, the data_id field in this object
+                needs to specify only the action_id part.
+            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this
+                associated AlertData.
+
+        Returns:
+             StoreAlertDataResponse response.
+        """
+
+        request = data_acquisition_store.StoreAlertDataRequest(alert_data=associated_alert_data,
+                                                              data_id=data_id)
+        return self.call(self._stub.StoreAlertData, request,
+                         error_from_response=common_header_errors, **kwargs)
+
+    def store_alertdata_async(self, associated_alert_data, data_id, **kwargs):
+        """Async version of the store_alertdata() RPC."""
+        request = data_acquisition_store.StoreAlertDataRequest(alert_data=associated_alert_data,
+                                                              data_id=data_id)
+        return self.call_async(self._stub.StoreAlertData, request,
                                error_from_response=common_header_errors, **kwargs)
 
     def store_data(self, data, data_id, file_extension=None, **kwargs):

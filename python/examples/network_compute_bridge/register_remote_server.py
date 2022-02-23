@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -37,7 +37,7 @@ def main(argv):
     parser.add_argument('-f', '--force', help='Overwrite existing clients using this name.',
                         action='store_true')
 
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
 
     options = parser.parse_args(argv)
 
@@ -48,7 +48,7 @@ def main(argv):
     robot = sdk.create_robot(options.hostname)
 
     # Authenticate robot before being able to use it
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
 
     directory_client = robot.ensure_client(
         bosdyn.client.directory.DirectoryClient.default_service_name)

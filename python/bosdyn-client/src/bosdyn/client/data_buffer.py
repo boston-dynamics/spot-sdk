@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -185,8 +185,6 @@ class DataBufferClient(BaseClient):
 
         request.blob_data.add(  # pylint: disable=no-member
             timestamp=robot_timestamp, channel=channel, type_id=type_id, data=data)
-
-        request.sync = write_sync
 
         request.sync = write_sync
 

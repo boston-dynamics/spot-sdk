@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -107,13 +107,13 @@ def create_apriltag_object():
 def main(argv):
     """An example using the API to apply mutations to world objects."""
     parser = argparse.ArgumentParser()
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     options = parser.parse_args(argv)
 
     # Create robot object with a world object client.
     sdk = bosdyn.client.create_standard_sdk('WorldObjectClient')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     # Time sync is necessary so that time-based filter requests can be converted.
     robot.time_sync.wait_for_sync()
 
@@ -208,10 +208,20 @@ def main(argv):
     print("World object IDs after object deletion: " +
           str([obj.apriltag_properties.tag_id for obj in world_objects]))
 
-    # Add a drawable object into the perception scene with a custom frame and unique name.
-    sphere_to_add = create_drawable_sphere_object()
-    add_sphere = make_add_world_object_req(sphere_to_add)
-    resp = world_object_client.mutate_world_objects(mutation_req=add_sphere)
+    # Add a drawable sphere into the perception scene with a custom frame and unique name.
+    x = 0.5
+    y = 0
+    z = 0
+    # The sphere's position will all be described relative to the robot's body frame.
+    frame = BODY_FRAME_NAME
+
+    # Set the drawing properties of the sphere.
+    radius = 0.05
+    color = (255, 0, 0, 1) # red, solid sphere
+
+    resp = world_object_client.draw_sphere("debug_sphere", x, y, z, frame, radius, color)
+    print('Added a world object sphere at (' + str(x) + ', ' + str(y) + ', ' + str(z) + ')')
+
     # Get the world object ID set by the service.
     sphere_id = resp.mutated_object_id
 

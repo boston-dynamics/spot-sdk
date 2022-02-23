@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -34,7 +34,7 @@ def find_unique_waypoint_id(short_code, graph, name_to_id):
     if len(short_code) != 2:
         # Not a short code, check if it is an annotation name (instead of the waypoint id).
         if short_code in name_to_id:
-            # Short code is an waypoint's annotation name. Check if it is paired with a unique waypoint id.
+            # Short code is a waypoint's annotation name. Check if it is paired with a unique waypoint id.
             if name_to_id[short_code] is not None:
                 # Has an associated waypoint id!
                 return name_to_id[short_code]
@@ -42,7 +42,7 @@ def find_unique_waypoint_id(short_code, graph, name_to_id):
                 print("The waypoint name %s is used for multiple different unique waypoints. Please use" + \
                         "the waypoint id." % (short_code))
                 return None
-        # Also not an waypoint annotation name, so we will operate under the assumption that it is a
+        # Also not a waypoint annotation name, so we will operate under the assumption that it is a
         # unique waypoint id.
         return short_code
 
@@ -95,7 +95,7 @@ def update_waypoints_and_edges(graph, localization_id, do_print=True):
     # fallback to sorting by annotation name.
     waypoint_to_timestamp = sorted(waypoint_to_timestamp, key=lambda x: (x[1], x[2]))
 
-    # Print out the waypoints name, id, and short code in a ordered sorted by the timestamp from
+    # Print out the waypoints name, id, and short code in an ordered sorted by the timestamp from
     # when the waypoint was created.
     if do_print:
         print('%d waypoints:' % len(graph.waypoints))

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -78,6 +78,8 @@ message SpotCheckFeedbackResponse {
         STATE_ERROR = 9;                 // Error occurred while running spotcheck. Inspect error for more info.
         STATE_WAITING_FOR_COMMAND = 10;  // Waiting for user command.
         STATE_HIP_RANGE_OF_MOTION_CHECK = 11; // Hip range of motion check underway.
+        STATE_GRIPPER_CAL = 12;          // Gripper calibration underway.
+        STATE_SIT_DOWN_AFTER_RUN = 13;   // Sitting down after run.
     }
     // The state of the spot check routine.
     State state = 2;
@@ -103,6 +105,7 @@ message SpotCheckFeedbackResponse {
         ERROR_POWER_OFF_FAILURE = 11;       // Robot failed to power off.
         ERROR_REVERT_FAILURE = 12;          // Robot failed to revert calibration.
         ERROR_FGKC_FAILURE = 13;            // Robot failed to do flat ground kinematic calibration.
+        ERROR_GRIPPER_CAL_TIMEOUT = 14;     // Timeout during gripper calibration.
     }
     // The specifics of the error for the SpotCheck service.
     Error error = 6;
@@ -202,6 +205,7 @@ message JointKinematicCheckResult {
         ERROR_UNKNOWN = 0;       // Unused enum.
         ERROR_NONE = 1;          // No hardware error detected.
         ERROR_CLUTCH_SLIP = 2;   // Error detected in clutch performance.
+        ERROR_INVALID_RANGE_OF_MOTION = 3;  // Error if a joint has an incorrect range of motion.
     }
     // A flag to indicate if results has an error.
     Error error = 2;

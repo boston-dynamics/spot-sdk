@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -54,7 +54,7 @@ Development Kit License (20191101-BDSDK-SL).
     Restart it with the new model and its labels:
 </p>
     <pre><code class="language-text wrap">cd ~/fetch
-python network_compute_server.py -m dogtoy/exported-models/dogtoy-model/saved_model dogtoy/annotations/label_map.pbtxt -m dogtoy/pre-trained-models/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8/saved_model dogtoy/pre-trained-models/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8/mscoco_label_map.pbtxt --username user --password YOUR_ROBOTS_PASSWORD 192.168.80.3
+python network_compute_server.py -m dogtoy/exported-models/dogtoy-model/saved_model dogtoy/annotations/label_map.pbtxt -m dogtoy/pre-trained-models/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8/saved_model dogtoy/pre-trained-models/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8/mscoco_label_map.pbtxt 192.168.80.3
 </code></pre>
 Yikes!  Let's break that down:
 <ul>
@@ -62,7 +62,8 @@ Yikes!  Let's break that down:
     <li><code class="wrap">-m dogtoy/exported-models/dogtoy-model/saved_model dogtoy/annotations/label_map.pbtxt</code> is the custom model and its labels that we ran before.</li>
     <li><code class="wrap">-m dogtoy/pre-trained-models/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8/saved_model dogtoy/pre-trained-models/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8/mscoco_label_map.pbtxt </code> is the pre-trained model and its labels.</li>
     <br />
-    <li><code>--username user --password YOUR_ROBOTS_PASSWORD 192.168.80.3</code> are the robot's username, password, and IP address</li>
+    <li><code>192.168.80.3</code> is the robot's and IP address</li>
+    <li>This command assumes that the `BOSDYN_CLIENT_USERNAME` and `BOSDYN_CLIENT_PASSWORD` environment variables are set to the robot's username and password.
 </ul>
 <p>
    Upon success, you'll see a bunch of output as TensorFlow and CUDA start up. Eventually, you'll see indication that both models have loaded, as shown below:
@@ -521,12 +522,11 @@ Loaded models:
     Run the code:
 </p>
 
-<pre><code class="language-text wrap">python fetch.py --username user --password YOUR_ROBOTS_PASSWORD -s fetch-server -m dogtoy-model -p ssd_resnet50_v1_fpn_640x640_coco17_tpu-8 192.168.80.3</code></pre>
+<pre><code class="language-text wrap">python fetch.py -s fetch-server -m dogtoy-model -p ssd_resnet50_v1_fpn_640x640_coco17_tpu-8 192.168.80.3</code></pre>
 <p>
     Arguments are:
 </p>
 <ul>
-    <li>Username and password (as before)</li>
     <li>Name of our ML server</li>
     <li>Name of the dog-toy model</li>
     <li>Name of our person detection model</li>

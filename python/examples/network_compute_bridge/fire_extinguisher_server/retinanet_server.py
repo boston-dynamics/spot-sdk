@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -197,7 +197,7 @@ class KerasExec():
         max_conf = max(scores)
 
         print(f"Max conf was {max_conf}")
-        
+
         for i in range(len(boxes)):
             # Skip if not the Fire Extinguisher class
             if classes[i] != 7: continue
@@ -293,17 +293,6 @@ class NetworkComputeBridgeWorkerServicer(
         out_proto = self.thread_output_queue.get()
         return out_proto
 
-def get_guid_and_secret():
-    # Returns the GUID and secret on the Spot CORE
-    kGuidAndSecretPath = '/opt/payload_credentials/payload_guid_and_secret'
-    try:
-        payload_file = open(kGuidAndSecretPath)
-        guid = payload_file.readline().strip('\n')
-        secret = payload_file.readline()
-    except IOError as io_error:
-        print("Unable to get the GUID/Secret for Spot Core: IOError when reading the file at: "+kGuidAndSecretPath)
-        raise io_error
-    return guid, secret
 
 def register_with_robot(options):
     """ Registers this worker with the robot's Directory."""
@@ -318,11 +307,10 @@ def register_with_robot(options):
     robot = sdk.create_robot(options.hostname)
 
     # Authenticate robot before being able to use it
-    if options.on_spot_core:
-        guid, secret = get_guid_and_secret()
-        robot.authenticate_from_payload_credentials(guid, secret)
+    if options.username or options.password:
+        bosdyn.client.util.authenticate(robot)
     else:
-        robot.authenticate(options.username, options.password)
+        robot.authenticate_from_payload_credentials(*bosdyn.client.util.get_guid_and_secret(options))
 
     directory_client = robot.ensure_client(
         bosdyn.client.directory.DirectoryClient.default_service_name)
@@ -368,7 +356,7 @@ def main(argv):
     parser.add_argument('-r', '--no-registration', help='Don\'t register with the robot\'s directory. This is useful for cloud applications where we can\'t reach into every robot directly. Instead use another program to register this server.', action='store_true')
     parser.add_argument('--username', help='User name of account to get credentials for.')
     parser.add_argument('--password', help='Password to get credentials for.')
-    parser.add_argument('--on-spot-core', help='Use SpotCore GUID to register the server with Spot', action='store_true')
+    bosdyn.client.util.add_payload_credentials_arguments(parser, required=False)
     parser.add_argument('hostname', nargs='?', help='Hostname or address of robot,'
                         ' e.g. "beta25-p" or "192.168.80.3"')
     options = parser.parse_args(argv)

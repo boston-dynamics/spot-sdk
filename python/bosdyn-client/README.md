@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -42,7 +42,7 @@ contains many tutorials on how to use the clients included in this wheel.
 Some of the clients included in this wheel can also be accessed directly from the command-line. 
 
 ```
-python3 -m bosdyn.client --username username --password password hostname -h
+python3 -m bosdyn.client hostname -h
 usage: bosdyn.client [-h] [-v] [--username USERNAME] [--password PASSWORD]
                      hostname
                      {dir,id,state,log,time-sync,lease,become-estop,image,local_grid}
@@ -54,7 +54,7 @@ Command-line interface for interacting with robot services.
 
 For example, to list the robot image sources from the command-line: 
 ```
-$ python3 -m bosdyn.client --username username --password password hostname image list-sources
+$ python3 -m bosdyn.client hostname image list-sources
 back_depth                     (240x424)
 back_depth_in_visual_frame     (480x640)
 back_fisheye_image             (480x640)

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -76,7 +76,7 @@ class XboxJoystick:
 
     def axis_scale(self, raw, deadzone) -> float:
         """Returns scaled raw (-32768 to +32767) axis value with deadzone correction. Deadzone
-         is +/- range of values to consider to be center stick (ie. 0.0).
+         is +/- range of values to consider to be center stick (i.e. 0.0).
         """
 
         return None

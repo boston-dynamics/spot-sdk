@@ -1,13 +1,17 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 import math
+import numbers
 import numpy
+import six
 
 from bosdyn.api import geometry_pb2
+
+from deprecated import deprecated
 
 
 def angle_diff(a1, a2):
@@ -28,6 +32,174 @@ def angle_diff_degrees(a1, a2):
     return v
 
 
+class Vec2(object):
+    """Class representing a two dimensional vector."""
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __str__(self):
+        return 'X: %0.3f Y: %0.3f' % (self.x, self.y)
+
+    def __neg__(self):
+        return Vec2(-self.x, -self.y)
+
+    def __mul__(self, other):
+        if not isinstance(other, numbers.Number):
+            raise TypeError("Can't multiply types %s and %s." % (type(self), type(other)))
+        return Vec2(self.x * other, self.y * other)
+
+    def __rmul__(self, lhs):
+        return self * lhs
+
+    def __truediv__(self, other):
+        if not isinstance(other, numbers.Number):
+            raise TypeError("Can't divide types %s and %s." % (type(self), type(other)))
+        return Vec2(self.x / other, self.y / other)
+
+    # Included for python 2 compatibility
+    def __div__(self, other):
+        return self.__truediv__(other)
+
+    def __add__(self, other):
+        if not isinstance(other, Vec2):
+            raise TypeError("Can't add types %s and %s." % (type(self), type(other)))
+        return Vec2(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        return self + (-other)
+
+    def __setitem__(self, idx, data):
+        # pylint: disable=no-else-return
+        if idx == 0:
+            self.x = data
+            return
+        elif idx == 1:
+            self.y = data
+            return
+        raise IndexError("Invalid index {}".format(idx))
+
+    def __getitem__(self, idx):
+        # pylint: disable=no-else-return
+        if idx == 0:
+            return self.x
+        elif idx == 1:
+            return self.y
+        raise IndexError("Invalid index {}".format(idx))
+
+    def length(self):
+        return math.sqrt(self.x * self.x + self.y * self.y)
+
+    def to_proto(self):
+        """Converts the math_helpers.Vec2 into an output of the protobuf geometry_pb2.Vec2."""
+        return geometry_pb2.Vec2(x=self.x, y=self.y)
+
+    def dot(self, other):
+        if not isinstance(other, Vec2):
+            raise TypeError("Can't dot types %s and %s." % (type(self), type(other)))
+        return self.x * other.x + self.y * other.y
+
+    def cross(self, other):
+        if not isinstance(other, Vec2):
+            raise TypeError("Can't cross types %s and %s." % (type(self), type(other)))
+        return self.x * other.y - other.x * self.y
+
+    @staticmethod
+    def from_proto(proto):
+        """Create a math_helpers.Vec2 from a geometry_pb2.Vec2 proto."""
+        return Vec2(proto.x, proto.y)
+
+
+class Vec3(object):
+    """Class representing a three dimensional vector."""
+
+    def __init__(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
+
+    def __str__(self):
+        return 'X: %0.3f Y: %0.3f Z: %0.3f' % (self.x, self.y, self.z)
+
+    def __neg__(self):
+        return Vec3(-self.x, -self.y, -self.z)
+
+    def __mul__(self, other):
+        if not isinstance(other, numbers.Number):
+            raise TypeError("Can't multiply types %s and %s." % (type(self), type(other)))
+        return Vec3(self.x * other, self.y * other, self.z * other)
+
+    def __rmul__(self, lhs):
+        return self * lhs
+
+    def __truediv__(self, other):
+        if not isinstance(other, numbers.Number):
+            raise TypeError("Can't divide types %s and %s." % (type(self), type(other)))
+        return Vec3(self.x / other, self.y / other, self.z / other)
+
+    # Included for python 2 compatibility
+    def __div__(self, other):
+        return self.__truediv__(other)
+
+    def __add__(self, other):
+        if not isinstance(other, Vec3):
+            raise TypeError("Can't add types %s and %s." % (type(self), type(other)))
+        return Vec3(self.x + other.x, self.y + other.y, self.z + other.z)
+
+    def __sub__(self, other):
+        return self + (-other)
+
+    def __setitem__(self, idx, data):
+        # pylint: disable=no-else-return
+        if idx == 0:
+            self.x = data
+            return
+        elif idx == 1:
+            self.y = data
+            return
+        elif idx == 2:
+            self.z = data
+            return
+        raise IndexError("Invalid index {}".format(idx))
+
+    def __getitem__(self, idx):
+        # pylint: disable=no-else-return
+        if idx == 0:
+            return self.x
+        elif idx == 1:
+            return self.y
+        elif idx == 2:
+            return self.z
+        raise IndexError("Invalid index {}".format(idx))
+
+    def length(self):
+        return math.sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
+
+    def to_proto(self):
+        """Converts the math_helpers.Vec3 into an output of the protobuf geometry_pb2.Vec3."""
+        return geometry_pb2.Vec3(x=self.x, y=self.y, z=self.z)
+
+    def dot(self, other):
+        if not isinstance(other, Vec3):
+            raise TypeError("Can't dot types %s and %s." % (type(self), type(other)))
+        return self.x * other.x + self.y * other.y + self.z * other.z
+
+    def cross(self, other):
+        if not isinstance(other, Vec3):
+            raise TypeError("Can't cross types %s and %s." % (type(self), type(other)))
+        return Vec3(
+            self.y * other.z - self.z * other.y,
+            self.x * other.z - self.z * other.x,
+            self.x * other.y - self.y * other.x
+        )
+
+    @staticmethod
+    def from_proto(proto):
+        """Create a math_helpers.Vec3 from a geometry_pb2.Vec3 proto."""
+        return Vec3(proto.x, proto.y, proto.z)
+
+
 class SE2Pose(object):
     """Class representing an SE2Pose with position and angle."""
 
@@ -43,7 +215,7 @@ class SE2Pose(object):
     @staticmethod
     def flatten(se3pose):
         """
-        Flatten a given SE3Pose to an SE2Pose. This will loose height information
+        Flatten a given SE3Pose to an SE2Pose. This will lose height information
         if the se3pose provided is not gravity aligned. The common gravity aligned
         frames are odom, vision, and flat_body.
 
@@ -99,11 +271,20 @@ class SE2Pose(object):
         rotated_pos = rotation_matrix.dot((se2pose.x, se2pose.y))
         return SE2Pose(self.x + rotated_pos[0], self.y + rotated_pos[1], self.angle + se2pose.angle)
 
-    def __mul__(self, se2pose):
-        """Overrides the '*' symbol to compute the multiplication between two SE(2) poses."""
-        rotation_matrix = self.to_rot_matrix()
-        rotated_pos = rotation_matrix.dot((se2pose.x, se2pose.y))
-        return SE2Pose(self.x + rotated_pos[0], self.y + rotated_pos[1], self.angle + se2pose.angle)
+    def __mul__(self, other):
+        """Overrides the '*' symbol to compute the multiplication between two SE(2) poses,
+        or between an SE(2) pose and a Vec2"""
+        if isinstance(other, Vec2):
+            rotation_matrix = self.to_rot_matrix()
+            rotated_pos = rotation_matrix.dot((other.x, other.y))
+            return Vec2(self.x + rotated_pos[0], self.y + rotated_pos[1])
+        if isinstance(other, SE2Pose):
+            rotation_matrix = self.to_rot_matrix()
+            rotated_pos = rotation_matrix.dot((other.x, other.y))
+            return SE2Pose(self.x + rotated_pos[0], self.y + rotated_pos[1], self.angle + other.angle)
+        else:
+            raise TypeError("Can't multiply types %s and %s." % (type(self), type(other)))
+
 
     def to_rot_matrix(self):
         """Returns the rotation matrix generate from the angle of the current SE(2) Pose."""
@@ -150,7 +331,12 @@ class SE2Pose(object):
         return SE2Pose(x, y, angle)
 
     @staticmethod
+    @deprecated(reason='Use from_proto instead.', version='3.1.0')
     def from_obj(tform):
+        return SE2Pose.from_proto(tform)
+
+    @staticmethod
+    def from_proto(tform):
         """Create a math_helpers.SE2Pose from a geometry_pb2.SE2Pose proto."""
         return SE2Pose(tform.position.x, tform.position.y, tform.angle)
 
@@ -228,7 +414,12 @@ class SE2Velocity(object):
         return self.angular_velocity
 
     @staticmethod
+    @deprecated(reason='Use from_proto instead.', version='3.1.0')
     def from_obj(vel):
+        return SE2Velocity.from_proto(vel)
+
+    @staticmethod
+    def from_proto(vel):
         """Create a math_helpers.SE2Velocity from a geometry_pb2.SE2Velocity proto."""
         return SE2Velocity(x=vel.linear.x, y=vel.linear.y, angular=vel.angular)
 
@@ -289,7 +480,12 @@ class SE3Velocity(object):
                                  z=self.angular_velocity_z)
 
     @staticmethod
+    @deprecated(reason='Use from_proto instead.', version='3.1.0')
     def from_obj(vel):
+        return SE3Velocity.from_proto(vel)
+
+    @staticmethod
+    def from_proto(vel):
         """Create a math_helpers.SE3Velocity from a geometry_pb2.SE3Velocity proto."""
         return SE3Velocity(lin_x=vel.linear.x, lin_y=vel.linear.y, lin_z=vel.linear.z,
                            ang_x=vel.angular.x, ang_y=vel.angular.y, ang_z=vel.angular.z)
@@ -330,18 +526,27 @@ class SE3Pose(object):
         # Expect the declaration of math_helpers.SE3Pose to pass a math_helpers.Quat, however we will convert
         # a protobuf Quaternion into the math_helpers object as well.
         if type(rot) == geometry_pb2.Quaternion:
-            rot = Quat.from_obj(rot)
+            rot = Quat.from_proto(rot)
         self.rot = rot
 
     def __str__(self):
         return 'position -- X: %0.3f Y: %0.3f Z: %0.3f rotation -- %s' % (self.x, self.y, self.z,
                                                                           str(self.rot))
 
+    def __iter__(self):
+        return iter([self.x, self.y, self.z, self.rot.w, self.rot.x, self.rot.y, self.rot.z])
+
+
     @staticmethod
+    @deprecated(reason='Use from_proto instead.', version='3.1.0')
     def from_obj(tform):
+        return SE3Pose.from_proto(tform)
+
+    @staticmethod
+    def from_proto(tform):
         """Create a math_helpers.SE3Pose from a geometry_pb2.SE3Pose proto."""
         if tform.HasField('rotation'):
-            quat = Quat.from_obj(tform.rotation)
+            quat = Quat.from_proto(tform.rotation)
         else:
             # Create the identity quaternion if no rotation is provided in the SE(3) pose.
             quat = Quat()
@@ -453,10 +658,17 @@ class SE3Pose(object):
         (x, y, z) = self.rot.transform_point(se3pose.x, se3pose.y, se3pose.z)
         return SE3Pose(self.x + x, self.y + y, self.z + z, self.rot.mult(se3pose.rot))
 
-    def __mul__(self, se3pose):
-        """Overrides the '*' symbol to compute the multiplication between two SE(3) poses."""
-        (x, y, z) = self.rot.transform_point(se3pose.x, se3pose.y, se3pose.z)
-        return SE3Pose(self.x + x, self.y + y, self.z + z, self.rot.mult(se3pose.rot))
+    def __mul__(self, other):
+        """Overrides the '*' symbol to compute the multiplication between two SE(3) poses,
+        or between an SE(3) pose and a Vec3."""
+        if isinstance(other, Vec3):
+            (x, y, z) = self.transform_point(other.x, other.y, other.z)
+            return Vec3(x, y, z)
+        if isinstance(other, SE3Pose):
+            (x, y, z) = self.rot.transform_point(other.x, other.y, other.z)
+            return SE3Pose(self.x + x, self.y + y, self.z + z, self.rot.mult(other.rot))
+        else:
+            raise TypeError("Can't multiply types %s and %s." % (type(self), type(other)))
 
     @property
     def position(self):
@@ -548,7 +760,7 @@ class Quat(object):
         return Quat(self.w, -self.x, -self.y, -self.z)
 
     def transform_point(self, x, y, z):
-        """"Computes the transformation (rotation by the quaternion) of a single (x,y,z)
+        """Computes the transformation (rotation by the quaternion) of a single (x,y,z)
             point using the current math_helpers.Quat."""
         inv = self.inverse()
         q = Quat(0, x, y, z)
@@ -557,7 +769,7 @@ class Quat(object):
         return (q.x, q.y, q.z)
 
     def transform_vec3(self, vec3):
-        """"Computes the transformation (rotation by the quaternion) of a Vec3
+        """Computes the transformation (rotation by the quaternion) of a Vec3
             point using the current math_helpers.Quat."""
         x, y, z = self.transform_point(vec3.x, vec3.y, vec3.z)
         return geometry_pb2.Vec3(x=x, y=y, z=z)
@@ -687,7 +899,12 @@ class Quat(object):
         return (angle, axis)
 
     @staticmethod
+    @deprecated(reason='Use from_proto instead.', version='3.1.0')
     def from_obj(proto):
+        return Quat.from_proto(proto)
+
+    @staticmethod
+    def from_proto(proto):
         """Create a math_helpers.Quat from a geometry_pb2.Quaternion proto."""
         return Quat(proto.w, proto.x, proto.y, proto.z)
 
@@ -712,15 +929,15 @@ class Quat(object):
             self.w * other_quat.z + self.x * other_quat.y - self.y * other_quat.x +
             self.z * other_quat.w)
 
-    def __mul__(self, other_quat):
-        """Overrides the '*' symbol to compute the multiplication between two math_helpers.Quats."""
-        return Quat(
-            self.w * other_quat.w - self.x * other_quat.x - self.y * other_quat.y -
-            self.z * other_quat.z, self.w * other_quat.x + self.x * other_quat.w +
-            self.y * other_quat.z - self.z * other_quat.y, self.w * other_quat.y -
-            self.x * other_quat.z + self.y * other_quat.w + self.z * other_quat.x,
-            self.w * other_quat.z + self.x * other_quat.y - self.y * other_quat.x +
-            self.z * other_quat.w)
+    def __mul__(self, other):
+        """Overrides the '*' symbol to compute the multiplication between two math_helpers.Quats
+        or between a Quat and a Vec3."""
+        if isinstance(other, Vec3):
+            (x, y, z) = self.transform_point(other.x, other.y, other.z)
+            return Vec3(x, y, z)
+        if isinstance(other, Quat):
+            return self.mult(other)
+        raise TypeError("Can't multiply types %s and %s." % (type(self), type(other)))
 
     def normalize(self):
         """Normalizes the quaternion."""
@@ -742,7 +959,7 @@ class Quat(object):
         if mag > 0:
             return Quat(w=self.w / mag, x=0, y=0, z=self.z / mag)
         else:
-            # If the problem is ill posed (i.e. z-axis of quaternion is [0, 0, -1], then preserve old
+            # If the problem is ill posed (i.e. z-axis of quaternion is [0, 0, -1]), then preserve old
             # behavior and always rotate 180 degrees around the y-axis.
             return Quat(w=0, x=0, y=1, z=0)
 
@@ -782,7 +999,7 @@ class Quat(object):
 
 def pose_to_xyz_yaw(A_tform_B):
     """Gets the x,y,z yaw of B in A from the SE3Pose protobuf message."""
-    yaw = Quat.from_obj(A_tform_B.rotation).to_yaw()
+    yaw = Quat.from_proto(A_tform_B.rotation).to_yaw()
     x = A_tform_B.position.x
     y = A_tform_B.position.y
     z = A_tform_B.position.z
@@ -791,7 +1008,7 @@ def pose_to_xyz_yaw(A_tform_B):
 
 def is_within_threshold(pose_3d, max_translation_meters, max_yaw_degrees):
     """Determines whether the given SE3 pose is small enough in X, Y, and theta."""
-    delta = SE2Pose.flatten(SE3Pose.from_obj(pose_3d))
+    delta = SE2Pose.flatten(SE3Pose.from_proto(pose_3d))
     dist_2d = math.sqrt(delta.x * delta.x + delta.y * delta.y)
     angle_deg = math.degrees(abs(delta.angle))
     return (dist_2d < max_translation_meters) and (angle_deg < max_yaw_degrees)
@@ -832,7 +1049,7 @@ def transform_se2velocity(a_adjoint_b_matrix, se2_velocity_in_b):
         math_helpers.SE2Velocity described in frame a. None if the input velocity is an unknown type.
     """
     if type(se2_velocity_in_b) == geometry_pb2.SE2Velocity:
-        se2_velocity_in_b_vector = (SE2Velocity.from_obj(se2_velocity_in_b)).to_vector()
+        se2_velocity_in_b_vector = (SE2Velocity.from_proto(se2_velocity_in_b)).to_vector()
     elif type(se2_velocity_in_b) == SE2Velocity:
         se2_velocity_in_b_vector = se2_velocity_in_b.to_vector()
     else:
@@ -856,7 +1073,7 @@ def transform_se3velocity(a_adjoint_b_matrix, se3_velocity_in_b):
         math_helpers.SE3Velocity described in frame a. None if the input velocity is an unknown type.
     """
     if type(se3_velocity_in_b) == geometry_pb2.SE3Velocity:
-        se3_velocity_in_b_vec = (SE3Velocity.from_obj(se3_velocity_in_b)).to_vector()
+        se3_velocity_in_b_vec = (SE3Velocity.from_proto(se3_velocity_in_b)).to_vector()
     elif type(se3_velocity_in_b) == SE3Velocity:
         se3_velocity_in_b_vec = se3_velocity_in_b.to_vector()
     else:

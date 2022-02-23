@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -626,7 +626,7 @@ def main(argv):
         help="Maximum allowed delay for processing an image; " +
         "any image older than this value will be skipped")
 
-    bosdyn.client.util.add_common_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
     options = parser.parse_args(argv)
     try:
         # Make sure the model path is a valid file
@@ -654,7 +654,7 @@ def main(argv):
         # Create robot object with a world object client
         sdk = bosdyn.client.create_standard_sdk('SpotFollowClient')
         robot = sdk.create_robot(options.hostname)
-        robot.authenticate(options.username, options.password)
+        bosdyn.client.util.authenticate(robot)
         #Time sync is necessary so that time-based filter requests can be converted
         robot.time_sync.wait_for_sync()
 

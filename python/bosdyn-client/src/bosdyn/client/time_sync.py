@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -123,9 +123,9 @@ def robot_time_range_from_datetimes(start_datetime, end_datetime, time_sync_endp
      the times will not be converted.
 
     Args:
-      start_datetime        timestamp.timestamp or None
-      end_datetime          timestamp.timestamp or None
-      time_sync_endpoint    Either TimeSyncEndpoint or None.
+      start_datetime:       timestamp.timestamp or None
+      end_datetime:         timestamp.timestamp or None
+      time_sync_endpoint:   Either TimeSyncEndpoint or None.
 
     Returns:
       return bosdyn.api.TimeRange  time range in robot time
@@ -204,7 +204,7 @@ class TimeSyncEndpoint:
 
     @property
     def round_trip_time(self):
-        """"The previous round trip time.
+        """The previous round trip time.
 
         Returns:
           Round trip time as google.protobuf.Duration proto if available, otherwise None.

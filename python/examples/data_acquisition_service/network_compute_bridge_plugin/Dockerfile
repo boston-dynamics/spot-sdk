@@ -1,7 +1,7 @@
 FROM python:3.7-slim
 
-COPY docker-requirements.txt .
-RUN python3 -m pip install -r docker-requirements.txt
+COPY docker-requirements.txt prebuilt/*.whl ./
+RUN python3 -m pip install -r docker-requirements.txt --find-links .
 
 COPY network_compute_bridge_plugin_service.py /app/network_compute_bridge_plugin_service.py
 WORKDIR /app

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -25,7 +25,7 @@ class RobotStateClient(BaseClient):
         """Obtain current state of the robot.
 
         Returns:
-            The current robot state.
+            RobotState: The current robot state.
 
         Raises:
             RpcError: Problem communicating with the robot.
@@ -102,7 +102,7 @@ class RobotStateClient(BaseClient):
                                common_header_errors, **kwargs)
 
     def get_hardware_config_with_link_info(self):
-        """Convenience function which first requests a robots hardware configuration followed by
+        """Convenience function which first requests a robot's hardware configuration followed by
         requests to get link models for all robot links.
 
         Returns:

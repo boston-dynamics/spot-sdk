@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -37,6 +37,14 @@ class UnsupportedImageFormatRequestedError(ImageResponseError):
     """The image service cannot return data in the requested format."""
 
 
+class UnsupportedPixelFormatRequestedError(ImageResponseError):
+    """The image service cannot return data in the requested pixel format."""
+
+
+class UnsupportedResizeRatioRequestedError(ImageResponseError):
+    """The image service cannot return data with the requested resize ratio."""
+
+
 _STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _STATUS_TO_ERROR.update({
     image_pb2.ImageResponse.STATUS_OK: (None, None),
@@ -48,6 +56,10 @@ _STATUS_TO_ERROR.update({
         error_pair(ImageDataError),
     image_pb2.ImageResponse.STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED:
         error_pair(UnsupportedImageFormatRequestedError),
+    image_pb2.ImageResponse.STATUS_UNSUPPORTED_PIXEL_FORMAT_REQUESTED:
+        error_pair(UnsupportedPixelFormatRequestedError),
+    image_pb2.ImageResponse.STATUS_UNSUPPORTED_RESIZE_RATIO_REQUESTED:
+        error_pair(UnsupportedResizeRatioRequestedError),
     image_pb2.ImageResponse.STATUS_UNKNOWN:
         error_pair(UnsetStatusError),
 })
@@ -150,7 +162,8 @@ class ImageClient(BaseClient):
         return image_pb2.ListImageSourcesRequest()
 
 
-def build_image_request(image_source_name, quality_percent=75, image_format=None):
+def build_image_request(image_source_name, quality_percent=75, image_format=None, pixel_format=None,
+                        resize_ratio=None):
     """Helper function which builds an ImageRequest from an image source name.
 
     By default the robot will choose an appropriate format when no image format
@@ -162,12 +175,14 @@ def build_image_request(image_source_name, quality_percent=75, image_format=None
         quality_percent (int): The image quality from [0,100] (percent-value).
         image_format (image_pb2.Image.Format): The type of format for the image
                                                data, such as JPEG, RAW, or RLE.
+        pixel_format (image_pb2.Image.PixelFormat) The pixel format of the image.
 
     Returns:
         The ImageRequest protobuf message for the given parameters.
     """
     return image_pb2.ImageRequest(image_source_name=image_source_name,
-                                  quality_percent=quality_percent, image_format=image_format)
+                                  quality_percent=quality_percent, image_format=image_format,
+                                  pixel_format=pixel_format, resize_ratio=resize_ratio)
 
 
 def _list_image_sources_value(response):
@@ -178,22 +193,24 @@ def _get_image_value(response):
     return response.image_responses
 
 
-def write_pgm_or_ppm(image_response, filename="", filepath="."):
+def write_pgm_or_ppm(image_response, filename="", filepath=".", include_pixel_format=False):
     """Write raw data from image_response to a PGM file.
 
     Args:
         image_response (image_pb2.ImageResponse): The ImageResponse proto to parse.
         filename (string): Name of the output file, if None is passed, then "image-{SOURCENAME}.pgm" is used.
         filepath(string): The directory to save the image.
+        include_pixel_format(bool): append the pixel format to the image name when generating
+                            a filename ("image-{SOURCENAME}-{PIXELFORMAT}.pgm").
     """
     # Determine the data type to decode the image.
     if image_response.shot.image.pixel_format in (image_pb2.Image.PIXEL_FORMAT_DEPTH_U16,
                                                   image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U16):
         dtype = np.uint16
-        max_val = 2 ** 16 - 1
+        max_val = np.iinfo(np.uint16).max
     else:
         dtype = np.uint8
-        max_val = 2 ** 8 - 1
+        max_val = np.iinfo(np.uint8).max
 
     num_channels = 1
     pgm_header_number = 'P5'
@@ -227,8 +244,13 @@ def write_pgm_or_ppm(image_response, filename="", filepath="."):
         print(err)
         return
     if not filename:
-        image_source_filename = "image-%s%s" % (image_response.source.name, file_extension)
-        filename = image_source_filename
+        if include_pixel_format:
+            filename = "image-{}-{}{}".format(
+                image_response.source.name,
+                image_pb2.Image.PixelFormat.Name(image_response.shot.image.pixel_format),
+                file_extension)
+        else:
+            filename = "image-{}{}".format(image_response.source.name, file_extension)
     filename = os.path.join(filepath, filename)
     try:
         fd_out = open(filename, 'w')
@@ -244,7 +266,7 @@ def write_pgm_or_ppm(image_response, filename="", filepath="."):
           (image_response.source.name, filename))
 
 
-def write_image_data(image_response, filename="", filepath="."):
+def write_image_data(image_response, filename="", filepath=".", include_pixel_format=False):
     """Write image data from image_response to a file.
 
     Args:
@@ -252,10 +274,16 @@ def write_image_data(image_response, filename="", filepath="."):
         filename (string): Name of the output file (including the file extension), if None is
                            passed, then "image-{SOURCENAME}.jpg" is used.
         filepath(string): The directory to save the image.
+        include_pixel_format(bool): append the pixel format to the image name when generating
+                                    a filename ("image-{SOURCENAME}-{PIXELFORMAT}.jpg").
     """
     if not filename:
-        image_source_filename = 'image-{}.jpg'.format(image_response.source.name)
-        filename = image_source_filename
+        if include_pixel_format:
+            filename = 'image-{}-{}.jpg'.format(
+                image_response.source.name,
+                image_pb2.Image.PixelFormat.Name(image_response.shot.image.pixel_format))
+        else:
+            filename = 'image-{}.jpg'.format(image_response.source.name)
     filename = os.path.join(filepath, filename)
     try:
         with open(filename, 'wb') as outfile:
@@ -266,7 +294,7 @@ def write_image_data(image_response, filename="", filepath="."):
         print(err)
 
 
-def save_images_as_files(image_responses, filename="", filepath="."):
+def save_images_as_files(image_responses, filename="", filepath=".", include_pixel_format=False):
     """Write image responses to files.
 
     Args:
@@ -274,6 +302,8 @@ def save_images_as_files(image_responses, filename="", filepath="."):
         filename (string): Name prefix of the output files (made unique by an integer suffix), if None
                            is passed the image source name is used.
         filepath(string): The directory to save the image files.
+        include_pixel_format(bool): append the pixel format to the image name when generating
+                                    a filename ("image-{SOURCENAME}-{PIXELFORMAT}.jpg").
     """
     for index, image in enumerate(image_responses):
         save_file_name = ""
@@ -286,10 +316,13 @@ def save_images_as_files(image_responses, filename="", filepath="."):
         elif not image.shot.image.format == image_pb2.Image.FORMAT_JPEG:
             # Save raw and rle sources as text files with the full matrix saved as text values. The matrix will
             # be of size: rows X cols X color channels. Color channels is determined through the pixel format.
-            write_pgm_or_ppm(image, save_file_name, filepath)
+            write_pgm_or_ppm(image, save_file_name, filepath,
+                             include_pixel_format=include_pixel_format)
         else:
             # Save jpeg format as a jpeg image.
-            write_image_data(image, save_file_name, filepath)
+            write_image_data(image, save_file_name, filepath,
+                             include_pixel_format=include_pixel_format)
+
 
 def pixel_to_camera_space(image_proto, pixel_x, pixel_y, depth=1.0):
     """Using the camera intrinsics, determine the (x,y,z) point in the camera frame for
@@ -305,6 +338,9 @@ def pixel_to_camera_space(image_proto, pixel_x, pixel_y, depth=1.0):
         An (x,y,z) tuple representing the pixel point of interest now described as a point
         in the camera frame.
     """
+    if not image_proto.source.HasField('pinhole'):
+        raise ValueError('Requires a pinhole camera_model.')
+
     focal_x = image_proto.source.pinhole.intrinsics.focal_length.x
     principal_x = image_proto.source.pinhole.intrinsics.principal_point.x
 
@@ -315,3 +351,101 @@ def pixel_to_camera_space(image_proto, pixel_x, pixel_y, depth=1.0):
     y_rt_camera = depth * (pixel_y - principal_y) / focal_y
     return (x_rt_camera, y_rt_camera, depth)
 
+
+# Depth images use PIXEL_FORMAT_DEPTH_U16.  A value of 0 or MAX_DEPTH_IMAGE_RANGE
+# represents invalid data.
+MAX_DEPTH_IMAGE_RANGE = np.iinfo(np.uint16).max
+
+
+def _depth_image_get_valid_indices(depth_array, min_dist=1, max_dist=MAX_DEPTH_IMAGE_RANGE - 1):
+    """Returns an array of indices containing valid depth data.
+
+    Args:
+        depth_array: A numpy array representation of the depth data.
+        min_dist (uint16): All points in the returned point cloud will be greater than min_dist from the image plane.
+        max_dist (uint16): All points in the returned point cloud will be less than max_dist from the image plane.
+
+    Returns:
+        A numpy of indices containing valid depth data.
+    """
+    # Saturate the input to valid values.
+    min_dist = np.clip(min_dist, 1, MAX_DEPTH_IMAGE_RANGE - 1)
+    max_dist = np.clip(max_dist, 1, MAX_DEPTH_IMAGE_RANGE - 1)
+
+    valid_range_idx = np.logical_and(depth_array >= min_dist, depth_array <= max_dist)
+    return valid_range_idx
+
+
+def _depth_image_data_to_numpy(image_response):
+    """Interprets the image data as a numpy array.
+
+    Args:
+        image_response (image_pb2.ImageResponse): An ImageResponse containing a depth image.
+
+    Returns:
+        A numpy array representation of the depth data.
+    """
+    depth_array = np.frombuffer(image_response.shot.image.data, dtype=np.uint16)
+    depth_array.shape = (image_response.shot.image.rows, image_response.shot.image.cols, -1)
+    if depth_array.shape[2] == 1:
+        depth_array.shape = depth_array.shape[:2]
+    return depth_array
+
+
+def depth_image_to_pointcloud(image_response, min_dist=0, max_dist=1000):
+    """Converts a depth image into a point cloud using the camera intrinsics. The point
+    cloud is represented as a numpy array of (x,y,z) values.  Requests can optionally filter
+    the results based on the points distance to the image plane. A depth image is represented
+    with an unsigned 16 bit integer and a scale factor to convert that distance to meters. In
+    addition, values of zero and 2^16 (uint 16 maximum) are used to represent invalid indices.
+    A (min_dist * depth_scale) value that casts to an integer value <=0 will be assigned a
+    value of 1 (the minimum representational distance). Similarly, a (max_dist * depth_scale)
+    value that casts to >= 2^16 will be assigned a value of 2^16 - 1 (the maximum
+    representational distance).
+
+    Args:
+        image_response (image_pb2.ImageResponse): An ImageResponse containing a depth image.
+        min_dist (double): All points in the returned point cloud will be greater than min_dist from the image plane [meters].
+        max_dist (double): All points in the returned point cloud will be less than max_dist from the image plane [meters].
+        depth (double): The depth from the camera to the point of interest.
+
+    Returns:
+        A numpy stack of (x,y,z) values representing depth image as a point cloud expressed in the sensor frame.
+    """
+
+    if image_response.source.image_type != image_pb2.ImageSource.IMAGE_TYPE_DEPTH:
+        raise ValueError('requires an image_type of IMAGE_TYPE_DEPTH.')
+
+    if image_response.shot.image.pixel_format != image_pb2.Image.PIXEL_FORMAT_DEPTH_U16:
+        raise ValueError(
+            'IMAGE_TYPE_DEPTH with an unsupported format, requires PIXEL_FORMAT_DEPTH_U16.')
+
+    if not image_response.source.HasField('pinhole'):
+        raise ValueError('Requires a pinhole camera_model.')
+
+    source_rows = image_response.source.rows
+    source_cols = image_response.source.cols
+    fx = image_response.source.pinhole.intrinsics.focal_length.x
+    fy = image_response.source.pinhole.intrinsics.focal_length.y
+    cx = image_response.source.pinhole.intrinsics.principal_point.x
+    cy = image_response.source.pinhole.intrinsics.principal_point.y
+    depth_scale = image_response.source.depth_scale
+
+    # Convert the proto representation into a numpy array.
+    depth_array = _depth_image_data_to_numpy(image_response)
+
+    # Determine which indices have valid data in the user requested range.
+    valid_inds = _depth_image_get_valid_indices(depth_array, np.rint(min_dist * depth_scale),
+                                                np.rint(max_dist * depth_scale))
+
+    # Compute the valid data.
+    rows, cols = np.mgrid[0:source_rows, 0:source_cols]
+    depth_array = depth_array[valid_inds]
+    rows = rows[valid_inds]
+    cols = cols[valid_inds]
+
+    # Convert the valid distance data to (x,y,z) values expressed in the sensor frame.
+    z = depth_array / depth_scale
+    x = np.multiply(z, (cols - cx)) / fx
+    y = np.multiply(z, (rows - cy)) / fy
+    return np.vstack((x, y, z)).T

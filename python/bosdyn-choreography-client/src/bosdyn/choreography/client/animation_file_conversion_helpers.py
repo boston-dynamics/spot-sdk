@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -565,7 +565,7 @@ def arm_playback_option(file_line_split, animation):
         animation.proto.arm_playback = choreography_sequence_pb2.Animation.ARM_PLAYBACK_WORKSPACE_DANCE_FRAME
     else:
         animation.proto.arm_playback = choreography_sequence_pb2.Animation.ARM_PLAYBACK_DEFAULT
-        print("Unknown arm playbak option %s" % playback)
+        print("Unknown arm playback option %s" % playback)
     return animation
 
 

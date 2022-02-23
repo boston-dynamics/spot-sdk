@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2021 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -31,7 +31,7 @@ When run, this script will
 * Power Off once engaged with the dock
 
 ```
-python3 dock_my_robot.py --username USER --password PASSWORD --dock-id DOCKID ROBOT_IP
+python3 dock_my_robot.py --dock-id DOCKID ROBOT_IP
 ```
 
 Try not to interrupt the robot while it's over the dock, loss of comms will make the robot sit on the dock in an incorrect way, possibly causing it to roll over or make it hard to recover autonomously.
