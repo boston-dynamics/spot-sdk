@@ -552,7 +552,7 @@ class DeveloperSetupCommand(Command):
 
     def run(self, options):
 
-        return (build_proto_wheel(options.latest_build_requirements, dry_run=options.dry_run,
+        return (build_proto_wheel(latest_requirements=options.latest_build_requirements, dry_run=options.dry_run,
                                   verbose=options.verbose) and
                 install_wheels(['bosdyn-api'], dry_run=options.dry_run, verbose=options.verbose) and
                 install_wheels_editable([], dry_run=options.dry_run, verbose=options.verbose))
