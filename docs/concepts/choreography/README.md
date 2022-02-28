@@ -26,3 +26,4 @@ The high-level [documentation](choreography_service.md) provides an overview of 
 * [Robot Connections in Choreographer](robot_controls_in_choreographer.md)
 * [Animations in Choreography](animations_in_choreographer.md)
 * [Animation File Format](animation_file_specification.md)
+* [Tablet Choreography Mode](choreography_in_tablet.md)

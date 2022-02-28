@@ -176,6 +176,7 @@ def build_image_request(image_source_name, quality_percent=75, image_format=None
         image_format (image_pb2.Image.Format): The type of format for the image
                                                data, such as JPEG, RAW, or RLE.
         pixel_format (image_pb2.Image.PixelFormat) The pixel format of the image.
+        resize_ratio (double): Resize ratio for image dimensions.
 
     Returns:
         The ImageRequest protobuf message for the given parameters.
