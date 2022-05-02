@@ -12,6 +12,17 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 3.1.1
+
+### Known Issues
+
+Same as 3.1.0
+
+### Sample Code
+
+[**Network Compute Bridge (updated)**](../python/examples/network_compute_bridge/README.md)
+Modified server to use user confidence value as a threshold for returning detections
+
 ## 3.1.0
 
 ### New Features

@@ -193,11 +193,6 @@ class KerasExec():
         scores = scores[0]
         classes = classes[0]
 
-        # Only use the detection w/ the highest confidence for Sensor pointing features
-        max_conf = max(scores)
-
-        print(f"Max conf was {max_conf}")
-
         for i in range(len(boxes)):
             # Skip if not the Fire Extinguisher class
             if classes[i] != 7: continue
@@ -206,9 +201,9 @@ class KerasExec():
             box = boxes[i]
             score = scores[i]
 
-            if score < max_conf:
+            if score < request.input_data.min_confidence:
                 # scores are sorted so we can break
-                continue
+                break
 
             num_objects += 1
 
