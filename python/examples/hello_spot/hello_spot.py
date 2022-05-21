@@ -178,7 +178,7 @@ def main(argv):
     bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument(
         '-s', '--save', action='store_true', help=
-        'Save the image captured by Spot to the working directory. To chose the save location, use --save_path instead.'
+        'Save the image captured by Spot to the working directory. To choose the save location, use --save_path instead.'
     )
     parser.add_argument(
         '--save-path', default=None, nargs='?', help=
