@@ -12,6 +12,7 @@ option java_outer_classname = "MapProto";
 import "bosdyn/api/geometry.proto";
 import "bosdyn/api/image.proto";
 import "bosdyn/api/local_grid.proto";
+import "bosdyn/api/payload.proto";
 import "bosdyn/api/point_cloud.proto";
 import "bosdyn/api/robot_state.proto";
 import "bosdyn/api/spot/robot_command.proto";
@@ -140,7 +141,16 @@ message WaypointSnapshot {
     // If true, the point cloud contains data from a remote point cloud service,
     // such as LIDAR.
     bool has_remote_point_cloud_sensor = 10;
+
+    // Transform from the robot body to the remote point cloud sensor's
+    // reference frame.
+    bosdyn.api.SE3Pose body_tform_remote_point_cloud_sensor = 11;
+
+    // Defines the payloads attached to the robot at this waypoint.
+    repeated bosdyn.api.Payload payloads = 12;
+
 }
+
 
 // A base element of the graph nav map. Edges consist of a directed edge from one
 // waypoint to another and a transform that estimates the relationship in 3D space

@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Spot Release Notes &mdash; Spot 3.1.1 documentation</title>
+  <title>Spot Release Notes &mdash; Spot 3.1.2 documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                3.1.1
+                3.1.2
               </div>
             
           
@@ -612,9 +612,20 @@ Development Kit License (20191101-BDSDK-SL).
 </p><section id="spot-release-notes">
 <h1>Spot Release Notes<a class="headerlink" href="#spot-release-notes" title="Permalink to this headline">¶</a></h1>
 <section id="id1">
-<h2>3.1.1<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>3.1.2<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<section id="bug-fixes-and-improvements">
+<h3>Bug Fixes and Improvements<a class="headerlink" href="#bug-fixes-and-improvements" title="Permalink to this headline">¶</a></h3>
+<p>Added payloads information in GraphNav’s <code class="docutils literal notranslate"><span class="pre">WaypointSnapshot</span></code> to improve navigation.</p>
+</section>
 <section id="known-issues">
 <h3>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this headline">¶</a></h3>
+<p>Same as 3.1.0</p>
+</section>
+</section>
+<section id="id2">
+<h2>3.1.1<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<section id="id3">
+<h3>Known Issues<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>Same as 3.1.0</p>
 </section>
 <section id="sample-code">
@@ -623,8 +634,8 @@ Development Kit License (20191101-BDSDK-SL).
 Modified server to use user confidence value as a threshold for returning detections</p>
 </section>
 </section>
-<section id="id2">
-<h2>3.1.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<section id="id4">
+<h2>3.1.0<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <section id="new-features">
 <h3>New Features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h3>
 <section id="safely-powering-off-on-staircases">
@@ -684,8 +695,8 @@ This change means that <strong>the robot will no longer sit down and power off i
 <p>A new node type, <code class="docutils literal notranslate"><span class="pre">ClearBehaviorFaults</span></code> will allow a mission to autonomously clear behavior faults when desired.</p>
 </section>
 </section>
-<section id="bug-fixes-and-improvements">
-<h3>Bug Fixes and Improvements<a class="headerlink" href="#bug-fixes-and-improvements" title="Permalink to this headline">¶</a></h3>
+<section id="id5">
+<h3>Bug Fixes and Improvements<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p>In the python client library the <a class="reference internal" href="../python/bosdyn-client/src/bosdyn/client/lease.html"><span class="doc">LeaseKeepAlive</span></a> context manager continually sends RetainLease commands to the robot to keep ownership of a lease.  It has been upgraded to support more complete lease management by acquiring the lease if it is not owned when created and an option to return it when it exits.  To preserve backwards compatibility, the initial acquisition is allowed to fail, and it does not return it by default.  There are two options that control this behavior: <code class="docutils literal notranslate"><span class="pre">must_acquire=True</span></code> means that any exceptions that are raised during acquisition are not caught and are raised to the code creating the keep-alive, and <code class="docutils literal notranslate"><span class="pre">return_at_exit=True</span></code> means that the lease will be returned when exiting or shutting down the keep-alive.  Both of these options default to <code class="docutils literal notranslate"><span class="pre">False</span></code> currently.</p>
 <p>Arm joint trajectories now include self-collision avoidance to prevent hitting the body or payload with the arm.</p>
 <p>The DockProperties of the docks from the World Object Service have an additional <code class="docutils literal notranslate"><span class="pre">from_prior</span></code> field that can indicate when that particular object comes from prior map knowledge and was not directly detected.  Docking Feedback includes a new failure case <code class="docutils literal notranslate"><span class="pre">STATUS_ERROR_UNREFINED_PRIOR</span></code>, for situations in which the dock prior could not be confirmed as a real dock.</p>
@@ -739,8 +750,8 @@ The new <code class="docutils literal notranslate"><span class="pre">SensorCompa
 <p>The robot may not be commanded to go to the battery change pose when docked.</p>
 <p>The Graph Nav map may not be cleared in the middle of recording.</p>
 </section>
-<section id="id3">
-<h4>Data Acquisition<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<section id="id6">
+<h4>Data Acquisition<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
 <p>The DataAcquisitionStore service is queryable for the IDs of items that have been stored by it. It would previously track everything that had been stored since the last time that the robot had been restarted.  As of 3.1, it will track only the last 10,000 items stored.</p>
 </section>
 </section>
@@ -748,8 +759,8 @@ The new <code class="docutils literal notranslate"><span class="pre">SensorCompa
 <h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">bosdyn-client</span></code> package no longer depends on <code class="docutils literal notranslate"><span class="pre">requests</span></code>.</p>
 </section>
-<section id="id4">
-<h3>Known Issues<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<section id="id7">
+<h3>Known Issues<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <p><strong>When a network transport failure occurs,</strong> depending on the particular operating system and version of gRPC installed, the error from the python SDK may not always be the most specific error possible, such as <code class="docutils literal notranslate"><span class="pre">UnknownDnsNameError</span></code>.  It may instead be raised as either a generic <code class="docutils literal notranslate"><span class="pre">RpcError</span></code>, or another generic failure type such as <code class="docutils literal notranslate"><span class="pre">UnableToConnectToRobotError</span></code>.</p>
 <p><strong>Spot CAM LED illumination levels</strong> are not currently recorded or played back in Autowalk missions.</p>
 <p><strong>If you write a custom data acquisition plugin or image service,</strong> do not change its <code class="docutils literal notranslate"><span class="pre">DataAcquisitionCapability</span></code> or <code class="docutils literal notranslate"><span class="pre">ImageSource</span></code> set once it is running and registered. New capabilities may not be detected, and old capabilities may still be listed as available in the Data Acquisition service. To change the capabilities of a service: unregister it from the directory, wait until its capabilities are no longer listed in the Data Acquisition service, and then re-register it. This waiting also applies to restarting a service if its capabilities will be different upon restart.</p>
@@ -760,8 +771,8 @@ The new <code class="docutils literal notranslate"><span class="pre">SensorCompa
 </ul>
 <p><strong>SE2VelocityLimits require care</strong>.  Correct usage of the <code class="docutils literal notranslate"><span class="pre">SE2VelocityLimit</span></code> message requires the user to fully fill out all the fields, setting unlimited values to a large number, say 1e6.</p>
 </section>
-<section id="id5">
-<h3>Sample Code<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<section id="id8">
+<h3>Sample Code<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <p>All examples have been changed to read the username and password from environment variables instead of taking <code class="docutils literal notranslate"><span class="pre">--username</span></code> and <code class="docutils literal notranslate"><span class="pre">--password</span></code> arguments.</p>
 <p>Additionally, most examples now use the LeaseKeepAlive for complete lease management by setting the <code class="docutils literal notranslate"><span class="pre">must_acquire</span></code> and <code class="docutils literal notranslate"><span class="pre">return_at_exit</span></code> arguments to <code class="docutils literal notranslate"><span class="pre">True</span></code> at construction.  This helps ensure that the lease is properly returned when the example is complete.</p>
 <p>The arm and manipulation examples have been updated to use the new <code class="docutils literal notranslate"><span class="pre">block_until_arm_arrives()</span></code> helper instead of <code class="docutils literal notranslate"><span class="pre">sleep()</span></code> calls.</p>
@@ -807,56 +818,56 @@ Demonstrate using the new drawing helper.</p>
 Cleaner lease usage throughout.</p>
 </section>
 </section>
-<section id="id6">
-<h2>3.0.3<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
-<section id="id7">
-<h3>Bug fixes and improvements<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<section id="id9">
+<h2>3.0.3<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<section id="id10">
+<h3>Bug fixes and improvements<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <p>Reduced RPC calls to the Fault service in <code class="docutils literal notranslate"><span class="pre">image_service_helpers.py</span></code>.</p>
 <p>Example documentation cleanup and improvements.</p>
 </section>
-<section id="id8">
-<h3>Known Issues<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<section id="id11">
+<h3>Known Issues<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <p>Same as 3.0.0</p>
 </section>
 </section>
-<section id="id9">
-<h2>3.0.2<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
-<section id="id10">
-<h3>New Features<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<section id="id12">
+<h2>3.0.2<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<section id="id13">
+<h3>New Features<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <p>Added <code class="docutils literal notranslate"><span class="pre">GetSystemLog</span></code> RPC in SpotCAM Health service to retrieve an encrypted log of system events, for factory diagnosis of possible issues.</p>
 </section>
-<section id="id11">
-<h3>Bug fixes and improvements<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<section id="id14">
+<h3>Bug fixes and improvements<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <p>Fixed UploadEdgeSnapshot typo in GraphNav client.</p>
 <p>Fixed usage of <code class="docutils literal notranslate"><span class="pre">SE2Trajectory</span></code> robot commands in mission service.</p>
 </section>
-<section id="id12">
-<h3>Known Issues<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<section id="id15">
+<h3>Known Issues<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <p>Same as 3.0.0</p>
 </section>
 </section>
-<section id="id13">
-<h2>3.0.1<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
-<section id="id14">
-<h3>New Features<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<section id="id16">
+<h2>3.0.1<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
+<section id="id17">
+<h3>New Features<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
 <p>Added <code class="docutils literal notranslate"><span class="pre">COLORMAP_INFERNO</span></code> and <code class="docutils literal notranslate"><span class="pre">COLORMAP_TURBO</span></code> as SpotCAM IR color map options.</p>
 </section>
-<section id="id15">
-<h3>Bug fixes and improvements<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<section id="id18">
+<h3>Bug fixes and improvements<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
 <p>The new <code class="docutils literal notranslate"><span class="pre">base_tform_sensor</span></code> fields in SpotCAM protos have the transform in the right direction. The old <code class="docutils literal notranslate"><span class="pre">base_tfrom_sensor</span></code> fields, now deprecated, had the inverse transform.</p>
 </section>
-<section id="id16">
-<h3>Deprecations<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<section id="id19">
+<h3>Deprecations<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
 <p>Deprecated field <code class="docutils literal notranslate"><span class="pre">base_tfrom_sensor</span></code> in SpotCAM camera proto and added field <code class="docutils literal notranslate"><span class="pre">base_tform_sensor</span></code> so it follows the intended naming convention.</p>
 <p>Deprecated field <code class="docutils literal notranslate"><span class="pre">base_tfrom_sensor</span></code> in SpotCAM logging proto and added field <code class="docutils literal notranslate"><span class="pre">base_tform_sensor</span></code> so it follows the intended naming convention.</p>
 <p>Deprecated the <code class="docutils literal notranslate"><span class="pre">decode_token()</span></code> and <code class="docutils literal notranslate"><span class="pre">log_token_time_remaining()</span></code> functions in <code class="docutils literal notranslate"><span class="pre">bosdyn.client.sdk</span></code>. The SDK no longer supports decoding tokens. If you need to decode one, use pyjwt directly.</p>
 </section>
-<section id="id17">
-<h3>Known Issues<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<section id="id20">
+<h3>Known Issues<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
 <p>Same as 3.0.0</p>
 </section>
-<section id="id18">
-<h3>Sample Code<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<section id="id21">
+<h3>Sample Code<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="../python/examples/arm_constrained_manipulation/README.html"><span class="doc">Arm Constrained Manipulation (updated)</span></a>
 Cleanup to clamp normalized velocity and also use normalized velocity for knob.</p>
 <p><a class="reference internal" href="../python/examples/graph_nav_command_line/README.html"><span class="doc">GraphNav Command Line (updated)</span></a>
@@ -865,12 +876,12 @@ Improved handling in certain failure cases</p>
 Handle new IR color map options and removed the usage of the deprecated pose fields</p>
 </section>
 </section>
-<section id="id19">
-<h2>3.0.0<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h2>
-<section id="id20">
-<h3>New Features<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
-<section id="id21">
-<h4>Graph Nav<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h4>
+<section id="id22">
+<h2>3.0.0<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h2>
+<section id="id23">
+<h3>New Features<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
+<section id="id24">
+<h4>Graph Nav<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h4>
 <p><strong>Map Processing</strong>
 The new map processing service provides two ways to process the data in a graph nav map:</p>
 <ul class="simple">
@@ -885,8 +896,8 @@ A new NaviagateToAnchor RPC can be used to command GraphNav to drive the robot t
 <h4>Auto Return<a class="headerlink" href="#auto-return" title="Permalink to this headline">¶</a></h4>
 <p>Auto Return is a service which can be configured to take control of the robot in the event of a communication loss, and return it back along its recently traveled route to attempt to regain communications with its user.  See the <a class="reference internal" href="concepts/autonomy/auto_return.html"><span class="doc">Auto Return</span></a> documentation for more details.</p>
 </section>
-<section id="id22">
-<h4>Choreography<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h4>
+<section id="id25">
+<h4>Choreography<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h4>
 <p>The Choreography API now provides ‘choreography logging’ which will capture timestamped data about the robot’s pose and joint state for either a user defined time period or for the duration of a dance. See the <a class="reference internal" href="concepts/choreography/choreography_service.html"><span class="doc">Choreography Service</span></a> documentation for more details.</p>
 <p>Users can now create animated moves using timestamped keyframes; these can be built through common animation software (like Autodesk Maya), handwritten, or constructed from choreography log data. The animated moves can be uploaded to the robot and used within dances like the base moves. See the <a class="reference internal" href="concepts/choreography/animations_in_choreographer.html"><span class="doc">Animations Overview</span></a> documentation for more details.</p>
 </section>
@@ -907,8 +918,8 @@ A new NaviagateToAnchor RPC can be used to command GraphNav to drive the robot t
 <p>Payload registration now supports mounting payloads to the wrist or gripper of the arm.  The new MountFrameName enum contains the valid mounting locations.</p>
 <p>A new UpdatePayloadAttached RPC allows for attaching and detaching payloads while the robot is operating.</p>
 </section>
-<section id="id23">
-<h4>Missions<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h4>
+<section id="id26">
+<h4>Missions<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h4>
 <p>Missions have a new <code class="docutils literal notranslate"><span class="pre">STATUS_STOPPED</span></code> state that can be triggered by the new <code class="docutils literal notranslate"><span class="pre">StopMission</span></code> rpc.  This state differs from a paused mission in that it means that the mission is no longer running and cannot be resumed.</p>
 <p>New mission node types:</p>
 <ul class="simple">
@@ -926,10 +937,10 @@ A new NaviagateToAnchor RPC can be used to command GraphNav to drive the robot t
 <p>A new <code class="docutils literal notranslate"><span class="pre">IREnableDisable</span></code> service and request have been added.  This request allows clients to enable/disable the robot’s IR light emitters in the body and hand sensors.  This new service supports special situations where Spot’s emitters may interfere with a custom attached payload.  Disabling the IR emission will cause a SystemFault to be raised and have a negative effect on mobility since the robot’s perception system is hindered.</p>
 </section>
 </section>
-<section id="id24">
-<h3>Bug fixes and improvements<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
-<section id="id25">
-<h4>Graph Nav<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h4>
+<section id="id27">
+<h3>Bug fixes and improvements<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
+<section id="id28">
+<h4>Graph Nav<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h4>
 <p>For RPCs that can fail because the robot is impaired, the response message now includes a RobotImpairedState message providing details about the nature of the impairment.</p>
 <p>NavigationFeedbackStatus now includes body_movement_status to make it simple to determine when the body has come to rest after completing navigation.</p>
 <p>Directed exploration and alternate route finding can now be disabled using new fields in TravelParams.</p>
@@ -942,8 +953,8 @@ The new has_remote_point_cloud_sensor field in WaypointSnapshot indicates that t
 <p>Starting to record a new map can fail with the new status <code class="docutils literal notranslate"><span class="pre">STATUS_TOO_FAR_FROM_EXISTING_MAP</span></code>.</p>
 <p>The RPC for creating a new waypoint can now be provided a list of world objects to include in that waypoint’s snapshot.</p>
 </section>
-<section id="id26">
-<h4>Missions<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h4>
+<section id="id29">
+<h4>Missions<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h4>
 <p>For very large missions, a new RPC has been added to the mission service to stream the mission to the robot in chunks, rather than as a single message.  The chunks should still deserialize to the same LoadMissionRequest message when assembled.</p>
 <p>When a mission node fails to compile, the resulting FailedNode message has a new string that lists the protobuf type of the node implementation.</p>
 </section>
@@ -977,8 +988,8 @@ See the <a class="reference external" href="../protos/bosdyn/api/proto_reference
 <p>Models can now have a list of labels associated with them.</p>
 <p>When the image is requested to be rotated, the rotation angle will be returned in the response.</p>
 </section>
-<section id="id27">
-<h4>Data Acquisition<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h4>
+<section id="id30">
+<h4>Data Acquisition<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h4>
 <p>DataAcquisitionCapabilities can now also report the plugin service name of the service that will be performing that acquisition.</p>
 <p>The DataAcquisitionClient has a new <code class="docutils literal notranslate"><span class="pre">acquire_data_from_request()</span></code> that takes a full request proto, instead of building it internally.</p>
 <p>The DataService client has been updated to have the correct service name.</p>
@@ -1006,8 +1017,8 @@ See the <a class="reference external" href="../protos/bosdyn/api/proto_reference
 <p>Calling <code class="docutils literal notranslate"><span class="pre">ensure_secure_channel()</span></code> directly will now result in max message sizes not being correctly.</p>
 </section>
 </section>
-<section id="id28">
-<h3>Breaking Changes<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
+<section id="id31">
+<h3>Breaking Changes<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
 <p>Invalid RobotCommands will no longer result in <code class="docutils literal notranslate"><span class="pre">STATUS_INVALID_REQUEST</span></code> in the RobotCommandResponse message, but will instead use the <code class="docutils literal notranslate"><span class="pre">CODE_INVALID_REQUEST</span></code> error in the common header, like other RPCs do.  In the python client library, this will still raise the same <code class="docutils literal notranslate"><span class="pre">InvalidRequestError</span></code> as before.</p>
 <p>E-stops may not be unregistered from the estop service while the robot’s motors are powered. This prevents accidentally powering the robot off. A new <code class="docutils literal notranslate"><span class="pre">STATUS_MOTORS_ON</span></code> status will be returned in the response to indicate this error. To unregister an estop, first safely power off the robot.</p>
 <p>RPCs to the AuthService and PayloadRegistration service are now rate-limited to 5 and 10 requests/second respectively.  Requesting more than that will result in an HTTP 429 error, or raising the <code class="docutils literal notranslate"><span class="pre">TooManyRequestsError</span></code> if using the python client.</p>
@@ -1015,24 +1026,24 @@ See the <a class="reference external" href="../protos/bosdyn/api/proto_reference
 <p>The python function <code class="docutils literal notranslate"><span class="pre">bosdyn.client.lease.test_active_lease</span></code> previously took an optional <code class="docutils literal notranslate"><span class="pre">make_sublease</span></code> argument.  That has been replaced with an optional <code class="docutils literal notranslate"><span class="pre">sublease_name</span></code> argument so that if a sublease is desired, it gets created with a client name correctly.</p>
 <p>The StraightStaircase message has been moved to bosdyn/api/stairs.proto so that it can be used in more places.  This is compatible with existing serialized protobufs, but any code that is manually creating these messages will need to be updated.</p>
 </section>
-<section id="id29">
-<h3>Deprecations<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
+<section id="id32">
+<h3>Deprecations<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
 <section id="robot-control">
 <h4>Robot Control<a class="headerlink" href="#robot-control" title="Permalink to this headline">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">enable_grated_floor</span></code> field is superceded by the new <code class="docutils literal notranslate"><span class="pre">grated_surfaces_mode</span></code> which will auto-detect the need for grated surface handling.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">safe_power_off()</span></code> helper has been replaced by the less ambiguous <code class="docutils literal notranslate"><span class="pre">safe_power_off_motors()</span></code> helper.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">docking_command_feedback()</span></code> method of DockingClient incorrectly raised an exception if the docking command had encountered lease errors, and has been replaced by <code class="docutils literal notranslate"><span class="pre">docking_command_feedback_full()</span></code> which returns the full feedback response.</p>
 </section>
-<section id="id30">
-<h4>Graph Nav<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h4>
+<section id="id33">
+<h4>Graph Nav<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h4>
 <p>For limiting the speed on an edge, use the <code class="docutils literal notranslate"><span class="pre">vel_limit</span></code> in <code class="docutils literal notranslate"><span class="pre">mobility_params</span></code> instead of the Edge annonation’s <code class="docutils literal notranslate"><span class="pre">vel_limit</span></code>.</p>
 </section>
-<section id="id31">
-<h4>Missions<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h4>
+<section id="id34">
+<h4>Missions<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h4>
 <p>Docking nodes should not use the child node anymore.  If a mission needs to react to docking results, it should use the responses written into the blackboard by the docking node.</p>
 </section>
-<section id="id32">
-<h4>Payloads<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h4>
+<section id="id35">
+<h4>Payloads<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">guid</span></code> and <code class="docutils literal notranslate"><span class="pre">secret</span></code> fields on payload registration RPCs have been replaced with a standardized <code class="docutils literal notranslate"><span class="pre">PayloadCredentials</span></code> message.</p>
 </section>
 <section id="writing-services">
@@ -1041,8 +1052,8 @@ See the <a class="reference external" href="../protos/bosdyn/api/proto_reference
 <p><code class="docutils literal notranslate"><span class="pre">bosdyn.mission.server_util.set_response_header()</span></code> has been moved to <code class="docutils literal notranslate"><span class="pre">bosdyn.client.server_util.set_response_header()</span></code>, so that it can be used by any service, not only those depending on missions.</p>
 </section>
 </section>
-<section id="id33">
-<h3>Known Issues<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h3>
+<section id="id36">
+<h3>Known Issues<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
 <p><strong>When a network transport failure occurs,</strong> depending on the particular operating system and version of gRPC installed, the error from the python SDK may not always be the most specific error possible, such as <code class="docutils literal notranslate"><span class="pre">UnknownDnsNameError</span></code>.  It may instead be raised as either a generic <code class="docutils literal notranslate"><span class="pre">RpcError</span></code>, or another generic failure type such as <code class="docutils literal notranslate"><span class="pre">UnableToConnectToRobotError</span></code>.</p>
 <p><strong>Spot CAM LED illumination levels</strong> are not currently recorded or played back in Autowalk missions.</p>
 <p><strong>If you write a custom data acquisition plugin or image service,</strong> do not change its <code class="docutils literal notranslate"><span class="pre">DataAcquisitionCapability</span></code> or <code class="docutils literal notranslate"><span class="pre">ImageSource</span></code> set once it is running and registered. New capabilities may not be detected, and old capabilities may still be listed as available in the Data Acquisition service. To change the capabilities of a service: unregister it from the directory, wait until its capabilities are no longer listed in the Data Acquisition service, and then re-register it. This waiting also applies to restarting a service if its capabilities will be different upon restart.</p>
@@ -1053,8 +1064,8 @@ See the <a class="reference external" href="../protos/bosdyn/api/proto_reference
 </ul>
 <p><strong>SE2VelocityLimits require care</strong>.  Correct usage of the <code class="docutils literal notranslate"><span class="pre">SE2VelocityLimit</span></code> message requires the user to fully fill out all the fields, setting unlimited values to a large number, say 1e6.</p>
 </section>
-<section id="id34">
-<h3>Sample Code<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h3>
+<section id="id37">
+<h3>Sample Code<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="../python/examples/animation_recorder/README.html"><span class="doc">Animation Recorder (new)</span></a>
 Demonstrates recording motion made with the tablet and then playing it back with the choreographer service.</p>
 <p><a class="reference internal" href="../python/examples/arm_constrained_manipulation/README.html"><span class="doc">Arm Constrained Manipulation (new)</span></a>
@@ -1103,10 +1114,10 @@ The Escape key can now be used to stop the robot.</p>
 New resolution options allow for capturing from the webcam at different resolutions.</p>
 </section>
 </section>
-<section id="id35">
-<h2>2.3.5<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h2>
-<section id="id36">
-<h3>New Features<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
+<section id="id38">
+<h2>2.3.5<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h2>
+<section id="id39">
+<h3>New Features<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h3>
 <section id="spot-cam">
 <h4>Spot CAM<a class="headerlink" href="#spot-cam" title="Permalink to this headline">¶</a></h4>
 <p>Added <code class="docutils literal notranslate"><span class="pre">InitializeLens</span></code> rpc, which resets the PTZ autofocus without needing to power cycle the Spot CAM.</p>
@@ -1117,61 +1128,61 @@ New resolution options allow for capturing from the webcam at different resoluti
 This is exposed through the optional <code class="docutils literal notranslate"><span class="pre">write_sync</span></code> argument to the <code class="docutils literal notranslate"><span class="pre">add_blob()</span></code> and <code class="docutils literal notranslate"><span class="pre">add_protobuf()</span></code> methods of the <code class="docutils literal notranslate"><span class="pre">DataBufferClient</span></code>.</p>
 </section>
 </section>
-<section id="id37">
-<h3>Bug fixes and improvements<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h3>
+<section id="id40">
+<h3>Bug fixes and improvements<a class="headerlink" href="#id40" title="Permalink to this headline">¶</a></h3>
 <p>When running with a Spot CAM+ (PTZ) running 2.3.5, the <code class="docutils literal notranslate"><span class="pre">SetPowerStatus</span></code> and <code class="docutils literal notranslate"><span class="pre">CyclePower</span></code> endpoints will now return an error if the PTZ is specified. These endpoints could previously cause the WebRTC feed to crash. These RPCs are still safe to use for other devices, but due to hardware limitations, resetting the PTZ power can possibly cause the Spot CAM to require a reboot to regain the WebRTC stream.</p>
 <p><code class="docutils literal notranslate"><span class="pre">RetryableUnavailableError</span></code> was raised in more cases than it should have been, and it is now more selectively raised.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">EstopKeepAlive</span></code> expected users to monitor its status by popping entries out of its <code class="docutils literal notranslate"><span class="pre">status_queue</span></code>.  If the user did not do so, the queue would continue to grow without bound.
 The queue size is now bounded and old unchecked entries will be thrown away.  The queue size is specified with the <code class="docutils literal notranslate"><span class="pre">max_status_queue_size</span></code> argument to the constructor.</p>
 </section>
-<section id="id38">
-<h3>Breaking Changes<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h3>
+<section id="id41">
+<h3>Breaking Changes<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h3>
 <p>As stated above, the behavior of <code class="docutils literal notranslate"><span class="pre">SetPowerStatus</span></code> and <code class="docutils literal notranslate"><span class="pre">CyclePower</span></code> endpoints have been changed for Spot CAM+ units when attempting to change the power status of the PTZ. They now return an error instead of modifying the power status of the PTZ. They remain functional for the Spot CAM+IR. Clients using these SDK endpoints to reset the autofocus on the PTZ are recommended to use <code class="docutils literal notranslate"><span class="pre">InitializeLens</span></code> instead. Other clients are encouraged to seek alternative options.</p>
 </section>
-<section id="id39">
-<h3>Deprecations<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h3>
+<section id="id42">
+<h3>Deprecations<a class="headerlink" href="#id42" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">ResponseContext</span></code> helper class has been moved to the bosdyn-client package (from the bosdyn-mission package), so that it can be used for gRPC logging in data acquisition plugin services in addition to the mission service. The new import location will be from <code class="docutils literal notranslate"><span class="pre">bosdyn.client.server_util</span></code>, and the original import location of <code class="docutils literal notranslate"><span class="pre">bosdyn.mission.server_util</span></code> has been deprecated.</p>
 </section>
-<section id="id40">
-<h3>Known Issues<a class="headerlink" href="#id40" title="Permalink to this headline">¶</a></h3>
+<section id="id43">
+<h3>Known Issues<a class="headerlink" href="#id43" title="Permalink to this headline">¶</a></h3>
 <p>Same as 2.3.0</p>
 </section>
 </section>
-<section id="id41">
-<h2>2.3.4<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h2>
-<section id="id42">
-<h3>New Features<a class="headerlink" href="#id42" title="Permalink to this headline">¶</a></h3>
+<section id="id44">
+<h2>2.3.4<a class="headerlink" href="#id44" title="Permalink to this headline">¶</a></h2>
+<section id="id45">
+<h3>New Features<a class="headerlink" href="#id45" title="Permalink to this headline">¶</a></h3>
 <section id="power-control">
 <h4>Power Control<a class="headerlink" href="#power-control" title="Permalink to this headline">¶</a></h4>
 <p>New options have been added to the Power Service to allow for power cycling the robot and powering the payload ports or wifi radios on or off. Additional fields have been added to the robot state message to check the payload and wifi power states. Support has also been been added to the <code class="docutils literal notranslate"><span class="pre">bosdyn.client</span></code> command line interface for these commands.</p>
 <p>These new options will only work on some Enterprise Spot robots. Check the HardwareConfiguration message reported by a particular robot to see if it supports them.</p>
 </section>
 </section>
-<section id="id43">
-<h3>Bug fixes and improvements<a class="headerlink" href="#id43" title="Permalink to this headline">¶</a></h3>
+<section id="id46">
+<h3>Bug fixes and improvements<a class="headerlink" href="#id46" title="Permalink to this headline">¶</a></h3>
 <p>Fixed an issue that could cause payload registration or directory registration keep-alive threads to exit early in certain cases.</p>
 <p>Fixed a couple issues with the webcam example: updated the Dockerfile to create a smaller container specifically with python 3.7, added new optional argument to specify the video codec, and programmatically prevent substring arguments other than the <code class="docutils literal notranslate"><span class="pre">--device-name</span></code> argument to avoid accidental confusion with the docker container’s <code class="docutils literal notranslate"><span class="pre">--device</span></code> argument.</p>
 </section>
-<section id="id44">
-<h3>Known Issues<a class="headerlink" href="#id44" title="Permalink to this headline">¶</a></h3>
+<section id="id47">
+<h3>Known Issues<a class="headerlink" href="#id47" title="Permalink to this headline">¶</a></h3>
 <p>Same as 2.3.0</p>
 </section>
-<section id="id45">
-<h3>Sample Code<a class="headerlink" href="#id45" title="Permalink to this headline">¶</a></h3>
+<section id="id48">
+<h3>Sample Code<a class="headerlink" href="#id48" title="Permalink to this headline">¶</a></h3>
 <p>A new <a class="reference internal" href="python/fetch_tutorial/fetch1.html"><span class="doc">tutorial</span></a> has been added to walk through using machine learning, the Network Compute Bridge, and Manipulation API to play fetch with Spot.</p>
 </section>
 </section>
-<section id="id46">
-<h2>2.3.3<a class="headerlink" href="#id46" title="Permalink to this headline">¶</a></h2>
-<section id="id47">
-<h3>New Features<a class="headerlink" href="#id47" title="Permalink to this headline">¶</a></h3>
-<section id="id48">
-<h4>Graph Nav<a class="headerlink" href="#id48" title="Permalink to this headline">¶</a></h4>
+<section id="id49">
+<h2>2.3.3<a class="headerlink" href="#id49" title="Permalink to this headline">¶</a></h2>
+<section id="id50">
+<h3>New Features<a class="headerlink" href="#id50" title="Permalink to this headline">¶</a></h3>
+<section id="id51">
+<h4>Graph Nav<a class="headerlink" href="#id51" title="Permalink to this headline">¶</a></h4>
 <p>The python Graph Nav client now allows setting an offset to the destination, for navigating to a position relative to the final waypoint instead of exactly matching the final waypoint position and orientation.</p>
 </section>
 </section>
-<section id="id49">
-<h3>Bug fixes and improvements<a class="headerlink" href="#id49" title="Permalink to this headline">¶</a></h3>
+<section id="id52">
+<h3>Bug fixes and improvements<a class="headerlink" href="#id52" title="Permalink to this headline">¶</a></h3>
 <p>Fixed issues where the data acquisition download helpers did not handle absolute paths on windows and did not clean filenames correctly. (Thanks David from Levatas!)</p>
 <p>Zip file names from the data download service no longer contain difficult characters.</p>
 <p>Fixed an issue where Graph Nav would sometimes report the robot was impaired on the first usage after restarting the robot.</p>
@@ -1179,26 +1190,26 @@ The queue size is now bounded and old unchecked entries will be thrown away.  Th
 <p>Updated background threads for the payload and directory registration helpers to silently ignore transient errors.</p>
 <p>Fixed an issue where requesting thermal images with PTZ/Pano images in a single data acquisition action caused thermal images to either not be collected or saved as “blank” images.</p>
 </section>
-<section id="id50">
-<h3>Breaking Changes<a class="headerlink" href="#id50" title="Permalink to this headline">¶</a></h3>
+<section id="id53">
+<h3>Breaking Changes<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h3>
 <p>The estop service will now refuse to change configuration if the robot is already powered on, returning a status of STATUS_MOTORS_ON. This prevents accidentally cutting power while the robot is in operation.</p>
 </section>
-<section id="id51">
-<h3>Known Issues<a class="headerlink" href="#id51" title="Permalink to this headline">¶</a></h3>
+<section id="id54">
+<h3>Known Issues<a class="headerlink" href="#id54" title="Permalink to this headline">¶</a></h3>
 <p>Same as 2.3.0</p>
 </section>
-<section id="id52">
-<h3>Sample Code<a class="headerlink" href="#id52" title="Permalink to this headline">¶</a></h3>
+<section id="id55">
+<h3>Sample Code<a class="headerlink" href="#id55" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="../python/examples/network_compute_bridge/README.html"><span class="doc">Network Compute Bridge</span></a>
 Updated to provide appropriate error messages from the workers.</p>
 </section>
 </section>
-<section id="id53">
-<h2>2.3.2<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h2>
-<section id="id54">
-<h3>New Features<a class="headerlink" href="#id54" title="Permalink to this headline">¶</a></h3>
-<section id="id55">
-<h4>SpotCAM<a class="headerlink" href="#id55" title="Permalink to this headline">¶</a></h4>
+<section id="id56">
+<h2>2.3.2<a class="headerlink" href="#id56" title="Permalink to this headline">¶</a></h2>
+<section id="id57">
+<h3>New Features<a class="headerlink" href="#id57" title="Permalink to this headline">¶</a></h3>
+<section id="id58">
+<h4>SpotCAM<a class="headerlink" href="#id58" title="Permalink to this headline">¶</a></h4>
 <p>The SpotCAM API has been expanded to support more use cases for the SpotCAM+IR (thermal PTZ variant). This includes the following new endpoints:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">SetIrColormap</span></code>/<code class="docutils literal notranslate"><span class="pre">GetIrColormap</span></code>: Set/get the mapping between radiometric IR samples to color, for video</p></li>
@@ -1207,12 +1218,12 @@ Updated to provide appropriate error messages from the workers.</p>
 <p>The SpotCAM Power API now has an additional endpoint to cycle power for any of the components that could previously be toggled using <code class="docutils literal notranslate"><span class="pre">SetPowerStatus</span></code>. <code class="docutils literal notranslate"><span class="pre">CyclePower</span></code> can be used to help the PTZ recover from adverse behavior, such as incorrect auto-focus or poor motor behavior, which can sometimes happen as the result of a robot fall. <code class="docutils literal notranslate"><span class="pre">CyclePower</span></code> will wait the appropriate amount of time between turning components off and turning on again to make sure the power is cycled correctly without the client needing to know the correct interval.</p>
 </section>
 </section>
-<section id="id56">
-<h3>Known Issues<a class="headerlink" href="#id56" title="Permalink to this headline">¶</a></h3>
+<section id="id59">
+<h3>Known Issues<a class="headerlink" href="#id59" title="Permalink to this headline">¶</a></h3>
 <p>Same as 2.3.0</p>
 </section>
-<section id="id57">
-<h3>Sample Code<a class="headerlink" href="#id57" title="Permalink to this headline">¶</a></h3>
+<section id="id60">
+<h3>Sample Code<a class="headerlink" href="#id60" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="../python/examples/get_image/README.html"><span class="doc">Get image (updated)</span></a>
 Support for the new pixel format of IR images.</p>
 <p><a class="reference internal" href="../python/examples/ricoh_theta/README.html"><span class="doc">Ricoh Theta (updated)</span></a>
@@ -1223,12 +1234,12 @@ Defaults to not capturing continuously.  Flags <code class="docutils literal not
 Support for IR images and power cycling functionality.</p>
 </section>
 </section>
-<section id="id58">
-<h2>2.3.0<a class="headerlink" href="#id58" title="Permalink to this headline">¶</a></h2>
-<section id="id59">
-<h3>New Features<a class="headerlink" href="#id59" title="Permalink to this headline">¶</a></h3>
-<section id="id60">
-<h4>Arm and Gripper Control<a class="headerlink" href="#id60" title="Permalink to this headline">¶</a></h4>
+<section id="id61">
+<h2>2.3.0<a class="headerlink" href="#id61" title="Permalink to this headline">¶</a></h2>
+<section id="id62">
+<h3>New Features<a class="headerlink" href="#id62" title="Permalink to this headline">¶</a></h3>
+<section id="id63">
+<h4>Arm and Gripper Control<a class="headerlink" href="#id63" title="Permalink to this headline">¶</a></h4>
 <p>One of the main features of the 2.3 release is control and support of Spot’s arm and gripper. Arm and gripper commands are included in the <code class="docutils literal notranslate"><span class="pre">SynchronizedCommand</span></code> message, and can be commanded in addition to mobility commands.  The <code class="docutils literal notranslate"><span class="pre">RobotCommandBuilder</span></code> in the SDK provides many new helpers for building new arm and gripper commands.  The synchro command builder functions now have an optional <code class="docutils literal notranslate"><span class="pre">build_on_command</span></code> argument, which is used to build a mobility/arm/gripper command onto an existing command, merging them correctly.
 The arm and gripper state are reported in the new <code class="docutils literal notranslate"><span class="pre">manipulator_state</span></code> field of the robot state.  The Python SDK <code class="docutils literal notranslate"><span class="pre">Robot</span></code> class now has a <code class="docutils literal notranslate"><span class="pre">has_arm()</span></code> helper to determine if the robot has an arm or not.
 For more information about controlling the arm, see the <a class="reference internal" href="concepts/arm/README.html"><span class="doc">arm documentation</span></a>.</p>
@@ -1239,8 +1250,8 @@ ArmSurfaceContactService lets you accurately move the robot’s arm in the world
 <p><strong>Doors (beta)</strong>
 DoorService will automatically open and move through doors, once provided some information about handles and hinges.</p>
 </section>
-<section id="id61">
-<h4>Network Compute Bridge<a class="headerlink" href="#id61" title="Permalink to this headline">¶</a></h4>
+<section id="id64">
+<h4>Network Compute Bridge<a class="headerlink" href="#id64" title="Permalink to this headline">¶</a></h4>
 <p>An interface for integrating real-time image processing and machine learning for identifying objects and aiding grasping.
 For more information, see the <a class="reference internal" href="concepts/network_compute_bridge.html"><span class="doc">network compute bridge documentation</span></a>.</p>
 </section>
@@ -1248,8 +1259,8 @@ For more information, see the <a class="reference internal" href="concepts/netwo
 <h4>Payload Estimation<a class="headerlink" href="#payload-estimation" title="Permalink to this headline">¶</a></h4>
 <p>A new <code class="docutils literal notranslate"><span class="pre">PayloadEstimationCommand</span></code> is available to have Spot try to estimate the mass properties of a payload itself.  After moving about to perform its estimation, the mass properties will be reported in the command feedback.</p>
 </section>
-<section id="id62">
-<h4>SpotCAM<a class="headerlink" href="#id62" title="Permalink to this headline">¶</a></h4>
+<section id="id65">
+<h4>SpotCAM<a class="headerlink" href="#id65" title="Permalink to this headline">¶</a></h4>
 <p>Some SpotCAMs now include an IR camera.  There are additional cameras and screens available for those versions, and a new pixel format <code class="docutils literal notranslate"><span class="pre">PIXEL_FORMAT_GREYSCALE_U16</span></code> used to represent those IR images.  There are additional rpcs used to set colormaps and overlays of the IR images for live display.</p>
 <p>Logpoint <code class="docutils literal notranslate"><span class="pre">QUEUED</span></code> status is now broken up further with the <code class="docutils literal notranslate"><span class="pre">queue_status</span></code> field, which differentiates between when the image has or has not been captured.</p>
 </section>
@@ -1257,45 +1268,45 @@ For more information, see the <a class="reference internal" href="concepts/netwo
 <h4>Arm Support in Choreographer<a class="headerlink" href="#arm-support-in-choreographer" title="Permalink to this headline">¶</a></h4>
 <p>The new Choreographer executable now includes two new tracks, gripper and arm, and includes new dance moves which control the arm.</p>
 </section>
-<section id="id63">
-<h4>Docking<a class="headerlink" href="#id63" title="Permalink to this headline">¶</a></h4>
+<section id="id66">
+<h4>Docking<a class="headerlink" href="#id66" title="Permalink to this headline">¶</a></h4>
 <p>A new <code class="docutils literal notranslate"><span class="pre">PREP_POSE_UNDOCK</span></code> command option can be used to undock a docked robot. It will return the new <code class="docutils literal notranslate"><span class="pre">STATUS_ERROR_NOT_DOCKED</span></code> if the robot was not already docked. When successful the status will be <code class="docutils literal notranslate"><span class="pre">STATUS_AT_PREP_POSE</span></code>.</p>
 </section>
-<section id="id64">
-<h4>Graph Nav<a class="headerlink" href="#id64" title="Permalink to this headline">¶</a></h4>
+<section id="id67">
+<h4>Graph Nav<a class="headerlink" href="#id67" title="Permalink to this headline">¶</a></h4>
 <p>When localizing the robot using <code class="docutils literal notranslate"><span class="pre">FIDUICIAL_INIT_SPECIFIC</span></code>, if the target waypoint does not contain a good measurement of the desired fiducial, nearby waypoints may be used to infer the robot’s location. This behavior can be disabled with the new <code class="docutils literal notranslate"><span class="pre">restrict_fiducial_detections_to_target_waypoint</span></code> field to only use the waypoint’s own data.</p>
 <p>A new <code class="docutils literal notranslate"><span class="pre">destination_waypoint_tform_body_goal</span></code> is provided for the <code class="docutils literal notranslate"><span class="pre">NavigateTo</span></code> and <code class="docutils literal notranslate"><span class="pre">NavigateRoute</span></code> rpcs.  This allows the user to specify a goal position that is offset from the destination waypoint, rather than exactly on the waypoint.</p>
 <p>A new <code class="docutils literal notranslate"><span class="pre">command_id</span></code> field can be specified on the <code class="docutils literal notranslate"><span class="pre">NavigateTo</span></code> and <code class="docutils literal notranslate"><span class="pre">NavigateRoute</span></code> rpcs.  This is used to continue a previous command without needing to re-specify all the data.  An important difference between specifying the <code class="docutils literal notranslate"><span class="pre">command_id</span></code> versus sending a new command is that if the robot has reported itself stuck, continuing a command will result in a <code class="docutils literal notranslate"><span class="pre">STATUS_STUCK</span></code> error, rather than trying again. A new <code class="docutils literal notranslate"><span class="pre">STATUS_UNRECOGNIZED_COMMAND</span></code> will be returned if the <code class="docutils literal notranslate"><span class="pre">command_id</span></code> does not match the currently executing command.</p>
 <p>The map representation now tracks the “source” of waypoints and edges. It is possible to override the cost of an edge used when planning paths and to disable the alternate route finding for a particular edge.</p>
 </section>
-<section id="id65">
-<h4>Leases<a class="headerlink" href="#id65" title="Permalink to this headline">¶</a></h4>
+<section id="id68">
+<h4>Leases<a class="headerlink" href="#id68" title="Permalink to this headline">¶</a></h4>
 <p>Leases now include client names alongside the sequence number for help in debugging.  If you are writing a custom client, make sure to append your client name any time that you create a sub-lease.</p>
 <p>ListLeases can optionally request to have the full lease information of the latest lease, rather than only the root lease information that was previously reported.</p>
 </section>
 </section>
-<section id="id66">
-<h3>Bug Fixes and Improvements<a class="headerlink" href="#id66" title="Permalink to this headline">¶</a></h3>
+<section id="id69">
+<h3>Bug Fixes and Improvements<a class="headerlink" href="#id69" title="Permalink to this headline">¶</a></h3>
 <p>In the seconds following modifications to the robot directory to the robot directories existing clients may experience a one time request failure. This failure is transient and can be resolved by retrying the request. This has been an expected failure case and a new error (RetryableUnavailableError) has been put in to better reflect the failure.</p>
 <p><code class="docutils literal notranslate"><span class="pre">SE3Pose</span></code> and <code class="docutils literal notranslate"><span class="pre">Quat</span></code> math helpers have <code class="docutils literal notranslate"><span class="pre">transform_vec3</span></code> members to simplify rotating vectors.</p>
 <p>There is a new <code class="docutils literal notranslate"><span class="pre">get_self_ip()</span></code> helper in <code class="docutils literal notranslate"><span class="pre">common.py</span></code> for determining the ip address your client will use to talk to the robot.  This is useful for determining the correct registration information for a service, particularly on a machine with multiple network interfaces.  This is also available via the python command line program <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">bosdyn.client</span> <span class="pre">&lt;robot</span> <span class="pre">host&gt;</span> <span class="pre">self-ip</span></code>.</p>
 <p>When listing events from the python command line program, you can now filter by event level and by event type.</p>
 </section>
-<section id="id67">
-<h3>Dependencies<a class="headerlink" href="#id67" title="Permalink to this headline">¶</a></h3>
+<section id="id70">
+<h3>Dependencies<a class="headerlink" href="#id70" title="Permalink to this headline">¶</a></h3>
 <p>The python SDK now depends on the <code class="docutils literal notranslate"><span class="pre">Deprecated</span></code> package, which is used to mark functions and classes that are deprecated and provide warnings, so that users are made aware that features that they are using may be removed in the future.</p>
 </section>
-<section id="id68">
-<h3>Deprecations<a class="headerlink" href="#id68" title="Permalink to this headline">¶</a></h3>
+<section id="id71">
+<h3>Deprecations<a class="headerlink" href="#id71" title="Permalink to this headline">¶</a></h3>
 <p>The Deprecated package has been implemented across the SDK so that deprecated features will print out a warning when they are called. Documentation surrounding deprecated features has also been updated.</p>
 </section>
-<section id="id69">
-<h3>Breaking Changes<a class="headerlink" href="#id69" title="Permalink to this headline">¶</a></h3>
+<section id="id72">
+<h3>Breaking Changes<a class="headerlink" href="#id72" title="Permalink to this headline">¶</a></h3>
 <p>Spot Check no longer computes the <code class="docutils literal notranslate"><span class="pre">foot_height_results</span></code> or <code class="docutils literal notranslate"><span class="pre">leg_pair_results</span></code> fields.</p>
 <p>All rpcs in the Python SDK have a default timeout of 30s.  The global timeout can be changed by assigning a new value to <code class="docutils literal notranslate"><span class="pre">bosdyn.client.common.DEFAULT_RPC_TIMEOUT</span></code>, and individual rpc calls can still set their own timeout via a <code class="docutils literal notranslate"><span class="pre">timeout=sec</span></code> optional parameter at any call site.</p>
 </section>
-<section id="id70">
-<h3>Known Issues<a class="headerlink" href="#id70" title="Permalink to this headline">¶</a></h3>
+<section id="id73">
+<h3>Known Issues<a class="headerlink" href="#id73" title="Permalink to this headline">¶</a></h3>
 <p><strong>When a network transport failure occurs,</strong> depending on the particular operating system and version of gRPC installed, the error from the python SDK may not always be the most specific error possible, such as <code class="docutils literal notranslate"><span class="pre">UnknownDnsNameError</span></code>.  It may instead be raised as either a generic <code class="docutils literal notranslate"><span class="pre">RpcError</span></code>, or another generic failure type such as <code class="docutils literal notranslate"><span class="pre">UnableToConnectToRobotError</span></code>.</p>
 <p><strong>Spot CAM LED illumination levels</strong> are not currently recorded or played back in Autowalk missions.</p>
 <p><strong>When capturing both a PTZ and Panoramic image</strong> in the same action, there may occasionally be two PTZ images captured along with the Panoramic image, rather than just one.</p>
@@ -1307,8 +1318,8 @@ For more information, see the <a class="reference internal" href="concepts/netwo
 </ul>
 <p><strong>SE2VelocityLimits require care</strong>.  Correct usage of the <code class="docutils literal notranslate"><span class="pre">SE2VelocityLimit</span></code> message requires the user to fully fill out all the fields, setting unlimited values to a large number, say 1e6.</p>
 </section>
-<section id="id71">
-<h3>Sample Code<a class="headerlink" href="#id71" title="Permalink to this headline">¶</a></h3>
+<section id="id74">
+<h3>Sample Code<a class="headerlink" href="#id74" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="../python/examples/arm_and_mobility_command/README.html"><span class="doc">Arm and Mobility Command (new)</span></a>
 Demonstrates how to issue both mobility and arm commands to the robot at the same time.</p>
 <p><a class="reference internal" href="../python/examples/arm_door/README.html"><span class="doc">Arm Door (new)</span></a>
@@ -1364,10 +1375,10 @@ Returns a clearer error message if being used with an incorrect license.</p>
 The web cam example now has better support for Windows, and has a debug mode which will show a popup image window of the camera image.</p>
 </section>
 </section>
-<section id="id72">
-<h2>2.2.0<a class="headerlink" href="#id72" title="Permalink to this headline">¶</a></h2>
-<section id="id73">
-<h3>New Features<a class="headerlink" href="#id73" title="Permalink to this headline">¶</a></h3>
+<section id="id75">
+<h2>2.2.0<a class="headerlink" href="#id75" title="Permalink to this headline">¶</a></h2>
+<section id="id76">
+<h3>New Features<a class="headerlink" href="#id76" title="Permalink to this headline">¶</a></h3>
 <section id="docking-license-dependent">
 <h4>Docking (license dependent)<a class="headerlink" href="#docking-license-dependent" title="Permalink to this headline">¶</a></h4>
 <p>Automated docking at charging stations is out of beta and available for enterprise customers.  There have been a few updates to the protos regarding status reporting and handling “prep” poses.</p>
@@ -1387,8 +1398,8 @@ Helper functions for communicating with the on robot data acquisition service to
 <h4><code class="docutils literal notranslate"><span class="pre">SE2TrajectoryCommand</span></code> Feedback<a class="headerlink" href="#se2trajectorycommand-feedback" title="Permalink to this headline">¶</a></h4>
 <p>Added new status <code class="docutils literal notranslate"><span class="pre">STATUS_NEAR_GOAL</span></code> as well as a new <code class="docutils literal notranslate"><span class="pre">BodyMovementStatus</span></code> to help differentiate between different kinds of states the robot can be in at the end of its trajectory.</p>
 </section>
-<section id="id74">
-<h4>Missions<a class="headerlink" href="#id74" title="Permalink to this headline">¶</a></h4>
+<section id="id77">
+<h4>Missions<a class="headerlink" href="#id77" title="Permalink to this headline">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">BosdynGraphNavLocalize</span></code> node can now specify a full <code class="docutils literal notranslate"><span class="pre">SetLocalizationRequest</span></code>, rather than only localizing to the nearest fiducial.</p>
 <p>When comparing blackboard values, there is a new <code class="docutils literal notranslate"><span class="pre">HandleStaleness</span></code> option to specify what the node should do if the blackboard value is stale.</p>
 </section>
@@ -1401,8 +1412,8 @@ Helper functions for communicating with the on robot data acquisition service to
 </ul>
 </section>
 </section>
-<section id="id75">
-<h3>Bug fixes and improvements<a class="headerlink" href="#id75" title="Permalink to this headline">¶</a></h3>
+<section id="id78">
+<h3>Bug fixes and improvements<a class="headerlink" href="#id78" title="Permalink to this headline">¶</a></h3>
 <p><strong>Data Acquisition</strong>
 Data Acquisition Service on robots is now robust to port number changes. The previous work around to this problem was to always specify the same port when starting/restarting a service. Now, the port argument for external api services can use the default, which will choose an available ephemeral port.</p>
 <p><strong>Image Services</strong>
@@ -1418,16 +1429,16 @@ The “log” and “textmsg” commands now go through the DataBuffer service, 
 <p><strong>EstopService timeout</strong>
 The maximum timeout on the EstopService (aka the motor cut authority) has been raised from 65 seconds to just over 18 hours and 10 minutes.  The estop service also correctly reports an error if given an invalid timeout.</p>
 </section>
-<section id="id76">
-<h3>Deprecations<a class="headerlink" href="#id76" title="Permalink to this headline">¶</a></h3>
+<section id="id79">
+<h3>Deprecations<a class="headerlink" href="#id79" title="Permalink to this headline">¶</a></h3>
 <p>BDDF code has moved to the <code class="docutils literal notranslate"><span class="pre">bosdyn-core</span></code> package, so that it can be used separately from the client code.  The new import location is <code class="docutils literal notranslate"><span class="pre">bosdyn.bddf</span></code>.  The old import path via <code class="docutils literal notranslate"><span class="pre">bosdyn.client.bddf</span></code> is deprecated.</p>
 </section>
 <section id="dependency-changes">
 <h3>Dependency Changes<a class="headerlink" href="#dependency-changes" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">bosdyn-client</span></code> now depends on the <code class="docutils literal notranslate"><span class="pre">requests</span></code> library for making http requests to download data acquisition results and bddf logs.</p>
 </section>
-<section id="id77">
-<h3>Known issues<a class="headerlink" href="#id77" title="Permalink to this headline">¶</a></h3>
+<section id="id80">
+<h3>Known issues<a class="headerlink" href="#id80" title="Permalink to this headline">¶</a></h3>
 <p><strong>When a network transport failure occurs,</strong> depending on the particular operating system and version of gRPC installed, the error from the python SDK may not always be the most specific error possible, such as <code class="docutils literal notranslate"><span class="pre">UnknownDnsNameError</span></code>.  It may instead be raised as either a generic <code class="docutils literal notranslate"><span class="pre">RpcError</span></code>, or another generic failure type such as <code class="docutils literal notranslate"><span class="pre">UnableToConnectToRobotError</span></code>.</p>
 <p><strong>Spot CAM LED illumination levels</strong> are not currently recorded or played back in Autowalk missions.</p>
 <p><strong>When capturing both a PTZ and Panoramic image</strong> in the same action, there may occasionally be two PTZ images captured along with the Panoramic image, rather than just one.</p>
@@ -1439,8 +1450,8 @@ The maximum timeout on the EstopService (aka the motor cut authority) has been r
 </ul>
 <p><strong>SE2VelocityLimits require care</strong>.  Correct usage of the <code class="docutils literal notranslate"><span class="pre">SE2VelocityLimit</span></code> message requires the user to fully fill out all the fields, setting unlimited values to a large number, say 1e6.</p>
 </section>
-<section id="id78">
-<h3>Sample Code<a class="headerlink" href="#id78" title="Permalink to this headline">¶</a></h3>
+<section id="id81">
+<h3>Sample Code<a class="headerlink" href="#id81" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="../python/examples/tester_programs/README.html"><span class="doc">Image service test program (new)</span></a>
 A new tester program for image services is available to help with the development and debugging of new image service implementations.</p>
 <p><a class="reference internal" href="../python/examples/docking/README.html"><span class="doc">Docking (new)</span></a>
@@ -1455,10 +1466,10 @@ Added options to specify a time range, and automatically converts times to robot
 Uses the new data acquisition helpers.  The data acquisition tester program has been moved to a common <a class="reference internal" href="../python/examples/tester_programs/README.html"><span class="doc">tester_programs</span></a> directory.</p>
 </section>
 </section>
-<section id="id79">
-<h2>2.1.0<a class="headerlink" href="#id79" title="Permalink to this headline">¶</a></h2>
-<section id="id80">
-<h3>New Features<a class="headerlink" href="#id80" title="Permalink to this headline">¶</a></h3>
+<section id="id82">
+<h2>2.1.0<a class="headerlink" href="#id82" title="Permalink to this headline">¶</a></h2>
+<section id="id83">
+<h3>New Features<a class="headerlink" href="#id83" title="Permalink to this headline">¶</a></h3>
 <section id="spot-i-o-data-acquisition">
 <h4>Spot I/O: <a class="reference internal" href="concepts/data_acquisition_overview.html"><span class="doc">Data Acquisition</span></a><a class="headerlink" href="#spot-i-o-data-acquisition" title="Permalink to this headline">¶</a></h4>
 <p>This release features a new system for acquiring, storing, and retrieving sensor data. It comprises several new services and their associated clients.</p>
@@ -1503,19 +1514,19 @@ Uses the new data acquisition helpers.  The data acquisition tester program has 
 <h4>Point Clouds<a class="headerlink" href="#point-clouds" title="Permalink to this headline">¶</a></h4>
 <p>Point cloud service definitions are provided for retrieving point cloud data from LiDAR sensors, such as from the EAP payload.</p>
 </section>
-<section id="id81">
-<h4>Spot CAM<a class="headerlink" href="#id81" title="Permalink to this headline">¶</a></h4>
+<section id="id84">
+<h4>Spot CAM<a class="headerlink" href="#id84" title="Permalink to this headline">¶</a></h4>
 <p>Congestion control is now available for WebRTC streaming.
 External microphones supported, with control for selecting microphones and setting gain levels individually. Note: External microphone support only available on Spot CAM + IR.</p>
 </section>
-<section id="id82">
-<h4>Graph Nav<a class="headerlink" href="#id82" title="Permalink to this headline">¶</a></h4>
+<section id="id85">
+<h4>Graph Nav<a class="headerlink" href="#id85" title="Permalink to this headline">¶</a></h4>
 <p>The localization data now includes a transform to a “seed” frame, providing a consistent global frame for use across multiple runs on the same map.</p>
 <p>Localization data can be requested relative to a particular waypoint, rather than only the waypoint that the robot is currently localized to.</p>
 <p>Additional control for determining whether the robot will navigate through areas with poor quality features.</p>
 </section>
-<section id="id83">
-<h4>Missions<a class="headerlink" href="#id83" title="Permalink to this headline">¶</a></h4>
+<section id="id86">
+<h4>Missions<a class="headerlink" href="#id86" title="Permalink to this headline">¶</a></h4>
 <p>Additional mission nodes which support new functionality:</p>
 <ul class="simple">
 <li><p>Point the Spot CAM PTZ to a specified orientation.</p></li>
@@ -1533,8 +1544,8 @@ External microphones supported, with control for selecting microphones and setti
 <p>The new docking service provides a way to autonomously dock at a charging station. It is currently in beta, and requires a special license to use.</p>
 </section>
 </section>
-<section id="id84">
-<h3>Bug Fixes and Improvements<a class="headerlink" href="#id84" title="Permalink to this headline">¶</a></h3>
+<section id="id87">
+<h3>Bug Fixes and Improvements<a class="headerlink" href="#id87" title="Permalink to this headline">¶</a></h3>
 <p><strong>Graph Nav</strong></p>
 <ul class="simple">
 <li><p>Added fiducial-related status errors in <code class="docutils literal notranslate"><span class="pre">SetLocalizationResponse</span></code>, such as a fiducial being too far away or having poor data.</p></li>
@@ -1584,8 +1595,8 @@ External microphones supported, with control for selecting microphones and setti
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">GetFeatureEnabled()</span></code> to the <code class="docutils literal notranslate"><span class="pre">LicenseService</span></code> to query for particular license features.</p></li>
 </ul>
 </section>
-<section id="id85">
-<h3>Breaking changes<a class="headerlink" href="#id85" title="Permalink to this headline">¶</a></h3>
+<section id="id88">
+<h3>Breaking changes<a class="headerlink" href="#id88" title="Permalink to this headline">¶</a></h3>
 <p><strong>Robot Control</strong></p>
 <p>A behavior fault (<code class="docutils literal notranslate"><span class="pre">CAUSE_LEASE_TIMEOUT</span></code>) is raised when the usage of a lease times out, and must be cleared before the robot can be commanded again.  This should have minimal effect on current clients, as this happens near the same time that the robot powers off from comms loss (which clears behavior faults).</p>
 <p><strong>Graph Nav</strong></p>
@@ -1593,8 +1604,8 @@ External microphones supported, with control for selecting microphones and setti
 <p><strong>Missions</strong></p>
 <p>Autowalk mission callback nodes only wait 10 seconds for a response.  When a mission calls <code class="docutils literal notranslate"><span class="pre">Tick()</span></code> on a mission callback service, it expects a quick response. In 2.0 it would wait up to 60 seconds for a response before retrying. This has been reduced to 10 seconds in version 2.1. Callbacks that do any significant work should be written to return with <code class="docutils literal notranslate"><span class="pre">STATUS_RUNNING</span></code> quickly, and then continue to do their work on another thread rather than trying to fit in all of their work before returning a response. The service can then base their response to subsequent <code class="docutils literal notranslate"><span class="pre">Tick()</span></code> requests on the status of that thread.</p>
 </section>
-<section id="id86">
-<h3>Known Issues<a class="headerlink" href="#id86" title="Permalink to this headline">¶</a></h3>
+<section id="id89">
+<h3>Known Issues<a class="headerlink" href="#id89" title="Permalink to this headline">¶</a></h3>
 <p><strong>When a network transport failure occurs,</strong> depending on the particular operating system and version of gRPC installed, the error from the python SDK may not always be the most specific error possible, such as <code class="docutils literal notranslate"><span class="pre">UnknownDnsNameError</span></code>.  It may instead be raised as either a generic <code class="docutils literal notranslate"><span class="pre">RpcError</span></code>, or another generic failure type such as <code class="docutils literal notranslate"><span class="pre">UnableToConnectToRobotError</span></code>.</p>
 <p><strong>Spot CAM LED illumination levels</strong> are not currently recorded or played back in Autowalk missions.</p>
 <p><strong>When capturing both a PTZ and Panoramic image</strong> in the same action, there may occasionally be two PTZ images captured along with the Panoramic image, rather than just one.</p>
@@ -1608,8 +1619,8 @@ External microphones supported, with control for selecting microphones and setti
 </ul>
 <p><strong>SE2VelocityLimits require care</strong>.  Correct usage of the <code class="docutils literal notranslate"><span class="pre">SE2VelocityLimit</span></code> message requires the user to fully fill out all the fields, setting unlimited values to a large number, say 1e6.</p>
 </section>
-<section id="id87">
-<h3>Deprecations<a class="headerlink" href="#id87" title="Permalink to this headline">¶</a></h3>
+<section id="id90">
+<h3>Deprecations<a class="headerlink" href="#id90" title="Permalink to this headline">¶</a></h3>
 <p>The following services, fields, and functions will continue to work, but will be removed in a future version.</p>
 <section id="services">
 <h4>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h4>
@@ -1631,8 +1642,8 @@ External microphones supported, with control for selecting microphones and setti
 <p>The non-synchro versions are deprecated, and will be removed at the time that the mobility commands are removed from <code class="docutils literal notranslate"><span class="pre">RobotCommand</span></code>.</p>
 </section>
 </section>
-<section id="id88">
-<h3>Sample Code<a class="headerlink" href="#id88" title="Permalink to this headline">¶</a></h3>
+<section id="id91">
+<h3>Sample Code<a class="headerlink" href="#id91" title="Permalink to this headline">¶</a></h3>
 <section id="new">
 <h4>New<a class="headerlink" href="#new" title="Permalink to this headline">¶</a></h4>
 <p><a class="reference internal" href="../python/examples/data_acquisition_service/README.html"><span class="doc">Data acquisition (new)</span></a></p>
@@ -1755,13 +1766,13 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 </section>
 </section>
 </section>
-<section id="id89">
-<h2>2.0.2<a class="headerlink" href="#id89" title="Permalink to this headline">¶</a></h2>
-<section id="id90">
-<h3>New Features<a class="headerlink" href="#id90" title="Permalink to this headline">¶</a></h3>
+<section id="id92">
+<h2>2.0.2<a class="headerlink" href="#id92" title="Permalink to this headline">¶</a></h2>
+<section id="id93">
+<h3>New Features<a class="headerlink" href="#id93" title="Permalink to this headline">¶</a></h3>
 </section>
-<section id="id91">
-<h3>Bug Fixes and Improvements<a class="headerlink" href="#id91" title="Permalink to this headline">¶</a></h3>
+<section id="id94">
+<h3>Bug Fixes and Improvements<a class="headerlink" href="#id94" title="Permalink to this headline">¶</a></h3>
 <section id="power-command-exceptions">
 <h4>Power Command Exceptions<a class="headerlink" href="#power-command-exceptions" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
@@ -1769,8 +1780,8 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 </ul>
 </section>
 </section>
-<section id="id92">
-<h3>Known Issues<a class="headerlink" href="#id92" title="Permalink to this headline">¶</a></h3>
+<section id="id95">
+<h3>Known Issues<a class="headerlink" href="#id95" title="Permalink to this headline">¶</a></h3>
 <p>Release 2.0.2 contains the same issues as release 2.0.1, listed below.</p>
 <p><strong>If you delete an object from the world object service</strong>, there is a chance that a ListWorldObjects call immediately afterwards may still include that object.</p>
 <ul class="simple">
@@ -1790,10 +1801,10 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 </ul>
 </section>
 </section>
-<section id="id93">
-<h2>2.0.1<a class="headerlink" href="#id93" title="Permalink to this headline">¶</a></h2>
-<section id="id94">
-<h3>New Features<a class="headerlink" href="#id94" title="Permalink to this headline">¶</a></h3>
+<section id="id96">
+<h2>2.0.1<a class="headerlink" href="#id96" title="Permalink to this headline">¶</a></h2>
+<section id="id97">
+<h3>New Features<a class="headerlink" href="#id97" title="Permalink to this headline">¶</a></h3>
 <section id="license-changes">
 <h4>License Changes<a class="headerlink" href="#license-changes" title="Permalink to this headline">¶</a></h4>
 <p>App tokens are no longer required to authorize applications. Instead, each robot itself will be licensed itself. From a programming perspective, this means that it is no longer necessary to load app tokens into the sdk object, or to fill them out in GetAuthTokenRequest.</p>
@@ -1801,8 +1812,8 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 <p>There is a new LicenseClient which can be used to query the license information for a robot. License information can also be queried from the bosdyn.client command line utility.</p>
 </section>
 </section>
-<section id="id95">
-<h3>Bug Fixes and Improvements<a class="headerlink" href="#id95" title="Permalink to this headline">¶</a></h3>
+<section id="id98">
+<h3>Bug Fixes and Improvements<a class="headerlink" href="#id98" title="Permalink to this headline">¶</a></h3>
 <section id="behavior-faults">
 <h4>Behavior Faults<a class="headerlink" href="#behavior-faults" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
@@ -1817,8 +1828,8 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 <li><p>When recording a map, grated floor mode and ground friction hints that are set in the recording environment are now correctly recorded into the map and used during playback.</p></li>
 </ul>
 </section>
-<section id="id96">
-<h4>Spot CAM<a class="headerlink" href="#id96" title="Permalink to this headline">¶</a></h4>
+<section id="id99">
+<h4>Spot CAM<a class="headerlink" href="#id99" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
 <li><p>Added an option to the Spot CAM MediaLogService to retrieve the raw (unstitched) images for a log point.</p></li>
 </ul>
@@ -1837,8 +1848,8 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 </ul>
 </section>
 </section>
-<section id="id97">
-<h3>Known Issues<a class="headerlink" href="#id97" title="Permalink to this headline">¶</a></h3>
+<section id="id100">
+<h3>Known Issues<a class="headerlink" href="#id100" title="Permalink to this headline">¶</a></h3>
 <p>Release 2.0.1 contains the same issues as release 2.0.0, listed below.</p>
 <p><strong>If you delete an object from the world object service</strong>, there is a chance that a ListWorldObjects call immediately afterwards may still include that object.</p>
 <ul class="simple">
@@ -1857,8 +1868,8 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 <li><p>Workaround: If you need to call these in an async manner, call them on a separate thread.</p></li>
 </ul>
 </section>
-<section id="id98">
-<h3>Sample Code<a class="headerlink" href="#id98" title="Permalink to this headline">¶</a></h3>
+<section id="id101">
+<h3>Sample Code<a class="headerlink" href="#id101" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="../python/examples/ricoh_theta/README.html"><span class="doc">Ricoh Theta (new)</span></a></p>
 <ul class="simple">
 <li><p>Example that utilizes the 360-degree Ricoh Theta camera during an Autowalk mission.</p></li>
@@ -1891,10 +1902,10 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 </ul>
 </section>
 </section>
-<section id="id99">
-<h2>2.0.0<a class="headerlink" href="#id99" title="Permalink to this headline">¶</a></h2>
-<section id="id100">
-<h3>New Features<a class="headerlink" href="#id100" title="Permalink to this headline">¶</a></h3>
+<section id="id102">
+<h2>2.0.0<a class="headerlink" href="#id102" title="Permalink to this headline">¶</a></h2>
+<section id="id103">
+<h3>New Features<a class="headerlink" href="#id103" title="Permalink to this headline">¶</a></h3>
 <section id="autonomous-navigation-apis">
 <h4>Autonomous Navigation APIs<a class="headerlink" href="#autonomous-navigation-apis" title="Permalink to this headline">¶</a></h4>
 <p>The APIs used by Autowalk are now accessible to developers.</p>
@@ -1937,8 +1948,8 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 </ul>
 </section>
 </section>
-<section id="id101">
-<h3>Bug Fixes and Improvements<a class="headerlink" href="#id101" title="Permalink to this headline">¶</a></h3>
+<section id="id104">
+<h3>Bug Fixes and Improvements<a class="headerlink" href="#id104" title="Permalink to this headline">¶</a></h3>
 <section id="expanded-and-improved-documentation">
 <h4>Expanded and improved documentation<a class="headerlink" href="#expanded-and-improved-documentation" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
@@ -1984,8 +1995,8 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 </ul>
 </section>
 </section>
-<section id="id102">
-<h3>Breaking changes<a class="headerlink" href="#id102" title="Permalink to this headline">¶</a></h3>
+<section id="id105">
+<h3>Breaking changes<a class="headerlink" href="#id105" title="Permalink to this headline">¶</a></h3>
 <p>Version 2.0 contains several breaking changes.  While some clients and programs written for the version 1.* SDK may still work, expect some updates to be necessary for most programs.</p>
 <section id="frame-handling">
 <h4>Frame handling<a class="headerlink" href="#frame-handling" title="Permalink to this headline">¶</a></h4>
@@ -2065,8 +2076,8 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 </li>
 </ul>
 </section>
-<section id="id103">
-<h4>Removed<a class="headerlink" href="#id103" title="Permalink to this headline">¶</a></h4>
+<section id="id106">
+<h4>Removed<a class="headerlink" href="#id106" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
 <li><p>All Frame messages have been replaced by frame strings where applicable.</p></li>
 <li><p>AddLogAnnotationResponse does not have a status field anymore, errors are encoded in the message header information</p></li>
@@ -2082,8 +2093,8 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 </ul>
 </section>
 </section>
-<section id="id104">
-<h3>Known issues<a class="headerlink" href="#id104" title="Permalink to this headline">¶</a></h3>
+<section id="id107">
+<h3>Known issues<a class="headerlink" href="#id107" title="Permalink to this headline">¶</a></h3>
 <p><strong>If you delete an object from the world object service</strong>, there is a chance that a ListWorldObjects call immediately afterwards may still include that object.</p>
 <ul class="simple">
 <li><p>Workaround: wait a short time before expecting the object to be gone.</p></li>
@@ -2101,8 +2112,8 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 <li><p>Workaround: If you need to call these in an async manner, call them on a separate thread.</p></li>
 </ul>
 </section>
-<section id="id105">
-<h3>Sample Code<a class="headerlink" href="#id105" title="Permalink to this headline">¶</a></h3>
+<section id="id108">
+<h3>Sample Code<a class="headerlink" href="#id108" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="../python/examples/directory/README.html"><span class="doc">directory</span></a></p>
 <ul class="simple">
 <li><p>Register, update, and unregister a service.</p></li>
@@ -2184,38 +2195,38 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 </ul>
 </section>
 </section>
-<section id="id106">
-<h2>1.1.2<a class="headerlink" href="#id106" title="Permalink to this headline">¶</a></h2>
-<section id="id107">
-<h3>New features<a class="headerlink" href="#id107" title="Permalink to this headline">¶</a></h3>
+<section id="id109">
+<h2>1.1.2<a class="headerlink" href="#id109" title="Permalink to this headline">¶</a></h2>
+<section id="id110">
+<h3>New features<a class="headerlink" href="#id110" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Missions API Beta and Callbacks</strong> When an Autowalk Mission is created with a “Callback” event, a client can detect that change using a beta version of the Mission API, then tell the robot to continue or abort the Mission. Example uses include a sensor payload that detects Callback events and captures sensor information before advancing the mission, and a desktop UI which waits for the user to push a button before advancing the mission.</p></li>
 <li><p><strong>External Forces Beta</strong>. Mobility commands can specify how to handle external forces. Examples of external forces could include an object that Spot is towing, or an object Spot is pushing. The default behavior is to do nothing, but clients can specify whether Spot should estimate external forces and compensate for it, or explicitly specify what the external forces are.</p></li>
 </ul>
 </section>
-<section id="id108">
-<h3>Bug fixes and improvements<a class="headerlink" href="#id108" title="Permalink to this headline">¶</a></h3>
+<section id="id111">
+<h3>Bug fixes and improvements<a class="headerlink" href="#id111" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Depth image</strong> extrinsics are fixed. In earlier 1.1.x releases, the extrinsics were incorrectly the same as the fisheye cameras.</p></li>
 <li><p><strong>App Token expiration logging.</strong>. The Python SDK object logs if the app token will expire in the next 30 days. New tokens can be requested at support&#64;bostondynamics.com.</p></li>
 </ul>
 </section>
-<section id="id109">
-<h3>Sample Code<a class="headerlink" href="#id109" title="Permalink to this headline">¶</a></h3>
+<section id="id112">
+<h3>Sample Code<a class="headerlink" href="#id112" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><strong>mission_question_answerer</strong> demonstrates how to build a client which responds to Mission Callbacks.</p></li>
 </ul>
 </section>
 </section>
-<section id="id110">
-<h2>1.1.1<a class="headerlink" href="#id110" title="Permalink to this headline">¶</a></h2>
+<section id="id113">
+<h2>1.1.1<a class="headerlink" href="#id113" title="Permalink to this headline">¶</a></h2>
 <p>1.1.1 has no SDK-related changes.</p>
 </section>
-<section id="id111">
-<h2>1.1.0<a class="headerlink" href="#id111" title="Permalink to this headline">¶</a></h2>
+<section id="id114">
+<h2>1.1.0<a class="headerlink" href="#id114" title="Permalink to this headline">¶</a></h2>
 <p>The 1.1.0 SDK software is published under a new software license which can be found in the LICENSE file at the top of the SDK directory.</p>
-<section id="id112">
-<h3>New features<a class="headerlink" href="#id112" title="Permalink to this headline">¶</a></h3>
+<section id="id115">
+<h3>New features<a class="headerlink" href="#id115" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><strong>ImageService</strong> exposes depth maps from on-board stereo cameras as additional image sources. Image Sources specify an ImageType to differentiate depth maps from grayscale images.</p></li>
 <li><p><strong>PayloadService</strong> is a new service which lists all known payloads on the robot.</p></li>
@@ -2225,8 +2236,8 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 <li><p><strong>Log Annotations</strong> a new type of log: Blob for large binary data.</p></li>
 </ul>
 </section>
-<section id="id113">
-<h3>Sample code<a class="headerlink" href="#id113" title="Permalink to this headline">¶</a></h3>
+<section id="id116">
+<h3>Sample code<a class="headerlink" href="#id116" title="Permalink to this headline">¶</a></h3>
 <p>The sample code directory structure has changed to directory-per-example under python/examples. Each example includes a requirements.txt file for specifying dependencies.</p>
 <ul class="simple">
 <li><p><strong>estop</strong> is a desktop GUI which creates an E-Stop endpoint for a robot. This example demonstrates how to use the E-Stop endpoint system, and is a useful utility on its own.</p></li>
@@ -2244,8 +2255,8 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 <li><p><strong>xbox_controller</strong> demonstrates how to specify more advanced options for mobility commands.</p></li>
 </ul>
 </section>
-<section id="id114">
-<h3>Bug fixes and Improvements<a class="headerlink" href="#id114" title="Permalink to this headline">¶</a></h3>
+<section id="id117">
+<h3>Bug fixes and Improvements<a class="headerlink" href="#id117" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Too many invalid login attempts will lock a user out from being able to authenticate for a temporary period to prevent brute-force attacks. GetAuthTokenResponse indicates this state with a STATUS_TEMPORARILY_LOCKED_OUT.</p></li>
 <li><p>Elliptic Curve (ECDSA) cryptography used for user tokens - reducing the size of RPC requests by several hundred bytes.</p></li>
@@ -2270,8 +2281,8 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 </ul>
 </section>
 </section>
-<section id="id115">
-<h2>1.0.1<a class="headerlink" href="#id115" title="Permalink to this headline">¶</a></h2>
+<section id="id118">
+<h2>1.0.1<a class="headerlink" href="#id118" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Improved documentation on SDK installation.</p></li>
 <li><p>Clearer Python dependency requirements.</p></li>
@@ -2280,8 +2291,8 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 <li><p>Fixed timing bugs in power service.</p></li>
 </ul>
 </section>
-<section id="id116">
-<h2>1.0.0<a class="headerlink" href="#id116" title="Permalink to this headline">¶</a></h2>
+<section id="id119">
+<h2>1.0.0<a class="headerlink" href="#id119" title="Permalink to this headline">¶</a></h2>
 <p>Initial release of the SDK.</p>
 </section>
 </section>

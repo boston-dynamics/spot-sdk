@@ -8020,6 +8020,8 @@ Should be indexed by a waypoint's "snapshot_id" field.
 | is_point_cloud_processed | [bool](#bool) | If true, the point cloud of this snapshot has been processed. |
 | version_id | [string](#string) | If this snapshot is a modified version of the raw snapshot with the given ID (for example, it has been processed), a new unique ID will we assigned to this field. If the field is empty, this is the raw version of the snapshot. |
 | has_remote_point_cloud_sensor | [bool](#bool) | If true, the point cloud contains data from a remote point cloud service, such as LIDAR. |
+| body_tform_remote_point_cloud_sensor | [bosdyn.api.SE3Pose](#bosdyn.api.SE3Pose) | Transform from the robot body to the remote point cloud sensor's reference frame. |
+| payloads | [bosdyn.api.Payload](#bosdyn.api.Payload) | Defines the payloads attached to the robot at this waypoint. |
 
 
 

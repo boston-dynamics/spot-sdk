@@ -12,6 +12,15 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 3.1.2
+
+### Bug Fixes and Improvements
+Added payloads information in GraphNav's `WaypointSnapshot` to improve navigation.
+
+### Known Issues
+
+Same as 3.1.0
+
 ## 3.1.1
 
 ### Known Issues
