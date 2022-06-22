@@ -12,10 +12,18 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 3.1.2.1
+
+### Dependencies
+
+The `bosdyn-api` and `bosdyn-choreography-protos` packages have been rebuilt to support the latest `protobuf` package.  They now require a minimum `protobuf` version of 3.6.1.
+
 ## 3.1.2
 
 ### Bug Fixes and Improvements
-Added payloads information in GraphNav's `WaypointSnapshot` to improve navigation.
+Added payloads and lidar transform in GraphNav's `WaypointSnapshot` to help with:
+- Not getting lost when a big payload occluded the lidar.
+- Determine which payloads were used to record a map.
 
 ### Known Issues
 

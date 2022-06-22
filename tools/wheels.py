@@ -410,9 +410,7 @@ def build_proto_wheel(wheel_name="bosdyn-api", proto_dir=PROTO_DIR, latest_requi
     """Build the API protobuf wheel."""
 
     print('building_proto_wheel')
-    req_file = "requirements-setup-no-c11.txt"
-    if latest_requirements:
-        req_file = "requirements-setup-linux-pinned.txt"
+    req_file = "requirements-setup-linux-pinned.txt"
 
     pkg_name = wheel_name
 

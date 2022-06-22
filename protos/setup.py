@@ -115,7 +115,7 @@ setuptools.setup(
     author="Boston Dynamics",
     author_email="support@bostondynamics.com",
     description="Boston Dynamics API definition of protobuf messages",
-    install_requires=["protobuf>=3.3.0"],
+    install_requires=["protobuf>=3.6.1"],
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://dev.bostondynamics.com/",
