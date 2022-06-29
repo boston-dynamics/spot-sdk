@@ -20,11 +20,10 @@ from google.protobuf.duration_pb2 import Duration
 from bosdyn.api import estop_service_pb2_grpc
 from bosdyn.api import estop_pb2
 
-from .common import BaseClient
-from .common import common_header_errors, handle_common_header_errors, handle_unset_status_error
-from .common import error_factory
-from .exceptions import Error, ResponseError, RpcError, TimedOutError
-
+from bosdyn.client.common import BaseClient
+from bosdyn.client.common import common_header_errors, handle_common_header_errors, handle_unset_status_error
+from bosdyn.client.common import error_factory
+from bosdyn.client.exceptions import Error, ResponseError, RpcError, TimedOutError
 
 class EstopResponseError(ResponseError):
     """General class of errors for Estop service."""
