@@ -5,6 +5,7 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import platform
+
 from xbox_joystick import XboxJoystick
 
 if platform.system() == "Windows":

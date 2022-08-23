@@ -5,8 +5,9 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """Tests for bosdyn.util"""
-from bosdyn import util
 from google.protobuf.timestamp_pb2 import Timestamp
+
+from bosdyn import util
 
 
 def test_time_converter():

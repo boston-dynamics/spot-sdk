@@ -19,16 +19,18 @@ python3 -m pip install -r requirements.txt
 ```
 
 ## Running the Example
+
 1. Record a map using AutoWalk or the Command Line interface. (If using Autowalk, transfer the map from Documents/bosdyn/autowalk/your_map.walk to your local machine using a USB cable). The map should be a directory of the form:
 
-````
+```
 - /your_map.walk
     + graph
     - waypoint_snapshots
     - edge_snapshots
-````
+```
 
 2. Run the map viewer
+
 ```
 python3 -m view_map <path_to_your_map_directory>
 ```
@@ -52,7 +54,7 @@ Maps do not have a global coordinate system (like GPS coordinates, for example).
 
 ## Understanding the Map Viewer
 
-The map viewer displays waypoints as axes (red, green and blue arrows) where the "z" axis is blue, the "x" is red, and the "y" is green.  They are connected by white lines representing edges.
+The map viewer displays waypoints as axes (red, green and blue arrows) where the "z" axis is blue, the "x" is red, and the "y" is green. They are connected by white lines representing edges.
 
 Around the waypoints, the map viewer displays feature clouds. Feature clouds are collections of points that correspond to detected edge features in the robot's cameras. The feature clouds are colored by height, where blue is higher and red is lower.
 

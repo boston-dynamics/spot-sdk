@@ -12,17 +12,18 @@ Client code and interfaces missions.
 
 ## Contents
 
-* [Client](client)
-* [Constants](constants)
-* [Exceptions](exceptions)
-* [Remote Client](remote_client)
-* [Server Util](server_util)
-* [Util](util)
+- [Client](client)
+- [Constants](constants)
+- [Exceptions](exceptions)
+- [Remote Client](remote_client)
+- [Server Util](server_util)
+- [Util](util)
 
 ## RPC Clients
+
 The table below specifies the protobuf service definitions supported by each client.
 
-| Client | RPCs Supported  |
-|:------:|:-------------:|
-| [**MissionClient**](./client.py) | [mission_service.proto](../../../../../protos/bosdyn/api/mission/mission_service.proto) |
-| [**RemoteClient**](./remote_client.py) | [remote_service.proto](../../../../../protos/bosdyn/api/mission/remote_service.proto) |
+|                 Client                 |                                     RPCs Supported                                      |
+| :------------------------------------: | :-------------------------------------------------------------------------------------: |
+|    [**MissionClient**](./client.py)    | [mission_service.proto](../../../../../protos/bosdyn/api/mission/mission_service.proto) |
+| [**RemoteClient**](./remote_client.py) |  [remote_service.proto](../../../../../protos/bosdyn/api/mission/remote_service.proto)  |

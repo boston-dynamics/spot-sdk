@@ -5,30 +5,30 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import argparse
-import google.protobuf.timestamp_pb2
 import math
-import numpy as np
-import numpy.linalg
 import os
 import sys
 import threading
 import time
+
+import google.protobuf.timestamp_pb2
+import numpy as np
+import numpy.linalg
 import vtk
+from visualization_utils import (add_numpy_to_vtk_object, get_default_color_map,
+                                 get_vtk_cube_source, get_vtk_polydata_from_numpy,
+                                 make_spot_vtk_hexahedron, se3pose_proto_to_vtk_tf)
 from vtk.util import numpy_support
-from bosdyn.api import geometry_pb2
-from bosdyn.api import local_grid_pb2
-from bosdyn.api import world_object_pb2
+
 import bosdyn.client
+import bosdyn.client.util
+from bosdyn.api import geometry_pb2, local_grid_pb2, world_object_pb2
 from bosdyn.client.frame_helpers import *
 from bosdyn.client.image import ImageClient, depth_image_to_pointcloud
 from bosdyn.client.local_grid import LocalGridClient
 from bosdyn.client.robot_state import RobotStateClient
 from bosdyn.client.world_object import WorldObjectClient
-import bosdyn.client.util
 from bosdyn.util import timestamp_to_nsec
-from visualization_utils import add_numpy_to_vtk_object, get_vtk_polydata_from_numpy, \
-                                get_default_color_map, se3pose_proto_to_vtk_tf, make_spot_vtk_hexahedron, \
-                                get_vtk_cube_source
 
 
 class WorldObjectTimedCallbackEvent(object):
@@ -536,7 +536,7 @@ def compute_ground_height_in_vision_frame(robot_state_client):
     robot_state = robot_state_client.get_robot_state()
     vision_tform_ground_plane = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot,
                                               VISION_FRAME_NAME, GROUND_PLANE_FRAME_NAME)
-    return vision_tform_ground_plane.position.x
+    return vision_tform_ground_plane.position.z
 
 
 class LocalGridTimedCallbackEvent(object):

@@ -38,7 +38,7 @@ To dock the robot it should be powered on and standing near the dock so that the
 2. Poll the robot with `DockingCommandFeedback` with the provided docking command ID to check on the status on the execution. It should report `STATUS_IN_PROGRESS` while executing then `STATUS_DOCKED` when finished.
 3. Docking the robot automatically powers it off at the end.
 
-You do not need to issue multiple `DockingComand` rpcs unless you explicitly want to issue a new docking command.
+You do not need to issue multiple `DockingComand` RPCs unless you explicitly want to issue a new docking command.
 
 ### Undocking the Robot
 To undock the robot it should be sitting on the dock with the area in front of the dock unobstructed.

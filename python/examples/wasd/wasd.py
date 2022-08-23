@@ -7,37 +7,38 @@
 """WASD driving of robot."""
 
 from __future__ import print_function
-from collections import OrderedDict
+
 import curses
+import io
 import logging
+import math
+import os
 import signal
 import sys
 import threading
 import time
-import math
-import io
-import os
+from collections import OrderedDict
 
 from PIL import Image, ImageEnhance
 
-from bosdyn.api import geometry_pb2
+import bosdyn.api.basic_command_pb2 as basic_command_pb2
 import bosdyn.api.power_pb2 as PowerServiceProto
 # import bosdyn.api.robot_command_pb2 as robot_command_pb2
 import bosdyn.api.robot_state_pb2 as robot_state_proto
-import bosdyn.api.basic_command_pb2 as basic_command_pb2
 import bosdyn.api.spot.robot_command_pb2 as spot_command_pb2
-from bosdyn.client import create_standard_sdk, ResponseError, RpcError
+import bosdyn.client.util
+from bosdyn.api import geometry_pb2
+from bosdyn.client import ResponseError, RpcError, create_standard_sdk
 from bosdyn.client.async_tasks import AsyncGRPCTask, AsyncPeriodicQuery, AsyncTasks
 from bosdyn.client.estop import EstopClient, EstopEndpoint, EstopKeepAlive
-from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
-from bosdyn.client.lease import Error as LeaseBaseError
-from bosdyn.client.power import PowerClient
-from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder
+from bosdyn.client.frame_helpers import ODOM_FRAME_NAME
 from bosdyn.client.image import ImageClient
+from bosdyn.client.lease import Error as LeaseBaseError
+from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
+from bosdyn.client.power import PowerClient
+from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient
 from bosdyn.client.robot_state import RobotStateClient
 from bosdyn.client.time_sync import TimeSyncError
-import bosdyn.client.util
-from bosdyn.client.frame_helpers import ODOM_FRAME_NAME
 from bosdyn.util import duration_str, format_metric, secs_to_hms
 
 LOGGER = logging.getLogger()
@@ -203,7 +204,7 @@ class WasdInterface(object):
         self._async_tasks = AsyncTasks([self._robot_state_task, self._image_task])
         self._lock = threading.Lock()
         self._command_dictionary = {
-            27: self._stop, # ESC key
+            27: self._stop,  # ESC key
             ord('\t'): self._quit_program,
             ord('T'): self._toggle_time_sync,
             ord(' '): self._toggle_estop,
@@ -230,14 +231,13 @@ class WasdInterface(object):
 
         # Stuff that is set in start()
         self._robot_id = None
-        self._lease = None
         self._lease_keepalive = None
 
     def start(self):
         """Begin communication with the robot."""
-        self._lease = self._lease_client.acquire()
         # Construct our lease keep-alive object, which begins RetainLease calls in a thread.
-        self._lease_keepalive = LeaseKeepAlive(self._lease_client)
+        self._lease_keepalive = LeaseKeepAlive(self._lease_client, must_acquire=True,
+                                               return_at_exit=True)
 
         self._robot_id = self._robot.get_id()
         if self._estop_endpoint is not None:
@@ -250,9 +250,8 @@ class WasdInterface(object):
         if self._estop_keepalive:
             # This stops the check-in thread but does not stop the robot.
             self._estop_keepalive.shutdown()
-        if self._lease:
-            _grpc_or_log("returning lease", lambda: self._lease_client.return_lease(self._lease))
-            self._lease = None
+        if self._lease_keepalive:
+            self._lease_keepalive.shutdown()
 
     def flush_and_estop_buffer(self, stdscr):
         """Manually flush the curses input buffer but trigger any estop requests (space)"""
@@ -399,17 +398,16 @@ class WasdInterface(object):
         """toggle lease acquisition. Initial state is acquired"""
         if self._lease_client is not None:
             if self._lease_keepalive is None:
-                self._lease = self._lease_client.acquire()
-                self._lease_keepalive = LeaseKeepAlive(self._lease_client)
+                self._lease_keepalive = LeaseKeepAlive(self._lease_client, must_acquire=True,
+                                                       return_at_exit=True)
             else:
-                self._lease_client.return_lease(self._lease)
                 self._lease_keepalive.shutdown()
                 self._lease_keepalive = None
 
     def _start_robot_command(self, desc, command_proto, end_time_secs=None):
 
         def _start_command():
-            self._robot_command_client.robot_command(lease=None, command=command_proto,
+            self._robot_command_client.robot_command(command=command_proto,
                                                      end_time_secs=end_time_secs)
 
         self._try_grpc(desc, _start_command)
@@ -509,16 +507,14 @@ class WasdInterface(object):
         return state.power_state.motor_power_state
 
     def _lease_str(self, lease_keep_alive):
-        alive = '??'
-        lease = '??'
         if lease_keep_alive is None:
             alive = 'STOPPED'
             lease = 'RETURNED'
         else:
-            if self._lease:
-                lease = '{}:{}'.format(self._lease.lease_proto.resource,
-                                       self._lease.lease_proto.sequence)
-            else:
+            try:
+                _lease = lease_keep_alive.lease_wallet.get_lease()
+                lease = '{}:{}'.format(_lease.lease_proto.resource, _lease.lease_proto.sequence)
+            except bosdyn.client.lease.Error:
                 lease = '...'
             if lease_keep_alive.is_alive():
                 alive = 'RUNNING'

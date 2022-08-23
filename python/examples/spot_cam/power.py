@@ -8,14 +8,12 @@ import os
 import shutil
 import tempfile
 
-from bosdyn.client.command_line import (Command, Subcommands)
-
-from bosdyn.client.spot_cam.compositor import CompositorClient
-from bosdyn.client.spot_cam.power import PowerClient
+from utils import add_bool_arg
 
 from bosdyn.api.spot_cam import power_pb2
-
-from utils import add_bool_arg
+from bosdyn.client.command_line import Command, Subcommands
+from bosdyn.client.spot_cam.compositor import CompositorClient
+from bosdyn.client.spot_cam.power import PowerClient
 
 
 class PowerCommands(Subcommands):
@@ -24,9 +22,10 @@ class PowerCommands(Subcommands):
     NAME = 'power'
 
     def __init__(self, subparsers, command_dict):
-        super(PowerCommands, self).__init__(subparsers, command_dict, [
-            PowerGetPowerStatusCommand, PowerSetPowerStatusCommand, PowerCyclePowerCommand
-        ])
+        super(PowerCommands, self).__init__(
+            subparsers, command_dict,
+            [PowerGetPowerStatusCommand, PowerSetPowerStatusCommand, PowerCyclePowerCommand])
+
 
 class PowerGetPowerStatusCommand(Command):
     """On/off state of specified devices"""
@@ -62,11 +61,12 @@ class PowerSetPowerStatusCommand(Command):
             screens = robot.ensure_client(CompositorClient.default_service_name).list_screens()
             screen_names = [s.name for s in screens]
             if 'mech_ir' not in screen_names and 'mech' in screen_names:
-                print('Warning: Toggling off PTZ power for a non-IR Spot CAM can cause the stream to crash')
-        ps = robot.ensure_client(PowerClient.default_service_name).set_power_status(ptz=options.ptz,
-                                                                                    aux1=options.aux1,
-                                                                                    aux2=options.aux2,
-                                                                                    external_mic=options.external_mic)
+                print(
+                    'Warning: Toggling off PTZ power for a non-IR Spot CAM can cause the stream to crash'
+                )
+        ps = robot.ensure_client(PowerClient.default_service_name).set_power_status(
+            ptz=options.ptz, aux1=options.aux1, aux2=options.aux2,
+            external_mic=options.external_mic)
 
         return ps
 
@@ -91,11 +91,12 @@ class PowerCyclePowerCommand(Command):
             screens = robot.ensure_client(CompositorClient.default_service_name).list_screens()
             screen_names = [s.name for s in screens]
             if 'mech_ir' not in screen_names and 'mech' in screen_names:
-                print('Warning: Toggling off PTZ power for a non-IR Spot CAM can cause the stream to crash')
+                print(
+                    'Warning: Toggling off PTZ power for a non-IR Spot CAM can cause the stream to crash'
+                )
 
-        ps = robot.ensure_client(PowerClient.default_service_name).cycle_power(ptz=options.ptz,
-                                                                               aux1=options.aux1,
-                                                                               aux2=options.aux2,
-                                                                               external_mic=options.external_mic)
+        ps = robot.ensure_client(PowerClient.default_service_name).cycle_power(
+            ptz=options.ptz, aux1=options.aux1, aux2=options.aux2,
+            external_mic=options.external_mic)
 
         return ps

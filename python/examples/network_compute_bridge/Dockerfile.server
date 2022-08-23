@@ -1,0 +1,12 @@
+FROM nvcr.io/nvidia/l4t-tensorflow:r32.7.1-tf2.7-py3
+
+# Needed for OpenCV
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6 -y python3-opencv
+
+COPY docker-requirements_server.txt prebuilt/*.whl ./
+RUN python3 -m pip install -r docker-requirements_server.txt --find-links .
+
+COPY tensorflow_server.py /app/
+WORKDIR /app
+
+ENTRYPOINT ["python3", "/app/tensorflow_server.py"]

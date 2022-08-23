@@ -10,9 +10,8 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
-from bosdyn.client.common import (BaseClient, common_header_errors, handle_common_header_errors)
-from bosdyn.api.spot_cam import service_pb2_grpc
-from bosdyn.api.spot_cam import version_pb2
+from bosdyn.api.spot_cam import service_pb2_grpc, version_pb2
+from bosdyn.client.common import BaseClient, common_header_errors, handle_common_header_errors
 
 
 class VersionClient(BaseClient):
@@ -33,14 +32,14 @@ class VersionClient(BaseClient):
         request = version_pb2.GetSoftwareVersionRequest()
         return self.call(self._stub.GetSoftwareVersion, request,
                          self._get_software_version_from_response,
-                         self._version_error_from_response, **kwargs)
+                         self._version_error_from_response, copy_request=False, **kwargs)
 
     def get_software_version_async(self, **kwargs):
         """Async version of get_software_version()"""
         request = version_pb2.GetSoftwareVersionRequest()
         return self.call_async(self._stub.GetSoftwareVersion, request,
                                self._get_software_version_from_response,
-                               self._version_error_from_response, **kwargs)
+                               self._version_error_from_response, copy_request=False, **kwargs)
 
     def get_software_version_full(self, **kwargs):
         """Retrieves the Spot CAM's full version information.
@@ -50,13 +49,15 @@ class VersionClient(BaseClient):
         """
         request = version_pb2.GetSoftwareVersionRequest()
         return self.call(self._stub.GetSoftwareVersion, request,
-                         error_from_response=self._version_error_from_response, **kwargs)
+                         error_from_response=self._version_error_from_response, copy_request=False,
+                         **kwargs)
 
     def get_software_version_full_async(self, **kwargs):
         """Async version of get_software_version_full()"""
         request = version_pb2.GetSoftwareVersionRequest()
         return self.call_async(self._stub.GetSoftwareVersion, request,
-                               error_from_response=self._version_error_from_response, **kwargs)
+                               error_from_response=self._version_error_from_response,
+                               copy_request=False, **kwargs)
 
     @staticmethod
     def _get_software_version_from_response(response):

@@ -16,10 +16,18 @@ import "google/protobuf/struct.proto";
 // and associated with with previously stored data.
 message AlertData {
     enum SeverityLevel {
+        // Do not use. If severity is unknown, must assume issue is
+        // highest severity.
         SEVERITY_LEVEL_UNKNOWN = 0;
+        // Informational message that requires no action.
         SEVERITY_LEVEL_INFO = 1;
+        // An error may occur in the future if no action is taken, but no action
+        // presently required.
         SEVERITY_LEVEL_WARN = 2;
+        // Action required. Error fatal to operation.
         SEVERITY_LEVEL_ERROR = 3;
+        // Action required. Severe error that requires immediate
+        // attention.
         SEVERITY_LEVEL_CRITICAL = 4;
     }
 

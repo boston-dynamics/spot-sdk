@@ -8,19 +8,19 @@
 Example code for using the directory (registration) service API
 """
 from __future__ import print_function
-import argparse
-import sys
-import logging
-import io
-import struct
-import time
 
-import bosdyn.client.util
-import bosdyn.client.directory
-import bosdyn.client.directory_registration
+import argparse
+import io
+import logging
+import struct
+import sys
+import time
 
 import bosdyn.api.directory_pb2 as directory_protos
 import bosdyn.api.directory_registration_pb2 as directory_registration_protos
+import bosdyn.client.directory
+import bosdyn.client.directory_registration
+import bosdyn.client.util
 
 
 def directory_spot(config):

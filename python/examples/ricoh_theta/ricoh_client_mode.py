@@ -17,8 +17,8 @@ python3 ricoh_client_mode.py --theta-ssid THETAYL00196843 --wifi-ssid WIFI_SSID 
 
 """
 
-import sys
 import argparse
+import sys
 
 from ricoh_theta import Theta
 

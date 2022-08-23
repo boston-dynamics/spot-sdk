@@ -6,8 +6,10 @@
 
 """A class for reading message data from a DataFile."""
 
-from .common import PROTOBUF_CONTENT_TYPE
 from deprecated import deprecated
+
+from .common import PROTOBUF_CONTENT_TYPE
+
 
 class MessageReader:
     """A class for reading message data from a DataFile.

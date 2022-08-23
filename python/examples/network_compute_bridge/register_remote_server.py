@@ -11,12 +11,12 @@ This lets you run a server in the cloud, or somewhere that can't easily reach ou
 """
 import argparse
 import sys
-import bosdyn.client.util
-import bosdyn.client.directory
-import bosdyn.client.directory_registration
 
 import bosdyn.api.directory_pb2 as directory_protos
 import bosdyn.api.directory_registration_pb2 as directory_registration_protos
+import bosdyn.client.directory
+import bosdyn.client.directory_registration
+import bosdyn.client.util
 
 
 def main(argv):

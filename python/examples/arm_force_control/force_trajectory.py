@@ -52,7 +52,7 @@ def force_wrench(config):
 
         # Tell the robot to stand up. The command service is used to issue commands to a robot.
         # The set of valid commands for a robot depends on hardware configuration. See
-        # SpotCommandHelper for more detailed examples on command building. The robot
+        # RobotCommandBuilder for more detailed examples on command building. The robot
         # command service requires timesync between the robot and the client.
         robot.logger.info("Commanding robot to stand...")
         command_client = robot.ensure_client(RobotCommandClient.default_service_name)
@@ -94,8 +94,7 @@ def force_wrench(config):
 
         wrench0 = geometry_pb2.Wrench(force=force0, torque=torque0)
         t0 = seconds_to_duration(0)
-        traj_point0 = trajectory_pb2.WrenchTrajectoryPoint(wrench=wrench0,
-                                                           time_since_reference=t0)
+        traj_point0 = trajectory_pb2.WrenchTrajectoryPoint(wrench=wrench0, time_since_reference=t0)
 
         # Second point on the trajectory
         force1 = geometry_pb2.Vec3(x=f_x1, y=f_y1, z=f_z1)
@@ -103,8 +102,7 @@ def force_wrench(config):
 
         wrench1 = geometry_pb2.Wrench(force=force1, torque=torque1)
         t1 = seconds_to_duration(trajectory_duration)
-        traj_point1 = trajectory_pb2.WrenchTrajectoryPoint(wrench=wrench1,
-                                                           time_since_reference=t1)
+        traj_point1 = trajectory_pb2.WrenchTrajectoryPoint(wrench=wrench1, time_since_reference=t1)
 
         # Build the trajectory
         trajectory = trajectory_pb2.WrenchTrajectory(points=[traj_point0, traj_point1])
@@ -122,8 +120,7 @@ def force_wrench(config):
             arm_cartesian_command=arm_cartesian_command)
         synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
             arm_command=arm_command)
-        robot_command = robot_command_pb2.RobotCommand(
-            synchronized_command=synchronized_command)
+        robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
 
         # Send the request
         command_client.robot_command(robot_command)

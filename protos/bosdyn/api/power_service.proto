@@ -21,4 +21,11 @@ service PowerService {
 
     // Check the status of a power command.
     rpc PowerCommandFeedback(PowerCommandFeedbackRequest) returns (PowerCommandFeedbackResponse) {}
+
+    // Separate RPC for toggling fan power due to need for time/percent power parameters
+    rpc FanPowerCommand(FanPowerCommandRequest) returns (FanPowerCommandResponse) {}
+
+    // Check the status of a fan power command.
+    rpc FanPowerCommandFeedback(FanPowerCommandFeedbackRequest) returns (FanPowerCommandFeedbackResponse) {}
+
 }

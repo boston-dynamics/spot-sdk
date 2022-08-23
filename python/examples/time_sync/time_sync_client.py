@@ -7,11 +7,12 @@
 """Simple time sync tutorial."""
 
 from __future__ import print_function
+
 import sys
 
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.client.time_sync import TimeSyncEndpoint, TimeSyncClient
+from bosdyn.client.time_sync import TimeSyncClient, TimeSyncEndpoint
 
 
 def main():

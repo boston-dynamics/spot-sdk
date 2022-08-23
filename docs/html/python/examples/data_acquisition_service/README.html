@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Data Acquisition Plugin Services &mdash; Spot 3.1.2.1 documentation</title>
+  <title>Data Acquisition Plugin Services &mdash; Spot 3.2.0 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.1.2.1
+                3.2.0
               </div>
             
           
@@ -118,10 +118,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autowalk_service.html">Autowalk service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/directed_exploration.html">Directed Exploration</a></li>
@@ -149,7 +151,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_output.html">Data Acquisition Output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_buffer_overview.html">Data Buffer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF file format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
 </ul>
 </li>
 </ul>
@@ -182,6 +185,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../docking/README.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../fan_command/README.html">Fan Commands</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -200,6 +204,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../arm_impedance_control/README.html">Arm Impedance Control</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -207,6 +212,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../core_io_gpio/README.html">CORE I/O GPIO</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -261,16 +267,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../replay_mission/README.html">Replay Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../edit_autowalk/README.html">Edit Autowalk</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
@@ -297,6 +311,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
@@ -322,6 +338,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/lights_helper.html">Lights Helper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
@@ -391,7 +408,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq2.html">Part 2: Capturing images</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq3.html">Part 3: Capturing other data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the Spot CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the CORE I/O</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq5.html">Part 5: Collecting data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq6.html">Part 6: Processing collected data</a></li>
 </ul>
@@ -405,9 +422,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul>
@@ -421,6 +443,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-proto">autowalk/autowalk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-service-proto">autowalk/autowalk_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-walks-proto">autowalk/walks.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
@@ -444,6 +469,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
@@ -539,6 +566,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -619,10 +647,10 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The example programs demonstrate how to create a data acquisition plugin service and run the service such that it can communicate with the data acquisition service on-robot. A data acquisition plugin service is used to communicate with external payloads and hardware, retrieve the data from these sensors, and save the data in the data acquisition store service.</p>
 <p>The DataAcquisitionPluginService base class (defined in <code class="docutils literal notranslate"><span class="pre">data_acquisition_plugin_service.py</span></code>) can be used to create the data acquisition plugin services. The example directory contains multiple different example plugins, each contained in their own folder:</p>
 <ul class="simple">
-<li><p><strong>battery_service</strong>: A very simple plugin which reads and saves the battery information out of the robot state as json-formatted metadata.  This plugin is used as part of the <a class="reference internal" href="../../../docs/python/daq_tutorial/daq1.html"><span class="doc">Data collection tutorial</span></a>.</p></li>
-<li><p><strong>pointclound_plugin</strong>: Reads from a point cloud service (such as a Velodyne) and saves the point cloud data as a binary protobuf.</p></li>
-<li><p><strong>network_compute_bridge_plugin</strong>: Used to call a Network Compute Bridge model to process data, and save the results.  Customize this example for when the built-in network compute support in the Data Acquisition Service is not expressive enough for your case.</p></li>
-<li><p><strong>gps_metadata_plugin</strong> and <strong>piksi_gps_plugin</strong>: Used to store GPS coordinates as json-formatted metadata.  gps_metadata_plugin just inserts random data and is meant to be customized for individual hardware.  piksi_gps_plugin reads from a Piksi unit.</p></li>
+<li><p><strong>battery_service</strong>: A very simple plugin which reads and saves the battery information out of the robot state as json-formatted metadata. This plugin is used as part of the <a class="reference internal" href="../../../docs/python/daq_tutorial/daq1.html"><span class="doc">Data collection tutorial</span></a>.</p></li>
+<li><p><strong>pointcloud_plugin</strong>: Reads from a point cloud service (such as a Velodyne) and saves the point cloud data as a binary protobuf.</p></li>
+<li><p><strong>network_compute_bridge_plugin</strong>: Used to call a Network Compute Bridge model to process data, and save the results. Customize this example for when the built-in network compute support in the Data Acquisition Service is not expressive enough for your case.</p></li>
+<li><p><strong>gps_metadata_plugin</strong> and <strong>piksi_gps_plugin</strong>: Used to store GPS coordinates as json-formatted metadata. gps_metadata_plugin just inserts random data and is meant to be customized for individual hardware. piksi_gps_plugin reads from a Piksi unit.</p></li>
 </ul>
 <section id="setup-dependencies">
 <h2>Setup Dependencies<a class="headerlink" href="#setup-dependencies" title="Permalink to this headline">¶</a></h2>
@@ -645,7 +673,7 @@ Development Kit License (20191101-BDSDK-SL).
 </div>
 <p>The other IP address is the traditional robot hostname (”ROBOT_IP”) argument, which describes the IP address of the robot hosting the directory service.</p>
 <p>Since the example is created to run off of a payload computer, it requires the input arguments <code class="docutils literal notranslate"><span class="pre">--guid</span></code> (uniquely generated payload specifier) and <code class="docutils literal notranslate"><span class="pre">--secret</span></code> (private string associated with a payload) for the registered payload computer that will be running the example plugins. See documentation on <a class="reference external" href="../../../docs/payload/configuring_payload_software.html#Configuring-and-authorizing-payloads">configuration of payload software</a> for more information.</p>
-<p>For the Spot CORE, this information by default will be located in the file <code class="docutils literal notranslate"><span class="pre">/opt/payload_credentials/payload_guid_and_secret</span></code>.</p>
+<p>For the CORE I/O, this information by default will be located in the file <code class="docutils literal notranslate"><span class="pre">/opt/payload_credentials/payload_guid_and_secret</span></code>.</p>
 <p>Note, you can run the example plugins locally on your PC by registering it as a weightless payload using <a class="reference internal" href="../payloads/README.html"><span class="doc">the payloads example</span></a> and creating a GUID and secret for your computer.</p>
 <p>Lastly, port numbers for the example plugin services can be specified using the <code class="docutils literal notranslate"><span class="pre">--port</span></code> (”PORT_THE_PLUGIN_WILL_MONITOR”) argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a services listening port. The port numbers will be used with the <code class="docutils literal notranslate"><span class="pre">--host-ip</span></code> (”IP_WHERE_PLUGIN_WILL_RUN”) to fully specify where the two services are running on the payload computer. The port numbers of different plugins cannot be the same, they must be open, and they must not be blocked by a local firewall, otherwise the service will be unreachable from the robot and other applications.</p>
 <p>The network ports used by the services can be opened by running this command on the host computer (Linux):</p>
@@ -658,7 +686,7 @@ Development Kit License (20191101-BDSDK-SL).
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>python -m bosdyn.client {ROBOT_IP} dir list`
 </pre></div>
 </div>
-<p>This will list all the services registered to the robot.  Use <code class="docutils literal notranslate"><span class="pre">--pointcloud-service</span></code> to provide the registered service name for pointcloud plugin.  Use <code class="docutils literal notranslate"><span class="pre">---worker-name</span></code> to provide the registered service name for network compute bridge plugin.</p>
+<p>This will list all the services registered to the robot. Use <code class="docutils literal notranslate"><span class="pre">--pointcloud-service</span></code> to provide the registered service name for pointcloud plugin. Use <code class="docutils literal notranslate"><span class="pre">---worker-name</span></code> to provide the registered service name for network compute bridge plugin.</p>
 <p>For example, if a network compute bridge plugin is needed for a <code class="docutils literal notranslate"><span class="pre">fire-extinguisher-server</span></code>, the registered service name would show up in the directory list like the following:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name</span>                                 <span class="nb">type</span>                                                      <span class="n">authority</span>                                       <span class="n">tokens</span>
 <span class="o">----------------------------------------------------------------------------------------------------------------------------------------------------</span>
@@ -694,7 +722,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="run-a-data-acquisition-plugin-service-using-docker">
 <h2>Run a Data Acquisition Plugin Service using Docker<a class="headerlink" href="#run-a-data-acquisition-plugin-service-using-docker" title="Permalink to this headline">¶</a></h2>
 <p>Please refer to this <a class="reference internal" href="../../../docs/payload/docker_containers.html"><span class="doc">document</span></a> for general instructions on how to run software applications on computation payloads as docker containers.</p>
-<p>With docker installed and setup, any of the data acquisition plugin services can be created into a docker container, saved as a tar file, and then run on the Spot CORE using Portainer. There are Dockerfiles for each plugin service within the plugin’s specific directory. These files will create a docker container with all necessary dependencies installed, and will start the plugin service.</p>
+<p>With docker installed and setup, any of the data acquisition plugin services can be created into a docker container, saved as a tar file, and then run on the CORE I/O as an Extension. There are Dockerfiles for each plugin service within the plugin’s specific directory. These files will create a docker container with all necessary dependencies installed, and will start the plugin service.</p>
 <p>Follow the instructions on how to build and use the docker image from <a class="reference external" href="../../../docs/payload/docker_containers.html#build-docker-images">this section</a> on. The application arguments needed to run the plugins included in this example are <code class="docutils literal notranslate"><span class="pre">--host-ip</span> <span class="pre">HOST_COMPUTER_IP</span> <span class="pre">--guid</span> <span class="pre">GUID</span> <span class="pre">--secret</span> <span class="pre">SECRET</span> <span class="pre">ROBOT_IP</span></code>.</p>
 </section>
 </section>

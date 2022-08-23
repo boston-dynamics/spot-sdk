@@ -57,17 +57,17 @@ def arm_surface_contact(config):
 
         # Tell the robot to stand up. The command service is used to issue commands to a robot.
         # The set of valid commands for a robot depends on hardware configuration. See
-        # SpotCommandHelper for more detailed examples on command building. The robot
+        # RobotCommandBuilder for more detailed examples on command building. The robot
         # command service requires timesync between the robot and the client.
         robot.logger.info("Commanding robot to stand...")
         command_client = robot.ensure_client(RobotCommandClient.default_service_name)
         blocking_stand(command_client, timeout_sec=10)
         robot.logger.info("Robot standing.")
 
-        # Unstow the arm
+        # Unstow the arm.
         unstow = RobotCommandBuilder.arm_ready_command()
 
-        # Issue the command via the RobotCommandClient
+        # Issue the command via the RobotCommandClient.
         unstow_command_id = command_client.robot_command(unstow)
 
         robot.logger.info("Unstow command issued.")
@@ -99,11 +99,9 @@ def arm_surface_contact(config):
         qz = 0
         body_Q_hand = geometry_pb2.Quaternion(w=qw, x=qx, y=qy, z=qz)
 
-        # Build a position trajectory
-        body_T_hand1 = geometry_pb2.SE3Pose(position=hand_vec3_start_rt_body,
-                                            rotation=body_Q_hand)
-        body_T_hand2 = geometry_pb2.SE3Pose(position=hand_vec3_end_rt_body,
-                                            rotation=body_Q_hand)
+        # Build a position trajectory.
+        body_T_hand1 = geometry_pb2.SE3Pose(position=hand_vec3_start_rt_body, rotation=body_Q_hand)
+        body_T_hand2 = geometry_pb2.SE3Pose(position=hand_vec3_end_rt_body, rotation=body_Q_hand)
 
         robot_state = robot_state_client.get_robot_state()
         odom_T_flat_body = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot,
@@ -115,14 +113,14 @@ def arm_surface_contact(config):
         trajectory_time = 5.0  # in seconds
         time_since_reference = seconds_to_duration(trajectory_time)
 
-        traj_point1 = trajectory_pb2.SE3TrajectoryPoint(
-            pose=odom_T_hand1.to_proto(), time_since_reference=seconds_to_duration(0))
-        traj_point2 = trajectory_pb2.SE3TrajectoryPoint(
-            pose=odom_T_hand2.to_proto(), time_since_reference=time_since_reference)
+        traj_point1 = trajectory_pb2.SE3TrajectoryPoint(pose=odom_T_hand1.to_proto(),
+                                                        time_since_reference=seconds_to_duration(0))
+        traj_point2 = trajectory_pb2.SE3TrajectoryPoint(pose=odom_T_hand2.to_proto(),
+                                                        time_since_reference=time_since_reference)
 
         hand_traj = trajectory_pb2.SE3Trajectory(points=[traj_point1, traj_point2])
 
-        # Open the gripper
+        # Close the gripper.
         gripper_cmd_packed = RobotCommandBuilder.claw_gripper_open_fraction_command(0)
         gripper_command = gripper_cmd_packed.synchronized_command.gripper_command.claw_gripper_command
 
@@ -133,15 +131,14 @@ def arm_surface_contact(config):
             x_axis=arm_surface_contact_pb2.ArmSurfaceContact.Request.AXIS_MODE_POSITION,
             y_axis=arm_surface_contact_pb2.ArmSurfaceContact.Request.AXIS_MODE_POSITION,
             z_axis=arm_surface_contact_pb2.ArmSurfaceContact.Request.AXIS_MODE_FORCE,
-            z_admittance=arm_surface_contact_pb2.ArmSurfaceContact.Request.
-            ADMITTANCE_SETTING_LOOSE,
+            z_admittance=arm_surface_contact_pb2.ArmSurfaceContact.Request.ADMITTANCE_SETTING_LOOSE,
             # Enable the cross term so that if the arm gets stuck in a rut, it will retract
             # upwards slightly, preventing excessive lateral forces.
             xy_to_z_cross_term_admittance=arm_surface_contact_pb2.ArmSurfaceContact.Request.
             ADMITTANCE_SETTING_VERY_STIFF,
             gripper_command=gripper_command)
 
-        # Enable walking
+        # Enable walking.
         cmd.is_robot_following_hand = True
 
         # A bias force (in this case, leaning forward) can help improve stability.
@@ -150,7 +147,7 @@ def arm_surface_contact(config):
 
         proto = arm_surface_contact_service_pb2.ArmSurfaceContactCommand(request=cmd)
 
-        # Send the request
+        # Send the request.
         robot.logger.info('Running arm surface contact...')
         arm_surface_contact_client.arm_surface_contact_command(proto)
 

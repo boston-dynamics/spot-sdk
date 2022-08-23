@@ -5,11 +5,11 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """Upload files to cloud example"""
-import sys
 import logging
+import sys
 
-from google.cloud import storage  # Import for GCP
 import boto3  # Import for AWS
+from google.cloud import storage  # Import for GCP
 
 logger = logging.getLogger(__name__)
 

@@ -5,21 +5,24 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 from __future__ import print_function
+
 import itertools
 import threading
 import time
-import pytest
 from concurrent.futures import Future, ThreadPoolExecutor
-
 from unittest import mock
-from bosdyn.api import (data_acquisition_store_pb2, data_acquisition_pb2, image_pb2)
-from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
+
+import pytest
+
+from bosdyn.api import data_acquisition_pb2, data_acquisition_store_pb2, image_pb2
 from bosdyn.client.common import FutureWrapper
 #from .util import make_async
 from bosdyn.client.data_acquisition_plugin_service import (Capability, DataAcquisitionPluginService,
-                                                           make_error, RequestManager, RequestState,
-                                                           RequestCancelledError,
-                                                           DataAcquisitionStoreHelper)
+                                                           DataAcquisitionStoreHelper,
+                                                           RequestCancelledError, RequestManager,
+                                                           RequestState, make_error)
+from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
+
 from .helpers import make_async
 
 

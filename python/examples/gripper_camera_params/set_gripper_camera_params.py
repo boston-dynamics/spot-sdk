@@ -11,13 +11,12 @@ import sys
 import time
 
 import get_gripper_camera_params
+from google.protobuf import wrappers_pb2
 
 import bosdyn.client
 import bosdyn.client.util
+from bosdyn.api import gripper_camera_param_pb2, header_pb2
 from bosdyn.client.gripper_camera_param import GripperCameraParamClient
-from bosdyn.api import gripper_camera_param_pb2
-from bosdyn.api import header_pb2
-from google.protobuf import wrappers_pb2
 
 
 def main(argv):

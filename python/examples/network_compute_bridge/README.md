@@ -8,19 +8,21 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Network Compute Bridge
 
-The network compute bridge allows you to off-load computation to another computer on the network.  For example, you might want to offload a deep neural-network call to a server in the cloud.
+The network compute bridge allows you to off-load computation to another computer on the network. For example, you might want to offload a deep neural-network call to a server in the cloud.
 
 Examples:
 
 - `tensorflow_server.py`: Processes requests to run a Faster R-CNN TensorFlow model on Spot image data.
-    - Registers a Network Compute Bridge Worker with the Spot directory service
-    - Handles Network Compute queries and executes the TensorFlow model on the image or image source input
-    - Can be easily reconfigured to run other TensorFlow object detection models
+
+  - Registers a Network Compute Bridge Worker with the Spot directory service
+  - Handles Network Compute queries and executes the TensorFlow model on the image or image source input
+  - Can be easily reconfigured to run other TensorFlow object detection models
 
 - `identify_object.py`: Requests identification on an image using a TensorFlow model.
-    - Client requests an image source, such as `frontleft_fisheye_image`
-    - Robot takes image, rotates it to align with the horizon and sends it to a server running `tensorflow_server.py`.
-    - Results are returned to the client.  If depth data is available inside the bounding box, the robot adds depth to the result.
+
+  - Client requests an image source, such as `frontleft_fisheye_image`
+  - Robot takes image, rotates it to align with the horizon and sends it to a server running `tensorflow_server.py`.
+  - Results are returned to the client. If depth data is available inside the bounding box, the robot adds depth to the result.
 
 - [Fire Extinguisher Server](./fire_extinguisher_server/README.md): Example of a network compute bridge server for detecting fire extinguishers that uses Keras Retinanet instead of TensorFlow.
 
@@ -31,9 +33,10 @@ Examples:
 ## Installation
 
 ### Server
+
 These examples require the bosdyn API and client to be installed, and must be run using python3.
 
-The `tensorflow_server.py` example requires TensorFlow to be installed.  You can install its
+The `tensorflow_server.py` example requires TensorFlow to be installed. You can install its
 dependencies via:
 
 ```
@@ -46,9 +49,8 @@ For CUDA / NVIDIA GPU installations:
 python3 -m pip install -r requirements_server_gpu.txt
 ```
 
-Installation of NVIDIA drivers and CUDA is outside the scope of the document.  There are
+Installation of NVIDIA drivers and CUDA is outside the scope of the document. There are
 many tutorials available such as [this one](https://www.pyimagesearch.com/2019/01/30/ubuntu-18-04-install-tensorflow-and-keras-for-deep-learning/).
-
 
 ### Client
 
@@ -58,9 +60,8 @@ The client example (`identify_object.py`) does not require TensorFlow:
 python3 -m pip install -r requirements_client.txt
 ```
 
-
-
 ## Execution
+
 To run this example, first launch the server and direct it to your Spot:
 
 ```
@@ -103,6 +104,7 @@ To run this example without a robot in the pipeline, first launch the server wit
 ```
 python3 tensorflow_server.py -r -d <MODEL DIRECTORY>
 ```
+
 After launching tensorflow_server.py, the user may post requests to it using the `identify_object_without_robot.py` client example. To run this example with the above example server and model, run:
 
 ```
@@ -114,6 +116,7 @@ python3 identify_object_without_robot.py --confidence 0.5 --model frozen_inferen
 ```
 
 Example output:
+
 ```
     Got 2 objects.
     name: "obj1_label_person"
@@ -128,16 +131,18 @@ Example output:
 
 ## Docker Execution
 
-This example contains the configuration files to run the python scripts described above also in Docker containers. The docker containers accept the same arguments described above. For example, to run the server_cpu docker container and the client docker container, follow the steps below with the correct values for the <> variables:
+This example contains the configuration files to run the python scripts described above also in Docker containers. The docker containers accept the same arguments described above. For example, to run the server docker container and the client docker container, follow the steps below with the correct values for the <> variables:
 
 ```
-sudo docker build -t ncb_server_cpu -f Dockerfile.server_cpu .
-sudo docker run -it --network=host --env BOSDYN_CLIENT_USERNAME --env BOSDYN_CLIENT_PASSWORD -v <MODEL_DIRECTORY>:/model_dir/ ncb_server_cpu --model-dir /model_dir/ <ROBOT_IP>
+sudo docker build -t ncb_server -f Dockerfile.server .
+sudo docker run -it --network=host --env BOSDYN_CLIENT_USERNAME --env BOSDYN_CLIENT_PASSWORD -v <MODEL_DIRECTORY>:/model_dir/ ncb_server --model-dir /model_dir/ <ROBOT_IP>
 
 
 sudo docker build -t ncb_client -f Dockerfile.client .
 sudo docker run -it --network=host --env BOSDYN_CLIENT_USERNAME --env BOSDYN_CLIENT_PASSWORD ncb_client --service tensorflow-server --confidence 0.5 --model frozen_inference_graph --image-source frontleft_fisheye_image <ROBOT_IP>
 ```
+
+When running ncb_server on CORE I/O, or another compute payload with GPU, pass the flag `--gpus all` to the `docker run` command to take advantage of the GPU.
 
 ## Troubleshooting
 

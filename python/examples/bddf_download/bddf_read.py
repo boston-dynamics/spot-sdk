@@ -9,8 +9,8 @@ import datetime
 import logging
 import sys
 
-from bosdyn.bddf import (DataReader, GrpcReader, ProtobufReader, ProtobufChannelReader)
 from bosdyn.api.data_buffer_pb2 import Event, OperatorComment
+from bosdyn.bddf import DataReader, GrpcReader, ProtobufChannelReader, ProtobufReader
 
 LOGGER = logging.getLogger()
 

@@ -1,0 +1,20 @@
+FROM nvcr.io/nvidia/l4t-tensorflow:r32.7.1-tf2.7-py3
+
+RUN apt-get update && apt-get install -y libsm6 libxext6 libxrender-dev libgl1-mesa-glx curl python3-opencv
+
+RUN python3 -m pip install --upgrade pip
+COPY docker-requirements-l4t.txt prebuilt/*.whl ./
+RUN python3 -m pip install -r docker-requirements-l4t.txt --find-links .
+
+# download an example detector
+RUN curl http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz > ssd_mobilenet_v2_coco_2018_03_29.tar.gz  && \
+    tar -xvf ssd_mobilenet_v2_coco_2018_03_29.tar.gz && \
+    mv ssd_mobilenet_v2_coco_2018_03_29/frozen_inference_graph.pb /model.pb && \
+    rm -rf ssd_mobilenet_v2_coco_2018_03_29*
+
+ENV LANG en_US.UTF-8 
+
+COPY . /app
+WORKDIR /app
+
+ENTRYPOINT ["/usr/bin/python3", "/app/spot_detect_and_follow.py"]

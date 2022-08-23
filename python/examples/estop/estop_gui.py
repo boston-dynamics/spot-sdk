@@ -6,21 +6,23 @@
 
 """Provides a very visible button to click to stop the robot."""
 from __future__ import print_function
+
 import argparse
-import sys
-import grpc
-import signal
+import logging
 import os
+import signal
+import sys
 import threading
 import traceback
-import logging
-from six.moves import queue
 from datetime import datetime
 
+import grpc
+from six.moves import queue
+
 try:
-    from PyQt5.QtGui import QIcon
-    import PyQt5.QtWidgets as QtWidgets
     import PyQt5.QtCore as QtCore
+    import PyQt5.QtWidgets as QtWidgets
+    from PyQt5.QtGui import QIcon
 
 # Enable backwards compatibility with Python2 via PyQt4
 except ImportError:
@@ -28,10 +30,9 @@ except ImportError:
     import PyQt4.QtGui as QtWidgets
     import PyQt4.QtCore as QtCore
 
-from bosdyn.client.estop import EstopEndpoint, EstopKeepAlive, EstopClient
 import bosdyn.client.util
-
 from bosdyn.api import estop_pb2 as estop_protos
+from bosdyn.client.estop import EstopClient, EstopEndpoint, EstopKeepAlive
 
 # Needed for dll call in Windows to set icon
 if sys.platform == 'win32':
@@ -194,7 +195,7 @@ def status_response_to_markup(status, my_id=None):
 def build_app(hostname, estop_client, timeout_sec):
     """Build the application window and configure the estop.
     Args:
-      timeout: Timeout of this estop endpoint (seconds)
+      timeout_sec: Timeout of this estop endpoint (seconds)
     """
     qt_app = QtWidgets.QApplication(sys.argv)
 

@@ -10,6 +10,7 @@ This allows client code to read from the robot payload registry.
 """
 
 from __future__ import print_function
+
 import logging
 
 import bosdyn.api.payload_pb2 as payload_protos

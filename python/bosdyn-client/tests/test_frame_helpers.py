@@ -6,11 +6,13 @@
 
 """Unit tests for frame helpers"""
 
-import bosdyn.api.geometry_pb2 as geom_protos
-from bosdyn.client import frame_helpers, math_helpers
+import math
+
 import google.protobuf.text_format
 import pytest
-import math
+
+import bosdyn.api.geometry_pb2 as geom_protos
+from bosdyn.client import frame_helpers, math_helpers
 
 
 def _create_snapshot(frame_tree_snapshot_string):
@@ -645,6 +647,7 @@ def test_express_velocity_new_frame():
     assert math.fabs(vel_of_body_in_odom.linear.y - (-2)) < 1e-6
     assert math.fabs(vel_of_body_in_odom.linear.z - (-1)) < 1e-6
 
+
 def test_express_velocity_types():
     snapshot_text = """
     child_to_parent_edge_map {
@@ -671,35 +674,39 @@ def test_express_velocity_types():
     """
     frame_tree = _create_snapshot(snapshot_text)
     assert frame_helpers.validate_frame_tree_snapshot(frame_tree)
-    test_vel1 = math_helpers.SE3Velocity(1.1,2.2,3.3,4.4,5.5,6.6)
+    test_vel1 = math_helpers.SE3Velocity(1.1, 2.2, 3.3, 4.4, 5.5, 6.6)
     assert type(test_vel1.linear_velocity_x) == float
     assert test_vel1.linear_velocity_x == 1.1
     assert test_vel1.linear.x == 1.1
-    test_vel2 = math_helpers.SE3Velocity(1.1,2.2,3.3,4.4,5.5,6.6)
+    test_vel2 = math_helpers.SE3Velocity(1.1, 2.2, 3.3, 4.4, 5.5, 6.6)
     test_vel2_proto = test_vel2.to_proto()
 
-    body_vel = frame_helpers.express_se3_velocity_in_new_frame(frame_tree, "body", "vision", test_vel2)
+    body_vel = frame_helpers.express_se3_velocity_in_new_frame(frame_tree, "body", "vision",
+                                                               test_vel2)
     assert body_vel is not None
     assert type(body_vel.linear.x) == float
     assert type(body_vel.linear_velocity_x) == float
     assert body_vel.linear_velocity_x == 56.1
     assert body_vel.linear.x == 56.1
-    body_vel = frame_helpers.express_se3_velocity_in_new_frame(frame_tree, "body", "vision", test_vel2_proto)
+    body_vel = frame_helpers.express_se3_velocity_in_new_frame(frame_tree, "body", "vision",
+                                                               test_vel2_proto)
     assert body_vel is not None
     assert type(body_vel.linear.x) == float
     assert type(body_vel.linear_velocity_x) == float
     assert body_vel.linear_velocity_x == 56.1
     assert body_vel.linear.x == 56.1
 
-    test_vel3 = math_helpers.SE2Velocity(1.1,2.2,3.3)
+    test_vel3 = math_helpers.SE2Velocity(1.1, 2.2, 3.3)
     test_vel3_proto = test_vel3.to_proto()
-    body_vel = frame_helpers.express_se2_velocity_in_new_frame(frame_tree, "body", "vision", test_vel3)
+    body_vel = frame_helpers.express_se2_velocity_in_new_frame(frame_tree, "body", "vision",
+                                                               test_vel3)
     assert body_vel is not None
     assert type(body_vel.linear.x) == float
     assert type(body_vel.linear_velocity_x) == float
     assert body_vel.linear_velocity_x == 1.1
     assert body_vel.linear.x == 1.1
-    body_vel = frame_helpers.express_se2_velocity_in_new_frame(frame_tree, "body", "vision", test_vel3_proto)
+    body_vel = frame_helpers.express_se2_velocity_in_new_frame(frame_tree, "body", "vision",
+                                                               test_vel3_proto)
     assert body_vel is not None
     assert type(body_vel.linear.x) == float
     assert type(body_vel.linear_velocity_x) == float

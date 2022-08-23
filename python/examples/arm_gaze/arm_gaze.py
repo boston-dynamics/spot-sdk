@@ -55,7 +55,7 @@ def gaze_control(config):
 
         # Tell the robot to stand up. The command service is used to issue commands to a robot.
         # The set of valid commands for a robot depends on hardware configuration. See
-        # SpotCommandHelper for more detailed examples on command building. The robot
+        # RobotCommandBuilder for more detailed examples on command building. The robot
         # command service requires timesync between the robot and the client.
         robot.logger.info("Commanding robot to stand...")
         command_client = robot.ensure_client(RobotCommandClient.default_service_name)
@@ -82,14 +82,12 @@ def gaze_control(config):
 
         gaze_command = RobotCommandBuilder.arm_gaze_command(gaze_target_in_odom[0],
                                                             gaze_target_in_odom[1],
-                                                            gaze_target_in_odom[2],
-                                                            ODOM_FRAME_NAME)
+                                                            gaze_target_in_odom[2], ODOM_FRAME_NAME)
         # Make the open gripper RobotCommand
         gripper_command = RobotCommandBuilder.claw_gripper_open_command()
 
         # Combine the arm and gripper commands into one RobotCommand
-        synchro_command = RobotCommandBuilder.build_synchro_command(
-            gripper_command, gaze_command)
+        synchro_command = RobotCommandBuilder.build_synchro_command(gripper_command, gaze_command)
 
         # Send the request
         robot.logger.info("Requesting gaze.")
@@ -112,8 +110,7 @@ def gaze_control(config):
                                               z=start_pos_in_odom_tuple[2])
 
         end_pos_in_odom_tuple = odom_T_flat_body.transform_point(x=x, y=end_y, z=z)
-        end_pos_in_odom = geometry_pb2.Vec3(x=end_pos_in_odom_tuple[0],
-                                            y=end_pos_in_odom_tuple[1],
+        end_pos_in_odom = geometry_pb2.Vec3(x=end_pos_in_odom_tuple[0], y=end_pos_in_odom_tuple[1],
                                             z=end_pos_in_odom_tuple[2])
 
         # Create the trajectory points

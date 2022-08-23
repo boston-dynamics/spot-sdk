@@ -6,31 +6,33 @@
 
 """Example to test the functionality of a bosdyn.api.DataAcquisitionPluginService in development."""
 from __future__ import print_function
+
 import argparse
+import datetime
+import functools
+import logging
 import os
 import sys
 import time
-import functools
-import datetime
 
-import logging
 # Logger for all the debug information from the tests.
 _LOGGER = logging.getLogger("Plugin Tester")
 
+from testing_helpers import (log_debug_information, run_test, test_directory_registration,
+                             test_if_service_has_active_service_faults,
+                             test_if_service_is_reachable)
+
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.client.util import setup_logging
-
 from bosdyn.api import data_acquisition_pb2, data_acquisition_store_pb2
 from bosdyn.client.data_acquisition import (CancellationFailedError, DataAcquisitionClient,
                                             RequestIdDoesNotExistError)
+from bosdyn.client.data_acquisition_helpers import (download_data_REST,
+                                                    make_time_query_params_from_group_name)
 from bosdyn.client.data_acquisition_plugin import DataAcquisitionPluginClient
-from bosdyn.client.exceptions import (ResponseError, InvalidRequestError)
 from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
-from bosdyn.client.data_acquisition_helpers import download_data_REST, make_time_query_params_from_group_name
-
-from testing_helpers import (test_directory_registration, test_if_service_has_active_service_faults,
-                             test_if_service_is_reachable, run_test, log_debug_information)
+from bosdyn.client.exceptions import InvalidRequestError, ResponseError
+from bosdyn.client.util import setup_logging
 
 # The sets of statuses for the GetStatus RPC that indicate the acquisition is continuing still, complete, or has failed.
 kAcquisitionContinuesStatuses = {

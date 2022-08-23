@@ -5,21 +5,17 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import copy
-import pytest
 import random
 import threading
 import time
 
-import bosdyn.client
-from bosdyn.client.lease import Lease
-from bosdyn.client.lease import LeaseKeepAlive
-from bosdyn.client.lease import LeaseState
-from bosdyn.client.lease import LeaseWallet
-from bosdyn.client.lease import NoSuchLease
-from bosdyn.client.lease import LeaseNotOwnedByWallet
-from bosdyn.client.lease import test_active_lease as active_lease_test
-from bosdyn.api import lease_pb2 as LeaseProto
+import pytest
 
+import bosdyn.client
+from bosdyn.api import lease_pb2 as LeaseProto
+from bosdyn.client.lease import (Lease, LeaseKeepAlive, LeaseNotOwnedByWallet, LeaseState,
+                                 LeaseWallet, NoSuchLease)
+from bosdyn.client.lease import test_active_lease as active_lease_test
 
 LLAMA = 'llama'
 MESO = 'mesozoic'
@@ -502,7 +498,8 @@ class MockLeaseClient(object):
             return None
 
     def acquire(self, resource):
-        lease = Lease(LeaseProto.Lease(resource=resource, sequence=[1], epoch='1', client_names=['root']))
+        lease = Lease(
+            LeaseProto.Lease(resource=resource, sequence=[1], epoch='1', client_names=['root']))
         self.lease_wallet.add(lease)
         return lease
 
@@ -534,12 +531,15 @@ def test_lease_keep_alive_empty_wallet_with_acquire():
     assert 3 == max_loops.cur_loops
     assert 3 == lease_client.retain_lease_calls
 
+
 def test_lease_keep_alive_empty_wallet_no_acquire():
     # There should be no calls to RetainLease if the wallet is empty
     lease_wallet = LeaseWallet()
     lease_client = MockLeaseClient(lease_wallet)
+
     def no_acquire(resource):
         raise bosdyn.client.Error('No lease given')
+
     lease_client.acquire = no_acquire
     max_loops = MaxKeepAliveLoops(3)
     keep_alive = LeaseKeepAlive(lease_client, resource='A', rpc_interval_seconds=.1,
@@ -621,4 +621,3 @@ def test_lease_compare_result_to_status():
 
     with pytest.raises(Exception):
         Lease.compare_result_to_lease_use_result_status(100, False)
-

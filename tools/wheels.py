@@ -383,9 +383,10 @@ def build_wheel(wheel, srcdir=None, dry_run=False, verbose=False, skip_git=False
     if not remove_built_wheel(wheel, dry_run=dry_run):
         return False
 
-    cmd = [sys.executable, 'setup.py', 'bdist_wheel', '-b', BUILD_DIR, '-d', DIST_DIR]
+    cmd = [sys.executable, 'setup.py']
     if not verbose:
         cmd.append('-q')
+    cmd += ['bdist_wheel', '-b', BUILD_DIR, '-d', DIST_DIR]
 
     if not srcdir:
         srcdir = os.path.join(PACKAGES_SOURCE_ROOT, wheel)

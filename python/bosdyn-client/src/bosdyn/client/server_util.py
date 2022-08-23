@@ -6,22 +6,18 @@
 
 """Helper functions and classes for creating and running a gRPC service."""
 
-from concurrent import futures
 import copy
-import grpc
 import logging
 import signal
 import time
+from concurrent import futures
 
-from bosdyn.api import header_pb2
-from bosdyn.api import data_acquisition_store_pb2
-from bosdyn.api import data_buffer_pb2
-from bosdyn.api import image_pb2
-from bosdyn.api import local_grid_pb2
-from bosdyn.api import log_annotation_pb2
-from bosdyn.client.channel import generate_channel_options
+import grpc
 
 import bosdyn.util
+from bosdyn.api import (data_acquisition_store_pb2, data_buffer_pb2, header_pb2, image_pb2,
+                        local_grid_pb2, log_annotation_pb2)
+from bosdyn.client.channel import generate_channel_options
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -40,14 +36,17 @@ class ResponseContext(object):
         rpc_logger (DataBufferClient): Optional data buffer client to log the messages; if not
             provided, only the headers will be mutated and nothing will be logged.
         channel_prefix (string): the prefix you want this req / resp pair logged under.
+        exc_callback (function): called with exception type, value, and traceback info if an
+            exception is raised in the body of the "with" statement.
     """
 
-    def __init__(self, response, request, rpc_logger=None, channel_prefix=None):
+    def __init__(self, response, request, rpc_logger=None, channel_prefix=None, exc_callback=None):
         self.response = response
         self.response.header.request_header.CopyFrom(request.header)
         self.request = request
         self.rpc_logger = rpc_logger
         self.channel_prefix = channel_prefix
+        self.exc_callback = exc_callback
 
     def __enter__(self):
         """Adds a start timestamp to the response header and logs the request RPC."""
@@ -69,6 +68,8 @@ class ResponseContext(object):
             # to be an internal error.
             self.response.header.error.code = self.response.header.error.CODE_INTERNAL_SERVER_ERROR
             self.response.header.error.message = "[%s] %s" % (exc_type.__name__, exc_val)
+            if self.exc_callback:
+                self.exc_callback(exc_type, exc_val, exc_tb)
         if self.rpc_logger:
             if self.channel_prefix is None:
                 channel = None
@@ -120,7 +121,7 @@ class GrpcServiceRunner(object):
         self.stop()
 
     def stop(self):
-        """Blocks until the gRPC server shutsdown."""
+        """Blocks until the gRPC server shuts down."""
         self.logger.info("Shutting down the {} server.".format(self.server_type_name))
         shutdown_complete = self.server.stop(None)
         shutdown_complete.wait(self.timeout_secs)

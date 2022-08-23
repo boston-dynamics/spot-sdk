@@ -8,11 +8,12 @@
 
 
 import concurrent
-import grpc
-from google.protobuf import timestamp_pb2
 import sys
+import time
 
+import grpc
 import pytest
+
 if sys.version_info[0:2] >= (3, 3):
     # Python version 3.3 added unittest.mock
     from unittest import mock
@@ -20,11 +21,12 @@ else:
     # The backport is on PyPi as just "mock"
     import mock
 
+from google.protobuf import timestamp_pb2
+
 import bosdyn.api.header_pb2 as HeaderProto
 import bosdyn.api.mission.nodes_pb2 as nodes_pb2
-import bosdyn.util
 import bosdyn.mission.util
-
+import bosdyn.util
 from bosdyn.api import lease_pb2
 from bosdyn.client.robot_command import RobotCommandBuilder
 
@@ -107,6 +109,7 @@ def start_server(servicer_to_server, client, service, robot=None):
     client.channel = channel
     server.start()
     return server
+
 
 def build_lease(sequence, epoch='foo', resource='bar'):
     lease = lease_pb2.Lease(resource=resource, epoch=epoch)

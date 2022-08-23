@@ -6,15 +6,16 @@
 
 """Tutorial to show how to use the Boston Dynamics API"""
 from __future__ import print_function
+
 import argparse
+import os
 import sys
 import time
-import os
+
 import bosdyn.client
 import bosdyn.client.lease
 import bosdyn.client.util
 import bosdyn.geometry
-
 from bosdyn.client.image import ImageClient
 from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient, blocking_stand
 
@@ -70,7 +71,7 @@ def hello_spot(config):
 
         # Tell the robot to stand up. The command service is used to issue commands to a robot.
         # The set of valid commands for a robot depends on hardware configuration. See
-        # SpotCommandHelper for more detailed examples on command building. The robot
+        # RobotCommandBuilder for more detailed examples on command building. The robot
         # command service requires timesync between the robot and the client.
         robot.logger.info("Commanding robot to stand...")
         command_client = robot.ensure_client(RobotCommandClient.default_service_name)
@@ -133,8 +134,9 @@ def hello_spot(config):
 def _maybe_display_image(image, display_time=3.0):
     """Try to display image, if client has correct deps."""
     try:
-        from PIL import Image
         import io
+
+        from PIL import Image
     except ImportError:
         logger = bosdyn.client.util.get_logger()
         logger.warning("Missing dependencies. Can't display image.")
@@ -152,8 +154,9 @@ def _maybe_save_image(image, path):
     """Try to save image, if client has correct deps."""
     logger = bosdyn.client.util.get_logger()
     try:
-        from PIL import Image
         import io
+
+        from PIL import Image
     except ImportError:
         logger.warning("Missing dependencies. Can't save image.")
         return

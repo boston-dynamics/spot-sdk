@@ -11,19 +11,19 @@ import signal
 import threading
 import time
 
+from sbp.client import Framer, Handler
+from sbp.client.drivers.pyserial_driver import PySerialDriver
+from sbp.navigation import SBP_MSG_POS_LLH, SBP_MSG_POS_LLH_DEP_A
+
+import bosdyn.client.util
 from bosdyn.api import data_acquisition_pb2, data_acquisition_plugin_service_pb2_grpc
+from bosdyn.client.data_acquisition_plugin_service import (Capability, DataAcquisitionPluginService,
+                                                           RequestState)
 from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
-from bosdyn.client.data_acquisition_plugin_service import (Capability, RequestState,
-                                                           DataAcquisitionPluginService)
 from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
                                                   DirectoryRegistrationKeepAlive)
-from sbp.client.drivers.pyserial_driver import PySerialDriver
-import bosdyn.client.util
-from bosdyn.client.util import setup_logging
 from bosdyn.client.server_util import GrpcServiceRunner
-
-from sbp.client import Handler, Framer
-from sbp.navigation import SBP_MSG_POS_LLH_DEP_A, SBP_MSG_POS_LLH
+from bosdyn.client.util import setup_logging
 
 DIRECTORY_NAME = 'data-acquisition-piksi-metadata-plugin'
 AUTHORITY = 'data-acquisition-piksi-metadata-plugin'

@@ -1,0 +1,10 @@
+version: "3.5"
+services:
+  docking_callback:
+    image: docking_callback:arm64
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      - BOSDYN_CLIENT_USERNAME={USER}
+      - BOSDYN_CLIENT_PASSWORD={PASSWORD}
+    command: --destination aws --bucket-name {YOUR_BUCKET} --host-ip 192.168.50.5 192.168.50.3

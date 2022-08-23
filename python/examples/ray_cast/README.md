@@ -13,13 +13,13 @@ The ray cast service calculates intersection points between a ray and various da
 ## Understanding Spot Programming
 
 For your best learning experience, please use the [Quickstart Guide](../../../docs/python/quickstart.md)
-found in the SDK's docs/python directory.  That will help you get your Python programming environment set up properly.
+found in the SDK's docs/python directory. That will help you get your Python programming environment set up properly.
 
 ## Setup Dependencies
 
 This example requires the bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:
 
-``` shell
+```shell
 python3 -m pip install -r requirements.txt
 ```
 
@@ -27,7 +27,7 @@ python3 -m pip install -r requirements.txt
 
 Below is example output from casting a ray starting in front of the robot (positive X) forward and down toward the ground.
 
-``` shell
+```shell
 >>> python3 cast_single_ray.py -o 0.5 0.0 0.0 -d 1.0 0.0 -1.0 HOSTNAME
 Raycasting from position: X: 0.500 Y: 0.000 Z: 0.000
 Raycasting in direction: X: 1.000 Y: 0.000 Z: -1.000

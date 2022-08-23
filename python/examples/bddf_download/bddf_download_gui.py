@@ -6,24 +6,23 @@
 
 """pyqt wrapper for bddf_download.py"""
 
-import sys
-import os
 import argparse
 import datetime
-import platform
 import logging
+import os
+import platform
 import signal
 import subprocess
+import sys
 
-from PyQt5 import QtCore, QtWidgets
-from PyQt5 import uic
+from bddf_download import collect_and_write_file, prepare_download
+from PyQt5 import QtCore, QtWidgets, uic
 
-from bddf_download import prepare_download, collect_and_write_file
 import bosdyn.client
-from bosdyn.util import duration_str
-from bosdyn.client.time_sync import TimeSyncClient, TimeSyncEndpoint
-from bosdyn.client.data_service import DataServiceClient
 from bosdyn.api.data_index_pb2 import EventsCommentsSpec
+from bosdyn.client.data_service import DataServiceClient
+from bosdyn.client.time_sync import TimeSyncClient, TimeSyncEndpoint
+from bosdyn.util import duration_str
 
 # Use for PyInstaller Executable.
 QTCREATORFILE = 'download.ui'

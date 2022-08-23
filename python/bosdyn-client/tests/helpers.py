@@ -7,9 +7,11 @@
 """Common unit test helpers for bosdyn.client tests."""
 
 import concurrent
+
 import grpc
 
 import bosdyn.api.header_pb2 as HeaderProto
+
 
 def setup_client_and_service(client, service, service_adder):
     """Starts a service listening on a port and points client to it.

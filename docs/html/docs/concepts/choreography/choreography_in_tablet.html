@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Boston Dynamics Choreography Tablet Screen &mdash; Spot 3.1.2.1 documentation</title>
+  <title>Boston Dynamics Choreography tablet UI &mdash; Spot 3.2.0 documentation</title>
   
 
   
@@ -42,7 +42,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Spot Arm and Gripper" href="../arm/README.html" />
-    <link rel="prev" title="Animation Files for Choreographer" href="animation_file_specification.html" /> 
+    <link rel="prev" title="Animation files for Choreographer" href="animation_file_specification.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.1.2.1
+                3.2.0
               </div>
             
           
@@ -118,10 +118,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autonomy/autowalk_service.html">Autowalk service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/directed_exploration.html">Directed Exploration</a></li>
@@ -149,7 +151,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../data_acquisition_output.html">Data Acquisition Output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../data_buffer_overview.html">Data Buffer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../bddf.html">BDDF file format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
 </ul>
 </li>
 </ul>
@@ -182,6 +185,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/docking/README.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -200,6 +204,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -207,6 +212,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -261,16 +267,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
@@ -297,6 +311,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
@@ -322,6 +338,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lights_helper.html">Lights Helper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
@@ -391,7 +408,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq2.html">Part 2: Capturing images</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq3.html">Part 3: Capturing other data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq4.html">Part 4: Deploying to the Spot CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq4.html">Part 4: Deploying to the CORE I/O</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq5.html">Part 5: Collecting data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq6.html">Part 6: Processing collected data</a></li>
 </ul>
@@ -405,9 +422,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../payload/robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../payload/configuring_payload_software.html">Configuring payload software</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/docker_containers.html">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../protos/README.html">API Protocol</a><ul>
@@ -421,6 +443,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-proto">autowalk/autowalk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-service-proto">autowalk/autowalk_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-walks-proto">autowalk/walks.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
@@ -444,6 +469,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
@@ -539,6 +566,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -589,7 +617,7 @@
         
           <li><a href="README.html">Spot Choreography SDK</a> &raquo;</li>
         
-      <li>Boston Dynamics Choreography Tablet Screen</li>
+      <li>Boston Dynamics Choreography tablet UI</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -612,43 +640,81 @@ Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><section id="boston-dynamics-choreography-tablet-screen">
-<h1>Boston Dynamics Choreography Tablet Screen<a class="headerlink" href="#boston-dynamics-choreography-tablet-screen" title="Permalink to this headline">¶</a></h1>
+--><section id="boston-dynamics-choreography-tablet-ui">
+<h1>Boston Dynamics Choreography tablet UI<a class="headerlink" href="#boston-dynamics-choreography-tablet-ui" title="Permalink to this headline">¶</a></h1>
 <p>Dances authored and executed using Choreographer can also be played through the Tablet using the Choreography drive mode.</p>
+<p><em>Only users with a Spot choreography license will be able to view the Choreography drive screen.</em></p>
 <section id="choreography-safety">
-<h2>Choreography Safety<a class="headerlink" href="#choreography-safety" title="Permalink to this headline">¶</a></h2>
+<h2>Choreography safety<a class="headerlink" href="#choreography-safety" title="Permalink to this headline">¶</a></h2>
 <p>When playing any choreography sequence on a robot, always keep in mind basic safety procedures. Make sure there is plenty of space around your Spot, keep all Spots at least two meters apart from each other, and be sure that neither you nor anyone else approach the dancing Spot. Never approach your Spot unless its motors have been powered off.</p>
 </section>
 <section id="using-the-choreography-drive-mode">
-<h2>Using the Choreography Drive Mode<a class="headerlink" href="#using-the-choreography-drive-mode" title="Permalink to this headline">¶</a></h2>
-<img src="../../../_images/tablet_choreographer_1.png" width="520"/> <ol>
-<li><p><strong>Application selection</strong> - The Choreography Drive Mode can be entered from the upper left dropdown menu where it will appear with Drive and Autowalk.</p></li>
-<li><p><strong>Exiting and Entering Dance Mode</strong> - For Tablets without hardware joysticks exiting and entering dance mode will allow you to toggle between playing choreography sequences and using the other robot modes (walk, stand, sit, etc.) For tablets with hardware joysticks selected choreography sequences will always appear on screen.</p></li>
-<li><p><strong>Select and View Known Moves</strong> - A list of the choreography sequences that the robot can perform are viewable by pressing the <strong>Select Moves</strong> tab at the top of the screen. Opening this menu will also allow you to add dance sequences to the Choreography screen as buttons which are used to play the sequences on the robot.</p>
-<p><em>The tablet interface refers to entire sequences as “Moves.”</em></p>
-</li>
+<h2>Using the Choreography drive mode<a class="headerlink" href="#using-the-choreography-drive-mode" title="Permalink to this headline">¶</a></h2>
+  <img src="../../../_images/tablet_choreographer_1.png" width="520"/><ol class="simple">
+<li><p><strong>Application selection</strong> - Enter Choreography drive mode from the upper left dropdown menu where it appears with Drive and Autowalk.</p></li>
 </ol>
-<img src="../../../_images/tablet_choreographer_2.png" width="520"/> <ol class="simple">
-<li><p><strong>Adding Moves to the Screen</strong> - You can choose to place any sequence to the left or right side of the tablet screen, where it will be added to a list of buttons which each trigger the playback of the selected choreography sequence. Swipe horizontally left and right across the dropdown menu to scroll through the known moves.</p></li>
+<ol class="simple">
+<li><p><strong>Exiting and entering Dance mode</strong> - For Tablets without hardware joysticks, exiting and entering dance mode allows you to toggle between playing choreography sequences and using other robot modes. For tablets with hardware joysticks, selected choreography sequences will always appear on screen.</p></li>
 </ol>
-<img src="../../../_images/tablet_choreographer_3.png" width="520"/> <ol class="simple">
-<li><p><strong>Play the Choreography Sequence</strong> - Once a sequence appears on screen as a white button you can press that button to play the choreography sequence. The name on the button indicates the choreography sequence that will play.</p></li>
-<li><p><strong>Removing Buttons from the list</strong> - You can remove a button from on screen by pressing the black ‘minus’ symbol next to it. This will not remove it from the list of available sequences in the <strong>Select Moves</strong> dropdown menu.</p></li>
-<li><p><strong>Cancel Move</strong> - A choreography sequence that is playing can be stopped by pressing the red <strong>CANCEL</strong> button in the center of the screen. If a move is canceled while it is playing the robot will stop the move and come to stand. A sequence can also be aborted by entering any other mode (e.g. Sit, Stand, Walk, Self Right).</p></li>
+<ol>
+<li><p><strong>Select and View Choreography Sequences</strong> - Lists of the choreography sequences that the robot can perform are viewable by pressing the tabs at the top of the screen. Opening these menus will allow you to add dance sequences to the Choreography screen as buttons which are used to play the sequences on the robot. These tabs are configurable, and you can choose which tabs will appear as options on screen by going to the <strong>Choreography</strong> option in the <strong>Settings</strong> menu.</p>
+<p><em>See below for information on configuring the Choreography drive screen.</em></p>
+<img src="../../../_images/tablet_choreographer_2.png" width="520"/></li>
+</ol>
+<ol>
+<li><p><strong>Adding moves to the screen</strong> - You can choose to place any sequence to the left or right side of the tablet screen, where it will be added to a list of buttons which each trigger the playback of the selected choreography sequence. Swipe horizontally left and right across the dropdown menu to scroll through the known moves.</p>
+<img src="../../../_images/tablet_choreographer_3.png" width="520"/></li>
+<li><p><strong>Play the Choreography sequence</strong> - Once a sequence appears on screen as a white button you can press that button to play the choreography sequence. The name on the button indicates the choreography sequence that will play.</p></li>
+<li><p><strong>Removing buttons from the list</strong> - Remove a button from on screen by pressing the minus symbol next to it. This does not remove the move from the dropdown menu it was selected from.</p></li>
+<li><p><strong>Cancel moves</strong> - Stop a choreography sequence that is playing by pressing <strong>CANCEL</strong> in the center of the screen. If a move is canceled while it is playing, the robot will stop the move and come to a stand. A sequence can also be aborted by entering any other mode such as Sit, Stand, Walk, or Self Right.</p></li>
 </ol>
 </section>
 <section id="using-the-tablet-to-play-your-own-choreography-sequences">
-<h2>Using the Tablet to Play your own Choreography Sequences<a class="headerlink" href="#using-the-tablet-to-play-your-own-choreography-sequences" title="Permalink to this headline">¶</a></h2>
-<p>Spot comes with a small library of sequences, some intended for performance, and some gestures that could be used to communicate intent through body language. These sequences are always available in the Select Moves dropdown, but the Tablet can also play custom sequences uploaded by users. The easiest way to author choreography sequences and upload them to the robot is through the Choreographer application.</p>
+<h2>Using the tablet to play your own Choreography sequences<a class="headerlink" href="#using-the-tablet-to-play-your-own-choreography-sequences" title="Permalink to this headline">¶</a></h2>
+<p>Spot comes with a small library of sequences. Some of these are intended for performance. Some gestures can be used to communicate intent through body language. These sequences are always available in the <strong>Select Moves</strong> dropdown. The Tablet can also play custom sequences uploaded by users. The easiest way to author choreography sequences and upload them to the robot is through the Choreographer application.</p>
 <p><em>Only users with a Spot choreography license can upload original sequences.</em></p>
-<p><strong>Uploading Choreography Sequences with Choreographer</strong></p>
-<ol class="simple">
+<section id="uploading-choreography-sequences-with-choreographer">
+<h3>Uploading choreography sequences with Choreographer<a class="headerlink" href="#uploading-choreography-sequences-with-choreographer" title="Permalink to this headline">¶</a></h3>
+<img src="../../../_images/tablet_choreographer_4.png" width="520"/><ol class="simple">
 <li><p>Start by opening your completed choreography sequence in Choreographer and connecting your robot to Choreographer. Refer to the “Choreographer User Guide” and “Connecting Robots to Choreographer” if you have trouble with this step.</p></li>
 <li><p>Make sure you have given your choreography sequence a name that will allow you to easily identify it later, and then play the sequence on the robot using the Choreographer application. Playing the sequence on the robot uploads it to Spot’s memory.</p></li>
-<li><p>After repeating steps 1 and 2 for all the choreography sequences you want to play through the tablet, sit the robot and disconnect it from Choreographer. Now when you connect to Spot through the Tablet all your original choreography sequences will appear with the other moves in the <strong>Select Moves</strong> dropdown menu.</p></li>
+<li><p>After repeating steps 1 and 2 for all the choreography sequences you want to play through the tablet or save to your Spot, sit the robot and disconnect it from Choreographer.</p></li>
 </ol>
-<p><strong>Limitations on Original Sequences</strong>
-Custom sequences uploaded by users to Spot are not saved permanently; they will only remain available until the robot is powered off. After turning the robot back on, you must follow follow all the steps in, “Uploading Choreography Sequences with Choreographer” again to reupload your sequences.</p>
+<img src="../../../_images/tablet_choreographer_5.png" width="520"/><ol class="simple">
+<li><p>Now connect to Spot through the Tablet, and navigate to the <strong>Settings</strong> section of the Hamburger menu. In <strong>Settings</strong> select <strong>Choreography</strong>. All the moves you uploaded with Choreographer should appear in a list near the bottom of the screen under <strong>Unsaved Choreography Sequences</strong>.</p></li>
+</ol>
+<img src="../../../_images/tablet_choreographer_6.png" width="520"/><ol class="simple">
+<li><p>To play these sequences through the tablet you will need to save them and give them a label. To save a sequence, select the edit symbol next to its name on the right side of the screen, choose a label from the dropdown, and press save. Complete this step for each sequence you wish to save and have accessible for execution through the tablet.</p></li>
+</ol>
+<p><em>All animation moves (moves loaded from .cha files), included in a saved sequence will also be saved. Once a sequence is saved no further upload action will be required for it to be playable from the tablet or through an <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC call using the sequence’s name. If all sequences requiring an animation move are deleted, the stored animation move will also be removed on the next reboot. Make sure different animations have different names, or saved choreography sequences will attempt to replace the old version with the new version of the animation.</em></p>
+<ol class="simple">
+<li><p>Locate the checkbox for the label(s) you saved your sequences to, and make sure they are checked. Checking the checkbox for a label will make it appear as an option when you enter the Choreography drive screen.</p></li>
+</ol>
+<img src="../../../_images/tablet_choreographer_7.png" width="520"/><ol class="simple">
+<li><p>Enter the Choreography drive screen and locate the dropdown tabs with the labels you selected in the Choreography settings screen. You will now be able to add and play your custom choreography sequences in the same way you would play the sample choreography sequences included with your robot release.</p></li>
+</ol>
+</section>
+</section>
+<section id="managing-your-uploaded-choreography-sequences">
+<h2>Managing your uploaded Choreography sequences<a class="headerlink" href="#managing-your-uploaded-choreography-sequences" title="Permalink to this headline">¶</a></h2>
+<section id="deleting-saved-choreography-sequences">
+<h3><strong>Deleting Saved Choreography Sequences</strong><a class="headerlink" href="#deleting-saved-choreography-sequences" title="Permalink to this headline">¶</a></h3>
+<p>The original choreography sequences you save to Spot will be retained indefinitely until you actively choose to delete them. There are two methods for deleting these sequences.</p>
+<p>Method 1: In the Choreography settings screen select the edit button next to sequence you wish to delete. In that screen, find the trash icon next to the sequence name and press it.</p>
+<p>Method 2: You can delete every custom sequence in a label by deleting the selected label. Select the edit button next to the label you wish to delete. In that screen, find the trash icon next to the label name and press it. This will delete every sequence under the label.</p>
+<p><em>Deleting a sequence deletes it from every label it is connected to. If you want to save it again, you will need to repeat the steps to upload it and save it from the unsaved state. If you just wish to remove a sequence from a certain label, but don’t want to delete it, see the steps for adding and removing labels below.</em></p>
+</section>
+<section id="adding-and-removing-labels">
+<h3><strong>Adding and Removing Labels</strong><a class="headerlink" href="#adding-and-removing-labels" title="Permalink to this headline">¶</a></h3>
+<p><strong>Add a Label</strong><br/></p>
+<img src="../../../_images/create_label.png" width="420"/><p>To add a new label go to the Choreography settings screen and press the button that says <strong>Add New Label</strong>. Enter your label name into the provided text field and press the <strong>Create</strong> button.</p>
+<p><strong>Delete a Label</strong><br/></p>
+<img src="../../../_images/delete_label.png" width="420"/><p>Select the edit icon next to the label you want to delete. Find the trash icon next to the label’s name in the edit screen and press it. This will delete the label and all the sequences that label has been added to.</p>
+<p><strong>Remove a label from a Sequence</strong><br/></p>
+<img src="../../../_images/remove_label.png" width="420"/><p>Select the edit icon next to the sequence you wish to modify. Find the label you wish to remove in the list under <em>sequence labels</em> on the right side of the screen, and remove it by pressing the <strong>X</strong> icon next to it.</p>
+<p><strong>Add a label to a Sequence</strong><br/></p>
+<img src="../../../_images/add_label.png" width="420"/><p>Select the edit icon next to the sequence you wish to modify. Select the label you wish to add in the dropdown on the left hand side of the screen, and then press the <strong>Add Label</strong> button.</p>
+</section>
 </section>
 </section>
 

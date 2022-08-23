@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Connecting Robots to Choreographer &mdash; Spot 3.1.2.1 documentation</title>
+  <title>Connecting robots to Choreographer &mdash; Spot 3.2.0 documentation</title>
   
 
   
@@ -42,7 +42,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Animations in Choreography" href="animations_in_choreographer.html" />
-    <link rel="prev" title="Boston Dynamics Choreographer User Guide" href="choreographer.html" /> 
+    <link rel="prev" title="Boston Dynamics Choreographer Developer Guide" href="choreographer.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.1.2.1
+                3.2.0
               </div>
             
           
@@ -118,10 +118,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autonomy/autowalk_service.html">Autowalk service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/directed_exploration.html">Directed Exploration</a></li>
@@ -149,7 +151,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../data_acquisition_output.html">Data Acquisition Output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../data_buffer_overview.html">Data Buffer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../bddf.html">BDDF file format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
 </ul>
 </li>
 </ul>
@@ -182,6 +185,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/docking/README.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -200,6 +204,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -207,6 +212,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -261,16 +267,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
@@ -297,6 +311,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
@@ -322,6 +338,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lights_helper.html">Lights Helper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
@@ -391,7 +408,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq2.html">Part 2: Capturing images</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq3.html">Part 3: Capturing other data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq4.html">Part 4: Deploying to the Spot CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq4.html">Part 4: Deploying to the CORE I/O</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq5.html">Part 5: Collecting data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq6.html">Part 6: Processing collected data</a></li>
 </ul>
@@ -405,9 +422,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../payload/robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../payload/configuring_payload_software.html">Configuring payload software</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/docker_containers.html">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../protos/README.html">API Protocol</a><ul>
@@ -421,6 +443,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-proto">autowalk/autowalk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-service-proto">autowalk/autowalk_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-walks-proto">autowalk/walks.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
@@ -444,6 +469,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
@@ -539,6 +566,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -589,7 +617,7 @@
         
           <li><a href="README.html">Spot Choreography SDK</a> &raquo;</li>
         
-      <li>Connecting Robots to Choreographer</li>
+      <li>Connecting robots to Choreographer</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -613,15 +641,24 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="connecting-robots-to-choreographer">
-<h1>Connecting Robots to Choreographer<a class="headerlink" href="#connecting-robots-to-choreographer" title="Permalink to this headline">¶</a></h1>
-<p>Robots can either be connected to Choreographer before starting the application, or they can be dynamically connected and disconnected from the application once it is running.</p>
-<p>In order to connect your robot to Choreographer, you must start Choreographer from the command line and pass in the arguments <code class="docutils literal notranslate"><span class="pre">--hostname</span> <span class="pre">{IP/Hostname</span> <span class="pre">of</span> <span class="pre">your</span> <span class="pre">Spot}</span> <span class="pre">--user</span> <span class="pre">{Username</span> <span class="pre">you</span> <span class="pre">use</span> <span class="pre">to</span> <span class="pre">log</span> <span class="pre">in</span> <span class="pre">to</span> <span class="pre">your</span> <span class="pre">Spot}</span> <span class="pre">--password</span> <span class="pre">{Password</span> <span class="pre">for</span> <span class="pre">your</span> <span class="pre">Spot}</span></code>. If you wish to connect to multiple Spots at once, simply add more copies of those command line arguments, one set for each Spot.</p>
-<p>To connect your robot after the application has been started, select the Robot Management Tab (shown in the image below), and then click the “Add” button. This will prompt you for the robot’s hostname, username, and then password. To remove any robot connections, click the “Disconnect” button and check any robots that you want to disconnect from. Note: disconnecting from a robot will power off the robot and release the lease and E-Stop.</p>
-<p><img alt="Robot Management Tab" src="../../../_images/robot_management.png" /></p>
-<p>Choreographer supports connecting to multiple robots at once. In the Robot Management Tab, you can select which robots are being controlled at a given time. Additionally, you can apply different choreographies to each robot and start them all at the same time.</p>
+<h1>Connecting robots to Choreographer<a class="headerlink" href="#connecting-robots-to-choreographer" title="Permalink to this headline">¶</a></h1>
+<p>Robots can either be connected to Choreographer before starting the application or dynamically connected and disconnected from the application once it is running.</p>
+<p>To connect your robot to Choreographer, start Choreographer from the command line with arguments:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span><span class="n">hostname</span> <span class="p">{</span><span class="n">IP</span><span class="o">/</span><span class="n">Hostname</span> <span class="n">of</span> <span class="n">your</span> <span class="n">Spot</span><span class="p">}</span> <span class="o">--</span><span class="n">user</span> <span class="p">{</span><span class="n">Username</span> <span class="n">you</span> <span class="n">use</span> <span class="n">to</span> <span class="n">log</span> <span class="ow">in</span> <span class="n">to</span> <span class="n">your</span> <span class="n">Spot</span><span class="p">}</span> <span class="o">--</span><span class="n">password</span> <span class="p">{</span><span class="n">Password</span> <span class="k">for</span> <span class="n">your</span> <span class="n">Spot</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>To connect multiple Spots at once include additional command line arguments, one set for each Spot.</p>
+<p>To connect your robot after the application has been started</p>
+<ol class="simple">
+<li><p>Select the Robot Management Tab (shown in the image below)</p></li>
+<li><p>Click <strong>Add</strong>. Enter the robot’s hostname, username, and password.</p></li>
+</ol>
+<p>To remove robot connections, click <strong>Disconnect</strong> and check any robots that you want to disconnect. Note: Disconnecting from a robot will power off the robot and release the lease and E-Stop.</p>
+<p><img alt="Robot Management tab" src="../../../_images/robot_management.png" /></p>
+<p>Choreographer supports connections to multiple robots. In the Robot Management Tab, you can select which robots are being controlled at a given time. Additionally, you can apply different choreographies to each robot and start them all at the same time.</p>
 <section id="robot-controls">
-<h2>Robot Controls<a class="headerlink" href="#robot-controls" title="Permalink to this headline">¶</a></h2>
-<p>The Robot Controls bar is disabled if there are no robots connected to the Choreographer program. If a robot is connected, the buttons will have the following effects:</p>
+<h2>Robot controls<a class="headerlink" href="#robot-controls" title="Permalink to this headline">¶</a></h2>
+<p>The <strong>Robot Controls</strong> bar is disabled if there are no robots connected to Choreographer. If a robot is connected to Choreographer, the buttons will have the following effects:</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -632,7 +669,7 @@ Development Kit License (20191101-BDSDK-SL).
 <tbody>
 <tr>
 <td>Power Off</td>
-<td>Powers off the Spot’s motors. Always press this before approaching your Spot.</td>
+<td>Powers off Spot’s motors. Always press Power off before approaching the robot.</td>
 </tr>
 <tr>
 <td>Power On</td>
@@ -644,39 +681,39 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>Self-Right</td>
-<td>If your Spot has fallen, this will attempt to right it into a sitting position</td>
+<td>If your Spot has fallen, self-righting causes the robot to attempt to return to the sitting pose.</td>
 </tr>
 <tr>
 <td>Sit</td>
-<td>Sits the Spot in-place. Cancels all current choreography and music, but E-Stop or Power Off should be used in an emergency.</td>
+<td>Sits the Spot in-place. Cancels all current choreography and music. E-Stop and  Power Off can still be used in an emergency.</td>
 </tr>
 <tr>
 <td>Stand</td>
-<td>Brings Spot to a stand. Cancels all current choreography and music, but E-Stop or Power Off should be used in an emergency.</td>
+<td>Brings Spot to a stand. Cancels all current choreography and music. E-Stop and Power Off can still be used in an emergency.</td>
 </tr>
 <tr>
 <td>Enable Joystick</td>
-<td>Activated Joystick Controls (see Joystick Controls section)</td>
+<td>Activates joystick controls (see Joystick controls section)</td>
 </tr>
 <tr>
 <td>Enable WASD Driving</td>
-<td>Activates "WASD" keyboard driving (see WASD Controls section)</td>
+<td>Activates WASD keyboard driving (see WASD Controls section)</td>
 </tr>
 <tr>
 <td>Return To Start</td>
-<td>Spot will walk from its current location to the last location it started a dance (either a full choreography or the move preview dance).</td>
+<td>Spot walks from its current location to the last location it started a dance (either a full choreography or the move preview dance).</td>
 </tr>
 <tr>
 <td>Start Choreography</td>
-<td>Sends your choreography sequence to your Spot, then starts a 3 second countdown before the robot begins dancing. Any loaded music will automatically start as soon as Spot begins to dance.</td>
+<td>Sends a choreography sequence to the robot, then starts a 3 second countdown before the robot begins dancing. Any loaded music will automatically start as soon as Spot begins to dance.</td>
 </tr>
 </tbody>
-</table><p>Note: The return to start button (added in the Spot 2.4 release) will bring all selected robots back to their starting position after completing a choreography. If multiple robots are being controlled, there is obstacle avoidance enabled when they are navigating back to the starting position. To adjust this obstacle padding distance (in meters), the command line argument <code class="docutils literal notranslate"><span class="pre">--obs-padding</span> <span class="pre">DIST_IN_METERS</span></code> can be provided when starting the Choreographer application.</p>
+</table><p>Note: <strong>Return to Start</strong> brings all selected robots back to their starting position after completing a choreography. If multiple robots are being controlled, obstacle avoidance is enabled when they are navigating back to the starting position. To adjust this obstacle padding distance (in meters) the command line argument <code class="docutils literal notranslate"><span class="pre">--obs-padding</span> <span class="pre">DIST_IN_METERS</span></code> can be added to the Choreographer command line.</p>
 </section>
 <section id="joystick-controls">
-<h2>Joystick Controls<a class="headerlink" href="#joystick-controls" title="Permalink to this headline">¶</a></h2>
+<h2>Joystick controls<a class="headerlink" href="#joystick-controls" title="Permalink to this headline">¶</a></h2>
 <p><img alt="Joystick Controls" src="../../../_images/joystick_help.png" /></p>
-<p>A X-Box gamepad controller can be used with the GUI for convenience of moving and positioning the robot.  The button layout is set up for X-Box 360 controllers, which are readily available, and can be connected to a computer through a USB port.  Many of the buttons in the GUI are linked to gamepad buttons, and the gamepad button will behave the same as the corresponding GUI button.  As shown in the diagram above they are:</p>
+<p>An Xbox gamepad controller can be used with the GUI for moving and positioning the robot.  The button layout is set up for Xbox 360 controllers. Xbox controllers are connected to a computer using a USB port.  Many of the buttons in the GUI are linked to gamepad buttons, and the gamepad button will behave the same as the corresponding GUI button.  As shown in the diagram above they are:</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -691,11 +728,11 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>B</td>
-<td>Enable Joystick</td>
+<td>Enable joystick</td>
 </tr>
 <tr>
 <td>X</td>
-<td>Start Choreography</td>
+<td>Start choreography</td>
 </tr>
 <tr>
 <td>Y</td>
@@ -703,7 +740,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>Left-Bumper</td>
-<td>Self Right</td>
+<td>Self-right</td>
 </tr>
 <tr>
 <td>Right-Bumper</td>
@@ -711,20 +748,23 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>Start</td>
-<td>Power On</td>
+<td>Power on</td>
 </tr>
 <tr>
 <td>Back</td>
-<td>Power Off</td>
+<td>Power off</td>
 </tr>
 </tbody>
-</table><p>When the joystick is enabled (either through hitting the “B” button on the gamepad or through the GUI button), the robot will walk, and can be driven by the joysticks. As shown in the diagram above, the left joystick controls translation, and the right joystick controls yaw. When the robot is controlled through any of the other Robot Controls buttons, when WASD mode is enabled, or when a dance routine has been started, joystick driving will be disabled however other buttons will still work.</p>
-<p>While using Choreographer, the joystick controller mapping diagram can be accessed as a reminder using the menus Help-&gt;Joystick Controller Mapping.</p>
-<p>Note: the X-Box controller must be connected to the computer via USB port before opening the Choreographer application.</p>
+</table><p>When the joystick is enabled by tapping the <strong>B</strong> button on the gamepad or using the GUI button, the robot walks and can be driven using the joysticks. As shown in the diagram above, the left joystick controls translation. The right joystick controls yaw.</p>
+<p>When the robot is controlled through any of the other Robot Controls buttons, when WASD mode is enabled, or when a dance routine has been started, joystick driving will be. Other buttons still work.</p>
+<p>View the joystick controller mapping diagram by selecting <strong>Joystick Controller Mapping</strong> from the Help menu.</p>
+<p>Note: The Xbox controller must be connected to the computer via USB port before opening the Choreographer application.</p>
 </section>
 <section id="keyboard-controls">
-<h2>Keyboard Controls<a class="headerlink" href="#keyboard-controls" title="Permalink to this headline">¶</a></h2>
-<p>Similar to the joystick control, we provide the ability to drive the robot using the WASD keys on the keyboard. When enabled (either through hitting the GUI button or by pressing “v” on the keyboard), the robot will walk and can be driven using the WASD keys. Joystick mode will be disabled while driving in WASD mode. The hotkeys are setup to mimic the joystick button key presses when applicable. When the robot is controlled through any of the other Robot Controls buttons, when joystick mode is enabled, or when a dance routine has been started, the WASD driving will be disabled, however other keypresses will still be available.</p>
+<h2>Keyboard controls<a class="headerlink" href="#keyboard-controls" title="Permalink to this headline">¶</a></h2>
+<p>Similar to the joystick control, you can drive the robot using the WASD keys on the keyboard.</p>
+<p>When enabled, the robot can be driven using the WASD keys. Joystick mode is disabled while driving in WASD mode. The hotkeys are set up to mimic the joystick button keys, when applicable.</p>
+<p>When the robot is controlled through any of the other Robot Controls buttons, WASD driving is disabled. Other keypresses still work.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -739,15 +779,15 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>b</td>
-<td>Enable Joystick mode</td>
+<td>Enable joystick mode</td>
 </tr>
 <tr>
 <td>k</td>
-<td>Power On</td>
+<td>Power on</td>
 </tr>
 <tr>
 <td>l</td>
-<td>Power Off</td>
+<td>Power off</td>
 </tr>
 <tr>
 <td>y</td>
@@ -755,7 +795,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>x</td>
-<td>Start Choreography</td>
+<td>Start choreography</td>
 </tr>
 <tr>
 <td>[</td>
@@ -790,7 +830,7 @@ Development Kit License (20191101-BDSDK-SL).
 <td>Turn right</td>
 </tr>
 </tbody>
-</table><p>While using Choreographer, a table of available keystrokes can be accessed as a reminder using the menus Help-&gt;Hotkeys Documentation.</p>
+</table><p>Select <strong>Hotkeys Documentation</strong> from the Help menu to view a keystroke mapping table.</p>
 </section>
 </section>
 

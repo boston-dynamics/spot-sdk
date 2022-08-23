@@ -95,7 +95,7 @@ def joint_move_example(config):
 
         # Tell the robot to stand up. The command service is used to issue commands to a robot.
         # The set of valid commands for a robot depends on hardware configuration. See
-        # SpotCommandHelper for more detailed examples on command building. The robot
+        # RobotCommandBuilder for more detailed examples on command building. The robot
         # command service requires timesync between the robot and the client.
         robot.logger.info("Commanding robot to stand...")
         command_client = robot.ensure_client(RobotCommandClient.default_service_name)
@@ -147,8 +147,7 @@ def joint_move_example(config):
 
         # Send the request
         cmd_id = command_client.robot_command(command)
-        robot.logger.info(
-            'Requesting a single point trajectory with unsatisfiable constraints.')
+        robot.logger.info('Requesting a single point trajectory with unsatisfiable constraints.')
 
         # Query for feedback
         feedback_resp = command_client.robot_command_feedback(cmd_id)

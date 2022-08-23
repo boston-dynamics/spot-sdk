@@ -10,12 +10,11 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
-from bosdyn.client.common import (BaseClient, common_header_errors, handle_common_header_errors)
-from bosdyn.api.spot_cam import service_pb2_grpc
-from bosdyn.api.spot_cam import audio_pb2
-from bosdyn.api import data_chunk_pb2
-
 from google.protobuf.wrappers_pb2 import FloatValue
+
+from bosdyn.api import data_chunk_pb2
+from bosdyn.api.spot_cam import audio_pb2, service_pb2_grpc
+from bosdyn.client.common import BaseClient, common_header_errors, handle_common_header_errors
 
 
 class AudioClient(BaseClient):
@@ -31,37 +30,37 @@ class AudioClient(BaseClient):
         """Retrieve the list of available sounds"""
         request = audio_pb2.ListSoundsRequest()
         return self.call(self._stub.ListSounds, request, self._list_sounds_from_response,
-                         self._audio_error_from_response, **kwargs)
+                         self._audio_error_from_response, copy_request=False, **kwargs)
 
     def list_sounds_async(self, **kwargs):
         """Async version of list_sounds()"""
         request = audio_pb2.ListSoundsRequest()
         return self.call_async(self._stub.ListSounds, request, self._list_sounds_from_response,
-                               self._audio_error_from_response, **kwargs)
+                               self._audio_error_from_response, copy_request=False, **kwargs)
 
     def set_volume(self, percentage, **kwargs):
         """Set the current volume as a percentage"""
         request = audio_pb2.SetVolumeRequest(volume=percentage)
         return self.call(self._stub.SetVolume, request, self._set_volume_from_response,
-                         self._audio_error_from_response, **kwargs)
+                         self._audio_error_from_response, copy_request=False, **kwargs)
 
     def set_volume_async(self, percentage, **kwargs):
         """Async version of set_volume()"""
         request = audio_pb2.SetVolumeRequest(volume=percentage)
         return self.call_async(self._stub.SetVolume, request, self._set_volume_from_response,
-                               self._audio_error_from_response, **kwargs)
+                               self._audio_error_from_response, copy_request=False, **kwargs)
 
     def get_volume(self, **kwargs):
         """Retrieve the current volume as a percentage"""
         request = audio_pb2.GetVolumeRequest()
         return self.call(self._stub.GetVolume, request, self._get_volume_from_response,
-                         self._audio_error_from_response, **kwargs)
+                         self._audio_error_from_response, copy_request=False, **kwargs)
 
     def get_volume_async(self, **kwargs):
         """Async version of get_volume()"""
         request = audio_pb2.GetVolumeRequest()
         return self.call_async(self._stub.GetVolume, request, self._get_volume_from_response,
-                               self._audio_error_from_response, **kwargs)
+                               self._audio_error_from_response, copy_request=False, **kwargs)
 
     def play_sound(self, sound, gain=None, **kwargs):
         """Play already uploaded sound with optional volume gain multiplier"""
@@ -72,7 +71,7 @@ class AudioClient(BaseClient):
         else:
             request = audio_pb2.PlaySoundRequest(sound=sound)
         return self.call(self._stub.PlaySound, request, self._play_sound_from_response,
-                         self._audio_error_from_response, **kwargs)
+                         self._audio_error_from_response, copy_request=False, **kwargs)
 
     def play_sound_async(self, sound, gain=1.0, **kwargs):
         """Async version of play_sound()"""
@@ -80,19 +79,19 @@ class AudioClient(BaseClient):
         fv.value = gain
         request = audio_pb2.PlaySoundRequest(sound=sound, gain=fv)
         return self.call_async(self._stub.PlaySound, request, self._play_sound_from_response,
-                               self._audio_error_from_response, **kwargs)
+                               self._audio_error_from_response, copy_request=False, **kwargs)
 
     def delete_sound(self, sound, **kwargs):
         """Delete sound found in list_sounds()"""
         request = audio_pb2.DeleteSoundRequest(sound=sound)
         return self.call(self._stub.DeleteSound, request, self._delete_sound_from_response,
-                         self._audio_error_from_response, **kwargs)
+                         self._audio_error_from_response, copy_request=False, **kwargs)
 
     def delete_sound_async(self, sound, **kwargs):
         """Async version of delete_sound()"""
         request = audio_pb2.DeleteSoundRequest(sound=sound)
         return self.call_async(self._stub.DeleteSound, request, self._delete_sound_from_response,
-                               self._audio_error_from_response, **kwargs)
+                               self._audio_error_from_response, copy_request=False, **kwargs)
 
     def load_sound(self, sound, data, max_chunk_size=1024 * 1024, **kwargs):
         """Uploads the WAV data tagged with the specified Sound"""
@@ -114,7 +113,7 @@ class AudioClient(BaseClient):
                 yield request
 
         return self.call(self._stub.LoadSound, yield_requests(data), self._load_sound_from_response,
-                         self._audio_error_from_response, **kwargs)
+                         self._audio_error_from_response, copy_request=False, **kwargs)
 
     #
     # RPCs for Spot CAM+IR Only
@@ -122,19 +121,19 @@ class AudioClient(BaseClient):
 
     def set_audio_capture_channel(self, channel, **kwargs):
         """Set the audio capture channel
-        
+
         Args:
             channel (audio_pb2.AudioCaptureChannel): Microphone to use
         """
         request = audio_pb2.SetAudioCaptureChannelRequest(channel=channel)
         return self.call(self._stub.SetAudioCaptureChannel, request, None,
-                         self._audio_error_from_response, **kwargs)
+                         self._audio_error_from_response, copy_request=False, **kwargs)
 
     def set_audio_capture_channel_async(self, channel, **kwargs):
         """Async version of set_audio_capture_channel()"""
         request = audio_pb2.SetAudioCaptureChannelRequest(channel=channel)
         return self.call_async(self._stub.SetAudioCaptureChannel, request, None,
-                               self._audio_error_from_response, **kwargs)
+                               self._audio_error_from_response, copy_request=False, **kwargs)
 
     def get_audio_capture_channel(self, **kwargs):
         """Retrieve the audio capture channel (microphone)
@@ -142,49 +141,49 @@ class AudioClient(BaseClient):
         request = audio_pb2.GetAudioCaptureChannelRequest()
         return self.call(self._stub.GetAudioCaptureChannel, request,
                          self._get_audio_capture_channel_from_response,
-                         self._audio_error_from_response, **kwargs)
+                         self._audio_error_from_response, copy_request=False, **kwargs)
 
     def get_audio_capture_channel_async(self, **kwargs):
         """Async version of get_audio_capture_channel()"""
         request = audio_pb2.GetAudioCaptureChannelRequest()
         return self.call_async(self._stub.GetAudioCaptureChannel, request,
                                self._get_audio_capture_channel_from_response,
-                               self._audio_error_from_response, **kwargs)
+                               self._audio_error_from_response, copy_request=False, **kwargs)
 
     def set_audio_capture_gain(self, channel, gain, **kwargs):
         """Set the audio capture gain
-        
+
         Args:
             channel (audio_pb2.AudioCaptureChannel): Microphone to set gain for
             gain (Double): Microphone gain, 0.0 to 1.0
         """
         request = audio_pb2.SetAudioCaptureGainRequest(channel=channel, gain=gain)
         return self.call(self._stub.SetAudioCaptureGain, request, None,
-                         self._audio_error_from_response, **kwargs)
+                         self._audio_error_from_response, copy_request=False, **kwargs)
 
     def set_audio_capture_gain_async(self, channel, gain, **kwargs):
         """Async version of set_audio_capture_gain()"""
         request = audio_pb2.SetAudioCaptureGainRequest(channel=channel, gain=gain)
         return self.call_async(self._stub.SetAudioCaptureGain, request, None,
-                               self._audio_error_from_response, **kwargs)
+                               self._audio_error_from_response, copy_request=False, **kwargs)
 
     def get_audio_capture_gain(self, channel, **kwargs):
         """Retrieve the audio capture gain (microphone volume)
-        
+
         Args:
             channel (audio_pb2.AudioCaptureChannel): Microphone to get gain for
         """
         request = audio_pb2.GetAudioCaptureGainRequest(channel=channel)
         return self.call(self._stub.GetAudioCaptureGain, request,
                          self._get_audio_capture_gain_from_response,
-                         self._audio_error_from_response, **kwargs)
+                         self._audio_error_from_response, copy_request=False, **kwargs)
 
     def get_audio_capture_gain_async(self, channel, **kwargs):
         """Async version of get_audio_capture_gain()"""
         request = audio_pb2.GetAudioCaptureGainRequest(channel=channel)
         return self.call_async(self._stub.GetAudioCaptureGain, request,
                                self._get_audio_capture_gain_from_response,
-                               self._audio_error_from_response, **kwargs)
+                               self._audio_error_from_response, copy_request=False, **kwargs)
 
     @staticmethod
     def _list_sounds_from_response(response):

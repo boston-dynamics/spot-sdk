@@ -5,14 +5,14 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """Unit tests for the image client."""
-import grpc
 import logging
-import pytest
 import time
+
+import grpc
+import pytest
 
 import bosdyn.api.image_pb2 as image_protos
 import bosdyn.api.image_service_pb2_grpc as image_service
-
 import bosdyn.client.image
 from bosdyn.client.exceptions import TimedOutError
 

@@ -39,11 +39,11 @@ and associated with with previously stored data.
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| SEVERITY_LEVEL_UNKNOWN | 0 |  |
-| SEVERITY_LEVEL_INFO | 1 |  |
-| SEVERITY_LEVEL_WARN | 2 |  |
-| SEVERITY_LEVEL_ERROR | 3 |  |
-| SEVERITY_LEVEL_CRITICAL | 4 |  |
+| SEVERITY_LEVEL_UNKNOWN | 0 | Do not use. If severity is unknown, must assume issue is highest severity. |
+| SEVERITY_LEVEL_INFO | 1 | Informational message that requires no action. |
+| SEVERITY_LEVEL_WARN | 2 | An error may occur in the future if no action is taken, but no action presently required. |
+| SEVERITY_LEVEL_ERROR | 3 | Action required. Error fatal to operation. |
+| SEVERITY_LEVEL_CRITICAL | 4 | Action required. Severe error that requires immediate attention. |
 
 
  <!-- end enums -->
@@ -158,6 +158,7 @@ of the command.
 | arm_gaze_feedback | [GazeCommand.Feedback](#bosdyn.api.GazeCommand.Feedback) | Feedback for the gaze command. |
 | arm_stop_feedback | [ArmStopCommand.Feedback](#bosdyn.api.ArmStopCommand.Feedback) |  |
 | arm_drag_feedback | [ArmDragCommand.Feedback](#bosdyn.api.ArmDragCommand.Feedback) | Feedback for the drag command. |
+| arm_impedance_feedback | [ArmImpedanceCommand.Feedback](#bosdyn.api.ArmImpedanceCommand.Feedback) | Feedback for impedance command. |
 | status | [RobotCommandFeedbackStatus.Status](#bosdyn.api.RobotCommandFeedbackStatus.Status) |  |
 
 
@@ -182,7 +183,55 @@ The arm request must be one of the basic command primitives.
 | arm_gaze_command | [GazeCommand.Request](#bosdyn.api.GazeCommand.Request) | Point the gripper at a point in the world. |
 | arm_stop_command | [ArmStopCommand.Request](#bosdyn.api.ArmStopCommand.Request) | Stop the arm in place with minimal motion. |
 | arm_drag_command | [ArmDragCommand.Request](#bosdyn.api.ArmDragCommand.Request) | Use the arm to drag something held in the gripper. |
+| arm_impedance_command | [ArmImpedanceCommand.Request](#bosdyn.api.ArmImpedanceCommand.Request) | Impedance control of arm (beta) |
 | params | [ArmParams](#bosdyn.api.ArmParams) | Any arm parameters to send, common across all arm commands |
+
+
+
+
+
+
+<a name="bosdyn.api.ArmImpedanceCommand"></a>
+
+### ArmImpedanceCommand
+
+Specify impedance about the end-effector. Users can set up frames along with stiffness and damping
+parameters to control how the end-effector will respond to external contact as it moves along a 
+specified trajectory
+
+
+
+
+
+
+
+<a name="bosdyn.api.ArmImpedanceCommand.Feedback"></a>
+
+### ArmImpedanceCommand.Feedback
+
+
+
+
+
+
+
+<a name="bosdyn.api.ArmImpedanceCommand.Request"></a>
+
+### ArmImpedanceCommand.Request
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| root_frame_name | [string](#string) | Name of the frame relative to which the task frame is defined for this command. Common frames for this include "odom", "vision", "body", and "flat_body". |
+| root_tform_task | [SE3Pose](#bosdyn.api.SE3Pose) | This transform specifies the pose of the task frame realtive to the root frame. If unset, it defaults to identity, and the task frame coincides with the root frame. The `desired_tool` frame will be specified relative to the task frame. For peg in hole tasks for example, the task frame could be a frame attached to the top of the hole with z-axis aligned with the hole axis, and the `desired_tool` frame could move in z to direct the peg deeper into the hole. |
+| wrist_tform_tool | [SE3Pose](#bosdyn.api.SE3Pose) | The tool pose relative to the parent link (link_wr1). This can also be thought of as the "remote center" frame. For peg in hole tasks for example, one might put the tool frame at the tip of the peg, or slightly below the tip floating in space, at the point on which we want our virtual springs to pull. Defaults to [0.19557 0 0] [1 0 0 0] which is a frame aligned with the wrist frame, with its origin slightly in front of the gripper's palm plate. |
+| task_tform_desired_tool | [SE3Trajectory](#bosdyn.api.SE3Trajectory) | Trajectory of where we want the tool to be relative to the task frame. Note that this `desired_tool` frame is not the same as the tool frame attached to the wrist link. If our tool deviates from this `desired_tool` pose, it will be subject to a wrench determined by our stiffness and damping matrices. |
+| feed_forward_wrench_at_tool_in_desired_tool | [Wrench](#bosdyn.api.Wrench) | Feed forward wrench to apply at the tool, expressed with respect to the `desired_tool` frame |
+| diagonal_stiffness_matrix | [Vector](#bosdyn.api.Vector) | Stiffness matrix in the `desired_tool` frame. The matrix is parameterized by a vector of 6 doubles, representing the diagonal of this 6x6 matrix: [x,y,z,tx,ty,tz] (N/m, N/m, N/m, Nm/rad, Nm/rad, Nm/rad). All other entries will be set to 0. All stiffness values along the diagonal should be non-negative. |
+| diagonal_damping_matrix | [Vector](#bosdyn.api.Vector) | Damping matrix in the `desired_tool` frame. The matrix is parameterized by a vector of 6 doubles, representing the diagonal of this 6x6 matrix: [x,y,z,tx,ty,tz] (Ns/m, Ns/m, Ns/m, Nms/rad, Nms/rad, Nms/rad) All other entries will be set to 0. All damping values along the diagonal should be non-negative. |
+| max_force_mag | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) | Maximum force magnitude in Newtons we're allowed to exert. If the tool deviates such that the magnitude of the requested force would exceed this threshold, saturate the requested force. If this value is not set, a default of 60N will be used. |
+| max_torque_mag | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) | Maximum torque magnitude in Newton meters we're allowed to exert. If the tool deviates such that the magnitude of the requested torque would exceed this threshold, saturate the requested torque. If this value is not set, a default of 15Nm will be used. |
 
 
 
@@ -630,6 +679,7 @@ the same task_frame as the trajectories.
 | STATUS_UNKNOWN | 0 | STATUS_UNKNOWN should never be used. If used, an internal error has happened |
 | STATUS_COMPLETE | 1 | The arm is at the desired configuration. |
 | STATUS_IN_PROGRESS | 2 | Robot is re-configuring arm to get to desired configuration. |
+| STATUS_STALLED | 3 | The arm has stopped making progress towards the goal. This could be because it is avoiding a collision or joint limit. |
 
 
 
@@ -1140,6 +1190,826 @@ Start AutoReturn behavior now.
 | Configure | [ConfigureRequest](#bosdyn.api.auto_return.ConfigureRequest) | [ConfigureResponse](#bosdyn.api.auto_return.ConfigureResponse) | Configure the service. |
 | GetConfiguration | [GetConfigurationRequest](#bosdyn.api.auto_return.GetConfigurationRequest) | [GetConfigurationResponse](#bosdyn.api.auto_return.GetConfigurationResponse) | Get the current configuration. |
 | Start | [StartRequest](#bosdyn.api.auto_return.StartRequest) | [StartResponse](#bosdyn.api.auto_return.StartResponse) | Start AutoReturn now. |
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn/api/autowalk/autowalk.proto"></a>
+
+# autowalk/autowalk.proto
+
+
+
+<a name="bosdyn.api.autowalk.CompileAutowalkRequest"></a>
+
+### CompileAutowalkRequest
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common request header. |
+| walk | [Walk](#bosdyn.api.autowalk.Walk) | Walk to compile. |
+| treat_warnings_as_errors | [bool](#bool) | If this is set to true, mission compilation will fail if the Walk contains parameters that are set incorrectly. This can be useful during development to help the developer find issues with their client (e.g., suppose the client UI allows a user to set a parameter incorrectly). If this is set to false, mission compilation is more likely to succeed for the same Walk because any parameters that are both incorrect and modifiable are modified during mission compilation. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.CompileAutowalkResponse"></a>
+
+### CompileAutowalkResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+| status | [CompileAutowalkResponse.Status](#bosdyn.api.autowalk.CompileAutowalkResponse.Status) | Result of compiling the mission. |
+| root | [bosdyn.api.mission.Node](#bosdyn.api.mission.Node) | Root node of compiled walk. |
+| element_identifiers | [ElementIdentifiers](#bosdyn.api.autowalk.ElementIdentifiers) | There will be one ElementIdentifier for each Element in the input Walk. The index of each ElementIdentifier corresponds to the index of the Element in the input Walk. Skipped elements will have default values for id's. (0 and empty string) |
+| failed_elements | [CompileAutowalkResponse.FailedElementsEntry](#bosdyn.api.autowalk.CompileAutowalkResponse.FailedElementsEntry) | If certain elements failed compilation, they will be reported back in this field. The map correlates the index of the Element in the input Walk to the FailedElement. |
+| docking_node | [NodeIdentifier](#bosdyn.api.autowalk.NodeIdentifier) | Final docking node. |
+| loop_node | [NodeIdentifier](#bosdyn.api.autowalk.NodeIdentifier) | Node that contains the main sequence of actions performed in the walk. In continuous playback mode, the walk repeats when this node completes. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.CompileAutowalkResponse.FailedElementsEntry"></a>
+
+### CompileAutowalkResponse.FailedElementsEntry
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| key | [int32](#int32) |  |
+| value | [FailedElement](#bosdyn.api.autowalk.FailedElement) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.ElementIdentifiers"></a>
+
+### ElementIdentifiers
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| root_id | [NodeIdentifier](#bosdyn.api.autowalk.NodeIdentifier) | Identifiable data for the root node of the element. |
+| action_id | [NodeIdentifier](#bosdyn.api.autowalk.NodeIdentifier) | Identifiable data for action node of the element. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.FailedElement"></a>
+
+### FailedElement
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| errors | [string](#string) | The reasons why this element failed. May not be provided by all elements. |
+| warnings | [string](#string) | Compile time modification that resolved error(s). |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.LoadAutowalkRequest"></a>
+
+### LoadAutowalkRequest
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common request header. |
+| walk | [Walk](#bosdyn.api.autowalk.Walk) | Walk to compile |
+| leases | [bosdyn.api.Lease](#bosdyn.api.Lease) | Leases that will be needed to validate the mission. Usually, no leases are necessary for validation, and this can be left empty. |
+| treat_warnings_as_errors | [bool](#bool) | If this is set to true, mission compilation will fail if the Walk contains parameters that are set incorrectly. This can be useful during development to help the developer find issues with their client (e.g., suppose the client UI allows a user to set a parameter incorrectly). If this is set to false, mission compilation is more likely to succeed for the same Walk because any parameters that are both incorrect and modifiable are modified during mission compilation. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.LoadAutowalkResponse"></a>
+
+### LoadAutowalkResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+| status | [LoadAutowalkResponse.Status](#bosdyn.api.autowalk.LoadAutowalkResponse.Status) | Result of loading the mission. |
+| lease_use_results | [bosdyn.api.LeaseUseResult](#bosdyn.api.LeaseUseResult) | Results from any leases that may have been used. As part of mission validation, some of the non-mission leases may have been used. |
+| failed_nodes | [bosdyn.api.mission.FailedNode](#bosdyn.api.mission.FailedNode) | If certain nodes failed compilation or validation, they will be reported back in this field. |
+| element_identifiers | [ElementIdentifiers](#bosdyn.api.autowalk.ElementIdentifiers) | There will be one ElementIdentifier for each Element in the input Walk. The index of each ElementIdentifier corresponds to the index of the Element in the input Walk. Skipped elements will have default values for id's. (0 and empty string) |
+| failed_elements | [LoadAutowalkResponse.FailedElementsEntry](#bosdyn.api.autowalk.LoadAutowalkResponse.FailedElementsEntry) | If certain elements failed compilation, they will be reported back in this field. The map correlates the index of the Element in the input Walk to the FailedElement. |
+| mission_id | [int64](#int64) | Mission ID assigned by the mission service. |
+| docking_node | [NodeIdentifier](#bosdyn.api.autowalk.NodeIdentifier) | Final docking node. |
+| loop_node | [NodeIdentifier](#bosdyn.api.autowalk.NodeIdentifier) | Node that contains the main sequence of actions performed in the walk. In continuous playback mode, the walk repeats when this node completes. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.LoadAutowalkResponse.FailedElementsEntry"></a>
+
+### LoadAutowalkResponse.FailedElementsEntry
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| key | [int32](#int32) |  |
+| value | [FailedElement](#bosdyn.api.autowalk.FailedElement) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.NodeIdentifier"></a>
+
+### NodeIdentifier
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| node_id | [int64](#int64) | Unique integer set by the mission service when loading a mission. |
+| user_data_id | [string](#string) | Unique string set by the autowalk service when compiling a walk. |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="bosdyn.api.autowalk.CompileAutowalkResponse.Status"></a>
+
+### CompileAutowalkResponse.Status
+
+Possible results of compiling a walk to mission.
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Invalid status, do not use. |
+| STATUS_OK | 1 | Compilation succeeded. |
+| STATUS_COMPILE_ERROR | 2 | Compilation failed. The walk was malformed. |
+
+
+
+<a name="bosdyn.api.autowalk.LoadAutowalkResponse.Status"></a>
+
+### LoadAutowalkResponse.Status
+
+Possible results of loading a mission.
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Invalid status, do not use. |
+| STATUS_OK | 1 | The mission was loaded successfully. |
+| STATUS_COMPILE_ERROR | 2 | Compilation failed. The walk was malformed. |
+| STATUS_VALIDATE_ERROR | 3 | Load-time validation failed. Some part of the mission was unable to initialize. |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn/api/autowalk/autowalk_service.proto"></a>
+
+# autowalk/autowalk_service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="bosdyn.api.autowalk.AutowalkService"></a>
+
+### AutowalkService
+
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| CompileAutowalk | [.bosdyn.api.DataChunk](#bosdyn.api.DataChunk) stream | [.bosdyn.api.DataChunk](#bosdyn.api.DataChunk) stream | Compile a walk into a mission. Input DataChunks should deserialize into a CompileAutowalkRequest. Output DataChunks should deserialize into a CompileAutowalkResponse. This rpc is stateless. |
+| LoadAutowalk | [.bosdyn.api.DataChunk](#bosdyn.api.DataChunk) stream | [.bosdyn.api.DataChunk](#bosdyn.api.DataChunk) stream | Compile a walk into a mission then load to mission service. Input DataChunks should deserialize into a LoadAutowalkRequest. Output DataChunks should deserialize into a LoadAutowalkResponse. |
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn/api/autowalk/walks.proto"></a>
+
+# autowalk/walks.proto
+
+
+
+<a name="bosdyn.api.autowalk.Action"></a>
+
+### Action
+
+An Action is what the robot should do at a location. For example, the user
+may desire that the robot perform a laser scan at a given waypoint.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| sleep | [Action.Sleep](#bosdyn.api.autowalk.Action.Sleep) |  |
+| data_acquisition | [Action.DataAcquisition](#bosdyn.api.autowalk.Action.DataAcquisition) |  |
+| remote_grpc | [Action.RemoteGrpc](#bosdyn.api.autowalk.Action.RemoteGrpc) |  |
+| node | [bosdyn.api.mission.Node](#bosdyn.api.mission.Node) | This field can be used to specify a behavior tree as an action. If the user had two callbacks they would like to run simultaneously at the waypoint this action is associated with, they could use create a behavior tree inside Node with both callbacks embedded in a simple parallel. The downside of using node, is that editors might not support editing parameters directly. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.Action.DataAcquisition"></a>
+
+### Action.DataAcquisition
+
+For actions associated with the Data Acquisition Service (DAQ).
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| acquire_data_request | [bosdyn.api.AcquireDataRequest](#bosdyn.api.AcquireDataRequest) |  |
+| completion_behavior | [bosdyn.api.mission.DataAcquisition.CompletionBehavior](#bosdyn.api.mission.DataAcquisition.CompletionBehavior) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.Action.RemoteGrpc"></a>
+
+### Action.RemoteGrpc
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| service_name | [string](#string) | Name of the service in the directory. |
+| rpc_timeout | [google.protobuf.Duration](#google.protobuf.Duration) | Timeout of any single RPC. If the timeout is exceeded, the RPC will fail. The mission service treats each failed RPC differently: - EstablishSession: An error is returned in LoadMission. - Tick: The RPC is retried. - Stop: The error is ignored, and the RPC is not retried. Omit for a default of 60 seconds. |
+| lease_resources | [string](#string) | Resources that we will need leases on. |
+| inputs | [bosdyn.api.mission.KeyValue](#bosdyn.api.mission.KeyValue) | The list of variables the remote host should receive. Variables given can be available at either run-time or compile-time. The "key" in KeyValue is the name of the variable as used by the remote system. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.Action.Sleep"></a>
+
+### Action.Sleep
+
+The robot does nothing but wait while
+also performing its ActionWrapper(s). For example, if the user
+wants the robot to pose for some amount of time (while doing
+nothing else), they would populate an ActionWrapper with Pose
+and set the desired duration here accordingly.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| duration | [google.protobuf.Duration](#google.protobuf.Duration) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.ActionWrapper"></a>
+
+### ActionWrapper
+
+An ActionWrapper is what the robot should do prior to and during an action.
+For example, the user may desire that the robot stand in such a way that its
+z-axis is aligned with the gravity vector, even though it is standing on an
+incline.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| robot_body_sit | [ActionWrapper.RobotBodySit](#bosdyn.api.autowalk.ActionWrapper.RobotBodySit) |  |
+| robot_body_pose | [ActionWrapper.RobotBodyPose](#bosdyn.api.autowalk.ActionWrapper.RobotBodyPose) |  |
+| spot_cam_led | [ActionWrapper.SpotCamLed](#bosdyn.api.autowalk.ActionWrapper.SpotCamLed) |  |
+| spot_cam_ptz | [ActionWrapper.SpotCamPtz](#bosdyn.api.autowalk.ActionWrapper.SpotCamPtz) |  |
+| arm_sensor_pointing | [ActionWrapper.ArmSensorPointing](#bosdyn.api.autowalk.ActionWrapper.ArmSensorPointing) |  |
+| gripper_camera_params | [ActionWrapper.GripperCameraParams](#bosdyn.api.autowalk.ActionWrapper.GripperCameraParams) |  |
+| gripper_command | [ActionWrapper.GripperCommand](#bosdyn.api.autowalk.ActionWrapper.GripperCommand) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.ActionWrapper.ArmSensorPointing"></a>
+
+### ActionWrapper.ArmSensorPointing
+
+Position the body and perform a joint move and cartesian command in target frame
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| joint_trajectory | [bosdyn.api.ArmJointTrajectory](#bosdyn.api.ArmJointTrajectory) | Arm Joint Move Command The joint trajectory to execute in the initial rough pointing joint move. |
+| wrist_tform_tool | [bosdyn.api.SE3Pose](#bosdyn.api.SE3Pose) | Arm Cartesian Command The tool pose relative to the parent link (wrist). Defaults to a frame with it's origin slightly in front of the gripper's palm plate aligned with the wrist's orientation. |
+| pose_trajectory_rt_target | [bosdyn.api.SE3Trajectory](#bosdyn.api.SE3Trajectory) | A 3D pose trajectory for the tool expressed in target frame, |
+| target_tform_measured_offset | [bosdyn.api.SE2Pose](#bosdyn.api.SE2Pose) | Robot desired stance relative to waypoint This is taken by measuring the average of the footprints in body frame at the time of waypoint creation. This is used to generate the stance command. Target == waypoint. This assumes the waypoint is gravity aligned. |
+| body_assist_params | [bosdyn.api.spot.BodyControlParams.BodyAssistForManipulation](#bosdyn.api.spot.BodyControlParams.BodyAssistForManipulation) | Body mobility params during cartesian move |
+| force_stow_override | [bool](#bool) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.ActionWrapper.GripperCameraParams"></a>
+
+### ActionWrapper.GripperCameraParams
+
+Set the camera params of the gripper camera
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| params | [bosdyn.api.GripperCameraParams](#bosdyn.api.GripperCameraParams) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.ActionWrapper.GripperCommand"></a>
+
+### ActionWrapper.GripperCommand
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| request | [bosdyn.api.GripperCommand.Request](#bosdyn.api.GripperCommand.Request) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.ActionWrapper.RobotBodyPose"></a>
+
+### ActionWrapper.RobotBodyPose
+
+Pose the robot prior to performing the action
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| target_tform_body | [bosdyn.api.SE3Pose](#bosdyn.api.SE3Pose) | If your Target is a graph_nav waypoint, this pose will be relative to the waypoint you are navigating to. If no target was specified, this parameter will be ignored and the robot will stand in a generic pose. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.ActionWrapper.RobotBodySit"></a>
+
+### ActionWrapper.RobotBodySit
+
+Sit the robot prior to performing the action
+
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.ActionWrapper.SpotCamLed"></a>
+
+### ActionWrapper.SpotCamLed
+
+Set the brightness of the LEDs on the SpotCam.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| brightnesses | [ActionWrapper.SpotCamLed.BrightnessesEntry](#bosdyn.api.autowalk.ActionWrapper.SpotCamLed.BrightnessesEntry) | There are four LEDs at indices [0, 3]. The brightness for each LED may be set between [0.0, 1.0], where 0 is off and 1 is full brightness. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.ActionWrapper.SpotCamLed.BrightnessesEntry"></a>
+
+### ActionWrapper.SpotCamLed.BrightnessesEntry
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| key | [int32](#int32) |  |
+| value | [float](#float) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.ActionWrapper.SpotCamPtz"></a>
+
+### ActionWrapper.SpotCamPtz
+
+Set the pan, tilt, and zoom of the SpotCam.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| ptz_position | [bosdyn.api.spot_cam.PtzPosition](#bosdyn.api.spot_cam.PtzPosition) | See bosdyn/api/spot_cam |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.BatteryMonitor"></a>
+
+### BatteryMonitor
+
+If your mission has docks, autowalk can pause the mission to return
+to the dock if the battery gets too low.  Use this message to control
+when this behavior happens.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| battery_start_threshold | [float](#float) | Once charging, the robot will continue to charge until the battery level is greater than or equal to this threshold, at which point in time, the mission will start. |
+| battery_stop_threshold | [float](#float) | If the battery level is less than or equal to this threshold, the robot will stop what it is currently doing and return to the dock. Once the battery level is greater than or equal to the battery start threshold, the mission will resume. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.Dock"></a>
+
+### Dock
+
+The dock itself and the target associated with it
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| dock_id | [uint32](#uint32) | The docking station ID of the dock corresponds to the number printed on the fiducial, below the part of the fiducial that looks like a QR code. Only fiducial IDs greater than or equal to 500 should be used here because they are reserved for docks. |
+| docked_waypoint_id | [string](#string) | To maximize reliability, at record time, the client should dock the robot while graph_nav is still recording. When the robot is finished docking, the client should create a waypoint on top of the dock, while the robot is docked, and then stop recording. The waypoint created while the robot is sitting on the dock should be specified here. |
+| target_prep_pose | [Target](#bosdyn.api.autowalk.Target) | When it is time for the robot to dock, it will approach this target before issuing docking commands. If the user is using graph_nav, the final waypoint in the NavigateRoute OR the waypoint ID in the NavigateTo MUST be at the docking prep pose. To do this, send a docking command to move the robot to the docking prep pose. Then, create a waypoint at the docking prep pose location. Graph_nav is responsible for navigating the robot to the docking prep pose. Once the robot is in the docking prep pose, the docking service does the rest. |
+| prompt_duration | [google.protobuf.Duration](#google.protobuf.Duration) | At mission playback, if the robot is unable to reach the dock OR successfully dock, the mission will let the operator know with a user question. If the operator does not answer, the robot will safely power off. This parameter controls how long the operator has to answer. This parameter also controls how long robot will wait to retry to undock on a failed undock. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.Element"></a>
+
+### Element
+
+An Element is the basic building block of the autowalk.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| name | [string](#string) | The name of an element may be anything, but it is good practice to choose something that describes the physical location and action that is occurring (e.g., boiler room laser scan). |
+| target | [Target](#bosdyn.api.autowalk.Target) | Location the robot should navigate to. |
+| target_failure_behavior | [FailureBehavior](#bosdyn.api.autowalk.FailureBehavior) | Describes what to do if the robot fails to navigate to target. |
+| action | [Action](#bosdyn.api.autowalk.Action) | Action performed at target destination |
+| action_wrapper | [ActionWrapper](#bosdyn.api.autowalk.ActionWrapper) | Actions performed by the robot and/or payloads prior to and during an action. |
+| action_failure_behavior | [FailureBehavior](#bosdyn.api.autowalk.FailureBehavior) | Describes what to do if the robot fails to execute the action. |
+| is_skipped | [bool](#bool) | Set to true to skip element. |
+| battery_monitor | [BatteryMonitor](#bosdyn.api.autowalk.BatteryMonitor) | If the mission requires more than one battery, the robot needs to return to the dock and charge before it can complete the mission. This field defines the battery percentage thresholds that at which the robot should pause and resume mission execution. Considering using various thresholds depending on the target's distance from the dock |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.FailureBehavior"></a>
+
+### FailureBehavior
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| retry_count | [int32](#int32) | The mission can automatically retry navigating to a waypoint or performing an action. Automatic retries can increase the probability of successfully navigating to a waypoint, but may cause the robot to take an unexpected path. Similarly, they can increase the probability of successfully collecting data for an action, but also increase the amount of time a mission takes. If the client does not want the robot to automatically retry navigating to a waypoint or performing an action, set this to 0. If the client wants the robot to automatically retry navigating to a waypoint or performing an action, set this to the desired number of retries. For example, if the client would like the action to be retried once, set this equal to 1. If this is unset or set to 0, no retry will occur. |
+| prompt_duration | [google.protobuf.Duration](#google.protobuf.Duration) | At mission playback, if something fails (e.g., the robot gets stuck, an action fails), the user will get all possible actions as options in a question to choose from. If the user does not answer, the mission will fall back to the default behavior after this timeout. The default behaviors are defined by the default_behavior one_of. A minimum duration of 10 seconds is enforced. |
+| safe_power_off | [FailureBehavior.SafePowerOff](#bosdyn.api.autowalk.FailureBehavior.SafePowerOff) |  |
+| proceed_if_able | [FailureBehavior.ProceedIfAble](#bosdyn.api.autowalk.FailureBehavior.ProceedIfAble) |  |
+| return_to_start_and_try_again_later | [FailureBehavior.ReturnToStartAndTryAgainLater](#bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTryAgainLater) |  |
+| return_to_start_and_terminate | [FailureBehavior.ReturnToStartAndTerminate](#bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTerminate) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.FailureBehavior.ProceedIfAble"></a>
+
+### FailureBehavior.ProceedIfAble
+
+If a failure occurs and the prompt has not been answered, the robot
+will proceed to the next action if able to do so. This may lead to
+different behavior at mission playback than at mission recording
+(e.g., the robot may take a different route, the robot may fail to
+collect the data for an action).
+
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTerminate"></a>
+
+### FailureBehavior.ReturnToStartAndTerminate
+
+Only available in missions with a dock!
+If robot can get back to the dock, it will, and if it does, the mission will end.
+
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.FailureBehavior.ReturnToStartAndTryAgainLater"></a>
+
+### FailureBehavior.ReturnToStartAndTryAgainLater
+
+Only available in missions with a dock!
+If a failure occurs and the prompt has not been answered, the robot
+will return to the start of the mission. Once at the start of the
+mission, the robot will attempt to dock.  If successfully, robot will
+try again later after the specified delay.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| try_again_delay | [google.protobuf.Duration](#google.protobuf.Duration) | How long to wait at start of mission (or on dock) before trying again. A minimum duration of 60 seconds is enforced. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.FailureBehavior.SafePowerOff"></a>
+
+### FailureBehavior.SafePowerOff
+
+If a failure occurs and the prompt has not been answered, the robot
+will sit down and power off. This is the safest option.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| request | [bosdyn.api.SafePowerOffCommand.Request](#bosdyn.api.SafePowerOffCommand.Request) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.GlobalParameters"></a>
+
+### GlobalParameters
+
+These parameters apply to the entire autowalk.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| group_name | [string](#string) | If the mission contains data acquisitions, this will be their group name. The actual group name used will include the specified group name, and additional qualifiers to ensure its unique for each start of this mission. |
+| should_autofocus_ptz | [bool](#bool) | If the mission contains SpotCAM PTZ actions, set this to true. At the start of the mission, the SpotCAM PTZ autofocus will be reset, thereby improving the quality of the subsequent PTZ captures. |
+| self_right_attempts | [int32](#int32) | The mission can automatically self-right the robot. Autonomous self-rights can damage the robot, its payloads, and its surroundings. If the user does not want the robot to self-right on its own, set this number to 0. If the user does want the robot to self-right itself, the user may set a maximum number of attempts so that the robot does not destroy itself by repeatedly falling and getting up and falling again. |
+| post_mission_callbacks | [Action.RemoteGrpc](#bosdyn.api.autowalk.Action.RemoteGrpc) | The callbacks that will be executed at the end of the mission. Functionality that is often found in post-mission callbacks includes uploading data to the cloud or sending an email. The callbacks will be executed serially (first in, first executed). |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.PlaybackMode"></a>
+
+### PlaybackMode
+
+The playback mode governs how many times the mission is played back (once or
+more), at what interval the playbacks should occur (e.g., every 2 hours),
+and if docking is involved, the battery level thresholds at which the robot
+should either (1) stop and charge or (2) start the playback process again.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| once | [PlaybackMode.Once](#bosdyn.api.autowalk.PlaybackMode.Once) |  |
+| periodic | [PlaybackMode.Periodic](#bosdyn.api.autowalk.PlaybackMode.Periodic) |  |
+| continuous | [PlaybackMode.Continuous](#bosdyn.api.autowalk.PlaybackMode.Continuous) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.PlaybackMode.Continuous"></a>
+
+### PlaybackMode.Continuous
+
+The mission should be played continuously only stopping if a battery 
+monitor stop threshold is crossed.
+
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.PlaybackMode.Once"></a>
+
+### PlaybackMode.Once
+
+The mission should be played back once.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| skip_docking_after_completion | [bool](#bool) | Boolean to allow the robot to not dock after completing a mission. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.PlaybackMode.Periodic"></a>
+
+### PlaybackMode.Periodic
+
+The mission should be played back periodically.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| interval | [google.protobuf.Duration](#google.protobuf.Duration) | The interval is the time that will elapse between the mission finishing and starting again. It is applied relative to the time at which the mission finishes. For example, if the user sets the interval to 2 hours, starts the mission at 12:00, and the mission takes one hour (finishes at 13:00), the next mission would start at 15:00, NOT 14:00. Next mission start time = current mission end time + interval |
+| repetitions | [int32](#int32) | The number of times the mission should be played back. If set to 1, the interval no longer applies and the mission will be played back once. If set to two or more, the mission will run that number of times, with the amount of time between playbacks equal to the interval. If set to zero, the mission will run "forever". |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.Target"></a>
+
+### Target
+
+A Target is the location the robot should navigate to.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| navigate_to | [Target.NavigateTo](#bosdyn.api.autowalk.Target.NavigateTo) |  |
+| navigate_route | [Target.NavigateRoute](#bosdyn.api.autowalk.Target.NavigateRoute) |  |
+| relocalize | [Target.Relocalize](#bosdyn.api.autowalk.Target.Relocalize) | If set, upon reaching the target the robot will perform an explicit relocalization. This should increase the accuracy of the robots belief of it's position on the map. After relocalizing, the robot will re-navigate to the target. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.Target.NavigateRoute"></a>
+
+### Target.NavigateRoute
+
+Tell the robot to follow a route to a waypoint.
+If the robot is off the route (i.e., "far" from the route) when
+NavigateRoute is sent, the robot may navigate in unexpected ways.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| route | [bosdyn.api.graph_nav.Route](#bosdyn.api.graph_nav.Route) | A route for the robot to follow. |
+| travel_params | [bosdyn.api.graph_nav.TravelParams](#bosdyn.api.graph_nav.TravelParams) | Parameters that define how to traverse and end the route. For example, the user may decide how close to the destination waypoint the robot needs to be in order to declare success. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.Target.NavigateTo"></a>
+
+### Target.NavigateTo
+
+Tell the robot to navigate to a waypoint. It will choose its route.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| destination_waypoint_id | [string](#string) | A unique string corresponding to the waypoint ID that the robot should go to. |
+| travel_params | [bosdyn.api.graph_nav.TravelParams](#bosdyn.api.graph_nav.TravelParams) | Parameters that define how to traverse and end the route. For example, the user may decide how close to the destination waypoint the robot needs to be in order to declare success. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.Target.Relocalize"></a>
+
+### Target.Relocalize
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| set_localization_request | [bosdyn.api.graph_nav.SetLocalizationRequest](#bosdyn.api.graph_nav.SetLocalizationRequest) | Some SetLocalizationRequests require that waypoint snapshots contain full images. Make sure your client is downloading / storing / uploading full snapshots if you plan on using this feature in your client. |
+
+
+
+
+
+
+<a name="bosdyn.api.autowalk.Walk"></a>
+
+### Walk
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| global_parameters | [GlobalParameters](#bosdyn.api.autowalk.GlobalParameters) | Parameters that apply to the entire mission. |
+| playback_mode | [PlaybackMode](#bosdyn.api.autowalk.PlaybackMode) | Governs the mode and frequency at which playbacks occur. |
+| map_name | [string](#string) | The name of the map this mission corresponds to. |
+| mission_name | [string](#string) | The name of the mission. |
+| elements | [Element](#bosdyn.api.autowalk.Element) | The list of actions and their associated locations. |
+| docks | [Dock](#bosdyn.api.autowalk.Dock) | The docks the mission can dock at. AT THE MOMENT AUTOWALK ONLY SUPPORTS A SINGLE DOCK. However, this is subject to change. |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
 
  <!-- end services -->
 
@@ -2750,8 +3620,9 @@ image data to be collected.
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | image_service | [string](#string) | Name of the image service that the data should be requested from. |
-| image_source | [string](#string) | Specific image source to use from the list reported by the image service within the ImageAcquisitionCapability message. |
-| pixel_format | [Image.PixelFormat](#bosdyn.api.Image.PixelFormat) | Specific pixel format to capture reported by the ImageAcquisitionCapability message. |
+| image_request | [ImageRequest](#bosdyn.api.ImageRequest) | Options for requesting this particular image. |
+| image_source | [string](#string) | Deprecated. Use image_request instead. Specific image source to use from the list reported by the image service within the ImageAcquisitionCapability message. |
+| pixel_format | [Image.PixelFormat](#bosdyn.api.Image.PixelFormat) | Deprecated. Use image_request instead. Specific pixel format to capture reported by the ImageAcquisitionCapability message. |
 
 
 
@@ -3456,7 +4327,7 @@ This message contains event data for logging to the public timeline.
 | type | [string](#string) | Type of event, typically prefixed with a project or organization, e.g. "bosdyn:startup" |
 | description | [string](#string) | Event description. This is optional. |
 | source | [string](#string) | A description of the source of this event. May be the client name. - Not required to be unique. - Disambiguates the source of similar event types. |
-| id | [string](#string) | Unique identifier to link start and end messages for events with a duration. - Long running events may have separate messages at the start and end, in case the message for the end of the event is lost. - For events without a separate start and end message (in which case both start_time and end time should be specified), the 'id' field should not be set. - This id is not tracked internally by the service. It is only used to consume the event timeline. - To be effective, the id value should be generated randomly by the client. |
+| id | [string](#string) | Unique identifier. Used to link start and end messages for events with a duration. - Long running events may have separate messages at the start and end, in case the message for the end of the event is lost. - For events without a separate start and end message (in which case both start_time and end time should be specified), the 'id' field will be set by the service during upload, unless the user has already set it. - This id is not tracked internally by the service. It is only used to consume the event timeline. - To be effective, the id value should be generated randomly by the client. |
 | start_time | [google.protobuf.Timestamp](#google.protobuf.Timestamp) | Start and end times for the event: - Some events are instantaneous. For these, set start_timestamp and end_timestamp to the same value and send a single message (without an id). - Some events take time. At the onset, send a message with a unique id, the start time, and type. The end message should include all data from the start message, any additional data, and an end time. If you have the end message, you should not need the start message since it is a strict subset. |
 | end_time | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  |
 | level | [Event.Level](#bosdyn.api.Event.Level) | The relative importance of the event. |
@@ -5106,6 +5977,7 @@ Message to get the status of a previously issued DockingCommand
 | ----- | ---- | ----------- |
 | header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common request header. |
 | docking_command_id | [uint32](#uint32) | Unique identifier of the command to get feedback for. |
+| update_docking_params | [UpdateDockingParams](#bosdyn.api.docking.UpdateDockingParams) | [optional] Update parameters relating to the specified command ID |
 
 
 
@@ -5147,7 +6019,7 @@ Note: If the robot is docked, you can undock the robot by issuing a command with
 | lease | [bosdyn.api.Lease](#bosdyn.api.Lease) | The Lease to show ownership of the robot. |
 | docking_station_id | [uint32](#uint32) | ID of docking station to dock at. This is ignored if undocking the robot, the current dock is used. |
 | clock_identifier | [string](#string) | Identifier provided by the time sync service to verify time sync between robot and client. |
-| end_time | [google.protobuf.Timestamp](#google.protobuf.Timestamp) | The timestamp (in robot time) by which a command must finish executing. This is a required field and used to prevent runaway commands. |
+| end_time | [google.protobuf.Timestamp](#google.protobuf.Timestamp) | The timestamp (in robot time) at which a command will stop executing. This can be updated by other RPCs This is a required field and used to prevent runaway commands. |
 | prep_pose_behavior | [PrepPoseBehavior](#bosdyn.api.docking.PrepPoseBehavior) | [Optional] Specify the prep pose behavior |
 
 
@@ -5240,6 +6112,21 @@ Response of a GetDockingStateRequest
 
 
 
+
+<a name="bosdyn.api.docking.UpdateDockingParams"></a>
+
+### UpdateDockingParams
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| end_time | [google.protobuf.Timestamp](#google.protobuf.Timestamp) | The new timestamp (in robot time) at which a command will stop executing. |
+
+
+
+
+
  <!-- end messages -->
 
 
@@ -5311,6 +6198,7 @@ Type of dock
 | STATUS_ERROR_TOO_DISTANT | 8 | ERROR: Provided end time too far in the future. |
 | STATUS_ERROR_NOT_AVAILABLE | 12 | ERROR: The dock is not available for docking. |
 | STATUS_ERROR_UNREFINED_PRIOR | 13 | ERROR: The prior could not be confirmed as a real dock |
+| STATUS_ERROR_STUCK | 14 | ERROR: The robot could not make progress towards docking. For example, there may be an obstacle in the way. |
 | STATUS_ERROR_SYSTEM | 9 | ERROR: Internal system error during execution This error cannot be resolved by issuing a new DockingCommand Check the returned message for details |
 
 
@@ -6222,6 +7110,63 @@ Represents a row-major order matrix of doubles.
 
 
 
+<a name="bosdyn.api.MatrixInt32"></a>
+
+### MatrixInt32
+
+Represents a row-major order matrix of int32.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| rows | [int32](#int32) |  |
+| cols | [int32](#int32) |  |
+| values | [int32](#int32) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.MatrixInt64"></a>
+
+### MatrixInt64
+
+Represents a row-major order matrix of int64.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| rows | [int32](#int32) |  |
+| cols | [int32](#int32) |  |
+| values | [int64](#int64) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.Matrixf"></a>
+
+### Matrixf
+
+Represents a row-major order matrix of floats.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| rows | [int32](#int32) |  |
+| cols | [int32](#int32) |  |
+| values | [float](#float) |  |
+
+
+
+
+
+
 <a name="bosdyn.api.Plane"></a>
 
 ### Plane
@@ -6560,6 +7505,23 @@ A 3D vector of doubles that uses wrapped values so we can tell which elements ar
 
 
 
+<a name="bosdyn.api.Vector"></a>
+
+### Vector
+
+Represents a vector of doubles
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| values | [double](#double) |  |
+
+
+
+
+
+
 <a name="bosdyn.api.Volume"></a>
 
 ### Volume
@@ -6604,9 +7566,466 @@ Geometric primitive used to specify forces and torques.
 
 
 
+<a name="bosdyn/api/graph_nav/area_callback.proto"></a>
+
+# graph_nav/area_callback.proto
+
+
+
+<a name="bosdyn.api.graph_nav.AreaCallbackError"></a>
+
+### AreaCallbackError
+
+Error reporting for things that can go wrong with calls.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| service_name | [string](#string) |  |
+| error | [AreaCallbackError.CallError](#bosdyn.api.graph_nav.AreaCallbackError.CallError) |  |
+| begin_callback | [BeginCallbackResponse](#bosdyn.api.graph_nav.BeginCallbackResponse) |  |
+| begin_control | [BeginControlResponse](#bosdyn.api.graph_nav.BeginControlResponse) |  |
+| update_callback | [UpdateCallbackResponse](#bosdyn.api.graph_nav.UpdateCallbackResponse) |  |
+| end_callback | [EndCallbackResponse](#bosdyn.api.graph_nav.EndCallbackResponse) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.AreaCallbackInformation"></a>
+
+### AreaCallbackInformation
+
+Specific information about how a AreaCallback implementation should be called.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| required_lease_resources | [string](#string) | A area callback can request to be in control of one or more resources at runtime. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.AreaCallbackInformationRequest"></a>
+
+### AreaCallbackInformationRequest
+
+Message for requesting information about a area callback implementation.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common request header. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.AreaCallbackInformationResponse"></a>
+
+### AreaCallbackInformationResponse
+
+Message for providing information about a area callback implementation.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+| info | [AreaCallbackInformation](#bosdyn.api.graph_nav.AreaCallbackInformation) | Information about how the AreaCallback should be called. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.BeginCallbackRequest"></a>
+
+### BeginCallbackRequest
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common request header. |
+| region_info | [RegionInformation](#bosdyn.api.graph_nav.RegionInformation) | Description of the region we are going to cross. |
+| end_time | [google.protobuf.Timestamp](#google.protobuf.Timestamp) | The timestamp (in robot time) by which a command must finish executing. If unset, a AreaCallback implementation may pick a reasonable value. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.BeginCallbackResponse"></a>
+
+### BeginCallbackResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+| status | [BeginCallbackResponse.Status](#bosdyn.api.graph_nav.BeginCallbackResponse.Status) | Return status for the request. |
+| command_id | [uint32](#uint32) | Unique identifier for the AreaCallback, used to update the callback in subsequent calls. If empty, the request was not accepted. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.BeginControlRequest"></a>
+
+### BeginControlRequest
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common request header. |
+| leases | [bosdyn.api.Lease](#bosdyn.api.Lease) | Leases that a AreaCallback uses once it takes control of the robot. This list should match AreaCallbackInformation required_lease_resources. |
+| command_id | [uint32](#uint32) | The command id associated with a single execution of a navigation callback. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.BeginControlResponse"></a>
+
+### BeginControlResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+| lease_use_results | [bosdyn.api.LeaseUseResult](#bosdyn.api.LeaseUseResult) | Details about how the lease was used. |
+| status | [BeginControlResponse.Status](#bosdyn.api.graph_nav.BeginControlResponse.Status) | Return status for the request. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.EndCallbackRequest"></a>
+
+### EndCallbackRequest
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common response header. |
+| command_id | [uint32](#uint32) | The command id associated with a single execution of a navigation callback. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.EndCallbackResponse"></a>
+
+### EndCallbackResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+| status | [EndCallbackResponse.Status](#bosdyn.api.graph_nav.EndCallbackResponse.Status) | Return status for the request. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.RegionInformation"></a>
+
+### RegionInformation
+
+Description of an Area Callback region at the time of crossing
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| region_id | [string](#string) | The unique id of the region we are entering. |
+| description | [string](#string) | Human-readable description of the region we are entering. |
+| route | [Route](#bosdyn.api.graph_nav.Route) | The planned route through the region. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.UpdateCallbackRequest"></a>
+
+### UpdateCallbackRequest
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common response header. |
+| command_id | [uint32](#uint32) | The command id associated with a single execution of a navigation callback. |
+| end_time | [google.protobuf.Timestamp](#google.protobuf.Timestamp) | If set, update the end time (in robot time) by which a command must finish executing. |
+| stage | [UpdateCallbackRequest.Stage](#bosdyn.api.graph_nav.UpdateCallbackRequest.Stage) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.UpdateCallbackResponse"></a>
+
+### UpdateCallbackResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+| status | [UpdateCallbackResponse.Status](#bosdyn.api.graph_nav.UpdateCallbackResponse.Status) | Return status for the request. |
+| policy | [UpdateCallbackResponse.NavPolicy](#bosdyn.api.graph_nav.UpdateCallbackResponse.NavPolicy) | Set the control policy that Graph Nav should use when crossing this region, and how and when Graph Nav should delegate control to or wait for the callback. This is the expected way to respond, and changing the policy is how a callback instructs graph nav to wait or continue on. |
+| error | [UpdateCallbackResponse.Error](#bosdyn.api.graph_nav.UpdateCallbackResponse.Error) | An error has occured. Graph Nav will stop calling UpdateCallback and will call EndCallback. |
+| complete | [UpdateCallbackResponse.Complete](#bosdyn.api.graph_nav.UpdateCallbackResponse.Complete) | The area callback is complete. Graph Nav will stop calling UpdateCallback and will call EndCallback. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.UpdateCallbackResponse.Complete"></a>
+
+### UpdateCallbackResponse.Complete
+
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.UpdateCallbackResponse.Error"></a>
+
+### UpdateCallbackResponse.Error
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| error | [UpdateCallbackResponse.Error.ErrorType](#bosdyn.api.graph_nav.UpdateCallbackResponse.Error.ErrorType) |  |
+| lease_use_results | [bosdyn.api.LeaseUseResult](#bosdyn.api.LeaseUseResult) | Details about how the lease was used. Only set when error == ERROR_LEASE. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.UpdateCallbackResponse.NavPolicy"></a>
+
+### UpdateCallbackResponse.NavPolicy
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| at_start | [UpdateCallbackResponse.NavPolicy.Option](#bosdyn.api.graph_nav.UpdateCallbackResponse.NavPolicy.Option) | Policy for what Graph Nav should do at the start of the region. |
+| at_end | [UpdateCallbackResponse.NavPolicy.Option](#bosdyn.api.graph_nav.UpdateCallbackResponse.NavPolicy.Option) | Policy for what Graph Nav should do at the end of the region. |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="bosdyn.api.graph_nav.AreaCallbackError.CallError"></a>
+
+### AreaCallbackError.CallError
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| ERROR_UNKNOWN | 0 |  |
+| ERROR_TRANSPORT | 1 | Unable to communicate with the callback. |
+| ERROR_RESPONSE | 2 | The callback responded with an error. |
+| ERROR_SERVICE | 3 | The service was not registered. |
+
+
+
+<a name="bosdyn.api.graph_nav.BeginCallbackResponse.Status"></a>
+
+### BeginCallbackResponse.Status
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | UNKNOWN should never be used. |
+| STATUS_OK | 1 | The area callback successfully began. |
+| STATUS_INVALID_CONFIGURATION | 2 | The area callback failed to start due to some problem with the supplied configuration_data. |
+| STATUS_EXPIRED_END_TIME | 3 | The area callback end time already expired. |
+
+
+
+<a name="bosdyn.api.graph_nav.BeginControlResponse.Status"></a>
+
+### BeginControlResponse.Status
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | UNKNOWN should never be used. |
+| STATUS_OK | 1 | The AreaCallback has successfully taken control of the robot. |
+| STATUS_INVALID_COMMAND_ID | 2 | The request command id does not exist or is no longer executing. |
+| STATUS_MISSING_LEASE_RESOURCES | 3 | The supplied lease does not match the leases requested in AreaCallbackInformation. |
+| STATUS_LEASE_ERROR | 4 | A lease use error occured. |
+
+
+
+<a name="bosdyn.api.graph_nav.EndCallbackResponse.Status"></a>
+
+### EndCallbackResponse.Status
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | UNKNOWN should never be used. |
+| STATUS_OK | 1 | The AreaCallback has cleanly ended. |
+| STATUS_INVALID_COMMAND_ID | 2 | The request command id does not exist or is no longer executing. |
+| STATUS_SHUTDOWN_CALLBACK_FAILED | 3 | Shutting down the callback failed. The callback worker thread did not respond to shutdown signal. |
+
+
+
+<a name="bosdyn.api.graph_nav.UpdateCallbackRequest.Stage"></a>
+
+### UpdateCallbackRequest.Stage
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STAGE_UNKNOWN | 0 |  |
+| STAGE_TO_START | 1 | Traveling to the start of the region. |
+| STAGE_AT_START | 2 | Waiting at the start of the region. |
+| STAGE_TO_END | 3 | Traveling to the end of the region. |
+| STAGE_AT_END | 4 | Waiting at the end of the region. |
+
+
+
+<a name="bosdyn.api.graph_nav.UpdateCallbackResponse.Error.ErrorType"></a>
+
+### UpdateCallbackResponse.Error.ErrorType
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| ERROR_UNKNOWN | 0 | UNKNOWN should never be used. |
+| ERROR_BLOCKED | 1 | The callback has determined that this way is impassable. |
+| ERROR_CALLBACK_FAILED | 2 | Something went wrong with the callback. |
+| ERROR_LEASE | 3 | A lease error occurred while executing commands. |
+| ERROR_TIMED_OUT | 4 | The callback has exceeded allowed execution time. |
+
+
+
+<a name="bosdyn.api.graph_nav.UpdateCallbackResponse.NavPolicy.Option"></a>
+
+### UpdateCallbackResponse.NavPolicy.Option
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| OPTION_UNKNOWN | 0 |  |
+| OPTION_CONTINUE | 1 | Continue past the waypoint. If not already stopped at it, do not stop. |
+| OPTION_STOP | 2 | Stop at the waypoint. |
+| OPTION_CONTROL | 3 | Stop at the waypoint and transfer control to the callback. |
+
+
+
+<a name="bosdyn.api.graph_nav.UpdateCallbackResponse.Status"></a>
+
+### UpdateCallbackResponse.Status
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | UNKNOWN should never be used. |
+| STATUS_OK | 1 | The AreaCallback is actively updating. If an execution error does occur, that is reported via the response oneof. |
+| STATUS_INVALID_COMMAND_ID | 2 | The request command id does not exist or is no longer executing. |
+| STATUS_EXPIRED_END_TIME | 3 | The area callback end time already expired. |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn/api/graph_nav/area_callback_service.proto"></a>
+
+# graph_nav/area_callback_service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="bosdyn.api.graph_nav.AreaCallbackService"></a>
+
+### AreaCallbackService
+
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| AreaCallbackInformation | [AreaCallbackInformationRequest](#bosdyn.api.graph_nav.AreaCallbackInformationRequest) | [AreaCallbackInformationResponse](#bosdyn.api.graph_nav.AreaCallbackInformationResponse) | Retreive information about how to operate the service, including what lease resources are required by the navigation callback. |
+| BeginCallback | [BeginCallbackRequest](#bosdyn.api.graph_nav.BeginCallbackRequest) | [BeginCallbackResponse](#bosdyn.api.graph_nav.BeginCallbackResponse) | BeginCallback is called once as the robot enters a AreaCallback region of a map. This call initilizes the navigation callback for operation. |
+| BeginControl | [BeginControlRequest](#bosdyn.api.graph_nav.BeginControlRequest) | [BeginControlResponse](#bosdyn.api.graph_nav.BeginControlResponse) | BeginControl is called once after the area callback implementation requests control. Control is handed off (via a lease) from the caller to the area callback. |
+| UpdateCallback | [UpdateCallbackRequest](#bosdyn.api.graph_nav.UpdateCallbackRequest) | [UpdateCallbackResponse](#bosdyn.api.graph_nav.UpdateCallbackResponse) | UpdateCallback is called periodically while the callback is running. Area callback implementations use UpdateCallback to dictate how caller should operate while callback is running (pause, continue, etc.) |
+| EndCallback | [EndCallbackRequest](#bosdyn.api.graph_nav.EndCallbackRequest) | [EndCallbackResponse](#bosdyn.api.graph_nav.EndCallbackResponse) | EndCallback is called once when the caller decides the navagation callback is over. This might be because the robot exited the callback region or might be because the callback reported that it finished doing work. |
+
+ <!-- end services -->
+
+
+
 <a name="bosdyn/api/graph_nav/graph_nav.proto"></a>
 
 # graph_nav/graph_nav.proto
+
+
+
+<a name="bosdyn.api.graph_nav.AreaCallbackServiceError"></a>
+
+### AreaCallbackServiceError
+
+Information about problems Area Callback services specifified in a map or on a route.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| missing_services | [string](#string) | Area Callback services that were requested but could not be contacted by graph nav. A service is considered missing if it is either not registered, or if it is registered but does not respond to a AreaCallbackInformation request. |
+
+
+
 
 
 
@@ -6890,6 +8309,7 @@ is provided to specify the ID that the user may use to poll the system for feedb
 | command_id | [uint32](#uint32) | Unique identifier for the command, If 0, command was not accepted. |
 | error_waypoint_ids | [string](#string) | On a relevant error status code, these fields contain the waypoint/edge IDs that caused the error. |
 | error_edge_ids | [Edge.Id](#bosdyn.api.graph_nav.Edge.Id) | On a relevant error status code (STATUS_INVALID_EDGE), this is populated with the edge ID's that cased the error. |
+| area_callback_error | [AreaCallbackServiceError](#bosdyn.api.graph_nav.AreaCallbackServiceError) | Errors about Area Callbacks in the map. |
 
 
 
@@ -6948,6 +8368,7 @@ for feedback on the NavigateTo command.
 | impaired_state | [bosdyn.api.RobotImpairedState](#bosdyn.api.RobotImpairedState) | If the status is ROBOT_IMPAIRED, this is why the robot is impaired. |
 | command_id | [uint32](#uint32) | Unique identifier for the command, If 0, command was not accepted. |
 | error_waypoint_ids | [string](#string) | On a relevant error status code, these fields contain the waypoint/edge IDs that caused the error. |
+| area_callback_error | [AreaCallbackServiceError](#bosdyn.api.graph_nav.AreaCallbackServiceError) | Errors about Area Callbacks in the map. |
 
 
 
@@ -7001,6 +8422,7 @@ is provided to specify the ID that the user may use to poll the system for feedb
 | impaired_state | [bosdyn.api.RobotImpairedState](#bosdyn.api.RobotImpairedState) | If the status is ROBOT_IMPAIRED, this is why the robot is impaired. |
 | command_id | [uint32](#uint32) | Unique identifier for the command, If 0, command was not accepted. |
 | error_waypoint_ids | [string](#string) | On a relevant error status code, these fields contain the waypoint/edge IDs that caused the error. |
+| area_callback_error | [AreaCallbackServiceError](#bosdyn.api.graph_nav.AreaCallbackServiceError) | Errors about Area Callbacks in the map. |
 
 
 
@@ -7042,10 +8464,66 @@ progress and current status for the command.
 | header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
 | status | [NavigationFeedbackResponse.Status](#bosdyn.api.graph_nav.NavigationFeedbackResponse.Status) | Return status for the request. |
 | impaired_state | [bosdyn.api.RobotImpairedState](#bosdyn.api.RobotImpairedState) | If the status is ROBOT_IMPAIRED, this is why the robot is impaired. |
+| area_callback_errors | [NavigationFeedbackResponse.AreaCallbackErrorsEntry](#bosdyn.api.graph_nav.NavigationFeedbackResponse.AreaCallbackErrorsEntry) | If the status is AREA_CALLBACK_ERROR, this map will be filled out with the error. The key of the map is the region id. |
 | remaining_route | [Route](#bosdyn.api.graph_nav.Route) | Remaining part of current route. |
 | command_id | [uint32](#uint32) | ID of the command this feedback corresponds to. |
 | last_ko_tform_goal | [bosdyn.api.SE3Pose](#bosdyn.api.SE3Pose) | The most recent transform describing the robot's pose relative to the navigation goal. |
 | body_movement_status | [bosdyn.api.SE2TrajectoryCommand.Feedback.BodyMovementStatus](#bosdyn.api.SE2TrajectoryCommand.Feedback.BodyMovementStatus) | Indicates whether the robot's body is currently in motion. |
+| path_following_mode | [Edge.Annotations.PathFollowingMode](#bosdyn.api.graph_nav.Edge.Annotations.PathFollowingMode) | Path following mode |
+| active_region_information | [NavigationFeedbackResponse.ActiveRegionInformationEntry](#bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformationEntry) | Map of Region IDs with relevant information |
+| route_following_status | [NavigationFeedbackResponse.RouteFollowingStatus](#bosdyn.api.graph_nav.NavigationFeedbackResponse.RouteFollowingStatus) | Additional information about what kind of route the robot is following and why. |
+| blockage_status | [NavigationFeedbackResponse.BlockageStatus](#bosdyn.api.graph_nav.NavigationFeedbackResponse.BlockageStatus) | Additional information about whether or not the robot believes the current route to be blocked. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation"></a>
+
+### NavigationFeedbackResponse.ActiveRegionInformation
+
+Data for a Area Callback region
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| description | [string](#string) | human readable name for the region |
+| service_name | [string](#string) | service name for the Area Callback region |
+| region_status | [NavigationFeedbackResponse.ActiveRegionInformation.AreaCallbackStatus](#bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation.AreaCallbackStatus) | Status of the Area Callback region |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformationEntry"></a>
+
+### NavigationFeedbackResponse.ActiveRegionInformationEntry
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| key | [string](#string) |  |
+| value | [NavigationFeedbackResponse.ActiveRegionInformation](#bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.NavigationFeedbackResponse.AreaCallbackErrorsEntry"></a>
+
+### NavigationFeedbackResponse.AreaCallbackErrorsEntry
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| key | [string](#string) |  |
+| value | [AreaCallbackError](#bosdyn.api.graph_nav.AreaCallbackError) |  |
 
 
 
@@ -7146,9 +8624,10 @@ will be modified, and can be retrieved using a GetLocalizationStateRequest.
 | max_yaw | [double](#double) | The max yaw [radians] is how different the localized yaw is allowed to be from the supplied yaw in the initial guess. If not specified, the offset is used directly. Otherwise it searches a neighborhood of the given size. |
 | fiducial_init | [SetLocalizationRequest.FiducialInit](#bosdyn.api.graph_nav.SetLocalizationRequest.FiducialInit) | Tells the initializer whether to use fiducials, and how to use them. |
 | use_fiducial_id | [int32](#int32) | If using FIDUCIAL_INIT_SPECIFIC, this is the specific fiducial ID to use for initialization. If no detection of this fiducial exists, the service will return STATUS_NO_MATCHING_FIDUCIAL. If detections exist, but are low quality, STATUS_FIDUCIAL_TOO_FAR_AWAY, FIDUCIAL_TOO_OLD, or FIDUCIAL_POSE_UNCERTAIN will be returned. |
-| refine_fiducial_result_with_icp | [bool](#bool) | If true, and we are using fiducials during initialization, will run ICP after the fiducial was used for an initial guess. |
 | do_ambiguity_check | [bool](#bool) | If true, consider how nearby localizations appear (like turned 180). |
 | restrict_fiducial_detections_to_target_waypoint | [bool](#bool) | If using FIDUCIAL_INIT_SPECIFIC and this is true, the initializer will only consider fiducial detections from the target waypoint (from initial_guess). Otherwise, if the target waypoint does not contain a good measurement of the desired fiducial, nearby waypoints may be used to infer the robot's location. |
+| refine_fiducial_result_with_icp | [bool](#bool) | If true, and we are using fiducials during initialization, will run ICP after the fiducial was used for an initial guess. |
+| refine_with_visual_features | [VisualRefinementOptions](#bosdyn.api.graph_nav.VisualRefinementOptions) | Improve localization based on images from body cameras |
 
 
 
@@ -7211,6 +8690,9 @@ Parameters describing how to travel along a route.
 | feature_quality_tolerance | [TravelParams.FeatureQualityTolerance](#bosdyn.api.graph_nav.TravelParams.FeatureQualityTolerance) |  |
 | disable_directed_exploration | [bool](#bool) | Disable directed exploration to skip blocked portions of route |
 | disable_alternate_route_finding | [bool](#bool) | Disable alternate-route-finding; overrides the per-edge setting in the map. |
+| path_following_mode | [Edge.Annotations.PathFollowingMode](#bosdyn.api.graph_nav.Edge.Annotations.PathFollowingMode) | Path following mode |
+| blocked_path_wait_time | [google.protobuf.Duration](#google.protobuf.Duration) | Time to wait for blocked path to clear (seconds) |
+| ground_clutter_mode | [Edge.Annotations.GroundClutterAvoidanceMode](#bosdyn.api.graph_nav.Edge.Annotations.GroundClutterAvoidanceMode) | Ground clutter avoidance mode. |
 
 
 
@@ -7301,6 +8783,7 @@ be uploaded by the client.
 | unknown_edge_snapshot_ids | [string](#string) | The edge snapshot ids for which there was no cached data. |
 | license_status | [bosdyn.api.LicenseInfo.Status](#bosdyn.api.LicenseInfo.Status) | Large graphs can only be uploaded if the license permits them. |
 | sensor_status | [SensorCompatibilityStatus](#bosdyn.api.graph_nav.SensorCompatibilityStatus) |  |
+| area_callback_error | [AreaCallbackServiceError](#bosdyn.api.graph_nav.AreaCallbackServiceError) | Errors about Area Callbacks in the map. |
 
 
 
@@ -7344,6 +8827,58 @@ been concatenated and deserialized.
 | lease_use_result | [bosdyn.api.LeaseUseResult](#bosdyn.api.LeaseUseResult) | Details about how the lease was used. |
 | status | [UploadWaypointSnapshotResponse.Status](#bosdyn.api.graph_nav.UploadWaypointSnapshotResponse.Status) |  |
 | sensor_status | [SensorCompatibilityStatus](#bosdyn.api.graph_nav.SensorCompatibilityStatus) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.ValidateGraphRequest"></a>
+
+### ValidateGraphRequest
+
+Run a check on the currently loaded map.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.ValidateGraphResponse"></a>
+
+### ValidateGraphResponse
+
+Report possible errors with the loaded map.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) |  |
+| status | [ValidateGraphResponse.Status](#bosdyn.api.graph_nav.ValidateGraphResponse.Status) | Status of the currently loaded map. |
+| sensor_status | [SensorCompatibilityStatus](#bosdyn.api.graph_nav.SensorCompatibilityStatus) |  |
+| area_callback_error | [AreaCallbackServiceError](#bosdyn.api.graph_nav.AreaCallbackServiceError) | Errors about Area Callbacks in the map. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.VisualRefinementOptions"></a>
+
+### VisualRefinementOptions
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| verify_refinement_quality | [bool](#bool) | Whether to return a STATUS_VISUAL_ALIGNMENT_FAILED if refine_with_visual_features fails. |
 
 
 
@@ -7420,6 +8955,7 @@ been concatenated and deserialized.
 | STATUS_COULD_NOT_UPDATE_ROUTE | 15 | [Wrestling Errors] Happens when graph nav refuses to follow the route you specified. Try saying please? |
 | STATUS_STUCK | 17 | [Route Error] Happens when you try to issue a navigate to while the robot is stuck. Navigate a different route, or clear the route and try again. |
 | STATUS_UNRECOGNIZED_COMMAND | 18 | [Request Error] Happens when you try to continue a command that was either expired, or had an unrecognized id. |
+| STATUS_AREA_CALLBACK_ERROR | 21 | [Route Error] Happens when you try to navigate along a route and a needed callback is no longer available. |
 
 
 
@@ -7447,6 +8983,7 @@ been concatenated and deserialized.
 | STATUS_STUCK | 14 | [Route Error] Happens when you try to issue a navigate to while the robot is stuck. Navigate to a different waypoint, or clear the route and try again. |
 | STATUS_UNRECOGNIZED_COMMAND | 15 | [Request Error] Happens when you try to continue a command that was either expired, or had an unrecognized id. |
 | STATUS_INVALID_POSE | 16 | [Route Error] The pose is invalid, or known to be unachievable (upside-down, etc). |
+| STATUS_AREA_CALLBACK_ERROR | 17 | [Route Error] Happens when you try to navigate along a route and a needed callback is no longer available. |
 
 
 
@@ -7473,6 +9010,60 @@ been concatenated and deserialized.
 | STATUS_COULD_NOT_UPDATE_ROUTE | 12 | [Wrestling error] Happens when graph nav refuses to follow the route you specified. |
 | STATUS_STUCK | 14 | [Route Error] Happens when you try to issue a navigate to while the robot is stuck. Navigate to a different waypoint, or clear the route and try again. |
 | STATUS_UNRECOGNIZED_COMMAND | 15 | [Request Error] Happens when you try to continue a command that was either expired, or had an unrecognized id. |
+| STATUS_AREA_CALLBACK_ERROR | 16 | [Route Error] Happens when you try to navigate along a route and a needed callback is no longer available. |
+
+
+
+<a name="bosdyn.api.graph_nav.NavigationFeedbackResponse.ActiveRegionInformation.AreaCallbackStatus"></a>
+
+### NavigationFeedbackResponse.ActiveRegionInformation.AreaCallbackStatus
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_NAVIGATING | 1 | The robot is navigating the Area Callback region |
+| STATUS_WAITING | 2 | The robot is waiting for assistance to navigate through the Area Callback region |
+| STATUS_CALLBACK_IN_CONTROL | 3 | The Area Callback service is in control of the robot |
+
+
+
+<a name="bosdyn.api.graph_nav.NavigationFeedbackResponse.BlockageStatus"></a>
+
+### NavigationFeedbackResponse.BlockageStatus
+
+Indicates whether the robot thinks its current path is blocked by an obstacle. This will be set when
+Status is STATUS_FOLLOWING_ROUTE, or STATUS_STUCK, and will be BLOCKAGE_STATUS_UNKNOWN in all other cases.
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| BLOCKAGE_STATUS_UNKNOWN | 0 |  |
+| BLOCKAGE_STATUS_ROUTE_CLEAR | 1 | The robot believes the path forward to be clear of obstacles. |
+| BLOCKAGE_STATUS_ROUTE_BLOCKED_TEMPORARILY | 2 | The robot believes there is an obstacle in the path which it can't get around easily. It will attempt to get around the obstacle, and if all else fails it will declare itself stuck. |
+| BLOCKAGE_STATUS_STUCK | 3 | The robot has given up trying to get around perceived obstacles in the path and has declared itself stuck. This will only ever be set when Status is STATUS_STUCK. |
+
+
+
+<a name="bosdyn.api.graph_nav.NavigationFeedbackResponse.RouteFollowingStatus"></a>
+
+### NavigationFeedbackResponse.RouteFollowingStatus
+
+When the robot is following a route (and Status is STATUS_FOLLOWING_ROUTE), this gives additional
+detail about what the robot is doing to follow that route. When Status is not STATUS_FOLLOWING_ROUTE,
+this will be set to ROUTE_FOLLOWING_STATUS_UNKNOWN.
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| ROUTE_FOLLOWING_STATUS_UNKNOWN | 0 |  |
+| ROUTE_FOLLOWING_STATUS_FOLLOWING_ROUTE | 1 | The robot is following the nominal path to the goal, either from a request or from internal path planning. |
+| ROUTE_FOLLOWING_STATUS_RETURNING_TO_ROUTE | 2 | The robot is trying to get back to the nominal path to the goal, either because it was not on the nominal path originally, or because it was moved away from the path. |
+| ROUTE_FOLLOWING_STATUS_FOLLOWING_ALTERNATE_ROUTE | 3 | The robot is taking a different path through the map via edges/waypoints to get around a perceived obstacle. This might take it through a different part of the building. |
+| ROUTE_FOLLOWING_STATUS_EXPLORING | 4 | The robot is walking to a different, nearby part of the map to find a path around a perceived blockage. |
 
 
 
@@ -7497,6 +9088,7 @@ been concatenated and deserialized.
 | STATUS_COMMAND_OVERRIDDEN | 12 | The command was replaced by a new command |
 | STATUS_NOT_LOCALIZED_TO_ROUTE | 13 | The localization or route changed mid-traverse. |
 | STATUS_LEASE_ERROR | 14 | The lease is no longer valid. |
+| STATUS_AREA_CALLBACK_ERROR | 15 | An error occurred with an Area Callback. Lease errors will be reported via STATUS_LEASE_ERROR instead. |
 
 
 
@@ -7587,6 +9179,7 @@ final-waypoint-offset), and command_id indicates a new command.
 | STATUS_NO_MATCHING_FIDUCIAL | 8 | Failed to localize because the fiducial requested by 'use_fiducial_id' did not exist in the map at the required location. |
 | STATUS_FIDUCIAL_POSE_UNCERTAIN | 9 | Failed to localize because the fiducial requested by 'use_fiducial_id' had an unreliable pose estimation, either in the current detection of that fiducial, or in detections that were saved in the map. Note that when using FIDUCIAL_INIT_SPECIFIC, fiducial detections at the target waypoint will be used so long as they are not uncertain -- otherwise, detections at adjacent waypoints may be used. If there exists no uncertain detection of the fiducial near the target waypoint in the map, the service returns this status. |
 | STATUS_INCOMPATIBLE_SENSORS | 10 | The localization could not be set, because the map was recorded using a different sensor setup than the robot currently has onboard. See SensorStatus for more details. |
+| STATUS_VISUAL_ALIGNMENT_FAILED | 11 | Visual feature based alignment failed or the pose solution was considered unreliable. |
 
 
 
@@ -7619,6 +9212,7 @@ Indicates whether robot will navigate through areas with poor quality features
 | STATUS_MAP_TOO_LARGE_LICENSE | 3 | Can't upload the graph because it was too large for the license. |
 | STATUS_INVALID_GRAPH | 4 | The graph is invalid topologically, for example containing missing waypoints referenced by edges. |
 | STATUS_INCOMPATIBLE_SENSORS | 5 |  |
+| STATUS_AREA_CALLBACK_ERROR | 6 |  |
 
 
 
@@ -7633,6 +9227,21 @@ Indicates whether robot will navigate through areas with poor quality features
 | STATUS_UNKNOWN | 0 | Unset. |
 | STATUS_OK | 1 | Success. |
 | STATUS_INCOMPATIBLE_SENSORS | 2 | The data in this waypoint snapshot is not compatible with the current configuration of the robot. Check sensor_status for more details. |
+
+
+
+<a name="bosdyn.api.graph_nav.ValidateGraphResponse.Status"></a>
+
+### ValidateGraphResponse.Status
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_OK | 1 |  |
+| STATUS_INCOMPATIBLE_SENSORS | 5 |  |
+| STATUS_AREA_CALLBACK_ERROR | 6 |  |
 
 
  <!-- end enums -->
@@ -7680,6 +9289,7 @@ requests to move around the map.
 | UploadEdgeSnapshot | [UploadEdgeSnapshotRequest](#bosdyn.api.graph_nav.UploadEdgeSnapshotRequest) stream | [UploadEdgeSnapshotResponse](#bosdyn.api.graph_nav.UploadEdgeSnapshotResponse) | Uploads large edge snapshot as a stream for a particular edge. |
 | DownloadWaypointSnapshot | [DownloadWaypointSnapshotRequest](#bosdyn.api.graph_nav.DownloadWaypointSnapshotRequest) | [DownloadWaypointSnapshotResponse](#bosdyn.api.graph_nav.DownloadWaypointSnapshotResponse) stream | Download waypoint data from the server. If the snapshot exists in disk cache, it will be loaded. |
 | DownloadEdgeSnapshot | [DownloadEdgeSnapshotRequest](#bosdyn.api.graph_nav.DownloadEdgeSnapshotRequest) | [DownloadEdgeSnapshotResponse](#bosdyn.api.graph_nav.DownloadEdgeSnapshotResponse) stream | Download edge data from the server. If the snapshot exists in disk cache, it will be loaded. |
+| ValidateGraph | [ValidateGraphRequest](#bosdyn.api.graph_nav.ValidateGraphRequest) | [ValidateGraphResponse](#bosdyn.api.graph_nav.ValidateGraphResponse) | Verify that the graph is still valid and all required external services are still available. A map that was valid at upload time may not still be valid if required services are no longer running. |
 
  <!-- end services -->
 
@@ -7743,6 +9353,62 @@ This associates a world object with a common reference frame, which is not neces
 
 
 
+<a name="bosdyn.api.graph_nav.AreaCallbackData"></a>
+
+### AreaCallbackData
+
+Data for a AreaCallback to be stored in snapshots
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| config_data | [google.protobuf.Any](#google.protobuf.Any) | Config data used by the service to do its job. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.AreaCallbackRegion"></a>
+
+### AreaCallbackRegion
+
+Data for a AreaCallback in the annotation.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| service_name | [string](#string) | This service must be used in a given region to safely traverse it. |
+| description | [string](#string) | Human-readable description of this region. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.ClientMetadata"></a>
+
+### ClientMetadata
+
+Optional metadata to attach to waypoints that are being recorded.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| session_name | [string](#string) | User-provided name for this recording "session". For example, the user may start and stop recording at various times and assign a name to a region that is being recorded. Usually, this will just be the map name. |
+| client_username | [string](#string) | If the application recording the map has a special user name, this is the name of that user. |
+| client_software_version | [string](#string) | Version string of any client software that generated this object. |
+| client_id | [string](#string) | Identifier of any client software that generated this object. |
+| client_type | [string](#string) | Special tag for the client software which created this object. For example, "Tablet", "Scout", "Python SDK", etc. |
+
+
+
+
+
+
 <a name="bosdyn.api.graph_nav.Edge"></a>
 
 ### Edge
@@ -7782,11 +9448,31 @@ Annotations understood by BostonDynamics systems.
 | flat_ground | [google.protobuf.BoolValue](#google.protobuf.BoolValue) | If true, the edge crosses flat ground and the robot shouldn't try to climb over obstacles. |
 | ground_mu_hint | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) | Terrain coefficient of friction user hint. This value must be postive and will clamped if necessary on the robot side. Best suggested values lie in the range between 0.4 and 0.8 (which is the robot's default.) WARNING: deprecated as of 2.1. Use mobility_params instead, which includes ground_mu_hint as part of the terrain_params. |
 | grated_floor | [google.protobuf.BoolValue](#google.protobuf.BoolValue) | If true, the edge crosses over grated metal. This changes some parameters of the robot's perception system to allow it to see grated floors bettter. WARNING: deprecated as of 2.1. Use mobility_params instead, which includes grated_floor as part of the terrain_params. |
-| override_mobility_params | [google.protobuf.FieldMask](#google.protobuf.FieldMask) | Overrides the following fields of the mobility parameters to whatever is stored in the map. For example, if this FieldMask contains "stair_hint" and "terrain_params.enable_grated_floor", then the map will be annotated with "stair_hint" and "enable_grated_floor" settings. An empty FieldMask means all fields are active annotations. Note that the more conservative of the velocity limit stored in the mobility parameters and the TravelParams of the entire route will be used for this edge (regardless of what override_mobility_params says). |
+| override_mobility_params | [google.protobuf.FieldMask](#google.protobuf.FieldMask) | Overrides the following fields of the mobility parameters to whatever is stored in the map. For example, if this FieldMask contains "stairs_mode" and "terrain_params.enable_grated_floor", then the map will be annotated with "stairs_mode" and "enable_grated_floor" settings. An empty FieldMask means all fields are active annotations. Note that the more conservative of the velocity limit stored in the mobility parameters and the TravelParams of the entire route will be used for this edge (regardless of what override_mobility_params says). |
 | mobility_params | [bosdyn.api.spot.MobilityParams](#bosdyn.api.spot.MobilityParams) | Contains terrain parameters, swing height, obstacle avoidance parameters, etc. When the robot crosses this edge, it will use the mobility parameters here. |
 | cost | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) | Assign edges a cost; used when finding the "shortest" (lowest cost) path. |
 | edge_source | [Edge.EdgeSource](#bosdyn.api.graph_nav.Edge.EdgeSource) | How this edge was made. |
 | disable_alternate_route_finding | [bool](#bool) | If true, disables alternate-route-finding for this edge. |
+| path_following_mode | [Edge.Annotations.PathFollowingMode](#bosdyn.api.graph_nav.Edge.Annotations.PathFollowingMode) | Path following mode for this edge. |
+| disable_directed_exploration | [bool](#bool) | Disable directed exploration for this edge. |
+| area_callbacks | [Edge.Annotations.AreaCallbacksEntry](#bosdyn.api.graph_nav.Edge.Annotations.AreaCallbacksEntry) | Reference to area callback regions needed to cross this edge. The string is a unique id for this region, which may be shared across multiple edges. |
+| ground_clutter_mode | [Edge.Annotations.GroundClutterAvoidanceMode](#bosdyn.api.graph_nav.Edge.Annotations.GroundClutterAvoidanceMode) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.Edge.Annotations.AreaCallbacksEntry"></a>
+
+### Edge.Annotations.AreaCallbacksEntry
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| key | [string](#string) |  |
+| value | [AreaCallbackRegion](#bosdyn.api.graph_nav.AreaCallbackRegion) |  |
 
 
 
@@ -7844,6 +9530,23 @@ May be used for automatically generating annotations, for example.
 | ----- | ---- | ----------- |
 | id | [string](#string) | Identifier of this snapshot. Snapshots are immutable -- if any of the other fields change, this ID must also change. |
 | stances | [EdgeSnapshot.Stance](#bosdyn.api.graph_nav.EdgeSnapshot.Stance) | Sampling of stances as robot traversed this edge. |
+| area_callbacks | [EdgeSnapshot.AreaCallbacksEntry](#bosdyn.api.graph_nav.EdgeSnapshot.AreaCallbacksEntry) | Data used by area callback services to perform their action. |
+
+
+
+
+
+
+<a name="bosdyn.api.graph_nav.EdgeSnapshot.AreaCallbacksEntry"></a>
+
+### EdgeSnapshot.AreaCallbacksEntry
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| key | [string](#string) |  |
+| value | [AreaCallbackData](#bosdyn.api.graph_nav.AreaCallbackData) |  |
 
 
 
@@ -7928,6 +9631,7 @@ Annotations understood by BostonDynamics systems.
 | icp_variance | [bosdyn.api.SE3Covariance](#bosdyn.api.SE3Covariance) | Estimate of the variance of ICP when performed at this waypoint, collected at record time. |
 | scan_match_region | [Waypoint.Annotations.LocalizeRegion](#bosdyn.api.graph_nav.Waypoint.Annotations.LocalizeRegion) | Options for how to localize to a waypoint (if at all). |
 | waypoint_source | [Waypoint.WaypointSource](#bosdyn.api.graph_nav.Waypoint.WaypointSource) | How this waypoint was made. |
+| client_metadata | [ClientMetadata](#bosdyn.api.graph_nav.ClientMetadata) | Information about the state of the client when this waypoint was created. |
 
 
 
@@ -8022,6 +9726,8 @@ Should be indexed by a waypoint's "snapshot_id" field.
 | has_remote_point_cloud_sensor | [bool](#bool) | If true, the point cloud contains data from a remote point cloud service, such as LIDAR. |
 | body_tform_remote_point_cloud_sensor | [bosdyn.api.SE3Pose](#bosdyn.api.SE3Pose) | Transform from the robot body to the remote point cloud sensor's reference frame. |
 | payloads | [bosdyn.api.Payload](#bosdyn.api.Payload) | Defines the payloads attached to the robot at this waypoint. |
+| robot_id | [bosdyn.api.RobotId](#bosdyn.api.RobotId) | Identifiers (software, nickname, etc.) of the robot that created this waypoint. |
+| recording_started_on | [google.protobuf.Timestamp](#google.protobuf.Timestamp) | Information about when the recording session started in robot time basis. This will be filled out by the recording service when StartRecording is called. |
 
 
 
@@ -8059,6 +9765,39 @@ Indicator of whether or not the waypoint and edge annotations are complete and f
 | DIRECTION_CONSTRAINT_FORWARD | 2 | Robot should walk the edge face-first. |
 | DIRECTION_CONSTRAINT_REVERSE | 3 | Robot should walk the edge rear-first. |
 | DIRECTION_CONSTRAINT_NONE | 4 | No constraints on which way the robot faces. |
+
+
+
+<a name="bosdyn.api.graph_nav.Edge.Annotations.GroundClutterAvoidanceMode"></a>
+
+### Edge.Annotations.GroundClutterAvoidanceMode
+
+Ground clutter avoidance mode.
+This enables detection and avoidance of low obstacles.
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| GROUND_CLUTTER_UNKNOWN | 0 | The mode is unset. |
+| GROUND_CLUTTER_OFF | 1 | The mode is explicitly off. |
+| GROUND_CLUTTER_FROM_FOOTFALLS | 2 | Enable detection of ground clutter using recorded footfalls. Objects that were not stepped on during map recording are obstacles. |
+
+
+
+<a name="bosdyn.api.graph_nav.Edge.Annotations.PathFollowingMode"></a>
+
+### Edge.Annotations.PathFollowingMode
+
+Path following mode
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| PATH_MODE_UNKNOWN | 0 | Unknown value |
+| PATH_MODE_DEFAULT | 1 | Use default path following parameters |
+| PATH_MODE_STRICT | 2 | Use strict path following parameters |
 
 
 
@@ -8470,6 +10209,18 @@ waypoints or edges created by this process.
 
 Waypoints may be anchored to a particular seed frame. The user may request that a waypoint
 be anchored in a particular place with some Gaussian uncertainty.
+Note on gravity alignment: optimization is sensitive to bad alignment with respect to gravity. By default, the
+orientation of the seed frame assumes gravity is pointing in the negative z direction. Take care to ensure that
+the orientation of the waypoint is correct with respect to gravity. By convention, waypoints' orientation
+is defined as: Z up, X forward, Y left. So, if the robot is flat on the ground, the waypoint's z axis should
+align with the seed frame's z axis.
+  z             z
+  ^             ^
+  |             |
+  |             |
+  |             |
+  +------>x     |
+Waypoint        Seed
 
 
 
@@ -8490,6 +10241,21 @@ be anchored in a particular place with some Gaussian uncertainty.
 
 World objects (such as fiducials) may be anchored to a particular seed frame. The user may request that an object
 be anchored in a particular place with some Gaussian uncertainty.
+Note on gravity alignment: optimization is sensitive to bad alignment with respect to gravity. By default, the
+orientation of the seed frame assumes gravity is pointing in the negative z direction. Take care to ensure that
+the orientation of the world object is correct with respect to gravity. By convention, fiducials' orientation
+is defined as: Z out of the page, X up and Y left (when looking at the fiducial). So, if a fiducial is mounted
+perfectly flat against a wall, its orientation w.r.t the seed frame would have the top of the fiducial facing
+positive Z.
++-----------+       z
+|      ^x   |       ^
+|      |    |       |
+|      |    |       |
+| <----+    |       |
+| y         |      Seed
+|           |
++-----------+
+   Fiducial (on wall)
 
 
 
@@ -8525,6 +10291,7 @@ be anchored in a particular place with some Gaussian uncertainty.
 | STATUS_MAX_TIME | 8 | The optimizer timed out before converging. |
 | STATUS_INVALID_HINTS | 9 | One or more of the hints passed in to the optimizer are invalid (do not correspond to real waypoints or objects). |
 | STATUS_MAP_MODIFIED_DURING_PROCESSING | 10 | Tried to write the anchoring after processing, but another client may have modified the map. Try again. |
+| STATUS_INVALID_GRAVITY_ALIGNMENT | 11 | An anchor hint (waypoint or fiducial) had an invalid orientation with respect to gravity. |
 
 
 
@@ -8762,6 +10529,8 @@ persistent recording environment is at the time the request was recieved.
 | is_recording | [bool](#bool) | If true, the record service is actively recording a chain. |
 | recording_environment | [RecordingEnvironment](#bosdyn.api.graph_nav.RecordingEnvironment) | The current persistent recording environment. |
 | map_state | [GetRecordStatusResponse.MapState](#bosdyn.api.graph_nav.GetRecordStatusResponse.MapState) |  |
+| status | [GetRecordStatusResponse.Status](#bosdyn.api.graph_nav.GetRecordStatusResponse.Status) |  |
+| impaired_state | [bosdyn.api.RobotImpairedState](#bosdyn.api.RobotImpairedState) | If the status is ROBOT_IMPAIRED, this is why the robot is impaired. |
 
 
 
@@ -8866,6 +10635,7 @@ the robot was standing when the request was made, in addition to any status info
 | missing_fiducials | [int32](#int32) | If the status is STATUS_MISSING_FIDUCIALS, these are the fiducials that are not currently visible. |
 | bad_pose_fiducials | [int32](#int32) | If the status is STATUS_FIDUCIAL_POSE_NOT_OK, these are the fiducials that could not be localized confidently. |
 | license_status | [bosdyn.api.LicenseInfo.Status](#bosdyn.api.LicenseInfo.Status) | Large graphs can only be uploaded if the license permits them. Recording will stop automatically when the graph gets too large. If StartRecording is requested again after the graph gets too large, it will fail, and license status will be filled out. |
+| impaired_state | [bosdyn.api.RobotImpairedState](#bosdyn.api.RobotImpairedState) | If the status is ROBOT_IMPAIRED, this is why the robot is impaired. |
 
 
 
@@ -8965,6 +10735,20 @@ information if the request fails.
 
 
 
+<a name="bosdyn.api.graph_nav.GetRecordStatusResponse.Status"></a>
+
+### GetRecordStatusResponse.Status
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_OK | 1 |  |
+| STATUS_ROBOT_IMPAIRED | 2 | Unable to record waypoints because the robot is impaired. When this happens, the system will not create new waypoints until the robot is no longer impaired. See impaired_state for more details. |
+
+
+
 <a name="bosdyn.api.graph_nav.StartRecordingResponse.Status"></a>
 
 ### StartRecordingResponse.Status
@@ -8984,6 +10768,7 @@ information if the request fails.
 | STATUS_REMOTE_CLOUD_FAILURE_NO_DATA | 8 | A required remote cloud did not have data. |
 | STATUS_FIDUCIAL_POSE_NOT_OK | 9 | All fiducials are visible but at least one pose could not be determined accurately. |
 | STATUS_TOO_FAR_FROM_EXISTING_MAP | 10 | When recording branches, the robot is too far from the existing map when starting to record a new branch. |
+| STATUS_ROBOT_IMPAIRED | 11 | Unable to start recording because the robot is impaired. See impaired_state for more details. |
 
 
 
@@ -11846,6 +13631,8 @@ does not change the speed at which the robot poses the body.
 | velocity_limit | [bosdyn.api.SE2VelocityLimit](#bosdyn.api.SE2VelocityLimit) | Velocity limits on the robot motion. Example use: limit velocity in "navigate to" nodes. |
 | disable_directed_exploration | [bool](#bool) | Disable directed exploration to bypass blocked path sections |
 | disable_alternate_route_finding | [bool](#bool) | Disable alternate-route-finding; overrides the per-edge setting in the map. |
+| path_following_mode | [bosdyn.api.graph_nav.Edge.Annotations.PathFollowingMode](#bosdyn.api.graph_nav.Edge.Annotations.PathFollowingMode) | Specifies whether to use default or strict path following mode. |
+| ground_clutter_mode | [bosdyn.api.graph_nav.Edge.Annotations.GroundClutterAvoidanceMode](#bosdyn.api.graph_nav.Edge.Annotations.GroundClutterAvoidanceMode) | Specify whether or not to enable ground clutter avoidance, and which type. |
 
 
 
@@ -11867,6 +13654,7 @@ A question posed by a Prompt node, or by the internal operation of another node.
 | text | [string](#string) | The text of the question itself. |
 | options | [Prompt.Option](#bosdyn.api.mission.Prompt.Option) | Options to choose from. Uses the submessage from the "prompt" node message. |
 | for_autonomous_processing | [bool](#bool) | Set to true if this question was meant to be answered by some automated system, not a human. Clients should usually avoid generating a UI element to ask such a question. |
+| severity | [bosdyn.api.AlertData.SeverityLevel](#bosdyn.api.AlertData.SeverityLevel) | Severity for this question. See comment in Prompt message in nodes.proto for a better understanding of what levels mean. |
 
 
 
@@ -12259,6 +14047,26 @@ Get GraphNav state from the robot and save it to the blackboard.
 
 
 
+<a name="bosdyn.api.mission.BosdynGripperCameraParamsState"></a>
+
+### BosdynGripperCameraParamsState
+
+Get the state of the gripper camera params from the robot.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| service_name | [string](#string) | Name of the service to use. |
+| host | [string](#string) | Host machine the service is running on. |
+| child | [Node](#bosdyn.api.mission.Node) | Child node. Children will have access to the state gathered by this node. |
+| state_name | [string](#string) | Name of the bosdyn.api.GripperCameraParams object in the blackboard. For example, if this is set to "gripper_params", children can look up "gripper_params.camera_mode" in the blackboard. |
+
+
+
+
+
+
 <a name="bosdyn.api.mission.BosdynNavigateRoute"></a>
 
 ### BosdynNavigateRoute
@@ -12337,6 +14145,24 @@ Record an APIEvent
 | service_name | [string](#string) | Name of the service to use. |
 | host | [string](#string) | Host machine the service is running on. |
 | event | [bosdyn.api.Event](#bosdyn.api.Event) | The event to be logged. Note that everything should be populated except the id, start_time and end_time. The start and end time will be populated by the mission, using the node's start time. The id field shouldn't be set when the start and end times are the same. |
+| succeed_early | [bool](#bool) | If set to false, this node will wait for the RecordEvents rpc to complete. If set to true, this node will send the RecordEventsRequest, and then return SUCCESS without waiting for the RecordEventsResponse. |
+| additional_parameters | [BosdynRecordEvent.AdditionalParametersEntry](#bosdyn.api.mission.BosdynRecordEvent.AdditionalParametersEntry) | In addition to the parameters specified in the event field, this field can be used to specify events only known at runtime. Map key will be parameter label, map value will be evaluated then packed into parameter value. |
+
+
+
+
+
+
+<a name="bosdyn.api.mission.BosdynRecordEvent.AdditionalParametersEntry"></a>
+
+### BosdynRecordEvent.AdditionalParametersEntry
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| key | [string](#string) |  |
+| value | [Value](#bosdyn.api.mission.Value) |  |
 
 
 
@@ -12400,6 +14226,9 @@ This node will:
 | service_name | [string](#string) | Name of the service to use. |
 | host | [string](#string) | Host machine the service is running on. |
 | robot_state_blackboard_name | [string](#string) | Name of a robot state message defined in the blackboard. Usually provided by embedding this node in a [BosdynRobotState] node. |
+| cleared_cause_fall_blackboard_name | [string](#string) | Optional blackboard variable name. If specified, this node will write the number of cleared behavior faults that had CAUSE_FALL. |
+| cleared_cause_hardware_blackboard_name | [string](#string) | Optional blackboard variable name. If specified, this node will write the number of cleared behavior faults that had CAUSE_HARDWARE. |
+| cleared_cause_lease_timeout_blackboard_name | [string](#string) | Optional blackboard variable name. If specified, this node will write the number of cleared behavior faults that had CAUSE_LEASE_TIMEOUT. |
 
 
 
@@ -12554,7 +14383,7 @@ DEPRECATED! Use docking_command_response_blackboard_key and docking_command_feed
 
 Run this child for a maximum amount of mission execution time.
 Will exit with child's status if the child finishes early,
-FAILURE if the child remains in RUNNING state for too long 
+FAILURE if the child remains in RUNNING state for too long
 and no timeout_child is specified, or the status of the
 timeout_child.
 
@@ -12646,6 +14475,7 @@ This node represents a request for information from ANY listeners that may be ou
 | options | [Prompt.Option](#bosdyn.api.mission.Prompt.Option) | The set of options that can be chosen for this prompt. |
 | child | [Node](#bosdyn.api.mission.Node) | Child node, run after the prompt has been responded to. Children will have access to the answer code provided by the response. |
 | for_autonomous_processing | [bool](#bool) | Hint that Question posed by this Prompt is meant to be answered by some automated system. See the Question message for details. |
+| severity | [bosdyn.api.AlertData.SeverityLevel](#bosdyn.api.AlertData.SeverityLevel) | Severity for this prompt. Used to determine what sort of alerting this prompt will trigger. Here are guidelines for severity as it pertains to missions: INFO: Normal operation. For example, waiting for charge; waiting on the dock for logs to download. WARN: Something went wrong, but the mission will try to recover autonomously. ERROR: Something went wrong, and the mission can't recover without human intervention. Intervention is not time sensitive and can be resolved when convenient. CRITICAL: Something went wrong, and the mission can't recover without human intervention. Human needs to rescue the robot before battery runs out because it's not charging. |
 
 
 
@@ -12704,6 +14534,7 @@ Repeat a child node.
 | max_starts | [int32](#int32) | Start the child node exactly this many times. Note that a value of 1 makes the Repeat node a no-op. |
 | child | [Node](#bosdyn.api.mission.Node) | Child to repeat max_starts times. |
 | start_counter_state_name | [string](#string) | If set, the node will write the start index to the blackboard. |
+| respect_child_failure | [bool](#bool) | If set to false, this repeat node will keep running its child regardless of whether or not the child succeeds or fails. If set to true, this repeat node will only keep running its child when the child succeeds. If the child fails, the repeat node will fail. |
 
 
 
@@ -12815,6 +14646,26 @@ Sets existing blackboard variables within this scope to specific values, returni
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | blackboard_variables | [KeyValue](#bosdyn.api.mission.KeyValue) | The key of the KeyValue is the name of the blackboard variable. The value will be dereferenced and converted into a value type at runtime inside this node's tick function. For example, if the value is a runtime variable, that variable will be evaluated at tick time, and then stored into the blackboard. If the value is another blackboard variable, that blackboard variable's value will be copied into the variable specified by the key. |
+
+
+
+
+
+
+<a name="bosdyn.api.mission.SetGripperCameraParams"></a>
+
+### SetGripperCameraParams
+
+Set gripper camera params
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| service_name | [string](#string) | Name of the service to use. |
+| host | [string](#string) | Host machine of the directory server that the gripper camera param service is registered with. |
+| params_in_blackboard_key | [string](#string) |  |
+| new_params | [bosdyn.api.GripperCameraParams](#bosdyn.api.GripperCameraParams) |  |
 
 
 
@@ -12984,6 +14835,57 @@ Triggers a StoreMetadataRequest to the data acquisition store.
 | acquire_data_request_name | [string](#string) | The name of the blackboard variable that holds the associated AcquireDataRequest. The reference ID that this metadata is associated with will be copied from the request. |
 | metadata_name | [string](#string) | The name of the metadata object in the blackboard to be stored. The metadata object can be any protobuf message. |
 | metadata_channel | [string](#string) | The data buffer channel on which to store the metadata. |
+
+
+
+
+
+
+<a name="bosdyn.api.mission.Switch"></a>
+
+### Switch
+
+Run a specific child based on a specified pivot_value.
+
+This node exists because of a subtle implmentation detail in Selector(always_restart = true).
+The astute reader might believe that they can construct a switch node by using a selector
+with sequences & conditions as children.  This is ALMOST true, EXCEPT that a selector 
+(with always_restart = true) can leave multiple children in the running state IF:
+
+ - A later selector child was RUNNING last tick
+ - An eariler selector child returns RUNNING this tick
+
+Even though the later selector child won't be ticked, it will still be left in the running state
+and not restart when the selector advances to it again later.  Sometimes this is desireable,
+sometimes it isn't.  Switch is constrained to only have one child running, and if the switch ever
+switches children and return to a previously running child, that child will be restarted.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| pivot_value | [Value](#bosdyn.api.mission.Value) | Expresses an integer value that decides which child to run. |
+| always_restart | [bool](#bool) | If false, this node will read the pivot_value once when its starts, and execute the specified child until it finishes even if the pivot_value changes.
+
+If true, this node will read from the pivot_value every tick, and change which child it's ticking when an underlying blackboard variable changes. |
+| int_children | [Switch.IntChildrenEntry](#bosdyn.api.mission.Switch.IntChildrenEntry) | List of all children to possibly run. |
+| default_child | [Node](#bosdyn.api.mission.Node) | If none of the above cases match, use this child |
+
+
+
+
+
+
+<a name="bosdyn.api.mission.Switch.IntChildrenEntry"></a>
+
+### Switch.IntChildrenEntry
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| key | [int32](#int32) |  |
+| value | [Node](#bosdyn.api.mission.Node) |  |
 
 
 
@@ -13562,7 +15464,8 @@ The mobility request must be one of the basic command primitives.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| image_source | [string](#string) | Image source. |
+| image_source | [string](#string) | When only an image source is specified, network compute bridge will choose default values for other request options. |
+| image_request | [ImageRequest](#bosdyn.api.ImageRequest) | A full image request with the image source name as well as other options. |
 | image_service | [string](#string) | Image service. If blank, it is assumed to be the robot's default image service. |
 
 
@@ -13673,7 +15576,26 @@ The mobility request must be one of the basic command primitives.
 Note that the image returned is *not* rotated, regardless of if it was rotated for processing. This ensures that all other calibration and metadata remains valid. |
 | other_data | [google.protobuf.Any](#google.protobuf.Any) | Non image-type data that can optionally be returned by a remote server. |
 | status | [NetworkComputeStatus](#bosdyn.api.NetworkComputeStatus) | Command status |
-| alert_data | [AlertData](#bosdyn.api.AlertData) | Optional field to indicate an alert detected by this model. |
+| alert_data | [AlertData](#bosdyn.api.AlertData) | Optional field to indicate an alert detected by this model.
+
+Note that this alert will be reported for this entire response (including all output images). If you have multiple output images and only want to alert on a specific image, use the alert_data field in the associated OutputImage message. |
+| output_images | [NetworkComputeResponse.OutputImagesEntry](#bosdyn.api.NetworkComputeResponse.OutputImagesEntry) | Optional field to output images generated by this model. Maps name to OutputImage. |
+
+
+
+
+
+
+<a name="bosdyn.api.NetworkComputeResponse.OutputImagesEntry"></a>
+
+### NetworkComputeResponse.OutputImagesEntry
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| key | [string](#string) |  |
+| value | [OutputImage](#bosdyn.api.OutputImage) |  |
 
 
 
@@ -13689,6 +15611,24 @@ Note that the image returned is *not* rotated, regardless of if it was rotated f
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | service_name | [string](#string) | Service name in the robot's Directory for the worker that will process the request. |
+
+
+
+
+
+
+<a name="bosdyn.api.OutputImage"></a>
+
+### OutputImage
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| image_response | [ImageResponse](#bosdyn.api.ImageResponse) | Annotated image showing process/end results. |
+| metadata | [google.protobuf.Struct](#google.protobuf.Struct) | Optional metadata related to this image. |
+| object_in_image | [WorldObject](#bosdyn.api.WorldObject) | Optional detection information. May include bounding boxes, image coordinates, 3D pose information, etc. |
+| alert_data | [AlertData](#bosdyn.api.AlertData) | Optional alert related to this image. |
 
 
 
@@ -14786,6 +16726,82 @@ and it supports requesting the latest point cloud data for each source by name.
 
 
 
+<a name="bosdyn.api.FanPowerCommandFeedbackRequest"></a>
+
+### FanPowerCommandFeedbackRequest
+
+The PowerCommandFeedback request message, which can get the feedback for a specific
+power command id number.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [RequestHeader](#bosdyn.api.RequestHeader) | Common request header. |
+| command_id | [uint32](#uint32) | Unique identifier for the command of which feedback is desired. |
+
+
+
+
+
+
+<a name="bosdyn.api.FanPowerCommandFeedbackResponse"></a>
+
+### FanPowerCommandFeedbackResponse
+
+The PowerCommandFeedback response message, which contains the progress of the power command.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+| status | [FanPowerCommandFeedbackResponse.Status](#bosdyn.api.FanPowerCommandFeedbackResponse.Status) | Current status of specified command. |
+| desired_end_time | [google.protobuf.Timestamp](#google.protobuf.Timestamp) | Based on duration, the time that this command was intended to stop being in effect. If stopped/overriden prematurely, early_stop_time will reflect the actual time the command stopped being in effect |
+| early_stop_time | [google.protobuf.Timestamp](#google.protobuf.Timestamp) | If the command was stopped or overridden before its desired end time, the time at which it was stopped. If command succeeded, this time is empty. |
+
+
+
+
+
+
+<a name="bosdyn.api.FanPowerCommandRequest"></a>
+
+### FanPowerCommandRequest
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [RequestHeader](#bosdyn.api.RequestHeader) | Common request header. |
+| lease | [Lease](#bosdyn.api.Lease) | The Lease to show ownership of the robot. |
+| percent_power | [int32](#int32) | What percent power does the user want the fans to run at? Range is 0 to 100, with 0 being off and 100 being full power |
+| duration | [google.protobuf.Duration](#google.protobuf.Duration) | How long the user wants control of the fans May not be duration the command is actually in effect for if temperature gets too high |
+
+
+
+
+
+
+<a name="bosdyn.api.FanPowerCommandResponse"></a>
+
+### FanPowerCommandResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+| lease_use_result | [LeaseUseResult](#bosdyn.api.LeaseUseResult) | Details about how the lease was used. |
+| status | [FanPowerCommandResponse.Status](#bosdyn.api.FanPowerCommandResponse.Status) | Current feedback of specified command. |
+| desired_end_time | [google.protobuf.Timestamp](#google.protobuf.Timestamp) | Based on received duration, the time when this command will stop being in effect |
+| command_id | [uint32](#uint32) | Unique identifier for the command, If empty, was not accepted. |
+
+
+
+
+
+
 <a name="bosdyn.api.PowerCommandFeedbackRequest"></a>
 
 ### PowerCommandFeedbackRequest
@@ -14866,6 +16882,40 @@ get feedback on the progress of a power command from the power service.
 
 
  <!-- end messages -->
+
+
+<a name="bosdyn.api.FanPowerCommandFeedbackResponse.Status"></a>
+
+### FanPowerCommandFeedbackResponse.Status
+
+Feedback on the current state of a fan power command on the robot.
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Status is not specified. |
+| STATUS_COMPLETE | 1 | Fan Power command succeeded for entire requested duration and is now done. |
+| STATUS_RUNNING | 2 | Fan command is still in effect due to requested duration but has succeeded so far |
+| STATUS_TEMPERATURE_STOP | 3 | ERROR: Command stopped before finish due to temperature becoming too high |
+| STATUS_OVERRIDDEN_BY_COMMAND | 4 | ERROR: A newer Fan Power Request took over before the full duration of this request was up. |
+
+
+
+<a name="bosdyn.api.FanPowerCommandResponse.Status"></a>
+
+### FanPowerCommandResponse.Status
+
+Feedback on the current state of a fan power command on the robot.
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Status is not specified. |
+| STATUS_OK | 1 | Fan Power command succeeded. May still get overriden later in duration |
+| STATUS_TEMPERATURE_TOO_HIGH | 2 | ERROR: Fan Power command rejected because temperature above safe threshold |
+
 
 
 <a name="bosdyn.api.PowerCommandRequest.Request"></a>
@@ -14950,6 +17000,8 @@ The power service for the robot that can power on/off the robot's motors.
 | ----------- | ------------ | ------------- | ------------|
 | PowerCommand | [PowerCommandRequest](#bosdyn.api.PowerCommandRequest) | [PowerCommandResponse](#bosdyn.api.PowerCommandResponse) | Starts a power command on the robot. A robot can only accept one power command at once. Power commands, are not interruptible. Once a command is issued, it must complete before another command can be issued. |
 | PowerCommandFeedback | [PowerCommandFeedbackRequest](#bosdyn.api.PowerCommandFeedbackRequest) | [PowerCommandFeedbackResponse](#bosdyn.api.PowerCommandFeedbackResponse) | Check the status of a power command. |
+| FanPowerCommand | [FanPowerCommandRequest](#bosdyn.api.FanPowerCommandRequest) | [FanPowerCommandResponse](#bosdyn.api.FanPowerCommandResponse) | Separate RPC for toggling fan power due to need for time/percent power parameters |
+| FanPowerCommandFeedback | [FanPowerCommandFeedbackRequest](#bosdyn.api.FanPowerCommandFeedbackRequest) | [FanPowerCommandFeedbackResponse](#bosdyn.api.FanPowerCommandFeedbackResponse) | Check the status of a fan power command. |
 
  <!-- end services -->
 
@@ -17150,7 +19202,8 @@ Params common across spot movement and mobility.
 | vel_limit | [bosdyn.api.SE2VelocityLimit](#bosdyn.api.SE2VelocityLimit) | Max allowable velocity at any point in trajectory. |
 | body_control | [BodyControlParams](#bosdyn.api.spot.BodyControlParams) | Parameters for controlling Spot's body during motion. |
 | locomotion_hint | [LocomotionHint](#bosdyn.api.spot.LocomotionHint) | Desired gait during locomotion |
-| stair_hint | [bool](#bool) | Stairs are only supported in trot gaits. Using this hint will override some user defaults in order to optimize stair behavior. |
+| stair_hint | [bool](#bool) | DEPRECATED as of 3.2.0: The boolean field has been replaced by the field stairs_mode. The following field will be deprecated and moved to 'reserved' in a future release. |
+| stairs_mode | [MobilityParams.StairsMode](#bosdyn.api.spot.MobilityParams.StairsMode) | The selected option for stairs mode. If unset, will use the deprecated stair_hint instead. If falling back on stair_hint, false will map to STAIRS_MODE_OFF. This will be changed to STAIRS_MODE_AUTO in a future release. |
 | allow_degraded_perception | [bool](#bool) | Allow the robot to move with degraded perception when there are perception faults. |
 | obstacle_params | [ObstacleParams](#bosdyn.api.spot.ObstacleParams) | Control of obstacle avoidance. |
 | swing_height | [SwingHeight](#bosdyn.api.spot.SwingHeight) | Swing height setting |
@@ -17268,6 +19321,24 @@ The locomotion hint specifying the gait of the robot.
 | HINT_HOP | 8 | Demo gait which hops while holding some feet in the air. |
 | HINT_AUTO_TROT | 3 | HINT_AUTO_TROT is deprecated due to the name being too similar to the Spot Autowalk feature. It has been replaced by HINT_SPEED_SELECT_TROT. Keeping this value in here for now for backwards compatibility, but this may be removed in future releases. |
 | HINT_AUTO_AMBLE | 6 | HINT_AUTO_AMBLE is deprecated due to the name being too similar to the Spot Autowalk feature. It has been replaced by HINT_SPEED_SELECT_AMBLE. Keeping this value in here for now for backwards compatibility, but this may be removed in future releases. |
+
+
+
+<a name="bosdyn.api.spot.MobilityParams.StairsMode"></a>
+
+### MobilityParams.StairsMode
+
+Stairs are only supported in trot gaits. Enabling stairs mode will override some user defaults in
+order to optimize stair behavior.
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STAIRS_MODE_UNKNOWN | 0 | Invalid; do not use. |
+| STAIRS_MODE_OFF | 1 |  |
+| STAIRS_MODE_ON | 2 |  |
+| STAIRS_MODE_AUTO | 3 | Robot will automatically turn mode on or off |
 
 
 
@@ -17745,6 +19816,7 @@ Response for the SpotCheckFeedback service.
 | STATUS_CAMERA_NOT_DETECTED | 15 | One of the cameras is not detected on the USB bus. |
 | STATUS_INTRINSIC_WRITE_FAILED | 16 | Failed to write intrinsic calibration. |
 | STATUS_EXTRINSIC_WRITE_FAILED | 17 | Failed to write extrinsic calibration. |
+| STATUS_CALIBRATION_VERIFICATION_FAILED | 18 | Spotcheck failed after the camera calibration. |
 
 
 
@@ -17812,6 +19884,8 @@ Errors reflect an issue with robot hardware.
 | ERROR_NONE | 1 | No hardware error detected. |
 | ERROR_CLUTCH_SLIP | 2 | Error detected in clutch performance. |
 | ERROR_INVALID_RANGE_OF_MOTION | 3 | Error if a joint has an incorrect range of motion. |
+| ERROR_ENCODER_SHIFTED | 4 | Error if the measured endstops shifted from kin cal. |
+| ERROR_COLLISION | 5 | Error if checking the joint would have a collsion. |
 
 
 
@@ -17917,6 +19991,8 @@ This reflects an error in the routine.
 | ERROR_REVERT_FAILURE | 12 | Robot failed to revert calibration. |
 | ERROR_FGKC_FAILURE | 13 | Robot failed to do flat ground kinematic calibration. |
 | ERROR_GRIPPER_CAL_TIMEOUT | 14 | Timeout during gripper calibration. |
+| ERROR_ARM_CHECK_COLLISION | 15 | Arm motion would cause collisions (eg. w/ a payload). |
+| ERROR_ARM_CHECK_TIMEOUT | 16 | Timeout during arm joint check. |
 
 
 
@@ -17942,6 +20018,7 @@ This reflects an error in the routine.
 | STATE_HIP_RANGE_OF_MOTION_CHECK | 11 | Hip range of motion check underway. |
 | STATE_GRIPPER_CAL | 12 | Gripper calibration underway. |
 | STATE_SIT_DOWN_AFTER_RUN | 13 | Sitting down after run. |
+| STATE_ARM_JOINT_CHECK | 14 | Arm joint endstops and cross error check underway. |
 
 
  <!-- end enums -->

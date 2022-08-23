@@ -5,27 +5,27 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import logging
-import numpy as np
+import sys
 import threading
 import time
 from abc import ABC, abstractmethod
 
-from bosdyn.util import seconds_to_duration, sec_to_nsec
+import numpy as np
+
+from bosdyn.api import (header_pb2, image_pb2, image_service_pb2, image_service_pb2_grpc,
+                        service_fault_pb2)
 from bosdyn.client.exceptions import RpcError
-from bosdyn.client.fault import FaultClient, ServiceFaultDoesNotExistError, ServiceFaultAlreadyExistsError
+from bosdyn.client.fault import (FaultClient, ServiceFaultAlreadyExistsError,
+                                 ServiceFaultDoesNotExistError)
 from bosdyn.client.image import UnsupportedPixelFormatRequestedError
 from bosdyn.client.server_util import populate_response_header
 from bosdyn.client.util import setup_logging
-
-from bosdyn.api import service_fault_pb2
-from bosdyn.api import header_pb2
-from bosdyn.api import image_pb2
-from bosdyn.api import image_service_pb2
-from bosdyn.api import image_service_pb2_grpc
+from bosdyn.util import sec_to_nsec, seconds_to_duration
 
 _LOGGER = logging.getLogger(__name__)
 
 CLEAR_FAULT_RPC_TIMEOUT_SECS = 0.1
+
 
 def convert_RGB_to_grayscale(image_data_RGB_np):
     """Convert numpy image from RGB to grayscale using Pillow's formula.
@@ -42,7 +42,10 @@ def convert_RGB_to_grayscale(image_data_RGB_np):
     # The constants below are the same as the ones in the above equation multiplied by 2^16
     # The final addition makes it round the correct direction when it gets truncated by the bit shift.
     rgb = image_data_RGB_np.astype(np.uint32)
-    return ((rgb[:,:,0] * 19595 + rgb[:,:,1] * 38470 + rgb[:,:,2] * 7471 + 0x8000)>>16).astype(np.uint8)
+    return (
+        (rgb[:, :, 0] * 19595 + rgb[:, :, 1] * 38470 + rgb[:, :, 2] * 7471 + 0x8000) >> 16).astype(
+            np.uint8)
+
 
 class CameraInterface(ABC):
     """Abstract class interface for capturing and decoding images from a camera.
@@ -77,6 +80,7 @@ class CameraInterface(ABC):
         """
         pass
 
+
 class VisualImageSource():
     """Helper class to represent a single image source.
 
@@ -105,7 +109,8 @@ class VisualImageSource():
                  pixel_formats=[], logger=None):
         self.image_source_name = image_name
         self.supported_pixel_formats = pixel_formats
-        self.image_source_proto = self.make_image_source(image_name, rows, cols, self.supported_pixel_formats)
+        self.image_source_proto = self.make_image_source(image_name, rows, cols,
+                                                         self.supported_pixel_formats)
         self.get_image_capture_params = lambda: self.make_capture_parameters(gain, exposure)
 
         # Ensure the camera_interface is a subclass of CameraInterface and has the defined capture and
@@ -149,11 +154,6 @@ class VisualImageSource():
 
     def create_capture_thread(self):
         """Initialize a background thread to continuously capture images.
-
-        Args:
-            capture_period (int): Amount of time (in seconds) between captures to wait
-                                  before triggering the next capture. Defaults to
-                                  "no wait" between captures.
         """
         self.capture_thread = ImageCaptureThread(self.image_source_name, self.capture_function)
         self.capture_thread.start_capturing()
@@ -197,7 +197,8 @@ class VisualImageSource():
             try:
                 self.fault_client.trigger_service_fault(fault)
                 self.active_fault_id_names.add(fault.fault_id.fault_name)
-            except ServiceFaultAlreadyExistsError: pass
+            except ServiceFaultAlreadyExistsError:
+                pass
             except RpcError as exc:
                 self.logger.error("RPC error in trigger_fault: %s.", exc)
 
@@ -210,11 +211,11 @@ class VisualImageSource():
         if self.fault_client is not None and fault is not None:
             try:
                 if fault.fault_id.fault_name in self.active_fault_id_names:
-                    self.fault_client.clear_service_fault(
-                        fault.fault_id, timeout=CLEAR_FAULT_RPC_TIMEOUT_SECS)
+                    self.fault_client.clear_service_fault(fault.fault_id,
+                                                          timeout=CLEAR_FAULT_RPC_TIMEOUT_SECS)
                     self.active_fault_id_names.remove(fault.fault_id.fault_name)
             except ServiceFaultDoesNotExistError:
-                self.logger.warn("No service fault found to clear.")
+                self.logger.warning("No service fault found to clear.")
             except RpcError as exc:
                 self.logger.error("RPC error in clear_fault: %s.", exc)
 
@@ -286,7 +287,7 @@ class VisualImageSource():
             image_data(any format): The image data returned by the camera interface's
                                     blocking_capture function.
             image_proto (image_pb2.Image): The image proto to be mutated with the decoded data.
-            img_req (image_pb2.ImageRequest): The image request associated with the image_data.
+            image_req (image_pb2.ImageRequest): The image request associated with the image_data.
 
         Returns:
             image_pb2.ImageResponse.Status indicating if the decode succeeds, or image format conversion or
@@ -342,7 +343,7 @@ class VisualImageSource():
         """Create an instance of the image_pb2.ImageSource for a given source name.
 
         Args:
-            name (string): The name for the camera source.
+            source_name (string): The name for the camera source.
             rows (int): The number of rows of pixels in the image.
             cols (int): The number of cols of pixels in the image.
             image_type (image_pb2.ImageType): The type of image (e.g. visual, depth).
@@ -387,6 +388,8 @@ class VisualImageSource():
         if exposure:
             if callable(exposure):
                 params.exposure_duration.CopyFrom(seconds_to_duration(exposure()))
+            elif exposure == float('inf'):
+                params.exposure_duration.CopyFrom(seconds_to_duration(sys.maxsize))
             else:
                 params.exposure_duration.CopyFrom(seconds_to_duration(exposure))
         return params
@@ -536,8 +539,9 @@ class CameraBaseImageServicer(image_service_pb2_grpc.ImageServiceServicer):
     def _set_format_and_decode(self, image_data, img_proto, img_req):
         """Calls the image_decode_with_error_checking function, which returns a (Boolean, Boolean) if the decode succeeds."""
         # This function should set the image data, pixel format, image format, and transform snapshot fields.
-        return self.image_sources_mapped[img_req.image_source_name].image_decode_with_error_checking(
-            image_data, img_proto, img_req)
+        return self.image_sources_mapped[
+            img_req.image_source_name].image_decode_with_error_checking(
+                image_data, img_proto, img_req)
 
     def GetImage(self, request, context):
         """Gets the latest image capture from all the image sources specified in the request.
@@ -594,7 +598,8 @@ class CameraBaseImageServicer(image_service_pb2_grpc.ImageServiceServicer):
 
             # Set the image data.
             img_resp.shot.image.format = img_req.image_format
-            decode_status = self._set_format_and_decode(captured_image, img_resp.shot.image, img_req)
+            decode_status = self._set_format_and_decode(captured_image, img_resp.shot.image,
+                                                        img_req)
             if decode_status != image_pb2.ImageResponse.STATUS_OK:
                 img_resp.status = decode_status
 

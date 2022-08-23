@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.robot_command &mdash; Spot 3.1.2.1 documentation</title>
+  <title>bosdyn.client.robot_command &mdash; Spot 3.2.0 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                3.1.2.1
+                3.2.0
               </div>
             
           
@@ -115,10 +115,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autowalk_service.html">Autowalk service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/directed_exploration.html">Directed Exploration</a></li>
@@ -146,7 +148,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_output.html">Data Acquisition Output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_buffer_overview.html">Data Buffer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF file format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
 </ul>
 </li>
 </ul>
@@ -179,6 +182,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/docking/README.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -197,6 +201,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -204,6 +209,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -258,16 +264,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
@@ -294,6 +308,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
@@ -319,6 +335,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lights_helper.html">Lights Helper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
@@ -388,7 +405,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq2.html">Part 2: Capturing images</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq3.html">Part 3: Capturing other data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the Spot CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the CORE I/O</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq5.html">Part 5: Collecting data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq6.html">Part 6: Processing collected data</a></li>
 </ul>
@@ -402,9 +419,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul>
@@ -418,6 +440,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-proto">autowalk/autowalk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-service-proto">autowalk/autowalk_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-walks-proto">autowalk/walks.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
@@ -441,6 +466,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
@@ -536,6 +563,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -612,30 +640,23 @@
 
 <span class="kn">from</span> <span class="nn">deprecated.sphinx</span> <span class="kn">import</span> <span class="n">deprecated</span>
 <span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">any_pb2</span><span class="p">,</span> <span class="n">wrappers_pb2</span>
+
 <span class="kn">from</span> <span class="nn">bosdyn</span> <span class="kn">import</span> <span class="n">geometry</span>
-
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">geometry_pb2</span>
-
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">arm_command_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">robot_command_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">full_body_command_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">mobility_command_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">synchronized_command_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">basic_command_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">gripper_command_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="p">(</span><span class="n">arm_command_pb2</span><span class="p">,</span> <span class="n">basic_command_pb2</span><span class="p">,</span> <span class="n">full_body_command_pb2</span><span class="p">,</span> <span class="n">geometry_pb2</span><span class="p">,</span>
+                        <span class="n">gripper_command_pb2</span><span class="p">,</span> <span class="n">mobility_command_pb2</span><span class="p">,</span> <span class="n">payload_estimation_pb2</span><span class="p">,</span>
+                        <span class="n">robot_command_pb2</span><span class="p">,</span> <span class="n">robot_command_service_pb2_grpc</span><span class="p">,</span> <span class="n">synchronized_command_pb2</span><span class="p">,</span>
+                        <span class="n">trajectory_pb2</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.spot</span> <span class="kn">import</span> <span class="n">robot_command_pb2</span> <span class="k">as</span> <span class="n">spot_command_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">robot_command_service_pb2_grpc</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">trajectory_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span> <span class="n">error_pair</span><span class="p">,</span>
+                                  <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_lease_use_result_errors</span><span class="p">,</span>
+                                  <span class="n">handle_unset_status_error</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">seconds_to_duration</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span> <span class="n">error_pair</span><span class="p">,</span> <span class="n">handle_unset_status_error</span><span class="p">,</span>
-                                  <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_lease_use_result_errors</span><span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">InvalidRequestError</span><span class="p">,</span> <span class="n">TimedOutError</span><span class="p">,</span> <span class="n">UnsetStatusError</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">Error</span> <span class="k">as</span> <span class="n">BaseError</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">InvalidRequestError</span><span class="p">,</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">TimedOutError</span><span class="p">,</span> <span class="n">UnsetStatusError</span>
 <span class="kn">from</span> <span class="nn">.frame_helpers</span> <span class="kn">import</span> <span class="n">BODY_FRAME_NAME</span><span class="p">,</span> <span class="n">ODOM_FRAME_NAME</span><span class="p">,</span> <span class="n">get_se2_a_tform_b</span>
-<span class="kn">from</span> <span class="nn">.math_helpers</span> <span class="kn">import</span> <span class="n">SE2Pose</span><span class="p">,</span> <span class="n">SE3Pose</span>
 <span class="kn">from</span> <span class="nn">.lease</span> <span class="kn">import</span> <span class="n">add_lease_wallet_processors</span>
+<span class="kn">from</span> <span class="nn">.math_helpers</span> <span class="kn">import</span> <span class="n">SE2Pose</span><span class="p">,</span> <span class="n">SE3Pose</span>
 
 <span class="c1"># The angles (in radians) that represent the claw gripper open and closed positions.</span>
 <span class="n">_CLAW_GRIPPER_OPEN_ANGLE</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.5708</span>
@@ -817,6 +838,11 @@
                     <span class="s1">&#39;tool_trajectory_in_frame2&#39;</span><span class="p">:</span> <span class="p">{</span>
                         <span class="s1">&#39;reference_time&#39;</span><span class="p">:</span> <span class="kc">None</span>
                     <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="s1">&#39;arm_impedance_command&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;task_tform_desired_tool&#39;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s1">&#39;reference_time&#39;</span><span class="p">:</span> <span class="kc">None</span>
+                    <span class="p">},</span>
                 <span class="p">}</span>
             <span class="p">}</span>
         <span class="p">}</span>
@@ -861,7 +887,7 @@
 
 
 <div class="viewcode-block" id="RobotCommandClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient">[docs]</a><span class="k">class</span> <span class="nc">RobotCommandClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Client for calling RobotCommand services.&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;Client for calling RobotCommand services.&quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;robot-command&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.RobotCommandService&#39;</span>
 
@@ -926,7 +952,7 @@
         <span class="c1"># Update req.command instead of command so that we don&#39;t modify an input in this function.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_command_timestamps</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_robot_command_value</span><span class="p">,</span> <span class="n">_robot_command_error</span><span class="p">,</span>
-                         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+                         <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobotCommandClient.robot_command_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.robot_command_async">[docs]</a>    <span class="k">def</span> <span class="nf">robot_command_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                             <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -957,7 +983,7 @@
         <span class="c1"># Update req.command instead of command so that we don&#39;t modify an input to this function.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_command_timestamps</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_robot_command_value</span><span class="p">,</span>
-                               <span class="n">_robot_command_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+                               <span class="n">_robot_command_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobotCommandClient.robot_command_feedback"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback">[docs]</a>    <span class="k">def</span> <span class="nf">robot_command_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_command_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get feedback from a previously issued command.</span>
@@ -971,7 +997,7 @@
 
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_robot_command_feedback_request</span><span class="p">(</span><span class="n">robot_command_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RobotCommandFeedback</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">_robot_command_feedback_error</span><span class="p">,</span>
-                         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+                         <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobotCommandClient.robot_command_feedback_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback_async">[docs]</a>    <span class="k">def</span> <span class="nf">robot_command_feedback_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_command_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Async version of robot_command_feedback().</span>
@@ -985,7 +1011,7 @@
 
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_robot_command_feedback_request</span><span class="p">(</span><span class="n">robot_command_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RobotCommandFeedback</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
-                               <span class="n">_robot_command_feedback_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+                               <span class="n">_robot_command_feedback_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RobotCommandClient.clear_behavior_fault"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.clear_behavior_fault">[docs]</a>    <span class="k">def</span> <span class="nf">clear_behavior_fault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">behavior_fault_id</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1005,7 +1031,7 @@
 
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_clear_behavior_fault_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">behavior_fault_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ClearBehaviorFault</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_clear_behavior_fault_value</span><span class="p">,</span>
-                         <span class="n">_clear_behavior_fault_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+                         <span class="n">_clear_behavior_fault_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobotCommandClient.clear_behavior_fault_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.clear_behavior_fault_async">[docs]</a>    <span class="k">def</span> <span class="nf">clear_behavior_fault_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">behavior_fault_id</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Async version of clear_behavior_fault().</span>
@@ -1026,7 +1052,7 @@
 
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_clear_behavior_fault_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">behavior_fault_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ClearBehaviorFault</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_clear_behavior_fault_value</span><span class="p">,</span>
-                               <span class="n">_clear_behavior_fault_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+                               <span class="n">_clear_behavior_fault_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_get_robot_command_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create RobotCommandRequest message from the given information.</span>
@@ -1272,6 +1298,21 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">()</span>
         <span class="n">command</span><span class="o">.</span><span class="n">full_body_command</span><span class="o">.</span><span class="n">battery_change_pose_request</span><span class="o">.</span><span class="n">direction_hint</span> <span class="o">=</span> <span class="n">dir_hint</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+
+<div class="viewcode-block" id="RobotCommandBuilder.payload_estimation_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.payload_estimation_command">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">payload_estimation_command</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;Command to get the robot estimate payload mass.</span>
+
+<span class="sd">        Commands robot to stand and execute a routine to estimate the mass properties of an</span>
+<span class="sd">        unregistered payload attached to the robot.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            RobotCommand, which can be issued to the robot command service.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">full_body_command</span> <span class="o">=</span> <span class="n">full_body_command_pb2</span><span class="o">.</span><span class="n">FullBodyCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+            <span class="n">payload_estimation_request</span><span class="o">=</span><span class="n">payload_estimation_pb2</span><span class="o">.</span><span class="n">PayloadEstimationCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">())</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">full_body_command</span><span class="o">=</span><span class="n">full_body_command</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">command</span></div>
 
 <div class="viewcode-block" id="RobotCommandBuilder.safe_power_off_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.safe_power_off_command">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -1540,9 +1581,9 @@
 <span class="sd">        call to RobotCommandService.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            goal_x: Position X coordinate described relative to the body frame.</span>
-<span class="sd">            goal_y: Position Y coordinate described relative to the body frame.</span>
-<span class="sd">            goal_heading: Pose heading in radians described relative to the body frame.</span>
+<span class="sd">            goal_x_rt_body: Position X coordinate described relative to the body frame.</span>
+<span class="sd">            goal_y_rt_body: Position Y coordinate described relative to the body frame.</span>
+<span class="sd">            goal_heading_rt_body: Pose heading in radians described relative to the body frame.</span>
 <span class="sd">            frame_tree_snapshot: Dictionary representing the child_to_parent_edge_map describing different</span>
 <span class="sd">                                 transforms. This can be acquired using the robot state client directly, or using</span>
 <span class="sd">                                 the robot object&#39;s helper function robot.get_frame_tree_snapshot().</span>
@@ -1686,7 +1727,7 @@
 <span class="sd">        argument is passed.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            se2_fame_name(string): The frame name which the desired foot_positions are described in.</span>
+<span class="sd">            se2_frame_name(string): The frame name which the desired foot_positions are described in.</span>
 <span class="sd">            pos_fl_rt_frame(Vec2): Position of front left foot in specified frame.</span>
 <span class="sd">            pos_fr_rt_frame(Vec2): Position of front right foot in specified frame.</span>
 <span class="sd">            pos_hl_rt_frame(Vec2): Position of rear left foot in specified frame.</span>
@@ -2043,7 +2084,7 @@
 <div class="viewcode-block" id="RobotCommandBuilder.mobility_params"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.mobility_params">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">mobility_params</span><span class="p">(</span><span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">footprint_R_body</span><span class="o">=</span><span class="n">geometry</span><span class="o">.</span><span class="n">EulerZXY</span><span class="p">(),</span>
                         <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">,</span> <span class="n">stair_hint</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                        <span class="n">external_force_params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                        <span class="n">external_force_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stairs_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Helper to create Mobility params for spot mobility commands. This function is designed</span>
 <span class="sd">        to help get started issuing commands, but lots of options are not exposed via this</span>
 <span class="sd">        interface. See spot.robot_command_pb2 for more details. If unset, good defaults will be</span>
@@ -2055,9 +2096,11 @@
 <span class="sd">                                        footprint frame (gravity aligned framed with yaw computed</span>
 <span class="sd">                                        from the stance feet)</span>
 <span class="sd">            locomotion_hint: Locomotion hint to use for the command.</span>
-<span class="sd">            stair_hint: Boolean to specify if stair mode should be used.</span>
+<span class="sd">            stair_hint: Boolean to specify if stair mode should be used. Deprecated in favor of stairs_mode</span>
+<span class="sd">                                        and ignored if stairs_mode set.</span>
 <span class="sd">            external_force_params(spot.BodyExternalForceParams): Robot body external force</span>
 <span class="sd">                                                                 parameters.</span>
+<span class="sd">            stairs_mode: StairsMode enum specifying stairs mode as On, Auto, or Off.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            spot.MobilityParams, params for spot mobility commands.</span>
@@ -2069,10 +2112,9 @@
         <span class="n">point</span> <span class="o">=</span> <span class="n">trajectory_pb2</span><span class="o">.</span><span class="n">SE3TrajectoryPoint</span><span class="p">(</span><span class="n">pose</span><span class="o">=</span><span class="n">pose</span><span class="p">)</span>
         <span class="n">traj</span> <span class="o">=</span> <span class="n">trajectory_pb2</span><span class="o">.</span><span class="n">SE3Trajectory</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="n">point</span><span class="p">])</span>
         <span class="n">body_control</span> <span class="o">=</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyControlParams</span><span class="p">(</span><span class="n">base_offset_rt_footprint</span><span class="o">=</span><span class="n">traj</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">MobilityParams</span><span class="p">(</span><span class="n">body_control</span><span class="o">=</span><span class="n">body_control</span><span class="p">,</span>
-                                               <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">locomotion_hint</span><span class="p">,</span>
-                                               <span class="n">stair_hint</span><span class="o">=</span><span class="n">stair_hint</span><span class="p">,</span>
-                                               <span class="n">external_force_params</span><span class="o">=</span><span class="n">external_force_params</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">MobilityParams</span><span class="p">(</span>
+            <span class="n">body_control</span><span class="o">=</span><span class="n">body_control</span><span class="p">,</span> <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">locomotion_hint</span><span class="p">,</span> <span class="n">stair_hint</span><span class="o">=</span><span class="n">stair_hint</span><span class="p">,</span>
+            <span class="n">external_force_params</span><span class="o">=</span><span class="n">external_force_params</span><span class="p">,</span> <span class="n">stairs_mode</span><span class="o">=</span><span class="n">stairs_mode</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobotCommandBuilder.build_body_external_forces"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.build_body_external_forces">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">build_body_external_forces</span><span class="p">(</span>
@@ -2354,6 +2396,8 @@
         <span class="k">elif</span> <span class="n">arm_feedback</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;arm_joint_move_feedback&quot;</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">arm_feedback</span><span class="o">.</span><span class="n">arm_joint_move_feedback</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">arm_command_pb2</span><span class="o">.</span><span class="n">ArmJointMoveCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_COMPLETE</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">arm_feedback</span><span class="o">.</span><span class="n">arm_joint_move_feedback</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">arm_command_pb2</span><span class="o">.</span><span class="n">ArmJointMoveCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_STALLED</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
         <span class="k">elif</span> <span class="n">arm_feedback</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;named_arm_position_feedback&quot;</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">arm_feedback</span><span class="o">.</span><span class="n">named_arm_position_feedback</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">arm_command_pb2</span><span class="o">.</span><span class="n">NamedArmPositionsCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_COMPLETE</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">True</span>
@@ -2374,7 +2418,7 @@
 <span class="sd">       Args:</span>
 <span class="sd">        command_client (RobotCommandClient): the client used to request feedback</span>
 <span class="sd">        cmd_id (int): command ID returned by the robot when the trajectory command was sent</span>
-<span class="sd">        acceptable_statuses (set of SE2TrajectoryCommand.Feedback.Status): the feedback must have a</span>
+<span class="sd">        trajectory_end_statuses (set of SE2TrajectoryCommand.Feedback.Status): the feedback must have a</span>
 <span class="sd">            status which is included in this set of statuses to be considered successfully complete.</span>
 <span class="sd">            By default, this includes only the &quot;STATUS_AT_GOAL&quot; end condition.</span>
 <span class="sd">        body_movement_statuses (set of SE2TrajectoryCommand.Feedback.BodyMovementStatus): the body</span>

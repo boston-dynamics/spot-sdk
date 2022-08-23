@@ -20,29 +20,29 @@ import traceback
 
 from google.protobuf import wrappers_pb2 as wrappers
 
+import bosdyn.api.robot_state_pb2 as robot_state_proto
+import bosdyn.api.spot.robot_command_pb2 as spot_command_pb2
+import bosdyn.client
+import bosdyn.client.channel
+import bosdyn.client.util
 from bosdyn.api import geometry_pb2, world_object_pb2
 from bosdyn.api.graph_nav import graph_nav_pb2, map_pb2, map_processing_pb2, recording_pb2
 from bosdyn.api.mission import nodes_pb2
-import bosdyn.api.robot_state_pb2 as robot_state_proto
-import bosdyn.api.spot.robot_command_pb2 as spot_command_pb2
-
-import bosdyn.client
-from bosdyn.client import create_standard_sdk, ResponseError, RpcError
+from bosdyn.client import ResponseError, RpcError, create_standard_sdk
 from bosdyn.client.async_tasks import AsyncPeriodicQuery, AsyncTasks
-import bosdyn.client.channel
 from bosdyn.client.estop import EstopClient, EstopEndpoint, EstopKeepAlive
+from bosdyn.client.frame_helpers import ODOM_FRAME_NAME
 from bosdyn.client.graph_nav import GraphNavClient
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 from bosdyn.client.map_processing import MapProcessingServiceClient
 from bosdyn.client.power import PowerClient
-from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder
-from bosdyn.client.recording import GraphNavRecordingServiceClient, NotLocalizedToEndError, NotReadyYetError
+from bosdyn.client.recording import (GraphNavRecordingServiceClient, NotLocalizedToEndError,
+                                     NotReadyYetError)
+from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient
 from bosdyn.client.robot_state import RobotStateClient
 from bosdyn.client.time_sync import TimeSyncError
-import bosdyn.client.util
-from bosdyn.util import duration_str, format_metric, secs_to_hms
-from bosdyn.client.frame_helpers import ODOM_FRAME_NAME
 from bosdyn.client.world_object import WorldObjectClient
+from bosdyn.util import duration_str, format_metric, secs_to_hms
 
 LOGGER = logging.getLogger()
 
@@ -155,7 +155,8 @@ class RecorderInterface(object):
             self._estop_client = None
             self._estop_endpoint = None
 
-        self._map_processing_client = robot.ensure_client(MapProcessingServiceClient.default_service_name)
+        self._map_processing_client = robot.ensure_client(
+            MapProcessingServiceClient.default_service_name)
         self._power_client = robot.ensure_client(PowerClient.default_service_name)
         self._robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
         self._robot_command_client = robot.ensure_client(RobotCommandClient.default_service_name)
@@ -176,7 +177,7 @@ class RecorderInterface(object):
         self._async_tasks = AsyncTasks([self._robot_state_task])
         self._lock = threading.Lock()
         self._command_dictionary = {
-            27: self._stop, # ESC key
+            27: self._stop,  # ESC key
             ord('\t'): self._quit_program,
             ord('T'): self._toggle_time_sync,
             ord(' '): self._toggle_estop,
@@ -545,9 +546,16 @@ class RecorderInterface(object):
         if self._waypoint_id is None:
             self.add_message("ERROR: Not localized to waypoint.")
             return
-
+        session_name = os.path.basename(self._download_filepath)
+        # Create metadata for the recording session.
+        client_metadata = GraphNavRecordingServiceClient.make_client_metadata(
+            session_name=session_name, client_username=self._robot._current_user,
+            client_id='Mission Recorder Example', client_type='Python SDK')
+        environment = GraphNavRecordingServiceClient.make_recording_environment(
+            waypoint_env=GraphNavRecordingServiceClient.make_waypoint_environment(
+                client_metadata=client_metadata))
         # Tell graph nav to start recording map
-        status = self._recording_client.start_recording()
+        status = self._recording_client.start_recording(recording_environment=environment)
         if status != recording_pb2.StartRecordingResponse.STATUS_OK:
             self.add_message("Start recording failed.")
             return
@@ -600,7 +608,8 @@ class RecorderInterface(object):
 
         except NotLocalizedToEndError:
             # This should never happen unless there's an internal error on the robot.
-            self.add_message("There was a problem while trying to stop recording. Please try again.")
+            self.add_message(
+                "There was a problem while trying to stop recording. Please try again.")
             return False
 
     def _relocalize(self):
@@ -746,8 +755,8 @@ class RecorderInterface(object):
                 # Failure in downloading edge snapshot. Continue to next snapshot.
                 self.add_message("Failed to download edge snapshot: " + edge.snapshot_id)
                 continue
-            write_bytes(os.path.join(self._download_filepath, 'edge_snapshots'),
-                        edge.snapshot_id, edge_snapshot.SerializeToString())
+            write_bytes(os.path.join(self._download_filepath, 'edge_snapshots'), edge.snapshot_id,
+                        edge_snapshot.SerializeToString())
             num_edge_snapshots_downloaded += 1
             self.add_message("Downloaded {} of the total {} edge snapshots.".format(
                 num_edge_snapshots_downloaded, num_to_download))
@@ -836,7 +845,8 @@ class RecorderInterface(object):
         else:
             backwards = True
             # Switch the indices and reverse the output order.
-            impl.route.waypoint_id[:] = reversed(self._all_graph_wps_in_order[wp_idx:prev_wp_idx + 1])
+            impl.route.waypoint_id[:] = reversed(
+                self._all_graph_wps_in_order[wp_idx:prev_wp_idx + 1])
         edge_ids = [e.id for e in self._graph.edges]
         for i in range(len(impl.route.waypoint_id) - 1):
             eid = map_pb2.Edge.Id()
@@ -980,7 +990,8 @@ def main():
         write_mission(mission, mission_filepath)
         return True
 
-    with LeaseKeepAlive(recorder_interface._lease_client, must_acquire=True, return_at_exit=True) as lease_keep_alive:
+    with LeaseKeepAlive(recorder_interface._lease_client, must_acquire=True,
+                        return_at_exit=True) as lease_keep_alive:
         try:
             recorder_interface.start(lease_keep_alive)
         except (ResponseError, RpcError) as err:

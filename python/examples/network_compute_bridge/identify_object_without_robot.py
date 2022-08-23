@@ -5,21 +5,18 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import argparse
-import sys
-import numpy as np
-import grpc
 import multiprocessing as mp
 import os
+import sys
 import time
 
-from bosdyn.api import image_pb2
-from bosdyn.api import network_compute_bridge_pb2
-from bosdyn.api import network_compute_bridge_service_pb2
-from bosdyn.api import network_compute_bridge_service_pb2_grpc
+import cv2
+import grpc
+import numpy as np
 from google.protobuf import wrappers_pb2
 
-import cv2
-import numpy as np
+from bosdyn.api import (image_pb2, network_compute_bridge_pb2, network_compute_bridge_service_pb2,
+                        network_compute_bridge_service_pb2_grpc)
 
 
 def append_str_to_filename(filename, string):

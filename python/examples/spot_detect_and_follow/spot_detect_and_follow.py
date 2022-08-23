@@ -12,17 +12,18 @@ import io
 import json
 import math
 import os
-import statistics
+import signal
 import sys
 import time
-from multiprocessing import Barrier, Process, Queue
-from queue import Full
+from multiprocessing import Barrier, Process, Queue, Value
+from queue import Empty, Full
 from threading import BrokenBarrierError, Thread
 
 import cv2
 import numpy as np
 from PIL import Image
 from scipy import ndimage
+from tensorflow_object_detection import DetectorAPI
 
 import bosdyn.client
 import bosdyn.client.util
@@ -32,16 +33,18 @@ from bosdyn.api import image_pb2, trajectory_pb2
 from bosdyn.api.image_pb2 import ImageSource
 from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
 from bosdyn.client.async_tasks import AsyncPeriodicQuery, AsyncTasks
-from bosdyn.client.frame_helpers import *
+from bosdyn.client.frame_helpers import (GROUND_PLANE_FRAME_NAME, VISION_FRAME_NAME, get_a_tform_b,
+                                         get_vision_tform_body)
 from bosdyn.client.image import ImageClient
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 from bosdyn.client.math_helpers import Quat, SE3Pose
-from bosdyn.client.robot_command import (RobotCommandBuilder, RobotCommandClient, blocking_stand,
-                                         CommandFailedError, CommandTimedOutError)
+from bosdyn.client.robot_command import (CommandFailedError, CommandTimedOutError,
+                                         RobotCommandBuilder, RobotCommandClient, blocking_stand)
 from bosdyn.client.robot_state import RobotStateClient
-from tensorflow_object_detection import DetectorAPI
 
 LOGGER = bosdyn.client.util.get_logger()
+
+SHUTDOWN_FLAG = Value('i', 0)
 
 # Don't let the queues get too backed up
 QUEUE_MAXSIZE = 10
@@ -49,24 +52,30 @@ QUEUE_MAXSIZE = 10
 # This is a multiprocessing.Queue for communication between the main process and the
 # Tensorflow processes.
 # Entries in this queue are in the format:
+
 # {
-#   'source': Name of the camera,
-#   'raw_image_time': Time when the image was collected,
-#   'capture_image_time': Time when the image was received by the main process,
-#   vision_'image': Actual image rotated
+#     'source': Name of the camera,
+#     'world_tform_cam': transform from VO to camera,
+#     'world_tform_gpe':  transform from VO to ground plane,
+#     'raw_image_time': Time when the image was collected,
+#     'cv_image': The decoded image,
+#     'visual_dims': (cols, rows),
+#     'depth_image': depth image proto,
+#     'system_cap_time': Time when the image was received by the main process,
+#     'image_queued_time': Time when the image was done preprocessing and queued
 # }
 RAW_IMAGES_QUEUE = Queue(QUEUE_MAXSIZE)
 
 # This is a multiprocessing.Queue for communication between the Tensorflow processes and
 # the bbox print process. This is meant for running in a containerized environment with no access
 # to an X display
-# Entries in this queue are in the format:
+# Entries in this queue have the following fields in addition to those in :
 # {
-#   'source': Name of the camera,
-#   'raw_image_time': Time when the image was collected,
-#   'capture_image_time': Time when the image was received by the main process,
-#   'processed_image_time': Time when the image was processed by a Tensorflow process,
+#   'processed_image_start_time':  Time when the image was received by the TF process,
+#   'processed_image_end_time':  Time when the image was processing for bounding boxes
 #   'boxes': list of detected bounding boxes for the processed image
+#   'classes': classes of objects,
+#   'scores': confidence scores,
 # }
 PROCESSED_BOXES_QUEUE = Queue(QUEUE_MAXSIZE)
 
@@ -226,44 +235,48 @@ def capture_images(image_task, sleep_between_capture):
         image_task (AsyncImage): Async task that provides the images response to use
         sleep_between_capture (float): Time to sleep between each image capture
     """
-    while True:
-        images_response = image_task.proto
-        if not images_response:
+    while not SHUTDOWN_FLAG.value:
+        get_im_resp = image_task.proto
+        start_time = time.time()
+        if not get_im_resp:
             continue
         depth_responses = {
             img.source.name: img
-            for img in images_response
+            for img in get_im_resp
             if img.source.image_type == ImageSource.IMAGE_TYPE_DEPTH
         }
         entry = {}
-        for image_response in images_response:
-            if image_response.source.image_type == ImageSource.IMAGE_TYPE_VISUAL:
-                source = image_response.source.name
+        for im_resp in get_im_resp:
+            if im_resp.source.image_type == ImageSource.IMAGE_TYPE_VISUAL:
+                source = im_resp.source.name
                 depth_source = VISUAL_SOURCE_TO_DEPTH_MAP_SOURCE[source]
                 depth_image = depth_responses[depth_source]
 
-                acquisition_time = image_response.shot.acquisition_time
+                acquisition_time = im_resp.shot.acquisition_time
                 image_time = acquisition_time.seconds + acquisition_time.nanos * 1e-9
 
                 try:
-                    image = Image.open(io.BytesIO(image_response.shot.image.data))
-                    source = image_response.source.name
+                    image = Image.open(io.BytesIO(im_resp.shot.image.data))
+                    source = im_resp.source.name
 
                     image = ndimage.rotate(image, ROTATION_ANGLES[source])
-                    # image = ndimage.rotate(image, 0)
-                    image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)  # Converted to RGB for TF
-                    tform_snapshot = image_response.shot.transforms_snapshot
-                    frame_name = image_response.shot.frame_name_image_sensor
+                    if im_resp.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8:
+                        image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)  # Converted to RGB for TF
+                    tform_snapshot = im_resp.shot.transforms_snapshot
+                    frame_name = im_resp.shot.frame_name_image_sensor
                     world_tform_cam = get_a_tform_b(tform_snapshot, VISION_FRAME_NAME, frame_name)
+                    world_tform_gpe = get_a_tform_b(tform_snapshot, VISION_FRAME_NAME,
+                                                    GROUND_PLANE_FRAME_NAME)
                     entry[source] = {
                         'source': source,
                         'world_tform_cam': world_tform_cam,
+                        'world_tform_gpe': world_tform_gpe,
                         'raw_image_time': image_time,
-                        'capture_image_time': time.time(),
                         'cv_image': image,
-                        'visual_image': image_response,
+                        'visual_dims': (im_resp.shot.image.cols, im_resp.shot.image.rows),
                         'depth_image': depth_image,
-                        'system_cap_time': time.time()
+                        'system_cap_time': start_time,
+                        'image_queued_time': time.time()
                     }
                 except Exception as exc:  # pylint: disable=broad-except
                     print(f'Exception occurred during image capture {exc}')
@@ -288,16 +301,18 @@ def start_tensorflow_processes(num_processes, model_path, detection_class, detec
         detection_threshold (float): Detection threshold to apply to all Tensorflow detections.
         max_processing_delay (float): Allowed delay before processing an incoming image.
     """
-
-    for counter in range(num_processes):
+    processes = []
+    for _ in range(num_processes):
         process = Process(
             target=process_images, args=(
                 model_path,
                 detection_class,
                 detection_threshold,
                 max_processing_delay,
-            ))
+            ), daemon=True)
         process.start()
+        processes.append(process)
+    return processes
 
 
 def process_images(model_path, detection_class, detection_threshold, max_processing_delay):
@@ -322,32 +337,38 @@ def process_images(model_path, detection_class, detection_threshold, max_process
         print(f'Error waiting for Tensorflow processes to initialize: {exc}')
         return False
 
-    while True:
-        entry = RAW_IMAGES_QUEUE.get()
+    while not SHUTDOWN_FLAG.value:
+        try:
+            entry = RAW_IMAGES_QUEUE.get_nowait()
+        except Empty:
+            time.sleep(0.1)
+            continue
         for _, capture in entry.items():
-            if time.time() - capture['raw_image_time'] > max_processing_delay:
+            start_time = time.time()
+            processing_delay = time.time() - capture['raw_image_time']
+            if processing_delay > max_processing_delay:
                 num_processed_skips += 1
+                print(f'skipped image because it took {processing_delay}')
                 continue  # Skip image due to delay
 
             image = capture['cv_image']
-            # process_start = time.time()
             boxes, scores, classes, _ = odapi.process_frame(image)
-            # process_end = time.time()
             confident_boxes = []
             confident_object_classes = []
             confident_scores = []
             if len(boxes) == 0:
+                print('no detections founds')
                 continue
             for box, score, box_class in sorted(zip(boxes, scores, classes), key=lambda x: x[1],
                                                 reverse=True):
-                # if score > detection_threshold:
                 if score > detection_threshold and box_class == detection_class:
                     confident_boxes.append(box)
                     confident_object_classes.append(COCO_CLASS_DICT[box_class])
                     confident_scores.append(score)
                     image = cv2.rectangle(image, (box[1], box[0]), (box[3], box[2]), (255, 0, 0), 2)
 
-            capture['processed_image_time'] = time.time()
+            capture['processed_image_start_time'] = start_time
+            capture['processed_image_end_time'] = time.time()
             capture['boxes'] = confident_boxes
             capture['classes'] = confident_object_classes
             capture['scores'] = confident_scores
@@ -356,9 +377,11 @@ def process_images(model_path, detection_class, detection_threshold, max_process
             PROCESSED_BOXES_QUEUE.put_nowait(entry)
         except Full as exc:
             print(f'PROCESSED_BOXES_QUEUE is full: {exc}')
+    print('tf process ending')
+    return True
 
 
-def get_go_to(world_tform_object, robot_state, mobility_params, dist_margin=1.2):
+def get_go_to(world_tform_object, robot_state, mobility_params, dist_margin=0.5):
     """Gets trajectory command to a goal location
 
     Args:
@@ -368,6 +391,7 @@ def get_go_to(world_tform_object, robot_state, mobility_params, dist_margin=1.2)
         dist_margin (float): Distance margin to target
     """
     vo_tform_robot = get_vision_tform_body(robot_state.kinematic_state.transforms_snapshot)
+    print(f"robot pos: {vo_tform_robot}")
     delta_ewrt_vo = np.array(
         [world_tform_object.x - vo_tform_robot.x, world_tform_object.y - vo_tform_robot.y, 0])
     norm = np.linalg.norm(delta_ewrt_vo)
@@ -416,14 +440,53 @@ def get_mobility_params():
     return mobility_params
 
 
+def depth_to_xyz(depth, pixel_x, pixel_y, focal_length, principal_point):
+    """Calculate the transform to point in image using camera intrinsics and depth"""
+    x = depth * (pixel_x - principal_point.x) / focal_length.x
+    y = depth * (pixel_y - principal_point.y) / focal_length.y
+    z = depth
+    return x, y, z
+
+
+def remove_ground_from_depth_image(raw_depth_image, focal_length, principal_point, world_tform_cam,
+                                   world_tform_gpe, ground_tolerance=0.04):
+    """ Simple ground plane removal algorithm. Uses ground height
+        and does simple z distance filtering.
+
+    Args:
+        raw_depth_image (np.array): Depth image
+        focal_length (Vec2): Focal length of camera that produced the depth image
+        principal_point (Vec2): Principal point of camera that produced the depth image
+        world_tform_cam (SE3Pose): Transform from VO to camera frame
+        world_tform_gpe (SE3Pose): Transform from VO to GPE frame
+        ground_tolerance (float): Distance in meters to add to the ground plane
+    """
+    new_depth_image = raw_depth_image
+
+    # same functions as depth_to_xyz, but converted to np functions
+    indices = np.indices(raw_depth_image.shape)
+    xs = raw_depth_image * (indices[1] - principal_point.x) / focal_length.x
+    ys = raw_depth_image * (indices[0] - principal_point.y) / focal_length.y
+    zs = raw_depth_image
+
+    # create xyz point cloud
+    camera_tform_points = np.stack([xs, ys, zs], axis=2)
+    # points in VO frame
+    world_tform_points = world_tform_cam.transform_cloud(camera_tform_points)
+    # array of booleans where True means the point was below the ground plane plus tolerance
+    world_tform_points_mask = (world_tform_gpe.z - world_tform_points[:, :, 2]) < ground_tolerance
+    # remove data below ground plane
+    new_depth_image[world_tform_points_mask] = 0
+    return new_depth_image
+
+
 def get_distance_to_closest_object_depth(x_min, x_max, y_min, y_max, depth_scale, raw_depth_image,
-                                         histogram_bin_size=0.20, minimum_number_of_points=100,
-                                         max_distance=4.0):
+                                         histogram_bin_size=0.50, minimum_number_of_points=10,
+                                         max_distance=8.0):
     """Make a histogram of distances to points in the cloud and take the closest distance with
     enough points.
 
     Args:
-        origin (tuple): Origin to rotate the point around
         x_min (int): minimum x coordinate (column) of object to find
         x_max (int): maximum x coordinate (column) of object to find
         y_min (int): minimum y coordinate (row) of object to find
@@ -435,22 +498,22 @@ def get_distance_to_closest_object_depth(x_min, x_max, y_min, y_max, depth_scale
         max_distance (float): maximum distance to object in meters
     """
     num_bins = math.ceil(max_distance / histogram_bin_size)
-    depths = []
 
-    for row in range(y_min, y_max):
-        for col in range(x_min, x_max):
-            raw_depth = raw_depth_image[row][col]
-            if raw_depth != 0 and raw_depth is not None:
-                depth = raw_depth / depth_scale
-                depths.append(depth)
+    # get a sub-rectangle of the bounding box out of the whole image, then flatten
+    obj_depths = (raw_depth_image[y_min:y_max, x_min:x_max]).flatten()
+    obj_depths = obj_depths / depth_scale
+    obj_depths = obj_depths[obj_depths != 0]
 
-    hist, hist_edges = np.histogram(depths, bins=num_bins, range=(0, max_distance))
+    hist, hist_edges = np.histogram(obj_depths, bins=num_bins, range=(0, max_distance))
 
     edges_zipped = zip(hist_edges[:-1], hist_edges[1:])
     # Iterate over the histogram and return the first distance with enough points.
     for entry, edges in zip(hist, edges_zipped):
         if entry > minimum_number_of_points:
-            return statistics.mean([d for d in depths if d > edges[0] and d > edges[1]])
+            filtered_depths = obj_depths[(obj_depths > edges[0]) & (obj_depths < edges[1])]
+            if len(filtered_depths) == 0:
+                continue
+            return np.mean(filtered_depths)
 
     return max_distance
 
@@ -484,20 +547,21 @@ def rotate_about_origin(origin, point, angle):
     return int(ret_x), int(ret_y)
 
 
-def get_object_position(world_tform_cam, visual_image, depth_image, bounding_box, rotation_angle):
+def get_object_position(world_tform_cam, world_tform_gpe, visual_dims, depth_image, bounding_box,
+                        rotation_angle):
     """
     Extract the bounding box, then find the mode in that region.
 
     Args:
         world_tform_cam (SE3Pose): SE3 transform from world to camera frame
-        visual_image (ImageResponse): From a visual camera
+        visual_dims (Tuple): (cols, rows) tuple from the visual image
         depth_image (ImageResponse): From a depth camera corresponding to the visual_image
         bounding_box (list): Bounding box from tensorflow
         rotation_angle (float): Angle (in degrees) to rotate depth image to match cam image rotation
     """
 
     # Make sure there are two images.
-    if visual_image is None or depth_image is None:
+    if visual_dims is None or depth_image is None:
         # Fail.
         return
 
@@ -505,21 +569,20 @@ def get_object_position(world_tform_cam, visual_image, depth_image, bounding_box
     points = [(bounding_box[1], bounding_box[0]), (bounding_box[3], bounding_box[0]),
               (bounding_box[3], bounding_box[2]), (bounding_box[1], bounding_box[2])]
 
-    origin = (visual_image.shot.image.cols / 2, visual_image.shot.image.rows / 2)
+    origin = (visual_dims[0] / 2, visual_dims[1] / 2)
 
     points_rot = [rotate_about_origin_degrees(origin, point, rotation_angle) for point in points]
 
     # Get the bounding box corners.
     y_min = max(0, min([point[1] for point in points_rot]))
     x_min = max(0, min([point[0] for point in points_rot]))
-    y_max = min(visual_image.shot.image.rows, max([point[1] for point in points_rot]))
-    x_max = min(visual_image.shot.image.cols, max([point[0] for point in points_rot]))
+    y_max = min(visual_dims[1], max([point[1] for point in points_rot]))
+    x_max = min(visual_dims[0], max([point[0] for point in points_rot]))
 
     # Check that the bounding box is valid.
-    if (x_min < 0 or y_min < 0 or x_max > visual_image.shot.image.cols or
-            y_max > visual_image.shot.image.rows):
+    if (x_min < 0 or y_min < 0 or x_max > visual_dims[0] or y_max > visual_dims[1]):
         print(f'Bounding box is invalid: ({x_min}, {y_min}) | ({x_max}, {y_max})')
-        print(f'Bounds: ({visual_image.shot.image.cols}, {visual_image.shot.image.rows})')
+        print(f'Bounds: ({visual_dims[0]}, {visual_dims[1]})')
         return
 
     # Unpack the images.
@@ -534,34 +597,31 @@ def get_object_position(world_tform_cam, visual_image, depth_image, bounding_box
         else:
             img = cv2.imdecode(img, -1)
         depth_image_pixels = img
-
+        depth_image_pixels = remove_ground_from_depth_image(
+            depth_image_pixels, depth_image.source.pinhole.intrinsics.focal_length,
+            depth_image.source.pinhole.intrinsics.principal_point, world_tform_cam, world_tform_gpe)
         # Get the depth data from the region in the bounding box.
+        max_distance = 8.0
         depth = get_distance_to_closest_object_depth(x_min, x_max, y_min, y_max,
                                                      depth_image.source.depth_scale,
-                                                     depth_image_pixels)
+                                                     depth_image_pixels, max_distance=max_distance)
 
-        if depth >= 4.0:
+        if depth >= max_distance:
             # Not enough depth data.
             print('Not enough depth data.')
             return False
-
-        # Calculate the transform to the center point of the object using camera intrinsics
-        # and depth calculated earlier in the function
-        focal_x = depth_image.source.pinhole.intrinsics.focal_length.x
-        principal_x = depth_image.source.pinhole.intrinsics.principal_point.x
-
-        focal_y = depth_image.source.pinhole.intrinsics.focal_length.y
-        principal_y = depth_image.source.pinhole.intrinsics.principal_point.y
+        else:
+            print(f"distance to object: {depth}")
 
         center_x = round((x_max - x_min) / 2.0 + x_min)
         center_y = round((y_max - y_min) / 2.0 + y_min)
 
-        tform_x = depth * (center_x - principal_x) / focal_x
-        tform_y = depth * (center_y - principal_y) / focal_y
-        tform_z = depth
-        obj_tform_camera = SE3Pose(tform_x, tform_y, tform_z, Quat())
+        tform_x, tform_y, tform_z = depth_to_xyz(
+            depth, center_x, center_y, depth_image.source.pinhole.intrinsics.focal_length,
+            depth_image.source.pinhole.intrinsics.principal_point)
+        camera_tform_obj = SE3Pose(tform_x, tform_y, tform_z, Quat())
 
-        return world_tform_cam * obj_tform_camera
+        return world_tform_cam * camera_tform_obj
     except Exception as exc:  # pylint: disable=broad-except
         print(f'Error getting object position: {exc}')
         return
@@ -594,6 +654,11 @@ def _find_highest_conf_source(processed_boxes_entry):
     return highest_conf_source
 
 
+def signal_handler(signal, frame):
+    print('Interrupt caught, shutting down')
+    SHUTDOWN_FLAG.value = 1
+
+
 def main(argv):
     """Command line interface.
 
@@ -603,11 +668,10 @@ def main(argv):
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--model-path", required=True,
-        help="Local file path to the Tensorflow model, example pre-trained models \
-                            can be found at \
-                            https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md"
-    )
+        "--model-path", default="/model.pb", help=
+        ("Local file path to the Tensorflow model, example pre-trained models can be found at "
+         "https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf1_detection_zoo.md"
+        ))
     parser.add_argument("--classes", default='/classes.json', type=str,
                         help="File containing json mapping of object class IDs to class names")
     parser.add_argument("--number-tensorflow-processes", default=1, type=int,
@@ -615,19 +679,23 @@ def main(argv):
     parser.add_argument("--detection-threshold", default=0.7, type=float,
                         help="Detection threshold to use for Tensorflow detections")
     parser.add_argument(
-        "--sleep-between-capture", default=1.0, type=float,
-        help="Seconds to sleep between each image capture loop iteration, which captures " +
-        "an image from all cameras")
+        "--sleep-between-capture", default=0.2, type=float,
+        help=("Seconds to sleep between each image capture loop iteration, which captures "
+              "an image from all cameras"))
     parser.add_argument(
-        "--detection-class", default=1, type=int, help="Detection classes to use in the" +
-        "Tensorflow model; Default is to use 1, which is a person in the Coco dataset")
+        "--detection-class", default=1, type=int,
+        help=("Detection classes to use in the Tensorflow model."
+              "Default is to use 1, which is a person in the Coco dataset"))
     parser.add_argument(
         "--max-processing-delay", default=7.0, type=float,
-        help="Maximum allowed delay for processing an image; " +
-        "any image older than this value will be skipped")
+        help=("Maximum allowed delay for processing an image. "
+              "Any image older than this value will be skipped"))
+    parser.add_argument("--test-mode", action='store_true',
+                        help="Run application in test mode, don't execute commands")
 
     bosdyn.client.util.add_base_arguments(parser)
     options = parser.parse_args(argv)
+    signal.signal(signal.SIGINT, signal_handler)
     try:
         # Make sure the model path is a valid file
         if not _check_model_path(options.model_path):
@@ -639,9 +707,10 @@ def main(argv):
         global TENSORFLOW_PROCESS_BARRIER  # pylint: disable=global-statement
         TENSORFLOW_PROCESS_BARRIER = Barrier(options.number_tensorflow_processes + 1)
         # Start Tensorflow processes
-        start_tensorflow_processes(options.number_tensorflow_processes, options.model_path,
-                                   options.detection_class, options.detection_threshold,
-                                   options.max_processing_delay)
+        tf_processes = start_tensorflow_processes(options.number_tensorflow_processes,
+                                                  options.model_path, options.detection_class,
+                                                  options.detection_threshold,
+                                                  options.max_processing_delay)
 
         # sleep to give the Tensorflow processes time to initialize
         try:
@@ -675,7 +744,7 @@ def main(argv):
         _async_tasks = AsyncTasks(task_list)
         print('Detect and follow client connected.')
 
-        lease = lease_client.acquire()
+        lease = lease_client.take()
         lease_keep = LeaseKeepAlive(lease_client)
         # Power on the robot and stand it up
         resp = robot.power_on()
@@ -699,14 +768,16 @@ def main(argv):
             time.sleep(0.1)
 
         # Start image capture process
-        image_capture_thread = Thread(target=capture_images, args=(
-            image_task,
-            options.sleep_between_capture,
-        ))
+        image_capture_thread = Process(target=capture_images,
+                                       args=(image_task, options.sleep_between_capture),
+                                       daemon=True)
         image_capture_thread.start()
-        while True:
+        while not SHUTDOWN_FLAG.value:
             # This comes from the tensorflow processes and limits the rate of this loop
-            entry = PROCESSED_BOXES_QUEUE.get()
+            try:
+                entry = PROCESSED_BOXES_QUEUE.get_nowait()
+            except Empty:
+                continue
             # find the highest confidence bounding box
             highest_conf_source = _find_highest_conf_source(entry)
             if highest_conf_source is None:
@@ -719,34 +790,46 @@ def main(argv):
                 continue  # Skip image due to delay
 
             # Find the transform to highest confidence object using the depth sensor
+            get_object_position_start = time.time()
+            robot_state = robot_state_task.proto
+            world_tform_gpe = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot,
+                                            VISION_FRAME_NAME, GROUND_PLANE_FRAME_NAME)
             world_tform_object = get_object_position(
-                capture_to_use['world_tform_cam'], capture_to_use['visual_image'],
+                capture_to_use['world_tform_cam'], world_tform_gpe, capture_to_use['visual_dims'],
                 capture_to_use['depth_image'], capture_to_use['boxes'][0],
                 ROTATION_ANGLES[capture_to_use['source']])
+            get_object_position_end = time.time()
+            print(f"system_cap_time: {capture_to_use['system_cap_time']}, "
+                  f"image_queued_time: {capture_to_use['image_queued_time']}, "
+                  f"processed_image_start_time: {capture_to_use['processed_image_start_time']}, "
+                  f"processed_image_end_time: {capture_to_use['processed_image_end_time']}, "
+                  f"get_object_position_start_time: {get_object_position_start}, "
+                  f"get_object_position_end_time: {get_object_position_end}, ")
 
             # get_object_position can fail if there is insufficient depth sensor information
             if not world_tform_object:
                 continue
 
             scores = capture_to_use['scores']
-            print(f'Transform for object with confidence {scores[0]}: {world_tform_object}')
+            print(f'Position of object with confidence {scores[0]}: {world_tform_object}')
             print(f'Process latency: {time.time() - capture_to_use["system_cap_time"]}')
-            tag_cmd = get_go_to(world_tform_object, robot_state_task.proto, params_set)
+            tag_cmd = get_go_to(world_tform_object, robot_state, params_set)
             end_time = 15.0
             if tag_cmd is not None:
-                robot_command_client.robot_command(lease=None, command=tag_cmd,
-                                                   end_time_secs=time.time() + end_time)
+                if not options.test_mode:
+                    print("executing command")
+                    robot_command_client.robot_command(lease=None, command=tag_cmd,
+                                                       end_time_secs=time.time() + end_time)
+                else:
+                    print("Running in test mode, skipping command.")
 
         # Shutdown lease keep-alive and return lease gracefully.
         lease_keep.shutdown()
         lease_client.return_lease(lease)
-
         return True
     except Exception as exc:  # pylint: disable=broad-except
         LOGGER.error("Spot Tensorflow Detector threw an exception: %s", exc)
         # Shutdown lease keep-alive and return lease gracefully.
-        lease_keep.shutdown()
-        lease_client.return_lease(lease)
         return False
 
 

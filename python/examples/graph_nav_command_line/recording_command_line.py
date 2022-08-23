@@ -6,30 +6,30 @@
 
 """Command line interface integrating options to record maps with WASD controls. """
 import argparse
-import grpc
 import logging
 import os
 import sys
 import time
 
-from bosdyn.api.graph_nav import map_pb2, map_processing_pb2, recording_pb2
-from bosdyn.client import create_standard_sdk, ResponseError, RpcError
-import bosdyn.client.channel
-from bosdyn.client.graph_nav import GraphNavClient
-from bosdyn.client.math_helpers import SE3Pose, Quat
-from bosdyn.client.recording import GraphNavRecordingServiceClient
-from bosdyn.client.map_processing import MapProcessingServiceClient
-import bosdyn.client.util
 import google.protobuf.timestamp_pb2
+import graph_nav_util
+import grpc
 from google.protobuf import wrappers_pb2 as wrappers
 
-import graph_nav_util
+import bosdyn.client.channel
+import bosdyn.client.util
+from bosdyn.api.graph_nav import map_pb2, map_processing_pb2, recording_pb2
+from bosdyn.client import ResponseError, RpcError, create_standard_sdk
+from bosdyn.client.graph_nav import GraphNavClient
+from bosdyn.client.map_processing import MapProcessingServiceClient
+from bosdyn.client.math_helpers import Quat, SE3Pose
+from bosdyn.client.recording import GraphNavRecordingServiceClient
 
 
 class RecordingInterface(object):
     """Recording service command line interface."""
 
-    def __init__(self, robot, download_filepath):
+    def __init__(self, robot, download_filepath, client_metadata):
         # Keep the robot instance and it's ID.
         self._robot = robot
         # Force trigger timesync.
@@ -44,6 +44,11 @@ class RecordingInterface(object):
         # Setup the recording service client.
         self._recording_client = self._robot.ensure_client(
             GraphNavRecordingServiceClient.default_service_name)
+
+        # Create the recording environment.
+        self._recording_environment = GraphNavRecordingServiceClient.make_recording_environment(
+            waypoint_env=GraphNavRecordingServiceClient.make_waypoint_environment(
+                client_metadata=client_metadata))
 
         # Setup the graph nav service client.
         self._graph_nav_client = robot.ensure_client(GraphNavClient.default_service_name)
@@ -104,7 +109,8 @@ class RecordingInterface(object):
                    "attempt to localize to the map.")
             return
         try:
-            status = self._recording_client.start_recording()
+            status = self._recording_client.start_recording(
+                recording_environment=self._recording_environment)
             print("Successfully started recording a map.")
         except Exception as err:
             print("Start recording failed: " + str(err))
@@ -404,13 +410,34 @@ def main(argv):
     parser.add_argument('-d', '--download-filepath',
                         help='Full filepath for where to download graph and snapshots.',
                         default=os.getcwd())
+    parser.add_argument(
+        '-n', '--recording_user_name', help=
+        'If a special user name should be attached to this session, use this name. If not provided, the robot username will be used.',
+        default='')
+    parser.add_argument(
+        '-s', '--recording_session_name', help=
+        'Provides a special name for this recording session. If not provided, the download filepath will be used.',
+        default='')
     options = parser.parse_args(argv)
 
     # Create robot object.
     sdk = bosdyn.client.create_standard_sdk('RecordingClient')
     robot = sdk.create_robot(options.hostname)
     bosdyn.client.util.authenticate(robot)
-    recording_command_line = RecordingInterface(robot, options.download_filepath)
+
+    # Parse session and user name options.
+    session_name = options.recording_session_name
+    if session_name == '':
+        session_name = os.path.basename(options.download_filepath)
+    user_name = options.recording_user_name
+    if user_name == '':
+        user_name = robot._current_user
+
+    # Crate metadata for the recording session.
+    client_metadata = GraphNavRecordingServiceClient.make_client_metadata(
+        session_name=session_name, client_username=user_name, client_id='RecordingClient',
+        client_type='Python SDK')
+    recording_command_line = RecordingInterface(robot, options.download_filepath, client_metadata)
 
     try:
         recording_command_line.run()

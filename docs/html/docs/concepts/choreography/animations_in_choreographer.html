@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Animations in Choreography &mdash; Spot 3.1.2.1 documentation</title>
+  <title>Animations in Choreography &mdash; Spot 3.2.0 documentation</title>
   
 
   
@@ -41,8 +41,8 @@
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Animation Files for Choreographer" href="animation_file_specification.html" />
-    <link rel="prev" title="Connecting Robots to Choreographer" href="robot_controls_in_choreographer.html" /> 
+    <link rel="next" title="Animation files for Choreographer" href="animation_file_specification.html" />
+    <link rel="prev" title="Connecting robots to Choreographer" href="robot_controls_in_choreographer.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.1.2.1
+                3.2.0
               </div>
             
           
@@ -118,10 +118,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autonomy/autowalk_service.html">Autowalk service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/directed_exploration.html">Directed Exploration</a></li>
@@ -149,7 +151,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../data_acquisition_output.html">Data Acquisition Output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../data_buffer_overview.html">Data Buffer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../bddf.html">BDDF file format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
 </ul>
 </li>
 </ul>
@@ -182,6 +185,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/docking/README.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -200,6 +204,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -207,6 +212,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -261,16 +267,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
@@ -297,6 +311,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
@@ -322,6 +338,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lights_helper.html">Lights Helper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
@@ -391,7 +408,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq2.html">Part 2: Capturing images</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq3.html">Part 3: Capturing other data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq4.html">Part 4: Deploying to the Spot CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq4.html">Part 4: Deploying to the CORE I/O</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq5.html">Part 5: Collecting data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq6.html">Part 6: Processing collected data</a></li>
 </ul>
@@ -405,9 +422,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../payload/robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../payload/configuring_payload_software.html">Configuring payload software</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/docker_containers.html">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../protos/README.html">API Protocol</a><ul>
@@ -421,6 +443,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-proto">autowalk/autowalk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-service-proto">autowalk/autowalk_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-walks-proto">autowalk/walks.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
@@ -444,6 +469,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
@@ -539,6 +566,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -614,12 +642,22 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="animations-in-choreography">
 <h1>Animations in Choreography<a class="headerlink" href="#animations-in-choreography" title="Permalink to this headline">¶</a></h1>
-<p>The Choreography service is a framework for producing scripted motion through a list of customizable, predetermined moves. The dances can be customized through the track layering system, the parameters associated with each move, and the adjustable beats per minute of the dances. While these knobs provide a large amount of flexibility when authoring choreographies, there are scenarios where the exact output can’t fully be expressed through the existing moves. To do this, we have developed an animation pipeline and API in the 2.4 Spot software release.</p>
-<p>The animation pipeline allows you to create wholly custom sequences using 3D animation tools and integrate them in Choreographer scripts just like the predefined, default moves. For the intro sequence of the <a class="reference external" href="https://www.youtube.com/watch?v=7atZfX85nd4">“Spot’s On It” video</a>, we used Autodesk Maya to produce the kaleidoscoping dance moves. Autodesk Maya is a 3D animation software that gives fine-grain control for authoring and editing kinematics trajectories, but a range of tool sets can be used with this API.</p>
+<p>The Choreography service is a framework for producing scripted motion through a list of customizable, predetermined moves. The sequences can be customized through the track layering system, the parameters associated with each move, and the adjustable beats per minute of the sequences.</p>
+<p>While these knobs provide a large amount of flexibility when authoring choreographies, there are scenarios where the exact desired behavior can’t fully be expressed through the existing moves. The animation API and associated pipeline provides the ability to further customize the motion.</p>
+<section id="animation-pipeline">
+<h2>Animation pipeline<a class="headerlink" href="#animation-pipeline" title="Permalink to this headline">¶</a></h2>
+<p>The animation pipeline allows you to create custom sequences using 3D animation tools and integrate them in Choreographer scripts just like the predefined default moves.</p>
+<p>For the intro sequence of the video <a class="reference external" href="https://www.youtube.com/watch?v=7atZfX85nd4">Spot’s On It</a> we used Autodesk Maya to produce the kaleidoscoping dance moves. Autodesk Maya is a 3D animation software that gives fine-grain control for authoring and editing kinematics trajectories. A range of tool sets can be used with this API.</p>
 <iframe width="600" height="400" allow="autoplay"
 src="https://www.youtube.com/embed/7atZfX85nd4">
-</iframe><p>The base representation for the animation is a human-readable text file, so while an animated dance move can be created through 3D animation tools like Autodesk Maya, it can also be hand-written and edited. The primary component of the animated move is a set of timestamped key frames which specify the motion of the different tracks (arms, gripper, legs, or body). The timestamped keyframes that specify the animation can be densely spaced, as they would be from a 3D animation software, or they can be very sparse and the robot will interpolate between each key frame.Additionally, there are components of this text file which enable different animation-specific options and also specifies the different parameters which are associated with this move. A complete overview of the animation file format can be found in the <a class="reference internal" href="animation_file_specification.html"><span class="doc">“Animation File Specification” document</span></a>.</p>
-<p>The animated move text files are be parsed into an <code class="docutils literal notranslate"><span class="pre">Animation</span></code> protobuf messages and uploaded to the robot. Once the animation is uploaded to the robot, it can be referenced by name within choreographies. This parsing step (from text file to protobuf message) happens automatically in Choreographer for both animations in the “animations” directory that matches the directory structure shown below, and also for animations uploaded through “File”-&gt;”Load Animated Move” menus.</p>
+</iframe></section>
+<section id="text-files-for-representing-animations">
+<h2>Text files for representing animations<a class="headerlink" href="#text-files-for-representing-animations" title="Permalink to this headline">¶</a></h2>
+<p>The base representation for the animation is a human-readable text file. While an animated dance move can be created through 3D animation tools like Autodesk Maya, moves can also be hand-written and edited.</p>
+<p>The primary component of the animated move is a set of timestamped key frames which specify the motion of the different tracks (arms, gripper, legs, or body). The timestamped keyframes that specify the animation can be densely spaced, as they would be from a 3D animation software, or they can be very sparse and the robot will interpolate between each key frame.</p>
+<p>Additionally, components of the text file enable different animation-specific options. The text file can also specify the different parameters to be associated with the move. A complete overview of the animation file format can be found on the <a class="reference internal" href="animation_file_specification.html"><span class="doc">Animation files for Choreographer</span></a> page.</p>
+<p>The animated move text files are parsed into <code class="docutils literal notranslate"><span class="pre">Animation</span></code> protobuf messages and uploaded to the robot. Once the animation is uploaded to the robot, it can be referenced by name within choreographies.</p>
+<p>This parsing step (from text file to protobuf message) happens automatically in Choreographer for both animations in the <strong>Animations</strong> directory that matches the directory structure shown below and for animations uploaded by selecting <strong>Load Animated Move</strong> from the File menu.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dance_directory</span><span class="o">/</span>
 	<span class="n">choreographer</span><span class="o">.</span><span class="n">exe</span>
 	<span class="n">animations</span><span class="o">/</span>
@@ -627,16 +665,32 @@ src="https://www.youtube.com/embed/7atZfX85nd4">
 		<span class="n">my_animation</span><span class="o">.</span><span class="n">cha</span>
 </pre></div>
 </div>
-<p>There is a python script in the <code class="docutils literal notranslate"><span class="pre">bosdyn-choreography-client</span></code> package, called <code class="docutils literal notranslate"><span class="pre">animation_file_to_proto.py</span></code>, which provides client access to the same functions used by Choreographer to complete the text file to protobuf animation parsing.</p>
-<p>When Choreographer is opened, it begins uploading all animations automatically to every connected robot. Once an animation is uploaded, it will last on the robot until it is rebooted. A dialog will appear indicating the status of all animations being uploaded; the image below shows an example of this dialog. If an animation fails to upload, then check the terminal where the Choreographer executable is running. An error message should be present on the terminal and provide a description of the part of the animation that was invalid.</p>
+</section>
+<section id="python-example-script">
+<h2>Python example script<a class="headerlink" href="#python-example-script" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">animation_file_to_proto.py</span></code> python script file in the <code class="docutils literal notranslate"><span class="pre">bosdyn-choreography-client</span></code> package provides client access to the same functions used by Choreographer to complete the text file to protobuf animation parsing.</p>
+</section>
+<section id="automatic-animation-uploading-in-choreographer">
+<h2>Automatic animation uploading in Choreographer<a class="headerlink" href="#automatic-animation-uploading-in-choreographer" title="Permalink to this headline">¶</a></h2>
+<p>When Choreographer connects to a robot, it begins uploading all animations automatically to every connected robot. This includes connecting to a robot at startup from command line arguments and connecting to a robot at run time through the connection interface.  Once an animation is uploaded, it is stored on the robot until it is rebooted.</p>
+<p>A dialog indicates the status of all animations being uploaded (example below). If an animation fails to upload, check the terminal where the Choreographer executable is running. It should contain an error message describing why the animation is invalid.</p>
 <p><img alt="Animation Upload Dialog" src="../../../_images/animation_upload_dialog.png" /></p>
+</section>
 <section id="choreography-logs-for-animations">
-<h2>Choreography Logs for Animations<a class="headerlink" href="#choreography-logs-for-animations" title="Permalink to this headline">¶</a></h2>
-<p>To aid in creating animated dance moves without 3D animation software, we have added choreography logs. These logs can be recorded through the choreography log service while driving the robot around with the tablet, moving the robots arm around manually (while it is powered off), or running an existing choreography. The choreography log contains high-rate timestamped key frames with the robot’s joint state, foot contacts, and body pose relative to the animation frame (defined by the robot’s foot state when the choreography log started). These key frames can be used directly for the animation file’s key frames.</p>
-<p>The choreography logs are divided into two types: auto and manual. The log types are used to specify the log’s duration and when it is recorded. The “auto” log is recorded whenever a choreography is being executed by the robot. The robot will start recording an “auto” log automatically when a choreography begins, and stop 3 seconds after the completion of a choreography. The “manual” log can be recorded whenever and its duration is defined by when the robot receives a <code class="docutils literal notranslate"><span class="pre">StartRecordingState</span></code> RPC to when it receives a <code class="docutils literal notranslate"><span class="pre">StopRecordingState</span></code> RPC. The manual log has a maximum of 5 minutes of recording. The robot will only keep the most recent “auto” log and the most recent “manual” log saved - therefore the logs must be downloaded immediately to ensure data is not lost.</p>
-<p>In Choreographer, there are buttons to start/stop recording the “manual” log (shown below). As well, there are buttons to download each log type (shown below). The log can be downloaded as a <a class="reference external" href="https://docs.python.org/3/library/pickle.html">pickle file</a>, which tightly packages the data stored as a python dictionary into a serialized object. This is the default format and will be used if no file extension is specified in the file name when saving the log. Additionally, it can be downloaded as a text file, which saves the <code class="docutils literal notranslate"><span class="pre">ChoreographyStateLog</span></code> protobuf message as a protobuf-to-text message; to save in this format, when typing the log name the “.txt” should be explicitly included.</p>
+<h2>Choreography logs for animations<a class="headerlink" href="#choreography-logs-for-animations" title="Permalink to this headline">¶</a></h2>
+<p>To aid in creating animated moves without 3D animation software, we provide choreography logs. These logs can be recorded through the Choreography service at any time, including:</p>
+<ul class="simple">
+<li><p>While driving the robot with the tablet</p></li>
+<li><p>Moving the robot arm manually (while it is powered off)</p></li>
+<li><p>Running an existing choreography sequence.</p></li>
+</ul>
+<p>A choreography log contains high-rate timestamped key frames with the robot’s joint state, foot contacts, and body pose relative to the animation frame (defined by the robot’s foot state when the choreography log started). These key frames can be used directly for the animation file’s key frames.</p>
+<p>There are two ways to create choreography logs. A log is automatically started when a choreography sequence begins and stopped 3 seconds after completing the sequence. The most recent one can be downloaded by clicking the “Download Auto Log” button in Choreographer. Alternatively, you can manually start a log with the “Start Manual Log” button in Choreographer or the StartRecordingState RPC. Once started, the button will transform to say “Stop Manual Log”. The log can be terminated by pressing that button or using the StopRecordingState RPC. It can then be downloaded by clicking the “Download Manual Log” button. Either log can be downloaded using the DownloadRobotStateLog RPC with the appropriate log_type set.</p>
+<p>The manual log has a maximum of 5 minutes of recording. The robot will only keep the most recent auto log and the most recent manual log saved. As a result, logs must be downloaded immediately to ensure data is not lost.</p>
+<p>The log can be downloaded as a <a class="reference external" href="https://docs.python.org/3/library/pickle.html">pickle file</a> which tightly packages the data stored as a python dictionary into a serialized object. This is the default format and will be used if no file extension is specified in the file name when saving the log.</p>
+<p>Logs can also be downloaded as a text files, which saves the <code class="docutils literal notranslate"><span class="pre">ChoreographyStateLog</span></code> protobuf message as a protobuf-to-text message. To save in this format, include the “.txt” file extension when entering the log name.</p>
 <p><img alt="Choreographer Log Buttons" src="../../../_images/log_buttons.png" /></p>
-<p>The API for the choreography logs is described in the <a class="reference internal" href="choreography_service.html"><span class="doc">Choreography Service document</span></a> and can be accessed via the API in the choreography client.</p>
+<p>The API for the choreography logs is described on the <a class="reference internal" href="choreography_service.html"><span class="doc">Choreography Service</span></a> page and can be accessed via the API in the Choreographer client.</p>
 </section>
 </section>
 

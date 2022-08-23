@@ -8,24 +8,23 @@ from __future__ import print_function
 
 import logging
 import time
+
 import google.protobuf.json_format as json_format
 
-from bosdyn.api import data_acquisition_pb2
-from bosdyn.api import data_acquisition_plugin_service_pb2_grpc
-from bosdyn.api import network_compute_bridge_pb2
-from bosdyn.api import world_object_pb2
+import bosdyn.client.util
+from bosdyn.api import (data_acquisition_pb2, data_acquisition_plugin_service_pb2_grpc,
+                        network_compute_bridge_pb2, world_object_pb2)
 from bosdyn.client.data_acquisition import DataAcquisitionClient
 from bosdyn.client.data_acquisition_plugin_service import (Capability, DataAcquisitionPluginService,
-                                                           make_error, RequestCancelledError)
+                                                           RequestCancelledError, make_error)
 from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
                                                   DirectoryRegistrationKeepAlive)
-from bosdyn.client.network_compute_bridge_client import (NetworkComputeBridgeClient,
+from bosdyn.client.network_compute_bridge_client import (ExternalServerError,
                                                          ExternalServiceNotFoundError,
-                                                         ExternalServerError)
-import bosdyn.client.util
-from bosdyn.client.util import setup_logging, GrpcServiceRunner
-# from bosdyn.client.server_util import
+                                                         NetworkComputeBridgeClient)
+from bosdyn.client.util import GrpcServiceRunner, setup_logging
 
+# from bosdyn.client.server_util import
 
 AUTHORITY = 'data-acquisition-ncb-plugin'
 
@@ -35,9 +34,11 @@ kCapabilityImage = "image"
 kCapabilityObjectInImage = "object_in_image"
 kCapabilityNames = [kCapabilityImage, kCapabilityObjectInImage]
 
+
 def get_directory_name(network_compute_bridge_worker_name):
-    return '{}-{}-plugin'.format(
-        DataAcquisitionClient.default_service_name, network_compute_bridge_worker_name)
+    return '{}-{}-plugin'.format(DataAcquisitionClient.default_service_name,
+                                 network_compute_bridge_worker_name)
+
 
 class NetworkComputeBrideAdapter:
     """Provide access to the latest data from a network compute bridge worker.
@@ -48,7 +49,8 @@ class NetworkComputeBrideAdapter:
     """
 
     def __init__(self, robot, network_compute_bridge_worker_name):
-        self._network_compute_bridge_client = robot.ensure_client(NetworkComputeBridgeClient.default_service_name)
+        self._network_compute_bridge_client = robot.ensure_client(
+            NetworkComputeBridgeClient.default_service_name)
         self._worker_name = network_compute_bridge_worker_name
 
     def get_capabilities(self):
@@ -65,7 +67,8 @@ class NetworkComputeBrideAdapter:
                     service_name=self._worker_name)
                 list_req = network_compute_bridge_pb2.ListAvailableModelsRequest(
                     server_config=server_data)
-                response = self._network_compute_bridge_client.list_available_models_command(list_req)
+                response = self._network_compute_bridge_client.list_available_models_command(
+                    list_req)
                 break
             except (ExternalServiceNotFoundError, ExternalServerError):
                 _LOGGER.exception('Network compute bridge worker is still unavailable:\n')
@@ -110,7 +113,8 @@ class NetworkComputeBrideAdapter:
                 if capture.name == kCapabilityImage:
                     store_helper.cancel_check()
                     _LOGGER.info("Storing image with data id %s...", data_id)
-                    store_helper.state.set_status(data_acquisition_pb2.GetStatusResponse.STATUS_SAVING)
+                    store_helper.state.set_status(
+                        data_acquisition_pb2.GetStatusResponse.STATUS_SAVING)
                     store_helper.store_image(response.image_response.shot, data_id)
 
                 elif capture.name == kCapabilityObjectInImage:
@@ -148,8 +152,8 @@ class NetworkComputeBrideAdapter:
             The data id associated with the given capability name.
         """
         data_id = data_acquisition_pb2.DataIdentifier(
-            action_id=request.action_id,
-            channel="{}--{}".format(self._worker_name, capability_name))
+            action_id=request.action_id, channel="{}--{}".format(self._worker_name,
+                                                                 capability_name))
         return data_id
 
     def _request_data(self, request, network_compute_bridge_metadata, store_helper):
@@ -212,13 +216,15 @@ def run_service(bosdyn_sdk_robot, port, network_compute_bridge_worker_name, logg
     add_servicer_to_server_fn = data_acquisition_plugin_service_pb2_grpc.add_DataAcquisitionPluginServiceServicer_to_server
 
     # Instance of the servicer to be run.
-    service_servicer = make_service(bosdyn_sdk_robot, network_compute_bridge_worker_name, logger=logger)
+    service_servicer = make_service(bosdyn_sdk_robot, network_compute_bridge_worker_name,
+                                    logger=logger)
     return GrpcServiceRunner(service_servicer, add_servicer_to_server_fn, port, logger=logger)
 
 
 def add_network_compute_bridge_plugin_arguments(parser):
     parser.add_argument('--worker-name',
-                        help="Name of the network compute bridge worker to get data from.", required=True)
+                        help="Name of the network compute bridge worker to get data from.",
+                        required=True)
 
 
 if __name__ == '__main__':
@@ -253,8 +259,8 @@ if __name__ == '__main__':
     # Use a keep alive to register the service with the robot directory.
     dir_reg_client = robot.ensure_client(DirectoryRegistrationClient.default_service_name)
     keep_alive = DirectoryRegistrationKeepAlive(dir_reg_client, logger=_LOGGER)
-    keep_alive.start(directory_name, DataAcquisitionPluginService.service_type, AUTHORITY,
-                     self_ip, service_runner.port)
+    keep_alive.start(directory_name, DataAcquisitionPluginService.service_type, AUTHORITY, self_ip,
+                     service_runner.port)
 
     # Attach the keep alive to the service runner and run until a SIGINT is received.
     with keep_alive:

@@ -5,14 +5,14 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """Unit tests for the auth module."""
-import grpc
 import logging
-import pytest
 import time
+
+import grpc
+import pytest
 
 import bosdyn.api.auth_pb2
 import bosdyn.api.auth_service_pb2_grpc as auth_service
-
 import bosdyn.client
 from bosdyn.client.exceptions import TimedOutError
 

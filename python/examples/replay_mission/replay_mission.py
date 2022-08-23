@@ -15,25 +15,20 @@ import time
 
 import google.protobuf.wrappers_pb2
 
-from bosdyn.api import robot_state_pb2
-from bosdyn.api.graph_nav import graph_nav_pb2, map_pb2, nav_pb2
-from bosdyn.api.mission import mission_pb2
-from bosdyn.api.mission import nodes_pb2
-
+import bosdyn.api.mission
 import bosdyn.api.power_pb2 as PowerServiceProto
-
 import bosdyn.client
 import bosdyn.client.lease
 import bosdyn.client.util
-
-from bosdyn.client.power import PowerClient, power_on, safe_power_off
-from bosdyn.client.robot_command import blocking_stand, RobotCommandBuilder, RobotCommandClient
-from bosdyn.client.robot_state import RobotStateClient
-
-import bosdyn.api.mission
 import bosdyn.geometry
 import bosdyn.mission.client
 import bosdyn.util
+from bosdyn.api import robot_state_pb2
+from bosdyn.api.graph_nav import graph_nav_pb2, map_pb2, nav_pb2
+from bosdyn.api.mission import mission_pb2, nodes_pb2
+from bosdyn.client.power import PowerClient, power_on, safe_power_off
+from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient, blocking_stand
+from bosdyn.client.robot_state import RobotStateClient
 
 
 def main(raw_args=None):
@@ -59,6 +54,8 @@ def main(raw_args=None):
     parser.add_argument('--disable_directed_exploration', action='store_true', default=False,
                         dest='disable_directed_exploration',
                         help='Disable directed exploration for skipped blocked branches')
+    parser.add_argument('--strict_mode', action='store_true', default=False, dest='strict_mode',
+                        help='Set strict path following mode')
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--time', type=float, default=0.0, dest='duration',
@@ -84,6 +81,15 @@ def main(raw_args=None):
 
     args = parser.parse_args(raw_args)
 
+    path_following_mode = map_pb2.Edge.Annotations.PATH_MODE_UNKNOWN
+
+    # In strict mode, disable alternate waypoints and directed exploration
+    if args.strict_mode:
+        args.disable_alternate_route_finding = True
+        args.disable_directed_exploration = True
+        path_following_mode = map_pb2.Edge.Annotations.PATH_MODE_STRICT
+        print('[ STRICT MODE ENABLED: Alternate waypoints and directed exploration disabled ]')
+
     if args.mission_type == 'simple':
         do_map_load = False
         fail_on_question = False
@@ -108,73 +114,53 @@ def main(raw_args=None):
 
     # Initialize robot object
     robot = init_robot(args.hostname)
+    assert not robot.is_estopped(), "Robot is estopped. " \
+                                    "Please use an external E-Stop client, " \
+                                    "such as the estop SDK example, to configure E-Stop."
 
     # Acquire robot lease
     robot.logger.info('Acquiring lease...')
     lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
-    body_lease = lease_client.acquire()
-    if body_lease is None:
-        raise Exception('Lease not acquired.')
-    robot.logger.info('Lease acquired: %s', str(body_lease))
+    with bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
+        # Initialize power client
+        robot.logger.info('Starting power client...')
+        power_client = robot.ensure_client(PowerClient.default_service_name)
 
-    # Initialize power client
-    robot.logger.info('Starting power client...')
-    power_client = robot.ensure_client(PowerClient.default_service_name)
+        # Initialize other clients
+        robot_state_client, command_client, mission_client, graph_nav_client = init_clients(
+            robot, mission_file, map_directory, do_map_load, args.disable_alternate_route_finding)
 
-    # Initialize other clients
-    robot_state_client, command_client, mission_client, graph_nav_client = init_clients(
-        robot, body_lease, mission_file, map_directory, do_map_load,
-        args.disable_alternate_route_finding)
+        # Turn on power
+        power_on(power_client)
 
-    try:
-        with bosdyn.client.lease.LeaseKeepAlive(lease_client):
+        # Stand up and wait for the perception system to stabilize
+        robot.logger.info('Commanding robot to stand...')
+        blocking_stand(command_client, timeout_sec=20)
+        countdown(5)
+        robot.logger.info('Robot standing.')
 
-            assert not robot.is_estopped(), "Robot is estopped. " \
-                                            "Please use an external E-Stop client, " \
-                                            "such as the estop SDK example, to configure E-Stop."
+        # Localize robot
+        localization_error = False
+        if do_localization:
+            graph = graph_nav_client.download_graph()
+            robot.logger.info('Localizing robot...')
+            robot_state = robot_state_client.get_robot_state()
+            localization = nav_pb2.Localization()
 
-            # Turn on power
-            power_on(power_client)
+            # Attempt to localize using any visible fiducial
+            graph_nav_client.set_localization(
+                initial_guess_localization=localization, ko_tform_body=None, max_distance=None,
+                max_yaw=None,
+                fiducial_init=graph_nav_pb2.SetLocalizationRequest.FIDUCIAL_INIT_NEAREST)
 
-            # Stand up and wait for the perception system to stabilize
-            robot.logger.info('Commanding robot to stand...')
-            blocking_stand(command_client, timeout_sec=20)
-            countdown(5)
-            robot.logger.info('Robot standing.')
-
-            # Localize robot
-            localization_error = False
-            if do_localization:
-                graph = graph_nav_client.download_graph()
-                robot.logger.info('Localizing robot...')
-                robot_state = robot_state_client.get_robot_state()
-                localization = nav_pb2.Localization()
-
-                # Attempt to localize using any visible fiducial
-                graph_nav_client.set_localization(
-                    initial_guess_localization=localization, ko_tform_body=None, max_distance=None,
-                    max_yaw=None,
-                    fiducial_init=graph_nav_pb2.SetLocalizationRequest.FIDUCIAL_INIT_NEAREST)
-
-            # Run mission
-            if not args.static_mode and not localization_error:
-                if args.duration == 0.0:
-                    run_mission(robot, mission_client, lease_client, fail_on_question, args.timeout,
-                                args.disable_directed_exploration)
-                else:
-                    repeat_mission(robot, mission_client, lease_client, args.duration,
-                                   fail_on_question, args.timeout,
-                                   args.disable_directed_exploration)
-
-    finally:
-        # Turn off power
-        lease_client.lease_wallet.advance()
-        robot.logger.info('Powering off...')
-        safe_power_off(command_client, robot_state_client)
-
-        # Return lease
-        robot.logger.info('Returning lease...')
-        lease_client.return_lease(body_lease)
+        # Run mission
+        if not args.static_mode and not localization_error:
+            if args.duration == 0.0:
+                run_mission(robot, mission_client, lease_client, fail_on_question, args.timeout,
+                            args.disable_directed_exploration, path_following_mode)
+            else:
+                repeat_mission(robot, mission_client, lease_client, args.duration, fail_on_question,
+                               args.timeout, args.disable_directed_exploration, path_following_mode)
 
 
 def init_robot(hostname):
@@ -195,8 +181,7 @@ def init_robot(hostname):
     return robot
 
 
-def init_clients(robot, lease, mission_file, map_directory, do_map_load,
-                 disable_alternate_route_finding):
+def init_clients(robot, mission_file, map_directory, do_map_load, disable_alternate_route_finding):
     """Initialize clients"""
 
     if not os.path.isfile(mission_file):
@@ -219,7 +204,7 @@ def init_clients(robot, lease, mission_file, map_directory, do_map_load,
         graph_nav_client.clear_graph()
 
         # Upload map to robot
-        upload_graph_and_snapshots(robot, graph_nav_client, lease.lease_proto, map_directory,
+        upload_graph_and_snapshots(robot, graph_nav_client, map_directory,
                                    disable_alternate_route_finding)
 
     # Create mission client
@@ -227,7 +212,7 @@ def init_clients(robot, lease, mission_file, map_directory, do_map_load,
     mission_client = robot.ensure_client(bosdyn.mission.client.MissionClient.default_service_name)
 
     # Upload mission to robot
-    upload_mission(robot, mission_client, mission_file, lease)
+    upload_mission(robot, mission_client, mission_file)
 
     # Create command client
     robot.logger.info('Creating command client...')
@@ -249,7 +234,7 @@ def countdown(length):
     print(0)
 
 
-def upload_graph_and_snapshots(robot, client, lease, path, disable_alternate_route_finding):
+def upload_graph_and_snapshots(robot, client, path, disable_alternate_route_finding):
     """Upload the graph and snapshots to the robot"""
 
     # Load the graph from disk.
@@ -296,23 +281,22 @@ def upload_graph_and_snapshots(robot, client, lease, path, disable_alternate_rou
     # Upload the graph to the robot.
     robot.logger.info('Uploading the graph and snapshots to the robot...')
     true_if_empty = not len(current_graph.anchoring.anchors)
-    response = client.upload_graph(graph=current_graph, lease=lease,
-                                   generate_new_anchoring=true_if_empty)
+    response = client.upload_graph(graph=current_graph, generate_new_anchoring=true_if_empty)
     robot.logger.info('Uploaded graph.')
 
     # Upload the snapshots to the robot.
     for snapshot_id in response.unknown_waypoint_snapshot_ids:
         waypoint_snapshot = current_waypoint_snapshots[snapshot_id]
-        client.upload_waypoint_snapshot(waypoint_snapshot=waypoint_snapshot, lease=lease)
+        client.upload_waypoint_snapshot(waypoint_snapshot=waypoint_snapshot)
         robot.logger.info('Uploaded {}'.format(waypoint_snapshot.id))
 
     for snapshot_id in response.unknown_edge_snapshot_ids:
         edge_snapshot = current_edge_snapshots[snapshot_id]
-        client.upload_edge_snapshot(edge_snapshot=edge_snapshot, lease=lease)
+        client.upload_edge_snapshot(edge_snapshot=edge_snapshot)
         robot.logger.info('Uploaded {}'.format(edge_snapshot.id))
 
 
-def upload_mission(robot, client, filename, lease):
+def upload_mission(robot, client, filename):
     """Upload the mission to the robot"""
 
     # Load the mission from disk
@@ -325,12 +309,12 @@ def upload_mission(robot, client, filename, lease):
 
     # Upload the mission to the robot
     robot.logger.info('Uploading the mission to the robot...')
-    client.load_mission(mission_proto, leases=[lease])
+    client.load_mission(mission_proto)
     robot.logger.info('Uploaded mission to robot.')
 
 
 def run_mission(robot, mission_client, lease_client, fail_on_question, mission_timeout,
-                disable_directed_exploration):
+                disable_directed_exploration, path_following_mode):
     """Run mission once"""
 
     robot.logger.info('Running mission')
@@ -349,7 +333,8 @@ def run_mission(robot, mission_client, lease_client, fail_on_question, mission_t
         local_pause_time = time.time() + mission_timeout
 
         play_settings = mission_pb2.PlaySettings(
-            disable_directed_exploration=disable_directed_exploration)
+            disable_directed_exploration=disable_directed_exploration,
+            path_following_mode=path_following_mode)
 
         mission_client.play_mission(local_pause_time, [body_lease], play_settings)
         time.sleep(1)
@@ -377,7 +362,7 @@ def restart_mission(robot, mission_client, lease_client, mission_timeout):
 
 
 def repeat_mission(robot, mission_client, lease_client, total_time, fail_on_question, timeout,
-                   disable_directed_exploration):
+                   disable_directed_exploration, path_following_mode):
     """Repeat mission for period of time"""
 
     robot.logger.info('Repeating mission for {} seconds.'.format(total_time))
@@ -385,7 +370,7 @@ def repeat_mission(robot, mission_client, lease_client, total_time, fail_on_ques
     # Run first mission
     start_time = time.time()
     mission_success = run_mission(robot, mission_client, lease_client, fail_on_question, timeout,
-                                  disable_directed_exploration)
+                                  disable_directed_exploration, path_following_mode)
     elapsed_time = time.time() - start_time
     robot.logger.info('Elapsed time = {} (out of {})'.format(elapsed_time, total_time))
 
@@ -397,7 +382,7 @@ def repeat_mission(robot, mission_client, lease_client, total_time, fail_on_ques
     while elapsed_time < total_time:
         restart_mission(robot, mission_client, lease_client, mission_timeout=3)
         mission_success = run_mission(robot, mission_client, lease_client, fail_on_question,
-                                      timeout, disable_directed_exploration)
+                                      timeout, disable_directed_exploration, path_following_mode)
 
         elapsed_time = time.time() - start_time
         robot.logger.info('Elapsed time = {} (out of {})'.format(elapsed_time, total_time))

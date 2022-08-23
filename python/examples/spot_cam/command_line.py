@@ -6,10 +6,6 @@
 
 import argparse
 
-import bosdyn.client
-
-from bosdyn.client.util import (add_common_arguments, setup_logging)
-
 from audio import AudioCommands
 from compositor import CompositorCommands
 from health import HealthCommands
@@ -23,7 +19,10 @@ from utils import UtilityCommands
 from version import VersionCommands
 from webrtc import WebRTCCommands
 
+import bosdyn.client
 from bosdyn.client import spot_cam
+from bosdyn.client.util import add_common_arguments, setup_logging
+
 
 
 def register_all_commands(subparsers, command_dict):

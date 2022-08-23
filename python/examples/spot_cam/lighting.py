@@ -8,11 +8,9 @@ import os
 import shutil
 import tempfile
 
-from bosdyn.client.command_line import (Command, Subcommands)
-
-from bosdyn.client.spot_cam.lighting import LightingClient
-
 from bosdyn.api.spot_cam import LED_pb2
+from bosdyn.client.command_line import Command, Subcommands
+from bosdyn.client.spot_cam.lighting import LightingClient
 
 
 class LightingCommands(Subcommands):

@@ -6,16 +6,15 @@
 
 """For clients of the graph_nav map processing service."""
 from __future__ import print_function
+
 import collections
-from bosdyn.api.graph_nav import map_pb2
-from bosdyn.api.graph_nav import map_processing_pb2
-from bosdyn.api.graph_nav import map_processing_service_pb2
-from bosdyn.api.graph_nav import map_processing_service_pb2_grpc as map_processing
-from bosdyn.client.common import BaseClient
-from bosdyn.client.common import (BaseClient, error_factory, handle_unset_status_error,
-                                  handle_common_header_errors, handle_lease_use_result_errors,
-                                  common_header_errors)
 from enum import Enum
+
+from bosdyn.api.graph_nav import map_pb2, map_processing_pb2, map_processing_service_pb2
+from bosdyn.api.graph_nav import map_processing_service_pb2_grpc as map_processing
+from bosdyn.client.common import (BaseClient, common_header_errors, error_factory,
+                                  handle_common_header_errors, handle_lease_use_result_errors,
+                                  handle_unset_status_error)
 from bosdyn.client.exceptions import ResponseError
 
 
@@ -51,8 +50,13 @@ class InvalidHintsError(MapProcessingServiceResponseError):
     """One or more of the hints passed in to the optimizer are invalid (do not correspond to real waypoints or objects)."""
 
 
+class InvalidGravityAlignmentError(MapProcessingServiceResponseError):
+    """One or more anchoring hints disagrees with gravity. Ensure the orientation of any hints is correct."""
+
+
 class ConstraintViolationError(MapProcessingServiceResponseError):
     """One or more anchors were moved outside of the desired constraints."""
+
 
 class MapModifiedError(MapProcessingServiceResponseError):
     """The map was modified on the server by another client during processing. Please try again."""
@@ -102,6 +106,8 @@ __ANCHORING_COMMON_ERRORS = {
         MaxTimeError,
     map_processing_pb2.ProcessAnchoringResponse.STATUS_INVALID_HINTS:
         InvalidHintsError,
+    map_processing_pb2.ProcessAnchoringResponse.STATUS_INVALID_GRAVITY_ALIGNMENT:
+        InvalidGravityAlignmentError,
     map_processing_pb2.ProcessAnchoringResponse.STATUS_MAP_MODIFIED_DURING_PROCESSING:
         MapModifiedError
 }
@@ -187,7 +193,8 @@ class MapProcessingServiceClient(BaseClient):
         request = self._build_process_topology_request(params, modify_map_on_server)
         return self.call(self._stub.ProcessTopology, request,
                          value_from_response=_get_streamed_topology_response,
-                         error_from_response=_process_topology_streamed_errors, **kwargs)
+                         error_from_response=_process_topology_streamed_errors, copy_request=False,
+                         **kwargs)
 
     def process_anchoring(self, params, modify_anchoring_on_server, stream_intermediate_results,
                           initial_hint=None, **kwargs):
@@ -212,4 +219,5 @@ class MapProcessingServiceClient(BaseClient):
 
         return self.call(self._stub.ProcessAnchoring, request,
                          value_from_response=_get_streamed_anchoring_response,
-                         error_from_response=_process_anchoring_streamed_errors, **kwargs)
+                         error_from_response=_process_anchoring_streamed_errors, copy_request=False,
+                         **kwargs)

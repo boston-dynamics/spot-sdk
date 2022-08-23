@@ -1,4 +1,4 @@
-FROM python:3.7-slim
+FROM python:3.7
 
 # Install the API wheels and other requirements.
 COPY docker-requirements.txt prebuilt/*.whl ./

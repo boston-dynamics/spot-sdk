@@ -10,17 +10,16 @@ import logging
 import signal
 import time
 
-from bosdyn.api import data_acquisition_pb2
-from bosdyn.api import data_acquisition_plugin_service_pb2_grpc
+import bosdyn.client.util
+from bosdyn.api import data_acquisition_pb2, data_acquisition_plugin_service_pb2_grpc
 from bosdyn.api.point_cloud_pb2 import PointCloud
 from bosdyn.client.data_acquisition_plugin_service import Capability, DataAcquisitionPluginService
 from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
                                                   DirectoryRegistrationKeepAlive)
 from bosdyn.client.exceptions import ServiceUnavailableError
 from bosdyn.client.point_cloud import PointCloudClient
-import bosdyn.client.util
-from bosdyn.client.util import setup_logging
 from bosdyn.client.server_util import GrpcServiceRunner
+from bosdyn.client.util import setup_logging
 
 DIRECTORY_NAME = 'data-acquisition-pointcloud-plugin'
 AUTHORITY = 'data-acquisition-pc-plugin'

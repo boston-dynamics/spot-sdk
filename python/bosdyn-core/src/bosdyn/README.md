@@ -12,6 +12,6 @@ Core code and interfaces for the Boston Dynamics robot API.
 
 ## Contents
 
-* [BDDF](bddf/README)
-* [Geometry](geometry)
-* [Util](util)
+- [BDDF](bddf/README)
+- [Geometry](geometry)
+- [Util](util)

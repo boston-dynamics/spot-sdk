@@ -6,22 +6,26 @@
 
 """Command the robot to go to an offset position using a trajectory command."""
 
-import math
 import logging
+import math
 import sys
 import time
-from bosdyn.api.basic_command_pb2 import RobotCommandFeedbackStatus
+
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.client.robot_state import RobotStateClient
-from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder, blocking_stand, block_for_trajectory_cmd
-from bosdyn.api import geometry_pb2 as geo
 from bosdyn.api import basic_command_pb2
+from bosdyn.api import geometry_pb2 as geo
+from bosdyn.api.basic_command_pb2 import RobotCommandFeedbackStatus
 from bosdyn.client import math_helpers
-from bosdyn.client.frame_helpers import ODOM_FRAME_NAME, VISION_FRAME_NAME, BODY_FRAME_NAME, get_se2_a_tform_b
+from bosdyn.client.frame_helpers import (BODY_FRAME_NAME, ODOM_FRAME_NAME, VISION_FRAME_NAME,
+                                         get_se2_a_tform_b)
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
+from bosdyn.client.robot_command import (RobotCommandBuilder, RobotCommandClient,
+                                         block_for_trajectory_cmd, blocking_stand)
+from bosdyn.client.robot_state import RobotStateClient
 
 _LOGGER = logging.getLogger(__name__)
+
 
 def main():
     import argparse
@@ -103,6 +107,7 @@ def relative_move(dx, dy, dyaw, frame_name, robot_command_client, robot_state_cl
         time.sleep(1)
 
     return True
+
 
 if __name__ == "__main__":
     if not main():

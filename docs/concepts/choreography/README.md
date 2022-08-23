@@ -11,11 +11,11 @@ Development Kit License (20191101-BDSDK-SL).
 Develop advanced choreographed routines for Spot. The choreography service requires a special-permissions license, as well as Python and Spot SDK.
 
 The Choreography SDK consists of:
-  * The Choreography API [protocol definitions](../../../choreography_protos/bosdyn/api/README), which defines the choreography moves and parameters.
-  * The Choreography [python client](../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/README), which communicates with Spot to upload and execute choreographies on robot.
-  * The Choreographer Application, which is an application to author choreographies and execute the routines on robot with music synchronization. The application, as well as additional documentation, can be downloaded from the [Support Center](https://support.bostondynamics.com) and used with a robot that has a choreography license.
+  * The Choreography API [protocol definitions](../../../choreography_protos/bosdyn/api/README) defines choreography moves and parameters.
+  * The Choreography [python client](../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/README) communicates with Spot to upload and execute sequences on the robot.
+  * The Choreographer Application is used to author choreography sequences, synchronize music, and execute routines on the robot. The application, as well as additional documentation, can be downloaded from the [Support Center](https://support.bostondynamics.com) and used with a robot that has a choreography license.
 
-The high-level [documentation](choreography_service.md) provides an overview of the Choreography API and Client and a description of the different choreography terms. Additionally, descriptions of each choreography move and its associated parameters, as well as GIFs showing a preview of the move, are available in the [Move Reference Guide](move_reference.md).
+This [documentation](choreography_service.md) provides an overview of the Choreography API and Client and a description of the different choreography terms. The [Move Reference Guide](move_reference.md) provides descriptions of each choreography move and its associated parameters, as well as GIF depictions of each move.
 
 ## Contents
 

@@ -13,15 +13,16 @@ Command line arguments are used to specify an offset to the current body's posit
 
 Note that trajectory commands cannot be issued in the body frame since this creates a goal point that is continually moving, so the trajectory can never reach the goal.
 
-
 See [the geometry and frames documentation](../../../docs/concepts/geometry_and_frames.md) for more of an overview of Spot's frames and transformation geometry.
 
-
 ## E-Stop
+
 You will have to launch a software E-Stop separately in order to run this example. See [the E-Stop examples.](../estop/README.md)
 
 ## Run the Example
+
 To run the example (moving forward 1 meter):
+
 ```
 python3 frame_trajectory_command.py ROBOT_IP --dx 1
 ```

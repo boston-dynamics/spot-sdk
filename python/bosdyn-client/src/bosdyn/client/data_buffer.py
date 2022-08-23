@@ -13,14 +13,23 @@ operator comments, blobs, signal ticks, and protobuf messages.
 from __future__ import print_function
 
 import functools
+import logging
+import sys
+import threading
 import time
+import traceback
 import uuid
 
-from bosdyn.client.exceptions import Error
-from bosdyn.client.common import BaseClient, common_header_errors
-from bosdyn.client import time_sync
+from google.protobuf.duration_pb2 import Duration
+from google.protobuf.timestamp_pb2 import Timestamp
+
 import bosdyn.api.data_buffer_pb2 as data_buffer_protos
 import bosdyn.api.data_buffer_service_pb2_grpc as data_buffer_service
+from bosdyn import util as core_util
+from bosdyn.api import parameter_pb2
+from bosdyn.client import time_sync
+from bosdyn.client.common import BaseClient, common_header_errors
+from bosdyn.client.exceptions import Error, ResponseError, RpcError
 
 
 class InvalidArgument(Error):
@@ -28,8 +37,8 @@ class InvalidArgument(Error):
 
 
 def log_event(  # pylint: disable=too-many-arguments,no-member
-        robot, event_type, level, description, start_timestamp_secs,
-        end_timestamp_secs=None, id_str=None, parameters=None,
+        robot, event_type, level, description, start_timestamp_secs, end_timestamp_secs=None,
+        id_str=None, parameters=None,
         log_preserve_hint=data_buffer_protos.Event.LOG_PRESERVE_HINT_NORMAL):
     """Add an Event to the Data Buffer.
 
@@ -64,10 +73,10 @@ def log_event(  # pylint: disable=too-many-arguments,no-member
         else:
             log_preserve_hint = data_buffer_protos.Event.LOG_PRESERVE_HINT_NORMAL
 
-    event = data_buffer_protos.Event(
-        type=event_type, description=description, source=robot.client_name,
-        id=id_str, start_time=robot_start_timestamp, end_time=robot_end_timestamp,
-        level=level, log_preserve_hint=log_preserve_hint)
+    event = data_buffer_protos.Event(type=event_type, description=description,
+                                     source=robot.client_name, id=id_str,
+                                     start_time=robot_start_timestamp, end_time=robot_end_timestamp,
+                                     level=level, log_preserve_hint=log_preserve_hint)
 
     if parameters:
         for parameter in parameters:
@@ -75,6 +84,27 @@ def log_event(  # pylint: disable=too-many-arguments,no-member
             proto.CopyFrom(parameter)
 
     data_buffer_client.add_events([event])
+
+
+def make_parameter(label, value, units="", notes=""):
+    """Create a parameter proto from a label and the parameter value."""
+    parameter = parameter_pb2.Parameter(label=label, units=units, notes=notes)
+    if isinstance(value, bool):
+        parameter.bool_value = value
+    elif isinstance(value, int):
+        parameter.int_value = value
+    elif isinstance(value, float):
+        parameter.float_value = value
+    elif isinstance(value, Timestamp):
+        parameter.timestamp.CopyFrom(value)
+    elif isinstance(value, Duration):
+        parameter.duration.CopyFrom(value)
+    elif isinstance(value, str):
+        parameter.string_value = value
+    else:
+        return None
+
+    return parameter
 
 
 class DataBufferClient(BaseClient):
@@ -142,7 +172,7 @@ class DataBufferClient(BaseClient):
     def _do_add_operator_comment(self, func, msg, robot_timestamp=None, **kwargs):
         """Internal operator comment RPC stub call."""
         request = data_buffer_protos.RecordOperatorCommentsRequest()
-        robot_timestamp = robot_timestamp or self._now_in_robot_basis(msg_type="Operator Comment")
+        robot_timestamp = robot_timestamp or self.now_in_robot_basis(msg_type="Operator Comment")
         # pylint: disable=no-member
         request.operator_comments.add(message=msg, timestamp=robot_timestamp)
         return func(self._stub.RecordOperatorComments, request, value_from_response=None,
@@ -181,7 +211,7 @@ class DataBufferClient(BaseClient):
         if not channel:
             channel = type_id
 
-        robot_timestamp = robot_timestamp or self._now_in_robot_basis(msg_type=type_id)
+        robot_timestamp = robot_timestamp or self.now_in_robot_basis(msg_type=type_id)
 
         request.blob_data.add(  # pylint: disable=no-member
             timestamp=robot_timestamp, channel=channel, type_id=type_id, data=data)
@@ -212,7 +242,7 @@ class DataBufferClient(BaseClient):
     def _do_add_protobuf(self, func, proto, channel, robot_timestamp, write_sync):
         """Internal blob stub call, serializes proto and logs as blob."""
         binary_data = proto.SerializeToString()
-        robot_timestamp = robot_timestamp or self._now_in_robot_basis(proto=proto)
+        robot_timestamp = robot_timestamp or self.now_in_robot_basis(proto=proto)
         type_id = proto.DESCRIPTOR.full_name
         channel = channel or type_id
         return func(data=binary_data, type_id=type_id, channel=channel,
@@ -319,17 +349,228 @@ class DataBufferClient(BaseClient):
         self.log_tick_schemas[response.schema_id] = schema
         return response.schema_id
 
-    def _now_in_robot_basis(self, msg_type=None, proto=None):
+    def now_in_robot_basis(self, msg_type=None, proto=None):
         """Get current time in robot clock basis if possible, None otherwise."""
         if self._timesync_endpoint:
             try:
                 converter = self._timesync_endpoint.get_robot_time_converter()
             except time_sync.NotEstablishedError:
                 # No timesync. That's OK -- the receiving host will provide the timestamp.
-                self.logger.debug('Could not timestamp message of type %s',
-                                  (msg_type if msg_type is not None else
-                                   (proto.DESCRIPTOR.full_name
-                                    if proto is not None else 'Unknown')))
+                self.logger.debug(
+                    'Could not timestamp message of type %s',
+                    (msg_type if msg_type is not None else
+                     (proto.DESCRIPTOR.full_name if proto is not None else 'Unknown')))
             else:
                 return converter.robot_timestamp_from_local_secs(time.time())
         return None
+
+
+class LoggingHandler(logging.Handler):  # pylint: disable=too-many-instance-attributes
+    """A logging system Handler that will publish text to a the data-buffer service.
+
+    Args:
+        service: Name of the service. See LogAnnotationTextMessage.
+        data_buffer_client: API client that will send log messages.
+        level: Python logging level. Defaults to NOTSET.
+        time_sync_endpoint: A TimeSyncEndpoint, already synchronized to the remote clock.
+        rpc_timeout: Timeout on RPCs made by data_buffer_client.
+        msg_num_limit: If number of messages reaches this number, send data with data_buffer_client.
+        msg_age_limit: If messages have been sitting locally for this many seconds, send data with
+                       data_buffer_client.
+
+    Raises:
+        log_annotation.InvalidArgument: The TimeSyncEndpoint is not valid.
+    """
+
+    def __init__(  # pylint: disable=too-many-arguments
+            self, service, data_buffer_client, level=logging.NOTSET, time_sync_endpoint=None,
+            rpc_timeout=1, msg_num_limit=10, msg_age_limit=1):
+        logging.Handler.__init__(self, level=level)
+        self.msg_age_limit = msg_age_limit
+        self.msg_num_limit = msg_num_limit
+        self.rpc_timeout = rpc_timeout
+        self.service = service
+        self.time_sync_endpoint = time_sync_endpoint
+        if self.time_sync_endpoint and not self.time_sync_endpoint.has_established_time_sync:
+            raise InvalidArgument('time_sync_endpoint must have already established timesync!')
+        # If we have this many unsent messages in the queue after a failure to send,
+        # "dump" the messages to stdout.
+        self._dump_msg_count = 20
+        # Internal tracking of errors.
+        self._num_failed_sends = 0
+        self._num_failed_sends_sequential = 0
+        # If we have this many failed sends in a row, stop the send thread.
+        self._limit_failed_sends_sequential = 5
+        # Event to trigger immediate flush of messages to the log client.
+        self._flush_event = threading.Event()
+        # How long to wait for flush events. Dictates non-flush update rate.
+        self._flush_event_wait_time = 0.1
+        # Last time "emit" was called.
+        self._last_emit_time = 0
+        self._data_buffer_client = data_buffer_client
+        self._lock = threading.Lock()
+        self._msg_queue = []
+        self._send_thread = threading.Thread(target=self._run_send_thread)
+        # Set to stop the message send thread.
+        self._shutdown_event = threading.Event()
+
+        # This apparently needs to be a daemon thread to play nicely with python's Handler shutdown
+        # procedure.
+        self._send_thread.daemon = True
+        self._send_thread.start()
+
+    def __enter__(self):
+        """Optionally use this as a ContextManager to be more cautious about sending messages."""
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """To ensure all messages have been sent to the best of our ability, call close()."""
+        self.close()
+
+    def emit(self, record):
+        msg = self.record_to_msg(record)
+        with self._lock:
+            self._msg_queue.append(msg)
+        self._last_emit_time = time.time()
+
+    def flush(self):
+        self._flush_event.set()
+
+    def close(self):
+        self._shutdown_event.set()
+        self._send_thread.join()
+
+        # One last attempt to send any messages.
+        if self._msg_queue:
+            try:
+                self._data_buffer_client.add_text_messages(self._msg_queue,
+                                                           timeout=self.rpc_timeout)
+            # Catch all client library errors.
+            except Error:
+                self._num_failed_sends += 1
+                with self._lock:
+                    self._dump_msg_queue()
+        logging.Handler.close(self)
+
+    def is_thread_alive(self):
+        """Return true if send-thread is running."""
+        return self._send_thread.is_alive()
+
+    def restart(self, data_buffer_client):
+        """Restart the send thread.
+
+        Raises:
+          AssertionError if send thread is still alive.
+        """
+        assert not self.is_thread_alive()
+        self._num_failed_sends_sequential = 0
+        self._data_buffer_client = data_buffer_client
+        self._send_thread = threading.Thread(target=self._run_send_thread)
+        self._send_thread.daemon = True
+        self._send_thread.start()
+
+    def _dump_msg_queue(self):
+        """Pop all of the message queue, using fallback_log to try and capture them.
+
+        Should be called with the lock held.
+        """
+        self.fallback_log('Dumping {} messages!'.format(len(self._msg_queue)))
+        for msg in self._msg_queue:
+            self.fallback_log(msg)
+        del self._msg_queue[:]
+
+    @staticmethod
+    def fallback_log(msg):
+        """Handle log messages that were failed to be sent by printing to the console."""
+        print(msg, file=sys.stderr)
+
+    def _run_send_thread(self):
+        while (self._num_failed_sends_sequential < self._limit_failed_sends_sequential and
+               not self._shutdown_event.is_set()):
+            flush = self._flush_event.wait(self._flush_event_wait_time)
+            msg_age = time.time() - self._last_emit_time
+            with self._lock:
+                num_msgs = len(self._msg_queue)
+                to_send = self._msg_queue[:num_msgs]
+            send_now = num_msgs >= 1 and (flush or msg_age >= self.msg_age_limit or
+                                          num_msgs >= self.msg_num_limit)
+
+            if send_now:
+                self._flush_event.clear()
+
+                send_errors = 0
+                error_limit = 2
+
+                sent = False
+                while send_errors < error_limit and not self._shutdown_event.is_set():
+                    try:
+                        self._data_buffer_client.add_text_messages(to_send,
+                                                                   timeout=self.rpc_timeout)
+                    except (ResponseError, RpcError):
+                        self.fallback_log('Error:\n{}'.format(traceback.format_exc()))
+                        send_errors += 1
+                    except:  # pylint: disable=bare-except
+                        # Catch all other exceptions and log them.
+                        self.fallback_log('Unexpected exception!\n{}'.format(
+                            traceback.format_exc()))
+                        break
+                    else:
+                        sent = True
+                        break
+
+                # Default to possibly dumping messages.
+                maybe_dump = True
+                if sent:
+                    # We successfully sent logs to the log service! Delete relevant local cache.
+                    with self._lock:
+                        del self._msg_queue[:num_msgs]
+                    maybe_dump = False
+                    self._num_failed_sends_sequential = 0
+                elif send_errors >= error_limit:
+                    self._num_failed_sends += 1
+                    self._num_failed_sends_sequential += 1
+                elif self._shutdown_event.is_set():
+                    # Don't dump if we're shutting down; we'll clear the messages in close().
+                    maybe_dump = False
+                else:
+                    # We can hit this state if
+                    # 1) We break out of the above loop without setting sent = True
+                    # 2) There is a logic bug in the above handling code / while loop.
+                    function_name = traceback.extract_stack()[-1][2]
+                    self.fallback_log('Unexpected condition in {}.{}!'.format(
+                        self.__class__.__name__, function_name))
+
+                # If we decided we may need to dump the message queue...
+                if maybe_dump:
+                    with self._lock:
+                        if len(self._msg_queue) >= self._dump_msg_count:
+                            self._dump_msg_queue()
+
+    def record_to_msg(self, record):
+        """Convert logging record to TextMessage proto."""
+        level = self.record_level_to_proto_level(record.levelno)
+        msg = data_buffer_protos.TextMessage(source=self.service, level=level,
+                                             message=self.format(record))
+        # pylint: disable=no-member
+        if self.time_sync_endpoint is not None:
+            try:
+                msg.timestamp.CopyFrom(
+                    self.time_sync_endpoint.robot_timestamp_from_local_secs(time.time()))
+            except time_sync.NotEstablishedError:
+                # If timestamp is not set in the proto, data-buffer will timestamp it on receipt.
+                msg.message = '(No time sync!): ' + msg.message
+        else:
+            msg.timestamp.CopyFrom(core_util.now_timestamp())
+        return msg
+
+    @staticmethod
+    def record_level_to_proto_level(record_level):
+        """Convert logging record level to TextMessage proto level."""
+        # pylint: disable=no-member
+        if record_level >= logging.ERROR:
+            return data_buffer_protos.TextMessage.LEVEL_ERROR
+        if record_level >= logging.WARNING:
+            return data_buffer_protos.TextMessage.LEVEL_WARN
+        if record_level >= logging.INFO:
+            return data_buffer_protos.TextMessage.LEVEL_INFO
+        return data_buffer_protos.TextMessage.LEVEL_DEBUG

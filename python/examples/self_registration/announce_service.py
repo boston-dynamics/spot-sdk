@@ -10,17 +10,18 @@ Example code demonstrating a basic python announce rpc service that handles anno
 This is a generic python grpc server set up.
 """
 import argparse
-import bosdyn.client.util
-from bosdyn.client.util import setup_logging
-from bosdyn.client.server_util import GrpcServiceRunner
 import logging
-import time
 import sys
+import time
 from concurrent import futures
-import grpc
 
 import announce_pb2 as announce_protos
 import announce_service_pb2_grpc as announce_service_protos_grpc
+import grpc
+
+import bosdyn.client.util
+from bosdyn.client.server_util import GrpcServiceRunner
+from bosdyn.client.util import setup_logging
 
 
 class AnnounceServicer(announce_service_protos_grpc.AnnounceServiceServicer):

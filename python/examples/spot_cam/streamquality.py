@@ -8,13 +8,11 @@ import os
 import shutil
 import tempfile
 
-from bosdyn.client.command_line import (Command, Subcommands)
-
-from bosdyn.client.spot_cam.streamquality import StreamQualityClient
+from utils import add_bool_arg
 
 from bosdyn.api.spot_cam import streamquality_pb2
-
-from utils import add_bool_arg
+from bosdyn.client.command_line import Command, Subcommands
+from bosdyn.client.spot_cam.streamquality import StreamQualityClient
 
 
 class StreamQualityCommands(Subcommands):
@@ -23,9 +21,10 @@ class StreamQualityCommands(Subcommands):
     NAME = 'stream_quality'
 
     def __init__(self, subparsers, command_dict):
-        super(StreamQualityCommands, self).__init__(
-            subparsers, command_dict,
-            [StreamQualityGetStreamParamsCommand, StreamQualitySetStreamParamsCommand, StreamQualityCongestionControlCommand])
+        super(StreamQualityCommands, self).__init__(subparsers, command_dict, [
+            StreamQualityGetStreamParamsCommand, StreamQualitySetStreamParamsCommand,
+            StreamQualityCongestionControlCommand
+        ])
 
 
 class StreamQualityGetStreamParamsCommand(Command):
@@ -69,6 +68,7 @@ class StreamQualitySetStreamParamsCommand(Command):
 
         return result
 
+
 class StreamQualityCongestionControlCommand(Command):
     """Get image quality and postprocessing settings"""
 
@@ -79,6 +79,8 @@ class StreamQualityCongestionControlCommand(Command):
         add_bool_arg(self._parser, 'congestion_control')
 
     def _run(self, robot, options):
-        result = robot.ensure_client(StreamQualityClient.default_service_name).enable_congestion_control(options.congestion_control)
+        result = robot.ensure_client(
+            StreamQualityClient.default_service_name).enable_congestion_control(
+                options.congestion_control)
 
         return result

@@ -9,9 +9,9 @@ import struct
 
 import bosdyn.api.bddf_pb2 as bddf
 
-from .common import (BLOCK_HEADER_SIZE_MASK, BLOCK_HEADER_TYPE_MASK, ChecksumError, DATA_BLOCK_TYPE,
-                     DESCRIPTOR_BLOCK_TYPE, DataFormatError, END_BLOCK_TYPE, LOGGER, MAGIC,
-                     ParseError, SHA1_DIGEST_NBYTES)
+from .common import (BLOCK_HEADER_SIZE_MASK, BLOCK_HEADER_TYPE_MASK, DATA_BLOCK_TYPE,
+                     DESCRIPTOR_BLOCK_TYPE, END_BLOCK_TYPE, LOGGER, MAGIC, SHA1_DIGEST_NBYTES,
+                     ChecksumError, DataFormatError, ParseError)
 
 
 class BaseDataReader:  # pylint: disable=too-many-instance-attributes

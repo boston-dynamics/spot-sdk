@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Running Custom Applications with Spot &mdash; Spot 3.1.2.1 documentation</title>
+  <title>Running Custom Applications with Spot &mdash; Spot 3.2.0 documentation</title>
   
 
   
@@ -41,7 +41,7 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Spot CORE Cockpit - System Management Tool" href="spot_core_cockpit.html" />
+    <link rel="next" title="Pre-3.2 Spot CORE Documentation" href="spot_core_documentation.html" />
     <link rel="prev" title="Payload Software Interface" href="configuring_payload_software.html" /> 
 </head>
 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.1.2.1
+                3.2.0
               </div>
             
           
@@ -118,10 +118,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/autowalk_service.html">Autowalk service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/directed_exploration.html">Directed Exploration</a></li>
@@ -149,7 +151,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../concepts/data_acquisition_output.html">Data Acquisition Output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/data_buffer_overview.html">Data Buffer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../concepts/bddf.html">BDDF file format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
 </ul>
 </li>
 </ul>
@@ -182,6 +185,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/docking/README.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/fan_command/README.html">Fan Commands</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -200,6 +204,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -207,6 +212,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -261,16 +267,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/replay_mission/README.html">Replay Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
@@ -297,6 +311,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
@@ -322,6 +338,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/lights_helper.html">Lights Helper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
@@ -391,7 +408,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../python/daq_tutorial/daq2.html">Part 2: Capturing images</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/daq_tutorial/daq3.html">Part 3: Capturing other data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../python/daq_tutorial/daq4.html">Part 4: Deploying to the Spot CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/daq_tutorial/daq4.html">Part 4: Deploying to the CORE I/O</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/daq_tutorial/daq5.html">Part 5: Collecting data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/daq_tutorial/daq6.html">Part 6: Processing collected data</a></li>
 </ul>
@@ -405,9 +422,14 @@
 <li class="toctree-l2"><a class="reference internal" href="guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configuring_payload_software.html">Configuring payload software</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Configuring Docker containers in SpotCORE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spot_core_vnc.html">Spot CORE VNC</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../protos/README.html">API Protocol</a><ul>
@@ -421,6 +443,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-proto">autowalk/autowalk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-service-proto">autowalk/autowalk_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#autowalk-walks-proto">autowalk/walks.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
@@ -444,6 +469,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
@@ -539,6 +566,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -610,10 +638,19 @@ Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><section id="running-custom-applications-with-spot">
+--><script type="text/javascript" src="../python/fetch_tutorial/video_play_at_scroll.js"></script><link rel="stylesheet" type="text/css" href="../python/fetch_tutorial/tutorial.css">
+<link href="../python/fetch_tutorial/prism.css" rel="stylesheet" />
+<script src="../python/fetch_tutorial/prism.js"></script><section id="running-custom-applications-with-spot">
 <h1>Running Custom Applications with Spot<a class="headerlink" href="#running-custom-applications-with-spot" title="Permalink to this headline">¶</a></h1>
-<p>Spot’s computing power can be extended through additional computation payloads mounted on the robot. Boston Dynamics offers Spot CORE and Spot CORE AI computation payloads, but users can attach other types of computation payloads as well. This document describes how to configure software to run on these computation payloads. Most instructions describe steps on how to manage custom software on the Spot CORE, but these steps are applicable to other computation payloads as well.</p>
-<p>The purpose of computation payloads is to run custom software applications on the robot that interact with the robot software system and the other payloads attached to Spot. For Spot CORE, we suggest using the provided docker framework to install, configure and run custom software. This document describes how to create docker images in the <a class="reference external" href="#create-docker-images">Create Docker Images</a> section, and how to manage docker containers in Spot CORE or other computation payloads in two different ways in the <a class="reference external" href="#manage-docker-containers-in-spot-core">Manage Docker Containers</a> section. The <a class="reference external" href="#portainer-configuration">Portainer section</a> describes how to use Portainer to manage docker containers. This feature is new in Spot release 2.1. The <a class="reference external" href="#command-line-configuration">Command-line section</a> describes how to use command-line tools, such as <code class="docutils literal notranslate"><span class="pre">scp</span></code>, <code class="docutils literal notranslate"><span class="pre">ssh</span></code> and docker CLI (Command Line Interface) to run docker containers in a computation payload.</p>
+<p>Spot’s computing power can be extended through additional computation payloads mounted on the robot. Boston Dynamics offers CORE I/O computation payloads, but users can attach other types of computation payloads as well. This document describes how to configure software to run on these computation payloads. Most instructions describe steps on how to manage custom software on the CORE I/O, but these steps are applicable to other computation payloads as well.</p>
+<p>The purpose of computation payloads is to run custom software applications on the robot that interact with the robot software system and the other payloads attached to Spot. For CORE I/O, we suggest using the provided Extensions framework to install, configure and run custom software. The suggested approach to develop, test and deploy software on computation payloads is as follows:</p>
+<ol class="simple">
+<li><p>Implement and test application in a development environment, such as a development computer. In this case, the development computer connected to Spot’s WiFi acts as the computation payload for the robot. Testing in the development environment allows for quick iterations and updating of the application code.</p></li>
+<li><p>Dockerize the application and test the docker image with the application on the development environment. The change in this step compared to the previous one is to run the application inside a docker container, rather than on the host OS of the development environment. This step verifies that the application works correctly in an containerized environment, and it acts as a stepping stone to the final step below. The section <a class="reference external" href="#create-docker-images">Create Docker Images</a> described how to create and test the docker images in the local development environment.</p></li>
+<li><p>If targetting the CORE I/O payload, combine all docker containers with a docker-compose configuration file and package everything into a Spot Extension, as described in the <a class="reference external" href="#manage-payload-software-in-core-i-o">Manage Payload Software in CORE I/O</a> section.</p></li>
+<li><p>Deploy and manage the Spot Extension in the CORE I/O payload (also described in the section linked above). Running the dockerized application on a computation payload attached to Spot removes the need for WiFi connectivity between Spot and a stationary computation environment, improving Spot’s autonomy.</p></li>
+</ol>
+<p>To manage the docker images on any other compute payload, please refer to the <a class="reference external" href="#command-line-configuration">Command-line Configuration</a> section.</p>
 <p>Multiple Spot SDK examples support dockerization and running as docker containers. The main examples are listed below, but all the other examples can be easily configured to run as docker containers by duplicating the docker configuration in the examples below.</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../../python/examples/data_acquisition_service/README.html"><span class="doc">Data Acquisition Plugins</span></a></p></li>
@@ -623,18 +660,39 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 <section id="create-docker-images">
 <h2>Create Docker Images<a class="headerlink" href="#create-docker-images" title="Permalink to this headline">¶</a></h2>
-<p>The first step is to create a docker image with the software application and its dependencies. Docker containers are dependent on images and use them to construct a run-time environment and run an application. The instructions to create a docker image are specified in a file, usually named <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>. The <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> specifies what base docker image to start from, what additional software and libraries to install on top of the base image, and what software needs to be run when the container starts. All the Spot SDK examples listed above contain a <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>.</p>
+<p>After implementing and testing the application on the development environment, the first step is to create a docker image with the software application and its dependencies. Docker containers are dependent on images and use them to construct a run-time environment and run an application. The instructions to create a docker image are specified in a file, usually named <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>. The <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> specifies what base docker image to start from, what additional software and libraries to install on top of the base image, and what software needs to be run when the container starts. A variety of Spot SDK examples contain a <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> files in the SDK examples contain instructions to create x86/AMD-based Ubuntu docker images. On top of <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> files, SDK examples also contain <code class="docutils literal notranslate"><span class="pre">Dockerfile.l4t</span></code> for creating ARM-based Ubuntu docker images for the CORE I/O payloads.</p>
 <section id="build-docker-images">
 <h3>Build Docker Images<a class="headerlink" href="#build-docker-images" title="Permalink to this headline">¶</a></h3>
-<p>The docker image, which is used to run a container with the software component, can be built and saved to a tar file using the following commands, where {IMAGE_NAME} represents the desired docker image name.</p>
+<p>This section describes the steps to create and run a docker image on the development environment. Docker images created to run on the same architecture as the development environment can be created with the simple <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">build</span></code> commands listed below.</p>
+<p>An x86/AMD docker image can be built on an x86/AMD development environment using the following commands, where {IMAGE_NAME} represents the desired docker image name.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span> <span class="o">.</span>
-<span class="n">sudo</span> <span class="n">docker</span> <span class="n">save</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span> <span class="o">&gt;</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span><span class="o">.</span><span class="n">tar</span>
+</pre></div>
+</div>
+<p>An ARM docker image can be built on an ARM development environment using the following commands, where {IMAGE_NAME} represents the desired docker image name.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span> <span class="o">-</span><span class="n">f</span> <span class="n">Dockerfile</span><span class="o">.</span><span class="n">l4t</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>In order to create docker images on the development environment for a different architecture, first run the following commands:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">qemu</span> <span class="n">qemu</span><span class="o">-</span><span class="n">user</span><span class="o">-</span><span class="n">static</span>
+<span class="n">docker</span> <span class="n">buildx</span> <span class="n">create</span> <span class="o">--</span><span class="n">use</span> <span class="o">--</span><span class="n">name</span> <span class="n">multiarchbuilder</span>
+<span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="n">prebuilt</span> <span class="c1"># this is needed due to limitations in docker buildx</span>
+<span class="n">sudo</span> <span class="n">docker</span> <span class="n">run</span> <span class="o">--</span><span class="n">rm</span> <span class="o">--</span><span class="n">privileged</span> <span class="n">multiarch</span><span class="o">/</span><span class="n">qemu</span><span class="o">-</span><span class="n">user</span><span class="o">-</span><span class="n">static</span> <span class="o">--</span><span class="n">reset</span> <span class="o">-</span><span class="n">p</span> <span class="n">yes</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">run</span></code> command needs to be rerun if the development environment restarts. Then, to build the docker images, we need to pass the <code class="docutils literal notranslate"><span class="pre">--platform</span></code> argument to the <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">build</span></code> commands shown above.</p>
+<p>An ARM docker image can be built on an x86/AMD development environment using the following commands, where {IMAGE_NAME} represents the desired docker image name.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span> <span class="o">--</span><span class="n">platform</span> <span class="n">linux</span><span class="o">/</span><span class="n">arm64</span> <span class="o">-</span><span class="n">f</span> <span class="n">Dockerfile</span><span class="o">.</span><span class="n">l4t</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>All the <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">build</span></code> commands shown above create a docker image that can be used on the development environment with docker commands. For example, <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">docker</span> <span class="pre">image</span> <span class="pre">ls</span></code> lists the docker images available for use. Finally, to save the docker image to a <code class="docutils literal notranslate"><span class="pre">tgz</span></code> file, run the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">save</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span> <span class="o">|</span> <span class="n">pigz</span> <span class="o">&gt;</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span><span class="o">.</span><span class="n">tgz</span>
 </pre></div>
 </div>
 </section>
 <section id="test-docker-images-locally">
 <h3>Test Docker Images Locally<a class="headerlink" href="#test-docker-images-locally" title="Permalink to this headline">¶</a></h3>
-<p>Before configuring and running a docker container on a computation payload, we recommend to test the container on a local environment first, such as on a development laptop. To start a docker container and its configured software application, run:</p>
+<p>The next step after creating the docker image is to test the container on a local development environment first. To start a docker container and its configured software application, run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">network</span><span class="o">=</span><span class="n">host</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span> <span class="p">{</span><span class="n">ROBOT_IP</span><span class="p">}</span> <span class="p">{</span><span class="n">APPLICATION</span> <span class="n">ARGUMENTS</span><span class="p">}</span>
 </pre></div>
 </div>
@@ -644,58 +702,190 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>{ROBOT_IP} represents the IP of the Spot robot (<code class="docutils literal notranslate"><span class="pre">192.168.80.3</span></code> if connected to robot’s wifi).</p></li>
 <li><p>{APPLICATION ARGUMENTS} represents any additional arguments the application that runs in the docker container takes as input. Most software applications that communicate with the services running on the robot will need the following arguments <code class="docutils literal notranslate"><span class="pre">--guid</span> <span class="pre">{PAYLOAD_GUID}</span> <span class="pre">--secret</span> <span class="pre">{PAYLOAD_SECRET}</span> <span class="pre">--host-ip</span> <span class="pre">{LOCAL_IP}</span></code>. Some software applications might use the <code class="docutils literal notranslate"><span class="pre">--username\--password</span></code> combination to authenticate with the robot instead of <code class="docutils literal notranslate"><span class="pre">--guid\--secret</span></code> These arguments represent:</p>
 <ul>
-<li><p>{PAYLOAD_GUID} represents the payload GUID. Refer to the <a class="reference internal" href="../../python/examples/payloads/README.html"><span class="doc">Python payload registration code example in the Spot SDK</span></a> for how to register a massless payload and use the GUID of the example payload for testing. For software running on dedicated payloads, such as on Spot CORE or other computation payloads, we recommend using the <code class="docutils literal notranslate"><span class="pre">GUID</span></code> of that computation payload.</p></li>
-<li><p>{PAYLOAD_SECRET} represents the payload secret.  Refer to the <a class="reference internal" href="../../python/examples/payloads/README.html"><span class="doc">Python payload registration code example in the Spot SDK</span></a> for how to register a massless payload and use the secret of the example payload for testing.  For software running on dedicated payloads, such as on Spot CORE or other computation payloads, we recommend using the <code class="docutils literal notranslate"><span class="pre">secret</span></code> of that computation payload.</p></li>
+<li><p>{PAYLOAD_GUID} represents the payload GUID. Refer to the <a class="reference internal" href="../../python/examples/payloads/README.html"><span class="doc">Python payload registration code example in the Spot SDK</span></a> for how to register a massless payload and use the GUID of the example payload for testing. For software running on dedicated payloads, such as on CORE I/O or other computation payloads, we recommend using the <code class="docutils literal notranslate"><span class="pre">GUID</span></code> of that computation payload.</p></li>
+<li><p>{PAYLOAD_SECRET} represents the payload secret. Refer to the <a class="reference internal" href="../../python/examples/payloads/README.html"><span class="doc">Python payload registration code example in the Spot SDK</span></a> for how to register a massless payload and use the secret of the example payload for testing. For software running on dedicated payloads, such as on CORE I/O or other computation payloads, we recommend using the <code class="docutils literal notranslate"><span class="pre">secret</span></code> of that computation payload.</p></li>
 <li><p>{LOCAL_IP} represents the IP of the platform where the docker is running.</p></li>
 </ul>
 </li>
 </ul>
-</section>
-</section>
-<section id="manage-docker-containers-in-computation-payloads">
-<h2>Manage Docker Containers in Computation Payloads<a class="headerlink" href="#manage-docker-containers-in-computation-payloads" title="Permalink to this headline">¶</a></h2>
-<p>This section describes two ways to manage docker containers on a computation payload, using Portainer already included in Spot CORE as of release 2.1, or command-line tools.</p>
-<section id="portainer-configuration">
-<h3>Portainer Configuration<a class="headerlink" href="#portainer-configuration" title="Permalink to this headline">¶</a></h3>
-<p>In Spot release 2.1, Spot CORE comes preloaded with <a class="reference external" href="https://www.portainer.io">Portainer</a> software to manage the docker containers. Portainer is a complete software solution for container management to speed up software deployments and troubleshooting on the Spot CORE. It is the recommended method for managing docker containers on Spot CORE. We also recommend using Portainer and following these instructions with other computation payloads as well.</p>
-<p>Check the Spot CORE version to make sure it is 2.1 or higher by ssh-ing onto the Spot CORE and running <code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">/etc/spotcore-release</span></code>. If it is not up to date, upgrade to the latest Spot CORE release by following the <a class="reference external" href="https://support.bostondynamics.com/s/article/How-to-update-Spot-CORE-software">instructions to upgrade</a>.</p>
-<p>Once the Spot CORE is updated, the docker file can be deployed from the Portainer web console. To access the web console, go to <code class="docutils literal notranslate"><span class="pre">https://192.168.80.3:21900</span></code>, log in, and then click the “Local” endpoint. To upload the tar file, click the “Image” tab on the left side of the web console, and then click the “Import” button in the “Images” section, as shown below.
-<img alt="Portainer Image Upload" src="../../_images/portainer_image_upload.png" /></p>
-<p>Select the tar file created by the <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">save</span></code> command above, and then click “Upload”. If the upload fails, try changing the permissions of the tar file using the command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">chmod</span> <span class="n">a</span><span class="o">+</span><span class="n">r</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span><span class="o">.</span><span class="n">tar</span>
+<p>In order to run a docker image created for a different architecture, add the <code class="docutils literal notranslate"><span class="pre">--platform</span></code> argument to the <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code> command. For example, to run an ARM-based docker image on an x86/AMD development environment, run the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">platform</span> <span class="n">linux</span><span class="o">/</span><span class="n">arm64</span> <span class="o">--</span><span class="n">network</span><span class="o">=</span><span class="n">host</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span> <span class="p">{</span><span class="n">ROBOT_IP</span><span class="p">}</span> <span class="p">{</span><span class="n">APPLICATION</span> <span class="n">ARGUMENTS</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>Once the upload completes, go to the “Containers” tab in Portainer and add a container by clicking the “Add Container” button. In the configuration page shown below:
-<img alt="Portainer Container Configuration" src="../../_images/portainer_container_configuration.png" /></p>
-<p>set the follow fields:</p>
+</section>
+</section>
+<section id="manage-payload-software-in-core-i-o">
+<h2>Manage Payload Software in CORE I/O<a class="headerlink" href="#manage-payload-software-in-core-i-o" title="Permalink to this headline">¶</a></h2>
+<p>This section describes two ways to manage docker containers on a computation payload, using CORE I/O extensions or command-line tools.</p>
+<section id="core-i-o-extensions-configuration">
+<h3>CORE I/O Extensions Configuration<a class="headerlink" href="#core-i-o-extensions-configuration" title="Permalink to this headline">¶</a></h3>
+<p>Extensions are software packages or static files introduced in 3.2 that can be installed or simply uploaded in CORE I/O or Scout platforms.</p>
+<p>Configured as software packages, Extensions provide the functionality for external developers to easily install applications onto CORE I/O and Scout platforms. On the CORE I/O, these software packages can integrate a newly-mounted payload with the Spot API, or not be associated with any payload functionality at all, such as uploading data to an AWS bucket.</p>
+<p>Extensions can also simply be static files that developers need to upload into CORE I/O or Scout platform. This configuration supports two important use cases:</p>
+<ol class="simple">
+<li><p>It allows the developers to split their Extensions into a smaller Extension with the software components that needs to be updated frequently and one or more larger Extensions with static files needed by the Extension with the software component. This configuration simplifies the process of updating Extensions by decoupling static large files from the frequently-updatable files and installing them once, or less frequently.</p></li>
+<li><p>It allows the developers to split their Extensions into a generic software package that is identical for all customers, and separate Extensions with configuration files that are applicable to one of a subset of customers. This configuration simplifies the process of installing customer-specific Extensions by maintaining the common part of the package in one Extension and the customer-specific configuration in another Extension.</p></li>
+</ol>
+<section id="extension-structure">
+<h4>Extension Structure<a class="headerlink" href="#extension-structure" title="Permalink to this headline">¶</a></h4>
+<p>An Extension is a set of docker images configured with a docker-compose yaml configuration file. Extensions are structured as a tgz file with an .spx file extension and contain the following files:</p>
 <ul class="simple">
-<li><p>“Name” = Name of the container. This should be set to a unique string that describes the container.</p></li>
-<li><p>“Image” = {IMAGE_NAME}:latest. {IMAGE_NAME} represents the image name used to build the docker image.</p></li>
-<li><p>Under the “Command &amp; logging” tab in the container configuration page, add all of the arguments in the “Command” field. Specifically, these arguments <code class="docutils literal notranslate"><span class="pre">--host-ip</span> <span class="pre">{HOST_COMPUTER_IP}</span> <span class="pre">--guid</span> <span class="pre">{PAYLOAD_GUID}</span> <span class="pre">--secret</span> <span class="pre">{PAYLOAD_SECRET}</span> <span class="pre">ROBOT_IP</span></code> should be required by all software applications running on Spot CORE that need to communicate with on-board services. Make sure the {HOST_COMPUTER_IP} matches the computation payload’s IP (by default, this is <code class="docutils literal notranslate"><span class="pre">192.168.50.5</span></code> for the rear-mounted payloads), and ROBOT_IP matches the robot IP from the perspective of the Spot CORE (by default, this is <code class="docutils literal notranslate"><span class="pre">192.168.50.3</span></code>). {PAYLOAD_GUID} and {PAYLOAD_SECRET} should correspond to the computation payload credentials. The list of arguments specified in this section should also include additional arguments expected by the application.</p></li>
-<li><p>Under the “Network” tab in the container configuration page, set the “Network” field to <code class="docutils literal notranslate"><span class="pre">host</span></code> so ports are forwarded correctly between the host OS and the docker container.</p></li>
-<li><p>Under the “Restart policy” tab in the container configuration page, set the policy to “Unless stopped”. This will allow the docker container to continue to keep running all the time (even after rebooting the spot core) unless it is manually stopped by a user in Portainer.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file with metadata about the Extension</p></li>
+<li><p>List of docker images</p></li>
+<li><p>docker-compose.yml file</p></li>
+<li><p>Icon file shown in the web portal</p></li>
+<li><p>Udev rules file to install in the CORE I/O OS if the Extension is associated with a hardware payload to be attached to CORE I/O.</p></li>
+<li><p>Other files needed by the software or the udev rules included in the Extension</p></li>
 </ul>
-<p>Once all the necessary fields are configured, select “Deploy the container” to run the software application configured in the docker container on Spot CORE. The screenshot below shows the web console view of a running container.
-<img alt="Portainer Container Details" src="../../_images/portainer_container_details.png" />
-The log statements generated by the software application running in the docker container can be seen by clicking the “Logs” link, as shown in the screenshots below.
-<img alt="Portainer Container Logs" src="../../_images/portainer_container_logs.png" /></p>
+<p>The name of the spx file represents the name of the extension.</p>
+<section id="manifest-file">
+<h5>Manifest file<a class="headerlink" href="#manifest-file" title="Permalink to this headline">¶</a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file is the Extension parameterization file with the following parameters:</p>
+<ul class="simple">
+<li><p>description: String with a short description of the extension</p></li>
+<li><p>version: Version of the extension</p></li>
+<li><p>icon: Name of the file included in the extension that should be used as the icon for the extension</p></li>
+<li><p>udev_rules: Name of the udev file included in the extension that contains the updated udev rules to install in host OS</p></li>
+<li><p>images: Optional list of tgz file names included in the extension that represent the docker images to load for running the extension. Parameter is omitted if the images are available from a public location, such as dockerhub.</p></li>
+</ul>
+</section>
+<section id="docker-images">
+<h5>Docker Images<a class="headerlink" href="#docker-images" title="Permalink to this headline">¶</a></h5>
+<p>The docker images listed in the <code class="docutils literal notranslate"><span class="pre">images</span></code> field of the <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file also need to be included in the Extension. These are the docker images that contain the software components to run as part of the extension. The inclusion of docker images in the Extension is optional if the images are available from a public source, such as dockerhub. The Extension setup could also contain a mix-and-match of public and non-public images. In that case, the <code class="docutils literal notranslate"><span class="pre">images</span></code> field in the <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file would include only the non-public images included in the Extension, and the docker-compose rules would specify all images (public and non-public).</p>
+</section>
+<section id="docker-compose-yaml-configuration-file">
+<h5>Docker Compose YAML configuration file<a class="headerlink" href="#docker-compose-yaml-configuration-file" title="Permalink to this headline">¶</a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file contains instructions for managing the docker images in the Extension. The “docker-compose” tool is an industry standard to support the management of multiple pieces of software packaged together.</p>
+</section>
+<section id="other-files">
+<h5>Other files<a class="headerlink" href="#other-files" title="Permalink to this headline">¶</a></h5>
+<p>Extensions can also include the following files:</p>
+<ul class="simple">
+<li><p>Icon file: Optional image file with the icon to show for the extension in the UI. The icon filename is specified in the <code class="docutils literal notranslate"><span class="pre">icon</span></code> field in the <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file. If omitted, a generic icon will be used for the extension.</p></li>
+<li><p>Udev rules file: Optional file with udev rules to copy to host OS /etc/udev/rules.d in order to support devices connected to Spot platform as a requirement to run the Extension. The udev filename is specified in the <code class="docutils literal notranslate"><span class="pre">udev_rules</span></code> field in the <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file. Udev rules are ignored in Extensions installations in Scout.</p></li>
+<li><p>Any other files needed to run the extension: The creators of the Spot Extensions can include any other files in the extension bundle that is necessary for the software applications in the extension to run.</p></li>
+</ul>
+</section>
+</section>
+<section id="extension-management">
+<h4>Extension Management<a class="headerlink" href="#extension-management" title="Permalink to this headline">¶</a></h4>
+<section id="create-extension">
+<h5>Create Extension<a class="headerlink" href="#create-extension" title="Permalink to this headline">¶</a></h5>
+<p>Once the files described in the section above are created, they can be packaged into an Extension file by simply tar-ing and zipping them into an <code class="docutils literal notranslate"><span class="pre">spx</span></code> file. With all the files contained in a folder, run the following command from that folder:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tar</span> <span class="n">zcfv</span> <span class="p">{</span><span class="n">EXTENSION_NAME</span><span class="p">}</span><span class="o">.</span><span class="n">spx</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">*</span></code> in the command above does not include hidden files, so they need to listed in the command individually, such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tar</span> <span class="n">zcfv</span> <span class="p">{</span><span class="n">EXTENSION_NAME</span><span class="p">}</span><span class="o">.</span><span class="n">spx</span> <span class="o">*</span> <span class="o">.</span><span class="n">hidden_file1</span> <span class="o">.</span><span class="n">hidden_file2</span>
+</pre></div>
+</div>
+</section>
+<section id="install-extension-using-web-portal">
+<h5>Install Extension Using Web Portal<a class="headerlink" href="#install-extension-using-web-portal" title="Permalink to this headline">¶</a></h5>
+<p>Extensions can be installed from the Extensions page by drag-and-dropping the Extension file onto the “Upload New Extension” subpanel, as shown in the video below:</p>
+<video autoplay loop muted playsinline class="tutorial-video"><source src="videos/extension_installation.mp4" type="video/mp4">
+</video><p>Extensions can also be installed by clicking the “Choose File” button, and selecting the Extension file manually in the File browser window that opens up.</p>
+<p>Extensions need to have a unique name in the system. The installation of an Extension first uninstalls an existing Extension with the same name. Locally, the Extensions are installed in the folder /data/.extensions/, and each Extension is installed in a separate folder in that location, with the folder name being the Extension name.</p>
+<p>For Extensions without udev rules, this is the only step needed for installation. For Extensions with udev rules, we need to run the following steps so the udev rules included in the Extension are applied correctly:</p>
+<ol class="simple">
+<li><p>After installing the Extension, plug in the device. This will execute the udev rule included in the Extension.</p></li>
+<li><p>Start the Extension manually in the CORE I/O web portal by clicking the “Start” button.</p></li>
+</ol>
+</section>
+<section id="install-extension-using-a-usb-drive">
+<h5>Install Extension Using a USB Drive<a class="headerlink" href="#install-extension-using-a-usb-drive" title="Permalink to this headline">¶</a></h5>
+<p>For cases when the Extension has a very large size, users can also install the Extension from a USB drive attached to the CORE I/O. On the command-line, simply <code class="docutils literal notranslate"><span class="pre">untar</span></code> the <code class="docutils literal notranslate"><span class="pre">spx</span></code> Extension file in the folder <code class="docutils literal notranslate"><span class="pre">/data/.extensions/</span></code> using the command <code class="docutils literal notranslate"><span class="pre">tar</span> <span class="pre">xzfm</span> <span class="pre">{PATH_TO_SPX_FILE}</span> <span class="pre">-C</span> <span class="pre">/data/.extensions/{EXTENSION_NAME}</span></code>. Then, go to Extensions tab in the web portal and start the Extension manually by pressing the “Start” button.</p>
+</section>
+<section id="monitoring">
+<h5>Monitoring<a class="headerlink" href="#monitoring" title="Permalink to this headline">¶</a></h5>
+<p>The Extensions page shows the status of each Extension installed in the system, as well as the status of all the docker containers in each Extension. The status of a container or an extension can be one of the following values:</p>
+<ul class="simple">
+<li><p>CREATED</p></li>
+<li><p>RESTARTING</p></li>
+<li><p>STOPPED</p></li>
+<li><p>RUNNING</p></li>
+</ul>
+<p>For the docker container statuses, the values listed above are a direct mapping of the status reported by the <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">ps</span></code> command for the container:</p>
+<ul class="simple">
+<li><p>CREATED: The reported status contains the string “Created”</p></li>
+<li><p>RESTARTING: The reported status contains the string “Restarting”</p></li>
+<li><p>STOPPED: The reported status contains the string “Stopped”</p></li>
+<li><p>RUNNING: All other statuses reported in the format “Up for X seconds”</p></li>
+</ul>
+<p>For the full Extension statuses, the values are computed as:</p>
+<ul class="simple">
+<li><p>STOPPED: Any of the containers in the Extension report a STOPPED status</p></li>
+<li><p>CREATED:</p>
+<ul>
+<li><p>No containers in the Extension, or</p></li>
+<li><p>No stopped containers and one of the containers in the Extension report a CREATED status</p></li>
+</ul>
+</li>
+<li><p>RESTARTING: No STOPPED or CREATED containers and one of the containers in the Extension report a RESTARTING status</p></li>
+<li><p>RUNNING: All containers in the Extension report a RUNNING status</p></li>
+</ul>
+</section>
+<section id="access-extension-logs">
+<h5>Access Extension Logs<a class="headerlink" href="#access-extension-logs" title="Permalink to this headline">¶</a></h5>
+<p>Users can view logs from the containers in the Extensions page by clicking the down-arrow button on each container. The expanded text window shows the most recent logs reported by the application running in the container. Users can scroll to the bottom of the text window, which triggers an automatic update of the logs in the text window, as reported by the application running in the container. Users can also copy the whole text displayed in the window, or download the full logs from the container using the two buttons in the top right corner of the Extension view, as shown in the video below:</p>
+<video autoplay loop muted playsinline class="tutorial-video"><source src="videos/extension_logs.mp4" type="video/mp4">
+</video></section>
+<section id="stop-extension">
+<h5>Stop Extension<a class="headerlink" href="#stop-extension" title="Permalink to this headline">¶</a></h5>
+<p>Extensions can be temporarily stopped from running by clicking the Stop button at the top-right corner of the Extension view, as shown in the screenshot below for the battery Extension:
+<img alt="Stop Extension" src="../../_images/extension_stop.png" /></p>
+<p>Once the Extension is stopped, the “Stop” button converts to a Start button and the Extension could be manually started by clicking it, as shown in the screenshot below for the battery Extension:
+<img alt="Start Extension" src="../../_images/extension_start.png" /></p>
+</section>
+<section id="remove-extension">
+<h5>Remove Extension<a class="headerlink" href="#remove-extension" title="Permalink to this headline">¶</a></h5>
+<p>To uninstall and remove an extension, click the “Trash Bin” icon for the Extension, as shown in the video below:</p>
+<video autoplay loop muted playsinline class="tutorial-video"><source src="videos/extension_removal.mp4" type="video/mp4">
+</video></section>
+</section>
 </section>
 <section id="command-line-configuration">
 <h3>Command-line Configuration<a class="headerlink" href="#command-line-configuration" title="Permalink to this headline">¶</a></h3>
-<p>To run the docker container on a computation payload without using Portainer, first copy the docker image tar file and then manually run it on the computation payload. To copy the dockerfile, run:</p>
+<p>Users can also manage their applications manually on the CORE I/O, or other compute payloads, by ssh-ing into it (<code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">-p</span> <span class="pre">20022</span> <span class="pre">192.168.80.3</span></code> from the robot’s WiFi) and starting their applications using the options described below. The Extensions functionality included in CORE I/O and Scout platforms simplify the process of managing applications on these platforms, but users can also use the instructions below for debugging and testing purposes.</p>
+<section id="run-application-s-directly-on-compute-payload">
+<h4>Run Application(s) Directly on Compute Payload<a class="headerlink" href="#run-application-s-directly-on-compute-payload" title="Permalink to this headline">¶</a></h4>
+<p>Users can copy their application to the CORE I/O:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="n">scp</span> <span class="o">-</span><span class="n">r</span> <span class="o">-</span><span class="n">P</span> <span class="mi">20022</span> <span class="p">{</span><span class="n">APPLICATION_FILES</span><span class="p">}</span> <span class="n">spot</span><span class="o">@</span><span class="mf">192.168.80.3</span><span class="p">:</span>
+</pre></div>
+</div>
+<p>and run them on the command line. <code class="docutils literal notranslate"><span class="pre">python3</span></code> is pre-installed in the CORE I/O.</p>
+</section>
+<section id="run-application-s-as-a-docker-container">
+<h4>Run Application(s) as a Docker Container<a class="headerlink" href="#run-application-s-as-a-docker-container" title="Permalink to this headline">¶</a></h4>
+<p>To run the docker container on CORE I/O, first copy the docker image tar file and then manually run it on the computation payload. To copy the docker file, run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scp</span> <span class="o">-</span><span class="n">r</span> <span class="o">-</span><span class="n">P</span> <span class="mi">20022</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span><span class="o">.</span><span class="n">tar</span> <span class="n">spot</span><span class="o">@</span><span class="mf">192.168.80.3</span><span class="p">:</span>
 </pre></div>
 </div>
-<p>Then, ssh onto the computation payload, and load the docker file locally:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">load</span> <span class="o">-</span><span class="n">i</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span><span class="o">.</span><span class="n">tar</span>
+<p>Then, ssh onto the computation payload, and load or import the docker file locally. For images created through the single architecture workflow, load the docker image with the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="n">sudo</span> <span class="n">docker</span> <span class="n">load</span> <span class="o">-</span><span class="n">i</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span><span class="o">.</span><span class="n">tar</span>
+</pre></div>
+</div>
+<p>For images created with <code class="docutils literal notranslate"><span class="pre">buildx</span></code> through the multiple architecture workflow, import the docker image with the command below, where {VERSION} is a user specified extension for the image:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="kn">import</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span><span class="o">.</span><span class="n">tar</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}:{</span><span class="n">VERSION</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>To run the docker container and the software application in it, execute:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">network</span><span class="o">=</span><span class="n">host</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span> <span class="mf">192.168.50.3</span> <span class="p">{</span><span class="n">APPLICATION</span> <span class="n">ARGUMENTS</span><span class="p">}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="n">sudo</span> <span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">network</span><span class="o">=</span><span class="n">host</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span> <span class="mf">192.168.50.3</span> <span class="p">{</span><span class="n">APPLICATION</span> <span class="n">ARGUMENTS</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>with the arguments as described in the section <a class="reference external" href="#test-docker-images-locally">Test Docker Images Locally</a>. Note, the <code class="docutils literal notranslate"><span class="pre">host-ip</span></code> in the example command is currently set for a Spot CORE attached to the rear port and the robot hostname is needed for a service running on the Spot CORE communicating with the on-board software.</p>
+<p>with the arguments as described in the section <a class="reference external" href="#test-docker-images-locally">Test Docker Images Locally</a>. Note, the <code class="docutils literal notranslate"><span class="pre">host-ip</span></code> in the example command is currently set for a CORE I/O attached to the rear port and the robot hostname is needed for a service running on the CORE I/O communicating with the on-board software.</p>
 <p>The manual configuration described in this section does not persist across reboots without additional configuration.</p>
+</section>
+<section id="run-applications-with-docker-compose">
+<h4>Run Applications with docker-compose<a class="headerlink" href="#run-applications-with-docker-compose" title="Permalink to this headline">¶</a></h4>
+<p>Users can execute a combination of docker images on the CORE I/O using <code class="docutils literal notranslate"><span class="pre">docker-compose</span></code>, which comes pre-installed in the CORE I/O. Using the commands shown in the section above, users can copy the docker images and the docker-compose YAML file to the CORE I/O and load the docker images individually. Then, they can start the docker images by running the <code class="docutils literal notranslate"><span class="pre">docker-compose</span></code> command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">f</span> <span class="p">{</span><span class="n">PATH</span> <span class="n">TO</span> <span class="n">DOCKER</span> <span class="n">COMPOSE</span> <span class="n">YAML</span> <span class="n">FILE</span><span class="p">}</span> <span class="n">start</span>
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 </section>

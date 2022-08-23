@@ -4,17 +4,16 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
+import concurrent.futures
 import logging
 import time
-import pytest
 
-import concurrent.futures
 import grpc
+import pytest
 
 import bosdyn.api.estop_pb2
 import bosdyn.api.estop_service_pb2_grpc
 import bosdyn.client.estop
-
 from bosdyn.client import InternalServerError
 
 

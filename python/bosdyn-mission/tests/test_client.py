@@ -6,10 +6,11 @@
 
 """Test the client to the mission service."""
 import concurrent
-import grpc
-import pytest
 import sys
 import time
+
+import grpc
+import pytest
 
 if sys.version_info[0:2] >= (3, 3):
     # Python version 3.3 added unittest.mock
@@ -18,14 +19,13 @@ else:
     # The backport is on PyPi as just "mock"
     import mock
 
-from google.protobuf import timestamp_pb2
-from bosdyn.api.mission import mission_service_pb2_grpc
-from bosdyn.api.mission import mission_pb2
-import bosdyn.api.header_pb2 as HeaderProto
-from bosdyn.client.server_util import ResponseContext
-import bosdyn.mission.client
-
 import helpers
+from google.protobuf import timestamp_pb2
+
+import bosdyn.api.header_pb2 as HeaderProto
+import bosdyn.mission.client
+from bosdyn.api.mission import mission_pb2, mission_service_pb2_grpc
+from bosdyn.client.server_util import ResponseContext
 
 INVALID_ANSWER_CODE = 100
 INVALID_QUESTION_ID = -1

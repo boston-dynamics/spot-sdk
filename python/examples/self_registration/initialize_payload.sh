@@ -14,7 +14,6 @@
 # endpoint_port - An open port on the current system for the service to communicate through
 # payload_secret - A private 16 character string unique to this payload instance
 
-
 # Compile the protobuf files.
 python3 -m pip install grpcio-tools
 python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. announce.proto announce_service.proto
@@ -41,33 +40,40 @@ endpoint_ip="$2"
 # A free port on the system to access to the service through.
 endpoint_port="$3"
 
-
 # Register the payload. Only need to register a single time.
-python3 self_register_payload.py --guid "$payload_guid" --secret "$payload_secret" --name "$payload_name"\
-                         --description "$payload_description" $robot_ip
+python3 self_register_payload.py --guid "$payload_guid" --secret "$payload_secret" --name "$payload_name" \
+    --description "$payload_description" $robot_ip
 if [ $? -ne 0 ]; then exit; fi
 echo "Payload registration complete."
 
 # Start the Announce Service on this system.
 python3 announce_service.py --port $endpoint_port &
 announce_service_script_pid=$!
-if [ $? -ne 0 ]; then kill -9 $announce_service_script_pid; exit; fi
+if [ $? -ne 0 ]; then
+    kill -9 $announce_service_script_pid
+    exit
+fi
 echo "Announce service started."
 
 # Register the service. This can be called from the payload or an arbitrary API client.
 # Must be registered after each robot power cycle.
 python3 self_register_service.py --guid $payload_guid --secret "$payload_secret" \
-                            --host-ip $endpoint_ip --port $endpoint_port $robot_ip
-if [ $? -ne 0 ]; then kill -9 $announce_service_script_pid; exit; fi
+    --host-ip $endpoint_ip --port $endpoint_port $robot_ip
+if [ $? -ne 0 ]; then
+    kill -9 $announce_service_script_pid
+    exit
+fi
 echo "Announce service registration complete."
 
 # Create a client and access the Announce Service through the robot.
 sleep 5 # Give the robot time to initialize the service
 python3 announce_client.py --guid $payload_guid \
-                           --secret "$payload_secret" \
-                           --message "This message is passed through the robot." $robot_ip
-if [ $? -ne 0 ]; then kill -9 $announce_service_script_pid; exit; fi
-
+    --secret "$payload_secret" \
+    --message "This message is passed through the robot." $robot_ip
+if [ $? -ne 0 ]; then
+    kill -9 $announce_service_script_pid
+    exit
+fi
 
 # Cleanup background process.
 kill -9 $announce_service_script_pid

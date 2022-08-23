@@ -11,16 +11,16 @@ Payload registration does not require auth credentials; however, registered payl
 must be enabled and authorized via the robot web UI.
 """
 from __future__ import print_function
+
 import argparse
 import sys
 from time import sleep
 
-import bosdyn.client
-from bosdyn.client.payload_registration import PayloadRegistrationClient, PayloadAlreadyExistsError
-import bosdyn.client.util
-
-import bosdyn.api.payload_pb2 as payload_protos
 import bosdyn.api.geometry_pb2 as geometry_protos
+import bosdyn.api.payload_pb2 as payload_protos
+import bosdyn.client
+import bosdyn.client.util
+from bosdyn.client.payload_registration import PayloadAlreadyExistsError, PayloadRegistrationClient
 
 
 def define_payload(guid, name, description):

@@ -11,9 +11,7 @@ import grpc
 import pytest
 
 import bosdyn.client.spot_cam.media_log
-
 from bosdyn.api.spot_cam import camera_pb2, logging_pb2, service_pb2_grpc
-
 from bosdyn.client.exceptions import TimedOutError
 
 from . import helpers

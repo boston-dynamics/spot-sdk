@@ -7,14 +7,11 @@
 import os
 import shutil
 import tempfile
-
 from bisect import bisect_left
 
-from bosdyn.client.command_line import (Command, Subcommands)
-
-from bosdyn.client.spot_cam.ptz import PtzClient
-
 from bosdyn.api.spot_cam import ptz_pb2
+from bosdyn.client.command_line import Command, Subcommands
+from bosdyn.client.spot_cam.ptz import PtzClient
 
 
 class PtzCommands(Subcommands):
@@ -23,10 +20,17 @@ class PtzCommands(Subcommands):
     NAME = 'ptz'
 
     def __init__(self, subparsers, command_dict):
-        super(PtzCommands, self).__init__(subparsers, command_dict, [
-            PtzListPtzCommand, PtzGetPtzPositionCommand, PtzGetPtzVelocityCommand,
-            PtzSetPtzPositionCommand, PtzSetPtzVelocityCommand, PtzInitializeLensCommand,
-        ])
+        super(PtzCommands, self).__init__(
+            subparsers,
+            command_dict,
+            [
+                PtzListPtzCommand,
+                PtzGetPtzPositionCommand,
+                PtzGetPtzVelocityCommand,
+                PtzSetPtzPositionCommand,
+                PtzSetPtzVelocityCommand,
+                PtzInitializeLensCommand,
+            ])
 
 
 class PtzListPtzCommand(Command):
@@ -123,7 +127,6 @@ class PtzSetPtzVelocityCommand(Command):
         return ptz_velocity
 
 
-
 class PtzInitializeLensCommand(Command):
     """Initializes the PTZ autofocus or resets it if already initialized"""
 
@@ -131,12 +134,13 @@ class PtzInitializeLensCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         super(PtzInitializeLensCommand, self).__init__(subparsers, command_dict)
-        self._parser.add_argument('ptz_name', default='digi', const='digi', nargs='?', choices=[
-            'digi', 'full_digi', 'mech', 'overlay_digi', 'full_pano', 'overlay_pano'
-        ])
+        self._parser.add_argument(
+            'ptz_name', default='digi', const='digi', nargs='?',
+            choices=['digi', 'full_digi', 'mech', 'overlay_digi', 'full_pano', 'overlay_pano'])
 
     def _run(self, robot, options):
         resp = robot.ensure_client(PtzClient.default_service_name).initialize_lens()
 
         return resp
+
 

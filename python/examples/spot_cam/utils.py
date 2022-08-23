@@ -7,13 +7,10 @@
 import socket
 import struct
 
-from bosdyn.client.command_line import (Command, Subcommands)
-
+from bosdyn.api.spot_cam import camera_pb2, logging_pb2
+from bosdyn.client.command_line import Command, Subcommands
 from bosdyn.client.math_helpers import Quat
-
 from bosdyn.client.spot_cam.media_log import MediaLogClient
-
-from bosdyn.api.spot_cam import logging_pb2, camera_pb2
 
 
 def add_bool_arg(parser, name, default=False, prefix=('disable', 'enable')):

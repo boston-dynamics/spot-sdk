@@ -44,10 +44,10 @@ storing the data.
 
 from __future__ import print_function
 
-import logging
-import time
-import threading
 import concurrent.futures
+import logging
+import threading
+import time
 from concurrent.futures import ThreadPoolExecutor
 
 from bosdyn.api import data_acquisition_pb2, data_acquisition_plugin_service_pb2_grpc, header_pb2
@@ -376,13 +376,13 @@ class DataAcquisitionPluginService(
             except Exception as e:
                 self.logger.exception('Failed during call to user acquire response function')
                 populate_response_header(response, request,
-                                        error_code=header_pb2.CommonError.CODE_INTERNAL_ERROR,
-                                        error_msg=str(e))
+                                         error_code=header_pb2.CommonError.CODE_INTERNAL_ERROR,
+                                         error_msg=str(e))
                 return response
         self.request_manager.cleanup_requests()
         response.request_id, state = self.request_manager.add_request()
         self.logger.info('Beginning request %d for %s', response.request_id,
-                        [capture.name for capture in request.acquisition_requests.data_captures])
+                         [capture.name for capture in request.acquisition_requests.data_captures])
         self.executor.submit(self._data_collection_wrapper, response.request_id, request, state)
         response.status = data_acquisition_pb2.AcquireDataResponse.STATUS_OK
         populate_response_header(response, request)

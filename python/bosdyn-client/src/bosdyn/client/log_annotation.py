@@ -23,12 +23,12 @@ import traceback
 from deprecated import deprecated
 from six.moves.queue import Queue
 
-from bosdyn import util as core_util
-from bosdyn.client.exceptions import Error, RpcError, ServerError
-from bosdyn.client.common import BaseClient, common_header_errors
-from bosdyn.client import time_sync
 import bosdyn.api.log_annotation_pb2 as log_annotation_protos
 import bosdyn.api.log_annotation_service_pb2_grpc as log_annotation_service
+from bosdyn import util as core_util
+from bosdyn.client import time_sync
+from bosdyn.client.common import BaseClient, common_header_errors
+from bosdyn.client.exceptions import Error, RpcError, ServerError
 
 
 class InvalidArgument(Error):
@@ -168,20 +168,10 @@ class LogAnnotationClient(BaseClient):
 @deprecated(reason='The log-annotation client and service have been replaced by data_buffer.',
             version='2.1.0', action="always")
 class LogAnnotationHandler(logging.Handler):
-    """A logging system Handler that will publish text to a bosdyn.api.LogAnnotationService.
+    """A logging system Handler that publish to a bosdyn.api.LogAnnotationService (DEPRECATED).
 
-    Args:
-        service: Name of the service. See LogAnnotationTextMessage.
-        log_client: API client that will send log messages.
-        level: Python logging level. Defaults to NOTSET.
-        time_sync_endpoint: A TimeSyncEndpoint, already synchronized to the remote clock.
-        rpc_timeout: Timeout on RPCs made by log_client.
-        msg_num_limit: If number of messages reaches this number, send data with log_client.
-        msg_age_limit: If messages have been sitting locally for this many seconds, send data with
-                       log_client.
-
-    Raises:
-        log_annotation.InvalidArgument: The TimeSyncEndpoint is not valid.
+    LogAnnotationHandler is deprecated.
+    Instead, use bosdyn.client.data_buffer.LoggingHandler.
     """
 
     def __init__(self, service, log_client, level=logging.NOTSET, time_sync_endpoint=None,

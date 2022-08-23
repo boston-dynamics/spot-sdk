@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Choreography Service &mdash; Spot 3.1.2.1 documentation</title>
+  <title>Choreography service &mdash; Spot 3.2.0 documentation</title>
   
 
   
@@ -41,7 +41,7 @@
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Choreography Moves Reference" href="move_reference.html" />
+    <link rel="next" title="Choreography moves reference" href="move_reference.html" />
     <link rel="prev" title="Spot Choreography SDK" href="README.html" /> 
 </head>
 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.1.2.1
+                3.2.0
               </div>
             
           
@@ -118,10 +118,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autonomy/autowalk_service.html">Autowalk service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/directed_exploration.html">Directed Exploration</a></li>
@@ -149,7 +151,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../data_acquisition_output.html">Data Acquisition Output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../data_buffer_overview.html">Data Buffer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../bddf.html">BDDF file format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
 </ul>
 </li>
 </ul>
@@ -182,6 +185,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/docking/README.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -200,6 +204,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -207,6 +212,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -261,16 +267,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
@@ -297,6 +311,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
@@ -322,6 +338,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lights_helper.html">Lights Helper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
@@ -391,7 +408,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq2.html">Part 2: Capturing images</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq3.html">Part 3: Capturing other data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq4.html">Part 4: Deploying to the Spot CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq4.html">Part 4: Deploying to the CORE I/O</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq5.html">Part 5: Collecting data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq6.html">Part 6: Processing collected data</a></li>
 </ul>
@@ -405,9 +422,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../payload/robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../payload/configuring_payload_software.html">Configuring payload software</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/docker_containers.html">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../protos/README.html">API Protocol</a><ul>
@@ -421,6 +443,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-proto">autowalk/autowalk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-service-proto">autowalk/autowalk_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-walks-proto">autowalk/walks.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
@@ -444,6 +469,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
@@ -539,6 +566,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -589,7 +617,7 @@
         
           <li><a href="README.html">Spot Choreography SDK</a> &raquo;</li>
         
-      <li>Choreography Service</li>
+      <li>Choreography service</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -613,36 +641,36 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="choreography-service">
-<h1>Choreography Service<a class="headerlink" href="#choreography-service" title="Permalink to this headline">¶</a></h1>
+<h1>Choreography service<a class="headerlink" href="#choreography-service" title="Permalink to this headline">¶</a></h1>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <section id="what-is-it">
 <h3>What is it?<a class="headerlink" href="#what-is-it" title="Permalink to this headline">¶</a></h3>
-<p>The Choreography service is a framework for producing precisely scripted motion, currently focused on dancing. Example choreography scripts can be seen on the Boston Dynamics Youtube channel, showing the robot dancing to <a class="reference external" href="https://www.youtube.com/watch?v=kHBcVlqpvZ8">Bruno Mars’s “Uptown Funk”</a> and <a class="reference external" href="https://www.youtube.com/watch?v=fn3KWM1kuAw">The Contours’ “Do You Love Me”</a>.</p>
-<p>A choreography sequence consists of a series of moves.  We can achieve a wide variety of possible behavior from a moderate list of available moves by:</p>
+<p>The Choreography service is a framework for producing precisely scripted motion, which are currently focused on dancing. Example choreography scripts can be seen on the Boston Dynamics Youtube channel, showing the robot dancing to <a class="reference external" href="https://www.youtube.com/watch?v=kHBcVlqpvZ8">Bruno Mars’s “Uptown Funk”</a> and <a class="reference external" href="https://www.youtube.com/watch?v=fn3KWM1kuAw">The Contours’ “Do You Love Me”</a>.</p>
+<p>A choreography sequence consists of a series of moves. A wide variety of possible behaviors can be created from a list of available moves by:</p>
 <ol class="simple">
-<li><p>Combining multiple moves (see the tracks/layering section).</p></li>
-<li><p>Altering move parameters to vary the behavior of the move.</p></li>
-<li><p>Adjusting the BPM of the choreography sequence to change the speed of the moves.</p></li>
+<li><p>Combining multiple moves (see the tracks/layering section)</p></li>
+<li><p>Altering move parameters to vary the behavior of the move</p></li>
+<li><p>Adjusting the BPM of the choreography sequence to change the speed of the moves</p></li>
 </ol>
 </section>
 <section id="note-on-reliability">
-<h3>Note on Reliability<a class="headerlink" href="#note-on-reliability" title="Permalink to this headline">¶</a></h3>
-<p>The choreography framework is much less robust than other Spot behaviors.  It should only be used on a flat floor with plenty of space and good traction.  Some combinations of moves will be incompatible and will result in the robot falling.  The same is true for some combinations of parameters for an individual move.  The robot <strong>will</strong> fall down.  It may take some trial-and-error to produce a script that looks good and succeeds reliably.</p>
+<h3>Note on reliability<a class="headerlink" href="#note-on-reliability" title="Permalink to this headline">¶</a></h3>
+<p>The choreography framework is less robust than other Spot behaviors. It should only be used on a flat floor with plenty of space and good traction.  Some combinations of moves will be incompatible and can result in the robot falling.  The same is true for some combinations of parameters for an individual move.  The robot <strong>will</strong> fall down.  Trial-and-error might be needed to produce a script that looks good and succeeds reliably.</p>
 <p><em><strong>Not recommended for use with payloads.</strong></em></p>
 </section>
 </section>
 <section id="choreography-terminology">
-<h2>Choreography Terminology<a class="headerlink" href="#choreography-terminology" title="Permalink to this headline">¶</a></h2>
+<h2>Choreography terminology<a class="headerlink" href="#choreography-terminology" title="Permalink to this headline">¶</a></h2>
 <section id="slices">
 <h3>Slices<a class="headerlink" href="#slices" title="Permalink to this headline">¶</a></h3>
-<p>We divide time up into slices.  In the context of Choreographer, a slice is ¼ beat (also, a 1/16th note for 4/4 music). For example, a dance with a BPM of 100 beats/minute will have 400 slices per minute. The duration of a slice can be adjusted, but must remain constant throughout the entire script.</p>
+<p>In Choreographer, time is divided into slices.  A slice is ¼ beat (also, a 1/16th note for 4/4 music). For example, a dance with a BPM of 100 beats/minute has 400 slices per minute. The duration of a slice can be adjusted but must remain constant throughout the entire script.</p>
 <p>Moves always run for an integer number of slices.  Some moves require a fixed number of slices, and some are extendable.  See the Config Files section for more details.</p>
 <p>Note that any number of slices per minute can be selected, however very fast or very slow slices will cause some moves to be unreliable.  Many moves will be most reliable in the range of 250-450 slices per minute.</p>
 </section>
-<section id="tracks-layering">
-<h3>Tracks/Layering<a class="headerlink" href="#tracks-layering" title="Permalink to this headline">¶</a></h3>
-<p>We divide the robot’s motion into the following distinct tracks:</p>
+<section id="tracks-and-layering">
+<h3>Tracks and layering<a class="headerlink" href="#tracks-and-layering" title="Permalink to this headline">¶</a></h3>
+<p>The robot’s motion is divided into the following distinct tracks:</p>
 <ul class="simple">
 <li><p>Legs</p></li>
 <li><p>Body</p></li>
@@ -651,117 +679,156 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 <p>In addition to the base motion, there are also tracks for:</p>
 <ul class="simple">
-<li><p>Lights: controls the robot’s front two sets of LEDs.</p></li>
-<li><p>Annotations: enables dance annotations that are separate from any specific move.</p></li>
-<li><p>(Choreographer Only) Music: controls the audio played from the Choreographer application when dancing.</p></li>
+<li><p>Lights: Control the robot’s front two sets of LEDs.</p></li>
+<li><p>Annotations: Enable dance annotations that are separate from any specific move.</p></li>
+<li><p>Music (Choreographer only): Control the audio played from the Choreographer application when dancing.</p></li>
 </ul>
-<p>Each dance move requires one or more of these tracks.  Moves that use different tracks can be run simultaneously in any combination. In Choreographer, a track is represented as a horizontal section in the timeline view.  For example, here is an image from Choreographer of a script that combines moves in three of the four tracks:</p>
+<p>Each dance move requires one or more of these tracks.  Moves that use different tracks can be run simultaneously in any combination. In Choreographer, a track is represented as a horizontal section in the timeline view.  Example: the following script combines moves in three of the four tracks:</p>
 <p><img alt="Tracks" src="../../../_images/tracks_labeled.png" /></p>
-<p>And the resulting behavior looks like this:</p>
+<p>The resulting behavior looks like this:</p>
 <p><img alt="Dancing Behavior Gif" src="../../../_images/main_image3.gif" /></p>
-<p>Some moves require multiple tracks, such as the “Jump” move which uses the Body and Legs track or the “Arm Move” which uses the Arm and Gripper tracks, as shown in this example:</p>
+<p>Some moves require multiple tracks, such as the “Jump” move which uses the body and the legs tracks. The “Arm Move” uses the Arm and Gripper tracks, as shown:</p>
 <p><img alt="../../../_images/multi_tracked_dance.png" src="../../../_images/multi_tracked_dance.png" /></p>
 </section>
-<section id="entry-exit-conditions">
-<h3>Entry/Exit conditions<a class="headerlink" href="#entry-exit-conditions" title="Permalink to this headline">¶</a></h3>
-<p>All moves that use the legs track will have logical entry and exit positions that the body must be in before/after the move. This is to prevent nonsensical choreographies; for example, completing a kneel-to-stand transition if you are not kneeling, or going directly from a step move to a kneeling-clap move without a stand-to-knee transition in between.</p>
-<p>To represent and enforce these requirements, all moves that use the legs track have an exit transition state and an entry transition state.  The options for transition state are:</p>
+<section id="entry-and-exit-conditions">
+<h3>Entry and exit conditions<a class="headerlink" href="#entry-and-exit-conditions" title="Permalink to this headline">¶</a></h3>
+<p>All moves that use the legs track have logical entry and exit positions that the body must be in before or after the move. These entry and exit positions help to prevent nonsensical choreographies.  Example: Completing a kneel-to-stand transition where the robot moves to a kneeling-clap move without an intervening stand-to-knee transition.</p>
+<p>To represent and enforce these requirements, all moves that use the legs track must use one of the following exit and entry transition states:</p>
 <ul class="simple">
 <li><p>Stand</p></li>
 <li><p>Sit</p></li>
 <li><p>Kneel</p></li>
 <li><p>Sprawl</p></li>
 </ul>
-<p>The first leg-track move can have any entry state, and the robot will automatically transition to an acceptable entry state for that move before starting the choreography sequence.  If the robot is not already in the correct starting pose, it may delay the start of the choreography sequence beyond the requested start time.</p>
-<p>All subsequent legs-track moves must have an entry state that corresponds to the previous legs-track move’s exit state.  Scripts that violate this requirement will be rejected by the API and return warnings indicating which moves violate the entry/exit states. As well, routines made in Choreographer will highlight moves red when the entry state does not match the previous leg move’s exit state, such as in this example:</p>
+<p>The first leg-track move can have any entry state. The robot automatically transitions to an acceptable entry state for that move before starting the choreography sequence.  If the robot is not already in the correct starting pose, it may delay the start of the choreography sequence beyond the requested start time.</p>
+<p>All subsequent legs-track moves must have an entry state that corresponds to the exit state of a previous legs-track move.  Scripts that violate this requirement are rejected by the API and return warnings indicating which moves violate this rule. Routines made in Choreographer highlight moves red when the entry state does not match the previous exit state, as in this example:</p>
 <p><img alt="Transitions Error" src="../../../_images/transition_error.png" /></p>
 </section>
 </section>
-<section id="api">
-<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
-<section id="choreography-api-interface">
-<h3>Choreography API Interface<a class="headerlink" href="#choreography-api-interface" title="Permalink to this headline">¶</a></h3>
-<p>The API defines a choreography sequence by a unique name, the number of slices per minute, and a repeated list of moves. Each move consists of the move’s type, its starting slice, duration (in slices), and the actual parameters (<code class="docutils literal notranslate"><span class="pre">MoveParams</span></code> proto message). The <code class="docutils literal notranslate"><span class="pre">MoveParams</span></code> message describe how the robot should behave during each move. For example, a move parameter could specify positions for the body.  Each parameter may have specific limits/bounds that are described by the <code class="docutils literal notranslate"><span class="pre">MoveInfo</span></code> proto; this information can be found using the <code class="docutils literal notranslate"><span class="pre">ListAllMoves</span></code> RPC.</p>
-<p>Once a choreography sequence is created, the <code class="docutils literal notranslate"><span class="pre">UploadChoreography</span></code> RPC will send the routine to the robot. The choreography service will validate and check the structure of the routine to ensure it is feasible and within bounds.</p>
-<p>The service will return a list of warnings and failures related to the uploaded choreography sequence. A failure is something the choreography service could not automatically correct and must be fixed before the routine can be executed. A warning is something that could be automatically corrected for and won’t block the execution of the routine in certain scenarios. If the boolean <code class="docutils literal notranslate"><span class="pre">non_strict_parsing</span></code> is set to true in the <code class="docutils literal notranslate"><span class="pre">UploadChoreography</span></code> RPC, then the service will fix any correctable errors within the routine (e.g. limiting parameters to the acceptable range) and allow a choreography sequence with warnings to be completed.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC will run the choreography sequence to completion on the robot. A choreography sequence is identified by the unique name of the sequence that was uploaded to the robot. Additionally, a starting time (in robot’s time) and a starting slice will fully specify to the robot when to start the choreography sequence and at which move.  The list of named sequences that the robot currently knows about can be found using the <code class="docutils literal notranslate"><span class="pre">ListAllSequences</span></code> RPC.</p>
-</section>
-<section id="animation-api-interface">
-<h3>Animation API Interface<a class="headerlink" href="#animation-api-interface" title="Permalink to this headline">¶</a></h3>
-<p>The API defines an animated move (<code class="docutils literal notranslate"><span class="pre">Animation</span></code> proto message) by a unique name, a repeated list of <code class="docutils literal notranslate"><span class="pre">AnimationKeyFrames</span></code> which describes the robot’s motion at each timestamp, and additional parameters and options which fully describe how the move should be executed. Unlike other dance moves, the information about the minimum and maximum parameters, if the move is extendable, or which tracks the move controls are not known to the robot beforehand and must be specified in the <code class="docutils literal notranslate"><span class="pre">Animation</span></code> protobuf.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">Animation</span></code> can be uploaded to the robot using the <code class="docutils literal notranslate"><span class="pre">UploadAnimatedMove</span></code> RPC, which will send the animation to the robot. The choreography service will validate and check the structure of the animation to ensure it is fully specified and is feasible. If the animation does not pass this validation, the RPC will respond with a failure status and a set of warning messages indicating which parts of the animation failed.</p>
-<p>If the animation uploads successfully, then it can be used within choreography sequences and will appear as a move option in Choreographer with any of the parameters that were specified in the initial <code class="docutils literal notranslate"><span class="pre">Animation</span></code> protobuf message. The move type associated with the uploaded animation is “animation::” +  the animation’s name. The animations will persist on robot until either the robot is powered off or an animation with the exact same name is uploaded (overwriting the previous animation with that name).</p>
-<p>While animations can be written manually using protobuf in any application, we have also provided a way to create animations from human-readable text files. The animation text file has the extension *.cha and has a specific format which is described in the <a class="reference internal" href="animation_file_specification.html"><span class="doc">animation file specification document</span></a>. The animation *.cha file can be converted into an <code class="docutils literal notranslate"><span class="pre">Animation</span></code> protobuf message using the <code class="docutils literal notranslate"><span class="pre">animation_file_to_proto.py</span></code> script provided in the choreography client library.</p>
-</section>
-<section id="choreography-logs-api-interface">
-<h3>Choreography Logs API Interface<a class="headerlink" href="#choreography-logs-api-interface" title="Permalink to this headline">¶</a></h3>
-<p>The API defines a choreography log using the <code class="docutils literal notranslate"><span class="pre">ChoreographyStateLog</span></code> protobuf message, which consists of a repeated series of timestamped key frames that contain the joint state of the entire robot, the foot contacts, and the SE3Pose for the robot body relative to the animation frame. The animation frame is defined based on the feet position at the beginning of the animation: the position is the center of all four feet, and the rotation is yaw only as computed from the feet positions.</p>
-<p>The choreography logs are divided into two types:</p>
+<section id="apis">
+<h2>APIs<a class="headerlink" href="#apis" title="Permalink to this headline">¶</a></h2>
+<section id="choreography-api">
+<h3>Choreography API<a class="headerlink" href="#choreography-api" title="Permalink to this headline">¶</a></h3>
+<p>The Choreography API defines a choreography sequence by a unique name, the number of slices per minute, and a repeated list of moves. Each move consists of:</p>
 <ul class="simple">
-<li><p>Automatic/”Last Choreography” Logs: This log is recorded from when the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC is first received to 3 seconds after the completion of the choreography.</p></li>
-<li><p>Manual Logs: This log is recorded from when a <code class="docutils literal notranslate"><span class="pre">StartRecordingState</span></code> RPC is received to when a <code class="docutils literal notranslate"><span class="pre">StopRecordingState</span></code> RPC is received. There is a maximum of 5 minutes of recording for a manual log.</p></li>
+<li><p>Move type</p></li>
+<li><p>Starting slice</p></li>
+<li><p>Duration (in slices)</p></li>
+<li><p>Actual parameters (<code class="docutils literal notranslate"><span class="pre">MoveParams</span></code> proto message).</p></li>
 </ul>
-<p>The choreography logs can be used to review how the robot actually executed a choreography or animated dance move. For example, specifically for animations, if the move is not completely feasible, the robot will attempt to get as close to what was asked as possible but may not succeed. The choreography log can be used to understand and update the animated move to be realistic.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">DownloadRobotStateLog</span></code> RPC can be used to download the choreography logs. The request specifies which type of log should be downloaded. The response is streamed over grpc and recombined by the choreography client to create a full log message. The robot only keeps one auto log and one manual log in its buffer (2 total logs) at a time, so the log must be downloaded immediately after completing the move on robot.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">MoveParams</span></code> message describes how the robot should behave during each move.</p>
+<p>Example: A move parameter could specify positions for the body.  Each parameter may have specific limits/bounds that are described by the <code class="docutils literal notranslate"><span class="pre">MoveInfo</span></code> proto. This information can be found using the <code class="docutils literal notranslate"><span class="pre">ListAllMoves</span></code> RPC.</p>
+<p>Once a choreography sequence is created, the <code class="docutils literal notranslate"><span class="pre">UploadChoreography</span></code> RPC sends the routine to the robot. The choreography service validates and checks the structure of the routine to ensure it is feasible and within bounds.</p>
+<p>The service returns a list of warnings and failures related to the uploaded choreography sequence. A failure is something the choreography service could not automatically correct and must be fixed before the routine can be executed. Warnings are automatically corrected and do not block the execution of the routine in certain scenarios. If the boolean <code class="docutils literal notranslate"><span class="pre">non_strict_parsing</span></code> is set to true in the <code class="docutils literal notranslate"><span class="pre">UploadChoreography</span></code> RPC, the service fixes any correctable errors within the routine (for example, by limiting parameters to the acceptable range) and allows a choreography sequence with warnings to be completed.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC runs the choreography sequence to completion on the robot. A choreography sequence is identified by the unique name of the sequence that was uploaded to the robot. Starting time (in robot’s time) and starting slice specifies when the robot when starts the choreography sequence and at which move.  Named sequences can be returned using the <code class="docutils literal notranslate"><span class="pre">ListAllSequences</span></code> RPC.</p>
+</section>
+<section id="saving-choreography-sequences-to-your-spot">
+<h3>Saving Choreography Sequences to your Spot<a class="headerlink" href="#saving-choreography-sequences-to-your-spot" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">SaveSequence</span></code> RPC will save a sequence and all information required to play that sequence to a library of permanently retained choreography sequences stored on the robot. These sequences load automatically when Spot boots up, and are playable through the Tablet Choreography screen or with an <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC. Sequences can be saved with additional information called labels, which are used to categorize and group retained sequences in the tablet UI. The labels associated wih a sequence can be added or removed with the <code class="docutils literal notranslate"><span class="pre">ModifyChoreographyInfo</span></code> RPC. Sequences saved to the robot can be removed using the <code class="docutils literal notranslate"><span class="pre">DeleteSequence</span></code> RPC, which deletes a single sequence, or by using the <code class="docutils literal notranslate"><span class="pre">ClearAllSequenceFiles</span></code> RPC, which deletes every saved choreography file from Spot.</p>
+</section>
+<section id="animation-api">
+<h3>Animation API<a class="headerlink" href="#animation-api" title="Permalink to this headline">¶</a></h3>
+<p>The Animation API defines an animated move (<code class="docutils literal notranslate"><span class="pre">Animation</span></code> proto message) by:</p>
+<ul class="simple">
+<li><p>Its unique name</p></li>
+<li><p>A repeated list of <code class="docutils literal notranslate"><span class="pre">AnimationKeyFrames</span></code> that describes the robot’s motion at each timestamp</p></li>
+<li><p>Additional parameters and options that describe how the move should be executed.</p></li>
+</ul>
+<p>Unlike other dance moves, the information about the minimum and maximum parameters must be specified in the <code class="docutils literal notranslate"><span class="pre">Animation</span></code> protobuf.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Animation</span></code> can be uploaded to the robot using the <code class="docutils literal notranslate"><span class="pre">UploadAnimatedMove</span></code> RPC, which sends the animation to the robot. The choreography service validates and checks the structure of the animation to ensure it is fully specified and is feasible. If the animation does not pass this validation, the RPC responds with a failure status and a set of warning messages indicating which parts of the animation failed.</p>
+<p>If the animation uploads successfully, it can be used within choreography sequences. The animation appears as a move option in Choreographer along with any parameters specified in the initial <code class="docutils literal notranslate"><span class="pre">Animation</span></code> protobuf message. The move type associated with the uploaded animation is “animation::” +  the animation’s name. The animations persist on the robot until either the robot is powered off or an animation with exactly the same name is uploaded and overwrites the previous animation.</p>
+<p>While animations can be written manually using protobuf in any application, we have also provided a way to create animations from human-readable text files.</p>
+<ul class="simple">
+<li><p>Animation text file extension: *.cha</p></li>
+<li><p>The animation file format is described in the <a class="reference internal" href="animation_file_specification.html"><span class="doc">animation file specification document</span></a>.</p></li>
+</ul>
+<p>The animation *.cha file can be converted into an <code class="docutils literal notranslate"><span class="pre">Animation</span></code> protobuf message using the <code class="docutils literal notranslate"><span class="pre">animation_file_to_proto.py</span></code> script provided in the choreography client library.</p>
+</section>
+<section id="choreography-logs-api">
+<h3>Choreography logs API<a class="headerlink" href="#choreography-logs-api" title="Permalink to this headline">¶</a></h3>
+<p>The Choreography logs API defines a choreography log using the <code class="docutils literal notranslate"><span class="pre">ChoreographyStateLog</span></code> protobuf message.  ChoreographyStateLog consists of a repeated series of timestamped key frames that contain:</p>
+<ul class="simple">
+<li><p>The joint state of the entire robot</p></li>
+<li><p>The foot contacts</p></li>
+<li><p>The SE3Pose for the robot body relative to the animation frame.</p></li>
+</ul>
+<p>The animation frame is defined based on the feet position at the beginning of the animation. The position is the center of all four feet. The rotation is yaw-only as computed from the feet positions.</p>
+</section>
+<section id="choreography-log-types">
+<h3>Choreography log types<a class="headerlink" href="#choreography-log-types" title="Permalink to this headline">¶</a></h3>
+<p>Choreography logs are divided into two types:</p>
+<ul class="simple">
+<li><p>Automatic logs: The recording starts when the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC is first received and continues 3 seconds after the completion of the choreography.</p></li>
+<li><p>Manual logs: The recording starts when the <code class="docutils literal notranslate"><span class="pre">StartRecordingState</span></code> RPC is first received and continues until the <code class="docutils literal notranslate"><span class="pre">StopRecordingState</span></code> RPC is received. Manual log recordings are limited to 5 minutes.</p></li>
+</ul>
+<p>Choreography logs can be used to review how the robot actually executed a choreography or animated dance move. For example (specifically for animations): If the move is not completely feasible, the robot attempts to get as close to what was asked as possible, but may not succeed. The choreography log can be used to understand and update the animated move to make it more likely to succeed.</p>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">DownloadRobotStateLog</span></code> RPC to download choreography logs. The request specifies which type of log should be downloaded. The response is streamed over grpc and recombined by the choreography client to create a full log message. The robot keeps only one auto log and one manual log in its buffer (2 total logs) at a time. The log must be downloaded immediately after completing the move on the robot.</p>
 </section>
 <section id="choreography-client">
-<h3>Choreography Client<a class="headerlink" href="#choreography-client" title="Permalink to this headline">¶</a></h3>
-<p>The choreography service has a python client library which provides helper functions for each RPC as well as functions that help convert the choreography sequence from a protobuf message into either a binary or text file.</p>
+<h3>Choreography client<a class="headerlink" href="#choreography-client" title="Permalink to this headline">¶</a></h3>
+<p>The choreography service python client library provides helper functions for each RPC as well as functions that help convert the choreography sequence from a protobuf message into either a binary or text file.</p>
 </section>
 <section id="python-examples-using-the-choreography-api">
-<h3>Python Examples using the Choreography API<a class="headerlink" href="#python-examples-using-the-choreography-api" title="Permalink to this headline">¶</a></h3>
+<h3>Python examples using the Choreography API<a class="headerlink" href="#python-examples-using-the-choreography-api" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="../../../python/examples/upload_choreographed_sequence/README.html"><span class="doc">upload_choreographed_sequence example</span></a> demonstrates how to read an existing routine from a saved text file, upload it to the robot, and then execute the uploaded choreography.</p>
 </section>
 </section>
 <section id="config-files">
-<h2>Config Files<a class="headerlink" href="#config-files" title="Permalink to this headline">¶</a></h2>
+<h2>Config files<a class="headerlink" href="#config-files" title="Permalink to this headline">¶</a></h2>
 <p>There are two config files that describe the individual moves that are used by the Choreographer to compose different choreography sequences.</p>
 </section>
 <section id="moveinfoconfig-txt">
 <h2>MoveInfoConfig.txt<a class="headerlink" href="#moveinfoconfig-txt" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">MoveInfoConfig</span></code> can be parsed by a protobuf parser into each moves field of the <code class="docutils literal notranslate"><span class="pre">ListAllMovesResponse</span></code> proto.  Each <code class="docutils literal notranslate"><span class="pre">MoveInfo</span></code> proto provides metadata about a particular move.  The fields and their meanings are:</p>
+<p><code class="docutils literal notranslate"><span class="pre">MoveInfoConfig</span></code> can be parsed by a protobuf parser into each moves field of the <code class="docutils literal notranslate"><span class="pre">ListAllMovesResponse</span></code> proto.  Each <code class="docutils literal notranslate"><span class="pre">MoveInfo</span></code> proto provides metadata about a particular move.</p>
+<p>The fields and their meanings are:</p>
 <ul class="simple">
-<li><p>name: The name of this move.</p></li>
-<li><p>move_length_slices: The default duration of this move in slices.</p></li>
-<li><p>min_move_length_slices: The absolute minimum number of slices this move can complete in.</p></li>
-<li><p>is_extendable: Whether this move can be extended to last longer than it normally would.  If is_extendable is true, the desired duration can be specified in the requested_slices field in the MoveParams proto.</p></li>
+<li><p>name: Name of this move.</p></li>
+<li><p>move_length_slices: Default duration of this move in slices.</p></li>
+<li><p>min_move_length_slices: Minimum number of slices this move can complete in.</p></li>
+<li><p>is_extendable: Whether this move can be extended.  If is_extendable is true, the desired duration can be specified in the requested_slices field in the MoveParams proto.</p></li>
 <li><p>entrance_state: Which transition state the robot must be in prior to entering this move.  Only applicable if controls_legs=true.  Structure can support multiple allowed entry states, but all current moves only accept a single entry state.</p></li>
 <li><p>exit_state: Which transition state the robot will be in after completing this move.  Only applicable if controls_legs=true.  The next legs-track move must have the same entrance_state.</p></li>
-<li><p>min_time: Some moves have a minimum duration and cannot go any faster.  For moves where this is specified, they may take more than the normal number of slices if the slice duration is very short (slices per minute is very high).</p></li>
-<li><p>max_time: Some moves have a maximum duration and cannot go any slower.  This applies to moves that are extendable, but cannot be made arbitrarily long.</p></li>
-<li><p>controls_arm: Does this move require the arm track.</p></li>
-<li><p>controls_legs: Does this move require the legs track.</p></li>
-<li><p>controls_body: Does this move require the body track.</p></li>
-<li><p>controls_gripper: Does this move require the gripper track.</p></li>
-<li><p>controls_lights: Does this move require the front LED lights.</p></li>
-<li><p>controls_annotations: Does this move update the overall dance state.</p></li>
-<li><p>display: Information for how Choreographer should display the move.</p>
+<li><p>min_time: Minimum move duration.  When specified, moves may take more than the normal number of slices if the slice duration is very short (slices per minute is very high).</p></li>
+<li><p>max_time: Maximum move duration.  This applies to moves that are extendable but cannot be made arbitrarily long.</p></li>
+<li><p>controls_arm: Move requires the arm track.</p></li>
+<li><p>controls_legs: Move requires the legs track.</p></li>
+<li><p>controls_body: Move requires the body track.</p></li>
+<li><p>controls_gripper: Move requires the gripper track.</p></li>
+<li><p>controls_lights: Move requires the front LED lights.</p></li>
+<li><p>controls_annotations: Move updates the overall dance state.</p></li>
+<li><p>display: How Choreographer should display the move.</p>
 <ul>
-<li><p>color: The color to draw the box for the move in the timeline tracks.</p></li>
-<li><p>markers: The slices to draw the small grey vertical lines.  These usually correspond to events such as touchdown and liftoff, and help the user line those events up as desired (e.g. on the beat).  Negative values here indicate slices before the end of the move.</p></li>
-<li><p>description: A text description of the move.</p></li>
-<li><p>image: The location of an image to display for the move.</p></li>
-<li><p>category: The category name that the move will be sorted into in the move selector in Choreographer.</p></li>
+<li><p>color: Color of the box for the move in timeline tracks.</p></li>
+<li><p>markers: Slices to draw the small grey vertical lines.  These usually correspond to events such as touchdown and liftoff. Intended to help the user line those events up as desired (for example, on the beat).  Negative values indicate slices before the end of the move.</p></li>
+<li><p>description: Text description of the move.</p></li>
+<li><p>image: Location of an image to display for the move.</p></li>
+<li><p>category: Category name of the move as it appears in the move selector in Choreographer.</p></li>
 </ul>
 </li>
 </ul>
 <section id="moveparamsconfig-txt">
 <h3>MoveParamsConfig.txt<a class="headerlink" href="#moveparamsconfig-txt" title="Permalink to this headline">¶</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">MoveParamsConfig</span></code> file gives the default value for each of the parameters associated with individual moves.  For moves that contain numerical parameters (e.g. double, int32), the config file will also specify the minimum and maximum values.</p>
-<p>The config file is formatted as follows. There will be a block of text separated by empty lines for each available move.</p>
-<p>The first line of each block will have two values:</p>
+<p><code class="docutils literal notranslate"><span class="pre">MoveParamsConfig</span></code> provides the default value for each move parameter.  For moves that contain numerical parameters (for example, double, int32) the config file will also specify the minimum and maximum values.</p>
+<p>The config file is formatted as a block of text separated by empty lines for each available move.</p>
+<p>The first line of each block has two values:</p>
 <ol class="simple">
-<li><p>The name of the moves.</p></li>
-<li><p>Which option in the oneof <code class="docutils literal notranslate"><span class="pre">params</span></code> field within the <code class="docutils literal notranslate"><span class="pre">MoveParams</span></code> proto this move uses to specify its parameters.  For moves with no parameters, the second entry in the first line should say <code class="docutils literal notranslate"><span class="pre">NONE</span></code>, and there will be no further lines in that block of text</p></li>
+<li><p>The names of the moves.</p></li>
+<li><p>Which option in the oneof <code class="docutils literal notranslate"><span class="pre">params</span></code> field within the <code class="docutils literal notranslate"><span class="pre">MoveParams</span></code> proto this move uses to specify its parameters.  For moves with no parameters, the second entry in the first line should say <code class="docutils literal notranslate"><span class="pre">NONE</span></code>. No further lines are used in that block of text</p></li>
 </ol>
-<p>The remaining lines describe the default (and possibly min/max) values for one parameter per line.  The first field in each of these lines will be the name of the parameter.  Dots (“.”) indicate a level of hierarchy within the proto.  For parameters that are of type bool or Enum, there will be two fields in the line, and the second field will be the default value.  For parameters that are of type double or int32, there will be 4 fields in the following order:</p>
+<p>The remaining lines describe the default (and possibly min/max) values for one parameter per line.</p>
+<ul class="simple">
+<li><p>The first field in each of these lines will be the name of the parameter.</p></li>
+<li><p>Dots (“.”) indicate a level of hierarchy within the proto.</p></li>
+<li><p>Parameters of type bool or Enum have two fields in the line. The second field is the default value.</p></li>
+<li><p>Parameters of type double or int32 have 4 fields in the following order:</p></li>
+</ul>
 <ol class="simple">
 <li><p>Parameter name</p></li>
 <li><p>Minimum value</p></li>
 <li><p>Default value</p></li>
 <li><p>Maximum value</p></li>
 </ol>
-<p>Default values are used if no value is specified within the proto.  Values outside of the allowable range will ordinarily result in the script being rejected.  However, if <code class="docutils literal notranslate"><span class="pre">non_strict_parsing</span></code> is enabled, the value will be forced into the required range and a warning will be thrown.</p>
+<p>Default values are used if no value is specified within the proto.  Scripts are rejected if the values are outside the allowable range.  If <code class="docutils literal notranslate"><span class="pre">non_strict_parsing</span></code> is enabled, the value will be forced into the required range and a warning will be thrown.</p>
 </section>
 </section>
 </section>

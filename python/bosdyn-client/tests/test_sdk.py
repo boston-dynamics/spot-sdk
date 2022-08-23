@@ -4,12 +4,13 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-import pkg_resources
 import unittest
 
+import pkg_resources
+
 import bosdyn.client
-import bosdyn.client.processors
 import bosdyn.client.common
+import bosdyn.client.processors
 
 
 class ServiceClientMock(bosdyn.client.common.BaseClient):

@@ -7,25 +7,27 @@
 """Helper functions and classes for creating client applications."""
 
 from __future__ import print_function
-from concurrent import futures
+
 import copy
-from deprecated import deprecated
 import getpass
 import glob
-import grpc
 import logging
 import os
-import six
 import signal
 import sys
-import time
 import threading
+import time
+from concurrent import futures
+
+import google.protobuf.descriptor
+import grpc
+import six
+from deprecated import deprecated
 
 import bosdyn.client.server_util
-from bosdyn.client.channel import generate_channel_options
 from bosdyn.client.auth import InvalidLoginError, InvalidTokenError
+from bosdyn.client.channel import generate_channel_options
 from bosdyn.client.exceptions import Error
-import google.protobuf.descriptor
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -232,9 +234,9 @@ def add_credentials_arguments(parser, credentials_no_warn=False):
         return arg
 
     if (not credentials_no_warn):
-        _LOGGER.warn('Credentials in program options is deprecated. '
-                     'Obtain credentials securely, such as with an environment variable, '
-                     'interactive prompt, etc.')
+        _LOGGER.warning('Credentials in program options is deprecated. '
+                        'Obtain credentials securely, such as with an environment variable, '
+                        'interactive prompt, etc.')
     parser.add_argument('--username', type=deprecated_username,
                         help='[DEPRECATED] Username to use for authentication.')
     parser.add_argument('--password', type=deprecated_password,

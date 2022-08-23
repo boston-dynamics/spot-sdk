@@ -12,7 +12,7 @@ The following examples show how to use the different logging and data retrieval 
 
 ## Contents
 
-* [BDDF Download](../bddf_download/README.md)
-* [Data Buffer](../data_buffer/README.md)
-* [Data Service](../data_service/README.md)
-* [Logging](../logging/README.md)
+- [BDDF Download](../bddf_download/README.md)
+- [Data Buffer](../data_buffer/README.md)
+- [Data Service](../data_service/README.md)
+- [Logging](../logging/README.md)

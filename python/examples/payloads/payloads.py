@@ -8,20 +8,21 @@
 Example code for using the payload service API
 """
 from __future__ import print_function
-import argparse
-import sys
-import logging
-import io
-import struct
-import time
 
-import bosdyn.client
-from bosdyn.client.payload import PayloadClient
-from bosdyn.client.payload_registration import PayloadRegistrationClient, PayloadRegistrationKeepAlive
-import bosdyn.client.util
+import argparse
+import io
+import logging
+import struct
+import sys
+import time
 
 import bosdyn.api.payload_pb2 as payload_protos
 import bosdyn.api.robot_id_pb2 as robot_id_protos
+import bosdyn.client
+import bosdyn.client.util
+from bosdyn.client.payload import PayloadClient
+from bosdyn.client.payload_registration import (PayloadRegistrationClient,
+                                                PayloadRegistrationKeepAlive)
 
 LOGGER = logging.getLogger()
 

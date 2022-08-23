@@ -11,11 +11,10 @@
 import argparse
 
 import bosdyn.client
-
 from bosdyn.api import ray_cast_pb2
+from bosdyn.client.math_helpers import Vec3
 from bosdyn.client.ray_cast import RayCastClient
 from bosdyn.client.util import add_base_arguments, setup_logging
-from bosdyn.client.math_helpers import Vec3
 
 
 def ray_intersection_type_strings():

@@ -5,23 +5,27 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 from __future__ import unicode_literals
-from builtins import str as text
+
 import copy
 import operator
 import re
-import six
+from builtins import str as text
+
 import google.protobuf.message
 import google.protobuf.text_format
+import six
 
-
-from bosdyn.api.mission import mission_pb2, nodes_pb2, util_pb2
+from bosdyn.api import data_acquisition_pb2, geometry_pb2, gripper_camera_param_pb2
 from bosdyn.api.docking import docking_pb2
-from bosdyn.api import geometry_pb2
 from bosdyn.api.graph_nav import graph_nav_pb2
+from bosdyn.api.mission import mission_pb2, nodes_pb2, util_pb2
 from bosdyn.mission import constants
 
 # This is a special dummy message we'll use for TYPE_MESSAGE parameters.
 DUMMY_MESSAGE = nodes_pb2.Node(name='dummy-message-for-parameterization')
+
+UNEXPECTED_EXCEPTION_EVENT_TYPE = 'bosdyn:mission:exception'
+
 
 
 class Error(Exception):
@@ -78,6 +82,11 @@ def proto_from_tuple(tup):
     Args:
         tup: (Name of node, Instantiated implementation of node protobuf, List of children tuples)
     """
+    if isinstance(tup, nodes_pb2.Node):
+        # Sometimes the short hand doesn't work nicely, and in those cases we allow setting
+        # The node itself.
+        return tup
+
     node = nodes_pb2.Node()
 
     name_or_dict, inner_proto, children = tup

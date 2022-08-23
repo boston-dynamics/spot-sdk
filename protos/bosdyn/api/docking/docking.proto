@@ -33,7 +33,8 @@ message DockingCommandRequest {
     // Identifier provided by the time sync service to verify time sync between robot and client.
     string clock_identifier = 4;
 
-    // The timestamp (in robot time) by which a command must finish executing.
+    // The timestamp (in robot time) at which a command will stop executing.
+    // This can be updated by other RPCs
     // This is a required field and used to prevent runaway commands.
     google.protobuf.Timestamp end_time = 5;
 
@@ -88,6 +89,11 @@ message DockingCommandResponse {
     uint32 docking_command_id = 5;
 }
 
+message UpdateDockingParams {
+    // The new timestamp (in robot time) at which a command will stop executing.
+    google.protobuf.Timestamp end_time = 5;
+}
+
 // Message to get the status of a previously issued DockingCommand
 message DockingCommandFeedbackRequest {
     // Common request header.
@@ -95,6 +101,9 @@ message DockingCommandFeedbackRequest {
 
     // Unique identifier of the command to get feedback for.
     uint32 docking_command_id = 2;
+
+    // [optional] Update parameters relating to the specified command ID
+    UpdateDockingParams update_docking_params = 3;
 }
 
 // Response to a DockingCommandFeedbackRequest for a particualar docking command ID
@@ -140,6 +149,10 @@ message DockingCommandFeedbackResponse {
 
         // ERROR: The prior could not be confirmed as a real dock
         STATUS_ERROR_UNREFINED_PRIOR = 13;
+
+        // ERROR: The robot could not make progress towards docking.
+        // For example, there may be an obstacle in the way.
+        STATUS_ERROR_STUCK = 14;
 
         // ERROR: Internal system error during execution
         // This error cannot be resolved by issuing a new DockingCommand

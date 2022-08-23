@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.image_service_helpers &mdash; Spot 3.1.2.1 documentation</title>
+  <title>bosdyn.client.image_service_helpers &mdash; Spot 3.2.0 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                3.1.2.1
+                3.2.0
               </div>
             
           
@@ -115,10 +115,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autowalk_service.html">Autowalk service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/directed_exploration.html">Directed Exploration</a></li>
@@ -146,7 +148,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_output.html">Data Acquisition Output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_buffer_overview.html">Data Buffer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF file format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
 </ul>
 </li>
 </ul>
@@ -179,6 +182,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/docking/README.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -197,6 +201,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -204,6 +209,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -258,16 +264,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
@@ -294,6 +308,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
@@ -319,6 +335,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lights_helper.html">Lights Helper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
@@ -388,7 +405,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq2.html">Part 2: Capturing images</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq3.html">Part 3: Capturing other data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the Spot CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the CORE I/O</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq5.html">Part 5: Collecting data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq6.html">Part 6: Processing collected data</a></li>
 </ul>
@@ -402,9 +419,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul>
@@ -418,6 +440,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-proto">autowalk/autowalk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-service-proto">autowalk/autowalk_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-walks-proto">autowalk/walks.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
@@ -441,6 +466,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
@@ -536,6 +563,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -607,27 +635,27 @@
 <span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">seconds_to_duration</span><span class="p">,</span> <span class="n">sec_to_nsec</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="p">(</span><span class="n">header_pb2</span><span class="p">,</span> <span class="n">image_pb2</span><span class="p">,</span> <span class="n">image_service_pb2</span><span class="p">,</span> <span class="n">image_service_pb2_grpc</span><span class="p">,</span>
+                        <span class="n">service_fault_pb2</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">RpcError</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.fault</span> <span class="kn">import</span> <span class="n">FaultClient</span><span class="p">,</span> <span class="n">ServiceFaultDoesNotExistError</span><span class="p">,</span> <span class="n">ServiceFaultAlreadyExistsError</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.fault</span> <span class="kn">import</span> <span class="p">(</span><span class="n">FaultClient</span><span class="p">,</span> <span class="n">ServiceFaultAlreadyExistsError</span><span class="p">,</span>
+                                 <span class="n">ServiceFaultDoesNotExistError</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.image</span> <span class="kn">import</span> <span class="n">UnsupportedPixelFormatRequestedError</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.server_util</span> <span class="kn">import</span> <span class="n">populate_response_header</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.util</span> <span class="kn">import</span> <span class="n">setup_logging</span>
-
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">service_fault_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">header_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">image_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">image_service_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">image_service_pb2_grpc</span>
+<span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">sec_to_nsec</span><span class="p">,</span> <span class="n">seconds_to_duration</span>
 
 <span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="n">CLEAR_FAULT_RPC_TIMEOUT_SECS</span> <span class="o">=</span> <span class="mf">0.1</span>
+
 
 <div class="viewcode-block" id="convert_RGB_to_grayscale"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.convert_RGB_to_grayscale">[docs]</a><span class="k">def</span> <span class="nf">convert_RGB_to_grayscale</span><span class="p">(</span><span class="n">image_data_RGB_np</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Convert numpy image from RGB to grayscale using Pillow&#39;s formula.</span>
@@ -644,7 +672,10 @@
     <span class="c1"># The constants below are the same as the ones in the above equation multiplied by 2^16</span>
     <span class="c1"># The final addition makes it round the correct direction when it gets truncated by the bit shift.</span>
     <span class="n">rgb</span> <span class="o">=</span> <span class="n">image_data_RGB_np</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">((</span><span class="n">rgb</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">19595</span> <span class="o">+</span> <span class="n">rgb</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">38470</span> <span class="o">+</span> <span class="n">rgb</span><span class="p">[:,:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="mi">7471</span> <span class="o">+</span> <span class="mh">0x8000</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">rgb</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">19595</span> <span class="o">+</span> <span class="n">rgb</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">38470</span> <span class="o">+</span> <span class="n">rgb</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="mi">7471</span> <span class="o">+</span> <span class="mh">0x8000</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="CameraInterface"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.CameraInterface">[docs]</a><span class="k">class</span> <span class="nc">CameraInterface</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Abstract class interface for capturing and decoding images from a camera.</span>
@@ -679,6 +710,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div></div>
 
+
 <div class="viewcode-block" id="VisualImageSource"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.VisualImageSource">[docs]</a><span class="k">class</span> <span class="nc">VisualImageSource</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Helper class to represent a single image source.</span>
 
@@ -707,7 +739,8 @@
                  <span class="n">pixel_formats</span><span class="o">=</span><span class="p">[],</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">image_source_name</span> <span class="o">=</span> <span class="n">image_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">supported_pixel_formats</span> <span class="o">=</span> <span class="n">pixel_formats</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">image_source_proto</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_image_source</span><span class="p">(</span><span class="n">image_name</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">supported_pixel_formats</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_source_proto</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_image_source</span><span class="p">(</span><span class="n">image_name</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">supported_pixel_formats</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_image_capture_params</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_capture_parameters</span><span class="p">(</span><span class="n">gain</span><span class="p">,</span> <span class="n">exposure</span><span class="p">)</span>
 
         <span class="c1"># Ensure the camera_interface is a subclass of CameraInterface and has the defined capture and</span>
@@ -751,11 +784,6 @@
 
 <div class="viewcode-block" id="VisualImageSource.create_capture_thread"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.VisualImageSource.create_capture_thread">[docs]</a>    <span class="k">def</span> <span class="nf">create_capture_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize a background thread to continuously capture images.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            capture_period (int): Amount of time (in seconds) between captures to wait</span>
-<span class="sd">                                  before triggering the next capture. Defaults to</span>
-<span class="sd">                                  &quot;no wait&quot; between captures.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">capture_thread</span> <span class="o">=</span> <span class="n">ImageCaptureThread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_source_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">capture_function</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">capture_thread</span><span class="o">.</span><span class="n">start_capturing</span><span class="p">()</span></div>
@@ -799,7 +827,8 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">fault_client</span><span class="o">.</span><span class="n">trigger_service_fault</span><span class="p">(</span><span class="n">fault</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">active_fault_id_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">fault</span><span class="o">.</span><span class="n">fault_id</span><span class="o">.</span><span class="n">fault_name</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">ServiceFaultAlreadyExistsError</span><span class="p">:</span> <span class="k">pass</span>
+            <span class="k">except</span> <span class="n">ServiceFaultAlreadyExistsError</span><span class="p">:</span>
+                <span class="k">pass</span>
             <span class="k">except</span> <span class="n">RpcError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;RPC error in trigger_fault: </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span></div>
 
@@ -812,11 +841,11 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fault_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fault</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">fault</span><span class="o">.</span><span class="n">fault_id</span><span class="o">.</span><span class="n">fault_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_fault_id_names</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">fault_client</span><span class="o">.</span><span class="n">clear_service_fault</span><span class="p">(</span>
-                        <span class="n">fault</span><span class="o">.</span><span class="n">fault_id</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">CLEAR_FAULT_RPC_TIMEOUT_SECS</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fault_client</span><span class="o">.</span><span class="n">clear_service_fault</span><span class="p">(</span><span class="n">fault</span><span class="o">.</span><span class="n">fault_id</span><span class="p">,</span>
+                                                          <span class="n">timeout</span><span class="o">=</span><span class="n">CLEAR_FAULT_RPC_TIMEOUT_SECS</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">active_fault_id_names</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fault</span><span class="o">.</span><span class="n">fault_id</span><span class="o">.</span><span class="n">fault_name</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">ServiceFaultDoesNotExistError</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No service fault found to clear.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No service fault found to clear.&quot;</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">RpcError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;RPC error in clear_fault: </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span></div>
 
@@ -888,7 +917,7 @@
 <span class="sd">            image_data(any format): The image data returned by the camera interface&#39;s</span>
 <span class="sd">                                    blocking_capture function.</span>
 <span class="sd">            image_proto (image_pb2.Image): The image proto to be mutated with the decoded data.</span>
-<span class="sd">            img_req (image_pb2.ImageRequest): The image request associated with the image_data.</span>
+<span class="sd">            image_req (image_pb2.ImageRequest): The image request associated with the image_data.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            image_pb2.ImageResponse.Status indicating if the decode succeeds, or image format conversion or</span>
@@ -944,7 +973,7 @@
         <span class="sd">&quot;&quot;&quot;Create an instance of the image_pb2.ImageSource for a given source name.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            name (string): The name for the camera source.</span>
+<span class="sd">            source_name (string): The name for the camera source.</span>
 <span class="sd">            rows (int): The number of rows of pixels in the image.</span>
 <span class="sd">            cols (int): The number of cols of pixels in the image.</span>
 <span class="sd">            image_type (image_pb2.ImageType): The type of image (e.g. visual, depth).</span>
@@ -989,6 +1018,8 @@
         <span class="k">if</span> <span class="n">exposure</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">exposure</span><span class="p">):</span>
                 <span class="n">params</span><span class="o">.</span><span class="n">exposure_duration</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">exposure</span><span class="p">()))</span>
+            <span class="k">elif</span> <span class="n">exposure</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">):</span>
+                <span class="n">params</span><span class="o">.</span><span class="n">exposure_duration</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">params</span><span class="o">.</span><span class="n">exposure_duration</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">exposure</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">params</span></div></div>
@@ -1138,8 +1169,9 @@
     <span class="k">def</span> <span class="nf">_set_format_and_decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_data</span><span class="p">,</span> <span class="n">img_proto</span><span class="p">,</span> <span class="n">img_req</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calls the image_decode_with_error_checking function, which returns a (Boolean, Boolean) if the decode succeeds.&quot;&quot;&quot;</span>
         <span class="c1"># This function should set the image data, pixel format, image format, and transform snapshot fields.</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span><span class="n">img_req</span><span class="o">.</span><span class="n">image_source_name</span><span class="p">]</span><span class="o">.</span><span class="n">image_decode_with_error_checking</span><span class="p">(</span>
-            <span class="n">image_data</span><span class="p">,</span> <span class="n">img_proto</span><span class="p">,</span> <span class="n">img_req</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span>
+            <span class="n">img_req</span><span class="o">.</span><span class="n">image_source_name</span><span class="p">]</span><span class="o">.</span><span class="n">image_decode_with_error_checking</span><span class="p">(</span>
+                <span class="n">image_data</span><span class="p">,</span> <span class="n">img_proto</span><span class="p">,</span> <span class="n">img_req</span><span class="p">)</span>
 
 <div class="viewcode-block" id="CameraBaseImageServicer.GetImage"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html#bosdyn.client.image_service_helpers.CameraBaseImageServicer.GetImage">[docs]</a>    <span class="k">def</span> <span class="nf">GetImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets the latest image capture from all the image sources specified in the request.</span>
@@ -1196,7 +1228,8 @@
 
             <span class="c1"># Set the image data.</span>
             <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">img_req</span><span class="o">.</span><span class="n">image_format</span>
-            <span class="n">decode_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_format_and_decode</span><span class="p">(</span><span class="n">captured_image</span><span class="p">,</span> <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">img_req</span><span class="p">)</span>
+            <span class="n">decode_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_format_and_decode</span><span class="p">(</span><span class="n">captured_image</span><span class="p">,</span> <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                                                        <span class="n">img_req</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">decode_status</span> <span class="o">!=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span>
                 <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">decode_status</span>
 

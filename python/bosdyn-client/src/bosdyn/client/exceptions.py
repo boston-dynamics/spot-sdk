@@ -62,8 +62,7 @@ class RpcError(Error):
         self.error_message = error_message or str(original_error)
 
     def __str__(self):
-        full_classname = self.error.__class__.__name__
-        return '{}: {}'.format(full_classname, self.error_message)
+        return '{}: {}'.format(self.__class__.__name__, self.error_message)
 
 
 class RetryableRpcError(RpcError):

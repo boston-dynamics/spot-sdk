@@ -6,17 +6,15 @@
 
 """For clients to use the graph nav recording service"""
 from __future__ import print_function
+
 import collections
-from bosdyn.api.graph_nav import map_pb2
-from bosdyn.api.graph_nav import nav_pb2
-from bosdyn.api.graph_nav import recording_pb2
-from bosdyn.api.graph_nav import recording_service_pb2
-from bosdyn.api.graph_nav import recording_service_pb2_grpc as recording_service
-from bosdyn.client.common import BaseClient
-from bosdyn.client.common import (BaseClient, error_factory, handle_unset_status_error,
-                                  handle_common_header_errors, handle_lease_use_result_errors,
-                                  common_header_errors)
 from enum import Enum
+
+from bosdyn.api.graph_nav import map_pb2, nav_pb2, recording_pb2, recording_service_pb2
+from bosdyn.api.graph_nav import recording_service_pb2_grpc as recording_service
+from bosdyn.client.common import (BaseClient, common_header_errors, error_factory,
+                                  handle_common_header_errors, handle_lease_use_result_errors,
+                                  handle_unset_status_error)
 from bosdyn.client.exceptions import ResponseError
 
 
@@ -49,7 +47,7 @@ class GraphNavRecordingServiceClient(BaseClient):
         request = self._build_start_recording_request(lease, recording_environment,
                                                       require_fiducials)
         return self.call(self._stub.StartRecording, request, value_from_response=_get_status,
-                         error_from_response=_start_recording_error, **kwargs)
+                         error_from_response=_start_recording_error, copy_request=False, **kwargs)
 
     def start_recording_async(self, lease=None, recording_environment=None, require_fiducials=None,
                               **kwargs):
@@ -57,7 +55,8 @@ class GraphNavRecordingServiceClient(BaseClient):
         request = self._build_start_recording_request(lease, recording_environment,
                                                       require_fiducials)
         return self.call_async(self._stub.StartRecording, request, value_from_response=_get_status,
-                               error_from_response=_start_recording_error, **kwargs)
+                               error_from_response=_start_recording_error, copy_request=False,
+                               **kwargs)
 
     def stop_recording(self, lease=None, **kwargs):
         """Stop the recording service.
@@ -69,13 +68,14 @@ class GraphNavRecordingServiceClient(BaseClient):
         """
         request = self._build_stop_recording_request(lease)
         return self.call(self._stub.StopRecording, request, value_from_response=_get_status,
-                         error_from_response=_stop_recording_error, **kwargs)
+                         error_from_response=_stop_recording_error, copy_request=False, **kwargs)
 
     def stop_recording_async(self, lease=None, **kwargs):
         """Async version of stop_recording()."""
         request = self._build_stop_recording_request(lease)
         return self.call_async(self._stub.StopRecording, request, value_from_response=_get_status,
-                               error_from_response=_stop_recording_error, **kwargs)
+                               error_from_response=_stop_recording_error, copy_request=False,
+                               **kwargs)
 
     def get_record_status(self, **kwargs):
         """Get the status of the recording service.
@@ -85,14 +85,15 @@ class GraphNavRecordingServiceClient(BaseClient):
         """
         request = self._build_get_record_status_request()
         return self.call(self._stub.GetRecordStatus, request, value_from_response=_get_response,
-                         error_from_response=common_header_errors, **kwargs)
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
 
     def get_record_status_async(self, **kwargs):
         """Async version of get_record_status()."""
         request = self._build_get_record_status_request()
         return self.call_async(self._stub.GetRecordStatus, request,
                                value_from_response=_get_response,
-                               error_from_response=common_header_errors, **kwargs)
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
 
     def set_recording_environment(self, lease=None, recording_environment=None, **kwargs):
         """Set the persistent recording environment.
@@ -105,14 +106,14 @@ class GraphNavRecordingServiceClient(BaseClient):
         """
         request = self._build_set_recording_environment_request(lease, recording_environment)
         return self.call(self._stub.SetRecordingEnvironment, request, value_from_response=None,
-                         error_from_response=common_header_errors, **kwargs)
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
 
     def set_recording_environment_async(self, lease=None, recording_environment=None, **kwargs):
         """Async version of set_recording_environment()."""
         request = self._build_set_recording_environment_request(lease, recording_environment)
         return self.call_async(self._stub.SetRecordingEnvironment, request,
                                value_from_response=None, error_from_response=common_header_errors,
-                               **kwargs)
+                               copy_request=False, **kwargs)
 
     def create_waypoint(self, lease=None, waypoint_name=None, recording_environment=None, **kwargs):
         """Create a waypoint in the map at the current robot state.
@@ -127,7 +128,7 @@ class GraphNavRecordingServiceClient(BaseClient):
         """
         request = self._build_create_waypoint_request(waypoint_name, recording_environment, lease)
         return self.call(self._stub.CreateWaypoint, request, value_from_response=_get_response,
-                         error_from_response=_create_waypoint_error, **kwargs)
+                         error_from_response=_create_waypoint_error, copy_request=False, **kwargs)
 
     def create_waypoint_async(self, lease=None, waypoint_name=None, recording_environment=None,
                               **kwargs):
@@ -135,7 +136,8 @@ class GraphNavRecordingServiceClient(BaseClient):
         request = self._build_create_waypoint_request(waypoint_name, recording_environment, lease)
         return self.call_async(self._stub.CreateWaypoint, request,
                                value_from_response=_get_response,
-                               error_from_response=_create_waypoint_error, **kwargs)
+                               error_from_response=_create_waypoint_error, copy_request=False,
+                               **kwargs)
 
     def create_edge(self, lease=None, edge=None, **kwargs):
         """Create a edge in the map between two existing waypoints.
@@ -148,13 +150,13 @@ class GraphNavRecordingServiceClient(BaseClient):
         """
         request = self._build_create_edge_request(edge, lease)
         return self.call(self._stub.CreateEdge, request, value_from_response=_get_status,
-                         error_from_response=_create_edge_error, **kwargs)
+                         error_from_response=_create_edge_error, copy_request=False, **kwargs)
 
     def create_edge_async(self, lease=None, edge=None, **kwargs):
         """Async version of create_edge()."""
         request = self._build_create_edge_request(edge, lease)
         return self.call_async(self._stub.CreateEdge, request, value_from_response=_get_status,
-                               error_from_response=_create_edge_error, **kwargs)
+                               error_from_response=_create_edge_error, copy_request=False, **kwargs)
 
     @staticmethod
     def _build_start_recording_request(lease, recording_env, require_fiducials):
@@ -183,7 +185,7 @@ class GraphNavRecordingServiceClient(BaseClient):
         return recording_pb2.CreateEdgeRequest(edge=edge, lease=lease)
 
     @staticmethod
-    def make_recording_environment(name, waypoint_env, edge_env):
+    def make_recording_environment(name=None, waypoint_env=None, edge_env=None):
         """Construct a complete recording environment from the waypoint and edge environments.
 
         Args:
@@ -198,8 +200,8 @@ class GraphNavRecordingServiceClient(BaseClient):
                                                   edge_environment=edge_env)
 
     @staticmethod
-    def make_waypoint_environment(name, region=WaypointRegion.DEFAULT_REGION, dist_2d=None,
-                                  **kwargs):
+    def make_waypoint_environment(name=None, region=WaypointRegion.DEFAULT_REGION, dist_2d=None,
+                                  client_metadata=None, **kwargs):
         """Create a waypoint environment.
 
         Args:
@@ -208,33 +210,49 @@ class GraphNavRecordingServiceClient(BaseClient):
                       either a default region, an empty region (don't localize to this waypoint), or a circular region.
             dist_2d: If the region is circular, then this is set as a distance (meters) representing the number
                        of meters away we can be from the waypoint before scan matching.
+            client_metadata: Info about the client which will be stored in the waypoints.
         Returns:
             The API Waypoint.Annotations protobuf message.
         """
-        waypoint_env = map_pb2.Waypoint.Annotations(name=name)
+        waypoint_env = map_pb2.Waypoint.Annotations(name=name, client_metadata=client_metadata)
         if region == WaypointRegion.DEFAULT_REGION:
             waypoint_env.scan_match_region.default_region.CopyFrom(
                 map_pb2.Waypoint.Annotations.LocalizeRegion.Default())
-            waypoint_env.scan_match_region.state.CopyFrom(
-                map_pb2.AnnotationState.ANNOTATION_STATE_SET)
+            waypoint_env.scan_match_region.state = map_pb2.ANNOTATION_STATE_SET
         elif region == WaypointRegion.EMPTY_REGION:
             waypoint_env.scan_match_region.empty.CopyFrom(
                 map_pb2.Waypoint.Annotations.LocalizeRegion.Empty())
-            waypoint_env.scan_match_region.state.CopyFrom(
-                map_pb2.AnnotationState.ANNOTATION_STATE_SET)
+            waypoint_env.scan_match_region.state = map_pb2.ANNOTATION_STATE_SET
         elif region == WaypointRegion.CIRCLE_REGION:
             if dist_2d is not None:
                 waypoint_env.scan_match_region.circle.CopyFrom(
                     map_pb2.Waypoint.Annotations.LocalizeRegion.Circle2D(dist_2d=dist_2d))
-                waypoint_env.scan_match_region.state.CopyFrom(
-                    map_pb2.AnnotationState.ANNOTATION_STATE_SET)
+                waypoint_env.scan_match_region.state = map_pb2.ANNOTATION_STATE_SET
             else:
-                waypoint_env.scan_match_region.state.CopyFrom(
-                    map_pb2.AnnotationState.ANNOTATION_STATE_NONE)
+                waypoint_env.scan_match_region.state = map_pb2.ANNOTATION_STATE_NONE
         else:
-            waypoint_env.scan_match_region.state.CopyFrom(
-                map_pb2.AnnotationState.ANNOTATION_STATE_NONE)
+            waypoint_env.scan_match_region.state = map_pb2.ANNOTATION_STATE_NONE
         return waypoint_env
+
+    @staticmethod
+    def make_client_metadata(session_name=None, client_username=None, client_software_version=None,
+                             client_id=None, client_type=None):
+        """Creates client metadata for recording.
+
+        Args:
+            session_name: User-provided name for this recording "session". For example, the user
+              may start and stop recording at various times and assign a name to a region
+              that is being recorded. Usually, this will just be the map name.
+            client_username: If the application recording the map has a special user name,
+              this is the name of that user.
+            client_software_version: Version string of any client software that generated this object.
+            client_id: Identifier of any client software that generated this object
+            client_type: Special tag for the client software which created this object.
+              For example, "Tablet", "Scout", "Python SDK", etc.
+        """
+        return map_pb2.ClientMetadata(session_name=session_name, client_username=client_username,
+                                      client_software_version=client_software_version,
+                                      client_type=client_type)
 
     @staticmethod
     def make_edge_environment(
@@ -352,6 +370,18 @@ class FiducialPoseError(RecordingServiceResponseError):
     """The pose of one or more required fiducials could not be determined accurately."""
 
 
+class RobotImpairedError(RecordingServiceResponseError):
+    """Failed to start recording because the robot is impaired."""
+
+    def __init__(self, response, message):
+        RecordingServiceResponseError.__init__(self, response, message)
+        self.impaired_state = response.impaired_state
+
+    def __str__(self):
+        base = RecordingServiceResponseError.__str__(self)
+        base += "\nImpaired state: {}".format(self.impaired_state)
+
+
 def _get_status(response):
     return response.status
 
@@ -381,7 +411,9 @@ _START_RECORDING_STATUS_TO_ERROR.update({
     recording_pb2.StartRecordingResponse.STATUS_FIDUCIAL_POSE_NOT_OK:
         (FiducialPoseError, FiducialPoseError.__doc__),
     recording_pb2.StartRecordingResponse.STATUS_TOO_FAR_FROM_EXISTING_MAP:
-        (TooFarFromExistingMapError, TooFarFromExistingMapError.__doc__)
+        (TooFarFromExistingMapError, TooFarFromExistingMapError.__doc__),
+    recording_pb2.StartRecordingResponse.STATUS_ROBOT_IMPAIRED:
+        (RobotImpairedError, RobotImpairedError.__doc__)
 })
 
 

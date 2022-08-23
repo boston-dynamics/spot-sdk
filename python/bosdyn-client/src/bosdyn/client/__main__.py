@@ -5,7 +5,10 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """Command-line tool for interacting with robot services"""
+__package__ = 'bosdyn.client'
+
 import sys
+
 from .command_line import main
 
 if __name__ == "__main__":

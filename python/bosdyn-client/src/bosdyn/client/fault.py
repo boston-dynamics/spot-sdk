@@ -7,12 +7,11 @@
 """For clients to use the fault service."""
 import collections
 
+from bosdyn.api import fault_service_pb2_grpc, service_fault_pb2
 from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
-                                  handle_unset_status_error, handle_common_header_errors)
-from .exceptions import ResponseError
+                                  handle_common_header_errors, handle_unset_status_error)
 
-from bosdyn.api import service_fault_pb2
-from bosdyn.api import fault_service_pb2_grpc
+from .exceptions import ResponseError
 
 
 class FaultResponseError(ResponseError):
@@ -52,14 +51,16 @@ class FaultClient(BaseClient):
         req = service_fault_pb2.TriggerServiceFaultRequest()
         req.fault.CopyFrom(service_fault)
         return self.call(self._stub.TriggerServiceFault, req, None,
-                         error_from_response=_trigger_service_fault_error, **kwargs)
+                         error_from_response=_trigger_service_fault_error, copy_request=False,
+                         **kwargs)
 
     def trigger_service_fault_async(self, service_fault, **kwargs):
         """Async version of trigger_service_fault()"""
         req = service_fault_pb2.TriggerServiceFaultRequest()
         req.fault.CopyFrom(service_fault)
         return self.call_async(self._stub.TriggerServiceFault, req, None,
-                               error_from_response=_trigger_service_fault_error, **kwargs)
+                               error_from_response=_trigger_service_fault_error, copy_request=False,
+                               **kwargs)
 
     def clear_service_fault(self, service_fault_id, clear_all_service_faults=False,
                             clear_all_payload_faults=False, **kwargs):
@@ -83,7 +84,8 @@ class FaultClient(BaseClient):
         req.clear_all_service_faults = clear_all_service_faults
         req.clear_all_payload_faults = clear_all_payload_faults
         return self.call(self._stub.ClearServiceFault, req, None,
-                         error_from_response=_clear_service_fault_error, **kwargs)
+                         error_from_response=_clear_service_fault_error, copy_request=False,
+                         **kwargs)
 
     def clear_service_fault_async(self, service_fault_id, clear_all_service_faults=False,
                                   clear_all_payload_faults=False, **kwargs):
@@ -93,7 +95,8 @@ class FaultClient(BaseClient):
         req.clear_all_service_faults = clear_all_service_faults
         req.clear_all_payload_faults = clear_all_payload_faults
         return self.call_async(self._stub.ClearServiceFault, req, None,
-                               error_from_response=_clear_service_fault_error, **kwargs)
+                               error_from_response=_clear_service_fault_error, copy_request=False,
+                               **kwargs)
 
 
 _TRIGGER_STATUS_TO_ERROR = collections.defaultdict(lambda: (FaultResponseError, None))

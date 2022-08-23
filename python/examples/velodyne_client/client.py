@@ -9,30 +9,27 @@ This is a test application for communicating with the velodyne over the API.
 It should only be used to test the API connection.
 """
 
-from __future__ import print_function
-
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
 import argparse
 import collections
 import logging
 import sys
-import time
 import threading
+import time
+
 import matplotlib
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
 
 import bosdyn
 import bosdyn.client
 import bosdyn.client.util
-
-from bosdyn.client.robot_state import RobotStateClient
 from bosdyn.client.async_tasks import AsyncPeriodicQuery, AsyncTasks
-
-from bosdyn.client.math_helpers import Quat, SE3Pose
 from bosdyn.client.frame_helpers import get_odom_tform_body
+from bosdyn.client.math_helpers import Quat, SE3Pose
+from bosdyn.client.robot_state import RobotStateClient
 
 matplotlib.use('Qt5agg')
 LOGGER = logging.getLogger(__name__)

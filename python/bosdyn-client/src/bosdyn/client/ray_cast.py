@@ -8,13 +8,10 @@
 
 import collections
 
-from bosdyn.client.common import BaseClient, error_pair, handle_unset_status_error
-from bosdyn.client.common import error_factory, handle_common_header_errors
+from bosdyn.api import geometry_pb2, ray_cast_pb2, ray_cast_service_pb2_grpc
+from bosdyn.client.common import (BaseClient, error_factory, error_pair,
+                                  handle_common_header_errors, handle_unset_status_error)
 from bosdyn.client.exceptions import ResponseError
-
-from bosdyn.api import geometry_pb2
-from bosdyn.api import ray_cast_pb2
-from bosdyn.api import ray_cast_service_pb2_grpc
 
 
 class RayCastResponseError(ResponseError):
@@ -82,14 +79,16 @@ class RayCastClient(BaseClient):
         """
         req = self._raycast_request(ray_origin, ray_direction, raycast_types, min_distance,
                                     frame_name)
-        return self.call(self._stub.Raycast, req, None, _error_from_response, **kwargs)
+        return self.call(self._stub.Raycast, req, None, _error_from_response, copy_request=False,
+                         **kwargs)
 
     def raycast_async(self, ray_origin, ray_direction, raycast_types, min_distance=0,
                       frame_name=None, **kwargs):
         """Async version of raycast()."""
         req = self._raycast_request(ray_origin, ray_direction, raycast_types, min_distance,
                                     frame_name)
-        return self.call_async(self._stub.Raycast, req, None, _error_from_response, **kwargs)
+        return self.call_async(self._stub.Raycast, req, None, _error_from_response,
+                               copy_request=False, **kwargs)
 
     @staticmethod
     def _raycast_request(ray_origin, ray_direction, raycast_types, min_distance, frame_name):

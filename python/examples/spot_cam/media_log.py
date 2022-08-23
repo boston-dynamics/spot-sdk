@@ -11,14 +11,12 @@ import tempfile
 import cv2
 import numpy as np
 from PIL import Image
-
-from bosdyn.client.command_line import (Command, Subcommands)
-
-from bosdyn.client.spot_cam.media_log import MediaLogClient
-from bosdyn.api import image_pb2
-from bosdyn.api.spot_cam import logging_pb2, camera_pb2
-
 from utils import add_bool_arg
+
+from bosdyn.api import image_pb2
+from bosdyn.api.spot_cam import camera_pb2, logging_pb2
+from bosdyn.client.command_line import Command, Subcommands
+from bosdyn.client.spot_cam.media_log import MediaLogClient
 
 
 def write_pgm(filename, width, height, max_val, data):
@@ -187,8 +185,8 @@ class MediaLogRetrieveCommand(Command):
             dst_filename = os.path.basename(src_filename)
 
         # Pano and IR both come in as JPEG from retrieve command
-        if lp.image_params.height == 4800 or lp.image_params.height == 2400 or (lp.image_params.width == 640 and
-                                              lp.image_params.height == 512):
+        if lp.image_params.height == 4800 or lp.image_params.height == 2400 or (
+                lp.image_params.width == 640 and lp.image_params.height == 512):
             shutil.move(src_filename, '{}.jpg'.format(dst_filename))
         else:
             target_filename = '{}-{}x{}.rgb24'.format(dst_filename, lp.image_params.width,

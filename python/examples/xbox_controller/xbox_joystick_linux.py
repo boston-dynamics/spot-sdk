@@ -15,8 +15,8 @@ You'll need to first install xboxdrv:
 See http://pingus.seul.org/~grumbel/xboxdrv/ for details on xboxdrv
 """
 
-import subprocess
 import select
+import subprocess
 import time
 
 from xbox_joystick import XboxJoystick

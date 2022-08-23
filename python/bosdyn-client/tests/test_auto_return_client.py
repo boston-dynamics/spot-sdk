@@ -6,13 +6,13 @@
 
 """Test the client to the auto_return service."""
 import concurrent
+
 import grpc
 import pytest
 
-from bosdyn.api.auto_return import auto_return_pb2
-from bosdyn.api.auto_return import auto_return_service_pb2_grpc
-
 import bosdyn.client.auto_return
+from bosdyn.api.auto_return import auto_return_pb2, auto_return_service_pb2_grpc
+
 from . import helpers
 
 

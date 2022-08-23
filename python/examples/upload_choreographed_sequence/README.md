@@ -17,6 +17,7 @@ You will have to launch a software E-Stop separately in order to run this exampl
 ## Setup Dependencies
 
 This example needs to be run with python3, and have the Spot SDK installed. See the requirements.txt file for a list of dependencies which can be installed with pip using the command:
+
 ```
 python3 -m pip install -r requirements.txt
 ```

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.data_buffer &mdash; Spot 3.1.2.1 documentation</title>
+  <title>bosdyn.client.data_buffer &mdash; Spot 3.2.0 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                3.1.2.1
+                3.2.0
               </div>
             
           
@@ -115,10 +115,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autowalk_service.html">Autowalk service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/directed_exploration.html">Directed Exploration</a></li>
@@ -146,7 +148,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_output.html">Data Acquisition Output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_buffer_overview.html">Data Buffer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF file format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
 </ul>
 </li>
 </ul>
@@ -179,6 +182,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/docking/README.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -197,6 +201,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -204,6 +209,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -258,16 +264,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
@@ -294,6 +308,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
@@ -319,6 +335,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lights_helper.html">Lights Helper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
@@ -388,7 +405,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq2.html">Part 2: Capturing images</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq3.html">Part 3: Capturing other data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the Spot CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the CORE I/O</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq5.html">Part 5: Collecting data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq6.html">Part 6: Processing collected data</a></li>
 </ul>
@@ -402,9 +419,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul>
@@ -418,6 +440,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-proto">autowalk/autowalk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-service-proto">autowalk/autowalk_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-walks-proto">autowalk/walks.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
@@ -441,6 +466,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
@@ -536,6 +563,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -615,14 +643,23 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">Error</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="n">BaseClient</span><span class="p">,</span> <span class="n">common_header_errors</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client</span> <span class="kn">import</span> <span class="n">time_sync</span>
+<span class="kn">from</span> <span class="nn">google.protobuf.duration_pb2</span> <span class="kn">import</span> <span class="n">Duration</span>
+<span class="kn">from</span> <span class="nn">google.protobuf.timestamp_pb2</span> <span class="kn">import</span> <span class="n">Timestamp</span>
+
 <span class="kn">import</span> <span class="nn">bosdyn.api.data_buffer_pb2</span> <span class="k">as</span> <span class="nn">data_buffer_protos</span>
 <span class="kn">import</span> <span class="nn">bosdyn.api.data_buffer_service_pb2_grpc</span> <span class="k">as</span> <span class="nn">data_buffer_service</span>
+<span class="kn">from</span> <span class="nn">bosdyn</span> <span class="kn">import</span> <span class="n">util</span> <span class="k">as</span> <span class="n">core_util</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">parameter_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client</span> <span class="kn">import</span> <span class="n">time_sync</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="n">BaseClient</span><span class="p">,</span> <span class="n">common_header_errors</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">RpcError</span>
 
 
 <div class="viewcode-block" id="InvalidArgument"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.InvalidArgument">[docs]</a><span class="k">class</span> <span class="nc">InvalidArgument</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
@@ -630,8 +667,8 @@
 
 
 <div class="viewcode-block" id="log_event"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.log_event">[docs]</a><span class="k">def</span> <span class="nf">log_event</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-arguments,no-member</span>
-        <span class="n">robot</span><span class="p">,</span> <span class="n">event_type</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">start_timestamp_secs</span><span class="p">,</span>
-        <span class="n">end_timestamp_secs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">id_str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">robot</span><span class="p">,</span> <span class="n">event_type</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">start_timestamp_secs</span><span class="p">,</span> <span class="n">end_timestamp_secs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">id_str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">log_preserve_hint</span><span class="o">=</span><span class="n">data_buffer_protos</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">LOG_PRESERVE_HINT_NORMAL</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Add an Event to the Data Buffer.</span>
 
@@ -666,10 +703,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">log_preserve_hint</span> <span class="o">=</span> <span class="n">data_buffer_protos</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">LOG_PRESERVE_HINT_NORMAL</span>
 
-    <span class="n">event</span> <span class="o">=</span> <span class="n">data_buffer_protos</span><span class="o">.</span><span class="n">Event</span><span class="p">(</span>
-        <span class="nb">type</span><span class="o">=</span><span class="n">event_type</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">robot</span><span class="o">.</span><span class="n">client_name</span><span class="p">,</span>
-        <span class="nb">id</span><span class="o">=</span><span class="n">id_str</span><span class="p">,</span> <span class="n">start_time</span><span class="o">=</span><span class="n">robot_start_timestamp</span><span class="p">,</span> <span class="n">end_time</span><span class="o">=</span><span class="n">robot_end_timestamp</span><span class="p">,</span>
-        <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="n">log_preserve_hint</span><span class="o">=</span><span class="n">log_preserve_hint</span><span class="p">)</span>
+    <span class="n">event</span> <span class="o">=</span> <span class="n">data_buffer_protos</span><span class="o">.</span><span class="n">Event</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">event_type</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+                                     <span class="n">source</span><span class="o">=</span><span class="n">robot</span><span class="o">.</span><span class="n">client_name</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">id_str</span><span class="p">,</span>
+                                     <span class="n">start_time</span><span class="o">=</span><span class="n">robot_start_timestamp</span><span class="p">,</span> <span class="n">end_time</span><span class="o">=</span><span class="n">robot_end_timestamp</span><span class="p">,</span>
+                                     <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="n">log_preserve_hint</span><span class="o">=</span><span class="n">log_preserve_hint</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">parameters</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
@@ -677,6 +714,27 @@
             <span class="n">proto</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
 
     <span class="n">data_buffer_client</span><span class="o">.</span><span class="n">add_events</span><span class="p">([</span><span class="n">event</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="make_parameter"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.make_parameter">[docs]</a><span class="k">def</span> <span class="nf">make_parameter</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">notes</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a parameter proto from a label and the parameter value.&quot;&quot;&quot;</span>
+    <span class="n">parameter</span> <span class="o">=</span> <span class="n">parameter_pb2</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">units</span><span class="p">,</span> <span class="n">notes</span><span class="o">=</span><span class="n">notes</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="n">parameter</span><span class="o">.</span><span class="n">bool_value</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">parameter</span><span class="o">.</span><span class="n">int_value</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="n">parameter</span><span class="o">.</span><span class="n">float_value</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Timestamp</span><span class="p">):</span>
+        <span class="n">parameter</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Duration</span><span class="p">):</span>
+        <span class="n">parameter</span><span class="o">.</span><span class="n">duration</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">parameter</span><span class="o">.</span><span class="n">string_value</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">parameter</span></div>
 
 
 <div class="viewcode-block" id="DataBufferClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.DataBufferClient">[docs]</a><span class="k">class</span> <span class="nc">DataBufferClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
@@ -744,7 +802,7 @@
     <span class="k">def</span> <span class="nf">_do_add_operator_comment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Internal operator comment RPC stub call.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">data_buffer_protos</span><span class="o">.</span><span class="n">RecordOperatorCommentsRequest</span><span class="p">()</span>
-        <span class="n">robot_timestamp</span> <span class="o">=</span> <span class="n">robot_timestamp</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_now_in_robot_basis</span><span class="p">(</span><span class="n">msg_type</span><span class="o">=</span><span class="s2">&quot;Operator Comment&quot;</span><span class="p">)</span>
+        <span class="n">robot_timestamp</span> <span class="o">=</span> <span class="n">robot_timestamp</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">now_in_robot_basis</span><span class="p">(</span><span class="n">msg_type</span><span class="o">=</span><span class="s2">&quot;Operator Comment&quot;</span><span class="p">)</span>
         <span class="c1"># pylint: disable=no-member</span>
         <span class="n">request</span><span class="o">.</span><span class="n">operator_comments</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">robot_timestamp</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RecordOperatorComments</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -783,7 +841,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">channel</span><span class="p">:</span>
             <span class="n">channel</span> <span class="o">=</span> <span class="n">type_id</span>
 
-        <span class="n">robot_timestamp</span> <span class="o">=</span> <span class="n">robot_timestamp</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_now_in_robot_basis</span><span class="p">(</span><span class="n">msg_type</span><span class="o">=</span><span class="n">type_id</span><span class="p">)</span>
+        <span class="n">robot_timestamp</span> <span class="o">=</span> <span class="n">robot_timestamp</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">now_in_robot_basis</span><span class="p">(</span><span class="n">msg_type</span><span class="o">=</span><span class="n">type_id</span><span class="p">)</span>
 
         <span class="n">request</span><span class="o">.</span><span class="n">blob_data</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>  <span class="c1"># pylint: disable=no-member</span>
             <span class="n">timestamp</span><span class="o">=</span><span class="n">robot_timestamp</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">type_id</span><span class="o">=</span><span class="n">type_id</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
@@ -814,7 +872,7 @@
     <span class="k">def</span> <span class="nf">_do_add_protobuf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">proto</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="p">,</span> <span class="n">write_sync</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Internal blob stub call, serializes proto and logs as blob.&quot;&quot;&quot;</span>
         <span class="n">binary_data</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
-        <span class="n">robot_timestamp</span> <span class="o">=</span> <span class="n">robot_timestamp</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_now_in_robot_basis</span><span class="p">(</span><span class="n">proto</span><span class="o">=</span><span class="n">proto</span><span class="p">)</span>
+        <span class="n">robot_timestamp</span> <span class="o">=</span> <span class="n">robot_timestamp</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">now_in_robot_basis</span><span class="p">(</span><span class="n">proto</span><span class="o">=</span><span class="n">proto</span><span class="p">)</span>
         <span class="n">type_id</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">full_name</span>
         <span class="n">channel</span> <span class="o">=</span> <span class="n">channel</span> <span class="ow">or</span> <span class="n">type_id</span>
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">binary_data</span><span class="p">,</span> <span class="n">type_id</span><span class="o">=</span><span class="n">type_id</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span>
@@ -921,20 +979,231 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">log_tick_schemas</span><span class="p">[</span><span class="n">response</span><span class="o">.</span><span class="n">schema_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">schema</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">schema_id</span>
 
-    <span class="k">def</span> <span class="nf">_now_in_robot_basis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">proto</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DataBufferClient.now_in_robot_basis"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.DataBufferClient.now_in_robot_basis">[docs]</a>    <span class="k">def</span> <span class="nf">now_in_robot_basis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">proto</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get current time in robot clock basis if possible, None otherwise.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">converter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span><span class="o">.</span><span class="n">get_robot_time_converter</span><span class="p">()</span>
             <span class="k">except</span> <span class="n">time_sync</span><span class="o">.</span><span class="n">NotEstablishedError</span><span class="p">:</span>
                 <span class="c1"># No timesync. That&#39;s OK -- the receiving host will provide the timestamp.</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Could not timestamp message of type </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
-                                  <span class="p">(</span><span class="n">msg_type</span> <span class="k">if</span> <span class="n">msg_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span>
-                                   <span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">full_name</span>
-                                    <span class="k">if</span> <span class="n">proto</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;Unknown&#39;</span><span class="p">)))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="s1">&#39;Could not timestamp message of type </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="p">(</span><span class="n">msg_type</span> <span class="k">if</span> <span class="n">msg_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span>
+                     <span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">full_name</span> <span class="k">if</span> <span class="n">proto</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;Unknown&#39;</span><span class="p">)))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">converter</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="kc">None</span></div></div>
+
+
+<div class="viewcode-block" id="LoggingHandler"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.LoggingHandler">[docs]</a><span class="k">class</span> <span class="nc">LoggingHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="p">):</span>  <span class="c1"># pylint: disable=too-many-instance-attributes</span>
+    <span class="sd">&quot;&quot;&quot;A logging system Handler that will publish text to a the data-buffer service.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        service: Name of the service. See LogAnnotationTextMessage.</span>
+<span class="sd">        data_buffer_client: API client that will send log messages.</span>
+<span class="sd">        level: Python logging level. Defaults to NOTSET.</span>
+<span class="sd">        time_sync_endpoint: A TimeSyncEndpoint, already synchronized to the remote clock.</span>
+<span class="sd">        rpc_timeout: Timeout on RPCs made by data_buffer_client.</span>
+<span class="sd">        msg_num_limit: If number of messages reaches this number, send data with data_buffer_client.</span>
+<span class="sd">        msg_age_limit: If messages have been sitting locally for this many seconds, send data with</span>
+<span class="sd">                       data_buffer_client.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        log_annotation.InvalidArgument: The TimeSyncEndpoint is not valid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-arguments</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">service</span><span class="p">,</span> <span class="n">data_buffer_client</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">NOTSET</span><span class="p">,</span> <span class="n">time_sync_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">rpc_timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">msg_num_limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">msg_age_limit</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg_age_limit</span> <span class="o">=</span> <span class="n">msg_age_limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg_num_limit</span> <span class="o">=</span> <span class="n">msg_num_limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rpc_timeout</span> <span class="o">=</span> <span class="n">rpc_timeout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service</span> <span class="o">=</span> <span class="n">service</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_sync_endpoint</span> <span class="o">=</span> <span class="n">time_sync_endpoint</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_sync_endpoint</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_sync_endpoint</span><span class="o">.</span><span class="n">has_established_time_sync</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidArgument</span><span class="p">(</span><span class="s1">&#39;time_sync_endpoint must have already established timesync!&#39;</span><span class="p">)</span>
+        <span class="c1"># If we have this many unsent messages in the queue after a failure to send,</span>
+        <span class="c1"># &quot;dump&quot; the messages to stdout.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dump_msg_count</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="c1"># Internal tracking of errors.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_failed_sends</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_failed_sends_sequential</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># If we have this many failed sends in a row, stop the send thread.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_limit_failed_sends_sequential</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="c1"># Event to trigger immediate flush of messages to the log client.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flush_event</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+        <span class="c1"># How long to wait for flush events. Dictates non-flush update rate.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flush_event_wait_time</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="c1"># Last time &quot;emit&quot; was called.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_emit_time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_buffer_client</span> <span class="o">=</span> <span class="n">data_buffer_client</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_send_thread</span><span class="p">)</span>
+        <span class="c1"># Set to stop the message send thread.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown_event</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+
+        <span class="c1"># This apparently needs to be a daemon thread to play nicely with python&#39;s Handler shutdown</span>
+        <span class="c1"># procedure.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Optionally use this as a ContextManager to be more cautious about sending messages.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;To ensure all messages have been sent to the best of our ability, call close().&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LoggingHandler.emit"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.LoggingHandler.emit">[docs]</a>    <span class="k">def</span> <span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">record_to_msg</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_emit_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LoggingHandler.flush"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.LoggingHandler.flush">[docs]</a>    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flush_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LoggingHandler.close"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.LoggingHandler.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send_thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+        <span class="c1"># One last attempt to send any messages.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_data_buffer_client</span><span class="o">.</span><span class="n">add_text_messages</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="p">,</span>
+                                                           <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rpc_timeout</span><span class="p">)</span>
+            <span class="c1"># Catch all client library errors.</span>
+            <span class="k">except</span> <span class="n">Error</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_num_failed_sends</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_dump_msg_queue</span><span class="p">()</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LoggingHandler.is_thread_alive"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.LoggingHandler.is_thread_alive">[docs]</a>    <span class="k">def</span> <span class="nf">is_thread_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return true if send-thread is running.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LoggingHandler.restart"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.LoggingHandler.restart">[docs]</a>    <span class="k">def</span> <span class="nf">restart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_buffer_client</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Restart the send thread.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">          AssertionError if send thread is still alive.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_thread_alive</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_failed_sends_sequential</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_buffer_client</span> <span class="o">=</span> <span class="n">data_buffer_client</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_send_thread</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">_dump_msg_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pop all of the message queue, using fallback_log to try and capture them.</span>
+
+<span class="sd">        Should be called with the lock held.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fallback_log</span><span class="p">(</span><span class="s1">&#39;Dumping </span><span class="si">{}</span><span class="s1"> messages!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fallback_log</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="p">[:]</span>
+
+<div class="viewcode-block" id="LoggingHandler.fallback_log"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.LoggingHandler.fallback_log">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">fallback_log</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Handle log messages that were failed to be sent by printing to the console.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_run_send_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">while</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_failed_sends_sequential</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_limit_failed_sends_sequential</span> <span class="ow">and</span>
+               <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown_event</span><span class="o">.</span><span class="n">is_set</span><span class="p">()):</span>
+            <span class="n">flush</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flush_event</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush_event_wait_time</span><span class="p">)</span>
+            <span class="n">msg_age</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_emit_time</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+                <span class="n">num_msgs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="p">)</span>
+                <span class="n">to_send</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="p">[:</span><span class="n">num_msgs</span><span class="p">]</span>
+            <span class="n">send_now</span> <span class="o">=</span> <span class="n">num_msgs</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span><span class="n">flush</span> <span class="ow">or</span> <span class="n">msg_age</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg_age_limit</span> <span class="ow">or</span>
+                                          <span class="n">num_msgs</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg_num_limit</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">send_now</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_flush_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+                <span class="n">send_errors</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">error_limit</span> <span class="o">=</span> <span class="mi">2</span>
+
+                <span class="n">sent</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">while</span> <span class="n">send_errors</span> <span class="o">&lt;</span> <span class="n">error_limit</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown_event</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_data_buffer_client</span><span class="o">.</span><span class="n">add_text_messages</span><span class="p">(</span><span class="n">to_send</span><span class="p">,</span>
+                                                                   <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rpc_timeout</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="n">RpcError</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">fallback_log</span><span class="p">(</span><span class="s1">&#39;Error:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()))</span>
+                        <span class="n">send_errors</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">except</span><span class="p">:</span>  <span class="c1"># pylint: disable=bare-except</span>
+                        <span class="c1"># Catch all other exceptions and log them.</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">fallback_log</span><span class="p">(</span><span class="s1">&#39;Unexpected exception!</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()))</span>
+                        <span class="k">break</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">sent</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="k">break</span>
+
+                <span class="c1"># Default to possibly dumping messages.</span>
+                <span class="n">maybe_dump</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="n">sent</span><span class="p">:</span>
+                    <span class="c1"># We successfully sent logs to the log service! Delete relevant local cache.</span>
+                    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+                        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="p">[:</span><span class="n">num_msgs</span><span class="p">]</span>
+                    <span class="n">maybe_dump</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_num_failed_sends_sequential</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">elif</span> <span class="n">send_errors</span> <span class="o">&gt;=</span> <span class="n">error_limit</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_num_failed_sends</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_num_failed_sends_sequential</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown_event</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+                    <span class="c1"># Don&#39;t dump if we&#39;re shutting down; we&#39;ll clear the messages in close().</span>
+                    <span class="n">maybe_dump</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># We can hit this state if</span>
+                    <span class="c1"># 1) We break out of the above loop without setting sent = True</span>
+                    <span class="c1"># 2) There is a logic bug in the above handling code / while loop.</span>
+                    <span class="n">function_name</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">extract_stack</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fallback_log</span><span class="p">(</span><span class="s1">&#39;Unexpected condition in </span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">function_name</span><span class="p">))</span>
+
+                <span class="c1"># If we decided we may need to dump the message queue...</span>
+                <span class="k">if</span> <span class="n">maybe_dump</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dump_msg_count</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_dump_msg_queue</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LoggingHandler.record_to_msg"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.LoggingHandler.record_to_msg">[docs]</a>    <span class="k">def</span> <span class="nf">record_to_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert logging record to TextMessage proto.&quot;&quot;&quot;</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">record_level_to_proto_level</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">levelno</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">data_buffer_protos</span><span class="o">.</span><span class="n">TextMessage</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span>
+                                             <span class="n">message</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">record</span><span class="p">))</span>
+        <span class="c1"># pylint: disable=no-member</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_sync_endpoint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">time_sync_endpoint</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
+            <span class="k">except</span> <span class="n">time_sync</span><span class="o">.</span><span class="n">NotEstablishedError</span><span class="p">:</span>
+                <span class="c1"># If timestamp is not set in the proto, data-buffer will timestamp it on receipt.</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;(No time sync!): &#39;</span> <span class="o">+</span> <span class="n">msg</span><span class="o">.</span><span class="n">message</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">core_util</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">msg</span></div>
+
+<div class="viewcode-block" id="LoggingHandler.record_level_to_proto_level"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html#bosdyn.client.data_buffer.LoggingHandler.record_level_to_proto_level">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">record_level_to_proto_level</span><span class="p">(</span><span class="n">record_level</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert logging record level to TextMessage proto level.&quot;&quot;&quot;</span>
+        <span class="c1"># pylint: disable=no-member</span>
+        <span class="k">if</span> <span class="n">record_level</span> <span class="o">&gt;=</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">data_buffer_protos</span><span class="o">.</span><span class="n">TextMessage</span><span class="o">.</span><span class="n">LEVEL_ERROR</span>
+        <span class="k">if</span> <span class="n">record_level</span> <span class="o">&gt;=</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">data_buffer_protos</span><span class="o">.</span><span class="n">TextMessage</span><span class="o">.</span><span class="n">LEVEL_WARN</span>
+        <span class="k">if</span> <span class="n">record_level</span> <span class="o">&gt;=</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">data_buffer_protos</span><span class="o">.</span><span class="n">TextMessage</span><span class="o">.</span><span class="n">LEVEL_INFO</span>
+        <span class="k">return</span> <span class="n">data_buffer_protos</span><span class="o">.</span><span class="n">TextMessage</span><span class="o">.</span><span class="n">LEVEL_DEBUG</span></div></div>
 </pre></div>
 
            </div>

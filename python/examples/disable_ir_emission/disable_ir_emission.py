@@ -11,9 +11,8 @@ import sys
 
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.client.ir_enable_disable import IREnableDisableServiceClient
-
 from bosdyn.api import header_pb2
+from bosdyn.client.ir_enable_disable import IREnableDisableServiceClient
 
 
 def main(argv):

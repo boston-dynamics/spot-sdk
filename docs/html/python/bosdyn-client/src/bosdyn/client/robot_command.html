@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Robot Command &mdash; Spot 3.1.2.1 documentation</title>
+  <title>Robot Command &mdash; Spot 3.2.0 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.1.2.1
+                3.2.0
               </div>
             
           
@@ -118,10 +118,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/autowalk_service.html">Autowalk service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/directed_exploration.html">Directed Exploration</a></li>
@@ -149,7 +151,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/data_acquisition_output.html">Data Acquisition Output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/data_buffer_overview.html">Data Buffer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/bddf.html">BDDF file format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
 </ul>
 </li>
 </ul>
@@ -182,6 +185,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/docking/README.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/fan_command/README.html">Fan Commands</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -200,6 +204,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -207,6 +212,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -261,16 +267,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/replay_mission/README.html">Replay Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/edit_autowalk/README.html">Edit Autowalk</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../../../../README.html">Python Reference Guide</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="README.html">Client</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autowalk.html">Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="bddf.html">BDDF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="channel.html">Channel</a></li>
@@ -297,6 +311,8 @@
 <li class="toctree-l4"><a class="reference internal" href="image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ir_enable_disable.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
@@ -322,6 +338,7 @@
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/compositor.html">Compositor</a></li>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/health.html">Health</a></li>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spot_cam/lights_helper.html">Lights Helper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/media_log.html">Media Log</a></li>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/network.html">Network</a></li>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/power.html">Power</a></li>
@@ -391,7 +408,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/python/daq_tutorial/daq2.html">Part 2: Capturing images</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/python/daq_tutorial/daq3.html">Part 3: Capturing other data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the Spot CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the CORE I/O</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/python/daq_tutorial/daq5.html">Part 5: Collecting data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/python/daq_tutorial/daq6.html">Part 6: Processing collected data</a></li>
 </ul>
@@ -405,9 +422,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/docker_containers.html">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/payload/spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/protos/README.html">API Protocol</a><ul>
@@ -421,6 +443,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-proto">autowalk/autowalk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-service-proto">autowalk/autowalk_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#autowalk-walks-proto">autowalk/walks.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
@@ -444,6 +469,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
@@ -539,6 +566,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -940,6 +968,19 @@ for easier battery access.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="bosdyn.client.robot_command.RobotCommandBuilder.payload_estimation_command">
+<em class="property">static </em><code class="sig-name descname">payload_estimation_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.payload_estimation_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.payload_estimation_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Command to get the robot estimate payload mass.</p>
+<p>Commands robot to stand and execute a routine to estimate the mass properties of an
+unregistered payload attached to the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>RobotCommand, which can be issued to the robot command service.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="bosdyn.client.robot_command.RobotCommandBuilder.safe_power_off_command">
 <em class="property">static </em><code class="sig-name descname">safe_power_off_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.safe_power_off_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.safe_power_off_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Command to get robot into a position where it is safe to power down, then power down. If
@@ -1130,9 +1171,9 @@ call to RobotCommandService.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>goal_x</strong> – Position X coordinate described relative to the body frame.</p></li>
-<li><p><strong>goal_y</strong> – Position Y coordinate described relative to the body frame.</p></li>
-<li><p><strong>goal_heading</strong> – Pose heading in radians described relative to the body frame.</p></li>
+<li><p><strong>goal_x_rt_body</strong> – Position X coordinate described relative to the body frame.</p></li>
+<li><p><strong>goal_y_rt_body</strong> – Position Y coordinate described relative to the body frame.</p></li>
+<li><p><strong>goal_heading_rt_body</strong> – Pose heading in radians described relative to the body frame.</p></li>
 <li><p><strong>frame_tree_snapshot</strong> – Dictionary representing the child_to_parent_edge_map describing different
 transforms. This can be acquired using the robot state client directly, or using
 the robot object’s helper function robot.get_frame_tree_snapshot().</p></li>
@@ -1240,7 +1281,7 @@ argument is passed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>se2_fame_name</strong> (<em>string</em>) – The frame name which the desired foot_positions are described in.</p></li>
+<li><p><strong>se2_frame_name</strong> (<em>string</em>) – The frame name which the desired foot_positions are described in.</p></li>
 <li><p><strong>pos_fl_rt_frame</strong> (<a class="reference internal" href="math_helpers.html#bosdyn.client.math_helpers.Vec2" title="bosdyn.client.math_helpers.Vec2"><em>Vec2</em></a>) – Position of front left foot in specified frame.</p></li>
 <li><p><strong>pos_fr_rt_frame</strong> (<a class="reference internal" href="math_helpers.html#bosdyn.client.math_helpers.Vec2" title="bosdyn.client.math_helpers.Vec2"><em>Vec2</em></a>) – Position of front right foot in specified frame.</p></li>
 <li><p><strong>pos_hl_rt_frame</strong> (<a class="reference internal" href="math_helpers.html#bosdyn.client.math_helpers.Vec2" title="bosdyn.client.math_helpers.Vec2"><em>Vec2</em></a>) – Position of rear left foot in specified frame.</p></li>
@@ -1384,7 +1425,7 @@ doesn’t get in the way.</p></li>
 
 <dl class="py method">
 <dt id="bosdyn.client.robot_command.RobotCommandBuilder.mobility_params">
-<em class="property">static </em><code class="sig-name descname">mobility_params</code><span class="sig-paren">(</span><em class="sig-param">body_height=0.0</em>, <em class="sig-param">footprint_R_body=&lt;bosdyn.geometry.EulerZXY object&gt;</em>, <em class="sig-param">locomotion_hint=1</em>, <em class="sig-param">stair_hint=False</em>, <em class="sig-param">external_force_params=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.mobility_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.mobility_params" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">mobility_params</code><span class="sig-paren">(</span><em class="sig-param">body_height=0.0</em>, <em class="sig-param">footprint_R_body=&lt;bosdyn.geometry.EulerZXY object&gt;</em>, <em class="sig-param">locomotion_hint=1</em>, <em class="sig-param">stair_hint=False</em>, <em class="sig-param">external_force_params=None</em>, <em class="sig-param">stairs_mode=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.mobility_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.mobility_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper to create Mobility params for spot mobility commands. This function is designed
 to help get started issuing commands, but lots of options are not exposed via this
 interface. See spot.robot_command_pb2 for more details. If unset, good defaults will be
@@ -1397,9 +1438,11 @@ chosen by the robot.</p>
 footprint frame (gravity aligned framed with yaw computed
 from the stance feet)</p></li>
 <li><p><strong>locomotion_hint</strong> – Locomotion hint to use for the command.</p></li>
-<li><p><strong>stair_hint</strong> – Boolean to specify if stair mode should be used.</p></li>
+<li><p><strong>stair_hint</strong> – Boolean to specify if stair mode should be used. Deprecated in favor of stairs_mode
+and ignored if stairs_mode set.</p></li>
 <li><p><strong>external_force_params</strong> (<em>spot.BodyExternalForceParams</em>) – Robot body external force
 parameters.</p></li>
+<li><p><strong>stairs_mode</strong> – StairsMode enum specifying stairs mode as On, Auto, or Off.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1546,7 +1589,7 @@ the move was canceled (the arm failed to reach the goal).</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>command_client</strong> (<a class="reference internal" href="#bosdyn.client.robot_command.RobotCommandClient" title="bosdyn.client.robot_command.RobotCommandClient"><em>RobotCommandClient</em></a>) – the client used to request feedback</p></li>
 <li><p><strong>cmd_id</strong> (<em>int</em>) – command ID returned by the robot when the trajectory command was sent</p></li>
-<li><p><strong>acceptable_statuses</strong> (<em>set of SE2TrajectoryCommand.Feedback.Status</em>) – the feedback must have a
+<li><p><strong>trajectory_end_statuses</strong> (<em>set of SE2TrajectoryCommand.Feedback.Status</em>) – the feedback must have a
 status which is included in this set of statuses to be considered successfully complete.
 By default, this includes only the “STATUS_AT_GOAL” end condition.</p></li>
 <li><p><strong>body_movement_statuses</strong> (<em>set of SE2TrajectoryCommand.Feedback.BodyMovementStatus</em>) – the body

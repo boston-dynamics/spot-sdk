@@ -6,24 +6,25 @@
 
 """Tutorial to show how to use the Boston Dynamics API"""
 from __future__ import print_function
+
 import argparse
 import io
 import multiprocessing
-from multiprocessing import Process, Queue
 import os
 import sys
 import time
+from multiprocessing import Process, Queue
 
 import cv2
 import numpy as np
 from PIL import Image
 from scipy import ndimage
+from tensorflow_object_detection import DetectorAPI
 
-from bosdyn.api.image_pb2 import ImageSource
 import bosdyn.client
 import bosdyn.client.util
+from bosdyn.api.image_pb2 import ImageSource
 from bosdyn.client.image import ImageClient
-from tensorflow_object_detection import DetectorAPI
 
 # This is a multiprocessing.Queue for communication between the main process and the
 # Tensorflow processes.
@@ -213,7 +214,7 @@ class SpotImageCapture:
         """ Captures an image from a specific camera.
 
         Args:
-            camera: String identifier of the camera to use.
+            sleep_between_capture: Duration to sleep between captures.
         """
         while True:
             images_response = self.image_client.get_image_from_sources(self.source_list)

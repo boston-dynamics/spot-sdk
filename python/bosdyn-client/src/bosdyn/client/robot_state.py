@@ -6,11 +6,8 @@
 
 """For clients to use the robot state service."""
 
-from bosdyn.client.common import BaseClient
-from bosdyn.client.common import common_header_errors
-
-from bosdyn.api import robot_state_pb2
-from bosdyn.api import robot_state_service_pb2_grpc
+from bosdyn.api import robot_state_pb2, robot_state_service_pb2_grpc
+from bosdyn.client.common import BaseClient, common_header_errors
 
 
 class RobotStateClient(BaseClient):
@@ -32,13 +29,13 @@ class RobotStateClient(BaseClient):
         """
         req = self._get_robot_state_request()
         return self.call(self._stub.GetRobotState, req, _get_robot_state_value,
-                         common_header_errors, **kwargs)
+                         common_header_errors, copy_request=False, **kwargs)
 
     def get_robot_state_async(self, **kwargs):
         """Async version of get_robot_state()"""
         req = self._get_robot_state_request()
         return self.call_async(self._stub.GetRobotState, req, _get_robot_state_value,
-                               common_header_errors, **kwargs)
+                               common_header_errors, copy_request=False, **kwargs)
 
     def get_robot_metrics(self, **kwargs):
         """Obtain robot metrics, such as distance traveled or time powered on.
@@ -51,13 +48,13 @@ class RobotStateClient(BaseClient):
         """
         req = self._get_robot_metrics_request()
         return self.call(self._stub.GetRobotMetrics, req, _get_robot_metrics_value,
-                         common_header_errors, **kwargs)
+                         common_header_errors, copy_request=False, **kwargs)
 
     def get_robot_metrics_async(self, **kwargs):
         """Async version of get_robot_state()"""
         req = self._get_robot_metrics_request()
         return self.call_async(self._stub.GetRobotMetrics, req, _get_robot_metrics_value,
-                               common_header_errors, **kwargs)
+                               common_header_errors, copy_request=False, **kwargs)
 
     def get_robot_hardware_configuration(self, **kwargs):
         """Obtain current hardware configuration of robot.
@@ -70,14 +67,15 @@ class RobotStateClient(BaseClient):
         """
         req = self._get_robot_hardware_configuration_request()
         return self.call(self._stub.GetRobotHardwareConfiguration, req,
-                         _get_robot_hardware_configuration_value, common_header_errors, **kwargs)
+                         _get_robot_hardware_configuration_value, common_header_errors,
+                         copy_request=False, **kwargs)
 
     def get_robot_hardware_configuration_async(self, **kwargs):
         """Async version of get_robot_hardware_configuration()"""
         req = self._get_robot_hardware_configuration_request()
         return self.call_async(self._stub.GetRobotHardwareConfiguration, req,
                                _get_robot_hardware_configuration_value, common_header_errors,
-                               **kwargs)
+                               copy_request=False, **kwargs)
 
     def get_robot_link_model(self, link_name, **kwargs):
         """Obtain link model OBJ for a specific link.
@@ -93,13 +91,13 @@ class RobotStateClient(BaseClient):
         """
         req = self._get_robot_link_model_request(link_name)
         return self.call(self._stub.GetRobotLinkModel, req, _get_robot_link_model_value,
-                         common_header_errors, **kwargs)
+                         common_header_errors, copy_request=False, **kwargs)
 
     def get_robot_link_model_async(self, link_name, **kwargs):
         """Async version of get_robot_joint_model_async()"""
         req = self._get_robot_link_model_request(link_name)
         return self.call_async(self._stub.GetRobotLinkModel, req, _get_robot_link_model_value,
-                               common_header_errors, **kwargs)
+                               common_header_errors, copy_request=False, **kwargs)
 
     def get_hardware_config_with_link_info(self):
         """Convenience function which first requests a robot's hardware configuration followed by

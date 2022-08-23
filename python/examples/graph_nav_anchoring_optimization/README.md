@@ -6,7 +6,6 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-
 # Graph Nav Anchoring Optimization Example
 
 This example demonstrates how to use the map processing service to align a graph nav map to a blueprint. This assumes that you have a running robot connected to the client.
@@ -19,7 +18,7 @@ These examples require the bosdyn API and client to be installed, and must be ru
 python3 -m pip install -r requirements.txt
 ```
 
-The example also requires matplotlib.  Depending on your system you may need to set up a [backend](https://matplotlib.org/stable/tutorials/introductory/usage.html#what-is-a-backend) for it to display properly.  One possible backend to use is Qt5: `python3 -m pip install pyqt5` and set the environment variable `MPLBACKEND` to `qt5agg`.
+The example also requires matplotlib. Depending on your system you may need to set up a [backend](https://matplotlib.org/stable/tutorials/introductory/usage.html#what-is-a-backend) for it to display properly. One possible backend to use is Qt5: `python3 -m pip install pyqt5` and set the environment variable `MPLBACKEND` to `qt5agg`.
 
 ## Running the Example
 
@@ -71,22 +70,21 @@ from_tform_to = (x = -0.1, y = 1.5, z = 0, rotation = identity)
 
 Now, let's suppose we want to determine where all the waypoints are in some fixed reference frame. If we only know about the edge transformations, and arbitrarily assign `w1` to be the origin of our fixed reference frame, we can follow w1 through (w1, w2) to determine that (w2) is at `x=1, y=0, z=0`. But what about w3? The answer actually depends on whether we take the path through (w2, w3) or (w1, w3)!
 
-If we take the first path, we would find that w3's coordinates are `x=0.9, y=1.5`. If we take the second path, we find that w3's coordinates are `x = 1, y = 1`. This is because the graph shown above is *metrically inconsistent*.
+If we take the first path, we would find that w3's coordinates are `x=0.9, y=1.5`. If we take the second path, we find that w3's coordinates are `x = 1, y = 1`. This is because the graph shown above is _metrically inconsistent_.
 
-Graph Nav maps normally become metrically inconsistent due to *odometry drift* and inaccurate measurements between waypoints. This is normally okay -- the robot can tolerate a large amount of metric inconsistency while localizing and navigating. However, if you wish to use a Graph Nav map for visualization or creating a high quality map, or registering to existing data, metric inconsistency can make this task very difficult.
+Graph Nav maps normally become metrically inconsistent due to _odometry drift_ and inaccurate measurements between waypoints. This is normally okay -- the robot can tolerate a large amount of metric inconsistency while localizing and navigating. However, if you wish to use a Graph Nav map for visualization or creating a high quality map, or registering to existing data, metric inconsistency can make this task very difficult.
 
-To solve this problem, Graph Nav provides a concept called *anchorings*. Anchorings are a mapping from waypoint to its pose in a metrically consistent reference frame.  A graph may have many anchorings, for example to a blueprint, BIM model, or point cloud. By providing an anchoring to a graph nav graph, you can more easily display and manipulate Graph Nav maps for your specific application.
+To solve this problem, Graph Nav provides a concept called _anchorings_. Anchorings are a mapping from waypoint to its pose in a metrically consistent reference frame. A graph may have many anchorings, for example to a blueprint, BIM model, or point cloud. By providing an anchoring to a graph nav graph, you can more easily display and manipulate Graph Nav maps for your specific application.
 
 ### Anchoring Optimization
 
-The *Map Processing Service* can be used to find metrically consistent anchorings using anchoring optimization, and can be used to align Graph Nav maps to other data sources such as blueprints.
+The _Map Processing Service_ can be used to find metrically consistent anchorings using anchoring optimization, and can be used to align Graph Nav maps to other data sources such as blueprints.
 
-In this example, we will show how to use the *Anchoring Optimization Service* to align graph nav maps to a blueprint. Graph Nav maps can be aligned to any data source so long as we have good guesses for where either an April Tag or a specific waypoint is with respect to that data. In this example, we will align an April Tag to a blueprint, and use that as a hint for anchoring optimization -- but you could also align individual waypoints to a blueprint, or use another data source such as a digital twin or BIM model.
+In this example, we will show how to use the _Anchoring Optimization Service_ to align graph nav maps to a blueprint. Graph Nav maps can be aligned to any data source so long as we have good guesses for where either an April Tag or a specific waypoint is with respect to that data. In this example, we will align an April Tag to a blueprint, and use that as a hint for anchoring optimization -- but you could also align individual waypoints to a blueprint, or use another data source such as a digital twin or BIM model.
 
 #### Step 1: setting up a connection to the robot
 
 The Map Processing Service runs on the robot. Therefore, we will need a connection to the robot, and a lease.
-
 
 ```python
     # Setup and authenticate the robot.
@@ -110,7 +108,6 @@ The Map Processing Service runs on the robot. Therefore, we will need a connecti
 
 The map processing service requires us to upload a graph nav graph and associated snapshot data. The service uses these data to create a metrically consistent anchoring. Maps are stored in the graph nav service, which requires a graph nav client connection. Once inside the graph nav service, maps are accessible to the map processing service.
 
-
 ```python
         # ... Inside the LeaseKeepAlive context manager
         # Load the graph from the disk and upload it to the robot.
@@ -123,7 +120,7 @@ The map processing service requires us to upload a graph nav graph and associate
 
 Now that we have a connection to the robot and have loaded the graph and snapshots, we can tell the map processing service to optimize the graph's anchoring.
 
-We can provide *parameters* for the optimizer and *hints*. Parameters control how many iterations the optimizer will run, and what data sources it will use for optimization. If no parameters are provided, the optimizer will use reasonable defaults. Hints tell the optimizer information about the anchoring -- for example where a particular April Tag is, or a particular waypoint. If we provide no hints at all, the Map Processing Service will choose an arbitrary waypoint to be the origin.
+We can provide _parameters_ for the optimizer and _hints_. Parameters control how many iterations the optimizer will run, and what data sources it will use for optimization. If no parameters are provided, the optimizer will use reasonable defaults. Hints tell the optimizer information about the anchoring -- for example where a particular April Tag is, or a particular waypoint. If we provide no hints at all, the Map Processing Service will choose an arbitrary waypoint to be the origin.
 
 In this case, we will provide a single hint to the service -- the location of a fiducial (April Tag).
 
@@ -171,12 +168,14 @@ To get the location of a fiducial, we start with a blueprint image (an example i
                                        z=0)
 ```
 
-By convention, we will assume that the origin of the anchoring is the bottom left of the image, and that the `x` axis is to the right, with the `y` axis up. We will also assume the `z` height of the fiducial is fixed at `z = 0`.  From there, we can determine the position and orientation of the fiducial in 3D space w.r.t the anchoring.
+By convention, we will assume that the origin of the anchoring is the bottom left of the image, and that the `x` axis is to the right, with the `y` axis up. We will also assume the `z` height of the fiducial is fixed at `z = 0`. From there, we can determine the position and orientation of the fiducial in 3D space w.r.t the anchoring.
 
 We pass this in as an initial hint to the anchoring optimizer, which it will use to align our map to the blueprint (and to ensure that it is metrically consistent).
 
 ### Running the optimization and interpreting the results
+
 We can now send a ProcessAnchoringRequest to the Map Processing Service with our initial guess, and get a result back.
+
 ```python
     return client.process_anchoring(params=map_processing_pb2.ProcessAnchoringRequest.Params(
                                         optimize_existing_anchoring=BoolValue(value=False)

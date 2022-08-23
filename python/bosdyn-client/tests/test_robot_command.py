@@ -6,16 +6,15 @@
 
 """Tests for the robot command client."""
 import pytest
-
-from bosdyn.client.robot_command import (_robot_command_error, _robot_command_feedback_error,
-                                         _clear_behavior_fault_error, RobotCommandBuilder,
-                                         _edit_proto, EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME,
-                                         END_TIME_EDIT_TREE)
-
-from bosdyn.api import robot_command_pb2, arm_command_pb2, synchronized_command_pb2, geometry_pb2
-from bosdyn.client.frame_helpers import BODY_FRAME_NAME, ODOM_FRAME_NAME
-from bosdyn.client import ResponseError, InternalServerError, LeaseUseError, UnsetStatusError
 from google.protobuf import timestamp_pb2
+
+from bosdyn.api import arm_command_pb2, geometry_pb2, robot_command_pb2, synchronized_command_pb2
+from bosdyn.client import InternalServerError, LeaseUseError, ResponseError, UnsetStatusError
+from bosdyn.client.frame_helpers import BODY_FRAME_NAME, ODOM_FRAME_NAME
+from bosdyn.client.robot_command import (EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME,
+                                         END_TIME_EDIT_TREE, RobotCommandBuilder,
+                                         _clear_behavior_fault_error, _edit_proto,
+                                         _robot_command_error, _robot_command_feedback_error)
 
 
 def test_robot_command_error():

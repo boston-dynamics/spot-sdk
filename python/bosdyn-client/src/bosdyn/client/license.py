@@ -28,7 +28,7 @@ class LicenseClient(BaseClient):
         """Get the robot's installed license."""
         req = license_pb2.GetLicenseInfoRequest()
         return self.call(self._stub.GetLicenseInfo, req, value_from_response=_get_entry_value,
-                         error_from_response=common_header_errors, **kwargs)
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
 
     def get_feature_enabled(self, feature_list, **kwargs):
         """Check if the installed license allow a list of feature codes."""

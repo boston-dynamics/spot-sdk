@@ -12,7 +12,6 @@ import glob
 import logging
 import os
 import random
-import requests
 import string
 import threading
 import time
@@ -21,6 +20,7 @@ import zipfile
 import boto3
 import botocore
 import google.auth
+import requests
 from google.cloud import storage
 from google.protobuf.timestamp_pb2 import Timestamp
 
@@ -163,8 +163,10 @@ class DaqDockingUploadServicer(remote_service_pb2_grpc.RemoteMissionServiceServi
             upload = self.upload_to_gcp
 
         retry = 0
-        start_time_string = datetime.datetime.fromtimestamp(self.start_time).strftime('%Y-%m-%d_%H:%M:%S')
-        current_time_string = datetime.datetime.fromtimestamp(current_time).strftime('%Y-%m-%d_%H:%M:%S')
+        start_time_string = datetime.datetime.fromtimestamp(
+            self.start_time).strftime('%Y-%m-%d_%H:%M:%S')
+        current_time_string = datetime.datetime.fromtimestamp(current_time).strftime(
+            '%Y-%m-%d_%H:%M:%S')
         while len(list_of_files) != 0 and retry < 10:
             list_of_files = upload(list_of_files, start_time_string, current_time_string)
             retry += 1
@@ -178,7 +180,8 @@ class DaqDockingUploadServicer(remote_service_pb2_grpc.RemoteMissionServiceServi
         failed_files = []
         for source_file in source_files:
             try:
-                destination_file = '{}_{}/{}'.format(start_time, current_time, source_file.split('/')[-1])
+                destination_file = '{}_{}/{}'.format(start_time, current_time,
+                                                     source_file.split('/')[-1])
                 self.s3_client.upload_file(source_file, self.options.bucket_name, destination_file)
                 self.logger.info('Upload of file {} as {} to {} successful'.format(
                     source_file, destination_file, self.options.bucket_name))

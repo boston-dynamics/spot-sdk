@@ -6,11 +6,11 @@
 
 """Tests for the arm surface contact client."""
 import pytest
-
-from bosdyn.client.robot_command import _edit_proto
-from bosdyn.client.arm_surface_contact import EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME
-from bosdyn.api import arm_surface_contact_service_pb2
 from google.protobuf import timestamp_pb2
+
+from bosdyn.api import arm_surface_contact_service_pb2
+from bosdyn.client.arm_surface_contact import EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME
+from bosdyn.client.robot_command import _edit_proto
 
 
 def test_edit_timestamps():

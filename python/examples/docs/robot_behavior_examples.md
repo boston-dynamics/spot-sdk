@@ -12,12 +12,13 @@ The following examples show how to command the robot to complete different behav
 
 ## Contents
 
-* [Stance](../stance/README.md)
-* [Frame Trajectory](../frame_trajectory_command/README.md)
-* [Spot Light](../spot_light/README.md)
-* [Upload Choreographed Sequence](../upload_choreographed_sequence/README.md)
-* [Xbox Controller](../xbox_controller/README.md)
-* [WASD](../wasd/README.md)
-* [Docking](../docking/README.md)
-* [Animation Recorder](../animation_recorder/README.md)
-* [Auto Return](../auto_return/README.md)
+- [Stance](../stance/README.md)
+- [Frame Trajectory](../frame_trajectory_command/README.md)
+- [Spot Light](../spot_light/README.md)
+- [Upload Choreographed Sequence](../upload_choreographed_sequence/README.md)
+- [Xbox Controller](../xbox_controller/README.md)
+- [WASD](../wasd/README.md)
+- [Docking](../docking/README.md)
+- [Animation Recorder](../animation_recorder/README.md)
+- [Auto Return](../auto_return/README.md)
+- [Fan Commands](../fan_command/README.md)

@@ -10,9 +10,8 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
-from bosdyn.client.common import (BaseClient, common_header_errors, handle_common_header_errors)
-from bosdyn.api.spot_cam import service_pb2_grpc
-from bosdyn.api.spot_cam import health_pb2
+from bosdyn.api.spot_cam import health_pb2, service_pb2_grpc
+from bosdyn.client.common import BaseClient, common_header_errors, handle_common_header_errors
 
 
 class HealthClient(BaseClient):
@@ -28,52 +27,51 @@ class HealthClient(BaseClient):
         """Clear out the events list of the BITStatus structure."""
         request = health_pb2.ClearBITEventsRequest()
         return self.call(self._stub.ClearBITEvents, request, self._clear_bit_events_from_response,
-                         self._health_error_from_response, **kwargs)
+                         self._health_error_from_response, copy_request=False, **kwargs)
 
     def clear_bit_events_async(self, **kwargs):
         """Async version of clear_bit_events()."""
         request = health_pb2.ClearBITEventsRequest()
         return self.call_async(self._stub.ClearBITEvents, request,
                                self._clear_bit_events_from_response,
-                               self._health_error_from_response, **kwargs)
+                               self._health_error_from_response, copy_request=False, **kwargs)
 
     def get_bit_status(self, **kwargs):
         """Retrieve (system events, degradations) as a tuple of two lists."""
         request = health_pb2.GetBITStatusRequest()
         return self.call(self._stub.GetBITStatus, request, self._get_bit_status_from_response,
-                         self._health_error_from_response, **kwargs)
+                         self._health_error_from_response, copy_request=False, **kwargs)
 
     def get_bit_status_async(self, **kwargs):
         """Async version of get_bit_status()."""
         request = health_pb2.GetBITStatusRequest()
         return self.call_async(self._stub.GetBITStatus, request, self._get_bit_status_from_response,
-                               self._health_error_from_response, **kwargs)
+                               self._health_error_from_response, copy_request=False, **kwargs)
 
     def get_temperature(self, **kwargs):
         """Retrieve a list of thermometers measuring the temperature (mC) of corresponding on-board devices."""
         request = health_pb2.GetTemperatureRequest()
         return self.call(self._stub.GetTemperature, request, self._get_temperature_from_response,
-                         self._health_error_from_response, **kwargs)
+                         self._health_error_from_response, copy_request=False, **kwargs)
 
     def get_temperature_async(self, **kwargs):
         """Async version of get_temperature()."""
         request = health_pb2.GetTemperatureRequest()
         return self.call_async(self._stub.GetTemperature, request,
                                self._get_temperature_from_response,
-                               self._health_error_from_response, **kwargs)
+                               self._health_error_from_response, copy_request=False, **kwargs)
 
     def get_system_log(self, **kwargs):
         """Retrieve a list of thermometers measuring the temperature (mC) of corresponding on-board devices."""
         request = health_pb2.GetSystemLogRequest()
         return self.call(self._stub.GetSystemLog, request, self._get_system_log_from_response,
-                         self._health_error_from_response, **kwargs)
+                         self._health_error_from_response, copy_request=False, **kwargs)
 
     def get_system_log_async(self, **kwargs):
         """Async version of get_system_log()."""
         request = health_pb2.GetSystemLogRequest()
-        return self.call_async(self._stub.GetSystemLog, request,
-                               self._get_system_log_from_response,
-                               self._health_error_from_response, **kwargs)
+        return self.call_async(self._stub.GetSystemLog, request, self._get_system_log_from_response,
+                               self._health_error_from_response, copy_request=False, **kwargs)
 
     @staticmethod
     def _clear_bit_events_from_response(response):

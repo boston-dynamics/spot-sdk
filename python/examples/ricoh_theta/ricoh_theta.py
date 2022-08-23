@@ -9,13 +9,15 @@
 # Ricoh Theta API Documentation
 # https://api.ricoh/products/theta-api/
 
-import os
 import json
+import os
 import shutil
-import webbrowser
 import time
+import webbrowser
+
 import requests
 from requests.auth import HTTPDigestAuth
+
 
 class Theta:
     """Class for interacting with a Ricoh Theta camera"""
@@ -75,8 +77,7 @@ class Theta:
             print("Request Contents:")
             print(json.dumps(info, indent=2))
         return requests.post(self.baseurl + ext, json=info, timeout=5,
-                             auth=(HTTPDigestAuth(self.theta_ssid, self.theta_pw)),
-                             stream=stream)
+                             auth=(HTTPDigestAuth(self.theta_ssid, self.theta_pw)), stream=stream)
 
     def sleepMode(self, enabled=None, delay=180, print_to_screen=True):
         """Alter sleep mode."""
@@ -296,7 +297,6 @@ class Theta:
             print("The image format is: ", format_res)
         return format_res
 
-
     def yieldLivePreview(self, print_to_screen=True):
         """
         Returns a generator for the live preview video stream as a series of jpegs (yielding the raw bytes).
@@ -313,7 +313,7 @@ class Theta:
             print("Creating the live preview had HTTP response: %s" % response)
 
         if response.status_code == 200:
-            bytes_block=b''
+            bytes_block = b''
             # Iterates over the response reading the bytes buffer in chunks of 16384 bytes.
             for block in response.iter_content(16384):
                 bytes_block += block
@@ -324,16 +324,16 @@ class Theta:
                 b = bytes_block.find(b'\xff\xd9')
 
                 # Found a jpg file in the bytes buffer!
-                if a !=- 1 and b != -1:
-                    jpg = bytes_block[a:b+2]
+                if a != -1 and b != -1:
+                    jpg = bytes_block[a:b + 2]
                     yield jpg
 
                     # Reset the buffer to point to the next set of bytes. NOTE:we start after "b+2" so that we don't
                     # include the previous jpg's ending byte indicator (2 bytes long) in the updated buffer.
-                    bytes_block = bytes_block[b+2:]
+                    bytes_block = bytes_block[b + 2:]
 
-
-    def getLivePreviewAndWriteToDisk(self, file_name_prefix="livePreview", time_limit_seconds=10, print_to_screen=True):
+    def getLivePreviewAndWriteToDisk(self, file_name_prefix="livePreview", time_limit_seconds=10,
+                                     print_to_screen=True):
         """
         Save the live preview video stream to disk as a series of jpegs.
         The capture mode must be 'image'.

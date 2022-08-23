@@ -8,13 +8,11 @@ import os
 import shutil
 import tempfile
 
-from bosdyn.client.command_line import (Command, Subcommands)
-
-from bosdyn.client.spot_cam.compositor import CompositorClient
+from utils import add_bool_arg
 
 from bosdyn.api.spot_cam import compositor_pb2
-
-from utils import add_bool_arg
+from bosdyn.client.command_line import Command, Subcommands
+from bosdyn.client.spot_cam.compositor import CompositorClient
 
 
 class CompositorCommands(Subcommands):
@@ -30,6 +28,7 @@ class CompositorCommands(Subcommands):
             CompositorGetVisibleCamerasCommand,
             CompositorGetIrColorMapCommand,
             CompositorSetIrColorMapCommand,
+            CompositorSetIrMeterOverlayCommand,
         ])
 
 
@@ -40,25 +39,12 @@ class CompositorSetScreenCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         super(CompositorSetScreenCommand, self).__init__(subparsers, command_dict)
-        self._parser.add_argument('name',
-                                  default='digi',
-                                  const='digi',
-                                  nargs='?',
-                                  choices=['digi',
-                                           'digi_overlay',
-                                           'digi_full',
-                                           'c0',
-                                           'c1',
-                                           'c2',
-                                           'c3',
-                                           'c4',
-                                           'mech',
-                                           'mech_full',
-                                           'mech_overlay',
-                                           'mech_overlay_ir',
-                                           'mech_ir',
-                                           'mech_full_ir',
-                                           'pano_full'])
+        self._parser.add_argument(
+            'name', default='digi', const='digi', nargs='?', choices=[
+                'digi', 'digi_overlay', 'digi_full', 'c0', 'c1', 'c2', 'c3', 'c4', 'mech',
+                'mech_full', 'mech_overlay', 'mech_overlay_ir', 'mech_ir', 'mech_full_ir',
+                'pano_full'
+            ])
 
     def _run(self, robot, options):
         result = robot.ensure_client(CompositorClient.default_service_name).set_screen(options.name)
@@ -161,8 +147,14 @@ class CompositorSetIrMeterOverlayCommand(Command):
         super(CompositorSetIrMeterOverlayCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('color', default='jet', const='jet', nargs='?',
                                   choices=['jet', 'greyscale', 'grayscale'])
-        self._parser.add_argument('-x', default=0.5, help='horizontal coordinate of reticle')
-        self._parser.add_argument('-y', default=0.5, help='vertical coordinate of reticle')
+        self._parser.add_argument(
+            '-x', type=float, default=0.5,
+            help='horizontal coordinate of reticle as a ratio of the display, \
+                range from 0 to 1 with 0 being the leftmost edge and 1 being the rightmost')
+        self._parser.add_argument(
+            '-y', type=float, default=0.5,
+            help='vertical coordinate of reticle as a ratio of the display, \
+                range from 0 to 1 with 0 being the top and 1 being the bottom')
         add_bool_arg(self._parser, 'enable', default=True)
 
     def _run(self, robot, options):

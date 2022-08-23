@@ -9,9 +9,10 @@
 RobotIdClient -- Wrapper around service stub.
 """
 
+from distutils.version import StrictVersion
+
 from bosdyn.api import robot_id_pb2, robot_id_service_pb2_grpc
 from bosdyn.client.common import BaseClient, common_header_errors
-from distutils.version import StrictVersion
 
 
 def _get_entry_value(response):
@@ -33,13 +34,19 @@ class RobotIdClient(BaseClient):
         """Get the robot's robot/id.proto."""
         req = robot_id_pb2.RobotIdRequest()
         return self.call(self._stub.GetRobotId, req, value_from_response=_get_entry_value,
-                         error_from_response=common_header_errors, **kwargs)
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
 
     def get_id_async(self, **kwargs):
         """Return a future to results of "get_id". See "get_id" for further docs."""
         req = robot_id_pb2.RobotIdRequest()
         return self.call_async(self._stub.GetRobotId, req, value_from_response=_get_entry_value,
-                               error_from_response=common_header_errors, **kwargs)
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
+
+
+def version_tuple(version):
+    """Return the version as a tuple for easy comparisons"""
+    return version.major_version, version.minor_version, version.patch_level
 
 
 def create_strict_version(robot_id):

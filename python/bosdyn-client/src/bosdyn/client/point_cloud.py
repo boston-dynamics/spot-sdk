@@ -10,16 +10,17 @@ This allows client code to read from a point cloud service.
 """
 
 from __future__ import print_function
+
 import collections
 import logging
 
 import bosdyn.api.point_cloud_pb2 as point_cloud_protos
 import bosdyn.api.point_cloud_service_pb2_grpc as point_cloud_service
-
-from .common import BaseClient
-from bosdyn.client.common import (error_factory, error_pair, common_header_errors,
+from bosdyn.client.common import (common_header_errors, error_factory, error_pair,
                                   handle_common_header_errors)
 from bosdyn.client.exceptions import ResponseError, UnsetStatusError
+
+from .common import BaseClient
 
 LOGGER = logging.getLogger('point_cloud_client')
 
@@ -87,13 +88,14 @@ class PointCloudClient(BaseClient):
         """
         req = self._get_list_point_cloud_source_request()
         return self.call(self._stub.ListPointCloudSources, req, _list_point_cloud_sources_value,
-                         common_header_errors, **kwargs)
+                         common_header_errors, copy_request=False, **kwargs)
 
     def list_point_cloud_sources_async(self, **kwargs):
         """Async version of list_point_cloud_sources()"""
         req = self._get_list_point_cloud_source_request()
         return self.call_async(self._stub.ListPointCloudSources, req,
-                               _list_point_cloud_sources_value, common_header_errors, **kwargs)
+                               _list_point_cloud_sources_value, common_header_errors,
+                               copy_request=False, **kwargs)
 
     def get_point_cloud_from_sources(self, point_cloud_sources, **kwargs):
         """Obtain point clouds from sources using default parameters.

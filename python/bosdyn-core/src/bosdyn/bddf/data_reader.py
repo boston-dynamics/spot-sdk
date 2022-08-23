@@ -57,7 +57,7 @@ class DataReader(BaseDataReader):  # pylint: disable=too-many-instance-attribute
 
         Args:
          series_index: int selecting from which series to read the message.
-         index:        The index number of the message within the channel.
+         index_in_series: The index number of the message within the channel.
 
         Returns: DataTypeDescriptor for channel, timestamp_nsec (int), message-data (bytes)
 

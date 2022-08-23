@@ -8,13 +8,14 @@
 
 import argparse
 import time
+from contextlib import ExitStack
 
 import grpc
 
-from bosdyn.api.mission import remote_pb2, util_pb2
-import bosdyn.mission.remote_client
 import bosdyn.client.lease
 import bosdyn.client.util
+import bosdyn.mission.remote_client
+from bosdyn.api.mission import remote_pb2, util_pb2
 
 
 def main():
@@ -42,8 +43,10 @@ def main():
 
     if options.hello_world:
         directory_name = 'hello-world-callback'
+        lease_resources = ()
     elif options.power_off:
         directory_name = 'power-off-callback'
+        lease_resources = bosdyn.client.lease.DEFAULT_RESOURCES
 
     # If attempting to communicate directly to the service.
     if options.host_type == 'local':
@@ -78,32 +81,28 @@ def main():
                     string_value=options.user_string)))
         ]
 
-    lease_client = None
-    body_lease = None
-    leases = []
-
-    if options.power_off:
-        # If we're using a lease, we'll have to authenticate to the robot to acquire it.
-        lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
-        # Acquire a lease and save it in the list of leases we pass to the servicer.
-        body_lease = lease_client.acquire()
-        leases = [body_lease]
-
-    # Now run through a typical sequence of calls to the remote servicer.
-    try:
+    # Use an ExitStack because we might or might not have a lease keep-alive
+    # depending on command line arguments
+    with ExitStack() as exit_stack:
+        if lease_resources and options.host_type != 'local':
+            lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
+            exit_stack.enter_context(
+                bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True,
+                                                   return_at_exit=True))
+        # Now run through a typical sequence of calls to the remote servicer.
         # Establish the session, telling the servicer to perform any one-time tasks.
         try:
-            session_id = client.establish_session(leases=leases, inputs=inputs)
+            session_id = client.establish_session(inputs=inputs, lease_resources=lease_resources)
         except bosdyn.client.UnimplementedError:
             # EstablishSession is optional, so we can ignore this error.
             print('EstablishSession is unimplemented.')
             session_id = None
 
         # Begin ticking, and tick until the server indicates something other than RUNNING.
-        response = client.tick(session_id, leases=leases, inputs=input_values)
+        response = client.tick(session_id, inputs=input_values, lease_resources=lease_resources)
         while response.status == remote_pb2.TickResponse.STATUS_RUNNING:
             time.sleep(0.1)
-            response = client.tick(session_id, leases=leases, inputs=input_values)
+            response = client.tick(session_id, inputs=input_values, lease_resources=lease_resources)
         print('Servicer stopped with status {}'.format(
             remote_pb2.TickResponse.Status.Name(response.status)))
         if response.error_message:
@@ -117,11 +116,6 @@ def main():
         except bosdyn.client.UnimplementedError as exc:
             # The exception itself can tell us what's not implemented.
             print('Either Stop or TeardownSession is unimplemented.')
-
-    finally:
-        # Try to return the lease, if applicable.
-        if lease_client and body_lease:
-            lease_client.return_lease(body_lease)
 
 
 if __name__ == '__main__':

@@ -59,7 +59,7 @@ class DockingClient(BaseClient):
         req = self._docking_command_request(lease, station_id, clock_identifier, end_time,
                                             prep_pose_behavior)
         return self.call(self._stub.DockingCommand, req, self._docking_id_from_response,
-                         _docking_command_error_from_response, **kwargs)
+                         _docking_command_error_from_response, copy_request=False, **kwargs)
 
     def docking_command_async(self, station_id, clock_identifier, end_time, prep_pose_behavior=None,
                               lease=None, **kwargs):
@@ -67,7 +67,7 @@ class DockingClient(BaseClient):
         req = self._docking_command_request(lease, station_id, clock_identifier, end_time,
                                             prep_pose_behavior)
         return self.call_async(self._stub.DockingCommand, req, self._docking_id_from_response,
-                               _docking_command_error_from_response, **kwargs)
+                               _docking_command_error_from_response, copy_request=False, **kwargs)
 
     def docking_command_full(self, station_id, clock_identifier, end_time, prep_pose_behavior=None,
                              lease=None, **kwargs):
@@ -75,7 +75,8 @@ class DockingClient(BaseClient):
         req = self._docking_command_request(lease, station_id, clock_identifier, end_time,
                                             prep_pose_behavior)
         return self.call(self._stub.DockingCommand, req,
-                         error_from_response=_docking_command_error_from_response, **kwargs)
+                         error_from_response=_docking_command_error_from_response,
+                         copy_request=False, **kwargs)
 
     def docking_command_full_async(self, station_id, clock_identifier, end_time,
                                    prep_pose_behavior=None, lease=None, **kwargs):
@@ -83,10 +84,11 @@ class DockingClient(BaseClient):
         req = self._docking_command_request(lease, station_id, clock_identifier, end_time,
                                             prep_pose_behavior)
         return self.call_async(self._stub.DockingCommand, req,
-                               error_from_response=_docking_command_error_from_response, **kwargs)
+                               error_from_response=_docking_command_error_from_response,
+                               copy_request=False, **kwargs)
 
 
-    def docking_command_feedback_full(self, command_id, **kwargs):
+    def docking_command_feedback_full(self, command_id, end_time=None, **kwargs):
         """Check the status of a previously issued docking command.
 
         Args:
@@ -97,15 +99,16 @@ class DockingClient(BaseClient):
         Returns:
             DockingCommandFeedbackResponse
         """
-        req = self._docking_command_feedback_request(command_id)
+        req = self._docking_command_feedback_request(command_id, end_time)
         return self.call(self._stub.DockingCommandFeedback, req,
-                         error_from_response=common_header_errors, **kwargs)
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
 
-    def docking_command_feedback_full_async(self, command_id, **kwargs):
+    def docking_command_feedback_full_async(self, command_id, end_time=None, **kwargs):
         """Async version of docking_command_feedback_full()."""
-        req = self._docking_command_feedback_request(command_id)
+        req = self._docking_command_feedback_request(command_id, end_time)
         return self.call_async(self._stub.DockingCommandFeedback, req,
-                               error_from_response=common_header_errors, **kwargs)
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
 
     @deprecated(
         reason='This function can raise LeaseErrors when the feedback was successfully retrieved. '
@@ -121,7 +124,7 @@ class DockingClient(BaseClient):
         """
         req = self._docking_command_feedback_request(command_id)
         return self.call(self._stub.DockingCommandFeedback, req, self._docking_status_from_response,
-                         _docking_feedback_error_from_response, **kwargs)
+                         _docking_feedback_error_from_response, copy_request=False, **kwargs)
 
     @deprecated(
         reason='This function can raise LeaseErrors when the feedback was successfully retrieved. '
@@ -131,7 +134,7 @@ class DockingClient(BaseClient):
         req = self._docking_command_feedback_request(command_id)
         return self.call_async(self._stub.DockingCommandFeedback, req,
                                self._docking_status_from_response,
-                               _docking_feedback_error_from_response, **kwargs)
+                               _docking_feedback_error_from_response, copy_request=False, **kwargs)
 
     def get_docking_config(self, **kwargs):
         """Get the docking config stored on the robot.
@@ -141,13 +144,14 @@ class DockingClient(BaseClient):
         """
         req = docking_pb2.GetDockingConfigRequest()
         return self.call(self._stub.GetDockingConfig, req, self._docking_config_from_response,
-                         _docking_get_config_error_from_response, **kwargs)
+                         _docking_get_config_error_from_response, copy_request=False, **kwargs)
 
     def get_docking_config_async(self, **kwargs):
         """Async version of get_docking_config()."""
         req = docking_pb2.GetDockingConfigRequest()
         return self.call_async(self._stub.GetDockingConfig, req, self._docking_config_from_response,
-                               _docking_get_config_error_from_response, **kwargs)
+                               _docking_get_config_error_from_response, copy_request=False,
+                               **kwargs)
 
     def get_docking_state(self, **kwargs):
         """Get docking state from the robot.
@@ -157,13 +161,13 @@ class DockingClient(BaseClient):
         """
         req = docking_pb2.GetDockingStateRequest()
         return self.call(self._stub.GetDockingState, req, self._docking_state_from_response,
-                         _docking_get_state_error_from_response, **kwargs)
+                         _docking_get_state_error_from_response, copy_request=False, **kwargs)
 
     def get_docking_state_async(self, **kwargs):
         """Async version of get_docking_state()."""
         req = docking_pb2.GetDockingStateRequest()
         return self.call_async(self._stub.GetDockingState, req, self._docking_state_from_response,
-                               _docking_get_state_error_from_response, **kwargs)
+                               _docking_get_state_error_from_response, copy_request=False, **kwargs)
 
     @staticmethod
     def _docking_command_request(lease, station_id, clock_identifier, end_time, prep_pose_behavior):
@@ -173,8 +177,11 @@ class DockingClient(BaseClient):
                                                  prep_pose_behavior=prep_pose_behavior)
 
     @staticmethod
-    def _docking_command_feedback_request(command_id):
-        return docking_pb2.DockingCommandFeedbackRequest(docking_command_id=command_id)
+    def _docking_command_feedback_request(command_id, end_time=None):
+        req = docking_pb2.DockingCommandFeedbackRequest(docking_command_id=command_id)
+        if end_time is not None:
+            req.update_docking_params.end_time.CopyFrom(end_time)
+        return req
 
     @staticmethod
     def _docking_id_from_response(response):
@@ -372,3 +379,12 @@ def blocking_undock(robot, timeout=20):
                                      docking_pb2.DockingCommandFeedbackResponse.Status.Name(status))
 
     raise CommandFailedError("Error undocking the robot, timeout exceeded.")
+
+
+def get_dock_id(robot):
+    """Blocking helper to get dock ID that robot is currently docked at, None if not docked."""
+    docking_client = robot.ensure_client(DockingClient.default_service_name)
+    dock_state = docking_client.get_docking_state()
+    if dock_state.status == docking_pb2.DockState.DOCK_STATUS_DOCKED:
+        return dock_state.dock_id
+    return None

@@ -6,21 +6,20 @@
 
 """Tutorial to show how to use the data acquisition client"""
 from __future__ import print_function
+
 import argparse
 import json
 import os
 import sys
 
+from google.protobuf.timestamp_pb2 import Timestamp
+
 import bosdyn.client
 import bosdyn.client.util
-
-from bosdyn.api import data_acquisition_pb2
-from bosdyn.api import data_acquisition_store_pb2
+from bosdyn.api import data_acquisition_pb2, data_acquisition_store_pb2
+from bosdyn.client.data_acquisition_helpers import download_data_REST
 from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
 from bosdyn.client.exceptions import ResponseError
-from bosdyn.client.data_acquisition_helpers import download_data_REST
-
-from google.protobuf.timestamp_pb2 import Timestamp
 
 
 def data_acquisition_download(config):

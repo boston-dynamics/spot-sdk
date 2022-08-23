@@ -37,7 +37,7 @@ message ListAllMovesResponse {
     string move_param_config = 3;
 }
 
-//Request a list of all playable choreography sequences that the robot knows about
+// Request a list of all playable choreography sequences that the robot knows about
 message ListAllSequencesRequest {
     // Common request header
     RequestHeader header = 1;
@@ -48,9 +48,155 @@ message ListAllSequencesResponse {
     // Common response header.
     ResponseHeader header = 1;
 
-    // List of choreography sequences the robot knows about.
-    repeated string known_sequences = 2;
+    // DEPRECATED as of 3.2.0: The string list of known sequence names has been  
+    // deprecated and replaced by the repeated field sequence_info.
+    repeated string known_sequences = 2 [deprecated = true];
 
+    // List of choreography sequences the robot knows about.
+    repeated SequenceInfo sequence_info = 3;
+}
+
+message SequenceInfo {
+    string name = 1;
+
+    repeated string labels = 2;
+
+    enum SavedState {
+        // Status unknown; do not use
+        SAVED_STATE_UNKNOWN = 0; 
+        // Sequence will be forgotten on reboot
+        SAVED_STATE_TEMPORARY = 1; 
+        // A file for this sequence is stored on the robot; the sequence will be loaded 
+        // to memory each time the robot boots
+        SAVED_STATE_RETAINED = 2;
+        // Sequence was built into the release and can't be deleted 
+        SAVED_STATE_PERMANENT = 3; 
+    }
+    
+    // Use temporary sequences during development with choreographer, and then tell the robot to 
+    // retain the final version of the sequence so that it can be played back later from other 
+    // interfaces, like the tablet
+    SavedState saved_state = 3;
+}
+
+
+// Delete the retained file for a choreography sequence so the sequence will be forgotten on reboot
+message DeleteSequenceRequest {
+    // Common request header
+    RequestHeader header = 1;
+
+    // Name of the sequence to delete, sequence will be forgotten on the next reboot
+    string sequence_name = 2;
+}
+
+// 
+message DeleteSequenceResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        // Do not use.
+        STATUS_UNKNOWN = 0; 
+        // The sequence was successfully deleted 
+        STATUS_OK = 1;  
+        // The sequence does not exist
+        STATUS_UNKNOWN_SEQUENCE = 2; 
+        // The sequence is already temporary and will be removed at the next reboot.
+        STATUS_ALREADY_TEMPORARY = 3; 
+        // Permanent sequences cannot be deleted
+        STATUS_PERMANENT_SEQUENCE = 4;
+    }
+    Status status = 2;
+}
+
+// Write a choreography sequence as a file to robot memory so it will be retained through reboot
+message SaveSequenceRequest {
+    // Common request header
+    RequestHeader header = 1;
+
+    // Name of the sequence to be added to the selection of retained sequences 
+    string sequence_name = 2;
+
+    // List of labels to add to the sequence when it is being saved
+    repeated string add_labels = 3;
+}
+
+// 
+message SaveSequenceResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        // Do not use.
+        STATUS_UNKNOWN = 0;
+        // The sequence was successfully saved  
+        STATUS_OK = 1;
+        // The sequence was successfully saved 
+        STATUS_UNKNOWN_SEQUENCE = 2; 
+        // This sequence is already saved in the release
+        STATUS_PERMANENT_SEQUENCE = 3; 
+        // We failed to save a file with the sequence information to robot
+        STATUS_FAILED_TO_SAVE = 4;  
+    }
+    Status status = 2;
+}
+
+// Edit the metadata of a choreography sequence and update any retained files for 
+// that sequence with the new metadata
+message ModifyChoreographyInfoRequest {
+    // Common request header
+    RequestHeader header = 1;
+
+    // Name of the sequence to be modified
+    string sequence_name = 2;
+
+    // Labels to be added to the sequence's metadata
+    repeated string add_labels = 3;
+
+    // Labels to be removed from the sequence's metadata
+    repeated string remove_labels = 4;
+}
+
+message ModifyChoreographyInfoResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        // Do not use.
+        STATUS_UNKNOWN = 0; 
+        // The sequence was successfully modified
+        STATUS_OK = 1;  
+        // The sequence does not exist
+        STATUS_UNKNOWN_SEQUENCE = 2; 
+        // Permanent sequences cannot be modified
+        STATUS_PERMANENT_SEQUENCE = 3; 
+        // The changes were made, but the retained sequence file was not updated and 
+        // changes were reverted
+        STATUS_FAILED_TO_UPDATE = 4; 
+    }
+    Status status = 2;
+}
+
+// Reset to a clean slate with no retained files by deleting all non-permanent 
+// choreography related files
+message ClearAllSequenceFilesRequest {
+    // Common request header
+    RequestHeader header = 1;
+}
+
+message ClearAllSequenceFilesResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        // Do not use.
+        STATUS_UNKNOWN = 0; 
+        // All retained sequences were successfully removed from robot memory
+        STATUS_OK = 1; 
+        // Deletion of all retained files failed
+        STATUS_FAILED_TO_DELETE = 2; 
+    }
+    Status status = 2;
 }
 
 message UploadChoreographyRequest {
@@ -101,6 +247,7 @@ message UploadAnimatedMoveResponse {
         STATUS_UNKNOWN = 0; // Do not use.
         STATUS_OK = 1; // Uploading + parsing the animated move succeeded.
         STATUS_ANIMATION_VALIDATION_FAILED = 2; // The animated move is considered invalid, see the warnings.
+        STATUS_PING_RESPONSE = 3;  // Treated this message as a ping.  Responding to demonstrate connectivity.
     }
     Status status = 2;
 
@@ -452,6 +599,14 @@ message ChoreographySequence {
 
     // All of the moves in this choreography sequence.
     repeated MoveParams moves = 3;
+
+    ChoreographyInfo choreography_info = 4; 
+}
+
+// Describes metadata for the Choreography sequence that can be used for a number of different UIs
+message ChoreographyInfo {
+    // the list of user assigned categories that the sequence belongs to
+    repeated string labels = 4;
 }
 
 // Describes the metadata and information only used by the Choreographer GUI, which isn't used in

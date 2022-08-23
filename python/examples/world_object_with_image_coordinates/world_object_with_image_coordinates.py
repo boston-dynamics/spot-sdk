@@ -7,15 +7,15 @@
 """Example using the world objects service. """
 
 from __future__ import print_function
+
 import argparse
 import sys
 
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.client.world_object import WorldObjectClient
-from bosdyn.client.world_object import make_add_world_object_req
-from bosdyn.api import world_object_pb2 as wo
 from bosdyn.api import geometry_pb2 as geom
+from bosdyn.api import world_object_pb2 as wo
+from bosdyn.client.world_object import WorldObjectClient, make_add_world_object_req
 from bosdyn.util import now_timestamp
 
 

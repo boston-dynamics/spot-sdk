@@ -10,6 +10,8 @@ package bosdyn.api;
 
 option java_outer_classname = "PowerProto";
 
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
 import "bosdyn/api/license.proto";
@@ -127,4 +129,94 @@ message PowerCommandFeedbackResponse {
 
     // Optional list of active faults blocking success of the PowerCommandRequest
     repeated SystemFault blocking_faults = 3;
+}
+
+message FanPowerCommandRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The Lease to show ownership of the robot.
+    Lease lease = 2;
+
+    // What percent power does the user want the fans to run at?
+    // Range is 0 to 100, with 0 being off and 100 being full power
+    int32 percent_power = 3;
+
+    // How long the user wants control of the fans
+    // May not be duration the command is actually in effect for if temperature gets too high
+    google.protobuf.Duration duration = 4; 
+}
+
+message FanPowerCommandResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Details about how the lease was used.
+    LeaseUseResult lease_use_result = 2;
+
+    // Feedback on the current state of a fan power command on the robot.
+    enum Status {
+        // Status is not specified.
+        STATUS_UNKNOWN = 0;
+
+        // Fan Power command succeeded. May still get overriden later in duration
+        STATUS_OK = 1;
+
+        // ERROR: Fan Power command rejected because temperature above safe threshold
+        STATUS_TEMPERATURE_TOO_HIGH = 2;
+    }
+    // Current feedback of specified command.
+    Status status = 3;
+
+    // Based on received duration, the time when this command will stop being in effect
+    google.protobuf.Timestamp desired_end_time = 4;
+
+    // Unique identifier for the command, If empty, was not accepted.
+    uint32 command_id = 5;
+}
+
+// The PowerCommandFeedback request message, which can get the feedback for a specific
+// power command id number.
+message FanPowerCommandFeedbackRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Unique identifier for the command of which feedback is desired.
+    uint32 command_id = 2;
+}
+
+// The PowerCommandFeedback response message, which contains the progress of the power command.
+message FanPowerCommandFeedbackResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Feedback on the current state of a fan power command on the robot.
+    enum Status {
+        // Status is not specified.
+        STATUS_UNKNOWN = 0;
+
+        // Fan Power command succeeded for entire requested duration and is now done.
+        STATUS_COMPLETE = 1;
+
+        // Fan command is still in effect due to requested duration but has succeeded so far
+        STATUS_RUNNING = 2;
+
+        // ERROR: Command stopped before finish due to temperature becoming too high
+        STATUS_TEMPERATURE_STOP = 3;
+
+        // ERROR: A newer Fan Power Request took over before the full duration of this request was up.
+        STATUS_OVERRIDDEN_BY_COMMAND = 4;
+    }
+
+    // Current status of specified command.
+    Status status = 2;
+
+    // Based on duration, the time that this command was intended to stop being in effect. If 
+    // stopped/overriden prematurely, early_stop_time will reflect the actual time the command
+    // stopped being in effect
+    google.protobuf.Timestamp desired_end_time = 3;
+
+    // If the command was stopped or overridden before its desired end time, the time at which it 
+    // was stopped. If command succeeded, this time is empty.
+    google.protobuf.Timestamp early_stop_time = 4;
 }

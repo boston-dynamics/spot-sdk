@@ -13,13 +13,17 @@ The "image properties" field of a world object can be used to describe pixel coo
 The image coordinate world objects could be used to annotate the world objects in the image for displaying an object's location or debugging if your application is correctly identifying the objects you want.
 
 ## Setup Dependencies
+
 These examples need to be run with python3, and have the Spot SDK installed. See the requirements.txt file for a list of dependencies which can be installed with pip using:
+
 ```
 python3 -m pip install -r requirements.txt
 ```
 
 ## Running the Example
+
 To run the example:
+
 ```
 python3 world_object_with_image_coordinates.py ROBOT_IP
 ```

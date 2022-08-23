@@ -9,15 +9,14 @@
 import argparse
 import sys
 
-from bosdyn.api import image_pb2
-import bosdyn.client
-import bosdyn.client.util
-from bosdyn.client.image import ImageClient, build_image_request
-from bosdyn.api import image_pb2
 import cv2
 import numpy as np
-
 from scipy import ndimage
+
+import bosdyn.client
+import bosdyn.client.util
+from bosdyn.api import image_pb2
+from bosdyn.client.image import ImageClient, build_image_request
 
 ROTATION_ANGLE = {
     'back_fisheye_image': 0,

@@ -43,6 +43,9 @@ message ArmCommand {
 
             // Use the arm to drag something held in the gripper.
             ArmDragCommand.Request arm_drag_command = 10;
+
+            // Impedance control of arm (beta)
+            ArmImpedanceCommand.Request arm_impedance_command = 12;
         }
 
         // Any arm parameters to send, common across all arm commands
@@ -71,6 +74,9 @@ message ArmCommand {
 
             // Feedback for the drag command.
             ArmDragCommand.Feedback arm_drag_feedback = 10;
+
+            // Feedback for impedance command.
+            ArmImpedanceCommand.Feedback arm_impedance_feedback = 12;
         }
 
         RobotCommandFeedbackStatus.Status status = 100;
@@ -320,6 +326,9 @@ message ArmJointMoveCommand {
             STATUS_COMPLETE = 1;
             // Robot is re-configuring arm to get to desired configuration.
             STATUS_IN_PROGRESS = 2;
+            // The arm has stopped making progress towards the goal. This could be because it is 
+            // avoiding a collision or joint limit.
+            STATUS_STALLED = 3;
         }
         // Current status of the request.
         Status status = 1;
@@ -506,5 +515,67 @@ message ArmStopCommand {
 
     message Feedback {
         // Stop command provides no feedback
+    }
+}
+
+// Specify impedance about the end-effector. Users can set up frames along with stiffness and damping
+// parameters to control how the end-effector will respond to external contact as it moves along a 
+// specified trajectory
+message ArmImpedanceCommand {
+    message Request {
+        // Name of the frame relative to which the task frame is defined for this command. 
+        // Common frames for this include "odom", "vision", "body", and "flat_body".
+        string root_frame_name = 1;
+
+        // This transform specifies the pose of the task frame realtive to the root frame.
+        // If unset, it defaults to identity, and the task frame coincides with the root frame.
+        // The `desired_tool` frame will be specified relative to the task frame. For peg in 
+        // hole tasks for example, the task frame could be a frame attached to the top of the
+        // hole with z-axis aligned with the hole axis, and the `desired_tool` frame could
+        // move in z to direct the peg deeper into the hole.
+        SE3Pose root_tform_task = 2;
+
+        // The tool pose relative to the parent link (link_wr1). This can also be thought of as the
+        // "remote center" frame. For peg in hole tasks for example, one might put the tool frame
+        // at the tip of the peg, or slightly below the tip floating in space, at the point on which
+        // we want our virtual springs to pull.
+        // Defaults to
+        //    [0.19557 0 0]
+        //    [1 0 0 0]
+        // which is a frame aligned with the wrist frame, with its origin slightly in front of
+        // the gripper's palm plate.
+        SE3Pose wrist_tform_tool = 3;
+
+        // Trajectory of where we want the tool to be relative to the task frame. Note that this `desired_tool` 
+        // frame is not the same as the tool frame attached to the wrist link. If our tool deviates from this 
+        // `desired_tool` pose, it will be subject to a wrench determined by our stiffness and damping matrices.
+        SE3Trajectory task_tform_desired_tool = 4;
+
+        // Feed forward wrench to apply at the tool, expressed with respect to the `desired_tool` frame
+        Wrench feed_forward_wrench_at_tool_in_desired_tool = 5;
+
+        // Stiffness matrix in the `desired_tool` frame. The matrix is parameterized by a vector of 6 doubles,
+        // representing the diagonal of this 6x6 matrix: [x,y,z,tx,ty,tz] (N/m, N/m, N/m, Nm/rad, Nm/rad, Nm/rad).
+        // All other entries will be set to 0. All stiffness values along the diagonal should be non-negative.
+        Vector diagonal_stiffness_matrix = 6;
+
+        // Damping matrix in the `desired_tool` frame. The matrix is parameterized by a vector of 6 doubles,
+        // representing the diagonal of this 6x6 matrix: [x,y,z,tx,ty,tz] (Ns/m, Ns/m, Ns/m, Nms/rad, Nms/rad, Nms/rad)
+        // All other entries will be set to 0. All damping values along the diagonal should be non-negative.
+        Vector diagonal_damping_matrix = 7;
+
+        // Maximum force magnitude in Newtons we're allowed to exert. If the tool deviates such that the
+        // magnitude of the requested force would exceed this threshold, saturate the requested force.
+        // If this value is not set, a default of 60N will be used.
+        google.protobuf.DoubleValue max_force_mag = 8;
+
+        // Maximum torque magnitude in Newton meters we're allowed to exert. If the tool deviates such
+        // that the magnitude of the requested torque would exceed this threshold, saturate the
+        // requested torque. If this value is not set, a default of 15Nm will be used.
+        google.protobuf.DoubleValue max_torque_mag = 9;
+
+    }
+
+    message Feedback {
     }
 }

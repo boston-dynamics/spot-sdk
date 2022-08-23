@@ -7,14 +7,15 @@
 """Example using the world objects service. """
 
 from __future__ import print_function
+
 import argparse
 import sys
 import time
 
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.client.world_object import WorldObjectClient
 from bosdyn.api import world_object_pb2
+from bosdyn.client.world_object import WorldObjectClient
 
 
 def main(argv):

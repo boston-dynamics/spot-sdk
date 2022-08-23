@@ -9,18 +9,15 @@
 import argparse
 import sys
 
+import cv2
+import numpy as np
+from google.protobuf import wrappers_pb2
+
 import bosdyn.client
 import bosdyn.client.util
+from bosdyn.api import geometry_pb2, gripper_camera_param_pb2, image_pb2
 from bosdyn.client.gripper_camera_param import GripperCameraParamClient
-from bosdyn.api import gripper_camera_param_pb2
-from google.protobuf import wrappers_pb2
 from bosdyn.client.image import ImageClient
-from bosdyn.api import image_pb2
-from google.protobuf import wrappers_pb2
-from bosdyn.api import geometry_pb2
-
-import numpy as np
-import cv2
 
 g_image_click = None
 g_image_display = None
@@ -52,8 +49,7 @@ def main(argv):
     sdk = bosdyn.client.create_standard_sdk('gripper_camera_focus_region')
     robot = sdk.create_robot(options.hostname)
     bosdyn.client.util.authenticate(robot)
-    gripper_camera_param_client = robot.ensure_client(
-        GripperCameraParamClient.default_service_name)
+    gripper_camera_param_client = robot.ensure_client(GripperCameraParamClient.default_service_name)
 
     image_client = robot.ensure_client(ImageClient.default_service_name)
 

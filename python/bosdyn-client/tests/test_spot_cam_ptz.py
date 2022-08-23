@@ -9,11 +9,9 @@ import time
 
 import grpc
 import pytest
-
 from pytest import approx
 
 import bosdyn.client.spot_cam.ptz
-
 from bosdyn.api.spot_cam import ptz_pb2, service_pb2_grpc
 
 from . import helpers

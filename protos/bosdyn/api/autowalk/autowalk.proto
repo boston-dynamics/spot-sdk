@@ -1,0 +1,165 @@
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.autowalk;
+
+option java_outer_classname = "AutowalkProto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/lease.proto";
+import "bosdyn/api/autowalk/walks.proto";
+import "bosdyn/api/mission/mission.proto";
+import "bosdyn/api/mission/nodes.proto";
+
+message FailedElement {
+    // The reasons why this element failed. May not be provided by all elements.
+    repeated string errors = 1;
+
+    // Compile time modification that resolved error(s).
+    repeated string warnings = 2;
+}
+
+message NodeIdentifier {
+    // Unique integer set by the mission service when loading a mission.
+    int64 node_id = 1;
+
+    // Unique string set by the autowalk service when compiling a walk.
+    string user_data_id = 2;
+}
+
+message ElementIdentifiers {
+    // Identifiable data for the root node of the element.
+    NodeIdentifier root_id = 1;
+
+    // Identifiable data for action node of the element.
+    NodeIdentifier action_id = 2;
+}
+
+message CompileAutowalkRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Walk to compile.
+    Walk walk = 2;
+
+    // If this is set to true, mission compilation will fail if the Walk contains parameters that
+    // are set incorrectly. This can be useful during development to help the developer find issues
+    // with their client (e.g., suppose the client UI allows a user to set a parameter incorrectly).
+    // If this is set to false, mission compilation is more likely to succeed for the same Walk
+    // because any parameters that are both incorrect and modifiable are modified during mission
+    // compilation.
+    bool treat_warnings_as_errors = 5;
+}
+
+message CompileAutowalkResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Possible results of compiling a walk to mission.
+    enum Status {
+        // Invalid status, do not use.
+        STATUS_UNKNOWN = 0;
+        // Compilation succeeded.
+        STATUS_OK = 1;
+        // Compilation failed. The walk was malformed.
+        STATUS_COMPILE_ERROR = 2;
+    }
+
+    // Result of compiling the mission.
+    Status status = 2;
+
+    // Reserved for deprecated fields.
+    reserved 3;
+
+    // Root node of compiled walk.
+    bosdyn.api.mission.Node root = 4;
+
+    // There will be one ElementIdentifier for each Element in the input Walk.
+    // The index of each ElementIdentifier corresponds to the index of the Element in the input
+    // Walk. Skipped elements will have default values for id's.  (0 and empty string)
+    repeated ElementIdentifiers element_identifiers = 5;
+
+    // If certain elements failed compilation, they will be reported back in this field.
+    // The map correlates the index of the Element in the input Walk to the FailedElement.
+    map<int32, FailedElement> failed_elements = 6;
+
+    // Final docking node.
+    NodeIdentifier docking_node = 7;
+
+    // Node that contains the main sequence of actions performed in the walk.
+    // In continuous playback mode, the walk repeats when this node completes.
+    NodeIdentifier loop_node = 8;
+}
+
+message LoadAutowalkRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Walk to compile
+    Walk walk = 2;
+
+    // Leases that will be needed to validate the mission.
+    // Usually, no leases are necessary for validation, and this can be left empty.
+    repeated bosdyn.api.Lease leases = 3;
+
+    // If this is set to true, mission compilation will fail if the Walk contains parameters that
+    // are set incorrectly. This can be useful during development to help the developer find issues
+    // with their client (e.g., suppose the client UI allows a user to set a parameter incorrectly).
+    // If this is set to false, mission compilation is more likely to succeed for the same Walk
+    // because any parameters that are both incorrect and modifiable are modified during mission
+    // compilation.
+    bool treat_warnings_as_errors = 5;
+}
+
+message LoadAutowalkResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Possible results of loading a mission.
+    enum Status {
+        // Invalid status, do not use.
+        STATUS_UNKNOWN = 0;
+        // The mission was loaded successfully.
+        STATUS_OK = 1;
+        // Compilation failed. The walk was malformed.
+        STATUS_COMPILE_ERROR = 2;
+        // Load-time validation failed. Some part of the mission was unable to initialize.
+        STATUS_VALIDATE_ERROR = 3;
+    }
+    // Result of loading the mission.
+    Status status = 2;
+
+    // Results from any leases that may have been used.
+    // As part of mission validation, some of the non-mission leases may have been used.
+    repeated bosdyn.api.LeaseUseResult lease_use_results = 3;
+
+    // Reserved for deprecated fields.
+    reserved 4, 6;
+
+    // If certain nodes failed compilation or validation, they will be reported back in this field.
+    repeated bosdyn.api.mission.FailedNode failed_nodes = 5;
+
+    // There will be one ElementIdentifier for each Element in the input Walk.
+    // The index of each ElementIdentifier corresponds to the index of the Element in the input
+    // Walk. Skipped elements will have default values for id's.  (0 and empty string)
+    repeated ElementIdentifiers element_identifiers = 7;
+
+    // If certain elements failed compilation, they will be reported back in this field.
+    // The map correlates the index of the Element in the input Walk to the FailedElement.
+    map<int32, FailedElement> failed_elements = 8;
+
+    // Mission ID assigned by the mission service.
+    int64 mission_id = 9;
+
+    // Final docking node.
+    NodeIdentifier docking_node = 10;
+
+    // Node that contains the main sequence of actions performed in the walk.
+    // In continuous playback mode, the walk repeats when this node completes.
+    NodeIdentifier loop_node = 11;
+}

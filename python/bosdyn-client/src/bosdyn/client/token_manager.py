@@ -14,7 +14,7 @@ import logging
 import threading
 
 from .auth import InvalidTokenError
-from .exceptions import (ResponseError, RpcError)
+from .exceptions import ResponseError, RpcError
 from .token_cache import WriteFailedError
 
 _LOGGER = logging.getLogger(__name__)

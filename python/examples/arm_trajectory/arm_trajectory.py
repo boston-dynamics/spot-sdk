@@ -52,14 +52,14 @@ def arm_trajectory(config):
 
         # Tell the robot to stand up. The command service is used to issue commands to a robot.
         # The set of valid commands for a robot depends on hardware configuration. See
-        # SpotCommandHelper for more detailed examples on command building. The robot
+        # RobotCommandBuilder for more detailed examples on command building. The robot
         # command service requires timesync between the robot and the client.
         robot.logger.info("Commanding robot to stand...")
         command_client = robot.ensure_client(RobotCommandClient.default_service_name)
         blocking_stand(command_client, timeout_sec=10)
         robot.logger.info("Robot standing.")
 
-        # Move the arm along a simple trajectory
+        # Move the arm along a simple trajectory.
 
         x = 0.75  # a reasonable position in front of the robot
         y1 = 0  # centered
@@ -70,11 +70,12 @@ def arm_trajectory(config):
         # Use the same rotation as the robot's body.
         rotation = math_helpers.Quat()
 
+        # Define times (in seconds) for each point in the trajectory.
         t_first_point = 0  # first point starts at t = 0 for the trajectory.
-        t_second_point = 4.0  # trajectory will last 1.0 seconds
-        t_third_point = 8.0  # trajectory will last 1.0 seconds
+        t_second_point = 4.0
+        t_third_point = 8.0
 
-        # Build the two points in the trajectory
+        # Build the points in the trajectory.
         hand_pose1 = math_helpers.SE3Pose(x=x, y=y1, z=z, rot=rotation)
         hand_pose2 = math_helpers.SE3Pose(x=x, y=y2, z=z, rot=rotation)
         hand_pose3 = math_helpers.SE3Pose(x=x, y=y3, z=z, rot=rotation)
@@ -83,12 +84,11 @@ def arm_trajectory(config):
         traj_point1 = trajectory_pb2.SE3TrajectoryPoint(
             pose=hand_pose1.to_proto(), time_since_reference=seconds_to_duration(t_first_point))
         traj_point2 = trajectory_pb2.SE3TrajectoryPoint(
-            pose=hand_pose2.to_proto(),
-            time_since_reference=seconds_to_duration(t_second_point))
+            pose=hand_pose2.to_proto(), time_since_reference=seconds_to_duration(t_second_point))
         traj_point3 = trajectory_pb2.SE3TrajectoryPoint(
             pose=hand_pose3.to_proto(), time_since_reference=seconds_to_duration(t_third_point))
 
-        # Build the trajectory proto by combining the two points
+        # Build the trajectory proto by combining the points.
         hand_traj = trajectory_pb2.SE3Trajectory(points=[traj_point1, traj_point2, traj_point3])
 
         # Build the command by taking the trajectory and specifying the frame it is expressed
@@ -106,8 +106,7 @@ def arm_trajectory(config):
         synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
             arm_command=arm_command)
 
-        robot_command = robot_command_pb2.RobotCommand(
-            synchronized_command=synchronized_command)
+        robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
 
         # Keep the gripper closed the whole time.
         robot_command = RobotCommandBuilder.claw_gripper_open_fraction_command(
@@ -121,11 +120,9 @@ def arm_trajectory(config):
         # Wait until the arm arrives at the goal.
         while True:
             feedback_resp = command_client.robot_command_feedback(cmd_id)
-            robot.logger.info(
-                'Distance to final point: ' + '{:.2f} meters'.format(
-                    feedback_resp.feedback.synchronized_feedback.arm_command_feedback.
-                    arm_cartesian_feedback.measured_pos_distance_to_goal) +
-                ', {:.2f} radians'.format(
+            robot.logger.info('Distance to final point: ' + '{:.2f} meters'.format(
+                feedback_resp.feedback.synchronized_feedback.arm_command_feedback.
+                arm_cartesian_feedback.measured_pos_distance_to_goal) + ', {:.2f} radians'.format(
                     feedback_resp.feedback.synchronized_feedback.arm_command_feedback.
                     arm_cartesian_feedback.measured_rot_distance_to_goal))
 

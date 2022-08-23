@@ -30,7 +30,7 @@ After reaching waypoint 5, Spot will navigate to the final destination at waypoi
 
 Directed Exploration is invoked as a last resort when all other attempts to find a path to the destination have failed.  Other strategies include attempting to plan a different route through the edges in the GraphNav map and attempting to follow alternate waypoints that are created next to the waypoints on the map.
 
-Directed Exploration can succeed in some situations where these other strategies fail, because Directed Exploration frees Spot from the constaint of navigating along edges stored in the GraphNav map.  Directed Exploration allows Spot to use its sensors to determine whether it can reach nearby waypoints, even if those waypoints aren't connected to its current location in the GraphNav map.
+Directed Exploration can succeed in some situations where these other strategies fail, because Directed Exploration frees Spot from the constraint of navigating along edges stored in the GraphNav map.  Directed Exploration allows Spot to use its sensors to determine whether it can reach nearby waypoints, even if those waypoints aren't connected to its current location in the GraphNav map.
 
 ## How to enable/disable Directed Exploration
 

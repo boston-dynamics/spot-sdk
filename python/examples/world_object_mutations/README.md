@@ -11,13 +11,17 @@ Development Kit License (20191101-BDSDK-SL).
 These examples demonstrate how to use the world object service to add, change, and delete world objects.
 
 ## Setup Dependencies
+
 These examples need to be run with python3, and have the Spot SDK installed. See the requirements.txt file for a list of dependencies which can be installed with pip.
+
 ```
 python3 -m pip install -r requirements.txt
 ```
 
 ## Running the Example
+
 To run the example:
+
 ```
 python3 mutate_world_objects.py ROBOT_IP
 ```

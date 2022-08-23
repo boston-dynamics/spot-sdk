@@ -6,28 +6,27 @@
 
 """Command-line utility code for interacting with robot services."""
 
-from __future__ import print_function, division
+from __future__ import division, print_function
+
 import abc
 import argparse
 import datetime
+import os
 import signal
+import sys
 import threading
 import time
-import os
-import sys
 
 import six
-
-from bosdyn.api.data_buffer_pb2 import Event, TextMessage
-from bosdyn.api.data_index_pb2 import EventsCommentsSpec
-from bosdyn.api import data_acquisition_pb2
-from bosdyn.api import image_pb2
-import bosdyn.client
-from bosdyn.util import (duration_str, timestamp_to_datetime)
 from google.protobuf import json_format
 
+import bosdyn.client
+from bosdyn.api import data_acquisition_pb2, image_pb2
+from bosdyn.api.data_buffer_pb2 import Event, TextMessage
+from bosdyn.api.data_index_pb2 import EventsCommentsSpec
+from bosdyn.util import duration_str, timestamp_to_datetime
+
 from .auth import InvalidLoginError, InvalidTokenError
-from .exceptions import Error, InvalidAppTokenError, InvalidRequestError, ProxyConnectionError
 from .data_acquisition import DataAcquisitionClient
 from .data_acquisition_helpers import acquire_and_process_request
 from .data_buffer import DataBufferClient
@@ -35,22 +34,21 @@ from .data_service import DataServiceClient
 from .directory import DirectoryClient, NonexistentServiceError
 from .directory_registration import DirectoryRegistrationClient, DirectoryRegistrationResponseError
 from .estop import EstopClient, EstopEndpoint, EstopKeepAlive
-from .payload import PayloadClient
-from .payload_registration import PayloadRegistrationClient, PayloadAlreadyExistsError
-from .power import PowerClient
-from .image import (ImageClient, UnknownImageSourceError, ImageResponseError, build_image_request,
+from .exceptions import Error, InvalidAppTokenError, InvalidRequestError, ProxyConnectionError
+from .image import (ImageClient, ImageResponseError, UnknownImageSourceError, build_image_request,
                     save_images_as_files)
 from .lease import LeaseClient
 from .license import LicenseClient
 from .local_grid import LocalGridClient
-from .power import (PowerClient, power_off_robot, power_cycle_robot, power_on_payload_ports,
-                    power_off_payload_ports, power_on_wifi_radio, power_off_wifi_radio,
-                    )
+from .payload import PayloadClient
+from .payload_registration import PayloadAlreadyExistsError, PayloadRegistrationClient
+from .power import (PowerClient, power_cycle_robot, power_off_payload_ports, power_off_robot,
+                    power_off_wifi_radio, power_on_payload_ports, power_on_wifi_radio)
 from .robot_id import RobotIdClient
 from .robot_state import RobotStateClient
 from .time_sync import TimeSyncClient, TimeSyncEndpoint, TimeSyncError, timespec_to_robot_timespan
+from .util import add_common_arguments, authenticate, setup_logging
 
-from .util import (add_common_arguments, authenticate, setup_logging)
 
 
 # pylint: disable=too-few-public-methods
@@ -1040,9 +1038,9 @@ class RobotStateCommands(Subcommands):
             subparsers: List of argument parsers.
             command_dict: Dictionary of command names which take parsed options.
         """
-        super(RobotStateCommands, self).__init__(subparsers, command_dict,
-                                                 [FullStateCommand, HardwareConfigurationCommand,
-                                                 MetricsCommand, RobotModel])
+        super(RobotStateCommands, self).__init__(
+            subparsers, command_dict,
+            [FullStateCommand, HardwareConfigurationCommand, MetricsCommand, RobotModel])
 
 
 class FullStateCommand(Command):
@@ -1070,6 +1068,7 @@ class FullStateCommand(Command):
         print(proto)
         return True
 
+
 class HardwareConfigurationCommand(Command):
     """Show robot hardware configuration."""
 
@@ -1091,9 +1090,11 @@ class HardwareConfigurationCommand(Command):
             robot: Robot object on which to run the command.
             options: Parsed command-line arguments.
         """
-        proto = robot.ensure_client(RobotStateClient.default_service_name).get_robot_hardware_configuration()
+        proto = robot.ensure_client(
+            RobotStateClient.default_service_name).get_robot_hardware_configuration()
         print(proto)
         return True
+
 
 class RobotModel(Command):
     """Write robot URDF and mesh to local files."""
@@ -1538,7 +1539,9 @@ def _show_image_sources_list(robot, as_proto=False, service_name=None):
     else:
         for image_source in proto:
             image_formats = [image_pb2.Image.Format.Name(i)[7:] for i in image_source.image_formats]
-            pixel_formats = [image_pb2.Image.PixelFormat.Name(i)[13:] for i in image_source.pixel_formats]
+            pixel_formats = [
+                image_pb2.Image.PixelFormat.Name(i)[13:] for i in image_source.pixel_formats
+            ]
             print("{:30s} ({:d}x{:d}) {:15s} {:15s}".format(image_source.name, image_source.rows,
                                                             image_source.cols,
                                                             ','.join(image_formats),
@@ -1861,6 +1864,10 @@ class DataAcquisitionServiceCommand(Command):
         for img_service in capabilities.image_sources:
             for img in img_service.image_source_names:
                 self._format_and_print_capability("image", img, img_service.service_name)
+        for ncb_worker in capabilities.network_compute_sources:
+            for model in ncb_worker.available_models:
+                self._format_and_print_capability("models", model,
+                                                  ncb_worker.server_config.service_name)
         return True
 
 
@@ -1924,7 +1931,6 @@ class HostComputerIPCommand(Command):
               (bosdyn.client.common.get_self_ip(robot._name)))
 
 
-
 class PowerCommand(Subcommands):
     """Send power commands to the robot."""
 
@@ -1937,9 +1943,15 @@ class PowerCommand(Subcommands):
             subparsers: List of argument parsers.
             command_dict: Dictionary of command names which take parsed options.
         """
-        super(PowerCommand, self).__init__(subparsers, command_dict, [
-            PowerRobotCommand, PowerPayloadsCommand, PowerWifiRadioCommand,
-        ])
+        super(PowerCommand, self).__init__(
+            subparsers,
+            command_dict,
+            [
+                PowerRobotCommand,
+                PowerPayloadsCommand,
+                PowerWifiRadioCommand,
+            ])
+
 
 class PowerRobotCommand(Command):
     """Control the power of the entire robot."""
@@ -1958,7 +1970,6 @@ class PowerRobotCommand(Command):
         super(PowerRobotCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument('cmd', choices=['cycle', 'off'])
 
-
     def _run(self, robot, options):
         """
         Args:
@@ -1967,7 +1978,8 @@ class PowerRobotCommand(Command):
         """
         robot.time_sync.wait_for_sync(timeout_sec=1.0)
         lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
-        with bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
+        with bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True,
+                                                return_at_exit=True):
             power_client = robot.ensure_client(PowerClient.default_service_name)
             if options.cmd == 'cycle':
                 power_cycle_robot(power_client)
@@ -2001,12 +2013,14 @@ class PowerPayloadsCommand(Command):
 
         robot.time_sync.wait_for_sync(timeout_sec=1.0)
         lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
-        with bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
+        with bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True,
+                                                return_at_exit=True):
             power_client = robot.ensure_client(PowerClient.default_service_name)
             if options.on_off == 'on':
                 power_on_payload_ports(power_client)
             elif options.on_off == 'off':
                 power_off_payload_ports(power_client)
+
 
 class PowerWifiRadioCommand(Command):
     """Control the power of robot wifi radio."""
@@ -2034,12 +2048,15 @@ class PowerWifiRadioCommand(Command):
 
         robot.time_sync.wait_for_sync(timeout_sec=1.0)
         lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
-        with bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
+        with bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True,
+                                                return_at_exit=True):
             power_client = robot.ensure_client(PowerClient.default_service_name)
             if options.on_off == 'on':
                 power_on_wifi_radio(power_client)
             elif options.on_off == 'off':
                 power_off_wifi_radio(power_client)
+
+
 
 
 def main(args=None):

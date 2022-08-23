@@ -11,6 +11,7 @@ package bosdyn.api.graph_nav;
 import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
 import "bosdyn/api/license.proto";
+import "bosdyn/api/robot_state.proto";
 import "bosdyn/api/world_object.proto";
 import "bosdyn/api/graph_nav/map.proto";
 
@@ -106,6 +107,9 @@ message StartRecordingResponse {
         // When recording branches, the robot is too far from the existing map when starting
         // to record a new branch.
         STATUS_TOO_FAR_FROM_EXISTING_MAP = 10;
+        // Unable to start recording because the robot is impaired.
+        // See impaired_state for more details.
+        STATUS_ROBOT_IMPAIRED = 11;
     }
     // Return status for the request.
     Status status = 4;
@@ -123,6 +127,9 @@ message StartRecordingResponse {
     // is requested again after the graph gets too large, it will fail, and license
     // status will be filled out.
     LicenseInfo.Status license_status = 6;
+
+    // If the status is ROBOT_IMPAIRED, this is why the robot is impaired.
+    RobotImpairedState impaired_state = 8;
 }
 
 // The StopRecording request message tells the robot to no longer continue adding waypoints and
@@ -182,7 +189,7 @@ message CreateWaypointRequest {
     // are presently visible before creating a waypoint. This is useful for verifying
     // that the robot is where the user thinks it is in an area with known fiducials.
     repeated int32 require_fiducials = 5;
-    // Additional world objects to insert into this waypoint. 
+    // Additional world objects to insert into this waypoint.
     repeated WorldObject world_objects = 6;
 }
 
@@ -301,4 +308,15 @@ message GetRecordStatusResponse {
         MAP_STATE_TOO_LARGE_FOR_LICENSE = 2;
     };
     MapState map_state = 4;
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        // Unable to record waypoints because the robot is impaired. When this happens,
+        // the system will not create new waypoints until the robot is no longer impaired.
+        // See impaired_state for more details.
+        STATUS_ROBOT_IMPAIRED = 2;
+    }
+    Status status = 5;
+    // If the status is ROBOT_IMPAIRED, this is why the robot is impaired.
+    RobotImpairedState impaired_state = 6;
 }

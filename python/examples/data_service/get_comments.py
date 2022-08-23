@@ -6,13 +6,14 @@
 
 """Tutorial to show how to use the Boston Dynamics API"""
 from __future__ import print_function
+
 import argparse
 import sys
 
 import bosdyn.api.data_index_pb2 as data_index_protos
 import bosdyn.client
-from bosdyn.client.data_service import DataServiceClient
 import bosdyn.client.util
+from bosdyn.client.data_service import DataServiceClient
 
 
 def get_comments(config):

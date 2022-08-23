@@ -12,7 +12,8 @@ The following examples show how to register a payload and create payload faults,
 
 ## Contents
 
-* [Payloads](../payloads/README.md)
-* [Self Registration](../self_registration/README.md)
-* [Faults](../service_faults/README.md)
-* [Velodyne](../velodyne_client/README.md)
+- [Payloads](../payloads/README.md)
+- [Self Registration](../self_registration/README.md)
+- [Faults](../service_faults/README.md)
+- [Velodyne](../velodyne_client/README.md)
+- [CORE I/O GPIO](../core_io_gpio/README.md)

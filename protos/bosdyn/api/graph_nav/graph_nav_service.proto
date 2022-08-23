@@ -55,5 +55,9 @@ service GraphNavService {
     // Download edge data from the server. If the snapshot exists in disk cache, it will be loaded.
     rpc DownloadEdgeSnapshot (DownloadEdgeSnapshotRequest) returns (stream DownloadEdgeSnapshotResponse) {}
 
+    // Verify that the graph is still valid and all required external services are still available.
+    // A map that was valid at upload time may not still be valid if required services are no longer running.
+    rpc ValidateGraph(ValidateGraphRequest) returns (ValidateGraphResponse) {}
+
 
 }

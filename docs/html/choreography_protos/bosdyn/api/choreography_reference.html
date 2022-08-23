@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>spot/choreography_params.proto &mdash; Spot 3.1.2.1 documentation</title>
+  <title>spot/choreography_params.proto &mdash; Spot 3.2.0 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.1.2.1
+                3.2.0
               </div>
             
           
@@ -118,10 +118,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autowalk_service.html">Autowalk service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/directed_exploration.html">Directed Exploration</a></li>
@@ -149,7 +151,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_output.html">Data Acquisition Output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_buffer_overview.html">Data Buffer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF file format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
 </ul>
 </li>
 </ul>
@@ -182,6 +185,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/docking/README.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -200,6 +204,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -207,6 +212,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -261,16 +267,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
@@ -297,6 +311,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
@@ -322,6 +338,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lights_helper.html">Lights Helper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
@@ -391,7 +408,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq2.html">Part 2: Capturing images</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq3.html">Part 3: Capturing other data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the Spot CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the CORE I/O</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq5.html">Part 5: Collecting data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq6.html">Part 6: Processing collected data</a></li>
 </ul>
@@ -405,9 +422,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul class="current">
@@ -421,6 +443,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-proto">autowalk/autowalk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-service-proto">autowalk/autowalk_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-walks-proto">autowalk/walks.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
@@ -444,6 +469,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
@@ -539,6 +566,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -3211,6 +3239,26 @@ the API</p>
 <td>The start slice for the choreographer save.</td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn.api.spot.ChoreographyInfo"></a></p>
+</section>
+<section id="choreographyinfo">
+<h2>ChoreographyInfo<a class="headerlink" href="#choreographyinfo" title="Permalink to this headline">¶</a></h2>
+<p>Describes metadata for the Choreography sequence that can be used for a number of different UIs</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>labels</td>
+<td><a href="#string">string</a></td>
+<td>the list of user assigned categories that the sequence belongs to</td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn.api.spot.ChoreographySequence"></a></p>
 </section>
 <section id="choreographysequence">
@@ -3240,6 +3288,11 @@ the API</p>
 <td><a href="#bosdyn.api.spot.MoveParams">MoveParams</a></td>
 <td>All of the moves in this choreography sequence.</td>
 </tr>
+<tr>
+<td>choreography_info</td>
+<td><a href="#bosdyn.api.spot.ChoreographyInfo">ChoreographyInfo</a></td>
+<td></td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn.api.spot.ChoreographyStateLog"></a></p>
 </section>
@@ -3258,6 +3311,100 @@ the API</p>
 <td>key_frames</td>
 <td><a href="#bosdyn.api.spot.LoggedStateKeyFrame">LoggedStateKeyFrame</a></td>
 <td>A set of key frames recorded at a high rate. The key frames can be for the duration of an executing choreography or for the duration of a manual recorded log (triggered by the StartRecordingState and StopRecordingState RPCs). The specific set of keyframes is specified by the LogType when requesting to download the data.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.ClearAllSequenceFilesRequest"></a></p>
+</section>
+<section id="clearallsequencefilesrequest">
+<h2>ClearAllSequenceFilesRequest<a class="headerlink" href="#clearallsequencefilesrequest" title="Permalink to this headline">¶</a></h2>
+<p>Reset to a clean slate with no retained files by deleting all non-permanent
+choreography related files</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.RequestHeader">bosdyn.api.RequestHeader</a></td>
+<td>Common request header</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.ClearAllSequenceFilesResponse"></a></p>
+</section>
+<section id="clearallsequencefilesresponse">
+<h2>ClearAllSequenceFilesResponse<a class="headerlink" href="#clearallsequencefilesresponse" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.ResponseHeader">bosdyn.api.ResponseHeader</a></td>
+<td>Common response header.</td>
+</tr>
+<tr>
+<td>status</td>
+<td><a href="#bosdyn.api.spot.ClearAllSequenceFilesResponse.Status">ClearAllSequenceFilesResponse.Status</a></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.DeleteSequenceRequest"></a></p>
+</section>
+<section id="deletesequencerequest">
+<h2>DeleteSequenceRequest<a class="headerlink" href="#deletesequencerequest" title="Permalink to this headline">¶</a></h2>
+<p>Delete the retained file for a choreography sequence so the sequence will be forgotten on reboot</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.RequestHeader">bosdyn.api.RequestHeader</a></td>
+<td>Common request header</td>
+</tr>
+<tr>
+<td>sequence_name</td>
+<td><a href="#string">string</a></td>
+<td>Name of the sequence to delete, sequence will be forgotten on the next reboot</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.DeleteSequenceResponse"></a></p>
+</section>
+<section id="deletesequenceresponse">
+<h2>DeleteSequenceResponse<a class="headerlink" href="#deletesequenceresponse" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.ResponseHeader">bosdyn.api.ResponseHeader</a></td>
+<td>Common response header.</td>
+</tr>
+<tr>
+<td>status</td>
+<td><a href="#bosdyn.api.spot.DeleteSequenceResponse.Status">DeleteSequenceResponse.Status</a></td>
+<td></td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.spot.DownloadRobotStateLogRequest"></a></p>
@@ -3502,6 +3649,11 @@ the API</p>
 <tr>
 <td>known_sequences</td>
 <td><a href="#string">string</a></td>
+<td>DEPRECATED as of 3.2.0: The string list of known sequence names has been deprecated and replaced by the repeated field sequence_info.</td>
+</tr>
+<tr>
+<td>sequence_info</td>
+<td><a href="#bosdyn.api.spot.SequenceInfo">SequenceInfo</a></td>
 <td>List of choreography sequences the robot knows about.</td>
 </tr>
 </tbody>
@@ -3615,6 +3767,66 @@ the API</p>
 <td>timestamp</td>
 <td><a href="#google.protobuf.Timestamp">google.protobuf.Timestamp</a></td>
 <td>The timestamp (in robot time) for the key frame.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.ModifyChoreographyInfoRequest"></a></p>
+</section>
+<section id="modifychoreographyinforequest">
+<h2>ModifyChoreographyInfoRequest<a class="headerlink" href="#modifychoreographyinforequest" title="Permalink to this headline">¶</a></h2>
+<p>Edit the metadata of a choreography sequence and update any retained files for
+that sequence with the new metadata</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.RequestHeader">bosdyn.api.RequestHeader</a></td>
+<td>Common request header</td>
+</tr>
+<tr>
+<td>sequence_name</td>
+<td><a href="#string">string</a></td>
+<td>Name of the sequence to be modified</td>
+</tr>
+<tr>
+<td>add_labels</td>
+<td><a href="#string">string</a></td>
+<td>Labels to be added to the sequence's metadata</td>
+</tr>
+<tr>
+<td>remove_labels</td>
+<td><a href="#string">string</a></td>
+<td>Labels to be removed from the sequence's metadata</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.ModifyChoreographyInfoResponse"></a></p>
+</section>
+<section id="modifychoreographyinforesponse">
+<h2>ModifyChoreographyInfoResponse<a class="headerlink" href="#modifychoreographyinforesponse" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.ResponseHeader">bosdyn.api.ResponseHeader</a></td>
+<td>Common response header.</td>
+</tr>
+<tr>
+<td>status</td>
+<td><a href="#bosdyn.api.spot.ModifyChoreographyInfoResponse.Status">ModifyChoreographyInfoResponse.Status</a></td>
+<td></td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.spot.MoveInfo"></a></p>
@@ -3915,6 +4127,89 @@ the API</p>
 <td>animate_params</td>
 <td><a href="#bosdyn.api.spot.AnimateParams">AnimateParams</a></td>
 <td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.SaveSequenceRequest"></a></p>
+</section>
+<section id="savesequencerequest">
+<h2>SaveSequenceRequest<a class="headerlink" href="#savesequencerequest" title="Permalink to this headline">¶</a></h2>
+<p>Write a choreography sequence as a file to robot memory so it will be retained through reboot</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.RequestHeader">bosdyn.api.RequestHeader</a></td>
+<td>Common request header</td>
+</tr>
+<tr>
+<td>sequence_name</td>
+<td><a href="#string">string</a></td>
+<td>Name of the sequence to be added to the selection of retained sequences</td>
+</tr>
+<tr>
+<td>add_labels</td>
+<td><a href="#string">string</a></td>
+<td>List of labels to add to the sequence when it is being saved</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.SaveSequenceResponse"></a></p>
+</section>
+<section id="savesequenceresponse">
+<h2>SaveSequenceResponse<a class="headerlink" href="#savesequenceresponse" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.ResponseHeader">bosdyn.api.ResponseHeader</a></td>
+<td>Common response header.</td>
+</tr>
+<tr>
+<td>status</td>
+<td><a href="#bosdyn.api.spot.SaveSequenceResponse.Status">SaveSequenceResponse.Status</a></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.SequenceInfo"></a></p>
+</section>
+<section id="sequenceinfo">
+<h2>SequenceInfo<a class="headerlink" href="#sequenceinfo" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td><a href="#string">string</a></td>
+<td></td>
+</tr>
+<tr>
+<td>labels</td>
+<td><a href="#string">string</a></td>
+<td></td>
+</tr>
+<tr>
+<td>saved_state</td>
+<td><a href="#bosdyn.api.spot.SequenceInfo.SavedState">SequenceInfo.SavedState</a></td>
+<td>Use temporary sequences during development with choreographer, and then tell the robot to retain the final version of the sequence so that it can be played back later from other interfaces, like the tablet</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.spot.StartRecordingStateRequest"></a></p>
@@ -4230,6 +4525,74 @@ displayed with.</p>
 <td></td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn.api.spot.ClearAllSequenceFilesResponse.Status"></a></p>
+</section>
+<section id="clearallsequencefilesresponse-status">
+<h2>ClearAllSequenceFilesResponse.Status<a class="headerlink" href="#clearallsequencefilesresponse-status" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STATUS_UNKNOWN</td>
+<td>0</td>
+<td>Do not use.</td>
+</tr>
+<tr>
+<td>STATUS_OK</td>
+<td>1</td>
+<td>All retained sequences were successfully removed from robot memory</td>
+</tr>
+<tr>
+<td>STATUS_FAILED_TO_DELETE</td>
+<td>2</td>
+<td>Deletion of all retained files failed</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.DeleteSequenceResponse.Status"></a></p>
+</section>
+<section id="deletesequenceresponse-status">
+<h2>DeleteSequenceResponse.Status<a class="headerlink" href="#deletesequenceresponse-status" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STATUS_UNKNOWN</td>
+<td>0</td>
+<td>Do not use.</td>
+</tr>
+<tr>
+<td>STATUS_OK</td>
+<td>1</td>
+<td>The sequence was successfully deleted</td>
+</tr>
+<tr>
+<td>STATUS_UNKNOWN_SEQUENCE</td>
+<td>2</td>
+<td>The sequence does not exist</td>
+</tr>
+<tr>
+<td>STATUS_ALREADY_TEMPORARY</td>
+<td>3</td>
+<td>The sequence is already temporary and will be removed at the next reboot.</td>
+</tr>
+<tr>
+<td>STATUS_PERMANENT_SEQUENCE</td>
+<td>4</td>
+<td>Permanent sequences cannot be deleted</td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn.api.spot.DownloadRobotStateLogRequest.LogType"></a></p>
 </section>
 <section id="downloadrobotstatelogrequest-logtype">
@@ -4332,6 +4695,45 @@ displayed with.</p>
 <td></td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn.api.spot.ModifyChoreographyInfoResponse.Status"></a></p>
+</section>
+<section id="modifychoreographyinforesponse-status">
+<h2>ModifyChoreographyInfoResponse.Status<a class="headerlink" href="#modifychoreographyinforesponse-status" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STATUS_UNKNOWN</td>
+<td>0</td>
+<td>Do not use.</td>
+</tr>
+<tr>
+<td>STATUS_OK</td>
+<td>1</td>
+<td>The sequence was successfully modified</td>
+</tr>
+<tr>
+<td>STATUS_UNKNOWN_SEQUENCE</td>
+<td>2</td>
+<td>The sequence does not exist</td>
+</tr>
+<tr>
+<td>STATUS_PERMANENT_SEQUENCE</td>
+<td>3</td>
+<td>Permanent sequences cannot be modified</td>
+</tr>
+<tr>
+<td>STATUS_FAILED_TO_UPDATE</td>
+<td>4</td>
+<td>The changes were made, but the retained sequence file was not updated and changes were reverted</td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn.api.spot.MoveInfo.TransitionState"></a></p>
 </section>
 <section id="moveinfo-transitionstate">
@@ -4370,6 +4772,79 @@ displayed with.</p>
 <td>TRANSITION_STATE_SPRAWL</td>
 <td>4</td>
 <td>The robot requires a self-right.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.SaveSequenceResponse.Status"></a></p>
+</section>
+<section id="savesequenceresponse-status">
+<h2>SaveSequenceResponse.Status<a class="headerlink" href="#savesequenceresponse-status" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STATUS_UNKNOWN</td>
+<td>0</td>
+<td>Do not use.</td>
+</tr>
+<tr>
+<td>STATUS_OK</td>
+<td>1</td>
+<td>The sequence was successfully saved</td>
+</tr>
+<tr>
+<td>STATUS_UNKNOWN_SEQUENCE</td>
+<td>2</td>
+<td>The sequence was successfully saved</td>
+</tr>
+<tr>
+<td>STATUS_PERMANENT_SEQUENCE</td>
+<td>3</td>
+<td>This sequence is already saved in the release</td>
+</tr>
+<tr>
+<td>STATUS_FAILED_TO_SAVE</td>
+<td>4</td>
+<td>We failed to save a file with the sequence information to robot</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.SequenceInfo.SavedState"></a></p>
+</section>
+<section id="sequenceinfo-savedstate">
+<h2>SequenceInfo.SavedState<a class="headerlink" href="#sequenceinfo-savedstate" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SAVED_STATE_UNKNOWN</td>
+<td>0</td>
+<td>Status unknown; do not use</td>
+</tr>
+<tr>
+<td>SAVED_STATE_TEMPORARY</td>
+<td>1</td>
+<td>Sequence will be forgotten on reboot</td>
+</tr>
+<tr>
+<td>SAVED_STATE_RETAINED</td>
+<td>2</td>
+<td>A file for this sequence is stored on the robot; the sequence will be loaded to memory each time the robot boots</td>
+</tr>
+<tr>
+<td>SAVED_STATE_PERMANENT</td>
+<td>3</td>
+<td>Sequence was built into the release and can't be deleted</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.spot.StartRecordingStateResponse.Status"></a></p>
@@ -4435,6 +4910,11 @@ displayed with.</p>
 <td>2</td>
 <td>The animated move is considered invalid, see the warnings.</td>
 </tr>
+<tr>
+<td>STATUS_PING_RESPONSE</td>
+<td>3</td>
+<td>Treated this message as a ping. Responding to demonstrate connectivity.</td>
+</tr>
 </tbody>
 </table> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn/api/spot/choreography_service.proto"></a></p>
 </section>
@@ -4465,6 +4945,30 @@ displayed with.</p>
 <td><a href="#bosdyn.api.spot.ListAllSequencesRequest">ListAllSequencesRequest</a></td>
 <td><a href="#bosdyn.api.spot.ListAllSequencesResponse">ListAllSequencesResponse</a></td>
 <td>List the available choreography sequences currently on the robot.</td>
+</tr>
+<tr>
+<td>DeleteSequence</td>
+<td><a href="#bosdyn.api.spot.DeleteSequenceRequest">DeleteSequenceRequest</a></td>
+<td><a href="#bosdyn.api.spot.DeleteSequenceResponse">DeleteSequenceResponse</a></td>
+<td>Delete a retained choreography sequence from the collection of user uploaded choreography sequences.</td>
+</tr>
+<tr>
+<td>SaveSequence</td>
+<td><a href="#bosdyn.api.spot.SaveSequenceRequest">SaveSequenceRequest</a></td>
+<td><a href="#bosdyn.api.spot.SaveSequenceResponse">SaveSequenceResponse</a></td>
+<td>Save a user uploaded choreography sequence to the robots collection of retained choreography sequences.</td>
+</tr>
+<tr>
+<td>ModifyChoreographyInfo</td>
+<td><a href="#bosdyn.api.spot.ModifyChoreographyInfoRequest">ModifyChoreographyInfoRequest</a></td>
+<td><a href="#bosdyn.api.spot.ModifyChoreographyInfoResponse">ModifyChoreographyInfoResponse</a></td>
+<td>Modify the metadata of a choreography sequence.</td>
+</tr>
+<tr>
+<td>ClearAllSequenceFiles</td>
+<td><a href="#bosdyn.api.spot.ClearAllSequenceFilesRequest">ClearAllSequenceFilesRequest</a></td>
+<td><a href="#bosdyn.api.spot.ClearAllSequenceFilesResponse">ClearAllSequenceFilesResponse</a></td>
+<td>Clear all retained choreography sequence files from robot memory.</td>
 </tr>
 <tr>
 <td>UploadChoreography</td>

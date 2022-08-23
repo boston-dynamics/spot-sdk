@@ -5,24 +5,25 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 from __future__ import print_function
+
 import argparse
-from enum import Enum
 import math
 import textwrap
 import time
-
-from bosdyn.api import estop_pb2
-from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
-import bosdyn.api.basic_command_pb2 as basic_command_pb2
-import bosdyn.client
-import bosdyn.client.util
-import bosdyn.client.estop
-from bosdyn.client.lease import LeaseClient, ResourceAlreadyClaimedError
-from bosdyn.client.estop import EstopClient
-from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient
-from bosdyn.geometry import EulerZXY
+from enum import Enum
 
 from xbox_joystick_factory import XboxJoystickFactory
+
+import bosdyn.api.basic_command_pb2 as basic_command_pb2
+import bosdyn.client
+import bosdyn.client.estop
+import bosdyn.client.util
+from bosdyn.api import estop_pb2
+from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
+from bosdyn.client.estop import EstopClient
+from bosdyn.client.lease import LeaseClient, ResourceAlreadyClaimedError
+from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient
+from bosdyn.geometry import EulerZXY
 
 VELOCITY_BASE_SPEED = 0.5  # m/s
 VELOCITY_BASE_ANGULAR = 0.8  # rad/sec
@@ -193,11 +194,13 @@ class XboxController:
         try:
             self.lease_client.acquire()
         except ResourceAlreadyClaimedError as exc:
-            print("Another controller " + exc.response.lease_owner.client_name + " has a lease. Close that controller"
-            ", wait a few seconds and press the Start button again.")
+            print("Another controller " + exc.response.lease_owner.client_name +
+                  " has a lease. Close that controller"
+                  ", wait a few seconds and press the Start button again.")
             return
         else:
-            self.lease_keep_alive = bosdyn.client.lease.LeaseKeepAlive(self.lease_client, return_at_exit=True)
+            self.lease_keep_alive = bosdyn.client.lease.LeaseKeepAlive(
+                self.lease_client, return_at_exit=True)
             self.has_robot_control = True
 
     def _power_motors(self):

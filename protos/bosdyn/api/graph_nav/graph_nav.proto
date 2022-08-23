@@ -15,13 +15,20 @@ import "bosdyn/api/data_chunk.proto";
 import "bosdyn/api/geometry.proto";
 import "bosdyn/api/graph_nav/nav.proto";
 import "bosdyn/api/graph_nav/map.proto";
+import "bosdyn/api/graph_nav/area_callback.proto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
 import "bosdyn/api/license.proto";
 import "bosdyn/api/robot_state.proto";
 import "bosdyn/api/world_object.proto";
 
+import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
+
+message VisualRefinementOptions {
+    // Whether to return a STATUS_VISUAL_ALIGNMENT_FAILED if refine_with_visual_features fails.
+    bool verify_refinement_quality = 1;
+}
 
 // The SetLocalization request is used to initialize or reset the localization of GraphNav
 // to a map. A localization consists of a waypoint ID, and a pose of the robot relative to that waypoint.
@@ -69,11 +76,6 @@ message SetLocalizationRequest {
     // If detections exist, but are low quality, STATUS_FIDUCIAL_TOO_FAR_AWAY, FIDUCIAL_TOO_OLD, or FIDUCIAL_POSE_UNCERTAIN will be returned.
     int32 use_fiducial_id = 8;
 
-    // If true, and we are using fiducials during initialization, will run ICP after the fiducial
-    // was used for an initial guess.
-    bool refine_fiducial_result_with_icp = 9;
-
-
     // If true, consider how nearby localizations appear (like turned 180).
     bool do_ambiguity_check = 10;
 
@@ -83,6 +85,14 @@ message SetLocalizationRequest {
     // may be used to infer the robot's location.
     bool restrict_fiducial_detections_to_target_waypoint = 11;
 
+    oneof refinement {
+        // If true, and we are using fiducials during initialization, will run ICP after the fiducial
+        // was used for an initial guess.
+        bool refine_fiducial_result_with_icp = 9;
+
+        // Improve localization based on images from body cameras
+        VisualRefinementOptions refine_with_visual_features = 12;
+    }
 }
 
 // Info on whether the robot's current sensor setup is compatible with the recorded data
@@ -137,6 +147,8 @@ message SetLocalizationResponse {
         // The localization could not be set, because the map was recorded using a different sensor
         // setup than the robot currently has onboard. See SensorStatus for more details.
         STATUS_INCOMPATIBLE_SENSORS = 10;
+        // Visual feature based alignment failed or the pose solution was considered unreliable.
+        STATUS_VISUAL_ALIGNMENT_FAILED = 11;
     }
     // Return status for the request.
     Status status = 3;
@@ -202,6 +214,16 @@ message TravelParams {
 
     // Disable alternate-route-finding; overrides the per-edge setting in the map.
     bool disable_alternate_route_finding = 8;
+
+    // Path following mode
+    bosdyn.api.graph_nav.Edge.Annotations.PathFollowingMode path_following_mode = 9;
+
+    // Time to wait for blocked path to clear (seconds)
+    google.protobuf.Duration blocked_path_wait_time = 10;
+
+    // Ground clutter avoidance mode.
+    bosdyn.api.graph_nav.Edge.Annotations.GroundClutterAvoidanceMode ground_clutter_mode = 11;
+
 }
 
 // The NavigateToRequest can be used to command GraphNav to drive the robot to a specific waypoint.
@@ -290,6 +312,8 @@ message NavigateToResponse {
         STATUS_STUCK                  = 14;
         // [Request Error] Happens when you try to continue a command that was either expired, or had an unrecognized id.
         STATUS_UNRECOGNIZED_COMMAND   = 15;
+        // [Route Error] Happens when you try to navigate along a route and a needed callback is no longer available.
+        STATUS_AREA_CALLBACK_ERROR = 16;
 
     }
     // Return status for the request.
@@ -303,6 +327,10 @@ message NavigateToResponse {
 
     // On a relevant error status code, these fields contain the waypoint/edge IDs that caused the error.
     repeated string error_waypoint_ids = 5;
+
+    // Errors about Area Callbacks in the map.
+    AreaCallbackServiceError area_callback_error = 10;
+
 }
 
 // These parameters are specific to how the robot follows a specified route in NavigateRoute.
@@ -457,6 +485,9 @@ message NavigateRouteResponse {
         STATUS_STUCK = 17;
         // [Request Error] Happens when you try to continue a command that was either expired, or had an unrecognized id.
         STATUS_UNRECOGNIZED_COMMAND   = 18;
+
+        // [Route Error] Happens when you try to navigate along a route and a needed callback is no longer available.
+        STATUS_AREA_CALLBACK_ERROR = 21;
     }
     // Return status for the request.
     Status status = 3;
@@ -471,6 +502,9 @@ message NavigateRouteResponse {
     repeated string error_waypoint_ids = 5;
     // On a relevant error status code (STATUS_INVALID_EDGE), this is populated with the edge ID's that cased the error.
     repeated Edge.Id error_edge_ids = 6;
+
+    // Errors about Area Callbacks in the map.
+    AreaCallbackServiceError area_callback_error = 8;
 }
 
 // The NavigateToAnchorRequest can be used to command GraphNav to drive the robot to a specific
@@ -571,6 +605,9 @@ message NavigateToAnchorResponse {
         // [Route Error] The pose is invalid, or known to be unachievable (upside-down, etc).
         STATUS_INVALID_POSE           = 16;
 
+        // [Route Error] Happens when you try to navigate along a route and a needed callback is no longer available.
+        STATUS_AREA_CALLBACK_ERROR = 17;
+
     }
     // Return status for the request.
     Status status = 3;
@@ -583,6 +620,10 @@ message NavigateToAnchorResponse {
 
     // On a relevant error status code, these fields contain the waypoint/edge IDs that caused the error.
     repeated string error_waypoint_ids = 5;
+
+    // Errors about Area Callbacks in the map.
+    AreaCallbackServiceError area_callback_error = 7;
+   
 }
 
 // The NavigationFeedback request message uses the command_id of a navigation request to get
@@ -634,12 +675,18 @@ message NavigationFeedbackResponse {
         STATUS_NOT_LOCALIZED_TO_ROUTE = 13;
         // The lease is no longer valid.
         STATUS_LEASE_ERROR = 14;
+        // An error occurred with an Area Callback. Lease errors will be reported via STATUS_LEASE_ERROR instead.
+        STATUS_AREA_CALLBACK_ERROR = 15;
     }
     // Return status for the request.
     Status status = 2;
 
     // If the status is ROBOT_IMPAIRED, this is why the robot is impaired.
     RobotImpairedState impaired_state = 6;
+
+    // If the status is AREA_CALLBACK_ERROR, this map will be filled out with the error.
+    // The key of the map is the region id.
+    map<string, AreaCallbackError> area_callback_errors = 9;
 
     // Remaining part of current route.
     Route remaining_route = 3;
@@ -653,7 +700,69 @@ message NavigationFeedbackResponse {
     // Indicates whether the robot's body is currently in motion.
     SE2TrajectoryCommand.Feedback.BodyMovementStatus body_movement_status = 7;
 
+    // Path following mode
+    bosdyn.api.graph_nav.Edge.Annotations.PathFollowingMode path_following_mode = 8;
 
+    // Map of Region IDs with relevant information
+    map<string, ActiveRegionInformation>  active_region_information = 10;
+
+    // Data for a Area Callback region
+    message ActiveRegionInformation {
+        // human readable name for the region
+        string description = 1;
+        // service name for the Area Callback region
+        string service_name = 2;
+        // Status of the Area Callback region
+        AreaCallbackStatus region_status = 3;
+
+        enum AreaCallbackStatus {
+            STATUS_UNKNOWN  = 0;
+            // The robot is navigating the Area Callback region
+            STATUS_NAVIGATING = 1;
+            // The robot is waiting for assistance to navigate through the Area Callback region
+            STATUS_WAITING = 2;
+            // The Area Callback service is in control of the robot
+            STATUS_CALLBACK_IN_CONTROL = 3;
+        }
+    }
+
+    // When the robot is following a route (and Status is STATUS_FOLLOWING_ROUTE), this gives additional
+    // detail about what the robot is doing to follow that route. When Status is not STATUS_FOLLOWING_ROUTE,
+    // this will be set to ROUTE_FOLLOWING_STATUS_UNKNOWN.
+    enum RouteFollowingStatus {
+        ROUTE_FOLLOWING_STATUS_UNKNOWN = 0;
+        // The robot is following the nominal path to the goal, either from a request or
+        // from internal path planning.
+        ROUTE_FOLLOWING_STATUS_FOLLOWING_ROUTE = 1;
+        // The robot is trying to get back to the nominal path to the goal, either because
+        // it was not on the nominal path originally, or because it was moved away from the path.
+        ROUTE_FOLLOWING_STATUS_RETURNING_TO_ROUTE = 2;
+        // The robot is taking a different path through the map via edges/waypoints
+        // to get around a perceived obstacle. This might take it through a different part
+        // of the building.
+        ROUTE_FOLLOWING_STATUS_FOLLOWING_ALTERNATE_ROUTE = 3;
+        // The robot is walking to a different, nearby part of the map to find a path around
+        // a perceived blockage.
+        ROUTE_FOLLOWING_STATUS_EXPLORING = 4;
+    };
+    // Additional information about what kind of route the robot is following and why.
+    RouteFollowingStatus route_following_status = 1000;
+
+    // Indicates whether the robot thinks its current path is blocked by an obstacle. This will be set when
+    // Status is STATUS_FOLLOWING_ROUTE, or STATUS_STUCK, and will be BLOCKAGE_STATUS_UNKNOWN in all other cases.
+    enum BlockageStatus {
+        BLOCKAGE_STATUS_UNKNOWN = 0;
+        // The robot believes the path forward to be clear of obstacles.
+        BLOCKAGE_STATUS_ROUTE_CLEAR = 1;
+        // The robot believes there is an obstacle in the path which it can't get around easily.
+        // It will attempt to get around the obstacle, and if all else fails it will declare itself stuck.
+        BLOCKAGE_STATUS_ROUTE_BLOCKED_TEMPORARILY = 2;
+        // The robot has given up trying to get around perceived obstacles in the path and has declared itself stuck.
+        // This will only ever be set when Status is STATUS_STUCK.
+        BLOCKAGE_STATUS_STUCK = 3;
+    };
+    // Additional information about whether or not the robot believes the current route to be blocked.
+    BlockageStatus blockage_status = 1001;
 }
 
 // The GetLocalizationState request message requests the current localization state and any other
@@ -792,6 +901,7 @@ message UploadGraphResponse {
         // The graph is invalid topologically, for example containing missing waypoints referenced by edges.
         STATUS_INVALID_GRAPH = 4;
         STATUS_INCOMPATIBLE_SENSORS = 5;
+        STATUS_AREA_CALLBACK_ERROR = 6;
     };
     // Status for an upload request.
     Status status = 8;
@@ -808,6 +918,9 @@ message UploadGraphResponse {
     // Large graphs can only be uploaded if the license permits them.
     LicenseInfo.Status license_status = 7;
     SensorCompatibilityStatus sensor_status = 9;
+
+    // Errors about Area Callbacks in the map.
+    AreaCallbackServiceError area_callback_error = 10;
 }
 
 // The DownloadGraphRequest requests that the server send the graph (waypoints and edges)
@@ -967,5 +1080,41 @@ message DownloadEdgeSnapshotResponse {
     // into a single byte string. Then, deserialize the byte string into an
     // EdgeSnapshot object.
     DataChunk chunk = 5;
+}
+
+
+// Information about problems Area Callback services specifified in a map or on a route.
+message AreaCallbackServiceError{
+
+    // Area Callback services that were requested but could not be contacted by graph nav.
+    // A service is considered missing if it is either not registered, or if it is registered
+    // but does not respond to a AreaCallbackInformation request.
+    repeated string missing_services = 1;
+    
+}
+
+
+// Run a check on the currently loaded map.
+message ValidateGraphRequest {
+    RequestHeader header = 1;
+}
+
+// Report possible errors with the loaded map.
+message ValidateGraphResponse {
+    ResponseHeader header = 1;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        STATUS_INCOMPATIBLE_SENSORS = 5;
+        STATUS_AREA_CALLBACK_ERROR = 6;
+    };
+    // Status of the currently loaded map.
+    Status status = 2;
+
+    SensorCompatibilityStatus sensor_status = 3;
+
+    // Errors about Area Callbacks in the map.
+    AreaCallbackServiceError area_callback_error = 4;
 }
 

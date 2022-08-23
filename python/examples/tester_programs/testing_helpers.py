@@ -6,13 +6,14 @@
 
 import logging
 import sys
+
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.client.server_util import strip_large_bytes_fields
-from bosdyn.client.exceptions import (ResponseError, ServiceUnavailableError, TimedOutError,
-                                      InvalidRequestError, UnableToConnectToRobotError)
-from bosdyn.client.directory import (DirectoryClient, NonexistentServiceError)
+from bosdyn.client.directory import DirectoryClient, NonexistentServiceError
+from bosdyn.client.exceptions import (InvalidRequestError, ResponseError, ServiceUnavailableError,
+                                      TimedOutError, UnableToConnectToRobotError)
 from bosdyn.client.robot_state import RobotStateClient
+from bosdyn.client.server_util import strip_large_bytes_fields
 
 # Logger for all the debug information from the tests.
 _LOGGER = logging.getLogger()

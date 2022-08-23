@@ -9,48 +9,40 @@
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
-
 """Register and run an Image Service for the output of a comms data on Spot."""
 
 import io
 import logging
-import six
-import time
-import threading
 import sys
+import threading
+import time
+
 import cv2
 import numpy as np
+import requests
+import six
+import urllib3
 
+import bosdyn.api.geometry_pb2 as geometry_protos
+import bosdyn.api.payload_pb2 as payload_protos
+import bosdyn.client.util
 import bosdyn.util
+from bosdyn.api import (header_pb2, image_pb2, image_service_pb2, image_service_pb2_grpc,
+                        payload_registration_pb2, service_fault_pb2)
+from bosdyn.client.async_tasks import AsyncPeriodicQuery, AsyncTasks
 from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
                                                   DirectoryRegistrationKeepAlive)
 from bosdyn.client.fault import FaultClient, ServiceFaultDoesNotExistError
-from bosdyn.client.util import setup_logging, GrpcServiceRunner, populate_response_header
-
-from bosdyn.client.robot_state import RobotStateClient
-
-from bosdyn.api import service_fault_pb2
-from bosdyn.api import header_pb2
-from bosdyn.api import image_pb2
-from bosdyn.api import image_service_pb2
-from bosdyn.api import image_service_pb2_grpc
-from bosdyn.api import payload_registration_pb2
-from bosdyn.client.async_tasks import AsyncPeriodicQuery, AsyncTasks
-
-from bosdyn.client.payload_registration import PayloadRegistrationClient, PayloadAlreadyExistsError
-import bosdyn.client.util
-
-import bosdyn.api.payload_pb2 as payload_protos
-import bosdyn.api.geometry_pb2 as geometry_protos
-
-from bosdyn.client.math_helpers import SE3Pose
 from bosdyn.client.frame_helpers import get_odom_tform_body
+from bosdyn.client.math_helpers import SE3Pose
+from bosdyn.client.payload_registration import PayloadAlreadyExistsError, PayloadRegistrationClient
+from bosdyn.client.robot_state import RobotStateClient
+from bosdyn.client.util import GrpcServiceRunner, populate_response_header, setup_logging
 
-import requests
-import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 import matplotlib as mpl
+
 mpl.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib import cm as CM
@@ -84,12 +76,13 @@ GOOD_SNR_THRESH = 40
 
 # misc constants
 IMG_SHAPE = (720, 1280, 3)
-WHITE_COLOR = (255,255,255)
-RED_COLOR = (0,0,255)
-GREEN_COLOR = (0,255,0)
-YELLOW_COLOR = (0,211,255)
+WHITE_COLOR = (255, 255, 255)
+RED_COLOR = (0, 0, 255)
+GREEN_COLOR = (0, 255, 0)
+YELLOW_COLOR = (0, 211, 255)
 
 _LOGGER = logging.getLogger(__name__)
+
 
 class AsyncRobotState(AsyncPeriodicQuery):
     """Grab robot state."""
@@ -100,6 +93,7 @@ class AsyncRobotState(AsyncPeriodicQuery):
 
     def _start_query(self):
         return self._client.get_robot_state_async()
+
 
 class CommsImageServicer(image_service_pb2_grpc.ImageServiceServicer):
     """GRPC service to provide access to multiple different image sources. The service can list the
@@ -231,7 +225,7 @@ class CommsImageServicer(image_service_pb2_grpc.ImageServiceServicer):
                 quality = self.default_jpeg_quality
                 if img_req.quality_percent > 0 and img_req.quality_percent <= 100:
                     quality = img_req.quality_percent
-                encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
+                encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), int(quality)]
                 img_resp.shot.image.data = cv2.imencode('.jpg', frame, encode_param)[1].tostring()
                 img_resp.shot.image.format = image_pb2.Image.FORMAT_JPEG
             else:
@@ -256,7 +250,7 @@ class CommsImageServicer(image_service_pb2_grpc.ImageServiceServicer):
     def make_image_source(source_name):
         """Create an instance of the image_pb2.ImageSource and a VideoCapture for that image source.
         Args:
-            device_name(str): The image source name that should be described.
+            source_name(str): The image source name that should be described.
 
         Returns:
             An ImageSource with the cols, rows, and image type populated, in addition to an OpenCV VideoCapture
@@ -268,6 +262,7 @@ class CommsImageServicer(image_service_pb2_grpc.ImageServiceServicer):
         source.rows = 1280
         source.image_type = image_pb2.ImageSource.IMAGE_TYPE_VISUAL
         return source
+
 
 def run_service(bosdyn_sdk_robot, port, service_name, options, logger=None):
     # Proto service specific function used to attach a servicer to a server.
@@ -284,6 +279,7 @@ def add_web_cam_arguments(parser):
         help=('Image source to query. If none are passed, it will default to the first available '
               'source.'), action='append', required=False, default=[SOURCE_NAME])
 
+
 def self_register_payload(robot, config):
     payload_registration_client = robot.ensure_client(
         PayloadRegistrationClient.default_service_name)
@@ -291,10 +287,11 @@ def self_register_payload(robot, config):
     payload = define_payload(GUID, config.name, config.description)
 
     # Register the payload and authenticate
-    payload_registration_client.register_payload_and_authenticate(payload, SECRET)
+    robot.register_payload_and_authenticate(payload, SECRET)
     _LOGGER.info('Payload has been authorized by admin.')
 
     return True
+
 
 def define_payload(guid, name, description):
     """Return an arbitrary bosdyn.api.Payload object."""
@@ -314,9 +311,11 @@ def define_payload(guid, name, description):
 
     return payload
 
+
 class FakeWifi():
     """Returns fake data for testing
     """
+
     def __init__(self):
         self.data = {
             "beacons_received": 22705,
@@ -341,9 +340,11 @@ class FakeWifi():
         self.data['rx_signal_dbm'] = self.data['rx_signal_dbm'] + 0.1
         return self.data
 
+
 class WifiStatsRetriever():
     """Retrieves data from robot data buffer
     """
+
     def __init__(self, robot):
         self.robot = robot
         self.data = {
@@ -417,9 +418,11 @@ class WifiStatsRetriever():
     def get_latest_data(self):
         return self.data
 
+
 class RajantStatsRetriever():
     """Retrieves data from robot data buffer
     """
+
     def __init__(self, robot):
         self.robot = robot
         self.data = {
@@ -474,7 +477,7 @@ class RajantStatsRetriever():
             self.token_str = self.get_token()
         elif resp.status_code == 200:
             try:
-                data = resp.json()['messages'][0]['message'] # ['devices'][0]['associations'][0]
+                data = resp.json()['messages'][0]['message']  # ['devices'][0]['associations'][0]
                 # map some of the Rajant stats to the wifi proto
                 self.data["beacons_received"] = len(data["peers"])
                 # find peer with max rssi
@@ -504,6 +507,7 @@ class RajantStatsRetriever():
     def get_latest_data(self):
         return self.data
 
+
 class CommsMapImageRenderer():
 
     def __init__(self, testmode, options):
@@ -511,7 +515,8 @@ class CommsMapImageRenderer():
         try:
             self.robot = sdk.create_robot(options.hostname)
             self.robot.authenticate_from_payload_credentials(GUID, SECRET)
-            self.robot_state_client = self.robot.ensure_client(RobotStateClient.default_service_name)
+            self.robot_state_client = self.robot.ensure_client(
+                RobotStateClient.default_service_name)
             self._robot_state_task = AsyncRobotState(self.robot_state_client)
         except Exception as e:
             _LOGGER.error("Unable to create robot state client: {}".format(e))
@@ -520,7 +525,8 @@ class CommsMapImageRenderer():
         self._task_list = [self._robot_state_task]
         self._async_tasks = AsyncTasks(self._task_list)
 
-        self.update_thread = threading.Thread(target=self.update_async_thread, args=[self._async_tasks])
+        self.update_thread = threading.Thread(target=self.update_async_thread,
+                                              args=[self._async_tasks])
         self.update_thread.daemon = True
 
         self.frame = np.zeros(IMG_SHAPE, dtype=np.uint8)
@@ -559,10 +565,10 @@ class CommsMapImageRenderer():
 
         # Font setup for adding text to the CV image
         self.text_render_font = cv2.FONT_HERSHEY_SIMPLEX
-        self.text_render_size = 0.5 # fontScale
-        self.text_render_top_frame = 500 # Location above frame bottom
-        self.text_render_line_increment_y = 35 # line height
-        self.text_render_left_margin = 12 # location from left side
+        self.text_render_size = 0.5  # fontScale
+        self.text_render_top_frame = 500  # Location above frame bottom
+        self.text_render_line_increment_y = 35  # line height
+        self.text_render_left_margin = 12  # location from left side
         self.text_render_thickness = 1
         _LOGGER.info("CommsMapImageRenderer object init complete")
 
@@ -590,7 +596,7 @@ class CommsMapImageRenderer():
             if loc is None:
                 return False
             if len(self.map_x) == 0:
-                return(True)
+                return (True)
             point1 = np.array((self.map_x[-1], self.map_y[-1]))
             point2 = np.array((loc.x, loc.y))
             return np.linalg.norm(point1 - point2) > TRAVEL_THRESH
@@ -607,7 +613,6 @@ class CommsMapImageRenderer():
                 self.rssi_list.append(rx_signal_dbm)
             _LOGGER.debug(f"{self.rssi_list}")
 
-
     def update_map(self):
         while True:
             self.draw_comms_map()
@@ -615,21 +620,16 @@ class CommsMapImageRenderer():
 
     def comms_colormaps(self):
         colors = [
-            (.96,.32,.23), # Red light red
-            (1.0,.48,.33), # Salmon-ish
-            (.96,.63,.27), # Orange
-            (1.0,.84,.23), # Dehydrated Yellow
-            (1.0,1.0,.28), # Lemon Yellow
-            (.22,.73,.29)  # Artificial Green
+            (.96, .32, .23),  # Red light red
+            (1.0, .48, .33),  # Salmon-ish
+            (.96, .63, .27),  # Orange
+            (1.0, .84, .23),  # Dehydrated Yellow
+            (1.0, 1.0, .28),  # Lemon Yellow
+            (.22, .73, .29)  # Artificial Green
         ]
         n_bins_ranges = [
-            NO_SIGNAL - 10,
-            NO_SIGNAL,
-            VERY_POOR_RSSI_THRESH,
-            POOR_RSSI_THRESH,
-            WARN_RSSI_THRESH,
-            GOOD_RSSI_THRESH,
-            0
+            NO_SIGNAL - 10, NO_SIGNAL, VERY_POOR_RSSI_THRESH, POOR_RSSI_THRESH, WARN_RSSI_THRESH,
+            GOOD_RSSI_THRESH, 0
         ]
         n_bin = len(n_bins_ranges) - 1
         cmap_name = 'comms_cm'
@@ -637,39 +637,32 @@ class CommsMapImageRenderer():
         norm_bins = mpl.colors.BoundaryNorm(n_bins_ranges, len(n_bins_ranges))
 
         colors_snr = [
-            (.96,.32,.23), # Red light red
-            (1.0,.48,.33), # Salmon-ish
-            (.96,.63,.27), # Orange
-            (1.0,.84,.23), # Dehydrated Yellow
-            (.22,.73,.29)  # Artificial Green
+            (.96, .32, .23),  # Red light red
+            (1.0, .48, .33),  # Salmon-ish
+            (.96, .63, .27),  # Orange
+            (1.0, .84, .23),  # Dehydrated Yellow
+            (.22, .73, .29)  # Artificial Green
         ]
         n_bins_ranges_snr = [
-            VERY_POOR_SNR_THRESH - 10,
-            VERY_POOR_SNR_THRESH,
-            POOR_SNR_THRESH,
-            WARN_SNR_THRESH,
-            GOOD_SNR_THRESH,
-            100
+            VERY_POOR_SNR_THRESH - 10, VERY_POOR_SNR_THRESH, POOR_SNR_THRESH, WARN_SNR_THRESH,
+            GOOD_SNR_THRESH, 100
         ]
         n_bin_snr = len(n_bins_ranges_snr) - 1
         cmap_name = 'comms_cm_snr'
         cm_snr = mpl.colors.LinearSegmentedColormap.from_list(cmap_name, colors_snr, N=n_bin_snr)
         norm_bins_snr = mpl.colors.BoundaryNorm(n_bins_ranges_snr, len(n_bins_ranges_snr))
-        cm_dict = {
-            "rssi": (cm, norm_bins),
-            "snr": (cm_snr, norm_bins_snr)
-        }
+        cm_dict = {"rssi": (cm, norm_bins), "snr": (cm_snr, norm_bins_snr)}
         return cm_dict
 
     def draw_comms_map(self):
-        fig, ax = plt.subplots(figsize=(7.5,6.7))
+        fig, ax = plt.subplots(figsize=(7.5, 6.7))
         with self.data_lock:
             sc = ax.scatter(
                 self.map_x,
                 self.map_y,
                 c=self.rssi_list,
                 s=20,
-                cmap=self.cm,# CM.RdYlGn,
+                cmap=self.cm,  # CM.RdYlGn,
                 alpha=1,
                 norm=self.norm_bins
                 #edgecolor='grey'
@@ -688,7 +681,8 @@ class CommsMapImageRenderer():
 
     def get_robot_loc(self):
         if self._robot_state_task.proto:
-            odom_tform_body = get_odom_tform_body(self._robot_state_task.proto.kinematic_state.transforms_snapshot).to_proto()
+            odom_tform_body = get_odom_tform_body(
+                self._robot_state_task.proto.kinematic_state.transforms_snapshot).to_proto()
             helper_se3 = SE3Pose.from_obj(odom_tform_body)
             return helper_se3
 
@@ -728,10 +722,12 @@ class CommsMapImageRenderer():
         try:
             x_offset = 500
             y_offset = 20
-            self.frame[y_offset:y_offset + comms_map.shape[0], x_offset:x_offset + comms_map.shape[1]] = comms_map
+            self.frame[y_offset:y_offset + comms_map.shape[0],
+                       x_offset:x_offset + comms_map.shape[1]] = comms_map
         except Exception as e:
             _LOGGER.error("Unable to place comms survey map in frame: {}".format(e))
-            cv2.putText(self.frame,"Map not ready",(500,300),self.text_render_font,1.2,(0,0,255),2)
+            cv2.putText(self.frame, "Map not ready", (500, 300), self.text_render_font, 1.2,
+                        (0, 0, 255), 2)
             pass
 
         # Add all lines for display here with key of "Label: " and value of information to display
@@ -750,20 +746,12 @@ class CommsMapImageRenderer():
             else:
                 textcolor = WHITE_COLOR
             try:
-                cv2.putText(
-                    self.frame,
-                    field_label + str(data_string),
-                    (
-                        self.text_render_left_margin,
-                        self.frame.shape[0]-textline
-                    ),
-                    self.text_render_font,
-                    self.text_render_size,
-                    textcolor,
-                    self.text_render_thickness
-                )
+                cv2.putText(self.frame, field_label + str(data_string),
+                            (self.text_render_left_margin, self.frame.shape[0] - textline),
+                            self.text_render_font, self.text_render_size, textcolor,
+                            self.text_render_thickness)
             except Exception as e:
-                _LOGGER.error("Couldn't add line for {} because: {}".format(field_label,e))
+                _LOGGER.error("Couldn't add line for {} because: {}".format(field_label, e))
             textline = textline - self.text_render_line_increment_y
 
         return True
@@ -783,6 +771,7 @@ class CommsMapImageRenderer():
         frame = self.frame
         return frame, tnow
 
+
 if __name__ == '__main__':
     # Define all arguments used by this service.
     import argparse
@@ -791,19 +780,17 @@ if __name__ == '__main__':
     add_web_cam_arguments(parser)
 
     # Setup payload self-registration details
-    parser.add_argument("--name", type=str, help="Name of the payload.",
-                        default="CommsMapper")
-    parser.add_argument("--description", type=str,
-                        help="Description of the payload.", default="Comms mapping tool")
+    parser.add_argument("--name", type=str, help="Name of the payload.", default="CommsMapper")
+    parser.add_argument("--description", type=str, help="Description of the payload.",
+                        default="Comms mapping tool")
     parser.add_argument('--rajant', default=False, action='store_true')
     parser.add_argument('--testmode',
                         help="Run in 'test mode' without using real comms data, return fake values",
                         default='false')
 
     # base and service port arguments with CORE defaults
-    parser.add_argument(
-        '--hostname', default='192.168.50.3', help='Hostname or address of robot,'
-        ' e.g. "192.168.50.3"')
+    parser.add_argument('--hostname', default='192.168.50.3', help='Hostname or address of robot,'
+                        ' e.g. "192.168.50.3"')
     parser.add_argument('-v', '--verbose', action='store_true', help='Print debug-level messages')
     parser.add_argument(
         '--host-ip', default='192.168.50.5',

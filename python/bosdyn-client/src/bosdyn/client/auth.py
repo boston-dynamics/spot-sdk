@@ -14,11 +14,10 @@ InvalidTokenError -- Raised when authentication response indicates invalid token
 import collections
 import logging
 
-from bosdyn.api import auth_pb2
-from bosdyn.api import auth_service_pb2_grpc
+from bosdyn.api import auth_pb2, auth_service_pb2_grpc
 
-from .common import BaseClient
-from .common import error_factory, handle_common_header_errors, handle_unset_status_error
+from .common import (BaseClient, error_factory, handle_common_header_errors,
+                     handle_unset_status_error)
 from .exceptions import ResponseError
 
 _LOGGER = logging.getLogger(__name__)
@@ -114,7 +113,7 @@ class AuthClient(BaseClient):
         """
         req = _build_auth_request(username, password, app_token)
         return self.call(self._stub.GetAuthToken, req, _token_from_response, _error_from_response,
-                         **kwargs)
+                         copy_request=False, **kwargs)
 
     def auth_async(self, username, password, app_token=None, **kwargs):
         """Asynchronously authenticate to the robot with a username/password combo.
@@ -123,7 +122,7 @@ class AuthClient(BaseClient):
         """
         req = _build_auth_request(username, password, app_token)
         return self.call_async(self._stub.GetAuthToken, req, _token_from_response,
-                               _error_from_response, **kwargs)
+                               _error_from_response, copy_request=False, **kwargs)
 
     def auth_with_token(self, token, app_token=None, **kwargs):
         """Authenticate to the robot using a previously created user token.
@@ -143,7 +142,7 @@ class AuthClient(BaseClient):
         """
         req = _build_auth_token_request(token, app_token)
         return self.call(self._stub.GetAuthToken, req, _token_from_response, _error_from_response,
-                         **kwargs)
+                         copy_request=False, **kwargs)
 
     def auth_with_token_async(self, token, app_token=None, **kwargs):
         """Authenticate to the robot using a previously created user token.
@@ -152,4 +151,4 @@ class AuthClient(BaseClient):
         """
         req = _build_auth_token_request(token, app_token)
         return self.call_async(self._stub.GetAuthToken, req, _token_from_response,
-                               _error_from_response, **kwargs)
+                               _error_from_response, copy_request=False, **kwargs)

@@ -6,18 +6,16 @@
 
 """Tests for the power command client."""
 
-import pytest
-from concurrent import futures
 import time
+from concurrent import futures
 
-from bosdyn.client.power import _power_command_error_from_response, _power_feedback_error_from_response
-from bosdyn.client import power
+import pytest
 
-from bosdyn.api import power_pb2
-from bosdyn.api import robot_state_pb2
-from bosdyn.api import license_pb2
-
-from bosdyn.client import ResponseError, InternalServerError, InvalidRequestError, LicenseError, LeaseUseError, UnsetStatusError
+from bosdyn.api import license_pb2, power_pb2, robot_state_pb2
+from bosdyn.client import (InternalServerError, InvalidRequestError, LeaseUseError, LicenseError,
+                           ResponseError, UnsetStatusError, power)
+from bosdyn.client.power import (_power_command_error_from_response,
+                                 _power_feedback_error_from_response)
 
 # For coverage report, run with...
 # python -m pytest --cov bosdyn.client.power --cov-report term-missing tests/test_power.py
@@ -267,6 +265,7 @@ def test_safe_power_off_robot_timeout(feedback_fn):
     dt = time.time() - start
     assert abs(dt - timeout) < 0.1
 
+
 def test_safe_power_cycle_robot_success():
     mock_command_client = MockRobotCommandClient()
     mock_state_client = MockRobotStateClient()
@@ -278,7 +277,7 @@ def test_safe_power_cycle_robot_success():
     mock_power_client.feedback_fn = lambda: time.sleep(timeout / 4.0)
     mock_power_client.response = power_pb2.STATUS_SUCCESS
     power.safe_power_cycle_robot(mock_command_client, mock_state_client, mock_power_client, 20,
-                               update_frequency=100)
+                                 update_frequency=100)
 
 
 @pytest.mark.parametrize('feedback_fn', [None, lambda: time.sleep(3.0)])
@@ -291,6 +290,6 @@ def test_safe_power_cycle_robot_timeout(feedback_fn):
     start = time.time()
     with pytest.raises(power.CommandTimedOutError):
         power.safe_power_cycle_robot(mock_command_client, mock_state_client, mock_power_client,
-                                   timeout, update_frequency=100)
+                                     timeout, update_frequency=100)
     dt = time.time() - start
     assert abs(dt - timeout) < 0.1

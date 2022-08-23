@@ -5,39 +5,34 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 from __future__ import print_function
+
 import argparse
+import math
 import sys
 import time
-import numpy as np
-import math
-import bosdyn.client
-import bosdyn.client.util
-from bosdyn.client.robot_state import RobotStateClient
-from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder, blocking_stand
-from bosdyn.api import geometry_pb2 as geo
-from bosdyn.client.estop import EstopClient, EstopEndpoint, EstopKeepAlive
-from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
-
-from bosdyn.client.world_object import WorldObjectClient
-from bosdyn.client.world_object import make_add_world_object_req, make_change_world_object_req, make_delete_world_object_req
-from bosdyn import geometry
-from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
-from bosdyn.api import trajectory_pb2
-
-from bosdyn.client.common import BaseClient
-from bosdyn.client.common import common_header_errors
-from bosdyn.api.image_pb2 import ImageSource
-from bosdyn.api import image_pb2
-from bosdyn.client.image import ImageClient
-from bosdyn.client.network_compute_bridge_client import NetworkComputeBridgeClient
-from bosdyn.api import network_compute_bridge_pb2
-from bosdyn.api import network_compute_bridge_service_pb2
-from bosdyn.api import network_compute_bridge_service_pb2_grpc
-from bosdyn.client.math_helpers import Quat
-from google.protobuf import wrappers_pb2
 
 import cv2
 import numpy as np
+from google.protobuf import wrappers_pb2
+
+import bosdyn.client
+import bosdyn.client.util
+from bosdyn import geometry
+from bosdyn.api import geometry_pb2 as geo
+from bosdyn.api import (image_pb2, network_compute_bridge_pb2, network_compute_bridge_service_pb2,
+                        network_compute_bridge_service_pb2_grpc, trajectory_pb2)
+from bosdyn.api.image_pb2 import ImageSource
+from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
+from bosdyn.client.common import BaseClient, common_header_errors
+from bosdyn.client.estop import EstopClient, EstopEndpoint, EstopKeepAlive
+from bosdyn.client.image import ImageClient
+from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
+from bosdyn.client.math_helpers import Quat
+from bosdyn.client.network_compute_bridge_client import NetworkComputeBridgeClient
+from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient, blocking_stand
+from bosdyn.client.robot_state import RobotStateClient
+from bosdyn.client.world_object import (WorldObjectClient, make_add_world_object_req,
+                                        make_change_world_object_req, make_delete_world_object_req)
 
 
 def get_all_network_compute_services(directory_client):
@@ -239,6 +234,7 @@ def main(argv):
 
     cv2.imwrite('identify_object_output.jpg', img)
 
+
 def rotate_image_nocrop(img, rotation_rad):
     """ Rotate an image without cropping (instead adding black space) """
     h = img.shape[0]
@@ -252,8 +248,8 @@ def rotate_image_nocrop(img, rotation_rad):
     sin_d = abs(rotmat[0][1])
 
     # Compute the new bounding dimensions
-    nW = int( (h*sin_d) + (w*cos_d) )
-    nH = int( (h*cos_d) + (w*sin_d) )
+    nW = int((h * sin_d) + (w * cos_d))
+    nH = int((h * cos_d) + (w * sin_d))
 
     # Adjust the rotation matrix to account for translation
     rotmat[0][2] += (nW / 2.0) - cX
@@ -263,11 +259,13 @@ def rotate_image_nocrop(img, rotation_rad):
 
     return img, rotmat
 
+
 def rotate_point(x, y, rotmat):
     """ Apply a rotation matrix to a point """
     src = np.array([[[x, y]]])
     out = cv2.transform(src, rotmat)
     return out[0][0]
+
 
 if __name__ == '__main__':
     if not main(sys.argv[1:]):

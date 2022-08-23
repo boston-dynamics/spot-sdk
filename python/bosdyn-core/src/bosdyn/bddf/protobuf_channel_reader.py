@@ -47,7 +47,6 @@ class ProtobufChannelReader:
                                                                   index_in_series)
         return timestamp, msg
 
-
     def __iter__(self):
         return ProtobufChannelReader.Iterator(self)
 

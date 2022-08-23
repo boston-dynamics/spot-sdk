@@ -7,14 +7,13 @@
 """For clients to the network compute bridge service."""
 
 import collections
-from bosdyn.client.common import BaseClient
-from bosdyn.client.common import (error_factory, error_pair, handle_unset_status_error,
-                                  handle_common_header_errors, handle_lease_use_result_errors)
-from bosdyn.client.exceptions import Error, ResponseError, InternalServerError, UnsetStatusError
 
-from bosdyn.api import network_compute_bridge_pb2
-from bosdyn.api import network_compute_bridge_service_pb2
-from bosdyn.api import network_compute_bridge_service_pb2_grpc
+from bosdyn.api import (network_compute_bridge_pb2, network_compute_bridge_service_pb2,
+                        network_compute_bridge_service_pb2_grpc)
+from bosdyn.client.common import (BaseClient, error_factory, error_pair,
+                                  handle_common_header_errors, handle_lease_use_result_errors,
+                                  handle_unset_status_error)
+from bosdyn.client.exceptions import Error, InternalServerError, ResponseError, UnsetStatusError
 
 
 class ExternalServiceNotFoundError(ResponseError):

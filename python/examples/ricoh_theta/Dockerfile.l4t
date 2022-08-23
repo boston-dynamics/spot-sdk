@@ -1,0 +1,12 @@
+FROM nvcr.io/nvidia/l4t-tensorflow:r32.6.1-tf2.5-py3
+
+COPY docker-requirements-l4t.txt prebuilt/*.whl ./
+
+RUN python3 -m pip install -r docker-requirements-l4t.txt --find-links .
+
+COPY ricoh_theta_image_service.py ricoh_theta.py /app/
+
+WORKDIR /app
+
+ENTRYPOINT ["python3", "/app/ricoh_theta_image_service.py"]
+CMD [ "192.168.50.3", "--host-ip=192.168.50.5", "--payload-credentials-file=/creds/payload_guid_and_secret"]

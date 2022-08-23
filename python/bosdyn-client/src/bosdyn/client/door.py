@@ -6,10 +6,9 @@
 
 """For clients to the door service."""
 
+from bosdyn.api.spot import door_service_pb2_grpc
 from bosdyn.client.common import (BaseClient, handle_common_header_errors,
                                   handle_lease_use_result_errors)
-
-from bosdyn.api.spot import door_service_pb2_grpc
 
 from .lease import add_lease_wallet_processors
 

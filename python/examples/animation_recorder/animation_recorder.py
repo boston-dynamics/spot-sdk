@@ -4,35 +4,38 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-
+import argparse
 import curses
+import hashlib
+import io
 import logging
+import math
+import os
+import re
 import signal
 import sys
 import time
-import io
-import os
-import re
-import hashlib
-import argparse
-import math
-
 from datetime import datetime
+
 from google.protobuf import text_format
 
 import bosdyn.client.util
-from bosdyn.choreography.client.choreography import ChoreographyClient, AnimationUploadHelper, AnimationValidationFailedError
-from bosdyn.choreography.client.animation_file_conversion_helpers import *
 from bosdyn.api.spot import choreography_sequence_pb2
+from bosdyn.choreography.client.animation_file_conversion_helpers import *
+from bosdyn.choreography.client.animation_file_to_proto import (COMMENT_DELIMITERS, GROUPED_HEADERS,
+                                                                OPTIONS_KEYWORDS_TO_FUNCTION,
+                                                                SINGLE_HEADERS,
+                                                                convert_animation_file_to_proto)
+from bosdyn.choreography.client.choreography import (AnimationUploadHelper,
+                                                     AnimationValidationFailedError,
+                                                     ChoreographyClient)
 from bosdyn.client import create_standard_sdk
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 from bosdyn.client.license import LicenseClient
-from bosdyn.choreography.client.animation_file_to_proto import convert_animation_file_to_proto
-from bosdyn.choreography.client.animation_file_to_proto import (OPTIONS_KEYWORDS_TO_FUNCTION, GROUPED_HEADERS,
-                                                                SINGLE_HEADERS, COMMENT_DELIMITERS)
 
 COMMAND_INPUT_RATE = 0.1
 LOGGER = logging.getLogger(__name__)
+
 
 class RecorderInterface(object):
     """Creates and plays animations on the robot by recording a robot being controlled by the tablet.
@@ -41,6 +44,7 @@ class RecorderInterface(object):
         robot(robot): The incoming robot object to be recorded and controlled.
         download_filepath(string): Location where animation_recorder.py is located, used when saving and reading files.
     """
+
     def __init__(self, robot, download_filepath):
         self._robot = robot
 
@@ -88,7 +92,7 @@ class RecorderInterface(object):
         # 0 : main
         # 1 : save or discard the recorded animation
         # 2 : playback an option from the list of previously recorded animations
-        self._screen = 0    # on start display the main screen
+        self._screen = 0  # on start display the main screen
 
         # keep track of whether the program is recording or not recording
         self._recording = False
@@ -97,7 +101,6 @@ class RecorderInterface(object):
         # The E-Stop while using Animation Recorder should be the tablet.
         assert not robot.is_estopped(), "Robot is estopped. Please connect the robot to the tablet or use " \
                                         "the estop SDK example, to configure E-Stop."
-
 
         self._command_dictionary = {
             # list of viable key commands for the main screen
@@ -140,7 +143,7 @@ class RecorderInterface(object):
         """Returns the recording state as a string to be displayed on the main screen telling
         the user whether the program is currently recording animation.
         """
-        if(self._recording):
+        if (self._recording):
             return "Recording"
         return "Not Recording"
 
@@ -164,7 +167,8 @@ class RecorderInterface(object):
 
         # create the animation *.cha file from the choreography log and save it to the animation directory
         cha_path = os.path.join(self._download_filepath, self._animation_directory)
-        cha_filename = self._choreo_client.choreography_log_to_animation_file(name, cha_path, self._robot.has_arm(), "truncatable")
+        cha_filename = self._choreo_client.choreography_log_to_animation_file(
+            name, cha_path, self._robot.has_arm(), "truncatable")
 
         # upload the animation to the robot as a choreography sequence from the *.cha file and list
         # the animation for playback
@@ -186,32 +190,33 @@ class RecorderInterface(object):
 
     def _choose_file(self, i):
         """Ensure that chosen file has a valid animation at that index, then play the selected animation file."""
-        if(len(self._proto_names) > i + (self._page * 5)):
+        if (len(self._proto_names) > i + (self._page * 5)):
             self._play_pre_recorded(i)
 
     def _next(self, i):
         """Display the next 5 animation files in the animation file list."""
-        if self._page < len(self._proto_names)/5 :
+        if self._page < len(self._proto_names) / 5:
             self._page += 1
 
     def _back(self, i):
         """Display the previous 5 animation files in the animation file list."""
-        if self._page > 0 :
+        if self._page > 0:
             self._page -= 1
-
 
     def _upload_animation_proto(self, animation):
         """Helper function for uploading an animation protobuf to the robot while providing debug messages."""
         upload_response = None
         try:
-            upload_response = self._choreography_animation_helper.upload_animated_move(animation.proto)
+            upload_response = self._choreography_animation_helper.upload_animated_move(
+                animation.proto)
             # The python choreography client will throw an exception if the upload animated move rpc returns
             # a status code that isn't STATUS_OK.
             if upload_response is None:
                 # The upload animation RPC may not be issued at all if the animation hasn't changed
                 # and doesn't need to be sent to the robot. In that case, the response is None but we
                 # still return true to indicate the move is successfully placed on robot.
-                LOGGER.info("Success: %s (Animation is already uploaded to the robot)." % animation.name)
+                LOGGER.info(
+                    "Success: %s (Animation is already uploaded to the robot)." % animation.name)
                 return True
             LOGGER.info("Success: %s (Uploaded new/changed animation)." % animation.name)
         except AnimationValidationFailedError as validation_failed:
@@ -278,8 +283,10 @@ class RecorderInterface(object):
 
         # calculate the expected duration of the move in slices by multiplying the duration of the animation in minutes by the
         # number of slices per minute of the created choreography sequence.
-        move_param.requested_slices = math.ceil(((animation.proto.animation_keyframes[-1].time -
-                                        animation.proto.animation_keyframes[0].time)/ 60) * choreography_seq.slices_per_minute)
+        move_param.requested_slices = math.ceil(
+            ((animation.proto.animation_keyframes[-1].time -
+              animation.proto.animation_keyframes[0].time) / 60) *
+            choreography_seq.slices_per_minute)
 
         # assign the move the name of the animation protobuf
         move_param.animate_params.animation_name = animation.name
@@ -291,7 +298,8 @@ class RecorderInterface(object):
         choreography_seq.moves.extend(MoveParamsList)
 
         # upload the choreography sequence to the robot
-        upload_response = self._choreo_client.upload_choreography(choreography_seq, non_strict_parsing=True)
+        upload_response = self._choreo_client.upload_choreography(choreography_seq,
+                                                                  non_strict_parsing=True)
 
         # return the animation protobuf and choreography sequence
         return animation, choreography_seq
@@ -302,13 +310,15 @@ class RecorderInterface(object):
 
         # lease needs to be forcibly taken because the tablet is actively controlling the robot
         self._take_lease()
-        self._length_of_current_choreo = self._choreos[self._page * 5 + i].moves[0].requested_slices / self._choreos[self._page * 5 + i].slices_per_minute
+        self._length_of_current_choreo = self._choreos[
+            self._page * 5 + i].moves[0].requested_slices / self._choreos[self._page * 5 +
+                                                                          i].slices_per_minute
         self._start_time = self._time_in_secs()
 
-        upload_response = self._choreo_client.upload_choreography(self._choreos[self._page * 5 + i], non_strict_parsing=True)
-        self._choreo_client.execute_choreography(self._proto_names[self._page * 5 + i], start_time, 0)
-
-
+        upload_response = self._choreo_client.upload_choreography(self._choreos[self._page * 5 + i],
+                                                                  non_strict_parsing=True)
+        self._choreo_client.execute_choreography(self._proto_names[self._page * 5 + i], start_time,
+                                                 0)
 
     def _take_lease(self):
         """Begin communication with the robot."""
@@ -316,20 +326,21 @@ class RecorderInterface(object):
         self._lease = self._lease_client.take()
 
         # Construct our lease keep-alive object, which begins RetainLease calls in a thread.
-        self._lease_alive = LeaseKeepAlive(self._lease_client, warnings=False)
+        self._lease_alive = LeaseKeepAlive(self._lease_client, warnings=False, return_at_exit=True)
 
     def _time_in_secs(self):
         """Helper function for getting real time in seconds. Used to measure when a choreography has ended."""
         now = datetime.now()
-        dtime_s, dtime_m, dtime_h = int(now.strftime("%S")), int(now.strftime("%M")), int(now.strftime("%H"))
-        t = dtime_s + 60*dtime_m + 60*60*dtime_h
+        dtime_s, dtime_m, dtime_h = int(now.strftime("%S")), int(now.strftime("%M")), int(
+            now.strftime("%H"))
+        t = dtime_s + 60 * dtime_m + 60 * 60 * dtime_h
         return t
 
     def _return_lease(self):
         """Function to return a lease being used by Animation Recorder."""
-        self._lease_client.return_lease(self._lease)
-
-
+        if self._lease_alive:
+            self._lease_alive.shutdown()
+            self._lease_alive = None
 
     def drive(self, stdscr):
         """Determine when to give back the lease and draw the curses screen while the program is active."""
@@ -338,7 +349,8 @@ class RecorderInterface(object):
 
         # if the current time exceeds the time when an animation running on the robot was expected to finish,
         # give back the lease
-        if(self._length_of_current_choreo != 0 and f_time > self._length_of_current_choreo + self._start_time):
+        if (self._length_of_current_choreo != 0 and
+                f_time > self._length_of_current_choreo + self._start_time):
             self._length_of_current_choreo = 0
             self._return_lease()
 
@@ -366,31 +378,32 @@ class RecorderInterface(object):
                         raise
             finally:
                 stdscr.clear()
+                self._return_lease()
 
     def _drive_draw(self, stdscr):
 
-        if(self._screen == 0):
-             self._main(stdscr)
+        if (self._screen == 0):
+            self._main(stdscr)
 
-        elif(self._screen == 1):
+        elif (self._screen == 1):
             self._question(stdscr)
 
-        elif(self._screen == 2):
+        elif (self._screen == 2):
             self._load(stdscr)
 
     def _drive_cmd(self, key):
         """Run user commands at each update."""
         try:
-            if(self._screen != 2):
+            if (self._screen != 2):
 
-                if(self._screen == 0):
+                if (self._screen == 0):
                     cmd_function = self._command_dictionary[key]
-                elif(self._screen == 1):
+                elif (self._screen == 1):
                     cmd_function = self._question_command_dictionary[key]
                 cmd_function()
 
             else:
-                (cmd_function, i)= self._load_command_dictionary[key]
+                (cmd_function, i) = self._load_command_dictionary[key]
                 cmd_function(i)
 
         except KeyError:
@@ -434,12 +447,13 @@ class RecorderInterface(object):
         stdscr.addstr(4, 5, "Choose a file:")
 
         # write the animation options for the current page from the animation files list
-        for i in range(0,5):
+        for i in range(0, 5):
             if len(self._proto_names) > (i + (self._page * 5)):
-                stdscr.addstr(5 + i, 5, "          [" + str(i+1) + "]: " + self._proto_names[i + (self._page * 5)])
+                stdscr.addstr(
+                    5 + i, 5,
+                    "          [" + str(i + 1) + "]: " + self._proto_names[i + (self._page * 5)])
             else:
-                stdscr.addstr(5 + i, 5, "          [" + str(i+1) + "]: ")
-
+                stdscr.addstr(5 + i, 5, "          [" + str(i + 1) + "]: ")
 
         stdscr.addstr(10, 5, "          [>]: Increment Page +")
         stdscr.addstr(11, 5, "          [<]: Increment Page -")
@@ -474,13 +488,15 @@ class ExitCheck(object):
         """Return the status of the exit checker indicating if it should exit."""
         return self._kill_now
 
+
 def main():
 
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    parser.add_argument('-d', '--download-filepath',
-                        help='Name for the new directory where recorded *.cha animation files will be read and saved',
-                        default=os.getcwd())
+    parser.add_argument(
+        '-d', '--download-filepath', help=
+        'Name for the new directory where recorded *.cha animation files will be read and saved',
+        default=os.getcwd())
     options = parser.parse_args()
 
     default_filepath = os.path.dirname(os.path.realpath(__file__))
@@ -494,11 +510,10 @@ def main():
     bosdyn.client.util.authenticate(robot)
 
     license_client = robot.ensure_client(LicenseClient.default_service_name)
-    if not license_client.get_feature_enabled([ChoreographyClient.license_name])[ChoreographyClient.license_name]:
+    if not license_client.get_feature_enabled([ChoreographyClient.license_name
+                                              ])[ChoreographyClient.license_name]:
         LOGGER.error("This robot is not licensed for choreography.")
         sys.exit(1)
-
-
 
     recorder_interface = RecorderInterface(robot, default_filepath)
 
@@ -508,7 +523,8 @@ def main():
         options.download_filepath = "recorded_animations_" + now.strftime("%d-%m-%Y")
 
     recorder_interface._animation_directory = options.download_filepath
-    fpath = os.path.join(recorder_interface._download_filepath, recorder_interface._animation_directory)
+    fpath = os.path.join(recorder_interface._download_filepath,
+                         recorder_interface._animation_directory)
 
     if not os.path.isdir(fpath):
         # create the new subdirectory with the chosen name
@@ -517,7 +533,6 @@ def main():
     else:
         # if the folder already existed save files in the existing subdirectory
         print("recorded animations will be saved to directory : " + options.download_filepath)
-
 
     # Run the program with curses user interface
     try:

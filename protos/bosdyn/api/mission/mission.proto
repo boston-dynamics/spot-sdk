@@ -10,7 +10,9 @@ package bosdyn.api.mission;
 
 option java_outer_classname = "MissionProto";
 
+import "bosdyn/api/alerts.proto";
 import "bosdyn/api/geometry.proto";
+import "bosdyn/api/graph_nav/map.proto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
 import "bosdyn/api/mission/nodes.proto";
@@ -134,6 +136,10 @@ message Question {
     // Set to true if this question was meant to be answered by some automated system, not a
     // human. Clients should usually avoid generating a UI element to ask such a question.
     bool for_autonomous_processing = 5;
+
+    // Severity for this question. See comment in Prompt message in nodes.proto for a better understanding
+    // of what levels mean.
+    AlertData.SeverityLevel severity = 6;
 }
 
 // Answer one of the outstanding questions.
@@ -234,6 +240,12 @@ message PlaySettings {
 
     // Disable alternate-route-finding; overrides the per-edge setting in the map.
     bool disable_alternate_route_finding = 3;
+
+    // Specifies whether to use default or strict path following mode.
+    bosdyn.api.graph_nav.Edge.Annotations.PathFollowingMode path_following_mode = 4;
+
+    // Specify whether or not to enable ground clutter avoidance, and which type.
+    bosdyn.api.graph_nav.Edge.Annotations.GroundClutterAvoidanceMode ground_clutter_mode = 5;
 }
 
 

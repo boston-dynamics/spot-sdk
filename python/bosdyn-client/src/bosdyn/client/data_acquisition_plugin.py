@@ -7,14 +7,14 @@
 """General client implementation for all data-acquisition plugin services."""
 
 from __future__ import print_function
+
 import sys
 
-from bosdyn.client.common import BaseClient
-from bosdyn.client.data_acquisition import (DataAcquisitionClient, get_request_id,
-                                            acquire_data_error, metadata_to_proto)
 from bosdyn.api import data_acquisition_pb2 as data_acquisition
 from bosdyn.api import data_acquisition_plugin_service_pb2_grpc as data_acquisition_plugin_service
-
+from bosdyn.client.common import BaseClient
+from bosdyn.client.data_acquisition import (DataAcquisitionClient, acquire_data_error,
+                                            get_request_id, metadata_to_proto)
 from bosdyn.util import now_timestamp
 
 
@@ -64,7 +64,7 @@ class DataAcquisitionPluginClient(BaseClient):
             metadata=metadata_proto, acquisition_requests=acquisition_requests,
             data_id=data_identifiers, action_id=action_id)
         return self.call(self._stub.AcquirePluginData, request,
-                         error_from_response=acquire_data_error, **kwargs)
+                         error_from_response=acquire_data_error, copy_request=False, **kwargs)
 
     def acquire_plugin_data_async(self, acquisition_requests, action_id, data_identifiers=None,
                                   metadata=None, **kwargs):
@@ -75,7 +75,7 @@ class DataAcquisitionPluginClient(BaseClient):
             metadata=metadata_proto, acquisition_requests=acquisition_requests,
             data_id=data_identifiers, action_id=action_id)
         return self.call_async(self._stub.AcquirePluginData, request,
-                               error_from_response=acquire_data_error, **kwargs)
+                               error_from_response=acquire_data_error, copy_request=False, **kwargs)
 
     # The get_status, get_service_info, and cancel_acquisition methods are identical to the ones
     # implemented in the DataAcquisitionClient.

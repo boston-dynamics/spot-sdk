@@ -5,15 +5,16 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 from __future__ import print_function
+
 import collections
 import time
 
-from bosdyn.api.spot import spot_check_service_pb2_grpc, spot_check_pb2
+from urllib3 import Timeout
 
-from bosdyn.client.common import BaseClient
-from bosdyn.client.common import (error_factory, handle_unset_status_error,
-                                  handle_common_header_errors, handle_lease_use_result_errors)
-from bosdyn.client.exceptions import ResponseError, LeaseUseError
+from bosdyn.api.spot import spot_check_pb2, spot_check_service_pb2_grpc
+from bosdyn.client.common import (BaseClient, error_factory, handle_common_header_errors,
+                                  handle_lease_use_result_errors, handle_unset_status_error)
+from bosdyn.client.exceptions import LeaseUseError, ResponseError, TimedOutError
 
 
 class SpotCheckError(ResponseError):
@@ -62,6 +63,14 @@ class SpotCheckGroundCheckError(SpotCheckResponseError):
 
 class SpotCheckTimedOutError(Exception):
     """Timed out waiting for SUCCESS response from spot check."""
+
+
+class CameraSpotCheckTimedOutError(Exception):
+    """Timed out waiting for SUCCESS response from camera spot check."""
+
+
+class CameraSpotCheckFeedbackError(Exception):
+    """General class of errors for camera spot check feedback."""
 
 
 class CameraCalibrationResponseError(SpotCheckError):
@@ -132,6 +141,9 @@ class SpotCheckClient(BaseClient):
         return self.call_async(self._stub.SpotCheckFeedback, request, None,
                                _spotcheck_feedback_error_from_response, **kwargs)
 
+
+
+
     def camera_calibration_command(self, request, **kwargs):
         """Issue a camera calibration command to the robot.
 
@@ -166,7 +178,7 @@ def run_spot_check(spot_check_client, lease, timeout_sec=212, update_frequency=0
     started. This routine calibrates robot joints and checks camera health.
 
     Args:
-        client (SpotCheckClient): client for calling calibration service.
+        spot_check_client (SpotCheckClient): client for calling calibration service.
         lease (Lease): A active lease. Spot check can be overridden at any time with another command.
         timeout_sec (float): Max time this function will block for.
         update_frequency (float): How often this function will query feedback.
@@ -201,6 +213,8 @@ def run_spot_check(spot_check_client, lease, timeout_sec=212, update_frequency=0
     raise SpotCheckTimedOutError
 
 
+
+
 def run_camera_calibration(spot_check_client, lease, timeout_sec=1200, update_frequency=0.25,
                            verbose=False):
     """Run full camera calibration routine for robot. This function blocks until calibration has
@@ -208,7 +222,7 @@ def run_camera_calibration(spot_check_client, lease, timeout_sec=1200, update_fr
     configuration described in user documentation.
 
     Args:
-        client (SpotCheckClient): client for calling calibration service.
+        spot_check_client (SpotCheckClient): client for calling calibration service.
         lease (Lease): A active lease, used by calibration routine to issue robot commands. Lease
                         keep alive internally managed by service. Revoke lease to end routine
                         at any time.
@@ -255,12 +269,16 @@ def _spotcheck_feedback_error_from_response(response):
     return _spot_check_error_from_response(response)
 
 
+
+
+
 _SC_ERROR_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _SC_ERROR_TO_ERROR.update({  # noqa
     spot_check_pb2.SpotCheckFeedbackResponse.ERROR_NONE: (None, None),
 
     spot_check_pb2.SpotCheckFeedbackResponse.ERROR_UNEXPECTED_POWER_CHANGE:
-    (SpotCheckUnexpectedPowerChangeError, SpotCheckUnexpectedPowerChangeError.__doc__),
+    (SpotCheckUnexpectedPowerChangeError,
+     SpotCheckUnexpectedPowerChangeError.__doc__),
 
     spot_check_pb2.SpotCheckFeedbackResponse.ERROR_INIT_IMU_CHECK:
     (SpotCheckImuCheckError, SpotCheckImuCheckError.__doc__),
@@ -324,7 +342,8 @@ _CAL_STATUS_TO_ERROR.update({  # noqa
     (CameraCalibrationPowerError, CameraCalibrationPowerError.__doc__),
 
     spot_check_pb2.CameraCalibrationFeedbackResponse.STATUS_TARGET_NOT_CENTERED:
-    (CameraCalibrationTargetNotCenteredError, CameraCalibrationTargetNotCenteredError.__doc__),
+    (CameraCalibrationTargetNotCenteredError,
+     CameraCalibrationTargetNotCenteredError.__doc__),
 
     spot_check_pb2.CameraCalibrationFeedbackResponse.STATUS_ROBOT_COMMAND_ERROR:
     (CameraCalibrationRobotCommandError, CameraCalibrationRobotCommandError.__doc__),
@@ -345,3 +364,5 @@ def _cal_status_error_from_response(response):
         response, response.status,
         status_to_string=spot_check_pb2.CameraCalibrationFeedbackResponse.Status.Name,
         status_to_error=_CAL_STATUS_TO_ERROR)
+
+

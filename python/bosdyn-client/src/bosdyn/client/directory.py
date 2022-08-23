@@ -13,9 +13,8 @@ import collections
 
 from bosdyn.api import directory_pb2, directory_service_pb2_grpc
 
-from .common import BaseClient
-from .common import (common_header_errors, error_factory, handle_unset_status_error,
-                     handle_common_header_errors)
+from .common import (BaseClient, common_header_errors, error_factory, handle_common_header_errors,
+                     handle_unset_status_error)
 from .exceptions import ResponseError
 
 
@@ -48,39 +47,40 @@ class DirectoryClient(BaseClient):
 
     def list(self, **kwargs):
         """List all services present on the robot.
-        
+
         Returns:
           A list of the proto message definitions of all registered services
-        
+
         Raises:
           RpcError: Problem communicating with the robot.
         """
         req = directory_pb2.ListServiceEntriesRequest()
         return self.call(self._stub.ListServiceEntries, req, value_from_response=_list_value,
-                         error_from_response=common_header_errors, **kwargs)
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
 
     def list_async(self, **kwargs):
         """List all services present on the robot.
-        
+
         Returns:
           A list of the proto message definitions of all registered services
-        
+
         Raises:
           RpcError: Problem communicating with the robot.
         """
         req = directory_pb2.ListServiceEntriesRequest()
         return self.call_async(self._stub.ListServiceEntries, req, value_from_response=_list_value,
-                               error_from_response=common_header_errors, **kwargs)
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
 
     def get_entry(self, service_name, **kwargs):
         """Get the service entry for one particular service specified by name.
-        
+
         Args:
           service_name:     The name of the service to retrieve.
 
         Returns:
           The proto message definition of the service entry
-        
+
         Raises:
           RpcError: Problem communicating with the robot.
           NonexistentServiceError: The service was not found.
@@ -88,17 +88,17 @@ class DirectoryClient(BaseClient):
         """
         req = directory_pb2.GetServiceEntryRequest(service_name=service_name)
         return self.call(self._stub.GetServiceEntry, req, value_from_response=_get_entry_value,
-                         error_from_response=_error_from_response, **kwargs)
+                         error_from_response=_error_from_response, copy_request=False, **kwargs)
 
     def get_entry_async(self, service_name, **kwargs):
         """Get the service entry for one particular service specified by name.
-        
+
         Args:
           service_name:     The name of the service to retrieve.
 
         Returns:
           The proto message definition of the service entry
-        
+
         Raises:
           RpcError: Problem communicating with the robot.
           NonexistentServiceError: The service was not found.
@@ -107,7 +107,8 @@ class DirectoryClient(BaseClient):
         req = directory_pb2.GetServiceEntryRequest(service_name=service_name)
         return self.call_async(self._stub.GetServiceEntry, req,
                                value_from_response=_get_entry_value,
-                               error_from_response=_error_from_response, **kwargs)
+                               error_from_response=_error_from_response, copy_request=False,
+                               **kwargs)
 
 
 

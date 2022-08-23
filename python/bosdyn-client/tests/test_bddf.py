@@ -6,16 +6,17 @@
 
 """Test code for bosdyn.client.bddf"""
 from __future__ import print_function
+
 import os
 import tempfile
 
-from google.protobuf.timestamp_pb2 import Timestamp
 import pytest
+from google.protobuf.timestamp_pb2 import Timestamp
 
 import bosdyn.api.bddf_pb2 as bddf
 from bosdyn.api.data_buffer_pb2 import OperatorComment
 from bosdyn.bddf import (DataReader, DataWriter, PodSeriesReader, PodSeriesWriter,
-                         ProtobufSeriesWriter, ProtobufChannelReader, ProtobufReader,
+                         ProtobufChannelReader, ProtobufReader, ProtobufSeriesWriter,
                          StreamDataReader)
 from bosdyn.util import now_nsec, now_timestamp, timestamp_to_nsec
 

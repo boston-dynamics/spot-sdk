@@ -6,20 +6,22 @@
 
 """Sdk is  a repository for settings typically common to a single developer and/or robot fleet."""
 from __future__ import absolute_import
+
+import datetime
 import glob
 import logging
 import os
 import platform
-
-import datetime
-from deprecated.sphinx import deprecated
 from enum import Enum
+
 import jwt
 import pkg_resources
+from deprecated.sphinx import deprecated
 
 from .arm_surface_contact import ArmSurfaceContactClient
 from .auth import AuthClient
 from .auto_return import AutoReturnClient
+from .autowalk import AutowalkClient
 from .channel import DEFAULT_MAX_MESSAGE_LENGTH
 from .data_acquisition import DataAcquisitionClient
 from .data_acquisition_store import DataAcquisitionStoreClient
@@ -30,16 +32,16 @@ from .directory_registration import DirectoryRegistrationClient
 from .docking import DockingClient
 from .door import DoorClient
 from .estop import EstopClient
-from .fault import FaultClient
 from .exceptions import Error
+from .fault import FaultClient
 from .graph_nav import GraphNavClient
 from .gripper_camera_param import GripperCameraParamClient
 from .image import ImageClient
 from .ir_enable_disable import IREnableDisableServiceClient
 from .lease import LeaseClient
 from .license import LicenseClient
-from .log_annotation import LogAnnotationClient
 from .local_grid import LocalGridClient
+from .log_annotation import LogAnnotationClient
 from .manipulation_api_client import ManipulationApiClient
 from .map_processing import MapProcessingServiceClient
 from .network_compute_bridge_client import NetworkComputeBridgeClient
@@ -48,8 +50,8 @@ from .payload_registration import PayloadRegistrationClient
 from .point_cloud import PointCloudClient
 from .power import PowerClient
 from .processors import AddRequestHeader
-from .recording import GraphNavRecordingServiceClient
 from .ray_cast import RayCastClient
+from .recording import GraphNavRecordingServiceClient
 from .robot import Robot
 from .robot_command import RobotCommandClient
 from .robot_id import RobotIdClient
@@ -57,6 +59,7 @@ from .robot_state import RobotStateClient
 from .spot_check import SpotCheckClient
 from .time_sync import TimeSyncClient
 from .world_object import WorldObjectClient
+
 
 
 class SdkError(Error):
@@ -101,6 +104,7 @@ _DEFAULT_SERVICE_CLIENTS = [
     ArmSurfaceContactClient,
     AuthClient,
     AutoReturnClient,
+    AutowalkClient,
     DataAcquisitionClient,
     DataAcquisitionStoreClient,
     DataBufferClient,
@@ -293,6 +297,7 @@ class Sdk(object):
     def load_app_token(*_):
         """Do nothing, this method is kept only to maintain backwards compatibility."""
         return
+
 
 @deprecated(
     reason='Decoding tokens is no longer supported in the sdk.  Use pyjwt directly instead.',

@@ -7,14 +7,12 @@
 """For clients to use the world object service"""
 from __future__ import print_function
 
-from bosdyn.client.common import BaseClient
-from bosdyn.client.common import common_header_errors
-from bosdyn.client.robot_command import NoTimeSyncError, _TimeConverter
-from bosdyn.api import world_object_pb2
-from bosdyn.api import world_object_service_pb2
-from bosdyn.api import world_object_service_pb2_grpc as world_object_service
 from bosdyn.api import geometry_pb2 as geom
+from bosdyn.api import world_object_pb2, world_object_service_pb2
+from bosdyn.api import world_object_service_pb2_grpc as world_object_service
+from bosdyn.client.common import BaseClient, common_header_errors
 from bosdyn.client.frame_helpers import *
+from bosdyn.client.robot_command import NoTimeSyncError, _TimeConverter
 from bosdyn.util import now_timestamp
 
 
@@ -71,7 +69,7 @@ class WorldObjectClient(BaseClient):
                                                       timestamp_filter=time_start_point)
         return self.call(self._stub.ListWorldObjects, req,
                          value_from_response=_get_world_object_value,
-                         error_from_response=common_header_errors, **kwargs)
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
 
     def list_world_objects_async(self, object_type=None, time_start_point=None, **kwargs):
         """Async version of list_world_objects()."""
@@ -81,7 +79,8 @@ class WorldObjectClient(BaseClient):
                                                       timestamp_filter=time_start_point)
         return self.call_async(self._stub.ListWorldObjects, req,
                                value_from_response=_get_world_object_value,
-                               error_from_response=common_header_errors, **kwargs)
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
 
     def mutate_world_objects(self, mutation_req, **kwargs):
         """Mutate (add, change, delete) world objects.
@@ -159,22 +158,20 @@ class WorldObjectClient(BaseClient):
 
         Args:
             name (string): The human-readable name of the world object.
-            sphere_frame_name (string):  The frame name for the drawable sphere frame.
             x_rt_frame_name,y_rt_frame_name,z_rt_frame_name (int): The coordinate position (x,y,z) of
                 the drawable sphere.
             frame_name (string): the frame in which the sphere's position is described.
             radius (float): The radius for the drawn sphere.
-            color (4 valued tuple): The RGBA color, where RGB are int values in [0,255] and A is a float in [0,1].
+            rgba (4 valued tuple): The RGBA color, where RGB are int values in [0,255] and A is a float in [0,1].
             list_objects_now (boolean): Should the ListWorldObjects request be made after creating
                 the sphere world object.
 
         Returns:
             The MutateWorldObjectResponse for the addition of the sphere world object.
         """
-        vision_tform_drawable = geom.SE3Pose(position=geom.Vec3(x=x_rt_frame_name,
-                                                                y=y_rt_frame_name,
-                                                                z=z_rt_frame_name),
-                                             rotation=geom.Quaternion(w=1, x=0, y=0, z=0))
+        vision_tform_drawable = geom.SE3Pose(
+            position=geom.Vec3(x=x_rt_frame_name, y=y_rt_frame_name, z=z_rt_frame_name),
+            rotation=geom.Quaternion(w=1, x=0, y=0, z=0))
         # Create a map between the child frame name and the parent frame name/SE3Pose parent_tform_child
         edges = {}
         # Create an edge in the frame tree snapshot that includes vision_tform_drawable
@@ -187,14 +184,14 @@ class WorldObjectClient(BaseClient):
 
         # Create the sphere drawable object
         sphere = world_object_pb2.DrawableSphere(radius=radius)
-        draw_color = world_object_pb2.DrawableProperties.Color(r=rgba[0], g=rgba[1], b=rgba[2], a=rgba[3])
+        draw_color = world_object_pb2.DrawableProperties.Color(r=rgba[0], g=rgba[1], b=rgba[2],
+                                                               a=rgba[3])
         sphere_drawable_prop = world_object_pb2.DrawableProperties(
             color=draw_color, label=name, wireframe=False, sphere=sphere,
             frame_name_drawable=drawable_frame_name)
 
         # Create the complete world object with transform information, a unique name, and the drawable sphere properties.
-        sphere_to_add = world_object_pb2.WorldObject(name=name,
-                                                     transforms_snapshot=snapshot,
+        sphere_to_add = world_object_pb2.WorldObject(name=name, transforms_snapshot=snapshot,
                                                      acquisition_time=time_now,
                                                      drawable_properties=[sphere_drawable_prop])
         # Add the sphere to the robot's world object service
@@ -209,8 +206,7 @@ class WorldObjectClient(BaseClient):
 
     def draw_oriented_bounding_box(self, name, drawable_box_frame_name, frame_name,
                                    frame_name_tform_drawable_box, size_ewrt_box_vec3,
-                                   rgba=(255, 0, 0, 1), wireframe=True,
-                                   list_objects_now=False):
+                                   rgba=(255, 0, 0, 1), wireframe=True, list_objects_now=False):
         """Create a drawable 3D box world object that will be sent to the world object service
         with a mutation request.
 
@@ -219,7 +215,7 @@ class WorldObjectClient(BaseClient):
             drawable_box_frame_name (string): The frame name for the drawable box frame.
             frame_name (string): The frame name which the drawable box is described relative to.
             frame_name_tform_drawable_box (geometry_pb2.SE3Pose): the SE3 pose of the drawable box relative to frame name.
-            size_ewrt_drawable_box_vec3 (float): The size of the box (x,y,z) expressed with respect to the
+            size_ewrt_box_vec3 (float): The size of the box (x,y,z) expressed with respect to the
                 drawable box frame.
             rgba (4 valued tuple): The RGBA color, where RGB are int values in [0,255] and A is a float in [0,1].
             wireframe  (boolean): Should this be drawn as a wireframe [wireframe=true] or a solid object [wireframe=false].
@@ -233,7 +229,8 @@ class WorldObjectClient(BaseClient):
         edges = {}
         # Create an edge in the frame tree snapshot that includes frame_tform_box
         drawable_frame_name = name
-        edges = add_edge_to_tree(edges, frame_name_tform_drawable_box, frame_name, drawable_frame_name)
+        edges = add_edge_to_tree(edges, frame_name_tform_drawable_box, frame_name,
+                                 drawable_frame_name)
         snapshot = geom.FrameTreeSnapshot(child_to_parent_edge_map=edges)
 
         # Set the acquisition time for the box using a function to get google.protobuf.Timestamp of the current system time.
@@ -241,14 +238,14 @@ class WorldObjectClient(BaseClient):
 
         # Create the box drawable object
         box = world_object_pb2.DrawableBox(size=size_ewrt_box_vec3)
-        draw_color = world_object_pb2.DrawableProperties.Color(r=rgba[0], g=rgba[1], b=rgba[2], a=rgba[3])
+        draw_color = world_object_pb2.DrawableProperties.Color(r=rgba[0], g=rgba[1], b=rgba[2],
+                                                               a=rgba[3])
         box_drawable_prop = world_object_pb2.DrawableProperties(
             color=draw_color, label=name, wireframe=wireframe, box=box,
             frame_name_drawable=drawable_box_frame_name)
 
         # Create the complete world object with transform information, a unique name, and the drawable box properties.
-        box_to_add = world_object_pb2.WorldObject(name=name,
-                                                  transforms_snapshot=snapshot,
+        box_to_add = world_object_pb2.WorldObject(name=name, transforms_snapshot=snapshot,
                                                   acquisition_time=time_now,
                                                   drawable_properties=[box_drawable_prop])
         # Add the box to the robot's world object service
@@ -260,6 +257,7 @@ class WorldObjectClient(BaseClient):
             self.list_world_objects()
 
         return resp
+
 
 def _get_world_object_value(response):
     return response
@@ -283,14 +281,14 @@ Static helper methods for constructing mutation requests for a given world objec
 
 
 def make_add_world_object_req(world_obj):
-    '''Add a world object to the scene.
+    """Add a world object to the scene.
 
     Args:
         world_obj (WorldObject): The world object to be added into the robot's perception scene.
 
     Returns:
         A MutateWorldObjectRequest where the action is to "add" the object to the scene.
-    '''
+    """
     add_obj = world_object_pb2.MutateWorldObjectRequest.Mutation(
         action=world_object_pb2.MutateWorldObjectRequest.ACTION_ADD, object=world_obj)
     req = world_object_pb2.MutateWorldObjectRequest(mutation=add_obj)
@@ -298,7 +296,7 @@ def make_add_world_object_req(world_obj):
 
 
 def make_delete_world_object_req(world_obj):
-    '''Delete a world object from the scene.
+    """Delete a world object from the scene.
 
     Args:
         world_obj (WorldObject): The world object to be deleted in the robot's perception scene. The
@@ -307,7 +305,7 @@ def make_delete_world_object_req(world_obj):
 
     Returns:
         A MutateWorldObjectRequest where the action is to "delete" the object to the scene.
-    '''
+    """
     del_obj = world_object_pb2.MutateWorldObjectRequest.Mutation(
         action=world_object_pb2.MutateWorldObjectRequest.ACTION_DELETE, object=world_obj)
     req = world_object_pb2.MutateWorldObjectRequest(mutation=del_obj)
@@ -315,7 +313,7 @@ def make_delete_world_object_req(world_obj):
 
 
 def make_change_world_object_req(world_obj):
-    '''Change/update an existing world object in the scene.
+    """Change/update an existing world object in the scene.
 
     Args:
         world_obj (WorldObject): The world object to be changed/updated in the robot's perception scene.
@@ -324,7 +322,7 @@ def make_change_world_object_req(world_obj):
 
     Returns:
         A MutateWorldObjectRequest where the action is to "change" the object to the scene.
-    '''
+    """
     change_obj = world_object_pb2.MutateWorldObjectRequest.Mutation(
         action=world_object_pb2.MutateWorldObjectRequest.ACTION_CHANGE, object=world_obj)
     req = world_object_pb2.MutateWorldObjectRequest(mutation=change_obj)

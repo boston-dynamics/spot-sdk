@@ -5,9 +5,11 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import argparse
-import numpy as np
 import os
 import sys
+
+import numpy as np
+
 from bosdyn.api.graph_nav import map_pb2
 from bosdyn.client.frame_helpers import *
 from bosdyn.client.math_helpers import *
@@ -39,11 +41,12 @@ def get_point_cloud_data_in_seed_frame(waypoints, snapshots, anchorings, waypoin
     waypoint_tform_odom = SE3Pose.from_obj(wp.waypoint_tform_ko)
     waypoint_tform_cloud = waypoint_tform_odom * odom_tform_cloud
     if waypoint_id not in anchorings:
-        raise Exception("{} not found in anchorings. Does the map have anchoring data?".format(waypoint_id))
-    seed_tform_cloud = SE3Pose.from_obj(anchorings[waypoint_id].seed_tform_waypoint) * waypoint_tform_cloud
+        raise Exception(
+            "{} not found in anchorings. Does the map have anchoring data?".format(waypoint_id))
+    seed_tform_cloud = SE3Pose.from_obj(
+        anchorings[waypoint_id].seed_tform_waypoint) * waypoint_tform_cloud
     point_cloud_data = np.frombuffer(cloud.data, dtype=np.float32).reshape(int(cloud.num_points), 3)
     return seed_tform_cloud.transform_cloud(point_cloud_data)
-
 
 
 def load_map(path):
@@ -123,11 +126,14 @@ def write_ply(data, output):
     print('Saving to {}'.format(output))
     with open(output, 'w') as f:
         num_points = data.shape[0]
-        f.write('ply\nformat ascii 1.0\nelement vertex {}\nproperty float x\nproperty float y\nproperty float z\nend_header\n'.format(num_points))
+        f.write(
+            'ply\nformat ascii 1.0\nelement vertex {}\nproperty float x\nproperty float y\nproperty float z\nend_header\n'
+            .format(num_points))
 
         for i in range(0, num_points):
             (x, y, z) = data[i, :]
             f.write('{} {} {}\n'.format(x, y, z))
+
 
 def main(argv):
     parser = argparse.ArgumentParser(description=__doc__)
@@ -142,7 +148,9 @@ def main(argv):
     # Concatenate the data from all waypoints.
     data = None
     for wp in current_graph.waypoints:
-        cloud_data = get_point_cloud_data_in_seed_frame(current_waypoints, current_waypoint_snapshots, current_anchors, wp.id)
+        cloud_data = get_point_cloud_data_in_seed_frame(current_waypoints,
+                                                        current_waypoint_snapshots, current_anchors,
+                                                        wp.id)
         if data is None:
             data = cloud_data
         else:
@@ -150,6 +158,7 @@ def main(argv):
 
     # Save to a PLY file.
     write_ply(data, options.output)
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])

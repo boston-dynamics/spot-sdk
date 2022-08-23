@@ -9,19 +9,18 @@
 
 from __future__ import print_function
 
-import functools
 import collections
+import functools
 import json
 
 from google.protobuf import json_format
 
-from bosdyn.client.exceptions import Error, ResponseError
-from bosdyn.client.common import (common_header_errors, error_factory, handle_common_header_errors,
-                                  handle_unset_status_error, error_pair, BaseClient)
 from bosdyn.api import data_acquisition_store_pb2 as data_acquisition_store
 from bosdyn.api import data_acquisition_store_service_pb2_grpc as data_acquisition_store_service
 from bosdyn.api import image_pb2
-
+from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
+                                  handle_common_header_errors, handle_unset_status_error)
+from bosdyn.client.exceptions import Error, ResponseError
 from bosdyn.util import now_timestamp
 
 
@@ -58,14 +57,15 @@ class DataAcquisitionStoreClient(BaseClient):
         request = data_acquisition_store.ListCaptureActionsRequest(query=query)
         return self.call(self._stub.ListCaptureActions, request,
                          value_from_response=_get_action_ids,
-                         error_from_response=common_header_errors, **kwargs)
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
 
     def list_capture_actions_async(self, query, **kwargs):
         """Async version of the list_capture_actions() RPC."""
         request = data_acquisition_store.ListCaptureActionsRequest(query=query)
         return self.call_async(self._stub.ListCaptureActions, request,
                                value_from_response=_get_action_ids,
-                               error_from_response=common_header_errors, **kwargs)
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
 
     def list_stored_images(self, query, **kwargs):
         """List images that satisfy the query parameters.
@@ -79,14 +79,15 @@ class DataAcquisitionStoreClient(BaseClient):
 
         request = data_acquisition_store.ListStoredImagesRequest(query=query)
         return self.call(self._stub.ListStoredImages, request, value_from_response=_get_data_ids,
-                         error_from_response=common_header_errors, **kwargs)
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
 
     def list_stored_images_async(self, query, **kwargs):
         """Async version of the list_stored_images_actions() RPC."""
         request = data_acquisition_store.ListStoredImagesRequest(query=query)
         return self.call_async(self._stub.ListStoredImages, request,
                                value_from_response=_get_data_ids,
-                               error_from_response=common_header_errors, **kwargs)
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
 
     def list_stored_metadata(self, query, **kwargs):
         """List metadata that satisfy the query parameters.
@@ -100,14 +101,15 @@ class DataAcquisitionStoreClient(BaseClient):
 
         request = data_acquisition_store.ListStoredMetadataRequest(query=query)
         return self.call(self._stub.ListStoredMetadata, request, value_from_response=_get_data_ids,
-                         error_from_response=common_header_errors, **kwargs)
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
 
     def list_stored_metadata_async(self, query, **kwargs):
         """Async version of the list_stored_metadata() RPC."""
         request = data_acquisition_store.ListStoredMetadataRequest(query=query)
         return self.call_async(self._stub.ListStoredMetadata, request,
                                value_from_response=_get_data_ids,
-                               error_from_response=common_header_errors, **kwargs)
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
 
     def list_stored_alertdata(self, query, **kwargs):
         """List AlertData that satisfy the query parameters.
@@ -121,14 +123,15 @@ class DataAcquisitionStoreClient(BaseClient):
 
         request = data_acquisition_store.ListStoredAlertDataRequest(query=query)
         return self.call(self._stub.ListStoredAlertData, request, value_from_response=_get_data_ids,
-                         error_from_response=common_header_errors, **kwargs)
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
 
     def list_stored_alertdata_async(self, query, **kwargs):
         """Async version of the list_stored_alertdata() RPC."""
         request = data_acquisition_store.ListStoredAlertDataRequest(query=query)
         return self.call_async(self._stub.ListStoredAlertData, request,
                                value_from_response=_get_data_ids,
-                               error_from_response=common_header_errors, **kwargs)
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
 
     def list_stored_data(self, query, **kwargs):
         """List data that satisfy the query parameters.
@@ -142,14 +145,15 @@ class DataAcquisitionStoreClient(BaseClient):
 
         request = data_acquisition_store.ListStoredDataRequest(query=query)
         return self.call(self._stub.ListStoredData, request, value_from_response=_get_data_ids,
-                         error_from_response=common_header_errors, **kwargs)
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
 
     def list_stored_data_async(self, query, **kwargs):
         """Async version of the list_stored_data() RPC."""
         request = data_acquisition_store.ListStoredDataRequest(query=query)
         return self.call_async(self._stub.ListStoredData, request,
                                value_from_response=_get_data_ids,
-                               error_from_response=common_header_errors, **kwargs)
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
 
     def store_image(self, image, data_id, **kwargs):
         """Store image.
@@ -164,13 +168,14 @@ class DataAcquisitionStoreClient(BaseClient):
 
         request = data_acquisition_store.StoreImageRequest(image=image, data_id=data_id)
         return self.call(self._stub.StoreImage, request, error_from_response=common_header_errors,
-                         **kwargs)
+                         copy_request=False, **kwargs)
 
     def store_image_async(self, image, data_id, **kwargs):
         """Async version of the store_image() RPC."""
         request = data_acquisition_store.StoreImageRequest(image=image, data_id=data_id)
         return self.call_async(self._stub.StoreImage, request,
-                               error_from_response=common_header_errors, **kwargs)
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
 
     def store_metadata(self, associated_metadata, data_id, **kwargs):
         """Store metadata.
@@ -189,20 +194,21 @@ class DataAcquisitionStoreClient(BaseClient):
         request = data_acquisition_store.StoreMetadataRequest(metadata=associated_metadata,
                                                               data_id=data_id)
         return self.call(self._stub.StoreMetadata, request,
-                         error_from_response=common_header_errors, **kwargs)
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
 
     def store_metadata_async(self, associated_metadata, data_id, **kwargs):
         """Async version of the store_metadata() RPC."""
         request = data_acquisition_store.StoreMetadataRequest(metadata=associated_metadata,
                                                               data_id=data_id)
         return self.call_async(self._stub.StoreMetadata, request,
-                               error_from_response=common_header_errors, **kwargs)
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
 
     def store_alertdata(self, associated_alert_data, data_id, **kwargs):
         """Store AlertData.
 
         Args:
-            associated_alertdata (bosdyn.api.AssociatedAlertData) : AlertData to store. If AlertData is
+            associated_alert_data (bosdyn.api.AssociatedAlertData) : AlertData to store. If AlertData is
                 not associated with a particular piece of data, the data_id field in this object
                 needs to specify only the action_id part.
             data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this
@@ -213,16 +219,17 @@ class DataAcquisitionStoreClient(BaseClient):
         """
 
         request = data_acquisition_store.StoreAlertDataRequest(alert_data=associated_alert_data,
-                                                              data_id=data_id)
+                                                               data_id=data_id)
         return self.call(self._stub.StoreAlertData, request,
-                         error_from_response=common_header_errors, **kwargs)
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
 
     def store_alertdata_async(self, associated_alert_data, data_id, **kwargs):
         """Async version of the store_alertdata() RPC."""
         request = data_acquisition_store.StoreAlertDataRequest(alert_data=associated_alert_data,
-                                                              data_id=data_id)
+                                                               data_id=data_id)
         return self.call_async(self._stub.StoreAlertData, request,
-                               error_from_response=common_header_errors, **kwargs)
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
 
     def store_data(self, data, data_id, file_extension=None, **kwargs):
         """Store data.
@@ -239,14 +246,15 @@ class DataAcquisitionStoreClient(BaseClient):
         request = data_acquisition_store.StoreDataRequest(data=data, data_id=data_id,
                                                           file_extension=file_extension)
         return self.call(self._stub.StoreData, request, error_from_response=common_header_errors,
-                         **kwargs)
+                         copy_request=False, **kwargs)
 
     def store_data_async(self, data, data_id, file_extension=None, **kwargs):
         """Async version of the store_data() RPC."""
         request = data_acquisition_store.StoreDataRequest(data=data, data_id=data_id,
                                                           file_extension=file_extension)
         return self.call_async(self._stub.StoreData, request,
-                               error_from_response=common_header_errors, **kwargs)
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
 
 
 def _get_action_ids(response):

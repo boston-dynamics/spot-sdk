@@ -9,8 +9,7 @@ This is a test application for performing comms testing as the client.
 It logs data in csv files.
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
 import argparse
 import csv
@@ -19,19 +18,18 @@ import logging
 import os
 import subprocess
 import sys
-import time
 import threading
+import time
 
 import iperf3
 
 import bosdyn
+import bosdyn.api.mission.mission_pb2 as mission_proto
 import bosdyn.client
 import bosdyn.client.util
-
-import bosdyn.api.mission.mission_pb2 as mission_proto
 from bosdyn.client.async_tasks import AsyncPeriodicQuery, AsyncTasks
-from bosdyn.client.math_helpers import SE3Pose
 from bosdyn.client.frame_helpers import get_odom_tform_body
+from bosdyn.client.math_helpers import SE3Pose
 from bosdyn.client.robot_state import RobotStateClient
 from bosdyn.mission.client import MissionClient
 

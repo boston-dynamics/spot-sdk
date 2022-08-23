@@ -4,18 +4,19 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-import os
 import argparse
+import os
 import sys
 import time
 
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.client import create_standard_sdk, RpcError, ResponseError
+from bosdyn.choreography.client.choreography import (ChoreographyClient,
+                                                     load_choreography_sequence_from_txt_file)
+from bosdyn.client import ResponseError, RpcError, create_standard_sdk
 from bosdyn.client.exceptions import UnauthenticatedError
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 from bosdyn.client.license import LicenseClient
-from bosdyn.choreography.client.choreography import ChoreographyClient, load_choreography_sequence_from_txt_file
 
 DEFAULT_DANCE = "default_dance.csq"
 
@@ -37,7 +38,8 @@ def main(argv):
     bosdyn.client.util.authenticate(robot)
 
     license_client = robot.ensure_client(LicenseClient.default_service_name)
-    if not license_client.get_feature_enabled([ChoreographyClient.license_name])[ChoreographyClient.license_name]:
+    if not license_client.get_feature_enabled([ChoreographyClient.license_name
+                                              ])[ChoreographyClient.license_name]:
         print("This robot is not licensed for choreography.")
         sys.exit(1)
 

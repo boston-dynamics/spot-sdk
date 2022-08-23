@@ -9,11 +9,12 @@
 import collections
 import enum
 import logging
-from bosdyn.api import lease_pb2
-import six
 import threading
 import time
 
+import six
+
+from bosdyn.api import lease_pb2
 from bosdyn.api.lease_pb2 import AcquireLeaseRequest, AcquireLeaseResponse
 from bosdyn.api.lease_pb2 import Lease as LeaseProto
 from bosdyn.api.lease_pb2 import (LeaseUseResult, ListLeasesRequest, RetainLeaseRequest,
@@ -22,9 +23,11 @@ from bosdyn.api.lease_pb2 import (LeaseUseResult, ListLeasesRequest, RetainLease
 from bosdyn.api.lease_service_pb2_grpc import LeaseServiceStub
 
 from . import common
-from .exceptions import ResponseError, RpcError, Error as BaseError
+from .exceptions import Error as BaseError
+from .exceptions import ResponseError, RpcError
 
 _LOGGER = logging.getLogger(__name__)
+
 
 class LeaseResponseError(ResponseError):
     """General class of errors for LeaseResponseError service."""
@@ -529,13 +532,13 @@ class LeaseClient(common.BaseClient):
         """
         req = self._make_acquire_request(resource)
         return self.call(self._stub.AcquireLease, req, self._handle_acquire_success,
-                         self._handle_acquire_errors, **kwargs)
+                         self._handle_acquire_errors, copy_request=False, **kwargs)
 
     def acquire_async(self, resource=_RESOURCE_BODY, **kwargs):
         """Async version of acquire() function."""
         req = self._make_acquire_request(resource)
         return self.call_async(self._stub.AcquireLease, req, self._handle_acquire_success,
-                               self._handle_acquire_errors, **kwargs)
+                               self._handle_acquire_errors, copy_request=False, **kwargs)
 
     def take(self, resource=_RESOURCE_BODY, **kwargs):
         """Take the lease for the given resource.
@@ -553,13 +556,13 @@ class LeaseClient(common.BaseClient):
         """
         req = self._make_take_request(resource)
         return self.call(self._stub.TakeLease, req, self._handle_acquire_success,
-                         self._handle_take_errors, **kwargs)
+                         self._handle_take_errors, copy_request=False, **kwargs)
 
     def take_async(self, resource=_RESOURCE_BODY, **kwargs):
         """Async version of the take() function."""
         req = self._make_take_request(resource)
         return self.call_async(self._stub.TakeLease, req, self._handle_acquire_success,
-                               self._handle_take_errors, **kwargs)
+                               self._handle_take_errors, copy_request=False, **kwargs)
 
     def return_lease(self, lease, **kwargs):
         """Return an acquired lease.
@@ -576,14 +579,16 @@ class LeaseClient(common.BaseClient):
         if self.lease_wallet:
             self.lease_wallet.remove(lease)
         req = self._make_return_request(lease)
-        return self.call(self._stub.ReturnLease, req, None, self._handle_return_errors, **kwargs)
+        return self.call(self._stub.ReturnLease, req, None, self._handle_return_errors,
+                         copy_request=False, **kwargs)
 
     def return_lease_async(self, lease, **kwargs):
         """Async version of the return_lease() function."""
         if self.lease_wallet:
             self.lease_wallet.remove(lease)
         req = self._make_return_request(lease)
-        return self.call(self._stub.ReturnLease, req, None, self._handle_return_errors, **kwargs)
+        return self.call(self._stub.ReturnLease, req, None, self._handle_return_errors,
+                         copy_request=False, **kwargs)
 
     def retain_lease(self, lease, **kwargs):
         """Retain the lease.
@@ -596,13 +601,14 @@ class LeaseClient(common.BaseClient):
             LeaseUseError: Request was rejected due to using an invalid lease.
         """
         req = self._make_retain_request(lease)
-        return self.call(self._stub.RetainLease, req, None, common.common_lease_errors, **kwargs)
+        return self.call(self._stub.RetainLease, req, None, common.common_lease_errors,
+                         copy_request=False, **kwargs)
 
     def retain_lease_async(self, lease, **kwargs):
         """Async version of the retain_lease() function."""
         req = self._make_retain_request(lease)
         return self.call_async(self._stub.RetainLease, req, None, common.common_lease_errors,
-                               **kwargs)
+                               copy_request=False, **kwargs)
 
 
     def list_leases(self, include_full_lease_info=False, **kwargs):
@@ -622,13 +628,13 @@ class LeaseClient(common.BaseClient):
         """
         req = self._make_list_leases_request(include_full_lease_info)
         return self.call(self._stub.ListLeases, req, self._list_leases_success,
-                         common.common_header_errors, **kwargs)
+                         common.common_header_errors, copy_request=False, **kwargs)
 
     def list_leases_async(self, include_full_lease_info=False, **kwargs):
         """Async version of the list_leases() function."""
         req = self._make_list_leases_request(include_full_lease_info)
         return self.call_async(self._stub.ListLeases, req, self._list_leases_success,
-                               common.common_header_errors, **kwargs)
+                               common.common_header_errors, copy_request=False, **kwargs)
 
     def list_leases_full(self, include_full_lease_info=False, **kwargs):
         """Get a list of the leases.
@@ -646,14 +652,14 @@ class LeaseClient(common.BaseClient):
             LeaseUseError: Request was rejected due to using an invalid lease.
         """
         req = self._make_list_leases_request(include_full_lease_info)
-        return self.call(self._stub.ListLeases, req, None,
-                         common.common_header_errors, **kwargs)
+        return self.call(self._stub.ListLeases, req, None, common.common_header_errors,
+                         copy_request=False, **kwargs)
 
     def list_leases_full_async(self, include_full_lease_info=False, **kwargs):
         """Async version of the list_leases() function."""
         req = self._make_list_leases_request(include_full_lease_info)
-        return self.call_async(self._stub.ListLeases, req, None,
-                               common.common_header_errors, **kwargs)
+        return self.call_async(self._stub.ListLeases, req, None, common.common_header_errors,
+                               copy_request=False, **kwargs)
 
     @staticmethod
     def _make_acquire_request(resource):
@@ -714,6 +720,11 @@ class LeaseClient(common.BaseClient):
         return response.resources
 
 
+# Constant to be explicit about using the default resources that a processor was initialized with,
+# rather than using None to imply that.
+DEFAULT_RESOURCES = object()
+
+
 class LeaseWalletRequestProcessor(object):
     """LeaseWalletRequestProcessor adds a lease from a wallet to a request.
 
@@ -725,28 +736,34 @@ class LeaseWalletRequestProcessor(object):
 
     def __init__(self, lease_wallet, resource_list=None):
         self.lease_wallet = lease_wallet
-        self.resource_list = resource_list or [_RESOURCE_BODY]
+        if resource_list is None:
+            self.resource_list = (_RESOURCE_BODY,)
+        else:
+            self.resource_list = resource_list
         self.logger = logging.getLogger()
 
-    def mutate(self, request):
+    def mutate(self, request, resource_list=DEFAULT_RESOURCES):
         """Add the leases for the necessary resources if no leases have been specified yet."""
         multiple_leases, skip_mutation = self.get_lease_state(request)
 
         if skip_mutation:
             return
 
-        if multiple_leases and len(self.resource_list) <= 1:
+        if resource_list is DEFAULT_RESOURCES:
+            resource_list = self.resource_list
+
+        if multiple_leases and len(resource_list) <= 1:
             pass
-        elif not multiple_leases and len(self.resource_list) > 1:
+        elif not multiple_leases and len(resource_list) > 1:
             self.logger.error('LeaseWalletRequestProcessor assigned multiple leases, '
                               'but request only wants one')
 
         if multiple_leases:
-            for resource in self.resource_list:
+            for resource in resource_list:
                 lease = self.lease_wallet.advance(resource)
                 request.leases.add().CopyFrom(lease.lease_proto)
         else:
-            lease = self.lease_wallet.advance(self.resource_list[0])
+            lease = self.lease_wallet.advance(resource_list[0])
             request.lease.CopyFrom(lease.lease_proto)
 
     @staticmethod
@@ -916,12 +933,12 @@ class LeaseKeepAlive(object):
         self.wait_until_done()
         if self._return_at_exit:
             try:
-                self._lease_client.return_lease(self.lease_wallet.get_lease(self._resource), timeout=2)
+                self._lease_client.return_lease(self.lease_wallet.get_lease(self._resource),
+                                                timeout=2)
             except (LeaseResponseError, NoSuchLease, LeaseNotOwnedByWallet):
                 pass  # These all mean that we don't own the lease anymore, which is fine.
             except RpcError as exc:
                 _LOGGER.error('Failed to return the lease at the end: %s', exc)
-
 
     def is_alive(self):
         return self._thread.is_alive()

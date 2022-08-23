@@ -1,0 +1,22 @@
+FROM tensorflow/tensorflow:2.1.1-gpu
+
+# This is needed to fix the nvidia issue discussed here: https://forums.developer.nvidia.com/t/invalid-public-key-for-cuda-apt-repository/212901/22
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
+RUN apt-get update && apt-get install -y libsm6 libxext6 libxrender-dev libgl1-mesa-glx curl
+
+COPY docker-requirements.txt prebuilt/*.whl ./
+RUN python3 -m pip install -r docker-requirements.txt --find-links .
+
+# download an example detector
+RUN apt-get update && apt-get install -y curl
+RUN curl http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz > ssd_mobilenet_v2_coco_2018_03_29.tar.gz  && \
+    tar -xvf ssd_mobilenet_v2_coco_2018_03_29.tar.gz && \
+    mv ssd_mobilenet_v2_coco_2018_03_29/frozen_inference_graph.pb /model.pb && \
+    rm -rf ssd_mobilenet_v2_coco_2018_03_29*
+
+ENV LANG en_US.UTF-8 
+
+COPY . /app
+WORKDIR /app
+
+ENTRYPOINT ["/usr/bin/python3", "/app/spot_detect_and_follow.py"]

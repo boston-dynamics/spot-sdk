@@ -15,11 +15,11 @@ import argparse
 import sys
 
 import bosdyn.client
+import bosdyn.client.util
 from bosdyn.client.directory import DirectoryClient, NonexistentServiceError
 from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
                                                   DirectoryRegistrationKeepAlive,
                                                   ServiceAlreadyExistsError)
-import bosdyn.client.util
 
 DIRECTORY_NAME = 'announce-service'
 AUTHORITY = 'announce-service'

@@ -308,7 +308,7 @@ def parse_timespan(timespan_spec):
     """Parse a timespan spec of the form {from-time}[-{to-time}]
 
     Args:
-     val: string with format {spec} or {spec}-{spec} where {spec} is a string
+     timespan_spec: string with format {spec} or {spec}-{spec} where {spec} is a string
              with a format as described by TIME_FORMAT_DESC.
 
     Returns: (datetime.datetime, None) or (datetime.datetime, datetime.datetime).

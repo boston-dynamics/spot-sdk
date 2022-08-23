@@ -9,11 +9,10 @@ import logging
 import re
 import ssl
 import sys
-
-from urllib.request import Request, urlopen
 from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
-from bosdyn.client.time_sync import (TimeSyncEndpoint, TimeSyncClient, NotEstablishedError,
+from bosdyn.client.time_sync import (NotEstablishedError, TimeSyncClient, TimeSyncEndpoint,
                                      robot_time_range_from_nanoseconds, timespec_to_robot_timespan)
 from bosdyn.util import TIME_FORMAT_DESC
 
@@ -149,7 +148,8 @@ def main():
     """Command-line interface"""
     # pylint: disable=import-outside-toplevel
     import argparse
-    from bosdyn.client import create_standard_sdk, InvalidLoginError
+
+    from bosdyn.client import InvalidLoginError, create_standard_sdk
     from bosdyn.client.util import add_common_arguments, authenticate
 
     parser = argparse.ArgumentParser()

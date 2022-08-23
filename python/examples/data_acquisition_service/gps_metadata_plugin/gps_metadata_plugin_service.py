@@ -12,15 +12,15 @@ import random
 import threading
 import time
 
+import bosdyn.client.util
 from bosdyn.api import data_acquisition_pb2, data_acquisition_plugin_service_pb2_grpc
+from bosdyn.client.data_acquisition_plugin_service import (Capability, DataAcquisitionPluginService,
+                                                           RequestState)
 from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
-from bosdyn.client.data_acquisition_plugin_service import (Capability, RequestState,
-                                                           DataAcquisitionPluginService)
 from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
                                                   DirectoryRegistrationKeepAlive)
-import bosdyn.client.util
-from bosdyn.client.util import setup_logging
 from bosdyn.client.server_util import GrpcServiceRunner
+from bosdyn.client.util import setup_logging
 
 DIRECTORY_NAME = 'data-acquisition-gps-metadata-plugin'
 AUTHORITY = 'data-acquisition-gps-metadata-plugin'

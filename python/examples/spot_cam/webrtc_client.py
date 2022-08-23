@@ -6,15 +6,11 @@
 
 import asyncio
 import base64
+
 import requests
-
-from aiortc import (
-    RTCPeerConnection,
-    RTCSessionDescription,
-    MediaStreamTrack,
-)
-
+from aiortc import MediaStreamTrack, RTCPeerConnection, RTCSessionDescription
 from aiortc.contrib.media import MediaBlackhole
+
 
 class SpotCAMMediaStreamTrack(MediaStreamTrack):
 
@@ -33,16 +29,15 @@ class SpotCAMMediaStreamTrack(MediaStreamTrack):
 
 class WebRTCClient:
 
-    def __init__(self, hostname, username, password, sdp_port, sdp_filename, cam_ssl_cert,
-                 rtc_config, media_recorder=None, recorder_type=None):
+    def __init__(self, hostname, sdp_port, sdp_filename, cam_ssl_cert, token, rtc_config,
+                 media_recorder=None, recorder_type=None):
         self.pc = RTCPeerConnection(configuration=rtc_config)
 
         self.video_frame_queue = asyncio.Queue()
         self.audio_frame_queue = asyncio.Queue()
 
         self.hostname = hostname
-        self.username = username
-        self.password = password
+        self.token = token
         self.sdp_port = sdp_port
         self.media_recorder = media_recorder
         self.media_black_hole = None
@@ -53,11 +48,7 @@ class WebRTCClient:
     def get_bearer_token(self, mock=False):
         if mock:
             return 'token'
-        payload = {'username': self.username, 'password': self.password}
-        response = requests.post(f'https://{self.hostname}/accounts/jwt/generate/', verify=False,
-                                 data=payload, timeout=1)
-        token = response.content.decode('utf-8')
-        return token
+        return self.token
 
     def get_sdp_offer_from_spot_cam(self, token):
 

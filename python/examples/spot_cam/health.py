@@ -8,11 +8,9 @@ import os
 import shutil
 import tempfile
 
-from bosdyn.client.command_line import (Command, Subcommands)
-
-from bosdyn.client.spot_cam.health import HealthClient
-
 from bosdyn.api.spot_cam import health_pb2
+from bosdyn.client.command_line import Command, Subcommands
+from bosdyn.client.spot_cam.health import HealthClient
 
 
 class HealthCommands(Subcommands):
@@ -68,7 +66,6 @@ class HealthGetTemperatureCommand(Command):
         temp = robot.ensure_client(HealthClient.default_service_name).get_temperature()
 
         return temp
-
 
 
 class HealthGetSystemLogCommand(Command):

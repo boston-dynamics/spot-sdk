@@ -12,6 +12,7 @@ This example program demonstrates how to trigger, clear, and display service fau
 system to enable automatic faulting when a service crashes or fails to maintain liveness.
 
 ## Setup Dependencies
+
 This example requires the bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:
 
 ```
@@ -19,13 +20,17 @@ python3 -m pip install -r requirements.txt
 ```
 
 ## Running the Example
+
 To run the example:
+
 ```
 python3 service_faults.py --guid GUID --secret SECRET ROBOT_IP
 ```
+
 OR
+
 ```
-python3 service_faults.py ROBOT_IP 
+python3 service_faults.py ROBOT_IP
 
 ```
 

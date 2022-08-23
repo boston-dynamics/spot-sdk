@@ -15,14 +15,14 @@ This includes Python libraries.
 The code follows the Google Python style guide.
 
 Following are dependent libraries:
-  * Google's gRPC Python library, as well as its transitive dependencies.
-  * PyJWT
-  * Numpy
 
+- Google's gRPC Python library, as well as its transitive dependencies.
+- PyJWT
+- Numpy
 
 ## Contents
 
-* [Client](bosdyn-client/src/bosdyn/client/README.md)
-* [Core](bosdyn-core/src/bosdyn/README.md)
-* [Mission](bosdyn-mission/src/bosdyn/mission/README.md)
-* [Choreography](bosdyn-choreography-client/src/bosdyn/choreography/client/README.md)
+- [Client](bosdyn-client/src/bosdyn/client/README.md)
+- [Core](bosdyn-core/src/bosdyn/README.md)
+- [Mission](bosdyn-mission/src/bosdyn/mission/README.md)
+- [Choreography](bosdyn-choreography-client/src/bosdyn/choreography/client/README.md)

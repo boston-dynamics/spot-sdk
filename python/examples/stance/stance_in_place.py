@@ -7,20 +7,18 @@
 """Test script to run a simple stance command.
 """
 from __future__ import print_function
+
 import argparse
 import sys
-import traceback
 import time
+import traceback
 
 import bosdyn.client
 import bosdyn.client.estop
 import bosdyn.client.lease
 import bosdyn.client.util
-
-from bosdyn.client import frame_helpers
-from bosdyn.client import math_helpers
-from bosdyn.client import robot_command
-from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder
+from bosdyn.client import frame_helpers, math_helpers, robot_command
+from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient
 from bosdyn.client.robot_state import RobotStateClient
 
 
@@ -73,8 +71,8 @@ def run(config):
         pos_hr_rt_vision = vo_T_body * math_helpers.SE2Pose(-x_offset, -y_offset, 0)
 
         stance_cmd = RobotCommandBuilder.stance_command(
-            frame_helpers.VISION_FRAME_NAME, pos_fl_rt_vision.position,
-            pos_fr_rt_vision.position, pos_hl_rt_vision.position, pos_hr_rt_vision.position)
+            frame_helpers.VISION_FRAME_NAME, pos_fl_rt_vision.position, pos_fr_rt_vision.position,
+            pos_hl_rt_vision.position, pos_hr_rt_vision.position)
 
         print("After stance adjustment, press Ctrl-C to sit Spot and turn off motors.")
 

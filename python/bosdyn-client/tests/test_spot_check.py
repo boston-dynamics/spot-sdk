@@ -6,15 +6,14 @@
 
 import pytest  # noqa
 
-from bosdyn.api.spot import spot_check_pb2
+import bosdyn.client.spot_check as sc
 from bosdyn.api import lease_pb2
 from bosdyn.api.header_pb2 import CommonError
-
+from bosdyn.api.spot import spot_check_pb2
 from bosdyn.client.exceptions import LeaseUseError
-import bosdyn.client.spot_check as sc
 from bosdyn.client.spot_check import (_calibration_feedback_error_from_response,
-                                      run_camera_calibration, run_spot_check,
-                                      _spotcheck_feedback_error_from_response)
+                                      _spotcheck_feedback_error_from_response,
+                                      run_camera_calibration, run_spot_check)
 
 
 class MockLease(object):

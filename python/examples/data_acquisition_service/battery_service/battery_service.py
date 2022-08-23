@@ -5,17 +5,19 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import logging
+
 from google.protobuf import json_format
 
+import bosdyn.client.util
 from bosdyn.api import data_acquisition_pb2, data_acquisition_plugin_service_pb2_grpc
+from bosdyn.client.data_acquisition_plugin_service import (Capability, DataAcquisitionPluginService,
+                                                           DataAcquisitionStoreHelper)
 from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
-from bosdyn.client.data_acquisition_plugin_service import Capability, DataAcquisitionPluginService, DataAcquisitionStoreHelper
 from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
                                                   DirectoryRegistrationKeepAlive)
 from bosdyn.client.robot_state import RobotStateClient
-import bosdyn.client.util
-from bosdyn.client.util import setup_logging
 from bosdyn.client.server_util import GrpcServiceRunner
+from bosdyn.client.util import setup_logging
 
 DIRECTORY_NAME = 'data-acquisition-battery'
 AUTHORITY = 'data-acquisition-battery'

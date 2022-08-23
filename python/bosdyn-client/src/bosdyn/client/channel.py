@@ -5,15 +5,17 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import logging
+import warnings
 
 import grpc
 
-from .exceptions import (
-    RpcError, ClientCancelledOperationError, InvalidAppTokenError, InvalidClientCertificateError,
-    NonexistentAuthorityError, NotFoundError, PermissionDeniedError, ProxyConnectionError,
-    RetryableUnavailableError, ResponseTooLargeError, ServiceFailedDuringExecutionError,
-    ServiceUnavailableError, TimedOutError, UnableToConnectToRobotError, UnauthenticatedError,
-    UnknownDnsNameError, UnimplementedError, TooManyRequestsError, TransientFailureError)
+from .exceptions import (ClientCancelledOperationError, InvalidAppTokenError,
+                         InvalidClientCertificateError, NonexistentAuthorityError, NotFoundError,
+                         PermissionDeniedError, ProxyConnectionError, ResponseTooLargeError,
+                         RetryableUnavailableError, RpcError, ServiceFailedDuringExecutionError,
+                         ServiceUnavailableError, TimedOutError, TooManyRequestsError,
+                         TransientFailureError, UnableToConnectToRobotError, UnauthenticatedError,
+                         UnimplementedError, UnknownDnsNameError)
 
 TransportError = grpc.RpcError
 
@@ -29,32 +31,34 @@ class RefreshingAccessTokenAuthMetadataPlugin(grpc.AuthMetadataPlugin):
 
     Args:
         token_cb: Callable that returns a tuple of (app_token, user_token)
-        add_app_token (bool): Whether to include an app token in the metadata. This is necessary for compatibility with old robot software.
+        add_app_token (bool): Deprecated
     """
 
-    def __init__(self, token_cb, add_app_token):
+    def __init__(self, token_cb, add_app_token=None):
         self._token_cb = token_cb
-        self._add_app_token = add_app_token
+        if add_app_token is not None:
+            warnings.warn(
+                'add_app_token is deprecated for RefreshingAccessTokenAuthMetadataPlugin. '
+                'Do not set it', DeprecationWarning)
 
     def __call__(self, context, callback):
         app_token, user_token = self._token_cb()
         user_token_metadata = ('authorization', 'Bearer {}'.format(user_token))
-        app_token_metadata = ('x-bosdyn-apptoken', app_token)
-        if self._add_app_token:
-            metadata = (user_token_metadata, app_token_metadata)
-        else:
-            metadata = (user_token_metadata,)
+        metadata = (user_token_metadata,)
         error = None
         callback(metadata, error)
 
 
-def create_secure_channel_creds(cert, token_cb, add_app_token):
+def create_secure_channel_creds(cert, token_cb, add_app_token=None):
     """Returns credentials for establishing a secure channel.
     Uses previously set values on the linked Sdk and self.
     """
+    if add_app_token is not None:
+        warnings.warn('add_app_token is deprecated for create_secure_channel_creds. Do not set it.',
+                      DeprecationWarning)
 
     transport_creds = grpc.ssl_channel_credentials(root_certificates=cert)
-    plugin = RefreshingAccessTokenAuthMetadataPlugin(token_cb, add_app_token=add_app_token)
+    plugin = RefreshingAccessTokenAuthMetadataPlugin(token_cb)
     # Encrypted connections carry either just transport credentials sufficient to
     # establish TLS or both transport and authorization credentials. The auth
     # credentials provide the token with every GRPC call on this channel.
@@ -170,6 +174,9 @@ def translate_exception(rpc_error):
             return RetryableUnavailableError(rpc_error, RetryableUnavailableError.__doc__)
         if str(502) in details:
             return ServiceUnavailableError(rpc_error, ServiceUnavailableError.__doc__)
+        if str(429) in details:
+            return TooManyRequestsError(rpc_error, TooManyRequestsError.__doc__)
+        return UnableToConnectToRobotError(rpc_error, UnableToConnectToRobotError.__doc__)
 
     _LOGGER.warning('Unclassified exception: %s', rpc_error)
 

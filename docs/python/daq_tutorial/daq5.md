@@ -100,7 +100,7 @@ Next, follow these steps to play back the mission recorded in the section above.
 
 ### Configure the robot to automatically upload its data to the cloud.
 
-The [Post Docking Callbacks example](../../../python/examples/post_docking_callbacks/README.md) contains scripts to enable users to upload files saved to DAQ during robot operation to various endpoints, with the target use case having the callback run when Spot docks at the end of an Autowalk mission. Please follow instructions in that example to set up a callback to upload the captured data to AWS when the robot docks.
+The [Post Docking Callbacks example](../../../python/examples/post_docking_callbacks/README.md) contains scripts to enable users to upload files saved during a data acquisition mission to various endpoints, with the target use case having the callback run when Spot docks at the end of an Autowalk mission. Please follow instructions in that example to set up a callback to upload the captured data to AWS when the robot docks.
 
 ## Head over to [Part 6: Processing Collected Data](daq6.md) >>
 

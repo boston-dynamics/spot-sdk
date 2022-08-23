@@ -4,10 +4,10 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
+from deprecated import deprecated
+
 import bosdyn.util
 from bosdyn.api import header_pb2
-
-from deprecated import deprecated
 
 
 

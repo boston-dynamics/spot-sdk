@@ -4,37 +4,32 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-from __future__ import print_function
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
-import logging
-from datetime import datetime
 import io
-import sys
 import json
+import logging
+import sys
+import time
+from datetime import datetime
+
 import numpy as np
 from PIL import Image
-import time
-
-import bosdyn.client
-import bosdyn.client.util
-from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
-                                                  DirectoryRegistrationKeepAlive)
-from bosdyn.client.util import setup_logging
-from bosdyn.client.server_util import GrpcServiceRunner
-from bosdyn.client.fault import FaultClient
-from bosdyn.client.image_service_helpers import (VisualImageSource, CameraBaseImageServicer,
-                                                 CameraInterface, convert_RGB_to_grayscale)
-
-from bosdyn.api import image_pb2
-from bosdyn.api import image_service_pb2_grpc
-from bosdyn.api import service_fault_pb2
-
 # Ricoh Theta
 from ricoh_theta import Theta
 
 # Payload Registration
 import bosdyn.api.payload_pb2 as payload_protos
+import bosdyn.client
+import bosdyn.client.util
+from bosdyn.api import image_pb2, image_service_pb2_grpc, service_fault_pb2
+from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
+                                                  DirectoryRegistrationKeepAlive)
+from bosdyn.client.fault import FaultClient
+from bosdyn.client.image_service_helpers import (CameraBaseImageServicer, CameraInterface,
+                                                 VisualImageSource, convert_RGB_to_grayscale)
+from bosdyn.client.server_util import GrpcServiceRunner
+from bosdyn.client.util import setup_logging
 
 # Create a virtual payload.
 PLACEHOLDER_PAYLOAD = payload_protos.Payload()
@@ -108,8 +103,9 @@ class RicohThetaServiceHelper(CameraInterface):
                 # An issue occurred getting the file format for the camera images. This is likely due
                 # to upstream failures creating the Theta instance, which already have triggered service
                 # faults.
-                _LOGGER.info("Unable to set the image width/height dimensions. Error message: %s %s",
-                            str(type(err)), str(err))
+                _LOGGER.info(
+                    "Unable to set the image width/height dimensions. Error message: %s %s",
+                    str(type(err)), str(err))
                 pass
             if format_json is not None:
                 print(format_json)
@@ -222,7 +218,8 @@ class RicohThetaServiceHelper(CameraInterface):
         if resize_ratio != 1.0 and resize_ratio != 0:
             new_width = int(converted_image_data.size[0])
             new_height = int(converted_image_data.size[1])
-            converted_image_data = converted_image_data.resize((new_width, new_height), Image.ANTIALIAS)
+            converted_image_data = converted_image_data.resize((new_width, new_height),
+                                                               Image.ANTIALIAS)
             image_proto.cols = new_width
             image_proto.rows = new_height
 
@@ -233,7 +230,8 @@ class RicohThetaServiceHelper(CameraInterface):
             # the size to allow for the larger raw images.
             # PIL will not do any JPEG compression if the quality is specified as 100. It effectively treats
             # requests with quality > 95 as a request for a raw image.
-            converted_image_data.save(compressed_byte_buffer, format=converted_image_data.format, quality=100)
+            converted_image_data.save(compressed_byte_buffer, format=converted_image_data.format,
+                                      quality=100)
             image_proto.data = compressed_byte_buffer.getvalue()
             image_proto.format = image_pb2.Image.FORMAT_RAW
         elif image_format == image_pb2.Image.FORMAT_JPEG or image_format == image_pb2.Image.FORMAT_UNKNOWN or image_format is None:
@@ -251,8 +249,7 @@ class RicohThetaServiceHelper(CameraInterface):
                     checked_quality = 95
                 else:
                     checked_quality = quality_percent
-            converted_image_data.save(compressed_byte_buffer, "JPEG",
-                                      quality=int(checked_quality))
+            converted_image_data.save(compressed_byte_buffer, "JPEG", quality=int(checked_quality))
             image_proto.data = compressed_byte_buffer.getvalue()
             # Set the format as JPEG because the incoming requested format could've initially been None/unknown
             # in this case.
@@ -294,11 +291,10 @@ def make_ricoh_theta_image_service(theta_ssid, theta_password, theta_client, rob
 
     ricoh_helper = RicohThetaServiceHelper(theta_ssid, theta_instance, logger, live_stream,
                                            use_background_capture_thread)
-    img_src = VisualImageSource(ricoh_helper.image_source_name, ricoh_helper, ricoh_helper.rows,
-                                ricoh_helper.cols, ricoh_helper.camera_gain,
-                                ricoh_helper.camera_exposure,
-                                [image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8, image_pb2.Image.PIXEL_FORMAT_RGB_U8],
-                                logger)
+    img_src = VisualImageSource(
+        ricoh_helper.image_source_name, ricoh_helper, ricoh_helper.rows, ricoh_helper.cols,
+        ricoh_helper.camera_gain, ricoh_helper.camera_exposure,
+        [image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8, image_pb2.Image.PIXEL_FORMAT_RGB_U8], logger)
     return True, CameraBaseImageServicer(robot, DIRECTORY_NAME, [img_src], logger,
                                          use_background_capture_thread)
 

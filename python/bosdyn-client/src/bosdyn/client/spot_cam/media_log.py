@@ -12,9 +12,8 @@ _LOGGER = logging.getLogger(__name__)
 
 from deprecated import deprecated
 
-from bosdyn.client.common import (BaseClient, common_header_errors, handle_common_header_errors)
-from bosdyn.api.spot_cam import service_pb2_grpc
-from bosdyn.api.spot_cam import logging_pb2
+from bosdyn.api.spot_cam import logging_pb2, service_pb2_grpc
+from bosdyn.client.common import BaseClient, common_header_errors, handle_common_header_errors
 
 
 class MediaLogClient(BaseClient):
@@ -33,13 +32,13 @@ class MediaLogClient(BaseClient):
           logpoint: spot_cam.Logpoint.name must be filled out."""
         request = logging_pb2.DeleteRequest(point=logpoint)
         return self.call(self._stub.Delete, request, self._delete_from_response,
-                         self._media_log_error_from_response, **kwargs)
+                         self._media_log_error_from_response, copy_request=False, **kwargs)
 
     def delete_async(self, logpoint, **kwargs):
         """Async version of delete()"""
         request = logging_pb2.DeleteRequest(point=logpoint)
         return self.call_async(self._stub.Delete, request, self._delete_from_response,
-                               self._media_log_error_from_response, **kwargs)
+                               self._media_log_error_from_response, copy_request=False, **kwargs)
 
     def enable_debug(self, temp=False, humidity=False, bit=False, shock=True, system_stats=False,
                      **kwargs):
@@ -55,7 +54,7 @@ class MediaLogClient(BaseClient):
                                            enable_BIT=bit, enable_shock=shock,
                                            enable_system_stat=system_stats)
         return self.call(self._stub.EnableDebug, request, self._enable_debug_from_response,
-                         self._media_log_error_from_response, **kwargs)
+                         self._media_log_error_from_response, copy_request=False, **kwargs)
 
     def enable_debug_async(self, temp=False, humidity=False, bit=False, shock=True,
                            system_stats=False, **kwargs):
@@ -64,7 +63,7 @@ class MediaLogClient(BaseClient):
                                            enable_BIT=bit, enable_shock=shock,
                                            enable_system_stat=system_stats)
         return self.call_async(self._stub.EnableDebug, request, self._enable_debug_from_response,
-                               self._media_log_error_from_response, **kwargs)
+                               self._media_log_error_from_response, copy_request=False, **kwargs)
 
     def get_status(self, logpoint, **kwargs):
         """Gets the state of the specified logpoint.
@@ -75,31 +74,31 @@ class MediaLogClient(BaseClient):
           A spot_cam.Logpoint with the status filled out."""
         request = logging_pb2.GetStatusRequest(point=logpoint)
         return self.call(self._stub.GetStatus, request, self._get_status_from_response,
-                         self._media_log_error_from_response, **kwargs)
+                         self._media_log_error_from_response, copy_request=False, **kwargs)
 
     def get_status_async(self, logpoint, **kwargs):
         """Async version of get_status()"""
         request = logging_pb2.GetStatusRequest(point=logpoint)
         return self.call_async(self._stub.GetStatus, request, self._get_status_from_response,
-                               self._media_log_error_from_response, **kwargs)
+                               self._media_log_error_from_response, copy_request=False, **kwargs)
 
     def list_cameras(self, **kwargs):
         """List cameras on Spot CAM"""
         request = logging_pb2.ListCamerasRequest()
         return self.call(self._stub.ListCameras, request, self._list_cameras_from_response,
-                         self._media_log_error_from_response, **kwargs)
+                         self._media_log_error_from_response, copy_request=False, **kwargs)
 
     def list_cameras_async(self, **kwargs):
         """Async version of list_cameras()"""
         request = logging_pb2.ListCamerasRequest()
         return self.call_async(self._stub.ListCameras, request, self._list_cameras_from_response,
-                               self._media_log_error_from_response, **kwargs)
+                               self._media_log_error_from_response, copy_request=False, **kwargs)
 
     def list_logpoints(self, **kwargs):
         """List Logpoints on Spot CAM"""
         request = logging_pb2.ListLogpointsRequest()
         return self.call(self._stub.ListLogpoints, request, self._list_logpoints_from_response,
-                         self._media_log_error_from_response, **kwargs)
+                         self._media_log_error_from_response, copy_request=False, **kwargs)
 
     def retrieve(self, logpoint, **kwargs):
         """Retrieves the image associated with the Logpoint.
@@ -108,7 +107,7 @@ class MediaLogClient(BaseClient):
           logpoint: spot_cam.Logpoint.name must be filled out."""
         request = logging_pb2.RetrieveRequest(point=logpoint)
         return self.call(self._stub.Retrieve, request, self._retrieve_from_response,
-                         self._media_log_error_from_response, **kwargs)
+                         self._media_log_error_from_response, copy_request=False, **kwargs)
 
     def retrieve_raw_data(self, logpoint, **kwargs):
         """Retrieves the image associated with the Logpoint.
@@ -117,7 +116,7 @@ class MediaLogClient(BaseClient):
           logpoint: spot_cam.Logpoint.name must be filled out."""
         request = logging_pb2.RetrieveRawDataRequest(point=logpoint)
         return self.call(self._stub.RetrieveRawData, request, self._retrieve_from_response,
-                         self._media_log_error_from_response, **kwargs)
+                         self._media_log_error_from_response, copy_request=False, **kwargs)
 
     @deprecated(reason='Spot CAM encryption has been removed as a result of the switch to NTFS.',
                 version='3.0.0', action="always")
@@ -125,7 +124,7 @@ class MediaLogClient(BaseClient):
         """Set password for Spot CAM filesystem."""
         request = logging_pb2.SetPassphraseRequest(passphrase=passphrase)
         return self.call(self._stub.SetPassphrase, request, self._set_passphrase_from_response,
-                         self._media_log_error_from_response, **kwargs)
+                         self._media_log_error_from_response, copy_request=False, **kwargs)
 
     @deprecated(reason='Spot CAM encryption has been removed as a result of the switch to NTFS.',
                 version='3.0.0', action="always")
@@ -134,7 +133,7 @@ class MediaLogClient(BaseClient):
         request = logging_pb2.SetPassphraseRequest(passphrase=passphrase)
         return self.call_async(self._stub.SetPassphrase, request,
                                self._set_passphrase_from_response,
-                               self._media_log_error_from_response, **kwargs)
+                               self._media_log_error_from_response, copy_request=False, **kwargs)
 
     def store(self, camera, record_type, tag=None, **kwargs):
         """Store media on the Spot CAM.
@@ -148,13 +147,13 @@ class MediaLogClient(BaseClient):
         """
         request = logging_pb2.StoreRequest(camera=camera, type=record_type, tag=tag)
         return self.call(self._stub.Store, request, self._store_from_response,
-                         self._media_log_error_from_response, **kwargs)
+                         self._media_log_error_from_response, copy_request=False, **kwargs)
 
     def store_async(self, camera, record_type, tag=None, **kwargs):
         """Async version of store()"""
         request = logging_pb2.StoreRequest(camera=camera, type=record_type, tag=tag)
         return self.call_async(self._stub.Store, request, self._store_from_response,
-                               self._media_log_error_from_response, **kwargs)
+                               self._media_log_error_from_response, copy_request=False, **kwargs)
 
     def tag(self, logpoint, **kwargs):
         """Update the 'tag' field of an existing Logpoint.
@@ -163,13 +162,13 @@ class MediaLogClient(BaseClient):
           logpoint: 'tag' and 'name' in spot_cam.Logpoint must be filled out."""
         request = logging_pb2.TagRequest(point=logpoint)
         return self.call(self._stub.Tag, request, self._tag_from_response,
-                         self._media_log_error_from_response, **kwargs)
+                         self._media_log_error_from_response, copy_request=False, **kwargs)
 
     def tag_async(self, logpoint, **kwargs):
         """Async version of tag()"""
         request = logging_pb2.TagRequest(point=logpoint)
         return self.call_async(self._stub.Tag, request, self._tag_from_response,
-                               self._media_log_error_from_response, **kwargs)
+                               self._media_log_error_from_response, copy_request=False, **kwargs)
 
     @staticmethod
     def _delete_from_response(response):

@@ -7,18 +7,19 @@
 """Example using the world objects service. """
 
 from __future__ import print_function
+
 import argparse
 import sys
 import time
 
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.client.world_object import WorldObjectClient
-from bosdyn.client.world_object import make_add_world_object_req, make_change_world_object_req, make_delete_world_object_req
-from bosdyn.api import world_object_pb2
 from bosdyn.api import geometry_pb2 as geom
-from bosdyn.util import now_timestamp
+from bosdyn.api import world_object_pb2
 from bosdyn.client.frame_helpers import *
+from bosdyn.client.world_object import (WorldObjectClient, make_add_world_object_req,
+                                        make_change_world_object_req, make_delete_world_object_req)
+from bosdyn.util import now_timestamp
 
 
 def create_drawable_sphere_object():
@@ -217,7 +218,7 @@ def main(argv):
 
     # Set the drawing properties of the sphere.
     radius = 0.05
-    color = (255, 0, 0, 1) # red, solid sphere
+    color = (255, 0, 0, 1)  # red, solid sphere
 
     resp = world_object_client.draw_sphere("debug_sphere", x, y, z, frame, radius, color)
     print('Added a world object sphere at (' + str(x) + ', ' + str(y) + ', ' + str(z) + ')')

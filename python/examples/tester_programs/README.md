@@ -13,6 +13,7 @@ The following scripts are available for a developer to rapidly test and debug di
 Currently, there are testing programs for DataAcquisitionPluginService and ImageService services, as well as general testing helpers that could be used for debugging other services being developed as well.
 
 ## Setup Dependencies
+
 This example requires the Spot SDK to be installed, and must be run using python3. Using pip, these dependencies can be installed using:
 
 ```
@@ -28,6 +29,7 @@ The image service tester script (`image_service_tester.py`) can be used while de
 Note: check that the camera is powered on, connected, and can be communicated with before running the tester program. This program is to help debug issues with the image service, and not the physical camera hardware.
 
 The script runs through a series of tests checking:
+
 - The image service is registered with the robot's directory service.
 - The image service can be communicated with using gRPC calls.
 - The image service has no active service faults when first starting the service, as well as after all tests are run.
@@ -37,6 +39,7 @@ The script runs through a series of tests checking:
 - Optionally test the integration of the image service with the data acquisition service.
 
 To use the image service tester script, the new image service must be running. Then, the tester script can be run using the following command:
+
 ```
 python3 image_service_tester.py {ROBOT_IP} --service-name {SERVICE_NAME}
 ```
@@ -52,6 +55,7 @@ Lastly, the robot's data acquisition should automatically integrate any director
 ## Testing a Data Acquisition Plugin
 
 The plugin tester script (`plugin_tester.py`) can be used while developing a new data acquisition plugin service to help ensure that the service can be communicated with and behaves as expected. The script runs through a series of tests checking:
+
 - The data acquisition plugin service is registered with the robot's directory service.
 - The data acquisition plugin service can be communicated with using gRPC calls.
 - The data acquisition plugin has no active service faults when first starting the service, as well as after all tests are run.
@@ -62,6 +66,7 @@ The plugin tester script (`plugin_tester.py`) can be used while developing a new
 - All acquisitions can be cancelled successfully using the CancelAcquisition RPC.
 
 To use the data acquisition plugin service tester script, the new image service must be running. Then, the tester script can be run using the following command:
+
 ```
 python3 plugin_tester.py {ROBOT_IP} --service-name {SERVICE_NAME}
 ```

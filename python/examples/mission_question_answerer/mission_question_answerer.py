@@ -51,7 +51,7 @@ def ask_user_for_answer(question_proto):
         selection_number += 1
 
     text = 'Question: "{}"\n\nChoose one:\n'.format(question_proto.text)
-    text += ''.join(opt[0]+'\n' for opt in user_options)
+    text += ''.join(opt[0] + '\n' for opt in user_options)
     idx = int(six.moves.input(text)) - 1
     return user_options[idx][1]
 

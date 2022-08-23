@@ -7,5 +7,5 @@
 """The mission library package.
 Sets up some convenience imports for commonly used classes and functions.
 """
-from .exceptions import Error, CompileError, UnknownType, ValidationError
 from .client import MissionClient
+from .exceptions import CompileError, Error, UnknownType, ValidationError

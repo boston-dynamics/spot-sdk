@@ -6,11 +6,10 @@
 
 """Tests for the payload registration client."""
 
-from bosdyn.client import InternalServerError, UnsetStatusError
-from bosdyn.client.payload_registration import (_payload_registration_error,
-                                                PayloadAlreadyExistsError)
-
 import bosdyn.api.payload_registration_pb2 as payload_registration_protos
+from bosdyn.client import InternalServerError, UnsetStatusError
+from bosdyn.client.payload_registration import (PayloadAlreadyExistsError,
+                                                _payload_registration_error)
 
 
 def test_payload_registration_error():

@@ -11,18 +11,23 @@ Development Kit License (20191101-BDSDK-SL).
 These examples demonstrate how to interact with the Spot CAM.
 
 ## Setup Dependencies
+
 These examples need to be run with python3, and have the Spot SDK installed. See the requirements.txt file for a list of dependencies which can be installed with pip.
+
 ```
 python3 -m pip install -r requirements.txt
 ```
 
-Older versions of pip may have trouble installing all of the requirements.  If you run into a problem, upgrade pip by running
+Older versions of pip may have trouble installing all of the requirements. If you run into a problem, upgrade pip by running
+
 ```
 python3 -m pip install --upgrade pip
 ```
 
 ## Running the Example
+
 To run the examples:
+
 ```
 USERNAME=<username>
 PASSWORD=<password>

@@ -4,21 +4,22 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-import cv2
-from unittest import mock
 import os
-import pytest
 import threading
-import numpy as np
+from unittest import mock
 
-from bosdyn.api import service_fault_pb2
-from bosdyn.api import image_pb2, header_pb2
-from bosdyn.client.fault import FaultClient, ServiceFaultDoesNotExistError
-from bosdyn.client.image_service_helpers import (VisualImageSource, ImageCaptureThread,
-                                                 CameraBaseImageServicer, CameraInterface,
-                                                 convert_RGB_to_grayscale)
+import cv2
+import numpy as np
+import pytest
 from google.protobuf import timestamp_pb2
 from PIL import Image
+
+from bosdyn.api import header_pb2, image_pb2, service_fault_pb2
+from bosdyn.client.fault import FaultClient, ServiceFaultDoesNotExistError
+from bosdyn.client.image_service_helpers import (CameraBaseImageServicer, CameraInterface,
+                                                 ImageCaptureThread, VisualImageSource,
+                                                 convert_RGB_to_grayscale)
+
 
 class MockFaultClient:
 
@@ -35,7 +36,7 @@ class MockFaultClient:
         return service_fault_pb2.TriggerServiceFaultResponse()
 
     def clear_service_fault(self, service_fault_id, clear_all_service_faults=False,
-                                  clear_all_payload_faults=False, **kwargs):
+                            clear_all_payload_faults=False, **kwargs):
         # This function makes the assumption that every fault in this mock fault client's dictionary
         # has the same service_name in the fault id.
         if clear_all_service_faults:
@@ -90,6 +91,7 @@ class FakeCamera(CameraInterface):
     def image_decode(self, image_data, image_proto, image_req):
         return self.decode_func(image_data, image_proto, image_req)
 
+
 # Old definition, pre 3.1.0
 class OldFakeCamera(CameraInterface):
 
@@ -103,12 +105,14 @@ class OldFakeCamera(CameraInterface):
     def image_decode(self, image_data, image_proto, image_format, quality_percent):
         return self.decode_func(image_data, image_proto, image_format, quality_percent)
 
+
 def capture_fake():
     return "image", 1
 
 
 def decode_fake(img_data, img_proto, img_req):
     img_proto.rows = 15
+
 
 def decode_fake_no_resize(img_data, img_proto, img_format, quality):
     img_proto.rows = 16
@@ -186,10 +190,12 @@ def test_faults_in_visual_source():
     assert fault_client.service_fault_counts[visual_src.decode_data_fault.fault_id.fault_name] == 1
     assert status == image_pb2.ImageResponse.STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED
 
+
 def test_clear_not_active_faults():
     # Check that clearing faults works with non active faults.
 
     class MockFaultClientFaultNotActive:
+
         def clear_service_fault(self, service_fault_id, clear_all_service_faults=False,
                                 clear_all_payload_faults=False, **kwargs):
             raise ServiceFaultDoesNotExistError(None, "error")
@@ -198,6 +204,7 @@ def test_clear_not_active_faults():
     fault_client = MockFaultClientFaultNotActive()
     visual_src.initialize_faults(fault_client, "service1")
     assert len(visual_src.active_fault_id_names) == 0
+
 
 def test_active_faults():
     # Check that active faults are managed correctly.
@@ -230,6 +237,7 @@ def test_active_faults():
     # Make sure clear_service_fault is not called for a cleared fault.
     assert fault_client.clear_service_fault_called_count == 2
     assert len(visual_src.active_fault_id_names) == 0
+
 
 def test_faults_are_cleared_on_success():
     # Check that captures/decodes that fail and then later succeed will cause the faults to get cleared.
@@ -588,19 +596,21 @@ def test_decode_backwards_compatibility():
 
 def test_convert_pixel_format():
 
-    empty_visual_src = VisualImageSource(
-        "source1", FakeCamera(capture_fake, decode_fake), rows=None, cols=None, gain=None,
-        exposure=None, pixel_formats=[])
+    empty_visual_src = VisualImageSource("source1", FakeCamera(capture_fake,
+                                                               decode_fake), rows=None, cols=None,
+                                         gain=None, exposure=None, pixel_formats=[])
     grayscale_visual_src = VisualImageSource(
         "source1", FakeCamera(capture_fake, decode_fake), rows=None, cols=None, gain=None,
         exposure=None, pixel_formats=[image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8])
     rgb_visual_src = VisualImageSource(
         "source1", FakeCamera(capture_fake, decode_fake), rows=None, cols=None, gain=None,
-        exposure=None, pixel_formats=[image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8,
-        image_pb2.Image.PIXEL_FORMAT_RGB_U8])
+        exposure=None, pixel_formats=[
+            image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8, image_pb2.Image.PIXEL_FORMAT_RGB_U8
+        ])
 
     im_proto = image_pb2.Image(rows=15)
-    grayscale_im_req = image_pb2.ImageRequest(pixel_format=image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8)
+    grayscale_im_req = image_pb2.ImageRequest(
+        pixel_format=image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8)
     rgb_im_req = image_pb2.ImageRequest(pixel_format=image_pb2.Image.PIXEL_FORMAT_RGB_U8)
     unknown_im_req = image_pb2.ImageRequest(pixel_format=image_pb2.Image.PIXEL_FORMAT_UNKNOWN)
 
@@ -649,9 +659,9 @@ def test_convert_pixel_format():
 
 def test_convert_pixel_format_comparisons():
     im = np.zeros((3, 3, 3), np.uint8)
-    for x in range(0,2):
-        for y in range(0,2):
-            for i in range(0,2):
+    for x in range(0, 2):
+        for y in range(0, 2):
+            for i in range(0, 2):
                 im[x, y, i] = x + y + 1
     converted_im = convert_RGB_to_grayscale(im)
 

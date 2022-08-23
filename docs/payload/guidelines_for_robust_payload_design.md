@@ -17,7 +17,7 @@ Spot is covered in a dual crash protection material that has an outer layer of p
 
 Payloads should include a crash structure to protect sensitive components from contact with the environment. Example: a rigid frame structure that surrounds and protects a device from impacts. Structural or shock absorbing material should be added, especially to the edges and corners of any payload.
 
-For impact protection, Boston Dynamics recommends that payload designers consider sculpted crosslinked polyethylene foam as a protection material. This type of machinable foam can be shaped easily and is durable without external covering.
+For impact protection, Boston Dynamics recommends that payload designers consider sculpted cross-linked polyethylene foam as a protection material. This type of machinable foam can be shaped easily and is durable without external covering.
 
 
 ## Shock loads

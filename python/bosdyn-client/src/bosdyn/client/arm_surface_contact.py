@@ -4,13 +4,11 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-from bosdyn.client.common import BaseClient
-from bosdyn.client.common import common_header_errors
+from bosdyn.api import arm_surface_contact_pb2, arm_surface_contact_service_pb2_grpc
+from bosdyn.client.common import BaseClient, common_header_errors
+from bosdyn.client.robot_command import NoTimeSyncError, _edit_proto, _TimeConverter
 
-from bosdyn.api import arm_surface_contact_pb2
-from bosdyn.api import arm_surface_contact_service_pb2_grpc
 from .lease import add_lease_wallet_processors
-from bosdyn.client.robot_command import NoTimeSyncError, _TimeConverter, _edit_proto
 
 
 class ArmSurfaceContactClient(BaseClient):

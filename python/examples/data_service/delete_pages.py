@@ -6,14 +6,15 @@
 
 """Tutorial to show how to use the Boston Dynamics API"""
 from __future__ import print_function
+
 import argparse
 import sys
 
 import bosdyn.client
-from bosdyn.client.data_service import DataServiceClient
-from bosdyn.client.time_sync import (TimeSyncEndpoint, TimeSyncClient, NotEstablishedError,
-                                     timespec_to_robot_timespan)
 import bosdyn.client.util
+from bosdyn.client.data_service import DataServiceClient
+from bosdyn.client.time_sync import (NotEstablishedError, TimeSyncClient, TimeSyncEndpoint,
+                                     timespec_to_robot_timespan)
 
 
 def delete_pages(config):

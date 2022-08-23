@@ -221,11 +221,12 @@ message Event {
     // - Disambiguates the source of similar event types.
     string source = 3;
 
-    // Unique identifier to link start and end messages for events with a duration.
+    // Unique identifier. Used to link start and end messages for events with a duration.
     // - Long running events may have separate messages at the start and end, in case the message
     //    for the end of the event is lost.
     // - For events without a separate start and end message (in which case both start_time and
-    //    end time should be specified), the 'id' field should not be set.
+    //    end time should be specified), the 'id' field will be set by the service during upload,
+    //    unless the user has already set it.
     // - This id is not tracked internally by the service. It is only used to consume the event
     //    timeline.
     // - To be effective, the id value should be generated randomly by the client.

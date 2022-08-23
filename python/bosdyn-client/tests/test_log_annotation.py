@@ -6,15 +6,16 @@
 
 import argparse
 import logging
-import pytest
 import sys
 import time
 import types
-import bosdyn.client
-from bosdyn.client.log_annotation import (LogAnnotationHandler, InvalidArgument,
-                                          LogAnnotationClient)
-from bosdyn.api.log_annotation_pb2 import LogAnnotationTextMessage
+
+import pytest
 from google.protobuf import timestamp_pb2
+
+import bosdyn.client
+from bosdyn.api.log_annotation_pb2 import LogAnnotationTextMessage
+from bosdyn.client.log_annotation import InvalidArgument, LogAnnotationClient, LogAnnotationHandler
 
 if sys.version_info[0:2] >= (3, 3):
     # Python version 3.3 added unittest.mock

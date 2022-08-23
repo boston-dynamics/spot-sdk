@@ -4,15 +4,17 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-from vtk.util import numpy_support
-import google.protobuf.timestamp_pb2
 import math
-import numpy as np
-import numpy.linalg
 import os
 import sys
 import time
+
+import google.protobuf.timestamp_pb2
+import numpy as np
+import numpy.linalg
 import vtk
+from vtk.util import numpy_support
+
 from bosdyn.client.math_helpers import SE3Pose
 
 

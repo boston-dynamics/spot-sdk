@@ -6,11 +6,10 @@
 
 """Tests for the fault client."""
 
-from bosdyn.client import InternalServerError, UnsetStatusError
-from bosdyn.client.fault import (_trigger_service_fault_error, _clear_service_fault_error,
-                                 ServiceFaultAlreadyExistsError, ServiceFaultDoesNotExistError)
-
 from bosdyn.api import service_fault_pb2
+from bosdyn.client import InternalServerError, UnsetStatusError
+from bosdyn.client.fault import (ServiceFaultAlreadyExistsError, ServiceFaultDoesNotExistError,
+                                 _clear_service_fault_error, _trigger_service_fault_error)
 
 
 def test_trigger_service_fault_error():

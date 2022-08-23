@@ -10,9 +10,8 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
-from bosdyn.client.common import (BaseClient, common_header_errors, handle_common_header_errors)
-from bosdyn.api.spot_cam import service_pb2_grpc
-from bosdyn.api.spot_cam import LED_pb2
+from bosdyn.api.spot_cam import LED_pb2, service_pb2_grpc
+from bosdyn.client.common import BaseClient, common_header_errors, handle_common_header_errors
 
 
 class LightingClient(BaseClient):
@@ -29,14 +28,14 @@ class LightingClient(BaseClient):
         request = LED_pb2.GetLEDBrightnessRequest()
         return self.call(self._stub.GetLEDBrightness, request,
                          self._get_led_brightness_from_response, self._lighting_error_from_response,
-                         **kwargs)
+                         copy_request=False, **kwargs)
 
     def get_led_brightness_async(self, **kwargs):
         """Async version of get_led_brightness()"""
         request = LED_pb2.GetLEDBrightnessRequest()
         return self.call_async(self._stub.GetLEDBrightness, request,
                                self._get_led_brightness_from_response,
-                               self._lighting_error_from_response, **kwargs)
+                               self._lighting_error_from_response, copy_request=False, **kwargs)
 
     def set_led_brightness(self, brightnesses, **kwargs):
         """Set the brightness value [0, 1] of each LED at indices [0, max)."""
@@ -49,7 +48,7 @@ class LightingClient(BaseClient):
 
         return self.call(self._stub.SetLEDBrightness, request,
                          self._set_led_brightness_from_response, self._lighting_error_from_response,
-                         **kwargs)
+                         copy_request=False, **kwargs)
 
     def set_led_brightness_async(self, brightnesses, **kwargs):
         """Async version of set_led_brightness()"""
@@ -61,7 +60,7 @@ class LightingClient(BaseClient):
             request.brightnesses[i] = brightness
         return self.call_async(self._stub.SetLEDBrightness, request,
                                self._set_led_brightness_from_response,
-                               self._lighting_error_from_response, **kwargs)
+                               self._lighting_error_from_response, copy_request=False, **kwargs)
 
     @staticmethod
     def _get_led_brightness_from_response(response):

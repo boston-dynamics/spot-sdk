@@ -9,18 +9,18 @@
 import logging
 import os
 import time
+
 import cv2
 import numpy as np
 
 import bosdyn.util
+from bosdyn.api import image_pb2, image_service_pb2_grpc
 from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
                                                   DirectoryRegistrationKeepAlive)
-from bosdyn.client.util import setup_logging
+from bosdyn.client.image_service_helpers import (CameraBaseImageServicer, CameraInterface,
+                                                 VisualImageSource, convert_RGB_to_grayscale)
 from bosdyn.client.server_util import GrpcServiceRunner
-from bosdyn.api import image_pb2
-from bosdyn.api import image_service_pb2_grpc
-from bosdyn.client.image_service_helpers import (VisualImageSource, CameraBaseImageServicer,
-                                                 CameraInterface, convert_RGB_to_grayscale)
+from bosdyn.client.util import setup_logging
 
 DIRECTORY_NAME = 'web-cam-service'
 AUTHORITY = 'robot-web-cam'
@@ -28,11 +28,12 @@ SERVICE_TYPE = 'bosdyn.api.ImageService'
 
 _LOGGER = logging.getLogger(__name__)
 
+
 class WebCam(CameraInterface):
     """Provide access to the latest web cam data using openCV's VideoCapture."""
 
-    def __init__(self, device_name, fps=30, show_debug_information=False, codec="",
-                 res_width=-1, res_height=-1):
+    def __init__(self, device_name, fps=30, show_debug_information=False, codec="", res_width=-1,
+                 res_height=-1):
 
         self.show_debug_images = show_debug_information
 
@@ -67,7 +68,8 @@ class WebCam(CameraInterface):
         if res_width > 0 and res_height > 0:
             self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, res_width)
             self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, res_height)
-            _LOGGER.info("Capture has resolution: %s x %s" % (self.capture.get(cv2.CAP_PROP_FRAME_WIDTH), self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+            _LOGGER.info("Capture has resolution: %s x %s" % (self.capture.get(
+                cv2.CAP_PROP_FRAME_WIDTH), self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT)))
 
         # Use the codec input argument to determine the  OpenCV 'FourCC' variable is a byte code specifying
         # the video codec (the compression/decompression software).
@@ -108,12 +110,14 @@ class WebCam(CameraInterface):
             if image.shape[2] == 1:
                 self.supported_pixel_formats = [image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8]
             elif image.shape[2] == 3:
-                self.supported_pixel_formats = [image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8,
-                image_pb2.Image.PIXEL_FORMAT_RGB_U8]
+                self.supported_pixel_formats = [
+                    image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8, image_pb2.Image.PIXEL_FORMAT_RGB_U8
+                ]
             elif image.shape[2] == 4:
-                self.supported_pixel_formats = [image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8,
-                image_pb2.Image.PIXEL_FORMAT_RGB_U8, image_pb2.Image.PIXEL_FORMAT_RGBA_U8]
-
+                self.supported_pixel_formats = [
+                    image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8, image_pb2.Image.PIXEL_FORMAT_RGB_U8,
+                    image_pb2.Image.PIXEL_FORMAT_RGBA_U8
+                ]
 
     def blocking_capture(self):
         # Get the image from the video capture.
@@ -173,7 +177,9 @@ class WebCam(CameraInterface):
         if resize_ratio != 1.0 and resize_ratio != 0:
             image_proto.rows = int(image_proto.rows * resize_ratio)
             image_proto.cols = int(image_proto.cols * resize_ratio)
-            converted_image_data = cv2.resize(converted_image_data, (image_proto.cols, image_proto.rows), interpolation = cv2.INTER_AREA)
+            converted_image_data = cv2.resize(converted_image_data,
+                                              (image_proto.cols, image_proto.rows),
+                                              interpolation=cv2.INTER_AREA)
 
         # Set the image data.
         if image_format == image_pb2.Image.FORMAT_RAW:
@@ -205,8 +211,8 @@ def device_name_to_source_name(device_name):
 
 
 def make_webcam_image_service(bosdyn_sdk_robot, service_name, device_names,
-                              show_debug_information=False, logger=None, codec="",
-                              res_width=-1, res_height=-1):
+                              show_debug_information=False, logger=None, codec="", res_width=-1,
+                              res_height=-1):
     image_sources = []
     for device in device_names:
         web_cam = WebCam(device, show_debug_information=show_debug_information, codec=codec,
@@ -236,14 +242,16 @@ def add_web_cam_arguments(parser):
         '--device-name',
         help=('Image source to query. If none are passed, it will default to the first available '
               'source.'), action='append', required=False, default=[])
-    parser.add_argument(
-        '--show-debug-info', action='store_true', required=False,
-        help="If passed, openCV will try to display the captured web cam images.")
+    parser.add_argument('--show-debug-info', action='store_true', required=False,
+                        help="If passed, openCV will try to display the captured web cam images.")
     parser.add_argument(
         '--codec', required=False, help="The four character video codec (compression format). For example, " +\
         "this is commonly 'DIVX' on windows or 'MJPG' on linux.", default="")
-    parser.add_argument('--res-width', required=False, type=int, default=-1, help="Resolution width (pixels).")
-    parser.add_argument('--res-height', required=False, type=int, default=-1, help="Resolution height (pixels).")
+    parser.add_argument('--res-width', required=False, type=int, default=-1,
+                        help="Resolution width (pixels).")
+    parser.add_argument('--res-height', required=False, type=int, default=-1,
+                        help="Resolution height (pixels).")
+
 
 if __name__ == '__main__':
     # Define all arguments used by this service.

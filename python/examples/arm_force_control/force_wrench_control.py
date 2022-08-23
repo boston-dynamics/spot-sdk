@@ -59,15 +59,14 @@ def force_wrench(config):
         # For this demo, that means the robot's base will lower enabling the hand to reach the ground.
         # The command service is used to issue commands to a robot.
         # The set of valid commands for a robot depends on hardware configuration. See
-        # SpotCommandHelper for more detailed examples on command building. The robot
+        # RobotCommandBuilder for more detailed examples on command building. The robot
         # command service requires timesync between the robot and the client.
         robot.logger.info("Commanding robot to stand...")
         command_client = robot.ensure_client(RobotCommandClient.default_service_name)
 
         body_control = spot_command_pb2.BodyControlParams(
             body_assist_for_manipulation=spot_command_pb2.BodyControlParams.
-            BodyAssistForManipulation(enable_hip_height_assist=True,
-                                      enable_body_yaw_assist=True))
+            BodyAssistForManipulation(enable_hip_height_assist=True, enable_body_yaw_assist=True))
         blocking_stand(command_client, timeout_sec=10,
                        params=spot_command_pb2.MobilityParams(body_control=body_control))
         robot.logger.info("Robot standing.")
@@ -114,8 +113,7 @@ def force_wrench(config):
                                     ODOM_FRAME_NAME, BODY_FRAME_NAME)
 
         force_in_odom = odom_T_body.rotation.transform_point(x=f_x, y=f_y, z=f_z)
-        torque_in_odom = odom_T_body.rotation.transform_point(x=torque_x, y=torque_y,
-                                                              z=torque_z)
+        torque_in_odom = odom_T_body.rotation.transform_point(x=torque_x, y=torque_y, z=torque_z)
 
         command = RobotCommandBuilder.arm_wrench_command(force_in_odom[0], force_in_odom[1],
                                                          force_in_odom[2], torque_in_odom[0],
@@ -164,10 +162,10 @@ def force_wrench(config):
         traj_time = 5.0
         time_since_reference = seconds_to_duration(traj_time)
 
-        traj_point1 = trajectory_pb2.SE3TrajectoryPoint(
-            pose=hand_pose1.to_proto(), time_since_reference=seconds_to_duration(0))
-        traj_point2 = trajectory_pb2.SE3TrajectoryPoint(
-            pose=hand_pose2.to_proto(), time_since_reference=time_since_reference)
+        traj_point1 = trajectory_pb2.SE3TrajectoryPoint(pose=hand_pose1.to_proto(),
+                                                        time_since_reference=seconds_to_duration(0))
+        traj_point2 = trajectory_pb2.SE3TrajectoryPoint(pose=hand_pose2.to_proto(),
+                                                        time_since_reference=time_since_reference)
 
         hand_traj = trajectory_pb2.SE3Trajectory(points=[traj_point1, traj_point2])
 
@@ -201,8 +199,7 @@ def force_wrench(config):
             arm_cartesian_command=arm_cartesian_command)
         synchronized_command = synchronized_command_pb2.SynchronizedCommand.Request(
             arm_command=arm_command)
-        robot_command = robot_command_pb2.RobotCommand(
-            synchronized_command=synchronized_command)
+        robot_command = robot_command_pb2.RobotCommand(synchronized_command=synchronized_command)
 
         # Send the request
         command_client.robot_command(robot_command)

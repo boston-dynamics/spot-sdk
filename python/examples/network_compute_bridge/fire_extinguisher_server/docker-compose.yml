@@ -1,0 +1,17 @@
+version: "3.5"
+services:
+  fire_ext_detector:
+    image: fire_ext_detector:l4t
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      # Mount payload credentials.
+      - /opt/payload_credentials/payload_guid_and_secret:/opt/payload_credentials/payload_guid_and_secret
+    # The command below is partial because the docker image is already configured with an entrypoint.
+    command: -d . 192.168.50.3 --payload-credentials-file /opt/payload_credentials/payload_guid_and_secret
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]

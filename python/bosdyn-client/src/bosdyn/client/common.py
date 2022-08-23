@@ -9,18 +9,19 @@ import copy
 import functools
 import logging
 import math
+import socket
 import types
+
 import grpc
 import six
-import socket
 
 from .channel import TransportError, translate_exception
-from .exceptions import Error, InternalServerError, InvalidRequestError, LicenseError, LeaseUseError, UnsetStatusError
+from .exceptions import (Error, InternalServerError, InvalidRequestError, LeaseUseError,
+                         LicenseError, UnsetStatusError)
 
 _LOGGER = logging.getLogger(__name__)
 
-from bosdyn.api import data_chunk_pb2
-from bosdyn.api import license_pb2
+from bosdyn.api import data_chunk_pb2, license_pb2
 
 DEFAULT_RPC_TIMEOUT = 30  # seconds
 
@@ -191,10 +192,12 @@ def handle_lease_use_result_errors(func):
 
     return wrapper
 
+
 def maybe_raise(exc):
     """raise the provided exception if it is not None"""
     if exc is not None:
         raise exc
+
 
 def print_response(func):
     """Decorate "error from response" functions to print for debugging specific messages."""
@@ -286,9 +289,10 @@ class BaseClient(object):
         self.lease_wallet = other.lease_wallet
         self.client_name = other.client_name
 
-    def update_request_iterator(self, request_iterator, logger, rpc_method, is_blocking):
+    def update_request_iterator(self, request_iterator, logger, rpc_method, is_blocking,
+                                copy_request=True):
         for request in request_iterator:
-            request = self._apply_request_processors(copy.deepcopy(request))
+            request = self._apply_request_processors(request, copy_request=copy_request)
             if is_blocking:
                 logger.debug('blocking request: %s %s', rpc_method._method,
                              self.request_trim_for_log(request))
@@ -319,7 +323,7 @@ class BaseClient(object):
 
     @process_kwargs
     def call(self, rpc_method, request, value_from_response=None, error_from_response=None,
-             **kwargs):
+             copy_request=True, **kwargs):
         """Returns result of calling rpc_method(request, kwargs) after running processors.
 
         value_from_response and error_from_response should not raise their own exceptions!
@@ -330,9 +334,10 @@ class BaseClient(object):
         if isinstance(rpc_method, grpc.StreamUnaryMultiCallable) or isinstance(
                 rpc_method, grpc.StreamStreamMultiCallable):
             # The incoming request is a streaming request.
-            request = self.update_request_iterator(request, logger, rpc_method, is_blocking=True)
+            request = self.update_request_iterator(request, logger, rpc_method, is_blocking=True,
+                                                   copy_request=copy_request)
         else:
-            request = self._apply_request_processors(copy.deepcopy(request))
+            request = self._apply_request_processors(request, copy_request=copy_request)
             logger.debug('blocking request: %s %s', rpc_method._method,
                          self.request_trim_for_log(request))
 
@@ -380,14 +385,14 @@ class BaseClient(object):
 
     @process_kwargs
     def call_async(self, rpc_method, request, value_from_response=None, error_from_response=None,
-                   **kwargs):
+                   copy_request=True, **kwargs):
         """Returns a Future for rpc_method(request, kwargs) after running processors.
 
         value_from_response and error_from_response should not raise their own exceptions!
 
         Asynchronous calls cannot be done with streaming rpcs right now.
         """
-        request = self._apply_request_processors(copy.deepcopy(request))
+        request = self._apply_request_processors(request, copy_request=copy_request)
         logger = self._get_logger(rpc_method)
         logger.debug('async request: %s %s', rpc_method._method, self.request_trim_for_log(request))
         timeout = kwargs.pop('timeout', DEFAULT_RPC_TIMEOUT)
@@ -410,9 +415,11 @@ class BaseClient(object):
         response_future.add_done_callback(on_finish)
         return FutureWrapper(response_future, value_from_response, error_from_response)
 
-    def _apply_request_processors(self, request):
+    def _apply_request_processors(self, request, copy_request=True):
         if request is None:
             return
+        if copy_request:
+            request = copy.deepcopy(request)
         for proc in self.request_processors:
             proc.mutate(request)
         return request

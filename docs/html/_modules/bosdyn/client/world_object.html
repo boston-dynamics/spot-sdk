@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.world_object &mdash; Spot 3.1.2.1 documentation</title>
+  <title>bosdyn.client.world_object &mdash; Spot 3.2.0 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                3.1.2.1
+                3.2.0
               </div>
             
           
@@ -115,10 +115,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autowalk_service.html">Autowalk service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/directed_exploration.html">Directed Exploration</a></li>
@@ -146,7 +148,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_output.html">Data Acquisition Output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_buffer_overview.html">Data Buffer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF file format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
 </ul>
 </li>
 </ul>
@@ -179,6 +182,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/docking/README.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -197,6 +201,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -204,6 +209,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -258,16 +264,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
@@ -294,6 +308,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
@@ -319,6 +335,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lights_helper.html">Lights Helper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
@@ -388,7 +405,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq2.html">Part 2: Capturing images</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq3.html">Part 3: Capturing other data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the Spot CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the CORE I/O</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq5.html">Part 5: Collecting data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq6.html">Part 6: Processing collected data</a></li>
 </ul>
@@ -402,9 +419,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul>
@@ -418,6 +440,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-proto">autowalk/autowalk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-service-proto">autowalk/autowalk_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-walks-proto">autowalk/walks.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
@@ -441,6 +466,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
@@ -536,6 +563,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -609,14 +637,12 @@
 <span class="sd">&quot;&quot;&quot;For clients to use the world object service&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 
-<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="n">BaseClient</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="n">common_header_errors</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.robot_command</span> <span class="kn">import</span> <span class="n">NoTimeSyncError</span><span class="p">,</span> <span class="n">_TimeConverter</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">world_object_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">world_object_service_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">world_object_service_pb2_grpc</span> <span class="k">as</span> <span class="n">world_object_service</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">geometry_pb2</span> <span class="k">as</span> <span class="n">geom</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">world_object_pb2</span><span class="p">,</span> <span class="n">world_object_service_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">world_object_service_pb2_grpc</span> <span class="k">as</span> <span class="n">world_object_service</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="n">BaseClient</span><span class="p">,</span> <span class="n">common_header_errors</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.frame_helpers</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.robot_command</span> <span class="kn">import</span> <span class="n">NoTimeSyncError</span><span class="p">,</span> <span class="n">_TimeConverter</span>
 <span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">now_timestamp</span>
 
 
@@ -673,7 +699,7 @@
                                                       <span class="n">timestamp_filter</span><span class="o">=</span><span class="n">time_start_point</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListWorldObjects</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
                          <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_world_object_value</span><span class="p">,</span>
-                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="WorldObjectClient.list_world_objects_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.WorldObjectClient.list_world_objects_async">[docs]</a>    <span class="k">def</span> <span class="nf">list_world_objects_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">time_start_point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Async version of list_world_objects().&quot;&quot;&quot;</span>
@@ -683,7 +709,8 @@
                                                       <span class="n">timestamp_filter</span><span class="o">=</span><span class="n">time_start_point</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListWorldObjects</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
                                <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_world_object_value</span><span class="p">,</span>
-                               <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+                               <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                               <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="WorldObjectClient.mutate_world_objects"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.WorldObjectClient.mutate_world_objects">[docs]</a>    <span class="k">def</span> <span class="nf">mutate_world_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mutation_req</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Mutate (add, change, delete) world objects.</span>
@@ -761,22 +788,20 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            name (string): The human-readable name of the world object.</span>
-<span class="sd">            sphere_frame_name (string):  The frame name for the drawable sphere frame.</span>
 <span class="sd">            x_rt_frame_name,y_rt_frame_name,z_rt_frame_name (int): The coordinate position (x,y,z) of</span>
 <span class="sd">                the drawable sphere.</span>
 <span class="sd">            frame_name (string): the frame in which the sphere&#39;s position is described.</span>
 <span class="sd">            radius (float): The radius for the drawn sphere.</span>
-<span class="sd">            color (4 valued tuple): The RGBA color, where RGB are int values in [0,255] and A is a float in [0,1].</span>
+<span class="sd">            rgba (4 valued tuple): The RGBA color, where RGB are int values in [0,255] and A is a float in [0,1].</span>
 <span class="sd">            list_objects_now (boolean): Should the ListWorldObjects request be made after creating</span>
 <span class="sd">                the sphere world object.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The MutateWorldObjectResponse for the addition of the sphere world object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">vision_tform_drawable</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">SE3Pose</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">geom</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x_rt_frame_name</span><span class="p">,</span>
-                                                                <span class="n">y</span><span class="o">=</span><span class="n">y_rt_frame_name</span><span class="p">,</span>
-                                                                <span class="n">z</span><span class="o">=</span><span class="n">z_rt_frame_name</span><span class="p">),</span>
-                                             <span class="n">rotation</span><span class="o">=</span><span class="n">geom</span><span class="o">.</span><span class="n">Quaternion</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">vision_tform_drawable</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">SE3Pose</span><span class="p">(</span>
+            <span class="n">position</span><span class="o">=</span><span class="n">geom</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x_rt_frame_name</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_rt_frame_name</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">z_rt_frame_name</span><span class="p">),</span>
+            <span class="n">rotation</span><span class="o">=</span><span class="n">geom</span><span class="o">.</span><span class="n">Quaternion</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
         <span class="c1"># Create a map between the child frame name and the parent frame name/SE3Pose parent_tform_child</span>
         <span class="n">edges</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c1"># Create an edge in the frame tree snapshot that includes vision_tform_drawable</span>
@@ -789,14 +814,14 @@
 
         <span class="c1"># Create the sphere drawable object</span>
         <span class="n">sphere</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">DrawableSphere</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">)</span>
-        <span class="n">draw_color</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">DrawableProperties</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">rgba</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">g</span><span class="o">=</span><span class="n">rgba</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">b</span><span class="o">=</span><span class="n">rgba</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">a</span><span class="o">=</span><span class="n">rgba</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">draw_color</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">DrawableProperties</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">rgba</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">g</span><span class="o">=</span><span class="n">rgba</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">b</span><span class="o">=</span><span class="n">rgba</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                                               <span class="n">a</span><span class="o">=</span><span class="n">rgba</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
         <span class="n">sphere_drawable_prop</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">DrawableProperties</span><span class="p">(</span>
             <span class="n">color</span><span class="o">=</span><span class="n">draw_color</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">wireframe</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sphere</span><span class="o">=</span><span class="n">sphere</span><span class="p">,</span>
             <span class="n">frame_name_drawable</span><span class="o">=</span><span class="n">drawable_frame_name</span><span class="p">)</span>
 
         <span class="c1"># Create the complete world object with transform information, a unique name, and the drawable sphere properties.</span>
-        <span class="n">sphere_to_add</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">WorldObject</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-                                                     <span class="n">transforms_snapshot</span><span class="o">=</span><span class="n">snapshot</span><span class="p">,</span>
+        <span class="n">sphere_to_add</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">WorldObject</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">transforms_snapshot</span><span class="o">=</span><span class="n">snapshot</span><span class="p">,</span>
                                                      <span class="n">acquisition_time</span><span class="o">=</span><span class="n">time_now</span><span class="p">,</span>
                                                      <span class="n">drawable_properties</span><span class="o">=</span><span class="p">[</span><span class="n">sphere_drawable_prop</span><span class="p">])</span>
         <span class="c1"># Add the sphere to the robot&#39;s world object service</span>
@@ -811,8 +836,7 @@
 
 <div class="viewcode-block" id="WorldObjectClient.draw_oriented_bounding_box"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.WorldObjectClient.draw_oriented_bounding_box">[docs]</a>    <span class="k">def</span> <span class="nf">draw_oriented_bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">drawable_box_frame_name</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span>
                                    <span class="n">frame_name_tform_drawable_box</span><span class="p">,</span> <span class="n">size_ewrt_box_vec3</span><span class="p">,</span>
-                                   <span class="n">rgba</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">wireframe</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                   <span class="n">list_objects_now</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                                   <span class="n">rgba</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">wireframe</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">list_objects_now</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a drawable 3D box world object that will be sent to the world object service</span>
 <span class="sd">        with a mutation request.</span>
 
@@ -821,7 +845,7 @@
 <span class="sd">            drawable_box_frame_name (string): The frame name for the drawable box frame.</span>
 <span class="sd">            frame_name (string): The frame name which the drawable box is described relative to.</span>
 <span class="sd">            frame_name_tform_drawable_box (geometry_pb2.SE3Pose): the SE3 pose of the drawable box relative to frame name.</span>
-<span class="sd">            size_ewrt_drawable_box_vec3 (float): The size of the box (x,y,z) expressed with respect to the</span>
+<span class="sd">            size_ewrt_box_vec3 (float): The size of the box (x,y,z) expressed with respect to the</span>
 <span class="sd">                drawable box frame.</span>
 <span class="sd">            rgba (4 valued tuple): The RGBA color, where RGB are int values in [0,255] and A is a float in [0,1].</span>
 <span class="sd">            wireframe  (boolean): Should this be drawn as a wireframe [wireframe=true] or a solid object [wireframe=false].</span>
@@ -835,7 +859,8 @@
         <span class="n">edges</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c1"># Create an edge in the frame tree snapshot that includes frame_tform_box</span>
         <span class="n">drawable_frame_name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="n">edges</span> <span class="o">=</span> <span class="n">add_edge_to_tree</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">frame_name_tform_drawable_box</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span> <span class="n">drawable_frame_name</span><span class="p">)</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="n">add_edge_to_tree</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">frame_name_tform_drawable_box</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span>
+                                 <span class="n">drawable_frame_name</span><span class="p">)</span>
         <span class="n">snapshot</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">FrameTreeSnapshot</span><span class="p">(</span><span class="n">child_to_parent_edge_map</span><span class="o">=</span><span class="n">edges</span><span class="p">)</span>
 
         <span class="c1"># Set the acquisition time for the box using a function to get google.protobuf.Timestamp of the current system time.</span>
@@ -843,14 +868,14 @@
 
         <span class="c1"># Create the box drawable object</span>
         <span class="n">box</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">DrawableBox</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">size_ewrt_box_vec3</span><span class="p">)</span>
-        <span class="n">draw_color</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">DrawableProperties</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">rgba</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">g</span><span class="o">=</span><span class="n">rgba</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">b</span><span class="o">=</span><span class="n">rgba</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">a</span><span class="o">=</span><span class="n">rgba</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">draw_color</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">DrawableProperties</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">rgba</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">g</span><span class="o">=</span><span class="n">rgba</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">b</span><span class="o">=</span><span class="n">rgba</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                                               <span class="n">a</span><span class="o">=</span><span class="n">rgba</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
         <span class="n">box_drawable_prop</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">DrawableProperties</span><span class="p">(</span>
             <span class="n">color</span><span class="o">=</span><span class="n">draw_color</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">wireframe</span><span class="o">=</span><span class="n">wireframe</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="p">,</span>
             <span class="n">frame_name_drawable</span><span class="o">=</span><span class="n">drawable_box_frame_name</span><span class="p">)</span>
 
         <span class="c1"># Create the complete world object with transform information, a unique name, and the drawable box properties.</span>
-        <span class="n">box_to_add</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">WorldObject</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-                                                  <span class="n">transforms_snapshot</span><span class="o">=</span><span class="n">snapshot</span><span class="p">,</span>
+        <span class="n">box_to_add</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">WorldObject</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">transforms_snapshot</span><span class="o">=</span><span class="n">snapshot</span><span class="p">,</span>
                                                   <span class="n">acquisition_time</span><span class="o">=</span><span class="n">time_now</span><span class="p">,</span>
                                                   <span class="n">drawable_properties</span><span class="o">=</span><span class="p">[</span><span class="n">box_drawable_prop</span><span class="p">])</span>
         <span class="c1"># Add the box to the robot&#39;s world object service</span>
@@ -862,6 +887,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">list_world_objects</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">resp</span></div></div>
+
 
 <span class="k">def</span> <span class="nf">_get_world_object_value</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">response</span>
@@ -885,14 +911,14 @@
 
 
 <div class="viewcode-block" id="make_add_world_object_req"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.make_add_world_object_req">[docs]</a><span class="k">def</span> <span class="nf">make_add_world_object_req</span><span class="p">(</span><span class="n">world_obj</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Add a world object to the scene.</span>
+    <span class="sd">&quot;&quot;&quot;Add a world object to the scene.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        world_obj (WorldObject): The world object to be added into the robot&#39;s perception scene.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        A MutateWorldObjectRequest where the action is to &quot;add&quot; the object to the scene.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">add_obj</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">MutateWorldObjectRequest</span><span class="o">.</span><span class="n">Mutation</span><span class="p">(</span>
         <span class="n">action</span><span class="o">=</span><span class="n">world_object_pb2</span><span class="o">.</span><span class="n">MutateWorldObjectRequest</span><span class="o">.</span><span class="n">ACTION_ADD</span><span class="p">,</span> <span class="nb">object</span><span class="o">=</span><span class="n">world_obj</span><span class="p">)</span>
     <span class="n">req</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">MutateWorldObjectRequest</span><span class="p">(</span><span class="n">mutation</span><span class="o">=</span><span class="n">add_obj</span><span class="p">)</span>
@@ -900,7 +926,7 @@
 
 
 <div class="viewcode-block" id="make_delete_world_object_req"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.make_delete_world_object_req">[docs]</a><span class="k">def</span> <span class="nf">make_delete_world_object_req</span><span class="p">(</span><span class="n">world_obj</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Delete a world object from the scene.</span>
+    <span class="sd">&quot;&quot;&quot;Delete a world object from the scene.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        world_obj (WorldObject): The world object to be deleted in the robot&#39;s perception scene. The</span>
@@ -909,7 +935,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        A MutateWorldObjectRequest where the action is to &quot;delete&quot; the object to the scene.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">del_obj</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">MutateWorldObjectRequest</span><span class="o">.</span><span class="n">Mutation</span><span class="p">(</span>
         <span class="n">action</span><span class="o">=</span><span class="n">world_object_pb2</span><span class="o">.</span><span class="n">MutateWorldObjectRequest</span><span class="o">.</span><span class="n">ACTION_DELETE</span><span class="p">,</span> <span class="nb">object</span><span class="o">=</span><span class="n">world_obj</span><span class="p">)</span>
     <span class="n">req</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">MutateWorldObjectRequest</span><span class="p">(</span><span class="n">mutation</span><span class="o">=</span><span class="n">del_obj</span><span class="p">)</span>
@@ -917,7 +943,7 @@
 
 
 <div class="viewcode-block" id="make_change_world_object_req"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.make_change_world_object_req">[docs]</a><span class="k">def</span> <span class="nf">make_change_world_object_req</span><span class="p">(</span><span class="n">world_obj</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Change/update an existing world object in the scene.</span>
+    <span class="sd">&quot;&quot;&quot;Change/update an existing world object in the scene.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        world_obj (WorldObject): The world object to be changed/updated in the robot&#39;s perception scene.</span>
@@ -926,7 +952,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        A MutateWorldObjectRequest where the action is to &quot;change&quot; the object to the scene.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">change_obj</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">MutateWorldObjectRequest</span><span class="o">.</span><span class="n">Mutation</span><span class="p">(</span>
         <span class="n">action</span><span class="o">=</span><span class="n">world_object_pb2</span><span class="o">.</span><span class="n">MutateWorldObjectRequest</span><span class="o">.</span><span class="n">ACTION_CHANGE</span><span class="p">,</span> <span class="nb">object</span><span class="o">=</span><span class="n">world_obj</span><span class="p">)</span>
     <span class="n">req</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">MutateWorldObjectRequest</span><span class="p">(</span><span class="n">mutation</span><span class="o">=</span><span class="n">change_obj</span><span class="p">)</span>

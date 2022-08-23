@@ -6,14 +6,15 @@
 
 """Unit tests for the graph_nav module."""
 import concurrent
+
 import grpc
 import pytest
 
-from bosdyn.api import header_pb2, lease_pb2, time_sync_pb2
-from bosdyn.api.graph_nav import graph_nav_service_pb2_grpc, graph_nav_pb2, nav_pb2, map_pb2
-from bosdyn.client.graph_nav import GraphNavClient
 import bosdyn.client.graph_nav
-from bosdyn.client.exceptions import UnsetStatusError, InternalServerError
+from bosdyn.api import header_pb2, lease_pb2, time_sync_pb2
+from bosdyn.api.graph_nav import graph_nav_pb2, graph_nav_service_pb2_grpc, map_pb2, nav_pb2
+from bosdyn.client.exceptions import InternalServerError, UnsetStatusError
+from bosdyn.client.graph_nav import GraphNavClient
 from bosdyn.client.time_sync import TimeSyncEndpoint
 
 

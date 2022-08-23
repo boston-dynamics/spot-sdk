@@ -1,0 +1,15 @@
+FROM nvcr.io/nvidia/l4t-tensorflow:r32.7.1-tf2.7-py3
+
+# Requirements for opencv to work.
+RUN apt-get update && apt-get install -y --no-install-recommends python3-opencv
+
+COPY docker-requirements-l4t.txt prebuilt/*.whl ./
+
+RUN python3 -m pip install -r docker-requirements-l4t.txt --find-links .
+
+COPY web_cam_image_service.py /app/
+WORKDIR /app
+
+ENTRYPOINT ["python3", "/app/web_cam_image_service.py"]
+# Default arguments for running on the CORE I/O
+CMD [ "192.168.50.3", "--host-ip=192.168.50.5", "--payload-credentials-file=/creds/payload_guid_and_secret" ]

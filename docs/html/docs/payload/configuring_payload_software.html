@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Payload Software Interface &mdash; Spot 3.1.2.1 documentation</title>
+  <title>Payload Software Interface &mdash; Spot 3.2.0 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.1.2.1
+                3.2.0
               </div>
             
           
@@ -118,10 +118,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/autowalk_service.html">Autowalk service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/directed_exploration.html">Directed Exploration</a></li>
@@ -149,7 +151,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../concepts/data_acquisition_output.html">Data Acquisition Output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/data_buffer_overview.html">Data Buffer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../concepts/bddf.html">BDDF file format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
 </ul>
 </li>
 </ul>
@@ -182,6 +185,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/docking/README.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/fan_command/README.html">Fan Commands</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -200,6 +204,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -207,6 +212,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -261,16 +267,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/replay_mission/README.html">Replay Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
@@ -297,6 +311,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
@@ -322,6 +338,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/lights_helper.html">Lights Helper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
@@ -391,7 +408,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../python/daq_tutorial/daq2.html">Part 2: Capturing images</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/daq_tutorial/daq3.html">Part 3: Capturing other data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../python/daq_tutorial/daq4.html">Part 4: Deploying to the Spot CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/daq_tutorial/daq4.html">Part 4: Deploying to the CORE I/O</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/daq_tutorial/daq5.html">Part 5: Collecting data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/daq_tutorial/daq6.html">Part 6: Processing collected data</a></li>
 </ul>
@@ -405,9 +422,14 @@
 <li class="toctree-l2"><a class="reference internal" href="guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Configuring payload software</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spot_core_vnc.html">Spot CORE VNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docker_containers.html">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../protos/README.html">API Protocol</a><ul>
@@ -421,6 +443,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-proto">autowalk/autowalk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-service-proto">autowalk/autowalk_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#autowalk-walks-proto">autowalk/walks.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
@@ -444,6 +469,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
@@ -539,6 +566,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -769,13 +797,13 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 <section id="configuring-and-authorizing-payloads">
 <h2>Configuring and authorizing payloads<a class="headerlink" href="#configuring-and-authorizing-payloads" title="Permalink to this headline">¶</a></h2>
-<p>A payload, like any software client, can access the API by using login credentials. However, for self-registration, payloads can complete basic registration and get access to host services without needing to pass hardcoded user credentials.</p>
+<p>A payload, like any software client, can access the API by using login credentials. However, for self-registration, payloads can complete basic registration and get access to host services without needing to pass hard-coded user credentials.</p>
 <p>Instead, a payload is manually authorized by an operator on the admin console Payloads page. To ensure that the payload authorization is not used by malicious payloads, each payload must provide a unique GUID and secret (password) at registration time. The GUID and secret can then be used to request a user token that grants access to the basic components of the API (directory, directory registration, robot-state).</p>
 </section>
 <section id="payload-device-network-configuration">
 <h2>Payload device network configuration<a class="headerlink" href="#payload-device-network-configuration" title="Permalink to this headline">¶</a></h2>
 <p>The robot’s default private IP address is 192.168.80.3. Users can configure these properties via the robot’s admin console. Use the network settings to change the robot’s network configuration from WiFi AP to WiFi client.</p>
-<p>The robot’s rear ethernet port can be configured to a user desired IP address via the web interface.  By default, its IP is set to 10.0.0.3.</p>
+<p>The robot’s rear ethernet port can be configured to a user desired IP address via the web interface. By default, its IP is set to 10.0.0.3.</p>
 <p>Payload devices should use the following network configuration:</p>
 <ul class="simple">
 <li><p>IP v4 host address 192.168.50.5 or 192.168.50.6 for either front or rear payload port</p></li>
@@ -786,15 +814,15 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Devices on the payload network can reach the robot at 192.168.50.3 via port 443. Devices on the robot network can reach payload services as follows:</p>
 <ol class="simple">
 <li><p>TCP traffic sent to the robot’s IP address on ports 20022, 20080, or 20443 will be forwarded to 192.168.50.5 on ports 22, 80, or 443.</p></li>
-<li><p>TCP/UDP traffic sent to the robot’s IP address  on ports 21000-22000 will be forwarded to 192.168.50.5 on that same port.</p></li>
+<li><p>TCP/UDP traffic sent to the robot’s IP address on ports 21000-22000 will be forwarded to 192.168.50.5 on that same port.</p></li>
 <li><p>TCP traffic sent to the robot’s IP address on ports 30022, 30080, or 30443 will be forwarded to 192.168.50.6 on ports 22, 80, or 443.</p></li>
 <li><p>TCP/UDP traffic sent to the robot on ports 31000-32000 will be forwarded to 192.168.50.6.</p></li>
 <li><p>TCP traffic sent to the robot’s IP address on ports 23022, 23080, or 23443 will be forwarded to 192.168.50.7 on ports 22, 80, or 443.</p></li>
-<li><p>TCP/UDP traffic sent to the robot’s IP address  on ports 23100-23199 will be forwarded to 192.168.50.7 on that same port.</p></li>
+<li><p>TCP/UDP traffic sent to the robot’s IP address on ports 23100-23199 will be forwarded to 192.168.50.7 on that same port.</p></li>
 <li><p>TCP traffic sent to the robot’s IP address on ports 24022, 24080, or 24443 will be forwarded to 192.168.50.8 on ports 22, 80, or 443.</p></li>
-<li><p>TCP/UDP traffic sent to the robot’s IP address  on ports 24100-24199 will be forwarded to 192.168.50.8 on that same port.</p></li>
+<li><p>TCP/UDP traffic sent to the robot’s IP address on ports 24100-24199 will be forwarded to 192.168.50.8 on that same port.</p></li>
 <li><p>TCP traffic sent to the robot’s IP address on ports 25022, 25080, or 25443 will be forwarded to 192.168.50.9 on ports 22, 80, or 443.</p></li>
-<li><p>TCP/UDP traffic sent to the robot’s IP address  on ports 25100-25199 will be forwarded to 192.168.50.9 on that same port.</p></li>
+<li><p>TCP/UDP traffic sent to the robot’s IP address on ports 25100-25199 will be forwarded to 192.168.50.9 on that same port.</p></li>
 </ol>
 </section>
 <section id="payload-port-forwarding-table">
@@ -876,11 +904,11 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="configuring-payload-mass-properties">
 <h2>Configuring payload mass properties<a class="headerlink" href="#configuring-payload-mass-properties" title="Permalink to this headline">¶</a></h2>
 <p>In order to locomote properly, the robot needs to know the physical properties of any payload it is carrying. This includes the center of mass location relative to the base link of the robot, moments of inertia, and other values.</p>
-<p>A payload self-registration service is available as part of the Spot 2.0 SDK.</p>
-<p>The following payload configuration table shows configuration values for the Spot CORE payload as they would appear in the robot’s admin console GUI.</p>
+<p>A payload self-registration service is available as part of the Spot SDK.</p>
+<p>The following payload configuration table shows configuration values for the rear-mounted CORE I/O EAP payload as they would appear in the robot’s admin console GUI.</p>
 <p>This table provides a reference when developing a client application using the the RegisterPayload RPC to register a Spot payload.</p>
 <section id="position-m">
-<h3>Position  (m)<a class="headerlink" href="#position-m" title="Permalink to this headline">¶</a></h3>
+<h3>Position (m)<a class="headerlink" href="#position-m" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -892,7 +920,7 @@ Development Kit License (20191101-BDSDK-SL).
 <tbody>
 <tr>
 <td>X</td>
-<td>-0.16</td>
+<td>-0.259</td>
 <td>m</td>
 </tr>
 <tr>
@@ -948,13 +976,85 @@ Development Kit License (20191101-BDSDK-SL).
 <tbody>
 <tr>
 <td>&nbsp;</td>
-<td>2.0</td>
+<td>3.11</td>
 <td>kg</td>
 </tr>
 </tbody>
 </table></section>
 <section id="position-of-center-of-mass-m">
 <h3>Position of Center of Mass (m)<a class="headerlink" href="#position-of-center-of-mass-m" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Item</th>
+<th>Value</th>
+<th>Units</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X</td>
+<td>-0.156</td>
+<td>m</td>
+</tr>
+<tr>
+<td>Y</td>
+<td>0</td>
+<td>m</td>
+</tr>
+<tr>
+<td>Z</td>
+<td>0.071</td>
+<td>m</td>
+</tr>
+</tbody>
+</table></section>
+<section id="moment-of-inertia-tensor-kg-m2">
+<h3>Moment of inertia tensor (kg-m2)<a class="headerlink" href="#moment-of-inertia-tensor-kg-m2" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Item</th>
+<th>Value</th>
+<th>Units</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>XX</td>
+<td>0.0125249699</td>
+<td>kg-m2</td>
+</tr>
+<tr>
+<td>XY</td>
+<td>0</td>
+<td>kg-m2</td>
+</tr>
+<tr>
+<td>XZ</td>
+<td>-0.00340958</td>
+<td>kg-m2</td>
+</tr>
+<tr>
+<td>YY</td>
+<td>0.0186853204</td>
+<td>kg-m2</td>
+</tr>
+<tr>
+<td>YZ</td>
+<td>0</td>
+<td>kg-m2</td>
+</tr>
+<tr>
+<td>ZZ</td>
+<td>0.0156701095</td>
+<td>kg-m2</td>
+</tr>
+</tbody>
+</table></section>
+<section id="bounding-boxes-center-m">
+<h3>Bounding boxes: Center (m)<a class="headerlink" href="#bounding-boxes-center-m" title="Permalink to this headline">¶</a></h3>
+<p>The two bounding boxes for the CORE I/O EAP payload, one for the CORE I/O and one for the EAP on top of it, are listed separately.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -980,53 +1080,7 @@ Development Kit License (20191101-BDSDK-SL).
 <td>m</td>
 </tr>
 </tbody>
-</table></section>
-<section id="moment-of-inertia-tensor-kg-m2">
-<h3>Moment of inertia tensor (kg-m2)<a class="headerlink" href="#moment-of-inertia-tensor-kg-m2" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Item</th>
-<th>Value</th>
-<th>Units</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>XX</td>
-<td>0.00675</td>
-<td>kg-m2</td>
-</tr>
-<tr>
-<td>XY</td>
-<td>0</td>
-<td>kg-m2</td>
-</tr>
-<tr>
-<td>XZ</td>
-<td>0</td>
-<td>kg-m2</td>
-</tr>
-<tr>
-<td>YY</td>
-<td>0.0126167</td>
-<td>kg-m2</td>
-</tr>
-<tr>
-<td>YZ</td>
-<td>0</td>
-<td>kg-m2</td>
-</tr>
-<tr>
-<td>ZZ</td>
-<td>0.0166667</td>
-<td>kg-m2</td>
-</tr>
-</tbody>
-</table></section>
-<section id="bounding-boxes-center-m">
-<h3>Bounding boxes: Center (m)<a class="headerlink" href="#bounding-boxes-center-m" title="Permalink to this headline">¶</a></h3>
-<table border="1" class="docutils">
+</table><table border="1" class="docutils">
 <thead>
 <tr>
 <th>Item</th>
@@ -1037,7 +1091,7 @@ Development Kit License (20191101-BDSDK-SL).
 <tbody>
 <tr>
 <td>X</td>
-<td>-0.13m</td>
+<td>-0.183</td>
 <td>m</td>
 </tr>
 <tr>
@@ -1047,7 +1101,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>Z</td>
-<td>0.045</td>
+<td>0.117</td>
 <td>m</td>
 </tr>
 </tbody>
@@ -1055,6 +1109,31 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="bounding-boxes-orientation-radians-zxy">
 <h3>Bounding boxes: Orientation (radians) ZXY<a class="headerlink" href="#bounding-boxes-orientation-radians-zxy" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils">
+<thead>
+<tr>
+<th>Item</th>
+<th>Value</th>
+<th>Units</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Yaw</td>
+<td>0</td>
+<td>rad.</td>
+</tr>
+<tr>
+<td>Roll</td>
+<td>0</td>
+<td>rad.</td>
+</tr>
+<tr>
+<td>Pitch</td>
+<td>0</td>
+<td>rad.</td>
+</tr>
+</tbody>
+</table><table border="1" class="docutils">
 <thead>
 <tr>
 <th>Item</th>
@@ -1104,6 +1183,31 @@ Development Kit License (20191101-BDSDK-SL).
 <tr>
 <td>Z</td>
 <td>0.045</td>
+<td>m</td>
+</tr>
+</tbody>
+</table><table border="1" class="docutils">
+<thead>
+<tr>
+<th>Item</th>
+<th>Value</th>
+<th>Units</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X</td>
+<td>0.088</td>
+<td>m</td>
+</tr>
+<tr>
+<td>Y</td>
+<td>0.088</td>
+<td>m</td>
+</tr>
+<tr>
+<td>Z</td>
+<td>0.067</td>
 <td>m</td>
 </tr>
 </tbody>

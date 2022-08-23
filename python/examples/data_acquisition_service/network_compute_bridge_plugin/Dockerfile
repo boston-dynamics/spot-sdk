@@ -1,4 +1,4 @@
-FROM python:3.7-slim
+FROM python:3.7
 
 COPY docker-requirements.txt prebuilt/*.whl ./
 RUN python3 -m pip install -r docker-requirements.txt --find-links .

@@ -5,32 +5,35 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 from __future__ import print_function
+
 import argparse
+import datetime
+import logging
 import os
 import sys
 import time
-import datetime
 
-import logging
 # Logger for all the debug information from the tests.
 _LOGGER = logging.getLogger("ImageService Tester")
 
+from plugin_tester import acquire_get_status_and_save
+from testing_helpers import (log_debug_information, run_test, test_directory_registration,
+                             test_if_service_has_active_service_faults,
+                             test_if_service_is_reachable)
+
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.client.util import setup_logging, strip_image_response, get_logger
 import bosdyn.util
-from bosdyn.api import image_pb2, data_acquisition_pb2
-from bosdyn.client.image import (
-    ImageClient, build_image_request, UnsupportedImageFormatRequestedError,
-    UnsupportedPixelFormatRequestedError, UnsupportedResizeRatioRequestedError, ImageDataError,
-    SourceDataError, UnknownImageSourceError, save_images_as_files)
-from bosdyn.client.exceptions import (ResponseError, InvalidRequestError, ResponseTooLargeError)
+from bosdyn.api import data_acquisition_pb2, image_pb2
 from bosdyn.client.data_acquisition import DataAcquisitionClient
 from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
-
-from testing_helpers import (test_directory_registration, test_if_service_has_active_service_faults,
-                             test_if_service_is_reachable, run_test, log_debug_information)
-from plugin_tester import acquire_get_status_and_save
+from bosdyn.client.exceptions import InvalidRequestError, ResponseError, ResponseTooLargeError
+from bosdyn.client.image import (ImageClient, ImageDataError, SourceDataError,
+                                 UnknownImageSourceError, UnsupportedImageFormatRequestedError,
+                                 UnsupportedPixelFormatRequestedError,
+                                 UnsupportedResizeRatioRequestedError, build_image_request,
+                                 save_images_as_files)
+from bosdyn.client.util import get_logger, setup_logging, strip_image_response
 
 TABLET_REQUIRED_IMAGE_FORMATS = {image_pb2.Image.FORMAT_JPEG}
 VISUAL_FORMATS = {image_pb2.Image.FORMAT_JPEG, image_pb2.Image.FORMAT_RAW}
@@ -539,8 +542,10 @@ def test_full_data_acquisition_integration(robot, image_sources, service_name, v
     for src in image_sources:
         action_name = "acquire and status check: " + src.name
         acquisition_request = data_acquisition_pb2.AcquisitionRequestList()
-        acquisition_request.image_captures.extend(
-            [data_acquisition_pb2.ImageSourceCapture(image_service=service_name, image_source=src.name)])
+        acquisition_request.image_captures.extend([
+            data_acquisition_pb2.ImageSourceCapture(image_service=service_name,
+                                                    image_source=src.name)
+        ])
         capability_success = acquire_get_status_and_save(acquisition_request, src, action_name,
                                                          group_name, data_acquisition_client,
                                                          data_store_client, verbose)

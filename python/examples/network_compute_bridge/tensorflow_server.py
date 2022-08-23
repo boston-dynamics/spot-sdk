@@ -17,46 +17,36 @@ acquire the Faster R-CNN model file that can be used to demonstrate this example
 
 import argparse
 import io
-import multiprocessing
-from multiprocessing import Process, Queue
-import os
-import sys
-import time
 import logging
-import numpy
+import math
+import multiprocessing
+import os
+import queue
+import socket
+import sys
+import threading
+import time
+from concurrent import futures
+from multiprocessing import Process, Queue
+from timeit import default_timer as timer
 
 import cv2
+import grpc
+# import the necessary packages for ML
+import numpy
 import numpy as np
+import tensorflow as tf
+from google.protobuf import any_pb2, wrappers_pb2
 from PIL import Image
 from scipy import ndimage
 
-from bosdyn.api.image_pb2 import ImageSource
-from bosdyn.api import network_compute_bridge_service_pb2_grpc
-from bosdyn.api import network_compute_bridge_service_pb2
-from bosdyn.api import network_compute_bridge_pb2
-from bosdyn.api import world_object_pb2
-from bosdyn.api import header_pb2
-from bosdyn.api import image_pb2
 import bosdyn.client
 import bosdyn.client.util
+from bosdyn.api import (header_pb2, image_pb2, network_compute_bridge_pb2,
+                        network_compute_bridge_service_pb2, network_compute_bridge_service_pb2_grpc,
+                        world_object_pb2)
+from bosdyn.api.image_pb2 import ImageSource
 from bosdyn.client.image import ImageClient
-import grpc
-from concurrent import futures
-import tensorflow as tf
-import math
-
-# import the necessary packages for ML
-import numpy as np
-import argparse
-import cv2
-from timeit import default_timer as timer
-import os
-
-import queue
-import threading
-from google.protobuf import any_pb2
-from google.protobuf import wrappers_pb2
-import socket
 
 # This is a multiprocessing.Queue for communication between the main process and the
 # Tensorflow processes.

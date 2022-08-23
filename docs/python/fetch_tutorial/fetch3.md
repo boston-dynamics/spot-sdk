@@ -184,12 +184,12 @@ kServiceAuthority = "fetch-tutorial-worker.spot.robot"
         request = request_queue.get()
 </code></pre>
 <ul>
-    <li>Set up a <code class="languag-python">while</code> loop that keeps the thread alive forever.</li>
+    <li>Set up a <code class="language-python">while</code> loop that keeps the thread alive forever.</li>
     <li>Unpack the GRPC request that comes in via the <a href="https://docs.python.org/3/library/queue.html">python queue</a>.</li>
     <ul>
         <li>Note: this call is blocking, so we'll wait here forever until we get a request
         <br />
-        <span class="indent">(that's how we avoid the <code class="languag-python">while True</code> from using 100% CPU)</span></li>
+        <span class="indent">(that's how we avoid the <code class="language-python">while True</code> from using 100% CPU)</span></li>
     </ul>
 </ul>
 <br />

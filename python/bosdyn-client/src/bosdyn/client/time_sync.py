@@ -12,14 +12,14 @@ uses this information when it needs to send a timestamp to the robot in a reques
 Timestamps in request protos generally need to be specified relative to the robot's system clock.
 """
 import time
-
 from threading import Event, Lock, Thread
+
+from google.protobuf import duration_pb2
 
 from bosdyn.api import time_sync_pb2, time_sync_service_pb2_grpc
 from bosdyn.api.time_range_pb2 import TimeRange
-from bosdyn.util import (RobotTimeConverter, now_nsec, parse_timespan, nsec_to_timestamp,
+from bosdyn.util import (RobotTimeConverter, now_nsec, nsec_to_timestamp, parse_timespan,
                          set_timestamp_from_nsec, timestamp_to_nsec)
-from google.protobuf import duration_pb2
 
 from .common import BaseClient, common_header_errors
 from .exceptions import Error
@@ -62,12 +62,14 @@ class TimeSyncClient(BaseClient):
             RpcError: Problem communicating with the robot.
         """
         req = self._get_time_sync_update_request(previous_round_trip, clock_identifier)
-        return self.call(self._stub.TimeSyncUpdate, req, None, common_header_errors, **kwargs)
+        return self.call(self._stub.TimeSyncUpdate, req, None, common_header_errors,
+                         copy_request=False, **kwargs)
 
     def get_time_sync_update_async(self, previous_round_trip, clock_identifier, **kwargs):
         """Async version of get_time_sync_update()"""
         req = self._get_time_sync_update_request(previous_round_trip, clock_identifier)
-        return self.call_async(self._stub.TimeSyncUpdate, req, None, common_header_errors, **kwargs)
+        return self.call_async(self._stub.TimeSyncUpdate, req, None, common_header_errors,
+                               copy_request=False, **kwargs)
 
 
     @staticmethod

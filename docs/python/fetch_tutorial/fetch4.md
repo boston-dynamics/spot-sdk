@@ -347,7 +347,7 @@ kImageSources = [
 
 <pre><code class="language-python">    # This script assumes the robot is already standing via the tablet.  We'll take over from the
     # tablet.
-    lease = lease_client.take()
+    lease_client.take()
 </code></pre>
 <p>
     Now we <strong>take over</strong> control from the tablet.
@@ -357,36 +357,35 @@ kImageSources = [
     <li>Note: We used this technique to get all the robots in position for <a href="https://youtu.be/6Zbhvaac68Y?t=28">jump roping</a> before starting the behavior.</li>
 </ul>
 
-<pre><code class="language-python">    lk = bosdyn.client.lease.LeaseKeepAlive(lease_client)
-
-    # Store the position of the hand at the last toy drop point.
-    vision_tform_hand_at_drop = None
-
-    while True:
-        holding_toy = False
-        while not holding_toy:
-            # Capture an image and run ML on it.
-            dogtoy, image, vision_tform_dogtoy = get_obj_and_img(
-                network_compute_client, options.ml_service, options.model,
-                options.confidence_dogtoy, kImageSources, 'dogtoy')
-
-            if dogtoy is None:
-                # Didn't find anything, keep searching.
-                continue
+<pre><code class="language-python">    with bosdyn.client.lease.LeaseKeepAlive(lease_client):
+        # Store the position of the hand at the last toy drop point.
+        vision_tform_hand_at_drop = None
+    
+        while True:
+            holding_toy = False
+            while not holding_toy:
+                # Capture an image and run ML on it.
+                dogtoy, image, vision_tform_dogtoy = get_obj_and_img(
+                    network_compute_client, options.ml_service, options.model,
+                    options.confidence_dogtoy, kImageSources, 'dogtoy')
+    
+                if dogtoy is None:
+                    # Didn't find anything, keep searching.
+                    continue
 </code></pre>
 <ul>
-    <li>Set up a lease client and start a loop.</li>
+    <li>Set up a lease keep-alive and start a loop.</li>
     <li>Search for a dog-toy until one is found.</li>
 </ul>
 <br />
 
-<pre><code class="language-python">            # If we have already dropped the toy off, make sure it has moved a sufficient amount before
-            # picking it up again
-            if vision_tform_hand_at_drop is not None and pose_dist(
-                    vision_tform_hand_at_drop, vision_tform_dogtoy) < 0.5:
-                print('Found dogtoy, but it hasn\'t moved.  Waiting...')
-                time.sleep(1)
-                continue
+<pre><code class="language-python">                # If we have already dropped the toy off, make sure it has moved a sufficient amount before
+                # picking it up again
+                if vision_tform_hand_at_drop is not None and pose_dist(
+                        vision_tform_hand_at_drop, vision_tform_dogtoy) < 0.5:
+                    print('Found dogtoy, but it hasn\'t moved.  Waiting...')
+                    time.sleep(1)
+                    continue
 
 </code></pre>
 <p>
@@ -395,34 +394,34 @@ kImageSources = [
 <br />
 
 <a id="enable_in_part5"></a>
-<pre><code class="language-python">            print('Found dogtoy...')
-
-            # Got a dogtoy.  Request pick up.
-
-            # Stow the arm in case it is deployed
-            stow_cmd = RobotCommandBuilder.arm_stow_command()
-            command_client.robot_command(stow_cmd)
-
-            # NOTE: we'll enable this code in Part 5, when we understand it.
-            # -------------------------
-            # # Walk to the object.
-            # walk_rt_vision, heading_rt_vision = compute_stand_location_and_yaw(
-                # vision_tform_dogtoy, robot_state_client, distance_margin=1.0)
-
-            # move_cmd = RobotCommandBuilder.trajectory_command(
-                # goal_x=walk_rt_vision[0],
-                # goal_y=walk_rt_vision[1],
-                # goal_heading=heading_rt_vision,
-                # frame_name=frame_helpers.VISION_FRAME_NAME,
-                # params=get_walking_params(0.5, 0.5))
-            # end_time = 5.0
-            # cmd_id = command_client.robot_command(command=move_cmd,
-                                                  # end_time_secs=time.time() +
-                                                  # end_time)
-
-            # # Wait until the robot reports that it is at the goal.
-            # block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)
-            # -------------------------
+<pre><code class="language-python">                print('Found dogtoy...')
+    
+                # Got a dogtoy.  Request pick up.
+    
+                # Stow the arm in case it is deployed
+                stow_cmd = RobotCommandBuilder.arm_stow_command()
+                command_client.robot_command(stow_cmd)
+    
+                # NOTE: we'll enable this code in Part 5, when we understand it.
+                # -------------------------
+                # # Walk to the object.
+                # walk_rt_vision, heading_rt_vision = compute_stand_location_and_yaw(
+                    # vision_tform_dogtoy, robot_state_client, distance_margin=1.0)
+    
+                # move_cmd = RobotCommandBuilder.trajectory_command(
+                    # goal_x=walk_rt_vision[0],
+                    # goal_y=walk_rt_vision[1],
+                    # goal_heading=heading_rt_vision,
+                    # frame_name=frame_helpers.VISION_FRAME_NAME,
+                    # params=get_walking_params(0.5, 0.5))
+                # end_time = 5.0
+                # cmd_id = command_client.robot_command(command=move_cmd,
+                                                      # end_time_secs=time.time() +
+                                                      # end_time)
+    
+                # # Wait until the robot reports that it is at the goal.
+                # block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)
+                # -------------------------
 
 </code></pre>
 <p>
@@ -430,22 +429,22 @@ kImageSources = [
 </p>
 <br />
 
-<pre><code class="language-python">            # The ML result is a bounding box.  Find the center.
-            (center_px_x,
-             center_px_y) = find_center_px(dogtoy.image_properties.coordinates)
-
-            # Request Pick Up on that pixel.
-            pick_vec = geometry_pb2.Vec2(x=center_px_x, y=center_px_y)
-            grasp = manipulation_api_pb2.PickObjectInImage(
-                pixel_xy=pick_vec,
-                transforms_snapshot_for_camera=image.shot.transforms_snapshot,
-                frame_name_image_sensor=image.shot.frame_name_image_sensor,
-                camera_model=image.source.pinhole)
-
-            # We can specify where in the gripper we want to grasp. About halfway is generally good for
-            # small objects like this. For a bigger object like a shoe, 0 is better (use the entire
-            # gripper)
-            grasp.grasp_params.grasp_palm_to_fingertip = 0.6
+<pre><code class="language-python">                # The ML result is a bounding box.  Find the center.
+                (center_px_x,
+                 center_px_y) = find_center_px(dogtoy.image_properties.coordinates)
+    
+                # Request Pick Up on that pixel.
+                pick_vec = geometry_pb2.Vec2(x=center_px_x, y=center_px_y)
+                grasp = manipulation_api_pb2.PickObjectInImage(
+                    pixel_xy=pick_vec,
+                    transforms_snapshot_for_camera=image.shot.transforms_snapshot,
+                    frame_name_image_sensor=image.shot.frame_name_image_sensor,
+                    camera_model=image.source.pinhole)
+    
+                # We can specify where in the gripper we want to grasp. About halfway is generally good for
+                # small objects like this. For a bigger object like a shoe, 0 is better (use the entire
+                # gripper)
+                grasp.grasp_params.grasp_palm_to_fingertip = 0.6
 </code></pre>
 
 <p>
@@ -464,29 +463,29 @@ kImageSources = [
 </ul>
 <br />
 
-<pre><code class="language-python">            # Tell the grasping system that we want a top-down grasp.
+<pre><code class="language-python">                # Tell the grasping system that we want a top-down grasp.
 
-            # Add a constraint that requests that the x-axis of the gripper is pointing in the
-            # negative-z direction in the vision frame.
-
-            # The axis on the gripper is the x-axis.
-            axis_on_gripper_ewrt_gripper = geometry_pb2.Vec3(x=1, y=0, z=0)
-
-            # The axis in the vision frame is the negative z-axis
-            axis_to_align_with_ewrt_vision = geometry_pb2.Vec3(x=0, y=0, z=-1)
-
-            # Add the vector constraint to our proto.
-            constraint = grasp.grasp_params.allowable_orientation.add()
-            constraint.vector_alignment_with_tolerance.axis_on_gripper_ewrt_gripper.CopyFrom(
-                axis_on_gripper_ewrt_gripper)
-            constraint.vector_alignment_with_tolerance.axis_to_align_with_ewrt_frame.CopyFrom(
-                axis_to_align_with_ewrt_vision)
-
-            # We'll take anything within about 15 degrees for top-down or horizontal grasps.
-            constraint.vector_alignment_with_tolerance.threshold_radians = 0.25
-
-            # Specify the frame we're using.
-            grasp.grasp_params.grasp_params_frame_name = frame_helpers.VISION_FRAME_NAME
+                # Add a constraint that requests that the x-axis of the gripper is pointing in the
+                # negative-z direction in the vision frame.
+    
+                # The axis on the gripper is the x-axis.
+                axis_on_gripper_ewrt_gripper = geometry_pb2.Vec3(x=1, y=0, z=0)
+    
+                # The axis in the vision frame is the negative z-axis
+                axis_to_align_with_ewrt_vision = geometry_pb2.Vec3(x=0, y=0, z=-1)
+    
+                # Add the vector constraint to our proto.
+                constraint = grasp.grasp_params.allowable_orientation.add()
+                constraint.vector_alignment_with_tolerance.axis_on_gripper_ewrt_gripper.CopyFrom(
+                    axis_on_gripper_ewrt_gripper)
+                constraint.vector_alignment_with_tolerance.axis_to_align_with_ewrt_frame.CopyFrom(
+                    axis_to_align_with_ewrt_vision)
+    
+                # We'll take anything within about 15 degrees for top-down or horizontal grasps.
+                constraint.vector_alignment_with_tolerance.threshold_radians = 0.25
+    
+                # Specify the frame we're using.
+                grasp.grasp_params.grasp_params_frame_name = frame_helpers.VISION_FRAME_NAME
 
 </code></pre>
 <p>
@@ -519,14 +518,14 @@ kImageSources = [
     Time to command a grasp!
 </p>
 
-<pre><code class="language-python">            # Build the proto
-            grasp_request = manipulation_api_pb2.ManipulationApiRequest(
-                pick_object_in_image=grasp)
-
-            # Send the request
-            print('Sending grasp request...')
-            cmd_response = manipulation_api_client.manipulation_api_command(
-                manipulation_api_request=grasp_request)
+<pre><code class="language-python">                # Build the proto
+                grasp_request = manipulation_api_pb2.ManipulationApiRequest(
+                    pick_object_in_image=grasp)
+    
+                # Send the request
+                print('Sending grasp request...')
+                cmd_response = manipulation_api_client.manipulation_api_command(
+                    manipulation_api_request=grasp_request)
 
 </code></pre>
 <ul>
@@ -534,38 +533,38 @@ kImageSources = [
 </ul>
 <br />
 
-<pre><code class="language-python">            # Wait for the grasp to finish
-            grasp_done = False
-            failed = False
-            time_start = time.time()
-            while not grasp_done:
-                feedback_request = manipulation_api_pb2.ManipulationApiFeedbackRequest(
-                    manipulation_cmd_id=cmd_response.manipulation_cmd_id)
-
-                # Send a request for feedback
-                response = manipulation_api_client.manipulation_api_feedback_command(
-                    manipulation_api_feedback_request=feedback_request)
-
-                current_state = response.current_state
-                current_time = time.time() - time_start
-                print('Current state ({time:.1f} sec): {state}'.format(
-                    time=current_time,
-                    state=manipulation_api_pb2.ManipulationFeedbackState.Name(
-                        current_state)),
-                      end='                \r')
-                sys.stdout.flush()
-
-                failed_states = [manipulation_api_pb2.MANIP_STATE_GRASP_FAILED,
-                                 manipulation_api_pb2.MANIP_STATE_GRASP_PLANNING_NO_SOLUTION,
-                                 manipulation_api_pb2.MANIP_STATE_GRASP_FAILED_TO_RAYCAST_INTO_MAP,
-                                 manipulation_api_pb2.MANIP_STATE_GRASP_PLANNING_WAITING_DATA_AT_EDGE]
-
-                failed = current_state in failed_states
-                grasp_done = current_state == manipulation_api_pb2.MANIP_STATE_GRASP_SUCCEEDED or failed
-
-                time.sleep(0.1)
-
-            holding_toy = not failed
+<pre><code class="language-python">                # Wait for the grasp to finish
+                grasp_done = False
+                failed = False
+                time_start = time.time()
+                while not grasp_done:
+                    feedback_request = manipulation_api_pb2.ManipulationApiFeedbackRequest(
+                        manipulation_cmd_id=cmd_response.manipulation_cmd_id)
+    
+                    # Send a request for feedback
+                    response = manipulation_api_client.manipulation_api_feedback_command(
+                        manipulation_api_feedback_request=feedback_request)
+    
+                    current_state = response.current_state
+                    current_time = time.time() - time_start
+                    print('Current state ({time:.1f} sec): {state}'.format(
+                        time=current_time,
+                        state=manipulation_api_pb2.ManipulationFeedbackState.Name(
+                            current_state)),
+                          end='                \r')
+                    sys.stdout.flush()
+    
+                    failed_states = [manipulation_api_pb2.MANIP_STATE_GRASP_FAILED,
+                                     manipulation_api_pb2.MANIP_STATE_GRASP_PLANNING_NO_SOLUTION,
+                                     manipulation_api_pb2.MANIP_STATE_GRASP_FAILED_TO_RAYCAST_INTO_MAP,
+                                     manipulation_api_pb2.MANIP_STATE_GRASP_PLANNING_WAITING_DATA_AT_EDGE]
+    
+                    failed = current_state in failed_states
+                    grasp_done = current_state == manipulation_api_pb2.MANIP_STATE_GRASP_SUCCEEDED or failed
+    
+                    time.sleep(0.1)
+    
+                holding_toy = not failed
 
 </code></pre>
 <p>
@@ -601,17 +600,18 @@ kImageSources = [
 </code></pre>
 <p>
     For now, we'll just exit.  Once we've successfully tested, we'll add person detection here.
+As the code exits the keep-alive context manager, the lease is returned.
 </p>
 <br />
 
-<pre><code class="language-python">    lease_client.return_lease(lease)
+<pre><code class="language-python">
 
 if __name__ == '__main__':
     if not main(sys.argv[1:]):
         sys.exit(1)
 </code></pre>
 <p>
-    Finish up by returning the lease and some python boilerplate.
+    Finish up with some python boilerplate.
 </p>
 <br />
 

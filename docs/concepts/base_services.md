@@ -42,9 +42,9 @@ message RobotId {
 
 Examples of ways applications can use the `robot-id` include:
 
-* Displaying the robot `nickname` in a list of possible Spot robots to connect to. Note that the same Spot can change `nickname` over time. Multiple Spots can share the same nickname.
-* Using the `serial_number` as a key for cached username/passwords or other data about the robot. `Serial_number` will never change over time, and is guaranteed to be unique.
-* Checking the `software_release` version to determine if the application is compatible with Spot, or to change behavior depending on Spot software version.
+- Displaying the robot `nickname` in a list of possible Spot robots to connect to. Note that the same Spot can change `nickname` over time. Multiple Spots can share the same nickname.
+- Using the `serial_number` as a key for cached username/passwords or other data about the robot. `Serial_number` will never change over time, and is guaranteed to be unique.
+- Checking the `software_release` version to determine if the application is compatible with Spot, or to change behavior depending on Spot software version.
 
 Unlike nearly all other services, the `robot-id` service does not require an authenticated user to access it. This is because the `RobotId` data includes information that can be helpful for the authentication sequence, such as the software version or a serial number that can help find user credentials.
 
@@ -61,7 +61,7 @@ The `auth` service rate-limits invalid authentication attempts to prevent a netw
 
 ## directory
 
-Spot’s API consists of a variety of services. Some of these services ship with Spot. Some services are provided by payloads or applications running on Spot CORE. The `directory` service is used to discover which services are currently running on Spot.
+Spot’s API consists of a variety of services. Some of these services ship with Spot. Some services are provided by payloads or applications running on CORE I/O. The `directory` service is used to discover which services are currently running on Spot.
 
 Note that if an application is built with the Python client library only uses built-in services, it may never need to access the `directory` service. However, the Python client library uses the `directory` service to set up connections to the built-in services.
 
@@ -94,14 +94,14 @@ Time is critical for both interpreting when sensor data was recorded as well as 
 
 Spot’s clock may not be the same as the application’s clock. For example, at a single point in time Spot may think it is 16:01, whereas the application’s clock may be an hour behind at 15:01. If the application treated Spot’s clock as being at the same time as its own clock, problems may result. Fresh sensor data from Spot would be interpreted as being generated in the future. Commands that are issued to expire in 10 seconds would be rejected by Spot since they would appear to have expired.
 
-The `time-sync` service is used to estimate the offset between the application’s clock and Spot’s clock. Each `TimeSyncUpdate` RPC provides send and receive timestamps which form a single measurement. Initially the offset is unknown. It is initialized after several consecutive and consistent measurements are observed.  Once an offset is calculated, applications can convert times recorded in Spot’s clock to the application’s clock and vice-versa.  The offset is slowly updated to account for clock drift.
+The `time-sync` service is used to estimate the offset between the application’s clock and Spot’s clock. Each `TimeSyncUpdate` RPC provides send and receive timestamps which form a single measurement. Initially the offset is unknown. It is initialized after several consecutive and consistent measurements are observed. Once an offset is calculated, applications can convert times recorded in Spot’s clock to the application’s clock and vice-versa. The offset is slowly updated to account for clock drift.
 
 Applications built with the Python library can use the `TimeSyncThread` to simplify interaction with the `time-sync` service. The `TimeSyncThread` spawns a background thread which establishes an initial offset estimation, and periodically updates the estimation to avoid drift issues. It also exposes a number of methods to convert time or determine what the current estimate is. See the [`time_sync` example](../../python/examples/time_sync/README.md) for an example of how to use the `TimeSyncThread`.
 
-This estimate is purely at the application layer.  This is important for two reasons:
+This estimate is purely at the application layer. This is important for two reasons:
 
-*  Neither Spot’s clock nor the application's clock are adjusted, admin/root permissions are not needed.
-*  A client may connect to multiple Spot robots that are not synchronized to each other.
+- Neither Spot’s clock nor the application's clock are adjusted, admin/root permissions are not needed.
+- A client may connect to multiple Spot robots that are not synchronized to each other.
 
 Clients needing high precision timing, such as a payload sensor collecting data while the robot is moving, should instead use NTP to synchronize to the robot.
 

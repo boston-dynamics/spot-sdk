@@ -10,10 +10,10 @@ import sys
 import time
 
 import bosdyn.api.data_buffer_pb2 as data_buffer_protos
-from bosdyn.api.parameter_pb2 import Parameter
 import bosdyn.client
-from bosdyn.client.data_buffer import DataBufferClient
 import bosdyn.client.util
+from bosdyn.api.parameter_pb2 import Parameter
+from bosdyn.client.data_buffer import DataBufferClient
 
 
 def add_blob(robot, options):
@@ -61,12 +61,13 @@ def add_event(robot):
 
     robot.time_sync.wait_for_sync()
     # pylint: disable=no-member
-    robot.log_event('examples:example_event', level=data_buffer_protos.Event.LEVEL_LOW,
-                    description='This is an example event from demonstrating the API',
-                    start_timestamp_secs=time.time(), parameters=[
-                        Parameter(label='test:length', units='m', float_value=3.141),
-                        Parameter(label='test:boolean', bool_value=True)
-                    ])
+    robot.log_event(
+        'examples:example_event', level=data_buffer_protos.Event.LEVEL_LOW,
+        description='This is an example event from demonstrating the API',
+        start_timestamp_secs=time.time(), parameters=[
+            Parameter(label='test:length', units='m', float_value=3.141),
+            Parameter(label='test:boolean', bool_value=True)
+        ])
     print("Added event.")
 
 

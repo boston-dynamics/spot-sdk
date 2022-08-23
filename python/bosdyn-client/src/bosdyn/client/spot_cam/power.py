@@ -10,11 +10,10 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
-from bosdyn.client.common import (BaseClient, common_header_errors, handle_common_header_errors)
-from bosdyn.api.spot_cam import service_pb2_grpc
-from bosdyn.api.spot_cam import power_pb2
-
 from google.protobuf.wrappers_pb2 import BoolValue
+
+from bosdyn.api.spot_cam import power_pb2, service_pb2_grpc
+from bosdyn.client.common import BaseClient, common_header_errors, handle_common_header_errors
 
 
 class PowerClient(BaseClient):
@@ -30,14 +29,14 @@ class PowerClient(BaseClient):
         """Retrieve on/off state of device."""
         request = power_pb2.GetPowerStatusRequest()
         return self.call(self._stub.GetPowerStatus, request, self._get_power_status_from_response,
-                         self._power_error_from_response, **kwargs)
+                         self._power_error_from_response, copy_request=False, **kwargs)
 
     def get_power_status_async(self, **kwargs):
         """Async version of get_power_status()"""
         request = power_pb2.GetPowerStatusRequest()
         return self.call_async(self._stub.GetPowerStatus, request,
                                self._get_power_status_from_response,
-                               self._power_error_from_response, **kwargs)
+                               self._power_error_from_response, copy_request=False, **kwargs)
 
     def set_power_status(self, ptz=None, aux1=None, aux2=None, external_mic=None, **kwargs):
         """Turn on/off the desire device.
@@ -48,7 +47,7 @@ class PowerClient(BaseClient):
         request = self._build_SetPowerStatusRequest(ptz, aux1, aux2, external_mic)
 
         return self.call(self._stub.SetPowerStatus, request, self._set_power_status_from_response,
-                         self._power_error_from_response, **kwargs)
+                         self._power_error_from_response, copy_request=False, **kwargs)
 
     def set_power_status_async(self, ptz=None, aux1=None, aux2=None, external_mic=None, **kwargs):
         """Async version of set_power_status()"""
@@ -56,7 +55,7 @@ class PowerClient(BaseClient):
 
         return self.call_async(self._stub.SetPowerStatus, request,
                                self._set_power_status_from_response,
-                               self._power_error_from_response, **kwargs)
+                               self._power_error_from_response, copy_request=False, **kwargs)
 
     def cycle_power(self, ptz=None, aux1=None, aux2=None, external_mic=None, **kwargs):
         """Turn power off then back on for the desired devices.
@@ -67,14 +66,14 @@ class PowerClient(BaseClient):
         request = self._build_CyclePowerRequest(ptz, aux1, aux2, external_mic)
 
         return self.call(self._stub.CyclePower, request, self._cycle_power_from_response,
-                         self._power_error_from_response, **kwargs)
+                         self._power_error_from_response, copy_request=False, **kwargs)
 
     def cycle_power_async(self, ptz=None, aux1=None, aux2=None, external_mic=None, **kwargs):
         """Async version of cycle_power()"""
         request = self._build_CyclePowerRequest(ptz, aux1, aux2, external_mic)
 
         return self.call_async(self._stub.CyclePower, request, self._cycle_power_from_response,
-                               self._power_error_from_response, **kwargs)
+                               self._power_error_from_response, copy_request=False, **kwargs)
 
     @staticmethod
     def _build_SetPowerStatusRequest(ptz, aux1, aux2, external_mic):

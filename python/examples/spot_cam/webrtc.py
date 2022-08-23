@@ -12,20 +12,14 @@ import sys
 import threading
 import time
 
-from aiortc import (
-    RTCConfiguration,
-    RTCPeerConnection,
-    RTCSessionDescription,
-    MediaStreamTrack,
-)
-from aiortc.contrib.media import MediaRecorder
-import requests
-
 import cv2
 import numpy as np
-
-from bosdyn.client.command_line import (Command, Subcommands)
+import requests
+from aiortc import MediaStreamTrack, RTCConfiguration, RTCPeerConnection, RTCSessionDescription
+from aiortc.contrib.media import MediaRecorder
 from webrtc_client import WebRTCClient
+
+from bosdyn.client.command_line import Command, Subcommands
 
 logging.basicConfig(level=logging.DEBUG, filename='webrtc.log', filemode='a+')
 STDERR = logging.getLogger('stderr')
@@ -40,6 +34,7 @@ class InterceptStdErr:
 
     def write(self, data):
         STDERR.error(data)
+
 
 class WebRTCCommands(Subcommands):
     """Commands related to the Spot CAM's WebRTC service"""
@@ -78,8 +73,9 @@ class WebRTCSaveCommand(Command):
             options.cam_ssl_cert = False
 
         shutdown_flag = threading.Event()
-        webrtc_thread = threading.Thread(target=start_webrtc,
-                                         args=[shutdown_flag, options, process_frame], daemon=True)
+        webrtc_thread = threading.Thread(
+            target=start_webrtc, args=[shutdown_flag, options, robot.user_token, process_frame],
+            daemon=True)
         webrtc_thread.start()
 
         try:
@@ -123,15 +119,15 @@ class WebRTCRecordCommand(Command):
 
         # run event loop
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(record_webrtc(options, recorder))
+        loop.run_until_complete(record_webrtc(options, robot.user_token, recorder))
 
 
 # WebRTC must be in its own thread with its own event loop.
-async def record_webrtc(options, recorder):
+async def record_webrtc(options, token, recorder):
     config = RTCConfiguration(iceServers=[])
-    client = WebRTCClient(options.hostname, options.username, options.password, options.sdp_port,
-                          options.sdp_filename, options.cam_ssl_cert, config,
-                          media_recorder=recorder, recorder_type=options.track)
+    client = WebRTCClient(options.hostname, options.sdp_port, options.sdp_filename,
+                          options.cam_ssl_cert, token, config, media_recorder=recorder,
+                          recorder_type=options.track)
     await client.start()
 
     # wait for connection to be established before recording
@@ -151,14 +147,13 @@ async def record_webrtc(options, recorder):
 
 
 # WebRTC must be in its own thread with its own event loop.
-def start_webrtc(shutdown_flag, options, process_func, recorder=None):
+def start_webrtc(shutdown_flag, options, token, process_func, recorder=None):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
     config = RTCConfiguration(iceServers=[])
-    client = WebRTCClient(options.hostname, options.username, options.password, options.sdp_port,
-                          options.sdp_filename, options.cam_ssl_cert, config,
-                          media_recorder=recorder)
+    client = WebRTCClient(options.hostname, options.sdp_port, options.sdp_filename,
+                          options.cam_ssl_cert, token, config, media_recorder=recorder)
 
     asyncio.gather(client.start(), process_func(client, options, shutdown_flag),
                    monitor_shutdown(shutdown_flag, client))

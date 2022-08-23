@@ -28,14 +28,11 @@ simple_pid
 
 import sys
 
+from MySpot import MySpot
+from StateMachine import StateMachine, StateMachineFollow, StateMachineSit, StateMachineStand
+
 import bosdyn.client
 import bosdyn.client.util
-
-from MySpot import MySpot
-from StateMachine import StateMachine
-from StateMachine import StateMachineSit
-from StateMachine import StateMachineStand
-from StateMachine import StateMachineFollow
 
 #===================================================================================================
 # Local Helpers

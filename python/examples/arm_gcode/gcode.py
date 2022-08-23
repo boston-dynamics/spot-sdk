@@ -614,7 +614,7 @@ def run_gcode_program(config):
 
         # Tell the robot to stand up. The command service is used to issue commands to a robot.
         # The set of valid commands for a robot depends on hardware configuration. See
-        # SpotCommandHelper for more detailed examples on command building. The robot
+        # RobotCommandBuilder for more detailed examples on command building. The robot
         # command service requires timesync between the robot and the client.
         robot.logger.info("Commanding robot to stand...")
         command_client = robot.ensure_client(RobotCommandClient.default_service_name)
@@ -646,8 +646,7 @@ def run_gcode_program(config):
             qy = 0
             qz = 0
 
-        flat_body_T_hand = math_helpers.SE3Pose(x, y, z,
-                                                math_helpers.Quat(w=qw, x=qx, y=qy, z=qz))
+        flat_body_T_hand = math_helpers.SE3Pose(x, y, z, math_helpers.Quat(w=qw, x=qx, y=qy, z=qz))
         odom_T_flat_body = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot,
                                          ODOM_FRAME_NAME, GRAV_ALIGNED_BODY_FRAME_NAME)
         odom_T_hand = odom_T_flat_body * flat_body_T_hand
@@ -683,9 +682,8 @@ def run_gcode_program(config):
             # Create an admittance frame that has Z- along the robot's X axis
             xhat_ewrt_robot = [0, 0, 1]
             xhat_ewrt_vo = [0, 0, 0]
-            (xhat_ewrt_vo[0],
-             xhat_ewrt_vo[1], xhat_ewrt_vo[2]) = world_T_body.rot.transform_point(
-                 xhat_ewrt_robot[0], xhat_ewrt_robot[1], xhat_ewrt_robot[2])
+            (xhat_ewrt_vo[0], xhat_ewrt_vo[1], xhat_ewrt_vo[2]) = world_T_body.rot.transform_point(
+                xhat_ewrt_robot[0], xhat_ewrt_robot[1], xhat_ewrt_robot[2])
             (z1, z2, z3) = world_T_body.rot.transform_point(-1, 0, 0)
             zhat_temp = [z1, z2, z3]
             zhat = make_orthogonal(xhat_ewrt_vo, zhat_temp)
@@ -694,8 +692,7 @@ def run_gcode_program(config):
             q_wall = Quat.from_matrix(mat)
 
             zero_vec3 = geometry_pb2.Vec3(x=0, y=0, z=0)
-            q_wall_proto = geometry_pb2.Quaternion(w=q_wall.w, x=q_wall.x, y=q_wall.y,
-                                                   z=q_wall.z)
+            q_wall_proto = geometry_pb2.Quaternion(w=q_wall.w, x=q_wall.x, y=q_wall.y, z=q_wall.z)
 
             world_T_admittance_frame = geometry_pb2.SE3Pose(position=zero_vec3,
                                                             rotation=q_wall_proto)
@@ -715,12 +712,11 @@ def run_gcode_program(config):
         (world_T_body, body_T_hand, world_T_hand, odom_T_body) = get_transforms(
             use_vision_frame, robot_state)
 
-        odom_T_ground_plane = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot,
-                                            "odom", "gpe")
+        odom_T_ground_plane = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot, "odom",
+                                            "gpe")
         world_T_odom = world_T_body * odom_T_body.inverse()
 
-        (gx, gy, gz) = world_T_odom.transform_point(odom_T_ground_plane.x,
-                                                    odom_T_ground_plane.y,
+        (gx, gy, gz) = world_T_odom.transform_point(odom_T_ground_plane.x, odom_T_ground_plane.y,
                                                     odom_T_ground_plane.z)
         ground_plane_rt_vo = [gx, gy, gz]
 
@@ -742,8 +738,7 @@ def run_gcode_program(config):
             mat = np.array([xhat, yhat, zhat]).transpose()
             vo_Q_origin = Quat.from_matrix(mat)
 
-            world_T_origin = SE3Pose(world_T_hand.x, world_T_hand.y, world_T_hand.z,
-                                     vo_Q_origin)
+            world_T_origin = SE3Pose(world_T_hand.x, world_T_hand.y, world_T_hand.z, vo_Q_origin)
         else:
             # todo should I use the same one?
             world_T_origin = world_T_hand
@@ -751,8 +746,7 @@ def run_gcode_program(config):
         gcode.set_origin(world_T_origin, world_T_admittance_frame)
         robot.logger.info('Origin set')
 
-        (is_admittance, world_T_goals,
-         is_pause) = gcode.get_next_world_T_goals(ground_plane_rt_vo)
+        (is_admittance, world_T_goals, is_pause) = gcode.get_next_world_T_goals(ground_plane_rt_vo)
 
         while is_pause:
             do_pause()
@@ -763,9 +757,9 @@ def run_gcode_program(config):
             # we're done!
             done = True
 
-        move_arm(robot_state, is_admittance, world_T_goals, arm_surface_contact_client,
-                 velocity, allow_walking, world_T_admittance_frame, press_force_percent,
-                 api_send_frame, use_xy_to_z_cross_term, bias_force_x)
+        move_arm(robot_state, is_admittance, world_T_goals, arm_surface_contact_client, velocity,
+                 allow_walking, world_T_admittance_frame, press_force_percent, api_send_frame,
+                 use_xy_to_z_cross_term, bias_force_x)
         odom_T_hand_goal = world_T_odom.inverse() * world_T_goals[-1]
         last_admittance = is_admittance
 
@@ -854,15 +848,16 @@ def run_gcode_program(config):
             odom_T_walk_se2 = SE2Pose.flatten(odom_T_walk)
 
             # Command the robot to go to the end point.
-            walk_cmd = RobotCommandBuilder.trajectory_command(
-                goal_x=odom_T_walk_se2.x, goal_y=odom_T_walk_se2.y,
-                goal_heading=odom_T_walk_se2.angle, frame_name="odom")
+            walk_cmd = RobotCommandBuilder.trajectory_command(goal_x=odom_T_walk_se2.x,
+                                                              goal_y=odom_T_walk_se2.y,
+                                                              goal_heading=odom_T_walk_se2.angle,
+                                                              frame_name="odom")
             end_time = 15.0
             #Issue the command to the robot
             command_client.robot_command(command=walk_cmd, end_time_secs=time.time() + end_time)
-            block_for_trajectory_cmd(
-                command_client, 1,
-                basic_command_pb2.SE2TrajectoryCommand.Feedback.STATUS_At_Goal, None, 0.1, 15.0)
+            block_for_trajectory_cmd(command_client, 1,
+                                     basic_command_pb2.SE2TrajectoryCommand.Feedback.STATUS_At_Goal,
+                                     None, 0.1, 15.0)
 
         robot.logger.info('Done.')
 

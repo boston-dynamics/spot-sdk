@@ -5,20 +5,22 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import argparse
-from vtk.util import numpy_support
-import google.protobuf.timestamp_pb2
 import math
-import numpy as np
-import numpy.linalg
 import os
 import sys
 import time
-import vtk
 
-from bosdyn.api.graph_nav import map_pb2
+import google.protobuf.timestamp_pb2
+import numpy as np
+import numpy.linalg
+import vtk
+from vtk.util import numpy_support
+
 from bosdyn.api import geometry_pb2
+from bosdyn.api.graph_nav import map_pb2
 from bosdyn.client.frame_helpers import *
 from bosdyn.client.math_helpers import *
+
 """
 This example shows how to load and view a graph nav map.
 

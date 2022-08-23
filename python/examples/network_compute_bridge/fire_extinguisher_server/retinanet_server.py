@@ -4,51 +4,38 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""Tutorial to show how to use the Boston Dynamics API"""
+"""Tutorial to show how to use the Boston Dynamics API NetworkComputeBridgeWorkerServicer"""
 import argparse
 import io
-from multiprocessing import Queue
+import logging
 import os
 import sys
+import threading
 import time
-import logging
+from concurrent import futures
+from multiprocessing import Queue
+from timeit import default_timer as timer
 
 import cv2
+import grpc
 import numpy as np
+import tensorflow as tf
+from google.protobuf import wrappers_pb2
+from keras_retinanet import models
+# import the necessary packages for ML
+from keras_retinanet.utils.image import preprocess_image, resize_image
 from PIL import Image
 from scipy import ndimage
 
+import bosdyn.client
+import bosdyn.client.util
+from bosdyn.api import (image_pb2, network_compute_bridge_pb2,
+                        network_compute_bridge_service_pb2_grpc)
+from bosdyn.client.directory import DirectoryClient, NonexistentServiceError
 from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
                                                   DirectoryRegistrationKeepAlive,
                                                   ServiceAlreadyExistsError)
 from bosdyn.client.payload_registration import PayloadRegistrationClient
-
-from bosdyn.api import network_compute_bridge_service_pb2_grpc
-from bosdyn.api import network_compute_bridge_pb2
-from bosdyn.api import image_pb2
-import bosdyn.client
-import bosdyn.client.util
-import grpc
-from concurrent import futures
-
-# import the necessary packages for ML
-from keras_retinanet.utils.image import preprocess_image
-from keras_retinanet.utils.image import resize_image
-from keras_retinanet import models
-import argparse
-from timeit import default_timer as timer
-
-import threading
-from google.protobuf import wrappers_pb2
-import tensorflow as tf
-
-# This is a multiprocessing.Queue for communication between the main process and the
-# Tensorflow processes.
-REQUEST_QUEUE = Queue()
-
-# This is a multiprocessing.Queue for communication between the Tensorflow processes and
-# the display process.
-RESPONSE_QUEUE = Queue()
 
 
 class Resnet50Model:
@@ -83,22 +70,27 @@ class KerasExec():
     """ Thread that waits for data and runs the Keras model. """
 
     def __init__(self, options, model_extension):
-        self.in_queue = REQUEST_QUEUE
-        self.out_queue = RESPONSE_QUEUE
+        # This is a multiprocessing.Queue for communication between the main process and the
+        # Tensorflow processes.
+        self.in_queue = Queue()
+        # This is a multiprocessing.Queue for communication between the Tensorflow processes and
+        # the display process.
+        self.out_queue = Queue()
+
         self.options = options
         self.debug = not options.no_debug
         self.model_extension = model_extension
 
     def run(self):
-        models = {}
+        run_models = {}
         for f in os.listdir(self.options.model_dir):
-            if f in models:
+            if f in run_models:
                 print('Warning: duplicate model name of "' + f + '", ignoring second model.')
                 continue
 
             path = os.path.join(self.options.model_dir, f)
             if os.path.isfile(path) and path.endswith(self.model_extension):
-                model_name = ''.join(f.rsplit(self.model_extension, 1)) # remove the extension
+                model_name = ''.join(f.rsplit(self.model_extension, 1))  # remove the extension
 
                 # reverse replace the extension
                 labels_file = '.csv'.join(f.rsplit(self.model_extension, 1))
@@ -106,45 +98,46 @@ class KerasExec():
 
                 if not os.path.isfile(labels_path):
                     labels_path = None
-                models[model_name] = (Resnet50Model(path, labels_path))
+                run_models[model_name] = (Resnet50Model(path, labels_path))
 
         # Tensorflow prints out a bunch of stuff, so print out useful data here after a space.
         print('')
         print('Running on port: ' + str(self.options.port))
-        print('Loaded models:')
-        for model_name in models:
-            if models[model_name].labels is not None:
+        print('Loaded run_models:')
+        for model_name in run_models:
+            if run_models[model_name].labels is not None:
                 labels_str = 'yes'
             else:
                 labels_str = 'no'
             print('    ' + model_name + ' (loaded labels: ' + labels_str + ')')
 
         while True:
-            request = REQUEST_QUEUE.get()
+            request = self.in_queue.get()
 
             if isinstance(request, network_compute_bridge_pb2.ListAvailableModelsRequest):
                 out_proto = network_compute_bridge_pb2.ListAvailableModelsResponse()
-                for model_name in models:
+                for model_name in run_models:
                     out_proto.available_models.append(model_name)
                     # To show available labels
-                    #if models[model_name].labels is not None:
+                    #if run_models[model_name].labels is not None:
                     #    labels_msg = out_proto.labels.add()
                     #    labels_msg.model_name = model_name
-                    #    for n in models[model_name].labels:
-                    #        labels_msg.available_labels.append(models[model_name].labels[n])
-                RESPONSE_QUEUE.put(out_proto)
+                    #    for n in run_models[model_name].labels:
+                    #        labels_msg.available_labels.append(run_models[model_name].labels[n])
+                self.out_queue.put(out_proto)
                 continue
             else:
                 out_proto = network_compute_bridge_pb2.NetworkComputeResponse()
 
             # Find the model
-            if request.input_data.model_name not in models:
-                print('Cannot find model "' + request.input_data.model_name + '" in loaded models.')
-                RESPONSE_QUEUE.put(out_proto)
+            if request.input_data.model_name not in run_models:
+                print('Cannot find model "' + request.input_data.model_name +
+                      '" in loaded run_models.')
+                self.out_queue.put(out_proto)
                 continue
 
             # Got a request, run the model.
-            self.run_model(request, models[request.input_data.model_name])
+            self.run_model(request, run_models[request.input_data.model_name])
 
     def run_model(self, request, this_model):
 
@@ -155,13 +148,15 @@ class KerasExec():
             pil_image = Image.open(io.BytesIO(request.input_data.image.data))
             pil_image = ndimage.rotate(pil_image, 0)
             if request.input_data.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8:
-                image = cv2.cvtColor(pil_image, cv2.COLOR_GRAY2RGB)  # Converted to RGB for Tensorflow
+                image = cv2.cvtColor(pil_image,
+                                     cv2.COLOR_GRAY2RGB)  # Converted to RGB for Tensorflow
             elif request.input_data.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_RGB_U8:
                 # Already in the correct format
                 image = pil_image
             else:
-                print('Error: image input in unsupported pixel format: ', request.input_data.image.pixel_format)
-                RESPONSE_QUEUE.put(out_proto)
+                print('Error: image input in unsupported pixel format: ',
+                      request.input_data.image.pixel_format)
+                self.out_queue.put(out_proto)
                 return
         elif request.input_data.image.format == image_pb2.Image.FORMAT_JPEG:
             dtype = np.uint8
@@ -172,7 +167,6 @@ class KerasExec():
             if len(image.shape) < 3:
                 # Single channel image, convert to RGB.
                 image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
-
 
         print('')
         print('Starting model eval...')
@@ -195,7 +189,8 @@ class KerasExec():
 
         for i in range(len(boxes)):
             # Skip if not the Fire Extinguisher class
-            if classes[i] != 7: continue
+            if classes[i] != 7:
+                continue
 
             label = this_model.labels[(classes[i])]
             box = boxes[i]
@@ -250,8 +245,8 @@ class KerasExec():
                 caption = "{}: {:.3f}".format(label, score)
                 left_x = min(point1[0], min(point2[0], min(point3[0], point4[0])))
                 top_y = min(point1[1], min(point2[1], min(point3[1], point4[1])))
-                cv2.putText(image, caption, (int(left_x), int(top_y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
-                            (0, 255, 0), 2)
+                cv2.putText(image, caption, (int(left_x), int(top_y)), cv2.FONT_HERSHEY_SIMPLEX,
+                            0.5, (0, 255, 0), 2)
 
         print('Found ' + str(num_objects) + ' object(s)')
 
@@ -305,10 +300,10 @@ def register_with_robot(options):
     if options.username or options.password:
         bosdyn.client.util.authenticate(robot)
     else:
-        robot.authenticate_from_payload_credentials(*bosdyn.client.util.get_guid_and_secret(options))
+        robot.authenticate_from_payload_credentials(
+            *bosdyn.client.util.get_guid_and_secret(options))
 
-    directory_client = robot.ensure_client(
-        bosdyn.client.directory.DirectoryClient.default_service_name)
+    directory_client = robot.ensure_client(DirectoryClient.default_service_name)
     directory_registration_client = robot.ensure_client(
         bosdyn.client.directory_registration.DirectoryRegistrationClient.default_service_name)
 
@@ -319,8 +314,8 @@ def register_with_robot(options):
     # List all services. Success if above test service is shown.
     try:
         registered_service = directory_client.get_entry(kServiceName)
-    except NonexistentServiceError:
-        print('\nSelf-registered service not found. Failure.')
+    except NonexistentServiceError as exc:
+        print(f'\nSelf-registered service not found. Failure: {exc}')
         return False
 
     print('\nService registration confirmed. Self-registration was a success.')
@@ -343,12 +338,16 @@ def main(argv):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '-d', '--model-dir', help=
-        'Directory of pre-trained models and (optionally) associated label files.\nExample directory contents: my_model.pb, my_classes.csv, my_model2.pb, my_classes2.csv.  CSV label format is: object,1<new line>thing,2', required=True
-    )
+        'Directory of pre-trained models and (optionally) associated label files.\nExample directory contents: my_model.pb, my_classes.csv, my_model2.pb, my_classes2.csv.  CSV label format is: object,1<new line>thing,2',
+        required=True)
     parser.add_argument('-p', '--port', help='Server\'s port number, default: ' + default_port,
                         default=default_port)
-    parser.add_argument('-n', '--no-debug', help='Disable writing debug images.', action='store_true')
-    parser.add_argument('-r', '--no-registration', help='Don\'t register with the robot\'s directory. This is useful for cloud applications where we can\'t reach into every robot directly. Instead use another program to register this server.', action='store_true')
+    parser.add_argument('-n', '--no-debug', help='Disable writing debug images.',
+                        action='store_true')
+    parser.add_argument(
+        '-r', '--no-registration', help=
+        'Don\'t register with the robot\'s directory. This is useful for cloud applications where we can\'t reach into every robot directly. Instead use another program to register this server.',
+        action='store_true')
     parser.add_argument('--username', help='User name of account to get credentials for.')
     parser.add_argument('--password', help='Password to get credentials for.')
     bosdyn.client.util.add_payload_credentials_arguments(parser, required=False)
@@ -378,7 +377,8 @@ def main(argv):
             break
 
     if not found_model:
-        print('Error: model directory must contain at least one model file with extension ' + model_extension + '.  Found:')
+        print('Error: model directory must contain at least one model file with extension ' +
+              model_extension + '.  Found:')
         for f in os.listdir(options.model_dir):
             print('    ' + f)
         sys.exit(1)

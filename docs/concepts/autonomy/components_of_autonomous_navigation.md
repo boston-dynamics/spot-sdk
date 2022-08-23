@@ -17,6 +17,7 @@ To get started with autonomous navigation, you'll need a grasp of the following 
 *  [Localization](#localization)
 *  [Initialization](#initialization)
 *  [Missions](#missions)
+*  [(Advanced) Area Callbacks](#area-callbacks)
 
 
 <h2 id="maps">Maps</h2>
@@ -45,8 +46,13 @@ Missions are expressed as behavior trees, which are composed of nodes arranged i
 
 The mission is complete once the root node has changed from running to failed or success.
 
-
 See [Missions service][missions] for details.
+
+<h2 id="area_callbacks">Advanced – Area Callbacks</h2>
+
+Edges can be annotated with Area Callback regions, which specify that GraphNav should call out to a particular callback service in order to safely enter, cross, and exit that region.  These services allow users to integrate new capabilities into GraphNav, such as checking whether it is safe to cross a crosswalk, opening doors, or flashing lights or playing sounds in a particular area.
+
+See [Area Callbacks][area-callbacks] for more information.
 
 
 <!--- image and page reference link definitions --->
@@ -59,5 +65,6 @@ See [Missions service][missions] for details.
 [map-structure]: graphnav_map_structure.md "GraphNav map structure"
 [initialization]: initialization.md "Initialization"
 [localization]: localization.md "Localization"
+[area-callbacks]: graphnav_area_callbacks.md "Area Callbacks"
 [locomotion]: graphnav_and_robot_locomotion.md "GraphNav and robot locomotion"
 [missions]: missions_service.md "Missions service"

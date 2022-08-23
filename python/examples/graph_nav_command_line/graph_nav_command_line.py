@@ -7,32 +7,28 @@
 """Command line interface for graph nav with options to download/upload a map and to navigate a map. """
 
 import argparse
-import grpc
 import logging
 import math
 import os
 import sys
 import time
 
-from bosdyn.api import geometry_pb2
-from bosdyn.api import power_pb2
-from bosdyn.api import robot_state_pb2
-from bosdyn.api.graph_nav import graph_nav_pb2
-from bosdyn.api.graph_nav import map_pb2
-from bosdyn.api.graph_nav import nav_pb2
-import bosdyn.client.channel
-from bosdyn.client.power import safe_power_off, PowerClient, power_on
-from bosdyn.client.exceptions import ResponseError
-from bosdyn.client.graph_nav import GraphNavClient
-from bosdyn.client.frame_helpers import get_odom_tform_body
-from bosdyn.client.lease import LeaseClient, LeaseKeepAlive, LeaseWallet, ResourceAlreadyClaimedError
-from bosdyn.client.math_helpers import Quat, SE3Pose
-from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder
-from bosdyn.client.robot_state import RobotStateClient
-import bosdyn.client.util
 import google.protobuf.timestamp_pb2
-
 import graph_nav_util
+import grpc
+
+import bosdyn.client.channel
+import bosdyn.client.util
+from bosdyn.api import geometry_pb2, power_pb2, robot_state_pb2
+from bosdyn.api.graph_nav import graph_nav_pb2, map_pb2, nav_pb2
+from bosdyn.client.exceptions import ResponseError
+from bosdyn.client.frame_helpers import get_odom_tform_body
+from bosdyn.client.graph_nav import GraphNavClient
+from bosdyn.client.lease import LeaseClient, LeaseKeepAlive, ResourceAlreadyClaimedError
+from bosdyn.client.math_helpers import Quat, SE3Pose
+from bosdyn.client.power import PowerClient, power_on, safe_power_off
+from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient
+from bosdyn.client.robot_state import RobotStateClient
 
 
 class GraphNavInterface(object):
@@ -43,16 +39,6 @@ class GraphNavInterface(object):
 
         # Force trigger timesync.
         self._robot.time_sync.wait_for_sync()
-
-        # Create the lease client with keep-alive, then acquire the lease.
-        self._lease_client = self._robot.ensure_client(LeaseClient.default_service_name)
-        self._lease_wallet = self._lease_client.lease_wallet
-        try:
-            self._lease = self._lease_client.acquire()
-        except ResourceAlreadyClaimedError as err:
-            print("The robot's lease is currently in use. Check for a tablet connection or try again in a few seconds.")
-            os._exit(1)
-        self._lease_keepalive = LeaseKeepAlive(self._lease_client)
 
         # Create robot state and command clients.
         self._robot_command_client = self._robot.ensure_client(
@@ -190,8 +176,7 @@ class GraphNavInterface(object):
         # Upload the graph to the robot.
         print("Uploading the graph and snapshots to the robot...")
         true_if_empty = not len(self._current_graph.anchoring.anchors)
-        response = self._graph_nav_client.upload_graph(lease=self._lease.lease_proto,
-                                                       graph=self._current_graph,
+        response = self._graph_nav_client.upload_graph(graph=self._current_graph,
                                                        generate_new_anchoring=true_if_empty)
         # Upload the snapshots to the robot.
         for snapshot_id in response.unknown_waypoint_snapshot_ids:
@@ -244,15 +229,10 @@ class GraphNavInterface(object):
             seed_T_goal.rot = Quat(w=float(args[0][3]), x=float(args[0][4]), y=float(args[0][5]),
                                    z=float(args[0][6]))
 
-        self._lease = self._lease_wallet.get_lease()
         if not self.toggle_power(should_power_on=True):
             print("Failed to power on the robot, and cannot complete navigate to request.")
             return
 
-        # Stop the lease keepalive and create a new sublease for graph nav.
-        self._lease = self._lease_wallet.advance()
-        sublease = self._lease.create_sublease()
-        self._lease_keepalive.shutdown()
         nav_to_cmd_id = None
         # Navigate to the destination.
         is_finished = False
@@ -261,8 +241,7 @@ class GraphNavInterface(object):
             # navigation command (with estop or killing the program).
             try:
                 nav_to_cmd_id = self._graph_nav_client.navigate_to_anchor(
-                    seed_T_goal.to_proto(), 1.0, leases=[sublease.lease_proto],
-                    command_id=nav_to_cmd_id)
+                    seed_T_goal.to_proto(), 1.0, command_id=nav_to_cmd_id)
             except ResponseError as e:
                 print("Error while navigating {}".format(e))
                 break
@@ -271,10 +250,7 @@ class GraphNavInterface(object):
             # the robot down once it is finished.
             is_finished = self._check_success(nav_to_cmd_id)
 
-        self._lease = self._lease_wallet.advance()
-        self._lease_keepalive = LeaseKeepAlive(self._lease_client)
-
-        # Update the lease and power off the robot if appropriate.
+        # Power off the robot if appropriate.
         if self._powered_on and not self._started_powered_on:
             # Sit the robot down + power off after the navigation command is complete.
             self.toggle_power(should_power_on=False)
@@ -287,7 +263,6 @@ class GraphNavInterface(object):
             print("No waypoint provided as a destination for navigate to.")
             return
 
-        self._lease = self._lease_wallet.get_lease()
         destination_waypoint = graph_nav_util.find_unique_waypoint_id(
             args[0][0], self._current_graph, self._current_annotation_name_to_wp_id)
         if not destination_waypoint:
@@ -297,10 +272,6 @@ class GraphNavInterface(object):
             print("Failed to power on the robot, and cannot complete navigate to request.")
             return
 
-        # Stop the lease keep-alive and create a new sublease for graph nav.
-        self._lease = self._lease_wallet.advance()
-        sublease = self._lease.create_sublease()
-        self._lease_keepalive.shutdown()
         nav_to_cmd_id = None
         # Navigate to the destination waypoint.
         is_finished = False
@@ -309,7 +280,6 @@ class GraphNavInterface(object):
             # navigation command (with estop or killing the program).
             try:
                 nav_to_cmd_id = self._graph_nav_client.navigate_to(destination_waypoint, 1.0,
-                                                                   leases=[sublease.lease_proto],
                                                                    command_id=nav_to_cmd_id)
             except ResponseError as e:
                 print("Error while navigating {}".format(e))
@@ -319,10 +289,7 @@ class GraphNavInterface(object):
             # the robot down once it is finished.
             is_finished = self._check_success(nav_to_cmd_id)
 
-        self._lease = self._lease_wallet.advance()
-        self._lease_keepalive = LeaseKeepAlive(self._lease_client)
-
-        # Update the lease and power off the robot if appropriate.
+        # Power off the robot if appropriate.
         if self._powered_on and not self._started_powered_on:
             # Sit the robot down + power off after the navigation command is complete.
             self.toggle_power(should_power_on=False)
@@ -359,16 +326,10 @@ class GraphNavInterface(object):
                 )
                 break
 
-        self._lease = self._lease_wallet.get_lease()
         if all_edges_found:
             if not self.toggle_power(should_power_on=True):
                 print("Failed to power on the robot, and cannot complete navigate route request.")
                 return
-
-            # Stop the lease keep-alive and create a new sublease for graph nav.
-            self._lease = self._lease_wallet.advance()
-            sublease = self._lease.create_sublease()
-            self._lease_keepalive.shutdown()
 
             # Navigate a specific route.
             route = self._graph_nav_client.build_route(waypoint_ids, edge_ids_list)
@@ -377,23 +338,20 @@ class GraphNavInterface(object):
                 # Issue the route command about twice a second such that it is easy to terminate the
                 # navigation command (with estop or killing the program).
                 nav_route_command_id = self._graph_nav_client.navigate_route(
-                    route, cmd_duration=1.0, leases=[sublease.lease_proto])
+                    route, cmd_duration=1.0)
                 time.sleep(.5)  # Sleep for half a second to allow for command execution.
                 # Poll the robot for feedback to determine if the route is complete. Then sit
                 # the robot down once it is finished.
                 is_finished = self._check_success(nav_route_command_id)
 
-            self._lease = self._lease_wallet.advance()
-            self._lease_keepalive = LeaseKeepAlive(self._lease_client)
-
-            # Update the lease and power off the robot if appropriate.
+            # Power off the robot if appropriate.
             if self._powered_on and not self._started_powered_on:
                 # Sit the robot down + power off after the navigation command is complete.
                 self.toggle_power(should_power_on=False)
 
     def _clear_graph(self, *args):
         """Clear the state of the map on the robot, removing all waypoints and edges."""
-        return self._graph_nav_client.clear_graph(lease=self._lease.lease_proto)
+        return self._graph_nav_client.clear_graph()
 
     def toggle_power(self, should_power_on):
         """Power the robot on/off dependent on the current power state."""
@@ -463,18 +421,12 @@ class GraphNavInterface(object):
                     return map_pb2.Edge.Id(from_waypoint=waypoint1, to_waypoint=waypoint2)
         return None
 
-    def return_lease(self):
-        """Shutdown lease keep-alive and return lease."""
-        self._lease_keepalive.shutdown()
-        self._lease_client.return_lease(self._lease)
-
     def _on_quit(self):
         """Cleanup on quit from the command line interface."""
         # Sit the robot down + power off after the navigation command is complete.
         if self._powered_on and not self._started_powered_on:
             self._robot_command_client.robot_command(RobotCommandBuilder.safe_power_off_command(),
                                                      end_time_secs=time.time())
-        self.return_lease()
 
     def run(self):
         """Main loop for the command line interface."""
@@ -484,6 +436,7 @@ class GraphNavInterface(object):
             (1) Get localization state.
             (2) Initialize localization to the nearest fiducial (must be in sight of a fiducial).
             (3) Initialize localization to a specific waypoint (must be exactly at the waypoint)."""
+
                   """
             (4) List the waypoint ids and edge ids of the map on the robot.
             (5) Upload the graph and its snapshots.
@@ -531,13 +484,20 @@ def main(argv):
     bosdyn.client.util.authenticate(robot)
 
     graph_nav_command_line = GraphNavInterface(robot, options.upload_filepath)
+    lease_client = robot.ensure_client(LeaseClient.default_service_name)
     try:
-        graph_nav_command_line.run()
-        return True
-    except Exception as exc:  # pylint: disable=broad-except
-        print(exc)
-        print("Graph nav command line client threw an error.")
-        graph_nav_command_line.return_lease()
+        with LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
+            try:
+                graph_nav_command_line.run()
+                return True
+            except Exception as exc:  # pylint: disable=broad-except
+                print(exc)
+                print("Graph nav command line client threw an error.")
+                return False
+    except ResourceAlreadyClaimedError:
+        print(
+            "The robot's lease is currently in use. Check for a tablet connection or try again in a few seconds."
+        )
         return False
 
 

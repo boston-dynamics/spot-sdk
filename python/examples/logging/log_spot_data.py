@@ -8,19 +8,19 @@
 Example usage of the data-buffer features
 """
 from __future__ import print_function
+
 import argparse
-import sys
 import logging
 import struct
+import sys
 import time
 
+import bosdyn.api.data_buffer_pb2 as data_buffer_protos
+import bosdyn.api.geometry_pb2 as geometry_protos
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.client.data_buffer import DataBufferClient
-
-import bosdyn.api.data_buffer_pb2 as data_buffer_protos
 from bosdyn.api import basic_command_pb2
-import bosdyn.api.geometry_pb2 as geometry_protos
+from bosdyn.client.data_buffer import DataBufferClient
 
 LOGGER = logging.getLogger()
 

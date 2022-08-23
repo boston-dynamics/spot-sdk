@@ -8,7 +8,7 @@
 import struct
 
 from .bosdyn import MessageChannel
-from .common import DataFormatError, POD_TYPE_TO_NUM_BYTES, POD_TYPE_TO_STRUCT
+from .common import POD_TYPE_TO_NUM_BYTES, POD_TYPE_TO_STRUCT, DataFormatError
 
 
 class PodSeriesWriter:  # pylint: disable=too-many-instance-attributes

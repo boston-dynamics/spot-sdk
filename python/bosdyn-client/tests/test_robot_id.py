@@ -5,14 +5,14 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """Unit tests for the robot_id client."""
-import grpc
 import logging
-import pytest
 import time
+
+import grpc
+import pytest
 
 import bosdyn.api.robot_id_pb2 as robot_id_protos
 import bosdyn.api.robot_id_service_pb2_grpc as robot_id_service
-
 import bosdyn.client.robot_id
 from bosdyn.client.exceptions import TimedOutError
 
@@ -48,6 +48,9 @@ def _create_fake_robot_id():
     robot_id.serial_number = 'B12313'
     robot_id.species = 'spot'
     robot_id.version = '1.1.12'
+    robot_id.software_release.version.major_version = 1
+    robot_id.software_release.version.minor_version = 1
+    robot_id.software_release.version.patch_level = 12
     robot_id.nickname = 'goofball'
     robot_id.computer_serial_number = 'fdafds'
     return robot_id
@@ -84,3 +87,9 @@ def test_get_robot_id_async_timeout():
     fut = client.get_id_async(timeout=timeout)
     with pytest.raises(TimedOutError):
         result = fut.result()
+
+
+def test_version_tuple():
+    client, service, server = _setup(robot_id=_create_fake_robot_id())
+    robot_id = client.get_id()
+    bosdyn.client.robot_id.version_tuple(robot_id.software_release.version) == (1, 1, 12)

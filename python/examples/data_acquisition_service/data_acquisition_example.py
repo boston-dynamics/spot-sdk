@@ -6,29 +6,22 @@
 
 """Tutorial to show how to use the data acquisition client"""
 from __future__ import print_function
+
 import argparse
-import os
-import shutil
 import sys
 import time
-from datetime import datetime
+
+from google.protobuf.struct_pb2 import Struct
 
 import bosdyn.client
 import bosdyn.client.util
-
 from bosdyn.api import data_acquisition_pb2
-from bosdyn.api import data_acquisition_store_pb2
-from bosdyn.api import image_pb2
-from bosdyn.client.data_acquisition import (DataAcquisitionClient, RequestIdDoesNotExistError)
-from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
-from bosdyn.client.exceptions import ResponseError
+from bosdyn.client.data_acquisition import DataAcquisitionClient
 from bosdyn.client.data_acquisition_helpers import (acquire_and_process_request,
-                                                    issue_acquire_data_request,
                                                     cancel_acquisition_request, download_data_REST,
+                                                    issue_acquire_data_request,
                                                     make_time_query_params)
-
-from google.protobuf.struct_pb2 import Struct
-from google.protobuf import json_format
+from bosdyn.client.image import build_image_request
 
 
 def data_acquisition(config):
@@ -55,8 +48,8 @@ def data_acquisition(config):
     # Request 1 contains only internal metadata capture requests and an image request.
     acquisition_requests = data_acquisition_pb2.AcquisitionRequestList()
     acquisition_requests.image_captures.extend([
-        data_acquisition_pb2.ImageSourceCapture(image_service="image",
-                                                image_source="back_fisheye_image")
+        data_acquisition_pb2.ImageSourceCapture(
+            image_service="image", image_request=build_image_request("back_fisheye_image"))
     ])
     acquisition_requests.data_captures.extend([
         data_acquisition_pb2.DataCapture(name="robot-state"),
@@ -75,10 +68,10 @@ def data_acquisition(config):
 
     acquisition_requests = data_acquisition_pb2.AcquisitionRequestList()
     acquisition_requests.image_captures.extend([
-        data_acquisition_pb2.ImageSourceCapture(image_service="image",
-                                                image_source="left_fisheye_image"),
-        data_acquisition_pb2.ImageSourceCapture(image_service="image",
-                                                image_source="right_fisheye_image")
+        data_acquisition_pb2.ImageSourceCapture(
+            image_service="image", image_request=build_image_request("left_fisheye_image")),
+        data_acquisition_pb2.ImageSourceCapture(
+            image_service="image", image_request=build_image_request("right_fisheye_image"))
     ])
     acquisition_requests.data_captures.extend([
         data_acquisition_pb2.DataCapture(name="robot-state"),

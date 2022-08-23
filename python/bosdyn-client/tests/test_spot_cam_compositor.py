@@ -11,8 +11,7 @@ import grpc
 import pytest
 
 import bosdyn.client.spot_cam.compositor
-
-from bosdyn.api.spot_cam import compositor_pb2, service_pb2_grpc, camera_pb2
+from bosdyn.api.spot_cam import camera_pb2, compositor_pb2, service_pb2_grpc
 
 from . import helpers
 

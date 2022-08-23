@@ -6,19 +6,20 @@
 
 """Test code for bosdyn.bddf"""
 from __future__ import print_function
+
 import os
 import tempfile
 
-from google.protobuf.timestamp_pb2 import Timestamp
 import pytest
+from google.protobuf.timestamp_pb2 import Timestamp
 
-import bosdyn.api.robot_id_pb2 as robot_id
 import bosdyn.api.bddf_pb2 as bddf
+import bosdyn.api.robot_id_pb2 as robot_id
 from bosdyn.api.data_buffer_pb2 import OperatorComment
 from bosdyn.bddf import (DataReader, DataWriter, GrpcReader, GrpcServiceWriter, PodSeriesReader,
-                         PodSeriesWriter, ProtobufSeriesWriter, ProtobufChannelReader,
-                         ProtobufReader, StreamDataReader)
-from bosdyn.util import now_nsec, now_timestamp, timestamp_to_nsec, nsec_to_timestamp
+                         PodSeriesWriter, ProtobufChannelReader, ProtobufReader,
+                         ProtobufSeriesWriter, StreamDataReader)
+from bosdyn.util import now_nsec, now_timestamp, nsec_to_timestamp, timestamp_to_nsec
 
 
 def test_write_read():  # pylint: disable=too-many-statements,too-many-locals

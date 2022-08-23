@@ -10,6 +10,7 @@ This allows client code to write to the robot payload registry.
 """
 
 from __future__ import print_function
+
 import collections
 import logging
 import threading
@@ -17,10 +18,10 @@ import time
 
 import bosdyn.api.payload_registration_pb2 as payload_registration_protos
 import bosdyn.api.payload_registration_service_pb2_grpc as payload_registration_service
-
-from bosdyn.client.common import (BaseClient, error_factory, handle_unset_status_error,
-                                  handle_common_header_errors, handle_lease_use_result_errors)
-from bosdyn.client import ResponseError, TimedOutError, RetryableUnavailableError
+from bosdyn.client import (ResponseError, RetryableUnavailableError, TimedOutError,
+                           TooManyRequestsError)
+from bosdyn.client.common import (BaseClient, error_factory, handle_common_header_errors,
+                                  handle_lease_use_result_errors, handle_unset_status_error)
 
 LOGGER = logging.getLogger('payload_registration_client')
 
@@ -338,6 +339,7 @@ def _get_payload_auth_token_error(response):
         status_to_string=payload_registration_protos.GetPayloadAuthTokenResponse.Status.Name,
         status_to_error=_GET_PAYLOAD_AUTH_TOKEN_STATUS_TO_ERROR)
 
+
 # Associate proto status errors to python client errors for UpdatePayloadAttachedResponse
 _UPDATE_PAYLOAD_ATTACHED_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
 _UPDATE_PAYLOAD_ATTACHED_STATUS_TO_ERROR.update({
@@ -457,6 +459,8 @@ class PayloadRegistrationKeepAlive(object):
                 pass
             except TimedOutError:
                 self.logger.warning('Timed out, timeout set to "{}"'.format(self._rpc_timeout_secs))
+            except TooManyRequestsError:
+                self.logger.warning("Too many requests error")
             except Exception as exc:
                 # Log all other exceptions, but continue looping in hopes that it resolves itself
                 self.logger.exception('Caught general exception.')

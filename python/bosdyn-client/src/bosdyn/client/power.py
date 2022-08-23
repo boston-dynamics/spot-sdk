@@ -6,23 +6,19 @@
 
 """For clients to the power command service."""
 import collections
-from concurrent.futures import TimeoutError
-from deprecated.sphinx import deprecated
 import functools
 import time
+from concurrent.futures import TimeoutError
 
-from bosdyn.client.common import BaseClient
-from bosdyn.client.common import (error_factory, handle_unset_status_error,
-                                  handle_common_header_errors, handle_lease_use_result_errors)
-from bosdyn.client.exceptions import Error, ResponseError, InternalServerError, LicenseError, TimedOutError
+from deprecated.sphinx import deprecated
+from google.protobuf.duration_pb2 import Duration
 
-from bosdyn.api import power_pb2
-from bosdyn.api import power_service_pb2_grpc
-from bosdyn.api import basic_command_pb2
-from bosdyn.api import full_body_command_pb2
-from bosdyn.api import license_pb2
-from bosdyn.api import robot_command_pb2
-from bosdyn.api import robot_state_pb2
+from bosdyn.api import (basic_command_pb2, full_body_command_pb2, license_pb2, power_pb2,
+                        power_service_pb2_grpc, robot_command_pb2, robot_state_pb2)
+from bosdyn.client.common import (BaseClient, error_factory, handle_common_header_errors,
+                                  handle_lease_use_result_errors, handle_unset_status_error)
+from bosdyn.client.exceptions import (Error, InternalServerError, LicenseError, ResponseError,
+                                      TimedOutError)
 
 from .lease import add_lease_wallet_processors
 
@@ -63,6 +59,10 @@ class CommandTimedOutError(PowerError):
     """Timed out waiting for SUCCESS response from power command."""
 
 
+class FanControlTemperatureError(PowerResponseError):
+    """Current measured robot temperatures are too high to accept user fan command."""
+
+
 class PowerClient(BaseClient):
     """A client for enabling / disabling robot motor power.
     Commands are non-blocking. Clients are expected to issue a power command and then periodically
@@ -84,25 +84,49 @@ class PowerClient(BaseClient):
         """Issue a power request to the robot."""
         req = self._power_command_request(lease, request)
         return self.call(self._stub.PowerCommand, req, None, _power_command_error_from_response,
-                         **kwargs)
+                         copy_request=False, **kwargs)
 
     def power_command_async(self, request, lease=None, **kwargs):
         """Async version of power_command()."""
         req = self._power_command_request(lease, request)
         return self.call_async(self._stub.PowerCommand, req, None,
-                               _power_command_error_from_response, **kwargs)
+                               _power_command_error_from_response, copy_request=False, **kwargs)
 
     def power_command_feedback(self, power_command_id, **kwargs):
         """Check the status of a previously issued power command."""
         req = self._power_command_feedback_request(power_command_id)
         return self.call(self._stub.PowerCommandFeedback, req, _power_status_from_response,
-                         _power_feedback_error_from_response, **kwargs)
+                         _power_feedback_error_from_response, copy_request=False, **kwargs)
 
     def power_command_feedback_async(self, power_command_id, **kwargs):
         """Async version of power_command_feedback()"""
         req = self._power_command_feedback_request(power_command_id)
         return self.call_async(self._stub.PowerCommandFeedback, req, _power_status_from_response,
-                               _power_feedback_error_from_response, **kwargs)
+                               _power_feedback_error_from_response, copy_request=False, **kwargs)
+
+    def fan_power_command(self, percent_power, duration, lease=None, **kwargs):
+        """Issue a fan power command request to the robot."""
+        req = self._fan_power_command_request(lease, percent_power, duration)
+        return self.call(self._stub.FanPowerCommand, req, None,
+                         _fan_power_command_error_from_response, **kwargs)
+
+    def fan_power_command_async(self, percent_power, duration, lease=None, **kwargs):
+        """Async version of fan_power_command()"""
+        req = self._fan_power_command_request(lease, percent_power, duration)
+        return self.call_async(self._stub.FanPowerCommand, req, None,
+                               _fan_power_command_error_from_response, **kwargs)
+
+    def fan_power_command_feedback(self, command_id, **kwargs):
+        """Check the status of a previously issued fan command"""
+        req = self._fan_power_command_feedback_request(command_id)
+        return self.call(self._stub.FanPowerCommandFeedback, req, None,
+                         _fan_power_feedback_error_from_response, **kwargs)
+
+    def fan_power_command_feedback_async(self, command_id, **kwargs):
+        """Async version of fan_power_command_feedback()"""
+        req = self._fan_power_command_feedback_request(command_id)
+        return self.call_async(self._stub.FanPowerCommandFeedback, req, None,
+                               _fan_power_feedback_error_from_response, **kwargs)
 
     @staticmethod
     def _power_command_request(lease, request):
@@ -111,6 +135,15 @@ class PowerClient(BaseClient):
     @staticmethod
     def _power_command_feedback_request(power_command_id):
         return power_pb2.PowerCommandFeedbackRequest(power_command_id=power_command_id)
+
+    @staticmethod
+    def _fan_power_command_request(lease, percent_power, duration):
+        return power_pb2.FanPowerCommandRequest(lease=lease, percent_power=percent_power,
+                                                duration=Duration(seconds=duration))
+
+    @staticmethod
+    def _fan_power_command_feedback_request(command_id):
+        return power_pb2.FanPowerCommandFeedbackRequest(command_id=command_id)
 
 
 def _handle_license_errors(func):
@@ -177,14 +210,39 @@ def _power_status_from_response(response):
     return response.status
 
 
-@deprecated(reason='Replaced by the less ambiguous safe_power_off_motors function.', version='3.0.0',
-            action="ignore")
+@handle_common_header_errors
+@handle_lease_use_result_errors
+@handle_unset_status_error(unset='STATUS_UNKNOWN', statustype=power_pb2.FanPowerCommandResponse)
+def _fan_power_command_error_from_response(response):
+    return error_factory(response, response.status,
+                         status_to_string=power_pb2.FanPowerCommandResponse.Status.Name,
+                         status_to_error=_FAN_STATUS_TO_ERROR)
+
+
+_FAN_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
+_FAN_STATUS_TO_ERROR.update({
+    power_pb2.FanPowerCommandResponse.STATUS_OK: (None, None),
+    power_pb2.FanPowerCommandResponse.STATUS_TEMPERATURE_TOO_HIGH:
+        (FanControlTemperatureError, FanControlTemperatureError.__doc__),
+})
+
+
+@handle_common_header_errors
+@handle_unset_status_error(unset='STATUS_UNKNOWN',
+                           statustype=power_pb2.FanPowerCommandFeedbackResponse)
+def _fan_power_feedback_error_from_response(response):
+    return None
+
+
+@deprecated(reason='Replaced by the less ambiguous safe_power_off_motors function.',
+            version='3.0.0', action="ignore")
 def safe_power_off(command_client, state_client, timeout_sec=30, update_frequency=1.0, **kwargs):
     """Safely power off motors. See safe_power_off_motors()."""
     safe_power_off_motors(command_client, state_client, timeout_sec, update_frequency, **kwargs)
 
 
-def safe_power_off_motors(command_client, state_client, timeout_sec=30, update_frequency=1.0, **kwargs):
+def safe_power_off_motors(command_client, state_client, timeout_sec=30, update_frequency=1.0,
+                          **kwargs):
     """Power off robot motors safely. This function blocks until robot safely powers off. This
     means the robot will attempt to sit before powering motors off.
 
@@ -237,6 +295,8 @@ def power_on(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
 def power_off(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
     """Power off the robot motors. See power_off_motors()."""
     power_off_motors(power_client, timeout_sec, update_frequency, **kwargs)
+
+
 
 
 def power_on_motors(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):

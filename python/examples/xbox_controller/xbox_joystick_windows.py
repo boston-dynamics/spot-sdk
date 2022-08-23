@@ -9,8 +9,8 @@
 
 import time
 
-from xbox_joystick import XboxJoystick
 import XInput as xinput
+from xbox_joystick import XboxJoystick
 
 
 class XboxJoystickWindows(XboxJoystick):

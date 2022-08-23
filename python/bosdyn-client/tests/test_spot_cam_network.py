@@ -5,19 +5,17 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """Unit tests for the Spot CAM's NetworkClient."""
+import socket
+import struct
 import time
 
 import grpc
 import pytest
 
 import bosdyn.client.spot_cam.network
-
 from bosdyn.api.spot_cam import network_pb2, service_pb2_grpc
 
 from . import helpers
-
-import socket
-import struct
 
 
 def ip2int(addr):

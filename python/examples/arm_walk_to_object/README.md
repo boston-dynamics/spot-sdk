@@ -23,20 +23,24 @@ python3 -m pip install -r requirements.txt
 ```
 
 ## Understanding Spot Programming
+
 For your best learning experience, please use the [Quickstart Guide](../../../docs/python/quickstart.md)
-found in the SDK's docs/python directory.  That will help you get your Python programming environment set up properly.
+found in the SDK's docs/python directory. That will help you get your Python programming environment set up properly.
 
 ## Common Problems
-1. Remember, you will need to launch a software e-stop separately.  The E-Stop programming example is [here](../estop/README.md).
+
+1. Remember, you will need to launch a software e-stop separately. The E-Stop programming example is [here](../estop/README.md).
 2. Make sure the Motor Enable button on the Spot rear panel is depressed.
 3. Make sure Spot is sitting upright, with the battery compartment on the side closest the floor.
 
 ## Run the Example
+
 Please be aware that this demo causes the robot to walk and move its arm. Ensure there is enough
-clearance around the robot to run this example.  There should be at least 2 meters of space around
+clearance around the robot to run this example. There should be at least 2 meters of space around
 the item to grasp.
 
 To run the example:
+
 ```
 python3 arm_walk_to_object.py ROBOT_IP
 ```

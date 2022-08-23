@@ -7,8 +7,9 @@ Development Kit License (20191101-BDSDK-SL).
 -->
 
 # Comms image service
+
 This service creates a virtual camera device that can be selected on the controller and displays a map of wifi signal strength.
-This example will register itself as a payload, which will need to be authorized in the robot's admin console.  The payload dimensions, location, and weight are small values.
+This example will register itself as a payload, which will need to be authorized in the robot's admin console. The payload dimensions, location, and weight are small values.
 
 # How to use
 
@@ -19,14 +20,12 @@ pip install -r docker-requirements.txt
 python3 comms_image_service.py [options] --host-ip <computer IP> <robotIP>
 ```
 
-## When using a Docker image on CORE:
-* Build using included Dockerfile then save to a .tar
-* Upload image tarfile using Portainer on CORE and create a new container from the image
-* Under "Network ports configuration", expose a port number (e.g. 7223)
-* Set the restart policy to "Always Unless Stopped"
-* In the "Advanced container settings", put `--port {PORT_NUM}`
+## When using a Docker image on CORE I/O:
 
-#### From the command line (alternate method):
+Follow the instructions in this [document](../../../docs/payload/docker_containers.md) to create a docker image and an Extension for CORE I/O. Or, the docker image can be run locally on the command-line:
+
 ```
-sudo docker run -it -p {PORT_NUM}:{PORT_NUM} {comms_image_service} --port {PORT_NUM}
+sudo docker run -it -p {PORT_NUM}:{PORT_NUM} --network host {comms_image_service} --port {PORT_NUM}
 ```
+
+The same command can be run on the CORE I/O as an alternative to creating an Extension, after copying the docker image to the CORE I/O and loading it with the command `sudo docker load -i {IMAGE_FILE}`.

@@ -8,19 +8,18 @@
 
 from __future__ import print_function
 
-import functools
 import collections
+import functools
 import json
 import time
 
 from google.protobuf import json_format
 
-from bosdyn.client.exceptions import Error, ResponseError
-from bosdyn.client.common import (common_header_errors, error_factory, handle_common_header_errors,
-                                  handle_unset_status_error, error_pair, BaseClient)
 from bosdyn.api import data_acquisition_pb2 as data_acquisition
 from bosdyn.api import data_acquisition_service_pb2_grpc as data_acquisition_service
-
+from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
+                                  handle_common_header_errors, handle_unset_status_error)
+from bosdyn.client.exceptions import Error, ResponseError
 from bosdyn.util import now_timestamp
 
 
@@ -60,7 +59,8 @@ class DataAcquisitionClient(BaseClient):
         except AttributeError:
             pass  # other doesn't have a time_sync accessor
 
-    def make_acquire_data_request(self, acquisition_requests, action_name, group_name, data_timestamp=None, metadata=None):
+    def make_acquire_data_request(self, acquisition_requests, action_name, group_name,
+                                  data_timestamp=None, metadata=None):
         """Helper utility to generate an AcquireDataRequest."""
         if data_timestamp is None:
             if not self._timesync_endpoint:
@@ -98,17 +98,17 @@ class DataAcquisitionClient(BaseClient):
             used to check the status of the acquisition and get feedback.
         """
         request = self.make_acquire_data_request(acquisition_requests, action_name, group_name,
-                                            data_timestamp, metadata)
+                                                 data_timestamp, metadata)
         return self.call(self._stub.AcquireData, request, value_from_response=get_request_id,
-                         error_from_response=acquire_data_error, **kwargs)
+                         error_from_response=acquire_data_error, copy_request=False, **kwargs)
 
     def acquire_data_async(self, acquisition_requests, action_name, group_name, data_timestamp=None,
                            metadata=None, **kwargs):
         """Async version of the acquire_data() RPC."""
         request = self.make_acquire_data_request(acquisition_requests, action_name, group_name,
-                                            data_timestamp, metadata)
+                                                 data_timestamp, metadata)
         return self.call_async(self._stub.AcquireData, request, value_from_response=get_request_id,
-                               error_from_response=acquire_data_error, **kwargs)
+                               error_from_response=acquire_data_error, copy_request=False, **kwargs)
 
     def acquire_data_from_request(self, request, **kwargs):
         """Alternate version of acquire_data() that takes an AcquireDataRequest directly.
@@ -116,14 +116,13 @@ class DataAcquisitionClient(BaseClient):
         Returns:
             If the RPC is successful, then it will return the AcquireDataResponse.
         """
-        return self.call(self._stub.AcquireData, request,
-                         error_from_response=acquire_data_error, **kwargs)
+        return self.call(self._stub.AcquireData, request, error_from_response=acquire_data_error,
+                         **kwargs)
 
     def acquire_data_from_request_async(self, request, **kwargs):
         """Async version of acquire_data_from_request()."""
         return self.call_async(self._stub.AcquireData, request,
                                error_from_response=acquire_data_error, **kwargs)
-
 
     def get_status(self, request_id, **kwargs):
         """Check the status of a data acquisition based on the request id.
@@ -141,13 +140,13 @@ class DataAcquisitionClient(BaseClient):
         """
         request = data_acquisition.GetStatusRequest(request_id=request_id)
         return self.call(self._stub.GetStatus, request, error_from_response=_get_status_error,
-                         **kwargs)
+                         copy_request=False, **kwargs)
 
     def get_status_async(self, request_id, **kwargs):
         """Async version of the get_status() RPC."""
         request = data_acquisition.GetStatusRequest(request_id=request_id)
         return self.call_async(self._stub.GetStatus, request, error_from_response=_get_status_error,
-                               **kwargs)
+                               copy_request=False, **kwargs)
 
     def get_service_info(self, **kwargs):
         """Get information from a DAQ service to list its capabilities - which data, metadata,
@@ -162,14 +161,15 @@ class DataAcquisitionClient(BaseClient):
         request = data_acquisition.GetServiceInfoRequest()
         return self.call(self._stub.GetServiceInfo, request,
                          value_from_response=_get_service_info_capabilities,
-                         error_from_response=common_header_errors, **kwargs)
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
 
     def get_service_info_async(self, **kwargs):
         """Async version of the get_service_info() RPC."""
         request = data_acquisition.GetServiceInfoRequest()
         return self.call_async(self._stub.GetServiceInfo, request,
                                value_from_response=_get_service_info_capabilities,
-                               error_from_response=common_header_errors, **kwargs)
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
 
     def cancel_acquisition(self, request_id, **kwargs):
         """Cancel a data acquisition based on the request id.
@@ -186,13 +186,15 @@ class DataAcquisitionClient(BaseClient):
         """
         request = data_acquisition.CancelAcquisitionRequest(request_id=request_id)
         return self.call(self._stub.CancelAcquisition, request,
-                         error_from_response=_cancel_acquisition_error, **kwargs)
+                         error_from_response=_cancel_acquisition_error, copy_request=False,
+                         **kwargs)
 
     def cancel_acquisition_async(self, request_id, **kwargs):
         """Async version of the cancel_acquisition() RPC."""
         request = data_acquisition.CancelAcquisitionRequest(request_id=request_id)
         return self.call_async(self._stub.CancelAcquisition, request,
-                               error_from_response=_cancel_acquisition_error, **kwargs)
+                               error_from_response=_cancel_acquisition_error, copy_request=False,
+                               **kwargs)
 
 
 _ACQUIRE_DATA_STATUS_TO_ERROR = collections.defaultdict(lambda:

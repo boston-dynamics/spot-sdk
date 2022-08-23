@@ -74,7 +74,7 @@ For example, consider the chain:
 start waypoint -> (1,000 waypoints) -> end waypoint
 ```
 
-The robot may only travel along edges while using GraphNav, so without an edge between the starting and ending waypoints of the map, the robot is unable to travel betwen the start and end directly. For example, the command:
+The robot may only travel along edges while using GraphNav, so without an edge between the starting and ending waypoints of the map, the robot is unable to travel between the start and end directly. For example, the command:
 
 ```
 NavigateTo(start waypoint)

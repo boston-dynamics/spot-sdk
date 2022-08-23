@@ -1260,6 +1260,23 @@ the API
 
 
 
+<a name="bosdyn.api.spot.ChoreographyInfo"></a>
+
+### ChoreographyInfo
+
+Describes metadata for the Choreography sequence that can be used for a number of different UIs
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| labels | [string](#string) | the list of user assigned categories that the sequence belongs to |
+
+
+
+
+
+
 <a name="bosdyn.api.spot.ChoreographySequence"></a>
 
 ### ChoreographySequence
@@ -1273,6 +1290,7 @@ Represents a particular choreography sequence, made up of MoveParams.
 | name | [string](#string) | Display name or file name associated with the choreography sequence. |
 | slices_per_minute | [double](#double) | Number of slices per minute in the choreography sequence. Typically a slice will correspond to 1/4 a beat. |
 | moves | [MoveParams](#bosdyn.api.spot.MoveParams) | All of the moves in this choreography sequence. |
+| choreography_info | [ChoreographyInfo](#bosdyn.api.spot.ChoreographyInfo) |  |
 
 
 
@@ -1288,6 +1306,74 @@ Represents a particular choreography sequence, made up of MoveParams.
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | key_frames | [LoggedStateKeyFrame](#bosdyn.api.spot.LoggedStateKeyFrame) | A set of key frames recorded at a high rate. The key frames can be for the duration of an executing choreography or for the duration of a manual recorded log (triggered by the StartRecordingState and StopRecordingState RPCs). The specific set of keyframes is specified by the LogType when requesting to download the data. |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.ClearAllSequenceFilesRequest"></a>
+
+### ClearAllSequenceFilesRequest
+
+Reset to a clean slate with no retained files by deleting all non-permanent 
+choreography related files
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common request header |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.ClearAllSequenceFilesResponse"></a>
+
+### ClearAllSequenceFilesResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+| status | [ClearAllSequenceFilesResponse.Status](#bosdyn.api.spot.ClearAllSequenceFilesResponse.Status) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.DeleteSequenceRequest"></a>
+
+### DeleteSequenceRequest
+
+Delete the retained file for a choreography sequence so the sequence will be forgotten on reboot
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common request header |
+| sequence_name | [string](#string) | Name of the sequence to delete, sequence will be forgotten on the next reboot |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.DeleteSequenceResponse"></a>
+
+### DeleteSequenceResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+| status | [DeleteSequenceResponse.Status](#bosdyn.api.spot.DeleteSequenceResponse.Status) |  |
 
 
 
@@ -1444,7 +1530,8 @@ Request a list of all playable choreography sequences that the robot knows about
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
-| known_sequences | [string](#string) | List of choreography sequences the robot knows about. |
+| known_sequences | [string](#string) | DEPRECATED as of 3.2.0: The string list of known sequence names has been deprecated and replaced by the repeated field sequence_info. |
+| sequence_info | [SequenceInfo](#bosdyn.api.spot.SequenceInfo) | List of choreography sequences the robot knows about. |
 
 
 
@@ -1501,6 +1588,43 @@ Request a list of all playable choreography sequences that the robot knows about
 | foot_contact_state | [LoggedFootContacts](#bosdyn.api.spot.LoggedFootContacts) | Foot contacts for the robot. |
 | animation_tform_body | [bosdyn.api.SE3Pose](#bosdyn.api.SE3Pose) | The current pose of the robot body in animation frame. The animation frame is defined based on the robot's footprint when the log first started recording. |
 | timestamp | [google.protobuf.Timestamp](#google.protobuf.Timestamp) | The timestamp (in robot time) for the key frame. |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.ModifyChoreographyInfoRequest"></a>
+
+### ModifyChoreographyInfoRequest
+
+Edit the metadata of a choreography sequence and update any retained files for 
+that sequence with the new metadata
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common request header |
+| sequence_name | [string](#string) | Name of the sequence to be modified |
+| add_labels | [string](#string) | Labels to be added to the sequence's metadata |
+| remove_labels | [string](#string) | Labels to be removed from the sequence's metadata |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.ModifyChoreographyInfoResponse"></a>
+
+### ModifyChoreographyInfoResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+| status | [ModifyChoreographyInfoResponse.Status](#bosdyn.api.spot.ModifyChoreographyInfoResponse.Status) |  |
 
 
 
@@ -1587,6 +1711,58 @@ Defines varying parameters for a particular instance of a move.
 | fade_color_params | [FadeColorParams](#bosdyn.api.spot.FadeColorParams) |  |
 | independent_color_params | [IndependentColorParams](#bosdyn.api.spot.IndependentColorParams) |  |
 | animate_params | [AnimateParams](#bosdyn.api.spot.AnimateParams) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.SaveSequenceRequest"></a>
+
+### SaveSequenceRequest
+
+Write a choreography sequence as a file to robot memory so it will be retained through reboot
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common request header |
+| sequence_name | [string](#string) | Name of the sequence to be added to the selection of retained sequences |
+| add_labels | [string](#string) | List of labels to add to the sequence when it is being saved |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.SaveSequenceResponse"></a>
+
+### SaveSequenceResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header. |
+| status | [SaveSequenceResponse.Status](#bosdyn.api.spot.SaveSequenceResponse.Status) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.SequenceInfo"></a>
+
+### SequenceInfo
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| name | [string](#string) |  |
+| labels | [string](#string) |  |
+| saved_state | [SequenceInfo.SavedState](#bosdyn.api.spot.SequenceInfo.SavedState) | Use temporary sequences during development with choreographer, and then tell the robot to retain the final version of the sequence so that it can be played back later from other interfaces, like the tablet |
 
 
 
@@ -1768,6 +1944,36 @@ displayed with.
 
 
 
+<a name="bosdyn.api.spot.ClearAllSequenceFilesResponse.Status"></a>
+
+### ClearAllSequenceFilesResponse.Status
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Do not use. |
+| STATUS_OK | 1 | All retained sequences were successfully removed from robot memory |
+| STATUS_FAILED_TO_DELETE | 2 | Deletion of all retained files failed |
+
+
+
+<a name="bosdyn.api.spot.DeleteSequenceResponse.Status"></a>
+
+### DeleteSequenceResponse.Status
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Do not use. |
+| STATUS_OK | 1 | The sequence was successfully deleted |
+| STATUS_UNKNOWN_SEQUENCE | 2 | The sequence does not exist |
+| STATUS_ALREADY_TEMPORARY | 3 | The sequence is already temporary and will be removed at the next reboot. |
+| STATUS_PERMANENT_SEQUENCE | 4 | Permanent sequences cannot be deleted |
+
+
+
 <a name="bosdyn.api.spot.DownloadRobotStateLogRequest.LogType"></a>
 
 ### DownloadRobotStateLogRequest.LogType
@@ -1813,6 +2019,22 @@ displayed with.
 
 
 
+<a name="bosdyn.api.spot.ModifyChoreographyInfoResponse.Status"></a>
+
+### ModifyChoreographyInfoResponse.Status
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Do not use. |
+| STATUS_OK | 1 | The sequence was successfully modified |
+| STATUS_UNKNOWN_SEQUENCE | 2 | The sequence does not exist |
+| STATUS_PERMANENT_SEQUENCE | 3 | Permanent sequences cannot be modified |
+| STATUS_FAILED_TO_UPDATE | 4 | The changes were made, but the retained sequence file was not updated and changes were reverted |
+
+
+
 <a name="bosdyn.api.spot.MoveInfo.TransitionState"></a>
 
 ### MoveInfo.TransitionState
@@ -1828,6 +2050,37 @@ The state that the robot is in at the start or end of a move.
 | TRANSITION_STATE_KNEEL | 2 | The robot is kneeling down. |
 | TRANSITION_STATE_SIT | 3 | The robot is sitting. |
 | TRANSITION_STATE_SPRAWL | 4 | The robot requires a self-right. |
+
+
+
+<a name="bosdyn.api.spot.SaveSequenceResponse.Status"></a>
+
+### SaveSequenceResponse.Status
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Do not use. |
+| STATUS_OK | 1 | The sequence was successfully saved |
+| STATUS_UNKNOWN_SEQUENCE | 2 | The sequence was successfully saved |
+| STATUS_PERMANENT_SEQUENCE | 3 | This sequence is already saved in the release |
+| STATUS_FAILED_TO_SAVE | 4 | We failed to save a file with the sequence information to robot |
+
+
+
+<a name="bosdyn.api.spot.SequenceInfo.SavedState"></a>
+
+### SequenceInfo.SavedState
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| SAVED_STATE_UNKNOWN | 0 | Status unknown; do not use |
+| SAVED_STATE_TEMPORARY | 1 | Sequence will be forgotten on reboot |
+| SAVED_STATE_RETAINED | 2 | A file for this sequence is stored on the robot; the sequence will be loaded to memory each time the robot boots |
+| SAVED_STATE_PERMANENT | 3 | Sequence was built into the release and can't be deleted |
 
 
 
@@ -1859,6 +2112,7 @@ The status for the start recording request.
 | STATUS_UNKNOWN | 0 | Do not use. |
 | STATUS_OK | 1 | Uploading + parsing the animated move succeeded. |
 | STATUS_ANIMATION_VALIDATION_FAILED | 2 | The animated move is considered invalid, see the warnings. |
+| STATUS_PING_RESPONSE | 3 | Treated this message as a ping. Responding to demonstrate connectivity. |
 
 
  <!-- end enums -->
@@ -1891,6 +2145,10 @@ The status for the start recording request.
 | ----------- | ------------ | ------------- | ------------|
 | ListAllMoves | [ListAllMovesRequest](#bosdyn.api.spot.ListAllMovesRequest) | [ListAllMovesResponse](#bosdyn.api.spot.ListAllMovesResponse) | List the available dance moves and their parameter information. |
 | ListAllSequences | [ListAllSequencesRequest](#bosdyn.api.spot.ListAllSequencesRequest) | [ListAllSequencesResponse](#bosdyn.api.spot.ListAllSequencesResponse) | List the available choreography sequences currently on the robot. |
+| DeleteSequence | [DeleteSequenceRequest](#bosdyn.api.spot.DeleteSequenceRequest) | [DeleteSequenceResponse](#bosdyn.api.spot.DeleteSequenceResponse) | Delete a retained choreography sequence from the collection of user uploaded choreography sequences. |
+| SaveSequence | [SaveSequenceRequest](#bosdyn.api.spot.SaveSequenceRequest) | [SaveSequenceResponse](#bosdyn.api.spot.SaveSequenceResponse) | Save a user uploaded choreography sequence to the robots collection of retained choreography sequences. |
+| ModifyChoreographyInfo | [ModifyChoreographyInfoRequest](#bosdyn.api.spot.ModifyChoreographyInfoRequest) | [ModifyChoreographyInfoResponse](#bosdyn.api.spot.ModifyChoreographyInfoResponse) | Modify the metadata of a choreography sequence. |
+| ClearAllSequenceFiles | [ClearAllSequenceFilesRequest](#bosdyn.api.spot.ClearAllSequenceFilesRequest) | [ClearAllSequenceFilesResponse](#bosdyn.api.spot.ClearAllSequenceFilesResponse) | Clear all retained choreography sequence files from robot memory. |
 | UploadChoreography | [UploadChoreographyRequest](#bosdyn.api.spot.UploadChoreographyRequest) | [UploadChoreographyResponse](#bosdyn.api.spot.UploadChoreographyResponse) | Upload a dance to the robot. |
 | UploadAnimatedMove | [UploadAnimatedMoveRequest](#bosdyn.api.spot.UploadAnimatedMoveRequest) | [UploadAnimatedMoveResponse](#bosdyn.api.spot.UploadAnimatedMoveResponse) | Upload an animation to the robot. |
 | ExecuteChoreography | [ExecuteChoreographyRequest](#bosdyn.api.spot.ExecuteChoreographyRequest) | [ExecuteChoreographyResponse](#bosdyn.api.spot.ExecuteChoreographyResponse) | Execute the uploaded dance. |

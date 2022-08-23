@@ -16,10 +16,10 @@ import time
 
 from bosdyn.api import (directory_pb2, directory_registration_pb2,
                         directory_registration_service_pb2_grpc)
+from bosdyn.client.common import (BaseClient, error_factory, error_pair,
+                                  handle_common_header_errors, handle_unset_status_error)
 
-from bosdyn.client.common import (BaseClient, error_factory, error_pair, handle_unset_status_error,
-                                  handle_common_header_errors)
-from .exceptions import ResponseError, TimedOutError, RetryableUnavailableError
+from .exceptions import ResponseError, RetryableUnavailableError, TimedOutError
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -46,10 +46,18 @@ class DirectoryRegistrationClient(BaseClient):
         super(DirectoryRegistrationClient, self).__init__(
             directory_registration_service_pb2_grpc.DirectoryRegistrationServiceStub)
 
-    def register(self, name, service_type, authority, host_ip, port, user_token_required=True,
-                 application_token_required=False,
-                 liveness_timeout_secs=0,
-                 **kwargs):
+
+    def register(
+            self,
+            name,
+            service_type,
+            authority,
+            host_ip,
+            port,
+            user_token_required=True,
+            application_token_required=False,
+            liveness_timeout_secs=0,
+            **kwargs):
         """Register a service routing with the robot.
 
         If service name already registered, no change will be applied and will raise ServiceAlreadyExistsError.
@@ -77,22 +85,49 @@ class DirectoryRegistrationClient(BaseClient):
                 'The application_token_required parameter has been deprecated and will have no effect.'
             )
 
-        service_entry = directory_pb2.ServiceEntry(name=name, type=service_type,
-                                                   authority=authority,
-                                                   user_token_required=user_token_required,
-                                                   liveness_timeout_secs=liveness_timeout_secs)
+        service_entry = directory_pb2.ServiceEntry(
+            name=name,
+            type=service_type,
+            authority=authority,
+            user_token_required=user_token_required,
+            liveness_timeout_secs=liveness_timeout_secs)
+        return self._call_register_rpc(service_entry, host_ip, port, **kwargs)
+
+    def _call_register_rpc(self, service_entry, host_ip, port, **kwargs):
+        """Helper function to register a service definition.
+
+        Args:
+          service_entry (directory_pb2.ServiceEntry): Service definition to register.
+          host_ip: The ip address of the system that the service is being hosted on.
+          port: The port number the service can be accessed through on the host system.
+
+        Raises:
+          RpcError: Problem communicating with the robot.
+          ServiceAlreadyExistsError: The service already exists.
+          DirectoryRegistrationResponseError: Something went wrong during the directory registration.
+        """
+
         endpoint = directory_pb2.Endpoint(host_ip=host_ip, port=port)
 
         req = directory_registration_pb2.RegisterServiceRequest(service_entry=service_entry,
                                                                 endpoint=endpoint)
 
         return self.call(self._stub.RegisterService, req,
-                         error_from_response=_directory_register_error, **kwargs)
+                         error_from_response=_directory_register_error, copy_request=False,
+                         **kwargs)
 
-    def update(self, name, service_type, authority, host_ip, port, user_token_required=True,
-               application_token_required=False,
-               liveness_timeout_secs=0,
-               **kwargs):
+
+    def update(
+            self,
+            name,
+            service_type,
+            authority,
+            host_ip,
+            port,
+            user_token_required=True,
+            application_token_required=False,
+            liveness_timeout_secs=0,
+            **kwargs):
         """Update a service definition of an existing service that matches the service name.
 
         If service name is not registered, will raise ServiceDoesNotExistError.
@@ -120,17 +155,36 @@ class DirectoryRegistrationClient(BaseClient):
                 'The application_token_required parameter has been deprecated and will have no effect.'
             )
 
-        service_entry = directory_pb2.ServiceEntry(name=name, type=service_type,
-                                                   authority=authority,
-                                                   user_token_required=user_token_required,
-                                                   liveness_timeout_secs=liveness_timeout_secs)
+        service_entry = directory_pb2.ServiceEntry(
+            name=name,
+            type=service_type,
+            authority=authority,
+            user_token_required=user_token_required,
+            liveness_timeout_secs=liveness_timeout_secs)
+        return self._call_update_rpc(service_entry, host_ip, port, **kwargs)
+
+    def _call_update_rpc(self, service_entry, host_ip, port, **kwargs):
+        """Helper function to update a service definition of an existing service that matches the
+        service name.
+
+        Args:
+          service_entry (directory_pb2.ServiceEntry): Service definition to update.
+          host_ip: The ip address of the system that the service is being hosted on.
+          port: The port number the service can be accessed through on the host system.
+
+        Raises:
+          RpcError: Problem communicating with the robot.
+          ServiceDoesNotExistError: The service does not exist.
+          DirectoryRegistrationResponseError: Something went wrong during the directory registration.
+        """
+
         endpoint = directory_pb2.Endpoint(host_ip=host_ip, port=port)
 
         req = directory_registration_pb2.UpdateServiceRequest(service_entry=service_entry,
                                                               endpoint=endpoint)
 
         return self.call(self._stub.UpdateService, req, error_from_response=_directory_update_error,
-                         **kwargs)
+                         copy_request=False, **kwargs)
 
     def unregister(self, name, **kwargs):
         """Remove a service routing with the robot.
@@ -146,7 +200,8 @@ class DirectoryRegistrationClient(BaseClient):
         req = directory_registration_pb2.UnregisterServiceRequest(service_name=name)
 
         return self.call(self._stub.UnregisterService, req,
-                         error_from_response=_directory_unregister_error, **kwargs)
+                         error_from_response=_directory_unregister_error, copy_request=False,
+                         **kwargs)
 
 
 _REGISTER_STATUS_TO_ERROR = collections.defaultdict(lambda:
@@ -206,9 +261,15 @@ def _directory_unregister_error(response):
         status_to_error=_UNREGISTER_STATUS_TO_ERROR)
 
 
-def reset_service_registration(directory_registration_client, name, service_type, authority,
-                               host_ip, port, user_token_required=True,
-                               liveness_timeout_secs=0):
+def reset_service_registration(
+        directory_registration_client,
+        name,
+        service_type,
+        authority,
+        host_ip,
+        port,
+        user_token_required=True,
+        liveness_timeout_secs=0):
     """Reset a service registration by unregistering the service and then re-registering it.
 
     This is useful when a program wants to register a new service but there may be an old entry
@@ -221,9 +282,14 @@ def reset_service_registration(directory_registration_client, name, service_type
         directory_registration_client.unregister(name)
     except ServiceDoesNotExistError:
         pass
-    directory_registration_client.register(name, service_type, authority, host_ip, port,
-                                           user_token_required=user_token_required,
-                                           liveness_timeout_secs=liveness_timeout_secs)
+    directory_registration_client.register(
+        name,
+        service_type,
+        authority,
+        host_ip,
+        port,
+        user_token_required=user_token_required,
+        liveness_timeout_secs=liveness_timeout_secs)
 
 
 class DirectoryRegistrationKeepAlive(object):
@@ -274,9 +340,16 @@ class DirectoryRegistrationKeepAlive(object):
         self.shutdown()
         self.unregister()
 
-    def start(self, directory_name, service_type, authority, host, port, liveness_timeout_secs=None,
-              user_token_required=True,
-              reset_service=True):
+    def start(
+            self,
+            directory_name,
+            service_type,
+            authority,
+            host,
+            port,
+            liveness_timeout_secs=None,
+            user_token_required=True,
+            reset_service=True):
         """Register, optionally update, and then kick off thread.
 
         Can not be restarted with this method after a shutdown.
@@ -298,18 +371,34 @@ class DirectoryRegistrationKeepAlive(object):
         if liveness_timeout_secs is None:
             liveness_timeout_secs = self._reregister_period * 2.5
         if reset_service:
-            reset_service_registration(self.dir_reg_client, directory_name, service_type, authority,
-                                       host, port, user_token_required=user_token_required,
-                                       liveness_timeout_secs=liveness_timeout_secs)
+            reset_service_registration(
+                self.dir_reg_client,
+                directory_name,
+                service_type,
+                authority,
+                host,
+                port,
+                user_token_required=user_token_required,
+                liveness_timeout_secs=liveness_timeout_secs)
         else:
             try:
-                self.dir_reg_client.register(directory_name, service_type, authority, host, port,
-                                             user_token_required=user_token_required,
-                                             liveness_timeout_secs=liveness_timeout_secs)
+                self.dir_reg_client.register(
+                    directory_name,
+                    service_type,
+                    authority,
+                    host,
+                    port,
+                    user_token_required=user_token_required,
+                    liveness_timeout_secs=liveness_timeout_secs)
             except ServiceAlreadyExistsError as exc:
-                self.dir_reg_client.update(directory_name, service_type, authority, host, port,
-                                           user_token_required=user_token_required,
-                                           liveness_timeout_secs=liveness_timeout_secs)
+                self.dir_reg_client.update(
+                    directory_name,
+                    service_type,
+                    authority,
+                    host,
+                    port,
+                    user_token_required=user_token_required,
+                    liveness_timeout_secs=liveness_timeout_secs)
         self.logger.info('{} service registered/updated.'.format(directory_name))
 
         self.authority = authority
@@ -358,11 +447,15 @@ class DirectoryRegistrationKeepAlive(object):
         while True:
             exec_start = time.time()
             try:
-                self.dir_reg_client.register(self.directory_name, self.service_type, self.authority,
-                                             self.host, self.port,
-                                             user_token_required=self.user_token_required,
-                                             liveness_timeout_secs=self.liveness_timeout_secs,
-                                             timeout=self._rpc_timeout)
+                self.dir_reg_client.register(
+                    self.directory_name,
+                    self.service_type,
+                    self.authority,
+                    self.host,
+                    self.port,
+                    user_token_required=self.user_token_required,
+                    liveness_timeout_secs=self.liveness_timeout_secs,
+                    timeout=self._rpc_timeout)
             except ServiceAlreadyExistsError:
                 # Ignore "already registered" errors -- we expect those.
                 # We do not allow anyone to change the directory parameters with an "update" call,

@@ -1,0 +1,444 @@
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.autowalk;
+
+option java_outer_classname = "WalksProto";
+
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "bosdyn/api/mission/nodes.proto";
+import "bosdyn/api/mission/util.proto";
+import "bosdyn/api/data_acquisition.proto";
+import "bosdyn/api/graph_nav/graph_nav.proto";
+import "bosdyn/api/graph_nav/nav.proto";
+import "bosdyn/api/gripper_command.proto";
+import "bosdyn/api/geometry.proto";
+import "bosdyn/api/trajectory.proto";
+import "bosdyn/api/spot_cam/ptz.proto";
+import "bosdyn/api/spot/robot_command.proto";
+import "bosdyn/api/arm_command.proto";
+import "bosdyn/api/basic_command.proto";
+import "bosdyn/api/gripper_camera_param.proto";
+
+message Walk {
+    // Parameters that apply to the entire mission.
+    GlobalParameters global_parameters = 1;
+
+    // Governs the mode and frequency at which playbacks occur.
+    PlaybackMode playback_mode = 2;
+
+    reserved 3;
+
+    // The name of the map this mission corresponds to.
+    string map_name = 7;
+
+    // The name of the mission.
+    string mission_name = 4;
+
+    // The list of actions and their associated locations.
+    repeated Element elements = 5;
+
+    // The docks the mission can dock at.
+    // AT THE MOMENT AUTOWALK ONLY SUPPORTS A SINGLE DOCK.
+    // However, this is subject to change.
+    repeated Dock docks = 6;
+
+}
+
+// These parameters apply to the entire autowalk.
+message GlobalParameters {
+    // If the mission contains data acquisitions, this will be their group name.
+    // The actual group name used will include the specified group name, and additional 
+    // qualifiers to ensure its unique for each start of this mission.
+    string group_name = 1;
+
+    // If the mission contains SpotCAM PTZ actions, set this to true. At the start of the
+    // mission, the SpotCAM PTZ autofocus will be reset, thereby improving the quality of
+    // the subsequent PTZ captures.
+    bool should_autofocus_ptz = 2;
+
+    // The mission can automatically self-right the robot. Autonomous self-rights
+    // can damage the robot, its payloads, and its surroundings. If the user
+    // does not want the robot to self-right on its own, set this number to 0.
+    // If the user does want the robot to self-right itself, the user may set a
+    // maximum number of attempts so that the robot does not destroy itself by
+    // repeatedly falling and getting up and falling again.
+    int32 self_right_attempts = 3;
+
+    // The callbacks that will be executed at the end of the mission. Functionality that
+    // is often found in post-mission callbacks includes uploading data to the cloud or 
+    // sending an email. The callbacks will be executed serially (first in, first executed).
+    repeated bosdyn.api.autowalk.Action.RemoteGrpc post_mission_callbacks = 4;
+}
+
+// The dock itself and the target associated with it
+message Dock {
+    // The docking station ID of the dock corresponds to the number printed on the
+    // fiducial, below the part of the fiducial that looks like a QR code.
+    // Only fiducial IDs greater than or equal to 500 should be
+    // used here because they are reserved for docks.
+    uint32 dock_id = 1;
+
+    // To maximize reliability, at record time, the client should dock the robot
+    // while graph_nav is still recording.  When the robot is finished docking,
+    // the client should create a waypoint on top of the dock, while the robot is
+    // docked, and then stop recording. The waypoint created while the
+    // robot is sitting on the dock should be specified here.
+    string docked_waypoint_id = 2;
+
+    // When it is time for the robot to dock, it will approach this target
+    // before issuing docking commands. If the user is using graph_nav, the
+    // final waypoint in the NavigateRoute OR the waypoint ID in the
+    // NavigateTo MUST be at the docking prep pose. To do this, send a docking 
+    // command to move the robot to the docking prep pose. Then, create a 
+    // waypoint at the docking prep pose location. Graph_nav is responsible for 
+    // navigating the robot to the docking prep pose. Once the robot is in the 
+    // docking prep pose, the docking service does the rest.
+    Target target_prep_pose = 3;
+
+    // At mission playback, if the robot is unable to reach the dock OR successfully
+    // dock, the mission will let the operator know with a user question.  If the operator
+    // does not answer, the robot will safely power off.  This parameter controls
+    // how long the operator has to answer.
+    // This parameter also controls how long robot will wait to retry to undock on
+    // a failed undock.
+    google.protobuf.Duration prompt_duration = 4;
+}
+
+// The playback mode governs how many times the mission is played back (once or
+// more), at what interval the playbacks should occur (e.g., every 2 hours),
+// and if docking is involved, the battery level thresholds at which the robot
+// should either (1) stop and charge or (2) start the playback process again.
+message PlaybackMode {
+    // The mission should be played back once.
+    message Once {
+        // Boolean to allow the robot to not dock after completing a mission.
+        bool skip_docking_after_completion = 1;
+    }
+
+    // The mission should be played back periodically.
+    message Periodic {
+        // The interval is the time that will elapse between the mission
+        // finishing and starting again. It is applied relative to the time at
+        // which the mission finishes. For example, if the user sets the
+        // interval to 2 hours, starts the mission at 12:00, and the mission
+        // takes one hour (finishes at 13:00), the next mission would start at
+        // 15:00, NOT 14:00.
+        // Next mission start time = current mission end time + interval
+        google.protobuf.Duration interval = 1;
+
+        // The number of times the mission should be played back. If set to 1,
+        // the interval no longer applies and the mission will be played back
+        // once. If set to two or more, the mission will run that number of
+        // times, with the amount of time between playbacks equal to the
+        // interval. If set to zero, the mission will run "forever".
+        int32 repetitions = 2;
+    }
+
+    // The mission should be played continuously only stopping if a battery 
+    // monitor stop threshold is crossed.
+    message Continuous {}
+
+    oneof mode {
+        Once once = 2;
+        Periodic periodic = 3;
+        Continuous continuous = 4;
+    }
+}
+
+// An Element is the basic building block of the autowalk.
+message Element {
+    // The name of an element may be anything, but it is good practice to choose
+    // something that describes the physical location and action that is occurring
+    // (e.g., boiler room laser scan).
+    string name = 1;
+
+    // Location the robot should navigate to.
+    Target target = 2;
+
+    // Describes what to do if the robot fails to navigate to target.
+    FailureBehavior target_failure_behavior = 3;
+
+    // Action performed at target destination
+    Action action = 4;
+
+    // Actions performed by the robot and/or payloads prior to and during an action.
+    ActionWrapper action_wrapper = 5;
+
+    // Describes what to do if the robot fails to execute the action.
+    FailureBehavior action_failure_behavior = 6;
+
+    // Set to true to skip element.
+    bool is_skipped = 7;
+
+    // If the mission requires more than one battery, the robot needs to return
+    // to the dock and charge before it can complete the mission.
+    // This field defines the battery percentage thresholds that at which the robot
+    // should pause and resume mission execution.
+    // Considering using various thresholds depending on the target's distance from the dock
+    BatteryMonitor battery_monitor = 8;
+}
+
+// A Target is the location the robot should navigate to.
+message Target {
+    message Relocalize {
+        // Some SetLocalizationRequests require that waypoint snapshots contain full images.
+        // Make sure your client is downloading / storing / uploading full snapshots if you
+        // plan on using this feature in your client.
+        bosdyn.api.graph_nav.SetLocalizationRequest set_localization_request = 1;
+    }
+
+    // Tell the robot to navigate to a waypoint. It will choose its route.
+    message NavigateTo {
+        // A unique string corresponding to the waypoint ID that the robot
+        // should go to.
+        string destination_waypoint_id = 1;
+
+        // Parameters that define how to traverse and end the route. For
+        // example, the user may decide how close to the destination waypoint
+        // the robot needs to be in order to declare success.
+        bosdyn.api.graph_nav.TravelParams travel_params = 3;
+    }
+
+    // Tell the robot to follow a route to a waypoint.
+    // If the robot is off the route (i.e., "far" from the route) when
+    // NavigateRoute is sent, the robot may navigate in unexpected ways.
+    message NavigateRoute {
+        // A route for the robot to follow.
+        bosdyn.api.graph_nav.Route route = 1;
+
+        // Parameters that define how to traverse and end the route. For
+        // example, the user may decide how close to the destination waypoint
+        // the robot needs to be in order to declare success.
+        bosdyn.api.graph_nav.TravelParams travel_params = 2;
+    }
+
+    oneof target {
+        NavigateTo navigate_to = 1;
+        NavigateRoute navigate_route = 2;
+    }
+
+    // If set, upon reaching the target the robot will perform an explicit relocalization.
+    // This should increase the accuracy of the robots belief of it's position on the map.
+    // After relocalizing, the robot will re-navigate to the target.
+    Relocalize relocalize = 3;
+}
+
+// An Action is what the robot should do at a location. For example, the user
+// may desire that the robot perform a laser scan at a given waypoint.
+message Action {
+    // The robot does nothing but wait while
+    // also performing its ActionWrapper(s). For example, if the user
+    // wants the robot to pose for some amount of time (while doing
+    // nothing else), they would populate an ActionWrapper with Pose
+    // and set the desired duration here accordingly.
+    message Sleep {
+        google.protobuf.Duration duration = 2;
+    }
+
+    // For actions associated with the Data Acquisition Service (DAQ).
+    message DataAcquisition {
+        AcquireDataRequest acquire_data_request = 1;
+        bosdyn.api.mission.DataAcquisition.CompletionBehavior completion_behavior = 2;
+    }
+
+    message RemoteGrpc {
+        // Name of the service in the directory.
+        string service_name = 1;
+
+        // Timeout of any single RPC. If the timeout is exceeded, the RPC will fail. The mission
+        // service treats each failed RPC differently:
+        // - EstablishSession: An error is returned in LoadMission.
+        // - Tick: The RPC is retried.
+        // - Stop: The error is ignored, and the RPC is not retried.
+        // Omit for a default of 60 seconds.
+        google.protobuf.Duration rpc_timeout = 2;
+
+        // Resources that we will need leases on.
+        repeated string lease_resources = 3;
+
+        // The list of variables the remote host should receive.
+        // Variables given can be available at either run-time or compile-time.
+        // The "key" in KeyValue is the name of the variable as used by the remote system.
+        repeated bosdyn.api.mission.KeyValue inputs = 4;
+    }
+
+    oneof action {
+        Sleep sleep = 1;
+        DataAcquisition data_acquisition = 2;
+        RemoteGrpc remote_grpc = 3;
+
+        // This field can be used to specify a behavior tree as an action.  If the user had
+        // two callbacks they would like to run simultaneously at the waypoint this action
+        // is associated with, they could use create a behavior tree inside Node with both
+        // callbacks embedded in a simple parallel.
+        // The downside of using node, is that editors might not support editing parameters
+        // directly.
+        bosdyn.api.mission.Node node = 4;
+    }
+}
+
+// An ActionWrapper is what the robot should do prior to and during an action.
+// For example, the user may desire that the robot stand in such a way that its
+// z-axis is aligned with the gravity vector, even though it is standing on an
+// incline.
+message ActionWrapper {
+    // Sit the robot prior to performing the action
+    message RobotBodySit {}
+
+    // Pose the robot prior to performing the action
+    message RobotBodyPose {
+        // If your Target is a graph_nav waypoint, this pose will be relative
+        // to the waypoint you are navigating to. If no target was specified,
+        // this parameter will be ignored and the robot will stand in a generic
+        // pose.
+        bosdyn.api.SE3Pose target_tform_body = 1;
+    }
+
+    // Set the brightness of the LEDs on the SpotCam.
+    message SpotCamLed {
+        // There are four LEDs at indices [0, 3]. The brightness for each LED
+        // may be set between [0.0, 1.0], where 0 is off and 1 is full
+        // brightness.
+        map<int32, float> brightnesses = 1;
+    }
+
+    // Set the pan, tilt, and zoom of the SpotCam.
+    message SpotCamPtz {
+        // See bosdyn/api/spot_cam
+        bosdyn.api.spot_cam.PtzPosition ptz_position = 1;
+    }
+
+    // Position the body and perform a joint move and cartesian command in target frame
+    message ArmSensorPointing {
+        // Arm Joint Move Command
+        // The joint trajectory to execute in the initial rough pointing joint move.
+        bosdyn.api.ArmJointTrajectory joint_trajectory = 2;
+
+        // Arm Cartesian Command
+        // The tool pose relative to the parent link (wrist).
+        // Defaults to a frame with it's origin slightly in front of the gripper's palm plate
+        // aligned with the wrist's orientation.
+        bosdyn.api.SE3Pose wrist_tform_tool = 3;
+
+        // A 3D pose trajectory for the tool expressed in target frame,
+        bosdyn.api.SE3Trajectory pose_trajectory_rt_target = 4;
+
+        // Robot desired stance relative to waypoint
+        // This is taken by measuring the average of the footprints
+        // in body frame at the time of waypoint creation.
+        // This is used to generate the stance command.
+        // Target == waypoint.
+        // This assumes the waypoint is gravity aligned.
+        bosdyn.api.SE2Pose target_tform_measured_offset = 7;
+
+        // Body mobility params during cartesian move
+        bosdyn.api.spot.BodyControlParams.BodyAssistForManipulation body_assist_params = 5;
+
+        bool force_stow_override = 6;
+    }
+
+    // Set the camera params of the gripper camera
+    message GripperCameraParams {
+        bosdyn.api.GripperCameraParams params = 1;
+    }
+
+    message GripperCommand {
+        bosdyn.api.GripperCommand.Request request = 1;
+    }
+
+    RobotBodySit robot_body_sit = 1;
+    RobotBodyPose robot_body_pose = 2;
+    SpotCamLed spot_cam_led = 4;
+    SpotCamPtz spot_cam_ptz = 5;
+    ArmSensorPointing arm_sensor_pointing = 6;
+    GripperCameraParams gripper_camera_params = 7;
+    GripperCommand gripper_command = 8;
+}
+
+message FailureBehavior {
+    // The mission can automatically retry navigating to a waypoint or
+    // performing an action. Automatic retries can increase the probability of
+    // successfully navigating to a waypoint, but may cause the robot to take
+    // an unexpected path. Similarly, they can increase the probability of
+    // successfully collecting data for an action, but also increase the amount
+    // of time a mission takes. If the client does not want the robot to
+    // automatically retry navigating to a waypoint or performing an action,
+    // set this to 0. If the client wants the robot to automatically retry
+    // navigating to a waypoint or performing an action, set this to the
+    // desired number of retries. For example, if the client would like the
+    // action to be retried once, set this equal to 1. If this is unset or set
+    // to 0, no retry will occur.
+    int32 retry_count = 1;
+
+    // At mission playback, if something fails (e.g., the robot gets stuck,
+    // an action fails), the user will get all possible actions as options
+    // in a question to choose from. If the user does not answer, the mission
+    // will fall back to the default behavior after this timeout. The default
+    // behaviors are defined by the default_behavior one_of. A minimum
+    // duration of 10 seconds is enforced.
+    google.protobuf.Duration prompt_duration = 2;
+
+    // If a failure occurs and the prompt has not been answered, the robot
+    // will sit down and power off. This is the safest option.
+    message SafePowerOff {
+        SafePowerOffCommand.Request request = 1;
+    }
+
+    // If a failure occurs and the prompt has not been answered, the robot
+    // will proceed to the next action if able to do so. This may lead to
+    // different behavior at mission playback than at mission recording
+    // (e.g., the robot may take a different route, the robot may fail to
+    // collect the data for an action).
+    message ProceedIfAble {}
+
+    // Only available in missions with a dock!
+    // If a failure occurs and the prompt has not been answered, the robot
+    // will return to the start of the mission. Once at the start of the
+    // mission, the robot will attempt to dock.  If successfully, robot will
+    // try again later after the specified delay.
+    message ReturnToStartAndTryAgainLater {
+        // How long to wait at start of mission (or on dock) before trying again.
+        // A minimum duration of 60 seconds is enforced.
+        google.protobuf.Duration try_again_delay = 1;
+    }
+
+    // Only available in missions with a dock!
+    // If robot can get back to the dock, it will, and if it does, the mission will end.
+    message ReturnToStartAndTerminate {}
+
+    // Sometimes, the robot may not be able to get to an action (for example,
+    // its path may be blocked). Similarly, while at a waypoint where an action
+    // is performed, that action may fail (for example, the sensor is not
+    // powered on). In case of such failures, the user should choose the desired
+    // behavior using this enum.
+    oneof default_behavior {
+        SafePowerOff safe_power_off = 3;
+        ProceedIfAble proceed_if_able = 4;
+        ReturnToStartAndTryAgainLater return_to_start_and_try_again_later = 5;
+        ReturnToStartAndTerminate return_to_start_and_terminate = 6;
+    }
+}
+
+// If your mission has docks, autowalk can pause the mission to return
+// to the dock if the battery gets too low.  Use this message to control
+// when this behavior happens.
+message BatteryMonitor {
+    // Once charging, the robot will continue to charge until the battery
+    // level is greater than or equal to this threshold, at which point in
+    // time, the mission will start.
+    float battery_start_threshold = 2;
+
+    // If the battery level is less than or equal to this threshold, the
+    // robot will stop what it is currently doing and return to the dock.
+    // Once the battery level is greater than or equal to the battery start
+    // threshold, the mission will resume.
+    float battery_stop_threshold = 3;
+}

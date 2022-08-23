@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.robot &mdash; Spot 3.1.2.1 documentation</title>
+  <title>bosdyn.client.robot &mdash; Spot 3.2.0 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                3.1.2.1
+                3.2.0
               </div>
             
           
@@ -115,10 +115,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autowalk_service.html">Autowalk service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/directed_exploration.html">Directed Exploration</a></li>
@@ -146,7 +148,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_output.html">Data Acquisition Output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_buffer_overview.html">Data Buffer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF file format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
 </ul>
 </li>
 </ul>
@@ -179,6 +182,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/docking/README.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -197,6 +201,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -204,6 +209,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -258,16 +264,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
@@ -294,6 +308,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
@@ -319,6 +335,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lights_helper.html">Lights Helper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
@@ -388,7 +405,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq2.html">Part 2: Capturing images</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq3.html">Part 3: Capturing other data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the Spot CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the CORE I/O</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq5.html">Part 5: Collecting data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq6.html">Part 6: Processing collected data</a></li>
 </ul>
@@ -402,9 +419,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul>
@@ -418,6 +440,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-proto">autowalk/autowalk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-service-proto">autowalk/autowalk_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-walks-proto">autowalk/walks.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
@@ -441,6 +466,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
@@ -536,6 +563,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -625,20 +653,21 @@
 <span class="kn">from</span> <span class="nn">.estop</span> <span class="kn">import</span> <span class="n">is_estopped</span> <span class="k">as</span> <span class="n">pkg_is_estopped</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">Error</span>
 <span class="kn">from</span> <span class="nn">.lease</span> <span class="kn">import</span> <span class="n">LeaseWallet</span>
-<span class="kn">from</span> <span class="nn">.payload_registration</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PayloadRegistrationClient</span><span class="p">,</span> <span class="n">PayloadAlreadyExistsError</span><span class="p">,</span>
-                                   <span class="n">PayloadNotAuthorizedError</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.payload_registration</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PayloadAlreadyExistsError</span><span class="p">,</span> <span class="n">PayloadNotAuthorizedError</span><span class="p">,</span>
+                                   <span class="n">PayloadRegistrationClient</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">PowerClient</span>
-<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">power_on</span> <span class="k">as</span> <span class="n">pkg_power_on</span>
-<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">power_off</span> <span class="k">as</span> <span class="n">pkg_power_off</span>
-<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">safe_power_off</span> <span class="k">as</span> <span class="n">pkg_safe_power_off</span>
 <span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">is_powered_on</span> <span class="k">as</span> <span class="n">pkg_is_powered_on</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">power_off</span> <span class="k">as</span> <span class="n">pkg_power_off</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">power_on</span> <span class="k">as</span> <span class="n">pkg_power_on</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">safe_power_off</span> <span class="k">as</span> <span class="n">pkg_safe_power_off</span>
 <span class="kn">from</span> <span class="nn">.robot_command</span> <span class="kn">import</span> <span class="n">RobotCommandClient</span>
 <span class="kn">from</span> <span class="nn">.robot_id</span> <span class="kn">import</span> <span class="n">RobotIdClient</span>
 <span class="kn">from</span> <span class="nn">.robot_state</span> <span class="kn">import</span> <span class="n">RobotStateClient</span>
 <span class="kn">from</span> <span class="nn">.robot_state</span> <span class="kn">import</span> <span class="n">has_arm</span> <span class="k">as</span> <span class="n">pkg_has_arm</span>
-<span class="kn">from</span> <span class="nn">.time_sync</span> <span class="kn">import</span> <span class="n">TimeSyncThread</span><span class="p">,</span> <span class="n">TimeSyncClient</span><span class="p">,</span> <span class="n">TimeSyncError</span>
-<span class="kn">from</span> <span class="nn">.token_manager</span> <span class="kn">import</span> <span class="n">TokenManager</span>
+<span class="kn">from</span> <span class="nn">.time_sync</span> <span class="kn">import</span> <span class="n">TimeSyncClient</span><span class="p">,</span> <span class="n">TimeSyncError</span><span class="p">,</span> <span class="n">TimeSyncThread</span>
 <span class="kn">from</span> <span class="nn">.token_cache</span> <span class="kn">import</span> <span class="n">TokenCache</span>
+<span class="kn">from</span> <span class="nn">.token_manager</span> <span class="kn">import</span> <span class="n">TokenManager</span>
+
 
 <span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">_DEFAULT_SECURE_CHANNEL_PORT</span> <span class="o">=</span> <span class="mi">443</span>
@@ -717,6 +746,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">authorities_by_name</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_robot_id</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_has_arm</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_secure_channel_port</span> <span class="o">=</span> <span class="n">_DEFAULT_SECURE_CHANNEL_PORT</span>
 
 
         <span class="c1"># Things usually updated from an Sdk object.</span>
@@ -751,6 +781,10 @@
 
     <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">host</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
 
     <span class="k">def</span> <span class="nf">_get_token_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">serial_number</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
@@ -848,17 +882,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_robot_id</span> <span class="o">=</span> <span class="n">robot_id_client</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_robot_id</span></div>
 
-    <span class="k">def</span> <span class="nf">_should_send_app_token_on_each_request</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">robot_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cached_robot_id</span><span class="p">()</span>
-        <span class="n">robot_software_version</span> <span class="o">=</span> <span class="n">robot_id</span><span class="o">.</span><span class="n">software_release</span><span class="o">.</span><span class="n">version</span>
-        <span class="c1"># Send app tokens on 1.1.x and below versions of robot software to be backwards</span>
-        <span class="c1"># compatible</span>
-        <span class="k">if</span> <span class="n">robot_software_version</span><span class="o">.</span><span class="n">major_version</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">robot_software_version</span><span class="o">.</span><span class="n">minor_version</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="c1"># Otherwise, the robot software is recent enough to not require app tokens on every</span>
-        <span class="c1"># request. Don&#39;t add them to help save data usage.</span>
-        <span class="k">return</span> <span class="kc">False</span>
-
 
 <div class="viewcode-block" id="Robot.ensure_channel"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.ensure_channel">[docs]</a>    <span class="k">def</span> <span class="nf">ensure_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">[]):</span>
         <span class="sd">&quot;&quot;&quot;Verify the right information exists before calling the ensure_secure_channel</span>
@@ -904,19 +927,14 @@
         <span class="k">if</span> <span class="s1">&#39;grpc.max_send_message_length&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">option</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">options</span><span class="p">]:</span>
             <span class="n">options</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;grpc.max_send_message_length&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_send_message_length</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">skip_app_token_check</span><span class="p">:</span>
-            <span class="n">should_send_app_token</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">should_send_app_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_should_send_app_token_on_each_request</span><span class="p">()</span>
-
         <span class="c1"># Channel doesn&#39;t exist, so create it.</span>
-        <span class="n">port</span> <span class="o">=</span> <span class="n">_DEFAULT_SECURE_CHANNEL_PORT</span>
         <span class="n">creds</span> <span class="o">=</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">create_secure_channel_creds</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cert</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_token</span><span class="p">),</span> <span class="n">should_send_app_token</span><span class="p">)</span>
-        <span class="n">channel</span> <span class="o">=</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">create_secure_channel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">creds</span><span class="p">,</span> <span class="n">authority</span><span class="p">,</span>
-                                                              <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Created channel to </span><span class="si">%s</span><span class="s1"> at port </span><span class="si">%i</span><span class="s1"> with authority </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span>
-                          <span class="n">authority</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cert</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_token</span><span class="p">))</span>
+        <span class="n">channel</span> <span class="o">=</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">create_secure_channel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+                                                              <span class="bp">self</span><span class="o">.</span><span class="n">_secure_channel_port</span><span class="p">,</span> <span class="n">creds</span><span class="p">,</span>
+                                                              <span class="n">authority</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Created channel to </span><span class="si">%s</span><span class="s1"> at port </span><span class="si">%i</span><span class="s1"> with authority </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">_secure_channel_port</span><span class="p">,</span> <span class="n">authority</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">channels_by_authority</span><span class="p">[</span><span class="n">authority</span><span class="p">]</span> <span class="o">=</span> <span class="n">channel</span>
         <span class="k">return</span> <span class="n">channel</span></div>
 
@@ -1003,8 +1021,9 @@
             <span class="k">except</span> <span class="n">PayloadNotAuthorizedError</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">printed_warning</span><span class="p">:</span>
                     <span class="n">printed_warning</span> <span class="o">=</span> <span class="kc">True</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Payload is not authorized. Authentication will block until an&#39;</span>
-                          <span class="s1">&#39; operator authorizes the payload in the Admin Console.&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s1">&#39;Payload is not authorized. Authentication will block until an&#39;</span>
+                        <span class="s1">&#39; operator authorizes the payload in the Admin Console.&#39;</span><span class="p">)</span>
                 <span class="k">pass</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_user_token</span><span class="p">(</span><span class="n">user_token</span><span class="p">)</span></div>
@@ -1033,26 +1052,28 @@
         <span class="n">id_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">id_service_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">id_client</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Robot.list_services"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.list_services">[docs]</a>    <span class="k">def</span> <span class="nf">list_services</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory_service_name</span><span class="o">=</span><span class="n">DirectoryClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">,</span>
-                      <span class="n">directory_service_authority</span><span class="o">=</span><span class="n">_bootstrap_service_authorities</span><span class="p">[</span>
-                          <span class="n">DirectoryClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">]):</span>
+<div class="viewcode-block" id="Robot.list_services"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.list_services">[docs]</a>    <span class="k">def</span> <span class="nf">list_services</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get all the available services on the robot.&quot;&quot;&quot;</span>
-        <span class="n">directory_channel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_secure_channel</span><span class="p">(</span><span class="n">directory_service_authority</span><span class="p">)</span>
-        <span class="n">dir_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">directory_service_name</span><span class="p">,</span> <span class="n">directory_channel</span><span class="p">)</span>
+        <span class="n">dir_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">DirectoryClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">dir_client</span><span class="o">.</span><span class="n">list</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Robot.sync_with_directory"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.sync_with_directory">[docs]</a>    <span class="k">def</span> <span class="nf">sync_with_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory_service_name</span><span class="o">=</span><span class="n">DirectoryClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">,</span>
-                            <span class="n">directory_service_authority</span><span class="o">=</span><span class="n">_bootstrap_service_authorities</span><span class="p">[</span>
-                                <span class="n">DirectoryClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">]):</span>
+<div class="viewcode-block" id="Robot.sync_with_directory"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.sync_with_directory">[docs]</a>    <span class="k">def</span> <span class="nf">sync_with_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update local state with all available services on the robot.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict[string, string]: Mapping of service name to service type</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">remote_services</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_services</span><span class="p">(</span>
-            <span class="n">directory_service_name</span><span class="o">=</span><span class="n">directory_service_name</span><span class="p">,</span>
-            <span class="n">directory_service_authority</span><span class="o">=</span><span class="n">directory_service_authority</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">remote_services</span><span class="p">:</span>
+        <span class="n">remote_services</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_services</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_with_services_list</span><span class="p">(</span><span class="n">remote_services</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Robot.sync_with_services_list"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.sync_with_services_list">[docs]</a>    <span class="k">def</span> <span class="nf">sync_with_services_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">services_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Alternate version of sync_with_directory() that takes the list of services</span>
+<span class="sd">        directly and does not perform any rpcs.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[string, string]: Mapping of service name to service type</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">services_list</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">authorities_by_name</span><span class="p">[</span><span class="n">service</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">authority</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">service_type_by_name</span><span class="p">[</span><span class="n">service</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">type</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_type_by_name</span></div>
@@ -1083,7 +1104,7 @@
         <span class="sd">&quot;&quot;&quot;Start time sync thread if needed.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            val (float): The interval (in seconds) that the time-sync estimate should be updated.</span>
+<span class="sd">            time_sync_interval_sec (float): The interval (in seconds) that the time-sync estimate should be updated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span> <span class="o">=</span> <span class="n">TimeSyncThread</span><span class="p">(</span>
@@ -1273,7 +1294,18 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_arm</span>
         <span class="n">state_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">RobotStateClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_has_arm</span> <span class="o">=</span> <span class="n">pkg_has_arm</span><span class="p">(</span><span class="n">state_client</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_arm</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_arm</span></div>
+
+<div class="viewcode-block" id="Robot.update_secure_channel_port"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.update_secure_channel_port">[docs]</a>    <span class="k">def</span> <span class="nf">update_secure_channel_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secure_channel_port</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the port used for creating secure channels, instead of using the default 443.</span>
+
+<span class="sd">        Calling this method does not change existing channels. It only affects secure channels</span>
+<span class="sd">        created after this method is called.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            secure_channel_port: New port to use for creating secure channels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_secure_channel_port</span> <span class="o">=</span> <span class="n">secure_channel_port</span></div></div>
 
 
 </pre></div>

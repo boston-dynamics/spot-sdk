@@ -12,9 +12,7 @@ import grpc
 import pytest
 
 import bosdyn.client.spot_cam.audio
-
 from bosdyn.api import header_pb2
-
 from bosdyn.api.spot_cam import audio_pb2, service_pb2_grpc
 
 from . import helpers

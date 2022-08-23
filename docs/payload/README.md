@@ -18,23 +18,22 @@ This section of the Spot SDK documentation provides details about designing, con
 
 Boston Dynamics designed Spot as a versatile sensing and manipulation platform. Spot supports up to two payloads and an arm to provide application-specific functionality. Two ports provide electrical and data interfaces for payloads. Mounting rails provide mechanical attachment points.
 
-A payload is any device attached to the robot. Many payloads will connect to the robot to access power and data interfaces. Non-interactive payloads are also supported.  
-
+A payload is any device attached to the robot. Many payloads will connect to the robot to access power and data interfaces. Non-interactive payloads are also supported.
 
 The complexity of payload integration with the Spot platform ranges from:
 
-*  *Light* — Attaching an inert payload to the back of the robot without connecting to the robot's payload ports or network.
-*  *Medium* — The payload connects to a payload port and uses some or all of the services provided by the robot.
-*  *Heavy* — A payload that registers and provides standard services that integrate with other components of the robot system, such as the tablet driving interface, or other payloads.
+- _Light_ — Attaching an inert payload to the back of the robot without connecting to the robot's payload ports or network.
+- _Medium_ — The payload connects to a payload port and uses some or all of the services provided by the robot.
+- _Heavy_ — A payload that registers and provides standard services that integrate with other components of the robot system, such as the tablet driving interface, or other payloads.
 
 ## Contents
 
-* [Payload configuration requirements](payload_configuration_requirements.md)
-* [Mechanical interfaces](mechanical_interfaces.md)
-* [Robot mounting rails](robot_mounting_rails.md)
-* [Guidelines for robust payload design](guidelines_for_robust_payload_design.md)
-* [Robot electrical interface](robot_electrical_interface.md)
-* [Configuring payload software](configuring_payload_software.md)
-* [Configuring Docker containers in SpotCORE](docker_containers.md)
-* [Spot CORE system management tool: Cockpit](spot_core_cockpit.md)
-* [Spot CORE VNC](spot_core_vnc.md)
+- [Payload configuration requirements](payload_configuration_requirements.md)
+- [Mechanical interfaces](mechanical_interfaces.md)
+- [Robot mounting rails](robot_mounting_rails.md)
+- [Guidelines for robust payload design](guidelines_for_robust_payload_design.md)
+- [Robot electrical interface](robot_electrical_interface.md)
+- [Configuring payload software](configuring_payload_software.md)
+- [Dockerize payload software](docker_containers.md)
+- [Pre-3.2 Spot CORE Documentation](spot_core_documentation.md)
+- [CORE I/O Documentation](coreio_documentation.md)

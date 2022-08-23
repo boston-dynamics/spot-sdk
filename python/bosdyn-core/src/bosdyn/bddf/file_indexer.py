@@ -6,8 +6,8 @@
 
 """A FileIndexer is an object which keeps an index of series and blocks within series"""
 
-from hashlib import sha1
 import struct
+from hashlib import sha1
 
 import bosdyn.api.bddf_pb2 as bddf
 

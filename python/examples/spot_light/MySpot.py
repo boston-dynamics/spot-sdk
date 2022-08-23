@@ -5,16 +5,16 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import io
+
 import cv2
 import numpy
 
 import bosdyn.client
 import bosdyn.client.lease
 import bosdyn.client.util
-
-from bosdyn.client.image import ImageClient
-from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder, blocking_stand
 from bosdyn import geometry
+from bosdyn.client.image import ImageClient
+from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient, blocking_stand
 
 
 class MySpot(object):

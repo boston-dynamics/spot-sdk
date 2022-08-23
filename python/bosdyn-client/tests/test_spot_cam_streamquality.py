@@ -11,8 +11,7 @@ import grpc
 import pytest
 
 import bosdyn.client.spot_cam.streamquality
-
-from bosdyn.api.spot_cam import streamquality_pb2, service_pb2_grpc
+from bosdyn.api.spot_cam import service_pb2_grpc, streamquality_pb2
 
 from . import helpers
 

@@ -1,0 +1,285 @@
+// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.graph_nav;
+option java_outer_classname = "AreaCallbackProto";
+
+import "google/protobuf/any.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/lease.proto";
+import "bosdyn/api/graph_nav/nav.proto";
+
+
+// Error reporting for things that can go wrong with calls.
+message AreaCallbackError {
+    string service_name = 1;
+
+    enum CallError{
+        ERROR_UNKNOWN = 0;
+        ERROR_TRANSPORT = 1; // Unable to communicate with the callback.
+        ERROR_RESPONSE = 2; // The callback responded with an error.
+        ERROR_SERVICE = 3; // The service was not registered.
+    }
+    CallError error = 2;
+
+    // If error is ERROR_RESPONSE, the response will be included here.
+    oneof response_error {
+        BeginCallbackResponse begin_callback = 3;
+        BeginControlResponse begin_control = 4;
+        UpdateCallbackResponse update_callback = 5;
+        EndCallbackResponse end_callback = 6;
+    }
+}
+
+// Message for requesting information about a area callback implementation.
+message AreaCallbackInformationRequest {
+    // Common request header.
+    RequestHeader header = 1;
+}
+
+// Specific information about how a AreaCallback implementation should be called.
+message AreaCallbackInformation {
+    // A area callback can request to be in control of one or more resources at runtime.
+    repeated string required_lease_resources = 1;
+
+}
+
+// Message for providing information about a area callback implementation.
+message AreaCallbackInformationResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Information about how the AreaCallback should be called.
+    AreaCallbackInformation info = 2;
+}
+
+// Description of an Area Callback region at the time of crossing
+message RegionInformation{
+    // The unique id of the region we are entering.
+    string region_id = 1;
+
+    // Human-readable description of the region we are entering.
+    string description = 2; 
+
+    // The planned route through the region.
+    bosdyn.api.graph_nav.Route route = 3;
+}
+
+message BeginCallbackRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Description of the region we are going to cross.
+    RegionInformation region_info = 4;
+
+    // The timestamp (in robot time) by which a command must finish executing.
+    // If unset, a AreaCallback implementation may pick a reasonable value.
+    google.protobuf.Timestamp end_time = 3;
+}
+
+message BeginCallbackResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        // UNKNOWN should never be used.
+        STATUS_UNKNOWN = 0;
+
+        // The area callback successfully began.
+        STATUS_OK = 1;
+
+        // The area callback failed to start due to some problem with the supplied configuration_data.
+        STATUS_INVALID_CONFIGURATION = 2;
+
+        // The area callback end time already expired.
+        STATUS_EXPIRED_END_TIME = 3;
+    }
+
+    // Return status for the request.
+    Status status = 2;
+
+    // Unique identifier for the AreaCallback, used to update the callback in subsequent calls. If empty,
+    // the request was not accepted.
+    uint32 command_id = 3;
+}
+
+message BeginControlRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Leases that a AreaCallback uses once it takes control of the robot. This list should match
+    // AreaCallbackInformation required_lease_resources.
+    repeated Lease leases = 2;
+
+    // The command id associated with a single execution of a navigation callback.
+    uint32 command_id = 3;
+}
+
+message BeginControlResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Details about how the lease was used.
+    repeated LeaseUseResult lease_use_results = 2;
+
+    enum Status {
+        // UNKNOWN should never be used.
+        STATUS_UNKNOWN = 0;
+
+        // The AreaCallback has successfully taken control of the robot.
+        STATUS_OK = 1;
+
+        // The request command id does not exist or is no longer executing.
+        STATUS_INVALID_COMMAND_ID = 2;
+
+        // The supplied lease does not match the leases requested in AreaCallbackInformation.
+        STATUS_MISSING_LEASE_RESOURCES = 3;
+
+        // A lease use error occured.
+        STATUS_LEASE_ERROR = 4;
+    }
+
+    // Return status for the request.
+    Status status = 3;
+}
+
+message UpdateCallbackRequest {
+    // Common response header.
+    RequestHeader header = 1;
+
+    // The command id associated with a single execution of a navigation callback.
+    uint32 command_id = 2;
+
+    // If set, update the end time (in robot time) by which a command must finish executing.
+    google.protobuf.Timestamp end_time = 3;
+
+    enum Stage {
+        STAGE_UNKNOWN = 0;
+        STAGE_TO_START = 1;  // Traveling to the start of the region.
+        STAGE_AT_START = 2;  // Waiting at the start of the region.
+        STAGE_TO_END = 3;    // Traveling to the end of the region.
+        STAGE_AT_END = 4;    // Waiting at the end of the region.
+    }
+    Stage stage = 4;
+}
+
+message UpdateCallbackResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        // UNKNOWN should never be used.
+        STATUS_UNKNOWN = 0;
+
+        // The AreaCallback is actively updating. If an execution error does occur, that is reported
+        // via the response oneof.
+        STATUS_OK = 1;
+
+        // The request command id does not exist or is no longer executing.
+        STATUS_INVALID_COMMAND_ID = 2;
+
+        // The area callback end time already expired.
+        STATUS_EXPIRED_END_TIME = 3;
+    }
+
+    // Return status for the request.
+    Status status = 2;
+
+    // Enumeration of ways navigation callback can ask Graph Nav to continue operating.
+    oneof response {
+        // Set the control policy that Graph Nav should use when crossing this region, and
+        // how and when Graph Nav should delegate control to or wait for the callback.
+        // This is the expected way to respond, and changing the policy is how a callback
+        // instructs graph nav to wait or continue on.
+        NavPolicy policy = 3;
+
+        // An error has occured. Graph Nav will stop calling UpdateCallback and will call EndCallback.
+        Error error = 4;
+
+        // The area callback is complete. Graph Nav will stop calling UpdateCallback and will call
+        // EndCallback.
+        Complete complete = 5;
+    }
+
+    message NavPolicy {
+        enum Option {
+            OPTION_UNKNOWN = 0;
+            OPTION_CONTINUE = 1; // Continue past the waypoint. If not already stopped at it, do not stop.
+            OPTION_STOP = 2;     // Stop at the waypoint.
+            OPTION_CONTROL = 3;  // Stop at the waypoint and transfer control to the callback.
+        }
+        // Policy for what Graph Nav should do at the start of the region.
+        Option at_start = 1;
+        // Policy for what Graph Nav should do at the end of the region.
+        Option at_end = 2;
+    }
+
+    message Error {
+        enum ErrorType {
+            // UNKNOWN should never be used.
+            ERROR_UNKNOWN = 0;
+
+            // The callback has determined that this way is impassable.
+            ERROR_BLOCKED = 1;
+
+            // Something went wrong with the callback.
+            ERROR_CALLBACK_FAILED = 2;
+
+            // A lease error occurred while executing commands.
+            ERROR_LEASE = 3;
+
+            // The callback has exceeded allowed execution time.
+            ERROR_TIMED_OUT = 4;
+        }
+
+        ErrorType error = 1;
+
+        // Details about how the lease was used. Only set when error == ERROR_LEASE.
+        repeated LeaseUseResult lease_use_results = 2;
+    }
+
+    message Complete {}
+}
+
+message EndCallbackRequest {
+    // Common response header.
+    RequestHeader header = 1;
+
+    // The command id associated with a single execution of a navigation callback.
+    uint32 command_id = 2;
+
+    // TODO do we need to provide a reason why the callback was ended? We could use this as an error
+    // reporting mechanism for clients who write impossible and invalid callbacks.
+}
+
+message EndCallbackResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        // UNKNOWN should never be used.
+        STATUS_UNKNOWN = 0;
+
+        // The AreaCallback has cleanly ended.
+        STATUS_OK = 1;
+
+        // The request command id does not exist or is no longer executing.
+        STATUS_INVALID_COMMAND_ID = 2;
+
+        // Shutting down the callback failed. The callback worker thread did not respond to shutdown
+        // signal.
+        STATUS_SHUTDOWN_CALLBACK_FAILED = 3;
+    }
+
+    // Return status for the request.
+    Status status = 2;
+}

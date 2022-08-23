@@ -10,9 +10,8 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
-from bosdyn.client.common import (BaseClient, common_header_errors, handle_common_header_errors)
-from bosdyn.api.spot_cam import service_pb2_grpc
-from bosdyn.api.spot_cam import streamquality_pb2
+from bosdyn.api.spot_cam import service_pb2_grpc, streamquality_pb2
+from bosdyn.client.common import BaseClient, common_header_errors, handle_common_header_errors
 
 
 class StreamQualityClient(BaseClient):
@@ -31,7 +30,7 @@ class StreamQualityClient(BaseClient):
                                                      awb_mode)
 
         return self.call(self._stub.SetStreamParams, request, self._params_from_response,
-                         self._streamquality_error_from_response, **kwargs)
+                         self._streamquality_error_from_response, copy_request=False, **kwargs)
 
     def set_stream_params_async(self, target_bitrate=None, refresh_interval=None, idr_interval=None,
                                 awb_mode=None, **kwargs):
@@ -40,31 +39,34 @@ class StreamQualityClient(BaseClient):
                                                      awb_mode)
 
         return self.call_async(self._stub.SetStreamParams, request, self._params_from_response,
-                               self._streamquality_error_from_response, **kwargs)
+                               self._streamquality_error_from_response, copy_request=False,
+                               **kwargs)
 
     def get_stream_params(self, **kwargs):
         """Get image quality and processing settings."""
         request = streamquality_pb2.GetStreamParamsRequest()
         return self.call(self._stub.GetStreamParams, request, self._params_from_response,
-                         self._streamquality_error_from_response, **kwargs)
+                         self._streamquality_error_from_response, copy_request=False, **kwargs)
 
     def get_stream_params_async(self, **kwargs):
         """Async version of get_stream_params()."""
         request = streamquality_pb2.GetStreamParamsRequest()
         return self.call_async(self._stub.GetStreamParams, request, self._params_from_response,
-                               self._streamquality_error_from_response, **kwargs)
+                               self._streamquality_error_from_response, copy_request=False,
+                               **kwargs)
 
     def enable_congestion_control(self, enable=True, **kwargs):
         """Enable congestion control."""
         request = streamquality_pb2.EnableCongestionControlRequest(enable_congestion_control=enable)
         return self.call(self._stub.EnableCongestionControl, request, None,
-                         self._streamquality_error_from_response, **kwargs)
+                         self._streamquality_error_from_response, copy_request=False, **kwargs)
 
     def enable_congestion_control_async(self, enable=True, **kwargs):
         """Async version of enable_congestion_control()."""
         request = streamquality_pb2.EnableCongestionControlRequest(enable_congestion_control=enable)
         return self.call_async(self._stub.EnableCongestionControl, request, None,
-                               self._streamquality_error_from_response, **kwargs)
+                               self._streamquality_error_from_response, copy_request=False,
+                               **kwargs)
 
     @staticmethod
     def _build_SetStreamParamsRequest(target_bitrate, refresh_interval, idr_interval, awb_mode):

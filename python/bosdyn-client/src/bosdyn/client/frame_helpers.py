@@ -4,8 +4,9 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-from . import math_helpers
 from bosdyn.api import geometry_pb2
+
+from . import math_helpers
 
 VISION_FRAME_NAME = "vision"
 BODY_FRAME_NAME = "body"

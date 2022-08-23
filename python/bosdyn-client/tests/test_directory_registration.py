@@ -5,8 +5,9 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """Unit tests for the directory registration module."""
-import pytest
 import time
+
+import pytest
 
 import bosdyn.api.directory_pb2 as directory_protos
 import bosdyn.api.directory_registration_pb2 as directory_registration_protos
@@ -15,13 +16,13 @@ import bosdyn.api.header_pb2 as HeaderProto
 import bosdyn.client.common
 import bosdyn.client.directory_registration
 import bosdyn.client.processors
+from bosdyn.client import InternalServerError, UnsetStatusError
+from bosdyn.client.directory_registration import (DirectoryRegistrationKeepAlive,
+                                                  ServiceAlreadyExistsError,
+                                                  ServiceDoesNotExistError)
+from bosdyn.client.exceptions import InvalidRequestError
 
 from . import helpers
-from bosdyn.client import InternalServerError, UnsetStatusError
-from bosdyn.client.directory_registration import (ServiceAlreadyExistsError,
-                                                  ServiceDoesNotExistError,
-                                                  DirectoryRegistrationKeepAlive)
-from bosdyn.client.exceptions import InvalidRequestError
 
 
 class MockDirectoryRegistrationServicer(

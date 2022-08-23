@@ -21,17 +21,21 @@ python3 -m pip install -r requirements.txt
 ```
 
 # Example Programs
+
 ## Recording Service Command Line
+
 This program demonstrates how to record a new Graph Nav map.
 
-
 ### Setting up for Recording
-Before you start, make sure that the robot is in a location where it can see a fiducial. The robot will later use this fiducial to *initialize* to the map.
+
+Before you start, make sure that the robot is in a location where it can see a fiducial. The robot will later use this fiducial to _initialize_ to the map.
 
 The recording_command_line example does not require a robot lease, and does not acquire the estop of the robot. It passively runs while another service (such as the tablet, or another example) controls the robot. So, before you run this example, you should be connected to the robot via a tablet (if available), or some other service which is able to drive the robot.
 
 ### How to Run
+
 To run the example:
+
 ```
 python3 -m recording_command_line --download-filepath <path_to_downloaded_map> ROBOT_IP
 ```
@@ -51,7 +55,7 @@ download-filepath
 
 ### Using the Example to Record a Map
 
-Running the recording command line example shows a prompt with options. Type a number or letter and press *enter* to execute one of the options. Here are the options you should see:
+Running the recording command line example shows a prompt with options. Type a number or letter and press _enter_ to execute one of the options. Here are the options you should see:
 
 ```
     Options:
@@ -71,31 +75,31 @@ Running the recording command line example shows a prompt with options. Type a n
 
 To record a basic map, do the following:
 
-* Using the tablet or another service, stand the robot up.
-* Enter *1* to start recording a map.
-* Using the tablet or another service, walk the robot around.
-* Enter *2* to stop recording a map.
-* Enter *5* to download the map. It will be saved to the download directory.
-* Enter *q* to quit the application.
+- Using the tablet or another service, stand the robot up.
+- Enter _1_ to start recording a map.
+- Using the tablet or another service, walk the robot around.
+- Enter _2_ to stop recording a map.
+- Enter _5_ to download the map. It will be saved to the download directory.
+- Enter _q_ to quit the application.
 
 ### Advanced Usage
 
-Simply starting and stopping recording will cause the recording service to create a *chain* of waypoints and edges from the start to the end. This means that the robot can only walk along this chain (as if it were on a rail). However, the recording service is also capable of making *branches* and *loops*.
+Simply starting and stopping recording will cause the recording service to create a _chain_ of waypoints and edges from the start to the end. This means that the robot can only walk along this chain (as if it were on a rail). However, the recording service is also capable of making _branches_ and _loops_.
 
-To manually create an edge, use option *7*. This will prompt you for two waypoint ids (which you can find using option *6*, or using the view_map.py example after you download the map). It will create an edge using these two waypoints and kinematic odometry as a guess to how those two waypoints are connected.
+To manually create an edge, use option _7_. This will prompt you for two waypoint ids (which you can find using option _6_, or using the view_map.py example after you download the map). It will create an edge using these two waypoints and kinematic odometry as a guess to how those two waypoints are connected.
 
-You can also create an edge between the start and end of a chain by using option *8*. This is commonly used when a robot returns back to the location it started recording in.
+You can also create an edge between the start and end of a chain by using option _8_. This is commonly used when a robot returns back to the location it started recording in.
 
-Option *9* allows the recording service to automatically identify and close loops (including at the start and end of the map), using fiducials, odometry, and other methods (see [here](https://dev.bostondynamics.com/docs/concepts/autonomy/graphnav_map_structure#map-processing) for details.)
+Option _9_ allows the recording service to automatically identify and close loops (including at the start and end of the map), using fiducials, odometry, and other methods (see [here](https://dev.bostondynamics.com/docs/concepts/autonomy/graphnav_map_structure#map-processing) for details.)
 
-Option *a* creates an *anchoring* for the map, which allows it to be more accurately drawn and used for data export (see [here](https://dev.bostondynamics.com/docs/concepts/autonomy/graphnav_map_structure#anchorings-and-anchoring-optimization) for more details.)
-
+Option _a_ creates an _anchoring_ for the map, which allows it to be more accurately drawn and used for data export (see [here](https://dev.bostondynamics.com/docs/concepts/autonomy/graphnav_map_structure#anchorings-and-anchoring-optimization) for more details.)
 
 ## GraphNav Service Command Line
+
 This program demonstrates how to use the different GraphNav requests to upload maps to the robot, get the current localization of the robot on a map, and navigate the map (using either a specific route or a destination waypoint id), and clear the existing map on robot.
 
-
 ### Setting up for Navigation
+
 The command line example will take control of the robot and navigate autonomously. A body lease and an E-Stop is required for navigation commands, so the tablet or the WASD python example must be disconnected. Additionally, the client must manually start an E-Stop endpoint, which can be run from a second command line terminal in the folder `bosdyn/python/examples/estop/`:
 
 ```
@@ -111,7 +115,9 @@ Note that if you used the `recording_command_line` example, the `download-filepa
 Use the map viewer to see the different waypoint ids and the edges between them when issuing navigation commands. This tool will allow you to better visualize where the robot will travel before executing a navigation command. Additionally, you can list all waypoint ids and edge ids (which are represented by the two ids of the connected waypoints) on the command line from the robot's currently loaded map.
 
 ### How to Run
+
 To run the example (with example filepath):
+
 ```
 python3 -m graph_nav_command_line --upload-filepath ~/Downloads/my_graph_folder ROBOT_IP
 ```
@@ -138,31 +144,33 @@ After running the example, you will see the following options:
     (q) Exit.
 ```
 
-To execute a command, type the letter or number next to that command, and press *enter*.
+To execute a command, type the letter or number next to that command, and press _enter_.
 
-Before the robot can complete any navigation commands, a map must be uploaded (option *5*) to the robot or recorded on the robot recently without powering off the robot. Additionally, the localization must be set: it will automatically be localized to the map if it was just recorded on the robot without any power cycles; otherwise, the localization must manually be initialized (option *2* is recommended) when the robot is standing near a fiducial in the recorded map.
+Before the robot can complete any navigation commands, a map must be uploaded (option _5_) to the robot or recorded on the robot recently without powering off the robot. Additionally, the localization must be set: it will automatically be localized to the map if it was just recorded on the robot without any power cycles; otherwise, the localization must manually be initialized (option _2_ is recommended) when the robot is standing near a fiducial in the recorded map.
 
 **Navigation Commands**
 
-The navigation commands (options *6, 7, 8*) will power on and stand the robot up, execute the desired route, and then sit down and power off the robot when the navigation is complete. Use the E-Stop or quit the command line to stop navigation.
+The navigation commands (options _6, 7, 8_) will power on and stand the robot up, execute the desired route, and then sit down and power off the robot when the navigation is complete. Use the E-Stop or quit the command line to stop navigation.
 
-When issuing a *navigate to* request (option *6*), supply the destination waypoint's id as the second argument in the command line. For example, an input could be:
+When issuing a _navigate to_ request (option _6_), supply the destination waypoint's id as the second argument in the command line. For example, an input could be:
+
 ```
 > 6 zigzag-filly-8ieN.xz8c9pL5tDZtQYW+w==
 ```
+
 Note that ids for the waypoints and edges can be shown by listing the graph ids from the command line.
 
-> **NOTE:** instead of using the full waypoint ID, you may use 2 letter "short codes" whenever they are unambiguous.  In this example `zigzag-filly-8ieN.xz8c9pL5tDZtQYW+w==` could be just `zf` if that is unique to the map. "Short codes" are only used in this program for convenience of typing. In all API commands, full waypoint IDs are required.
+> **NOTE:** instead of using the full waypoint ID, you may use 2 letter "short codes" whenever they are unambiguous. In this example `zigzag-filly-8ieN.xz8c9pL5tDZtQYW+w==` could be just `zf` if that is unique to the map. "Short codes" are only used in this program for convenience of typing. In all API commands, full waypoint IDs are required.
 
-To issue a *navigate route* (option *7*) command, the listed waypoints must be in order from the starting waypoint to the final destination waypoint. As well, each consecutive pair of waypoints must have an edge between it that is in the map. For example, an input could be:
+To issue a _navigate route_ (option _7_) command, the listed waypoints must be in order from the starting waypoint to the final destination waypoint. As well, each consecutive pair of waypoints must have an edge between it that is in the map. For example, an input could be:
 
 ```
 > 7 hammy-skink-iKQI6hGQ.fCBWXJy6mmjqg== unread-beagle-vQfl7NrKVhHPOUoos+ffIg== zigzag-filly-8ieN.xz8c9pL5tDZtQYW+w==
 ```
-In this example, there would also be a known edge (from waypoint id: `hammy-skink-iKQI6hGQ.fCBWXJy6mmjqg==`, to waypoint id: `unread-beagle-vQfl7NrKVhHPOUoos+ffIg==`) and a second edge (from waypoint id: `unread-beagle-vQfl7NrKVhHPOUoos+ffIg==`, to waypoint id: `zigzag-filly-8ieN.xz8c9pL5tDZtQYW+w==`).  Note that you would likely be able to simplify this with short codes to `7 hs ub zf`.
 
+In this example, there would also be a known edge (from waypoint id: `hammy-skink-iKQI6hGQ.fCBWXJy6mmjqg==`, to waypoint id: `unread-beagle-vQfl7NrKVhHPOUoos+ffIg==`) and a second edge (from waypoint id: `unread-beagle-vQfl7NrKVhHPOUoos+ffIg==`, to waypoint id: `zigzag-filly-8ieN.xz8c9pL5tDZtQYW+w==`). Note that you would likely be able to simplify this with short codes to `7 hs ub zf`.
 
-To issue a *navigate to anchor* (option *8*) command, you must first know where you want the robot to go in absolute (x, y) meter coordinates relative to the *seed frame* (see [here](https://dev.bostondynamics.com/docs/concepts/autonomy/graphnav_map_structure#anchorings-and-anchoring-optimization) for more details). This allows the robot to navigate to a position on the map without necessarily knowing which waypoint is near that location.
+To issue a _navigate to anchor_ (option _8_) command, you must first know where you want the robot to go in absolute (x, y) meter coordinates relative to the _seed frame_ (see [here](https://dev.bostondynamics.com/docs/concepts/autonomy/graphnav_map_structure#anchorings-and-anchoring-optimization) for more details). This allows the robot to navigate to a position on the map without necessarily knowing which waypoint is near that location.
 
 For example, this command:
 
@@ -170,6 +178,6 @@ For example, this command:
 > 8 5.2 3.1 0.1
 ```
 
-Would navigate to an anchor (option *8*), located at `x = 5.2m`, `y = 3.1m`, `yaw=0.1 radians`. The robot would then walk along the path to the nearest waypoint to that location, and then attempt to walk in a straight line to it.
+Would navigate to an anchor (option _8_), located at `x = 5.2m`, `y = 3.1m`, `yaw=0.1 radians`. The robot would then walk along the path to the nearest waypoint to that location, and then attempt to walk in a straight line to it.
 
-> **NOTE**: use the get localization state command (option *1*) to see where the robot believes it is in the seed frame, and which waypoint it believes it is currently at.
+> **NOTE**: use the get localization state command (option _1_) to see where the robot believes it is in the seed frame, and which waypoint it believes it is currently at.

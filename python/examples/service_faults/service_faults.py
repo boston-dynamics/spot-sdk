@@ -18,13 +18,14 @@ import sys
 import time
 
 import bosdyn.client.util
+from bosdyn.api import service_fault_pb2
 from bosdyn.client.directory import DirectoryClient
-from bosdyn.client.directory_registration import DirectoryRegistrationClient, ServiceAlreadyExistsError, DirectoryRegistrationKeepAlive
+from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
+                                                  DirectoryRegistrationKeepAlive,
+                                                  ServiceAlreadyExistsError)
 from bosdyn.client.exceptions import InvalidRequestError
 from bosdyn.client.fault import FaultClient, ServiceFaultAlreadyExistsError
 from bosdyn.client.robot_state import RobotStateClient
-
-from bosdyn.api import service_fault_pb2
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -153,11 +154,8 @@ def main(argv):
     # and all future service faults.
     if (config.guid and config.secret) or config.payload_credentials_file:
         robot.authenticate_from_payload_credentials(*bosdyn.client.util.get_guid_and_secret(config))
-    elif config.username and config.password:
-        bosdyn.client.util.authenticate(robot)
     else:
-        _LOGGER.error('Must provide either a set of username/password or guid/secret.\nExiting...')
-        exit(1)
+        bosdyn.client.util.authenticate(robot)
 
     # Demonstrate directory liveness service faults
     liveness_faulting(robot)

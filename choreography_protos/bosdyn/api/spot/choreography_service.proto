@@ -19,6 +19,20 @@ service ChoreographyService {
     // List the available choreography sequences currently on the robot.
     rpc ListAllSequences(ListAllSequencesRequest) returns (ListAllSequencesResponse) {}
 
+    // Delete a retained choreography sequence from the collection of user uploaded 
+    // choreography sequences.
+    rpc DeleteSequence(DeleteSequenceRequest) returns (DeleteSequenceResponse) {}
+
+    // Save a user uploaded choreography sequence to the robots collection of 
+    // retained choreography sequences.
+    rpc SaveSequence(SaveSequenceRequest) returns (SaveSequenceResponse) {}
+
+    // Modify the metadata of a choreography sequence.
+    rpc ModifyChoreographyInfo(ModifyChoreographyInfoRequest) returns (ModifyChoreographyInfoResponse) {}
+
+    // Clear all retained choreography sequence files from robot memory.
+    rpc ClearAllSequenceFiles(ClearAllSequenceFilesRequest) returns (ClearAllSequenceFilesResponse) {}
+
     // Upload a dance to the robot.
     rpc UploadChoreography(UploadChoreographyRequest) returns (UploadChoreographyResponse) {}
 

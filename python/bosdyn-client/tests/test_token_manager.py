@@ -6,13 +6,14 @@
 
 """Unit tests for the token_manager module."""
 import datetime
-import pytest
 import time
+
+import pytest
 
 from bosdyn.client.auth import InvalidTokenError
 from bosdyn.client.exceptions import Error, RpcError
 from bosdyn.client.token_manager import TokenManager, WriteFailedError
-from bosdyn.client.util import cli_login_prompt, cli_auth
+from bosdyn.client.util import cli_auth, cli_login_prompt
 
 
 class MockRobot:
@@ -95,10 +96,14 @@ def test_token_refresh_write_error():
     assert tm.is_alive()
     tm.stop()
 
+
 def _patch(value):
+
     def patched(*args, **kwargs):
         return value
+
     return patched
+
 
 def test_cli_login(monkeypatch):
     real_login = ('user', 'password')

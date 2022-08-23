@@ -16,7 +16,7 @@ import bosdyn.client.estop
 import bosdyn.client.lease
 import bosdyn.client.util
 from bosdyn.client import robot_command
-from bosdyn.client.docking import blocking_dock_robot
+from bosdyn.client.docking import blocking_dock_robot, blocking_undock, get_dock_id
 
 
 def run_docking(config):
@@ -34,24 +34,34 @@ def run_docking(config):
     lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
     command_client = robot.ensure_client(robot_command.RobotCommandClient.default_service_name)
 
-    # To steal control away from another user to dock the robot, uncomment the line below.
+    # To steal control away from another, uncomment the line below.
     # lease_client.take()
     with bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
-        # make sure we're powered on and standing
+        # Make sure we're powered on.
         robot.power_on()
-        robot_command.blocking_stand(command_client)
 
-        # Dock the robot
-        blocking_dock_robot(robot, config.dock_id)
-
-        print("Docking Success")
+        if config.undock:
+            dock_id = get_dock_id(robot)
+            if dock_id is None:
+                print("Robot does not seem to be docked; trying anyway")
+            else:
+                print("Docked at {}".format(dock_id))
+            blocking_undock(robot)
+            print("Undocking Success")
+        else:
+            # Stand before trying to dock.
+            robot_command.blocking_stand(command_client)
+            blocking_dock_robot(robot, config.dock_id)
+            print("Docking Success")
 
 
 def main(argv):
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    parser.add_argument('--dock-id', required=True, type=int, help='Docking station ID to dock at')
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--dock-id', type=int, help='Docking station ID to dock at')
+    group.add_argument('--undock', action='store_true', help='Undock, instead of docking.')
     options = parser.parse_args(argv)
     run_docking(options)
 

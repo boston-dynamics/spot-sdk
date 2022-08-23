@@ -11,6 +11,7 @@ Development Kit License (20191101-BDSDK-SL).
 This example demonstrates how to use the `depth_in_visual_frame` image sources to visualize depth in a visual image.
 
 ## Setup Dependencies
+
 This example requires the bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:
 
 ```
@@ -18,7 +19,9 @@ python3 -m pip install -r requirements.txt
 ```
 
 ## Running the Example
+
 To run the example:
+
 ```
 python3 get_depth_plus_visual_image.py ROBOT_IP
 ```

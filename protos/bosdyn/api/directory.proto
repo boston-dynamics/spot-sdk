@@ -13,6 +13,7 @@ import "google/protobuf/timestamp.proto";
 
 package bosdyn.api;
 
+
 // A message representing a discoverable service.  By definition, all services
 // discoverable by this system are expected to be grpc "services" provided by
 // some server.
@@ -21,9 +22,11 @@ message ServiceEntry {
     // The unique user-friendly name of this service.
     string name = 1;
 
-    // The type of this service. Usually identifies the underlying implementation.
-	// Does not have to be unique among all ServiceEntry objects.
-    string type = 2;
+    oneof service_type{
+        // The type of this service. Usually identifies the underlying implementation.
+        // Does not have to be unique among all ServiceEntry objects.
+        string type = 2;
+    }
 
     // Information used to route to the desired Service. Can either be a full address
     // (aService.spot.robot) or just a DNS label that will be automatically converted to an

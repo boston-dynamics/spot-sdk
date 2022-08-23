@@ -14,11 +14,13 @@ import "bosdyn/api/image.proto";
 import "bosdyn/api/local_grid.proto";
 import "bosdyn/api/payload.proto";
 import "bosdyn/api/point_cloud.proto";
+import "bosdyn/api/robot_id.proto";
 import "bosdyn/api/robot_state.proto";
 import "bosdyn/api/spot/robot_command.proto";
 import "bosdyn/api/stairs.proto";
 import "bosdyn/api/world_object.proto";
 
+import "google/protobuf/any.proto";
 import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
@@ -103,9 +105,30 @@ message Waypoint {
 
         // How this waypoint was made.
         WaypointSource waypoint_source = 5;
+
+        // Information about the state of the client when this waypoint was created.
+        ClientMetadata client_metadata = 6;
     }
     // Annotations specific to the current waypoint.
     Annotations annotations = 4;
+}
+
+// Optional metadata to attach to waypoints that are being recorded.
+message ClientMetadata {
+    // User-provided name for this recording "session". For example, the user
+    // may start and stop recording at various times and assign a name to a region
+    // that is being recorded. Usually, this will just be the map name.
+    string session_name = 1;
+    // If the application recording the map has a special user name,
+    // this is the name of that user.
+    string client_username = 2;
+    // Version string of any client software that generated this object.
+    string client_software_version = 3;
+    // Identifier of any client software that generated this object.
+    string client_id = 4;
+    // Special tag for the client software which created this object.
+    // For example, "Tablet", "Scout", "Python SDK", etc.
+    string client_type = 5;
 }
 
 // Relevant data collected at the waypoint.
@@ -149,6 +172,13 @@ message WaypointSnapshot {
     // Defines the payloads attached to the robot at this waypoint.
     repeated bosdyn.api.Payload payloads = 12;
 
+
+    // Identifiers (software, nickname, etc.) of the robot that created this waypoint.
+    bosdyn.api.RobotId robot_id = 14;
+
+    // Information about when the recording session started in robot time basis.
+    // This will be filled out by the recording service when StartRecording is called.
+    google.protobuf.Timestamp recording_started_on = 15;
 }
 
 
@@ -243,9 +273,9 @@ message Edge {
         // as part of the terrain_params.
         google.protobuf.BoolValue grated_floor = 8 [deprecated = true];
         // Overrides the following fields of the mobility parameters to whatever is
-        // stored in the map. For example, if this FieldMask contains "stair_hint" and
+        // stored in the map. For example, if this FieldMask contains "stairs_mode" and
         // "terrain_params.enable_grated_floor", then the map will be
-        // annotated with "stair_hint" and "enable_grated_floor" settings. An empty FieldMask means all fields are active
+        // annotated with "stairs_mode" and "enable_grated_floor" settings. An empty FieldMask means all fields are active
         // annotations. Note that the more conservative of the velocity limit stored in the mobility parameters and the
         // TravelParams of the entire route will be used for this edge (regardless of what override_mobility_params says).
         google.protobuf.FieldMask override_mobility_params = 9;
@@ -261,6 +291,37 @@ message Edge {
 
         // If true, disables alternate-route-finding for this edge.
         bool disable_alternate_route_finding = 13;
+
+        // Path following mode
+        enum PathFollowingMode {
+            PATH_MODE_UNKNOWN = 0;       // Unknown value
+            PATH_MODE_DEFAULT = 1;       // Use default path following parameters
+            PATH_MODE_STRICT = 2;        // Use strict path following parameters
+        }
+
+        // Path following mode for this edge.
+        PathFollowingMode path_following_mode = 14;
+
+        // Disable directed exploration for this edge.
+        bool disable_directed_exploration = 15;
+
+        // Reference to area callback regions needed to cross this edge.
+        // The string is a unique id for this region, which may be shared
+        // across multiple edges.
+        map<string, AreaCallbackRegion> area_callbacks = 16;
+
+        // Ground clutter avoidance mode.
+        // This enables detection and avoidance of low obstacles.
+        enum GroundClutterAvoidanceMode {
+            // The mode is unset.
+            GROUND_CLUTTER_UNKNOWN = 0;
+            // The mode is explicitly off.
+            GROUND_CLUTTER_OFF = 1;
+            // Enable detection of ground clutter using recorded footfalls.
+            // Objects that were not stepped on during map recording are obstacles.
+            GROUND_CLUTTER_FROM_FOOTFALLS = 2;
+        }
+        GroundClutterAvoidanceMode ground_clutter_mode = 17;
     }
     // Annotations specific to the current edge.
     Annotations annotations = 4;
@@ -287,6 +348,9 @@ message EdgeSnapshot {
     }
     // Sampling of stances as robot traversed this edge.
     repeated Stance stances = 2;
+
+    // Data used by area callback services to perform their action.
+    map<string, AreaCallbackData> area_callbacks = 16;
 }
 
 // This associates a waypoint with a common reference frame, which is not necessarily metric.
@@ -314,6 +378,21 @@ message Anchoring {
 
     // World objects, located in the common reference frame.
     repeated AnchoredWorldObject objects = 2;
+}
+
+// Data for a AreaCallback in the annotation.
+message AreaCallbackRegion {
+    // This service must be used in a given region to safely traverse it.
+    string service_name = 1;
+
+    // Human-readable description of this region.
+    string description = 3;
+}
+
+// Data for a AreaCallback to be stored in snapshots
+message AreaCallbackData {
+    // Config data used by the service to do its job.
+    google.protobuf.Any config_data = 1;
 }
 
 // This is an arbitrary collection of waypoints and edges. The edges and waypoints are not required

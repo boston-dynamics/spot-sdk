@@ -66,9 +66,23 @@ message MobilityParams {
     // Desired gait during locomotion
     LocomotionHint locomotion_hint = 3;
 
-    // Stairs are only supported in trot gaits. Using this hint will override some user defaults in
+    // DEPRECATED as of 3.2.0: The boolean field has been replaced by the field stairs_mode.
+    // The following field will be deprecated and moved to 'reserved' in a future release.
+    bool stair_hint = 4 [deprecated = true];
+
+    // Stairs are only supported in trot gaits. Enabling stairs mode will override some user defaults in
     // order to optimize stair behavior.
-    bool stair_hint = 4;
+    enum StairsMode {
+        STAIRS_MODE_UNKNOWN = 0; // Invalid; do not use.
+        STAIRS_MODE_OFF = 1;
+        STAIRS_MODE_ON = 2;
+        STAIRS_MODE_AUTO = 3;    // Robot will automatically turn mode on or off
+    }
+    // The selected option for stairs mode.
+    // If unset, will use the deprecated stair_hint instead.
+    // If falling back on stair_hint, false will map to STAIRS_MODE_OFF.  
+    // This will be changed to STAIRS_MODE_AUTO in a future release.
+    StairsMode stairs_mode = 17;
 
     // Allow the robot to move with degraded perception when there are perception faults.
     bool allow_degraded_perception = 5;

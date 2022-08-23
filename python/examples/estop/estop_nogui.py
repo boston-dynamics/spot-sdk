@@ -6,17 +6,18 @@
 
 """Provides a programmatic estop to stop the robot."""
 from __future__ import print_function
+
 import argparse
-import sys
-import os
-import signal
-import time
 import curses
 import logging
+import os
+import signal
+import sys
+import time
 
-from bosdyn.client.estop import EstopEndpoint, EstopKeepAlive, EstopClient
-from bosdyn.client.robot_state import RobotStateClient
 import bosdyn.client.util
+from bosdyn.client.estop import EstopClient, EstopEndpoint, EstopKeepAlive
+from bosdyn.client.robot_state import RobotStateClient
 
 
 class EstopNoGui():

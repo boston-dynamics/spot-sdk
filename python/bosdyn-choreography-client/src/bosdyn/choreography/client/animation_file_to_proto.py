@@ -320,7 +320,7 @@ def read_and_find_animation_params(animate_move_params_file, filepath_input=True
         A dictionary containing the parameter name as the key, and the full parameter line from
         the file as the value.
     """
-    if(filepath_input):
+    if (filepath_input):
         #if animate_move_params_file is a filepath open the file
         params_file = open(animate_move_params_file, "r")
     else:
@@ -374,7 +374,8 @@ def convert_animation_file_to_proto(animated_file, animate_move_params_file=""):
             default_animate_params_values = read_and_find_animation_params(animate_move_params_file)
         else:
             # if animate_move_params_file isn't a locatable file try to read the string as parameter field data
-            default_animate_params_values = read_and_find_animation_params(animate_move_params_file, False)
+            default_animate_params_values = read_and_find_animation_params(
+                animate_move_params_file, False)
 
     animation = Animation()
     animation.name = ntpath.basename(animated_file).split(".cha")[0]

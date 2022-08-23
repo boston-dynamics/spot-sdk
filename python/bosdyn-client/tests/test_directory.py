@@ -14,9 +14,9 @@ import bosdyn.api.header_pb2 as HeaderProto
 import bosdyn.client.common
 import bosdyn.client.directory
 import bosdyn.client.processors
+from bosdyn.client import InternalServerError, UnsetStatusError
 
 from . import helpers
-from bosdyn.client import InternalServerError, UnsetStatusError
 
 
 class MockDirectoryServicer(directory_service.DirectoryServiceServicer):

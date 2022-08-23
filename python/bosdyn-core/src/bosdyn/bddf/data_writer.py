@@ -75,7 +75,7 @@ class DataWriter:
          series_type:   the kind of spec, corresponding to the set of keys expected in series_spec.
          series_spec:   dict of {key (string) -> value (string)} describing the series.
          type_enum:     kind of values stored in the file (PodTypeEnum).
-         dimensions:    None or empty-array means elements are single values,
+         dimension:     None or empty-array means elements are single values,
                            [3] means vectors of size 3, [4, 4] is a 4x4 matrix, etc....
          annotations:   optional dict of key (string) -> value (string) pairs to
                             associate with the message channel

@@ -11,7 +11,6 @@ import grpc
 import pytest
 
 import bosdyn.client.spot_cam.health
-
 from bosdyn.api.spot_cam import health_pb2, service_pb2_grpc
 
 from . import helpers

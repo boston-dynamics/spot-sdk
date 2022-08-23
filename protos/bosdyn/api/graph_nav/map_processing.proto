@@ -199,6 +199,18 @@ message AnchorHintUncertainty {
 
 // Waypoints may be anchored to a particular seed frame. The user may request that a waypoint
 // be anchored in a particular place with some Gaussian uncertainty.
+// Note on gravity alignment: optimization is sensitive to bad alignment with respect to gravity. By default, the
+// orientation of the seed frame assumes gravity is pointing in the negative z direction. Take care to ensure that
+// the orientation of the waypoint is correct with respect to gravity. By convention, waypoints' orientation
+// is defined as: Z up, X forward, Y left. So, if the robot is flat on the ground, the waypoint's z axis should
+// align with the seed frame's z axis.
+//   z             z
+//   ^             ^
+//   |             |
+//   |             |
+//   |             |
+//   +------>x     |
+// Waypoint        Seed
 message WaypointAnchorHint {
     // This is to be interpreted as the mean of a Gaussian distribution, representing
     // the pose of the waypoint in the seed frame.
@@ -215,6 +227,21 @@ message WaypointAnchorHint {
 
 // World objects (such as fiducials) may be anchored to a particular seed frame. The user may request that an object
 // be anchored in a particular place with some Gaussian uncertainty.
+// Note on gravity alignment: optimization is sensitive to bad alignment with respect to gravity. By default, the
+// orientation of the seed frame assumes gravity is pointing in the negative z direction. Take care to ensure that
+// the orientation of the world object is correct with respect to gravity. By convention, fiducials' orientation
+// is defined as: Z out of the page, X up and Y left (when looking at the fiducial). So, if a fiducial is mounted
+// perfectly flat against a wall, its orientation w.r.t the seed frame would have the top of the fiducial facing
+// positive Z.
+// +-----------+       z
+// |      ^x   |       ^
+// |      |    |       |
+// |      |    |       |
+// | <----+    |       |
+// | y         |      Seed
+// |           |
+// +-----------+
+//    Fiducial (on wall)
 message WorldObjectAnchorHint {
     // This is to be interpreted as the mean of a Gaussian distribution, representing
     // the pose of the object in the seed frame.
@@ -324,6 +351,7 @@ message ProcessAnchoringResponse {
         STATUS_MAX_TIME = 8; // The optimizer timed out before converging.
         STATUS_INVALID_HINTS = 9; // One or more of the hints passed in to the optimizer are invalid (do not correspond to real waypoints or objects).
         STATUS_MAP_MODIFIED_DURING_PROCESSING = 10; // Tried to write the anchoring after processing, but another client may have modified the map. Try again.
+        STATUS_INVALID_GRAVITY_ALIGNMENT = 11; // An anchor hint (waypoint or fiducial) had an invalid orientation with respect to gravity.
     }
     Status status = 2;
     // Contains new anchorings for waypoint(s) processed by the server.

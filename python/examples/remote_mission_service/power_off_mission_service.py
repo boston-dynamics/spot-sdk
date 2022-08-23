@@ -11,19 +11,18 @@ import random
 import string
 import threading
 
-from bosdyn.api import header_pb2, robot_command_pb2, basic_command_pb2
-from bosdyn.api.mission import remote_service_pb2_grpc, remote_pb2
-
 import bosdyn.client
 import bosdyn.client.util
+from bosdyn.api import basic_command_pb2, header_pb2, robot_command_pb2
+from bosdyn.api.mission import remote_pb2, remote_service_pb2_grpc
 from bosdyn.client import time_sync
+from bosdyn.client.auth import AuthResponseError
 from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
                                                   DirectoryRegistrationKeepAlive)
-from bosdyn.client.lease import LeaseClient, Lease
-from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder
-from bosdyn.client.auth import AuthResponseError
+from bosdyn.client.lease import Lease, LeaseClient
+from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient
+from bosdyn.client.server_util import GrpcServiceRunner, ResponseContext
 from bosdyn.client.util import setup_logging
-from bosdyn.client.server_util import ResponseContext, GrpcServiceRunner
 from bosdyn.mission import util
 
 DIRECTORY_NAME = 'power-off-callback'

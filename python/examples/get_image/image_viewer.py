@@ -7,19 +7,19 @@
 """Simple image display example."""
 
 import argparse
+import logging
 import sys
 
-from bosdyn.api import image_pb2
-import bosdyn.client
-from bosdyn.client.time_sync import TimedOutError
-import bosdyn.client.util
-from bosdyn.client.image import ImageClient, build_image_request
-from bosdyn.api import image_pb2
 import cv2
 import numpy as np
 from scipy import ndimage
 
-import logging
+import bosdyn.client
+import bosdyn.client.util
+from bosdyn.api import image_pb2
+from bosdyn.client.image import ImageClient, build_image_request
+from bosdyn.client.time_sync import TimedOutError
+
 _LOGGER = logging.getLogger(__name__)
 
 VALUE_FOR_Q_KEYSTROKE = 113
@@ -32,6 +32,7 @@ ROTATION_ANGLE = {
     'left_fisheye_image': 0,
     'right_fisheye_image': 180
 }
+
 
 def image_to_opencv(image, auto_rotate=True):
     """Convert an image proto message to an openCV image."""
@@ -87,7 +88,10 @@ def main(argv):
                         type=int, default=50)
     parser.add_argument('-c', '--capture-delay', help="Time [ms] to wait before the next capture",
                         type=int, default=100)
-    parser.add_argument('--disable-full-screen', help="A single image source gets displayed full screen by default. This flag disables that.", action='store_true')
+    parser.add_argument(
+        '--disable-full-screen',
+        help="A single image source gets displayed full screen by default. This flag disables that.",
+        action='store_true')
     parser.add_argument('--auto-rotate', help='rotate right and front images to be upright',
                         action='store_true')
     options = parser.parse_args(argv)
@@ -139,6 +143,7 @@ def main(argv):
             image, _ = image_to_opencv(images[i], options.auto_rotate)
             cv2.imshow(images[i].source.name, image)
         keystroke = cv2.waitKey(options.capture_delay)
+
 
 if __name__ == "__main__":
     if not main(sys.argv[1:]):

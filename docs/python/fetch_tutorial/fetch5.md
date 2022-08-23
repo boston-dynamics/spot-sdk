@@ -131,26 +131,26 @@ Loaded models:
     First, <mark>delete the following lines</mark> near the end of <code>fetch.py</code>
 </p>
 
-<pre><code class="language-python">        # For now, we'll just exit...
-        print('')
-        print('Done for now, returning control to tablet in 5 seconds...')
-        time.sleep(5.0)
-        break
+<pre><code class="language-python">            # For now, we'll just exit...
+            print('')
+            print('Done for now, returning control to tablet in 5 seconds...')
+            time.sleep(5.0)
+            break
 </code></pre>
 <p>
     Add new code to replace it directly after these lines:
 </p>
 
-<pre><code class="language-python">        # Wait for the carry command to finish
-        time.sleep(0.75)</code></pre>
+<pre><code class="language-python">            # Wait for the carry command to finish
+            time.sleep(0.75)</code></pre>
 
-<pre><code class="language-python">        person = None
-        while person is None:
-            # Find a person to deliver the toy to
-            person, image, vision_tform_person = get_obj_and_img(
-                network_compute_client, options.ml_service,
-                options.person_model, options.confidence_person, kImageSources,
-                'person')
+<pre><code class="language-python">            person = None
+            while person is None:
+                # Find a person to deliver the toy to
+                person, image, vision_tform_person = get_obj_and_img(
+                    network_compute_client, options.ml_service,
+                    options.person_model, options.confidence_person, kImageSources,
+                    'person')
 </code></pre>
 <p>
     Same call as above, but this time we use model <code>options.person_model</code> and search for objects with the <code>'person'</code> label.
@@ -162,12 +162,12 @@ Loaded models:
 </ul>
 <br />
 
-<pre><code class="language-python">        # We now have found a person to drop the toy off near.
-        drop_position_rt_vision, heading_rt_vision = compute_stand_location_and_yaw(
-            vision_tform_person, robot_state_client, distance_margin=2.0)
+<pre><code class="language-python">            # We now have found a person to drop the toy off near.
+            drop_position_rt_vision, heading_rt_vision = compute_stand_location_and_yaw(
+                vision_tform_person, robot_state_client, distance_margin=2.0)
 
-        wait_position_rt_vision, wait_heading_rt_vision = compute_stand_location_and_yaw(
-            vision_tform_person, robot_state_client, distance_margin=3.0)
+            wait_position_rt_vision, wait_heading_rt_vision = compute_stand_location_and_yaw(
+                vision_tform_person, robot_state_client, distance_margin=3.0)
 
 </code></pre>
 <p>
@@ -175,60 +175,60 @@ Loaded models:
 </p>
 <br />
 
-<pre><code class="language-python">        # Tell the robot to go there
+<pre><code class="language-python">            # Tell the robot to go there
 
-        # Limit the speed so we don't charge at the person.
-        move_cmd = RobotCommandBuilder.trajectory_command(
-            goal_x=drop_position_rt_vision[0],
-            goal_y=drop_position_rt_vision[1],
-            goal_heading=heading_rt_vision,
-            frame_name=frame_helpers.VISION_FRAME_NAME,
-            params=get_walking_params(0.5, 0.5))
-        end_time = 5.0
-        cmd_id = command_client.robot_command(command=move_cmd,
-                                              end_time_secs=time.time() +
-                                              end_time)
+            # Limit the speed so we don't charge at the person.
+            move_cmd = RobotCommandBuilder.trajectory_command(
+                goal_x=drop_position_rt_vision[0],
+                goal_y=drop_position_rt_vision[1],
+                goal_heading=heading_rt_vision,
+                frame_name=frame_helpers.VISION_FRAME_NAME,
+                params=get_walking_params(0.5, 0.5))
+            end_time = 5.0
+            cmd_id = command_client.robot_command(command=move_cmd,
+                                                end_time_secs=time.time() +
+                                                end_time)
 </code></pre>
 <ul>
     <li>Set a velocity limit when walking</li>
     <li>Command the robot to move to our drop position and yaw</li>
 </ul>
 
-<pre><code class="language-python">        # Wait until the robot reports that it is at the goal.
-        block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)
+<pre><code class="language-python">            # Wait until the robot reports that it is at the goal.
+            block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)
 
-        print('Arrived at goal, dropping object...')
+            print('Arrived at goal, dropping object...')
 </code></pre>
 <p>
     Wait for the robot to walk.  This helper function polls the robot for feedback using <code>cmd_id</code> and returns when we've arrived.
 </p>
 <br />
 
-<pre><code class="language-python">        # Do an arm-move to gently put the object down.
-        # Build a position to move the arm to (in meters, relative to and expressed in the gravity aligned body frame).
-        x = 0.75
-        y = 0
-        z = -0.25
-        hand_ewrt_flat_body = geometry_pb2.Vec3(x=x, y=y, z=z)
+<pre><code class="language-python">            # Do an arm-move to gently put the object down.
+            # Build a position to move the arm to (in meters, relative to and expressed in the gravity aligned body frame).
+            x = 0.75
+            y = 0
+            z = -0.25
+            hand_ewrt_flat_body = geometry_pb2.Vec3(x=x, y=y, z=z)
 
-        # Point the hand straight down with a quaternion.
-        qw = 0.707
-        qx = 0
-        qy = 0.707
-        qz = 0
-        flat_body_Q_hand = geometry_pb2.Quaternion(w=qw, x=qx, y=qy, z=qz)
+            # Point the hand straight down with a quaternion.
+            qw = 0.707
+            qx = 0
+            qy = 0.707
+            qz = 0
+            flat_body_Q_hand = geometry_pb2.Quaternion(w=qw, x=qx, y=qy, z=qz)
 
-        flat_body_tform_hand = geometry_pb2.SE3Pose(
-            position=hand_ewrt_flat_body, rotation=flat_body_Q_hand)
+            flat_body_tform_hand = geometry_pb2.SE3Pose(
+                position=hand_ewrt_flat_body, rotation=flat_body_Q_hand)
 
-        robot_state = robot_state_client.get_robot_state()
-        vision_tform_flat_body = frame_helpers.get_a_tform_b(
-            robot_state.kinematic_state.transforms_snapshot,
-            frame_helpers.VISION_FRAME_NAME,
-            frame_helpers.GRAV_ALIGNED_BODY_FRAME_NAME)
+            robot_state = robot_state_client.get_robot_state()
+            vision_tform_flat_body = frame_helpers.get_a_tform_b(
+                robot_state.kinematic_state.transforms_snapshot,
+                frame_helpers.VISION_FRAME_NAME,
+                frame_helpers.GRAV_ALIGNED_BODY_FRAME_NAME)
 
-        vision_tform_hand_at_drop = vision_tform_flat_body * math_helpers.SE3Pose.from_obj(
-            flat_body_tform_hand)
+            vision_tform_hand_at_drop = vision_tform_flat_body * math_helpers.SE3Pose.from_obj(
+                flat_body_tform_hand)
 </code></pre>
 <p>
     Compute the drop position.  Since we're already standing in the right location, we can do a body-relative move to point the hand down in front of Spot.
@@ -240,26 +240,26 @@ Loaded models:
     Often this won't matter, but if the robot is disturbed, it will keep the arm in place, as opposed to holding the arm relative to the robot
 </p>
 
-<pre><code class="language-python">        # duration in seconds
-        seconds = 1
+<pre><code class="language-python">            # duration in seconds
+            seconds = 1
 
-        arm_command = RobotCommandBuilder.arm_pose_command(
-            vision_tform_hand_at_drop.x, vision_tform_hand_at_drop.y,
-            vision_tform_hand_at_drop.z, vision_tform_hand_at_drop.rot.w,
-            vision_tform_hand_at_drop.rot.x, vision_tform_hand_at_drop.rot.y,
-            vision_tform_hand_at_drop.rot.z, frame_helpers.VISION_FRAME_NAME,
-            seconds)
+            arm_command = RobotCommandBuilder.arm_pose_command(
+                vision_tform_hand_at_drop.x, vision_tform_hand_at_drop.y,
+                vision_tform_hand_at_drop.z, vision_tform_hand_at_drop.rot.w,
+                vision_tform_hand_at_drop.rot.x, vision_tform_hand_at_drop.rot.y,
+                vision_tform_hand_at_drop.rot.z, frame_helpers.VISION_FRAME_NAME,
+                seconds)
 
-        # Keep the gripper closed.
-        gripper_command = RobotCommandBuilder.claw_gripper_open_fraction_command(
-            0.0)
+            # Keep the gripper closed.
+            gripper_command = RobotCommandBuilder.claw_gripper_open_fraction_command(
+                0.0)
 
-        # Combine the arm and gripper commands into one RobotCommand
-        command = RobotCommandBuilder.build_synchro_command(
-            gripper_command, arm_command)
+            # Combine the arm and gripper commands into one RobotCommand
+            command = RobotCommandBuilder.build_synchro_command(
+                gripper_command, arm_command)
 
-        # Send the request
-        cmd_id = command_client.robot_command(command)
+            # Send the request
+            cmd_id = command_client.robot_command(command)
 
 </code></pre>
 <p>
@@ -267,23 +267,23 @@ Loaded models:
 </p>
 <br />
 
-<pre><code class="language-python">        # Wait until the arm arrives at the goal.
-        block_until_arm_arrives(command_client, cmd_id)
+<pre><code class="language-python">            # Wait until the arm arrives at the goal.
+            block_until_arm_arrives(command_client, cmd_id)
 
-        # Open the gripper
-        gripper_command = RobotCommandBuilder.claw_gripper_open_fraction_command(
-            1.0)
-        command = RobotCommandBuilder.build_synchro_command(gripper_command)
-        cmd_id = command_client.robot_command(command)
+            # Open the gripper
+            gripper_command = RobotCommandBuilder.claw_gripper_open_fraction_command(
+                1.0)
+            command = RobotCommandBuilder.build_synchro_command(gripper_command)
+            cmd_id = command_client.robot_command(command)
 
-        # Wait for the dogtoy to fall out
-        time.sleep(1.5)
+            # Wait for the dogtoy to fall out
+            time.sleep(1.5)
 
-        # Stow the arm.
-        stow_cmd = RobotCommandBuilder.arm_stow_command()
-        command_client.robot_command(stow_cmd)
+            # Stow the arm.
+            stow_cmd = RobotCommandBuilder.arm_stow_command()
+            command_client.robot_command(stow_cmd)
 
-        time.sleep(1)
+            time.sleep(1)
 
 </code></pre>
 <ul>
@@ -293,35 +293,26 @@ Loaded models:
 </ul>
 <br />
 
-<pre><code class="language-python">        print('Backing up and waiting...')
+<pre><code class="language-python">            print('Backing up and waiting...')
 
-        # Back up one meter and wait for the person to throw the object again.
-        move_cmd = RobotCommandBuilder.trajectory_command(
-            goal_x=wait_position_rt_vision[0],
-            goal_y=wait_position_rt_vision[1],
-            goal_heading=wait_heading_rt_vision,
-            frame_name=frame_helpers.VISION_FRAME_NAME,
-            params=get_walking_params(0.5, 0.5))
-        end_time = 5.0
-        cmd_id = command_client.robot_command(command=move_cmd,
-                                              end_time_secs=time.time() +
-                                              end_time)
+            # Back up one meter and wait for the person to throw the object again.
+            move_cmd = RobotCommandBuilder.trajectory_command(
+                goal_x=wait_position_rt_vision[0],
+                goal_y=wait_position_rt_vision[1],
+                goal_heading=wait_heading_rt_vision,
+                frame_name=frame_helpers.VISION_FRAME_NAME,
+                params=get_walking_params(0.5, 0.5))
+            end_time = 5.0
+            cmd_id = command_client.robot_command(command=move_cmd,
+                                                end_time_secs=time.time() +
+                                                end_time)
 
-        # Wait until the robot reports that it is at the goal.
-        block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)
+            # Wait until the robot reports that it is at the goal.
+            block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)
 </code></pre>
 <p>
     The last part!  Back up to let the user pick up the toy safely and loop.
 </p>
-<br />
-
-<p>
-    <mark>Careful!</mark>  This line is already in your file from <a href="fetch4.html">Part 4</a>.  Don't  copy it twice.
-</p>
-
-<pre><code class="language-python">    lease_client.return_lease(lease)
-</pre></code>
-<br />
 <p>
     Now we'll define some of the helper functions:
 </p>

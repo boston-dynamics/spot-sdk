@@ -7,6 +7,7 @@
 from __future__ import print_function
 
 import os
+
 import setuptools
 
 try:
@@ -35,8 +36,13 @@ setuptools.setup(
     package_dir={'': 'src'},
     package_data={'': ['*.pem']},
     install_requires=[
-        'bosdyn-api=={}'.format(SDK_VERSION), 'bosdyn-core=={}'.format(SDK_VERSION), 'grpcio',
-        'pyjwt', 'numpy', 'Deprecated~=1.2.10',
+        'bosdyn-api=={}'.format(SDK_VERSION),
+        'bosdyn-core=={}'.format(SDK_VERSION),
+        'grpcio',
+        'pyjwt',
+        'numpy',
+        'Deprecated~=1.2.10',
+        'requests>=2.26.0',
     ],
     classifiers=[
         "Programming Language :: Python :: 3.6",

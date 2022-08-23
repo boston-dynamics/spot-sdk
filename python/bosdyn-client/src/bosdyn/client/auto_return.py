@@ -10,11 +10,10 @@ from __future__ import print_function
 
 import collections
 
+from bosdyn.api.auto_return import auto_return_pb2, auto_return_service_pb2_grpc
+from bosdyn.client.common import (BaseClient, error_factory, error_pair,
+                                  handle_common_header_errors, handle_unset_status_error)
 from bosdyn.client.exceptions import ResponseError
-from bosdyn.client.common import (error_factory, handle_common_header_errors,
-                                  handle_unset_status_error, error_pair, BaseClient)
-from bosdyn.api.auto_return import auto_return_pb2
-from bosdyn.api.auto_return import auto_return_service_pb2_grpc
 
 
 class AutoReturnResponseError(ResponseError):
@@ -51,12 +50,14 @@ class AutoReturnClient(BaseClient):
         """
 
         request = self._configure_request(params, leases)
-        return self.call(self._stub.Configure, request, None, configure_error, **kwargs)
+        return self.call(self._stub.Configure, request, None, configure_error, copy_request=False,
+                         **kwargs)
 
     def configure_async(self, params, leases, **kwargs):
         """Async version of the configure() RPC."""
         request = self._configure_request(params, leases)
-        return self.call(self._stub.Configure, request, None, configure_error, **kwargs)
+        return self.call(self._stub.Configure, request, None, configure_error, copy_request=False,
+                         **kwargs)
 
     def get_configuration(self, **kwargs):
         """Get the configuration of the AutoReturn system.
@@ -68,12 +69,14 @@ class AutoReturnClient(BaseClient):
             The bosdyn.api.auto_return_pb2.GetConfigurationResponse.
         """
         request = auto_return_pb2.GetConfigurationRequest()
-        return self.call(self._stub.GetConfiguration, request, None, None, **kwargs)
+        return self.call(self._stub.GetConfiguration, request, None, None, copy_request=False,
+                         **kwargs)
 
     def get_configuration_async(self, **kwargs):
         """Async version of the get_configuration() RPC."""
         request = auto_return_pb2.GetConfigurationRequest()
-        return self.call_async(self._stub.GetConfiguration, request, None, None, **kwargs)
+        return self.call_async(self._stub.GetConfiguration, request, None, None, copy_request=False,
+                               **kwargs)
 
     def start(self, **kwargs):
         """Start AutoReturn now.
@@ -84,12 +87,12 @@ class AutoReturnClient(BaseClient):
             The bosdyn.api.auto_return_pb2.GetConfigurationResponse.
         """
         request = auto_return_pb2.StartRequest()
-        return self.call(self._stub.Start, request, None, None, **kwargs)
+        return self.call(self._stub.Start, request, None, None, copy_request=False, **kwargs)
 
     def start_async(self, **kwargs):
         """Async version of the start() RPC."""
         request = auto_return_pb2.StartRequest()
-        return self.call_async(self._stub.Start, request, None, None, **kwargs)
+        return self.call_async(self._stub.Start, request, None, None, copy_request=False, **kwargs)
 
     def _configure_request(self, params, leases):
         request = auto_return_pb2.ConfigureRequest(params=params)

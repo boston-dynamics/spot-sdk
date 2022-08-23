@@ -30,7 +30,7 @@ from bosdyn.client.image import ImageClient
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 from bosdyn.client.manipulation_api_client import ManipulationApiClient
 from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient, blocking_stand
-from bosdyn.client.util import add_base_arguments, setup_logging
+from bosdyn.client.util import add_base_arguments, authenticate, setup_logging
 
 
 def power_on(robot):
@@ -429,7 +429,7 @@ def initialize_robot(options):
     """
     sdk = create_standard_sdk('DoorExample')
     robot = sdk.create_robot(options.hostname)
-    bosdyn.client.util.authenticate(robot)
+    authenticate(robot)
     robot.time_sync.wait_for_sync()
     return robot
 

@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Part 3: Capturing Other Data &mdash; Spot 3.1.2.1 documentation</title>
+  <title>Part 3: Capturing Other Data &mdash; Spot 3.2.0 documentation</title>
   
 
   
@@ -41,7 +41,7 @@
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Part 4: Deploying to the Spot CORE" href="daq4.html" />
+    <link rel="next" title="Part 4: Deploying to the CORE I/O" href="daq4.html" />
     <link rel="prev" title="Part 2: Capturing Images" href="daq2.html" /> 
 </head>
 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.1.2.1
+                3.2.0
               </div>
             
           
@@ -118,10 +118,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/autonomy/autowalk_service.html">Autowalk service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/autonomy/directed_exploration.html">Directed Exploration</a></li>
@@ -149,7 +151,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/data_acquisition_output.html">Data Acquisition Output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/data_buffer_overview.html">Data Buffer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../concepts/bddf.html">BDDF file format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
 </ul>
 </li>
 </ul>
@@ -182,6 +185,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/docking/README.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -200,6 +204,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -207,6 +212,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -261,16 +267,24 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
@@ -297,6 +311,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
@@ -322,6 +338,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lights_helper.html">Lights Helper</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
@@ -391,7 +408,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="daq1.html">Data Collection Tutorial</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="daq2.html">Part 2: Capturing images</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Part 3: Capturing other data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="daq4.html">Part 4: Deploying to the Spot CORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="daq4.html">Part 4: Deploying to the CORE I/O</a></li>
 <li class="toctree-l3"><a class="reference internal" href="daq5.html">Part 5: Collecting data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="daq6.html">Part 6: Processing collected data</a></li>
 </ul>
@@ -405,9 +422,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../payload/robot_electrical_interface.html">Robot electrical interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../payload/configuring_payload_software.html">Configuring payload software</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../payload/docker_containers.html">Configuring Docker containers in SpotCORE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/docker_containers.html">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../protos/README.html">API Protocol</a><ul>
@@ -421,6 +443,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-proto">autowalk/autowalk.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-service-proto">autowalk/autowalk_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#autowalk-walks-proto">autowalk/walks.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
@@ -444,6 +469,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
@@ -539,6 +566,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -629,13 +657,13 @@ Development Kit License (20191101-BDSDK-SL).
 <p>To skip the explanation and just run the plugin, jump ahead to <a class="reference external" href="#testing-the-plugin">testing the plugin</a>.</p>
 <section id="understanding-data-acquisition-plugins">
 <h2>Understanding data acquisition plugins<a class="headerlink" href="#understanding-data-acquisition-plugins" title="Permalink to this headline">¶</a></h2>
-<p>The purpose of a data acquisition plugin is to capture and store data from a particular source (such as a temperature sensor, laser scan, gas sensor, etc.) that is not directly supported by Spot.  A data acquisition plugin exposes a list of “Capabilities” that can be requested during a capture event. Users do not directly communicate with a data acquisition plugin like they would with the image service example.  Instead they make a request to the data acquisition service and it sends out requests to individual plugin services as appropriate. Data acquisition plugins will save their data into the data acquisition store, where it can be retrieved later.</p>
-<p>The data acquisition store supports storing images, json metadata, and raw bytes.  The json metadata can be used to annotate other pieces of stored data, or to just save data as json.  In this example, we will read battery state from the robot and save that data as json. Every piece of data that is stored will have its own data identifier.  These are built from an action identifier that is set by the client and a channel name that is set by the individual plugins.</p>
+<p>The purpose of a data acquisition plugin is to capture and store data from a particular source (such as a temperature sensor, laser scan, gas sensor, etc.) that is not directly supported by Spot. A data acquisition plugin exposes a list of “Capabilities” that can be requested during a capture event. Users do not directly communicate with a data acquisition plugin like they would with the image service example. Instead they make a request to the data acquisition service and it sends out requests to individual plugin services as appropriate. Data acquisition plugins will save their data into the data acquisition store, where it can be retrieved later.</p>
+<p>The data acquisition store supports storing images, json metadata, and raw bytes. The json metadata can be used to annotate other pieces of stored data, or to just save data as json. In this example, we will read battery state from the robot and save that data as json. Every piece of data that is stored will have its own data identifier. These are built from an action identifier that is set by the client and a channel name that is set by the individual plugins.</p>
 <p>To create a data acquisition plugin, we will use the <code class="docutils literal notranslate"><span class="pre">DataAcquisitionPluginService</span></code> helper class. This helper handles all of the gRPC request management, so we will only need to provide it with three things:</p>
 <ul class="simple">
 <li><p>A list of capabilities</p></li>
 <li><p>A capture function to collect and store the data</p></li>
-<li><p>[Optional] A function to respond to the initial acquisition request.  This is used when we need to report that a requested capture is expected to take a long time (more than 30 seconds).</p></li>
+<li><p>[Optional] A function to respond to the initial acquisition request. This is used when we need to report that a requested capture is expected to take a long time (more than 30 seconds).</p></li>
 </ul>
 <section id="preparing-the-environment">
 <h3>Preparing the environment<a class="headerlink" href="#preparing-the-environment" title="Permalink to this headline">¶</a></h3>
@@ -683,51 +711,51 @@ Development Kit License (20191101-BDSDK-SL).
 <span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;battery_plugin&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Next we crate a class that we use to store any state used for our service.  This adapter class only takes a Robot instance and uses it to create a client we will use for acquisition.</p>
+<p>Next we create a class that we use to store any state used for our service. This adapter class only takes a Robot instance and uses it to create a client we will use for acquisition.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">BatteryAdapter</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sdk_robot</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">sdk_robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">RobotStateClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now we write the function does the main work.  It takes as input the plugin data request, and also a store_helper object a that</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_battery_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">AcquirePluginDataRequest</span><span class="p">,</span>
-                     <span class="n">store_helper</span><span class="p">:</span> <span class="n">DataAcquisitionStoreHelper</span><span class="p">):</span>
+<p>Now we write the function that does the main work. It takes as input the plugin data request and a store_helper object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">get_battery_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">AcquirePluginDataRequest</span><span class="p">,</span>
+                         <span class="n">store_helper</span><span class="p">:</span> <span class="n">DataAcquisitionStoreHelper</span><span class="p">):</span>
 </pre></div>
 </div>
-<p>The request includes an ActionIdentifier.  We will combine this with our channel name to create an identifier for the data we are about to save.</p>
+<p>The request includes an ActionIdentifier. We will combine this with our channel name to create an identifier for the data we are about to save.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="n">data_id</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">DataIdentifier</span><span class="p">(</span><span class="n">action_id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">action_id</span><span class="p">,</span>
                                                       <span class="n">channel</span><span class="o">=</span><span class="n">CAPABILITY</span><span class="o">.</span><span class="n">channel_name</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Here we actually collect the data from the robot.  In many cases this will be more complicated, but for this basic plugin it is a simple RPC.</p>
+<p>Here we actually collect the data from the robot. In many cases this will be more complicated, but for this basic plugin it is a simple RPC.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_robot_state</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If you have a long-running capture, you should periodically check that the capture has not been cancelled by the client.  Store_helper provides the cancel_check() helper which will raise a RequestCancelledError if the request has already been cancelled.  If you need to do any cleanup upon cancellation, you should catch the exception, perform your cleanup, and re-raise it.  Note that most store_helper functions can raise this exception as well.</p>
+<p>If you have a long-running capture, you should periodically check that the capture has not been cancelled by the client. Store_helper provides the cancel_check() helper which will raise a RequestCancelledError if the request has already been cancelled. If you need to do any cleanup upon cancellation, you should catch the exception, perform your cleanup, and re-raise it. Note that most store_helper functions can raise this exception as well.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="n">store_helper</span><span class="o">.</span><span class="n">cancel_check</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>At this point we have acquired all the data we need and will begin storing it.  First, we will update our status to STATUS_SAVING (it was previously STATUS_ACQUIRING).</p>
+<p>At this point we have acquired all the data we need and will begin storing it. First, we will update our status to STATUS_SAVING (it was previously STATUS_ACQUIRING).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="n">store_helper</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">GetStatusResponse</span><span class="o">.</span><span class="n">STATUS_SAVING</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Next we save the particular battery data we care about as associated metadata.  The data we are saving is associated with the overall capture action in this case and not any other specific piece of data, so we set the reference_id to that action_id of the request.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>       <span class="n">message</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">AssociatedMetadata</span><span class="p">()</span>
-       <span class="n">message</span><span class="o">.</span><span class="n">reference_id</span><span class="o">.</span><span class="n">action_id</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">action_id</span><span class="p">)</span>
-       <span class="n">message</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-           <span class="s2">&quot;battery_percentage&quot;</span><span class="p">:</span>
-               <span class="n">state</span><span class="o">.</span><span class="n">power_state</span><span class="o">.</span><span class="n">locomotion_charge_percentage</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-           <span class="s2">&quot;battery_runtime&quot;</span><span class="p">:</span>
-               <span class="n">json_format</span><span class="o">.</span><span class="n">MessageToJson</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">power_state</span><span class="o">.</span><span class="n">locomotion_estimated_runtime</span><span class="p">)</span>
-       <span class="p">})</span>
-       <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Retrieving battery data: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+<p>Next we save the particular battery data we care about as associated metadata. The data we are saving is associated with the overall capture action in this case and not any other specific piece of data, so we set the reference_id to that action_id of the request.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="n">message</span> <span class="o">=</span> <span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">AssociatedMetadata</span><span class="p">()</span>
+        <span class="n">message</span><span class="o">.</span><span class="n">reference_id</span><span class="o">.</span><span class="n">action_id</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">action_id</span><span class="p">)</span>
+        <span class="n">message</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s2">&quot;battery_percentage&quot;</span><span class="p">:</span>
+                <span class="n">state</span><span class="o">.</span><span class="n">power_state</span><span class="o">.</span><span class="n">locomotion_charge_percentage</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="s2">&quot;battery_runtime&quot;</span><span class="p">:</span>
+                <span class="n">json_format</span><span class="o">.</span><span class="n">MessageToJson</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">power_state</span><span class="o">.</span><span class="n">locomotion_estimated_runtime</span><span class="p">)</span>
+        <span class="p">})</span>
+        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Retrieving battery data: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>Finally, we begin saving the data into the store.  After returning from this function, the status of this action will automatically be updated to <code class="docutils literal notranslate"><span class="pre">STATUS_COMPLETE</span></code> for us once all the stores we requested are complete.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>       <span class="n">store_helper</span><span class="o">.</span><span class="n">store_metadata</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">data_id</span><span class="p">)</span>
+<p>Finally, we begin saving the data into the store. After returning from this function, the status of this action will automatically be updated to <code class="docutils literal notranslate"><span class="pre">STATUS_COMPLETE</span></code> for us once all the stores we requested are complete.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="n">store_helper</span><span class="o">.</span><span class="n">store_metadata</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">data_id</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The remaining parts of the file handle setting up, running and registering the service.  To create the service, we use the DataAcquisitionPluginService helper, which needs the capabilities the plugin implements, and the function to capture the data (which in our case is the get_battery_data method).</p>
+<p>The remaining parts of the file handle setting up, running and registering the service. To create the service, we use the DataAcquisitionPluginService helper, which needs the capabilities the plugin implements, and the function to capture the data (which in our case is the get_battery_data method).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">make_servicer</span><span class="p">(</span><span class="n">sdk_robot</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Create the data acquisition servicer for the battery data.&quot;&quot;&quot;</span>
     <span class="n">adapter</span> <span class="o">=</span> <span class="n">BatteryAdapter</span><span class="p">(</span><span class="n">sdk_robot</span><span class="p">)</span>
@@ -786,7 +814,7 @@ Development Kit License (20191101-BDSDK-SL).
 <h3>Registering a payload<a class="headerlink" href="#registering-a-payload" title="Permalink to this headline">¶</a></h3>
 <p>In order to test these services, we need payload authentication credentials. Those credentials are created by registering a payload with the robot. The payload can represent an actual physical payload with mass and dimensions specified in the payload registration request, or a massless payload. To register a massless payload, please run the payload SDK example https://github.com/boston-dynamics/spot-sdk/tree/master/python/examples/payloads.</p>
 <p>For more information on registering payloads, please take a look at <a class="reference internal" href="../../payload/configuring_payload_software.html"><span class="doc">this SDK documentation article</span></a>.</p>
-<p>The SpotCORE  payload credentials can also be used to authenticate these image and data acquisition plugin services. They are located in <code class="docutils literal notranslate"><span class="pre">/opt/payload_credentials/payload_guid_and_secret</span></code> in SpotCORE.</p>
+<p>The SpotCORE payload credentials can also be used to authenticate these image and data acquisition plugin services. They are located in <code class="docutils literal notranslate"><span class="pre">/opt/payload_credentials/payload_guid_and_secret</span></code> in SpotCORE.</p>
 <p>For testing on our development machine, we will use the credentials created and registered in <a class="reference external" href="daq1.html#register-a-payload-for-development">Part 1</a>.</p>
 </section>
 <section id="running-the-service">
@@ -796,7 +824,7 @@ Development Kit License (20191101-BDSDK-SL).
 python3 battery_service.py --payload-credentials-file <span class="nv">$CRED_FILE</span> <span class="nv">$ROBOT_IP</span> --host-ip <span class="nv">$SELF_IP</span> --port <span class="nv">$BATTERY_PORT</span>
 </pre></div>
 </div>
-<p>Note that you will need to either disable any firewall or open the specified port to allow the robot to contact the service.  If you are unsure of the correct ip address to use for <code class="docutils literal notranslate"><span class="pre">--host-ip</span></code>, you can discover it via the bosdyn.client command line program:</p>
+<p>Note that you will need to either disable any firewall or open the specified port to allow the robot to contact the service. If you are unsure of the correct ip address to use for <code class="docutils literal notranslate"><span class="pre">--host-ip</span></code>, you can discover it via the bosdyn.client command line program:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3 -m bosdyn.client <span class="nv">$ROBOT_IP</span> self-ip
 </pre></div>
 </div>
@@ -805,7 +833,7 @@ python3 battery_service.py --payload-credentials-file <span class="nv">$CRED_FIL
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3 plugin_tester.py <span class="nv">$ROBOT_IP</span> --service-name data-acquisition-battery
 </pre></div>
 </div>
-<p>This will attempt capture each capability listed by the plugin, as well testing that cancelling acquisitions works as expected.  It will save the downloaded results of the acquisition tests to the current directory (this can be modified via the <code class="docutils literal notranslate"><span class="pre">--destination-folder</span></code> argument).</p>
+<p>This will attempt capture each capability listed by the plugin, as well testing that cancelling acquisitions works as expected. It will save the downloaded results of the acquisition tests to the current directory (this can be modified via the <code class="docutils literal notranslate"><span class="pre">--destination-folder</span></code> argument).</p>
 <p>Common errors at this point:</p>
 <ul class="simple">
 <li><p>Firewall blocking requests</p></li>
@@ -813,8 +841,8 @@ python3 battery_service.py --payload-credentials-file <span class="nv">$CRED_FIL
 </ul>
 </section>
 </section>
-<section id="head-over-to-part-4-deploying-to-the-spot-core">
-<h2>Head over to <a class="reference internal" href="daq4.html"><span class="doc">Part 4: Deploying to the Spot CORE</span></a> &gt;&gt;<a class="headerlink" href="#head-over-to-part-4-deploying-to-the-spot-core" title="Permalink to this headline">¶</a></h2>
+<section id="head-over-to-part-4-deploying-to-the-core-i-o">
+<h2>Head over to <a class="reference internal" href="daq4.html"><span class="doc">Part 4: Deploying to the CORE I/O</span></a> &gt;&gt;<a class="headerlink" href="#head-over-to-part-4-deploying-to-the-core-i-o" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference internal" href="daq2.html"><span class="doc">&lt;&lt; Previous Page</span></a>
 |
 <a class="reference internal" href="daq4.html"><span class="doc">Next Page &gt;&gt;</span></a></p>

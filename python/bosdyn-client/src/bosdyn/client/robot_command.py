@@ -10,30 +10,23 @@ import time
 
 from deprecated.sphinx import deprecated
 from google.protobuf import any_pb2, wrappers_pb2
+
 from bosdyn import geometry
-
-from bosdyn.api import geometry_pb2
-
-from bosdyn.api import arm_command_pb2
-from bosdyn.api import robot_command_pb2
-from bosdyn.api import full_body_command_pb2
-from bosdyn.api import mobility_command_pb2
-from bosdyn.api import synchronized_command_pb2
-from bosdyn.api import basic_command_pb2
-from bosdyn.api import gripper_command_pb2
+from bosdyn.api import (arm_command_pb2, basic_command_pb2, full_body_command_pb2, geometry_pb2,
+                        gripper_command_pb2, mobility_command_pb2, payload_estimation_pb2,
+                        robot_command_pb2, robot_command_service_pb2_grpc, synchronized_command_pb2,
+                        trajectory_pb2)
 from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
-from bosdyn.api import robot_command_service_pb2_grpc
-from bosdyn.api import trajectory_pb2
+from bosdyn.client.common import (BaseClient, error_factory, error_pair,
+                                  handle_common_header_errors, handle_lease_use_result_errors,
+                                  handle_unset_status_error)
 from bosdyn.util import seconds_to_duration
 
-from bosdyn.client.common import (BaseClient, error_factory, error_pair, handle_unset_status_error,
-                                  handle_common_header_errors, handle_lease_use_result_errors)
-
-from .exceptions import ResponseError, InvalidRequestError, TimedOutError, UnsetStatusError
 from .exceptions import Error as BaseError
+from .exceptions import InvalidRequestError, ResponseError, TimedOutError, UnsetStatusError
 from .frame_helpers import BODY_FRAME_NAME, ODOM_FRAME_NAME, get_se2_a_tform_b
-from .math_helpers import SE2Pose, SE3Pose
 from .lease import add_lease_wallet_processors
+from .math_helpers import SE2Pose, SE3Pose
 
 # The angles (in radians) that represent the claw gripper open and closed positions.
 _CLAW_GRIPPER_OPEN_ANGLE = -1.5708
@@ -215,6 +208,11 @@ EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME = {
                     'tool_trajectory_in_frame2': {
                         'reference_time': None
                     }
+                },
+                'arm_impedance_command': {
+                    'task_tform_desired_tool': {
+                        'reference_time': None
+                    },
                 }
             }
         }
@@ -259,7 +257,7 @@ def _edit_proto(proto, edit_tree, edit_fn):
 
 
 class RobotCommandClient(BaseClient):
-    '''Client for calling RobotCommand services.'''
+    """Client for calling RobotCommand services."""
     default_service_name = 'robot-command'
     service_type = 'bosdyn.api.RobotCommandService'
 
@@ -324,7 +322,7 @@ class RobotCommandClient(BaseClient):
         # Update req.command instead of command so that we don't modify an input in this function.
         self._update_command_timestamps(req.command, end_time_secs, timesync_endpoint)
         return self.call(self._stub.RobotCommand, req, _robot_command_value, _robot_command_error,
-                         **kwargs)
+                         copy_request=False, **kwargs)
 
     def robot_command_async(self, command, end_time_secs=None, timesync_endpoint=None, lease=None,
                             **kwargs):
@@ -355,7 +353,7 @@ class RobotCommandClient(BaseClient):
         # Update req.command instead of command so that we don't modify an input to this function.
         self._update_command_timestamps(req.command, end_time_secs, timesync_endpoint)
         return self.call_async(self._stub.RobotCommand, req, _robot_command_value,
-                               _robot_command_error, **kwargs)
+                               _robot_command_error, copy_request=False, **kwargs)
 
     def robot_command_feedback(self, robot_command_id, **kwargs):
         """Get feedback from a previously issued command.
@@ -369,7 +367,7 @@ class RobotCommandClient(BaseClient):
 
         req = self._get_robot_command_feedback_request(robot_command_id)
         return self.call(self._stub.RobotCommandFeedback, req, None, _robot_command_feedback_error,
-                         **kwargs)
+                         copy_request=False, **kwargs)
 
     def robot_command_feedback_async(self, robot_command_id, **kwargs):
         """Async version of robot_command_feedback().
@@ -383,7 +381,7 @@ class RobotCommandClient(BaseClient):
 
         req = self._get_robot_command_feedback_request(robot_command_id)
         return self.call_async(self._stub.RobotCommandFeedback, req, None,
-                               _robot_command_feedback_error, **kwargs)
+                               _robot_command_feedback_error, copy_request=False, **kwargs)
 
 
     def clear_behavior_fault(self, behavior_fault_id, lease=None, **kwargs):
@@ -403,7 +401,7 @@ class RobotCommandClient(BaseClient):
 
         req = self._get_clear_behavior_fault_request(lease, behavior_fault_id)
         return self.call(self._stub.ClearBehaviorFault, req, _clear_behavior_fault_value,
-                         _clear_behavior_fault_error, **kwargs)
+                         _clear_behavior_fault_error, copy_request=False, **kwargs)
 
     def clear_behavior_fault_async(self, behavior_fault_id, lease=None, **kwargs):
         """Async version of clear_behavior_fault().
@@ -424,7 +422,7 @@ class RobotCommandClient(BaseClient):
 
         req = self._get_clear_behavior_fault_request(lease, behavior_fault_id)
         return self.call_async(self._stub.ClearBehaviorFault, req, _clear_behavior_fault_value,
-                               _clear_behavior_fault_error, **kwargs)
+                               _clear_behavior_fault_error, copy_request=False, **kwargs)
 
     def _get_robot_command_request(self, lease, command):
         """Create RobotCommandRequest message from the given information.
@@ -670,6 +668,21 @@ class RobotCommandBuilder(object):
         """
         command = robot_command_pb2.RobotCommand()
         command.full_body_command.battery_change_pose_request.direction_hint = dir_hint
+        return command
+
+    @staticmethod
+    def payload_estimation_command():
+        """Command to get the robot estimate payload mass.
+
+        Commands robot to stand and execute a routine to estimate the mass properties of an
+        unregistered payload attached to the robot.
+
+        Returns:
+            RobotCommand, which can be issued to the robot command service.
+        """
+        full_body_command = full_body_command_pb2.FullBodyCommand.Request(
+            payload_estimation_request=payload_estimation_pb2.PayloadEstimationCommand.Request())
+        command = robot_command_pb2.RobotCommand(full_body_command=full_body_command)
         return command
 
     @staticmethod
@@ -938,9 +951,9 @@ class RobotCommandBuilder(object):
         call to RobotCommandService.
 
         Args:
-            goal_x: Position X coordinate described relative to the body frame.
-            goal_y: Position Y coordinate described relative to the body frame.
-            goal_heading: Pose heading in radians described relative to the body frame.
+            goal_x_rt_body: Position X coordinate described relative to the body frame.
+            goal_y_rt_body: Position Y coordinate described relative to the body frame.
+            goal_heading_rt_body: Pose heading in radians described relative to the body frame.
             frame_tree_snapshot: Dictionary representing the child_to_parent_edge_map describing different
                                  transforms. This can be acquired using the robot state client directly, or using
                                  the robot object's helper function robot.get_frame_tree_snapshot().
@@ -1084,7 +1097,7 @@ class RobotCommandBuilder(object):
         argument is passed.
 
         Args:
-            se2_fame_name(string): The frame name which the desired foot_positions are described in.
+            se2_frame_name(string): The frame name which the desired foot_positions are described in.
             pos_fl_rt_frame(Vec2): Position of front left foot in specified frame.
             pos_fr_rt_frame(Vec2): Position of front right foot in specified frame.
             pos_hl_rt_frame(Vec2): Position of rear left foot in specified frame.
@@ -1441,7 +1454,7 @@ class RobotCommandBuilder(object):
     @staticmethod
     def mobility_params(body_height=0.0, footprint_R_body=geometry.EulerZXY(),
                         locomotion_hint=spot_command_pb2.HINT_AUTO, stair_hint=False,
-                        external_force_params=None):
+                        external_force_params=None, stairs_mode=None):
         """Helper to create Mobility params for spot mobility commands. This function is designed
         to help get started issuing commands, but lots of options are not exposed via this
         interface. See spot.robot_command_pb2 for more details. If unset, good defaults will be
@@ -1453,9 +1466,11 @@ class RobotCommandBuilder(object):
                                         footprint frame (gravity aligned framed with yaw computed
                                         from the stance feet)
             locomotion_hint: Locomotion hint to use for the command.
-            stair_hint: Boolean to specify if stair mode should be used.
+            stair_hint: Boolean to specify if stair mode should be used. Deprecated in favor of stairs_mode
+                                        and ignored if stairs_mode set.
             external_force_params(spot.BodyExternalForceParams): Robot body external force
                                                                  parameters.
+            stairs_mode: StairsMode enum specifying stairs mode as On, Auto, or Off.
 
         Returns:
             spot.MobilityParams, params for spot mobility commands.
@@ -1467,10 +1482,9 @@ class RobotCommandBuilder(object):
         point = trajectory_pb2.SE3TrajectoryPoint(pose=pose)
         traj = trajectory_pb2.SE3Trajectory(points=[point])
         body_control = spot_command_pb2.BodyControlParams(base_offset_rt_footprint=traj)
-        return spot_command_pb2.MobilityParams(body_control=body_control,
-                                               locomotion_hint=locomotion_hint,
-                                               stair_hint=stair_hint,
-                                               external_force_params=external_force_params)
+        return spot_command_pb2.MobilityParams(
+            body_control=body_control, locomotion_hint=locomotion_hint, stair_hint=stair_hint,
+            external_force_params=external_force_params, stairs_mode=stairs_mode)
 
     @staticmethod
     def build_body_external_forces(
@@ -1752,6 +1766,8 @@ def block_until_arm_arrives(command_client, cmd_id, timeout_sec=None):
         elif arm_feedback.HasField("arm_joint_move_feedback"):
             if arm_feedback.arm_joint_move_feedback.status == arm_command_pb2.ArmJointMoveCommand.Feedback.STATUS_COMPLETE:
                 return True
+            elif arm_feedback.arm_joint_move_feedback.status == arm_command_pb2.ArmJointMoveCommand.Feedback.STATUS_STALLED:
+                return False
         elif arm_feedback.HasField("named_arm_position_feedback"):
             if arm_feedback.named_arm_position_feedback.status == arm_command_pb2.NamedArmPositionsCommand.Feedback.STATUS_COMPLETE:
                 return True
@@ -1772,7 +1788,7 @@ def block_for_trajectory_cmd(
        Args:
         command_client (RobotCommandClient): the client used to request feedback
         cmd_id (int): command ID returned by the robot when the trajectory command was sent
-        acceptable_statuses (set of SE2TrajectoryCommand.Feedback.Status): the feedback must have a
+        trajectory_end_statuses (set of SE2TrajectoryCommand.Feedback.Status): the feedback must have a
             status which is included in this set of statuses to be considered successfully complete.
             By default, this includes only the "STATUS_AT_GOAL" end condition.
         body_movement_statuses (set of SE2TrajectoryCommand.Feedback.BodyMovementStatus): the body

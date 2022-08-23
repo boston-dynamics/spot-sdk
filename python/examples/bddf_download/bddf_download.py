@@ -14,9 +14,9 @@ import time
 import requests
 from urllib3.exceptions import InsecureRequestWarning
 
-from bosdyn.client import create_standard_sdk, RpcError
-from bosdyn.client.time_sync import TimeSyncEndpoint, TimeSyncClient
 import bosdyn.client.util
+from bosdyn.client import RpcError, create_standard_sdk
+from bosdyn.client.time_sync import TimeSyncClient, TimeSyncEndpoint
 
 # Suppress only the single warning from urllib3 needed.
 requests.packages.urllib3.disable_warnings(  # pylint:disable=no-member
@@ -203,8 +203,8 @@ def main():  # pylint: disable=too-many-locals
     sdk = create_standard_sdk('bddf')
     robot = sdk.create_robot(options.hostname)
     bosdyn.client.util.authenticate(robot)
-    url, headers, params = prepare_download(robot, options.timespan, options.channel,
-                                            options.type, options.service)
+    url, headers, params = prepare_download(robot, options.timespan, options.channel, options.type,
+                                            options.service)
 
     number_of_bytes_processed = 0
     for chunk, total_content_length, response_status_code in collect_and_write_file(

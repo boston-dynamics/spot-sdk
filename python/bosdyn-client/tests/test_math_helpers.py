@@ -6,18 +6,22 @@
 
 """Unit tests for frame helpers"""
 
+import math
+import random
+from math import cos, fabs, pi, sin, sqrt
+
+import google.protobuf.text_format
+import numpy
+import pytest
+
 from bosdyn.api import geometry_pb2
 from bosdyn.client.math_helpers import *
-import google.protobuf.text_format
-import pytest
-import numpy
-import math
-from math import sin, cos, pi, fabs, sqrt
 
 # The following set of tests are for the math_helpers
 # Still needing tests: Quat class, se3_times_vec3
 
 EPSILON = 0.0001
+
 
 def test_create_se2_pose():
     # Test creating an SE2Pose from a proto with from_obj()
@@ -229,6 +233,20 @@ def test_se2_conversions_se3_pose():
     assert se2_b.x == 1
     assert se2_b.y == 2
     assert se2_b.angle == 0
+
+    # Test that flattening always gives us an angle between [-pi, pi]
+    random.seed(2345)
+    for i in range(100):
+        # Generate a random quaternion (normalizing a 4D Gaussian)
+        w = random.gauss(0, 1)
+        x = random.gauss(0, 1)
+        y = random.gauss(0, 1)
+        z = random.gauss(0, 1)
+        mag = math.sqrt(w**2 + x**2 + y**2 + z**2)
+        b = SE3Pose(0, 0, 0, Quat(w / mag, x / mag, y / mag, z / mag))
+        se2_b = SE2Pose.flatten(b)
+        assert se2_b.angle <= math.pi
+        assert se2_b.angle >= -math.pi
 
     # Test converting se3pose --> se2pose
     c = SE3Pose(x=1, y=2, z=0, rot=Quat(w=.1, x=.3, y=.2, z=.2))
@@ -786,14 +804,54 @@ def test_vec3():
     assert b.cross(a).z == -12
 
 
-@pytest.mark.parametrize('desired_x, desired_y, angle', [
-    # Rotate 45 degrees, and see an offset of y on x axis
-    (3, 7, 0.785398),
-    # Rotate -45 degrees, and see an offset of 2 on x axis
-    (5, 5, -0.785398),
+@pytest.mark.parametrize('x, y, angle', [
+    (3, 7, 1.047198),
+    (5, 5, -1.047198),
 ])
+def test_se2_to_and_from_matrix(x, y, angle):
+    # Test that going to and from a matrix doesn't change anything
+    se2 = SE2Pose(x, y, angle)
+    new_se2 = SE2Pose.from_matrix(se2.to_matrix())
+    assert abs(new_se2.x - x) < EPSILON
+    assert abs(new_se2.y - y) < EPSILON
+    assert angle_diff(new_se2.angle, angle) < EPSILON
 
 
+def test_se2_angle_stuff():
+    # Test that we handle large angles and wrap around
+    random.seed(1234)
+    for i in range(100):
+        # Generate SE2Pose with potentially large positive or negative angles
+        angle1 = random.uniform(-math.pi, math.pi)
+        angle2 = random.uniform(-math.pi, math.pi)
+        x1 = random.uniform(-2.0, 2.0)
+        y1 = random.uniform(-2.0, 2.0)
+        x2 = random.uniform(-2.0, 2.0)
+        y2 = random.uniform(-2.0, 2.0)
+        p1 = random.randint(-20, 20) * 2 * math.pi
+        p2 = random.randint(-20, 20) * 2 * math.pi
+
+        # Check that we get 0 when we multiply a pose with its inverse
+        should_be_identity = SE2Pose(x1, y1, angle1) * SE2Pose(x1, y1, angle1 + p1).inverse()
+        assert abs(should_be_identity.angle) < EPSILON
+        assert abs(should_be_identity.x) < EPSILON
+        assert abs(should_be_identity.y) < EPSILON
+
+        # Check that we don't get a giant angle when multiplying poses together
+        new_pose = SE2Pose(x1, y1, angle1 + p1) * SE2Pose(x2, y2, angle2 + p2)
+        assert new_pose.angle <= math.pi
+        assert new_pose.angle >= -math.pi
+        assert abs(new_pose.angle - recenter_angle_mod(angle1 + angle2, 0.0)) < EPSILON
+
+
+@pytest.mark.parametrize(
+    'desired_x, desired_y, angle',
+    [
+        # Rotate 45 degrees, and see an offset of y on x axis
+        (3, 7, 0.785398),
+        # Rotate -45 degrees, and see an offset of 2 on x axis
+        (5, 5, -0.785398),
+    ])
 def test_se2_vec2_mult(desired_x, desired_y, angle):
     vec_proto = geometry_pb2.Vec2(x=sqrt(2), y=sqrt(2))
     vec = Vec2.from_proto(vec_proto)
@@ -809,15 +867,17 @@ def test_se3_vec3_mult():
     vec_proto = geometry_pb2.Vec3(x=sqrt(3), y=sqrt(3), z=sqrt(3))
     vec = Vec3.from_proto(vec_proto)
 
-    root2o2 = sqrt(2) /2
-    se3_proto = geometry_pb2.SE3Pose(position=geometry_pb2.Vec3(x=1, y=2, z=3),
-                                     rotation=geometry_pb2.Quaternion(w=0, x=root2o2, y=0, z=-root2o2))
+    root2o2 = sqrt(2) / 2
+    se3_proto = geometry_pb2.SE3Pose(
+        position=geometry_pb2.Vec3(x=1, y=2, z=3),
+        rotation=geometry_pb2.Quaternion(w=0, x=root2o2, y=0, z=-root2o2))
     se3 = SE3Pose.from_proto(se3_proto)
     result = se3 * vec
     assert abs(result.x - -0.7320508) < EPSILON
     assert abs(result.y - 0.2679491) < EPSILON
     assert abs(result.z - 1.2679491) < EPSILON
     assert isinstance(result, Vec3)
+
 
 def test_se2_vec2_mult_exceptions():
     vec_proto = geometry_pb2.Vec2(x=sqrt(2), y=sqrt(2))
@@ -836,6 +896,7 @@ def test_se2_vec2_mult_exceptions():
         " " * vec
     with pytest.raises(TypeError):
         se2 * ""
+
 
 def test_se3_vec3_mult_exceptions():
     vec_proto = geometry_pb2.Vec3(x=sqrt(2), y=sqrt(2), z=10)

@@ -5,10 +5,10 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """A class for reading a series of POD data from a DataFile."""
-from itertools import product
 import struct
+from itertools import product
 
-from .common import ParseError, POD_TYPE_TO_NUM_BYTES, POD_TYPE_TO_STRUCT
+from .common import POD_TYPE_TO_NUM_BYTES, POD_TYPE_TO_STRUCT, ParseError
 
 
 class PodSeriesReader:

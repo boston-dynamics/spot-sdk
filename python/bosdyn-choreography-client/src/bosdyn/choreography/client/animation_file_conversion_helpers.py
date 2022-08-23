@@ -525,25 +525,32 @@ def neutral_start_option(file_line_split, animation):
 def precise_steps_option(file_line_split, animation):
     animation.proto.precise_steps = True
 
+
 def precise_timing_option(file_line_split, animation):
     animation.proto.precise_timing = True
+
 
 def no_looping_option(file_line_split, animation):
     animation.proto.no_looping = True
 
+
 def arm_required_option(file_line_split, animation):
     animation.proto.arm_required = True
 
+
 def arm_prohibited_option(file_line_split, animation):
     animation.proto.arm_prohibited = True
+
 
 def track_swing_trajectories_option(file_line_split, animation):
     animation.proto.track_swing_trajectories = True
     return animation
 
+
 def assume_zero_roll_and_pitch_option(file_line_split, animation):
     animation.proto.assume_zero_roll_and_pitch = True
     return animation
+
 
 def track_hand_rt_body_option(file_line_split, animation):
     animation.proto.track_hand_rt_body = True

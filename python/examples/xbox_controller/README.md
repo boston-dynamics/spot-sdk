@@ -6,12 +6,12 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-#  Controlling the Robot with an Xbox Controller
+# Controlling the Robot with an Xbox Controller
 
 Xbox Controller example allows users to control a Spot robot through an Xbox controller. The example was tested with an Xbox 360 wired controller. The button mapping is:
 
 | Button Combination | Functionality            |
-|--------------------|--------------------------|
+| ------------------ | ------------------------ |
 | A                  | Walk                     |
 | B                  | Stand                    |
 | X                  | Sit                      |
@@ -27,7 +27,7 @@ Xbox Controller example allows users to control a Spot robot through an Xbox con
 |                    |                          |
 | If Stand Mode      |                          |
 | - Left Stick       |                          |
-| -- X               | Rotate body in roll axis |  
+| -- X               | Rotate body in roll axis |
 | -- Y               | Control height           |
 | - Right Stick      |                          |
 | -- X               | Turn body in yaw axis    |
@@ -40,14 +40,16 @@ Xbox Controller example allows users to control a Spot robot through an Xbox con
 | Start              | Motor power & Control    |
 | Back               | Exit                     |
 
-
 ## User Guide
+
 ### Installation
-For your best learning experience, please use the [Quickstart Guide](../../../docs/python/quickstart.md) 
-found in the SDK's docs/python directory.  That will help you get your Python programming 
+
+For your best learning experience, please use the [Quickstart Guide](../../../docs/python/quickstart.md)
+found in the SDK's docs/python directory. That will help you get your Python programming
 environment setup properly.
 
 #### OS-Specific Dependencies
+
 This example has external dependencies to communicate with an XBox controller, and those dependencies are OS-specific.
 
 **Ubuntu**: On Ubuntu 18.04, the example uses the `xboxdrv` driver to communicate with the controller, so please install the driver by executing:
@@ -61,15 +63,19 @@ The `xboxdrv` driver supports only Xbox360 controllers. Newer controllers are no
 **MacOS**: This example is not supported on MacOS.
 
 #### Installation Instructions
+
 To install this example on Ubuntu 18.04 and Windows, follow these instructions:
-- Create virtual environment as described in this 
-[Quickstart Guide virtualenv section](../../../docs/python/quickstart.md#manage-multiple-python-environments)
+
+- Create virtual environment as described in this
+  [Quickstart Guide virtualenv section](../../../docs/python/quickstart.md#manage-multiple-python-environments)
 - Install dependencies: `python3 -m pip install -r requirements.txt`
 - Run the example using instructions in the next section
 - To exit the virtual environment, run `deactivate`
 
 ### Execution
+
 This example follows the common pattern for expected arguments. It needs the common arguments used to configure the SDK and connect to a Spot:
+
 - hostname passed as the last argument
 - username and password should be set in the environment variables `BOSDYN_CLIENT_USERNAME` and `BOSDYN_CLIENT_PASSWORD`.
 
@@ -78,23 +84,27 @@ This example follows the common pattern for expected arguments. It needs the com
 `sudo venv/bin/python xbox_controller.py --user USER --password PASSWORD ROBOT_IP`
 
 **2)** After the controller is connected, the example prints a status window:
+
 ```
 E-Stop	Control	Motors On	Mode
 ```
 
 **3)** Next, press the key combination `Left Button + Right Button + B` to turn E-Stop on:
+
 ```
 E-Stop	Control	Motors On	Mode
 X
 ```
 
 **4)** Next, press the `Guide` button to acquire a lease with this Spot:
+
 ```
 E-Stop	Control	Motors On	Mode
 X       X
 ```
 
 **5)** Next, press the `Start` button to turn the motors on:
+
 ```
 E-Stop	Control	Motors On	Mode
 X       X       X

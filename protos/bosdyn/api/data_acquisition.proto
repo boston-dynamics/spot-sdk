@@ -147,12 +147,17 @@ message ImageSourceCapture {
     // Name of the image service that the data should be requested from.
     string image_service = 1;
 
+    // Options for requesting this particular image.
+    ImageRequest image_request = 4;
+
+    // Deprecated.  Use image_request instead.
     // Specific image source to use from the list reported by the image service within the
     // ImageAcquisitionCapability message.
-    string image_source = 2;
+    string image_source = 2 [deprecated = true];
 
-    // Specific pixel format to capture reported by the ImageAcquisitionCapability message. 
-    Image.PixelFormat pixel_format = 3;
+    // Deprecated.  Use image_request instead.
+    // Specific pixel format to capture reported by the ImageAcquisitionCapability message.
+    Image.PixelFormat pixel_format = 3 [deprecated = true];
 }
 
 // An individual capture which can be specified in the AcquireData request to identify a piece of

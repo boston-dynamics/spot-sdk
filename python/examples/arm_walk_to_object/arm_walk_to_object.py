@@ -62,7 +62,7 @@ def walk_to_object(config):
 
         # Tell the robot to stand up. The command service is used to issue commands to a robot.
         # The set of valid commands for a robot depends on hardware configuration. See
-        # SpotCommandHelper for more detailed examples on command building. The robot
+        # RobotCommandBuilder for more detailed examples on command building. The robot
         # command service requires timesync between the robot and the client.
         robot.logger.info("Commanding robot to stand...")
         command_client = robot.ensure_client(RobotCommandClient.default_service_name)
@@ -105,8 +105,8 @@ def walk_to_object(config):
                 print('"q" pressed, exiting.')
                 exit(0)
 
-        robot.logger.info('Walking to object at image location (' + str(g_image_click[0]) +
-                          ', ' + str(g_image_click[1]) + ')')
+        robot.logger.info('Walking to object at image location (' + str(g_image_click[0]) + ', ' +
+                          str(g_image_click[1]) + ')')
 
         walk_vec = geometry_pb2.Vec2(x=g_image_click[0], y=g_image_click[1])
 

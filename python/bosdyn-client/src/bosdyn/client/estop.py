@@ -10,19 +10,17 @@ import collections
 import ctypes
 import enum
 import logging
+import os
 import threading
 import time
-import os
-from six.moves import queue
 
 from google.protobuf.duration_pb2 import Duration
+from six.moves import queue
 
-from bosdyn.api import estop_service_pb2_grpc
-from bosdyn.api import estop_pb2
+from bosdyn.api import estop_pb2, estop_service_pb2_grpc
 
-from .common import BaseClient
-from .common import common_header_errors, handle_common_header_errors, handle_unset_status_error
-from .common import error_factory
+from .common import (BaseClient, common_header_errors, error_factory, handle_common_header_errors,
+                     handle_unset_status_error)
 from .exceptions import Error, ResponseError, RpcError, TimedOutError
 
 
@@ -83,14 +81,14 @@ class EstopClient(BaseClient):
         req = self._build_register_request(target_config_id, endpoint)
         return self.call(self._stub.RegisterEstopEndpoint, req,
                          _new_endpoint_from_register_response,
-                         _register_endpoint_error_from_response, **kwargs)
+                         _register_endpoint_error_from_response, copy_request=False, **kwargs)
 
     def register_async(self, target_config_id, endpoint, **kwargs):
         """Async version of register()"""
         req = self._build_register_request(target_config_id, endpoint)
         return self.call_async(self._stub.RegisterEstopEndpoint, req,
                                _new_endpoint_from_register_response,
-                               _register_endpoint_error_from_response, **kwargs)
+                               _register_endpoint_error_from_response, copy_request=False, **kwargs)
 
     def deregister(self, target_config_id, endpoint, **kwargs):
         """Deregister the endpoint in the target configuration.
@@ -102,13 +100,14 @@ class EstopClient(BaseClient):
         """
         req = self._build_deregister_request(target_config_id, endpoint)
         self.call(self._stub.DeregisterEstopEndpoint, req, None,
-                  _deregister_endpoint_error_from_response, **kwargs)
+                  _deregister_endpoint_error_from_response, copy_request=False, **kwargs)
 
     def deregister_async(self, target_config_id, endpoint, **kwargs):
         """Async version of deregister()"""
         req = self._build_deregister_request(target_config_id, endpoint)
         return self.call_async(self._stub.DeregisterEstopEndpoint, req, None,
-                               _deregister_endpoint_error_from_response, **kwargs)
+                               _deregister_endpoint_error_from_response, copy_request=False,
+                               **kwargs)
 
     def get_config(self, **kwargs):
         """Return the estop configuration of the robot.
@@ -119,12 +118,14 @@ class EstopClient(BaseClient):
             estop_pb2.EstopConfig the robot is currently using.
         """
         return self.call(self._stub.GetEstopConfig, estop_pb2.GetEstopConfigRequest(),
-                         _active_config_from_config_response, common_header_errors, **kwargs)
+                         _active_config_from_config_response, common_header_errors,
+                         copy_request=False, **kwargs)
 
     def get_config_async(self, **kwargs):
         """Async version of get_config()"""
         return self.call_async(self._stub.GetEstopConfig, estop_pb2.GetEstopConfigRequest(),
-                               _active_config_from_config_response, common_header_errors, **kwargs)
+                               _active_config_from_config_response, common_header_errors,
+                               copy_request=False, **kwargs)
 
     def set_config(self, config, target_config_id, **kwargs):
         """Change the estop configuration of the robot.
@@ -138,13 +139,13 @@ class EstopClient(BaseClient):
         """
         req = estop_pb2.SetEstopConfigRequest(config=config, target_config_id=target_config_id)
         return self.call(self._stub.SetEstopConfig, req, _active_config_from_config_response,
-                         _set_config_error_from_response, **kwargs)
+                         _set_config_error_from_response, copy_request=False, **kwargs)
 
     def set_config_async(self, config, target_config_id, **kwargs):
         """Async version of set_config()"""
         req = estop_pb2.SetEstopConfigRequest(config=config, target_config_id=target_config_id)
         return self.call_async(self._stub.SetEstopConfig, req, _active_config_from_config_response,
-                               _set_config_error_from_response, **kwargs)
+                               _set_config_error_from_response, copy_request=False, **kwargs)
 
     def get_status(self, **kwargs):
         """Return the estop status of the robot.
@@ -182,7 +183,7 @@ class EstopClient(BaseClient):
         req = self._build_check_in_request(stop_level, endpoint, challenge, response)
         err_from_resp = self._choose_check_in_err_func(suppress_incorrect=suppress_incorrect)
         return self.call(self._stub.EstopCheckIn, req, _challenge_from_check_in_response,
-                         err_from_resp, **kwargs)
+                         err_from_resp, copy_request=False, **kwargs)
 
     def check_in_async(self, stop_level, endpoint, challenge, response, suppress_incorrect=False,
                        **kwargs):
@@ -190,7 +191,7 @@ class EstopClient(BaseClient):
         req = self._build_check_in_request(stop_level, endpoint, challenge, response)
         err_from_resp = self._choose_check_in_err_func(suppress_incorrect=suppress_incorrect)
         return self.call_async(self._stub.EstopCheckIn, req, _challenge_from_check_in_response,
-                               err_from_resp, **kwargs)
+                               err_from_resp, copy_request=False, **kwargs)
 
     @staticmethod
     def _build_check_in_request(stop_level, endpoint, challenge, response):

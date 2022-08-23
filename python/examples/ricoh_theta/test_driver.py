@@ -28,7 +28,7 @@ camera.downloadLastImage()
 
 gen = camera.yieldLivePreview()
 jpg = next(gen)
-with open("ricoh_theta_live_preview.jpg",'wb') as f:
+with open("ricoh_theta_live_preview.jpg", 'wb') as f:
     f.write(jpg)
 gen.close()
 

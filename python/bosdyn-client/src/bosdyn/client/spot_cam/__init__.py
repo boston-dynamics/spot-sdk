@@ -4,16 +4,9 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-from . import audio
-from . import compositor
-from . import health
-from . import lighting
-from . import media_log
-from . import network
-from . import power
-from . import ptz
-from . import streamquality
-from . import version
+from . import (audio, compositor, health, lighting, media_log, network, power, ptz, streamquality,
+               version)
+
 
 CLIENTS = [
     audio.AudioClient,

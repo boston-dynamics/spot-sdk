@@ -91,7 +91,7 @@ def hello_arm(config):
         # Get robot pose in vision frame from robot state (we want to send commands in vision
         # frame relative to where the robot stands now)
         robot_state = robot_state_client.get_robot_state()
-        vision_T_world = get_vision_tform_body(robot_state.kinematic_state.transforms_snapshot)
+        vision_T_body = get_vision_tform_body(robot_state.kinematic_state.transforms_snapshot)
 
         # In this demo, the robot will walk in a square while moving its arm in a circle.
         # There are some parameters that you can set below:
@@ -119,9 +119,8 @@ def hello_arm(config):
             y = (_L_ROBOT_SQUARE / 2) - _L_ARM_CIRCLE * (np.cos(2 * ii * math.pi / _N_POINTS))
             z = _VERTICAL_SHIFT + _L_ARM_CIRCLE * (np.sin(2 * ii * math.pi / _N_POINTS))
 
-            # Using the transform we got earlier, transform the points into the world frame
-            x_ewrt_vision, y_ewrt_vision, z_ewrt_vision = vision_T_world.transform_point(
-                x, y, z)
+            # Using the transform we got earlier, transform the points into the vision frame
+            x_ewrt_vision, y_ewrt_vision, z_ewrt_vision = vision_T_body.transform_point(x, y, z)
 
             # Add a new point to the robot command's arm cartesian command se3 trajectory
             # This will be an se3 trajectory point
@@ -133,10 +132,10 @@ def hello_arm(config):
             point.pose.position.y = y_ewrt_vision
             point.pose.position.z = z_ewrt_vision
 
-            point.pose.rotation.x = vision_T_world.rot.x
-            point.pose.rotation.y = vision_T_world.rot.y
-            point.pose.rotation.z = vision_T_world.rot.z
-            point.pose.rotation.w = vision_T_world.rot.w
+            point.pose.rotation.x = vision_T_body.rot.x
+            point.pose.rotation.y = vision_T_body.rot.y
+            point.pose.rotation.z = vision_T_body.rot.z
+            point.pose.rotation.w = vision_T_body.rot.w
 
             traj_time = (ii + 1) * seconds_arm
             duration = seconds_to_duration(traj_time)
@@ -151,9 +150,8 @@ def hello_arm(config):
             x = _L_ROBOT_SQUARE * x_vals[ii]
             y = _L_ROBOT_SQUARE * y_vals[ii]
 
-            # Transform desired position into world frame
-            x_ewrt_vision, y_ewrt_vision, z_ewrt_vision = vision_T_world.transform_point(
-                x, y, 0)
+            # Transform desired position into vision frame
+            x_ewrt_vision, y_ewrt_vision, z_ewrt_vision = vision_T_body.transform_point(x, y, 0)
 
             # Add a new point to the robot command's arm cartesian command se3 trajectory
             # This will be an se2 trajectory point
@@ -164,7 +162,7 @@ def hello_arm(config):
             point.pose.position.x = x_ewrt_vision
             point.pose.position.y = y_ewrt_vision
 
-            point.pose.angle = vision_T_world.rot.to_yaw()
+            point.pose.angle = vision_T_body.rot.to_yaw()
 
             traj_time = (ii + 1) * seconds_body
             duration = seconds_to_duration(traj_time)

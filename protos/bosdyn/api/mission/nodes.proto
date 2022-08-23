@@ -14,8 +14,10 @@ import "google/protobuf/any.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/wrappers.proto";
 
+import "bosdyn/api/alerts.proto";
 import "bosdyn/api/docking/docking.proto";
 import "bosdyn/api/geometry.proto";
+import "bosdyn/api/gripper_camera_param.proto";
 import "bosdyn/api/spot_cam/camera.proto";
 import "bosdyn/api/spot_cam/logging.proto";
 import "bosdyn/api/spot_cam/ptz.proto";
@@ -26,7 +28,6 @@ import "bosdyn/api/data_buffer.proto";
 import "bosdyn/api/graph_nav/graph_nav.proto";
 import "bosdyn/api/graph_nav/nav.proto";
 import "bosdyn/api/mission/util.proto";
-
 
 // Wrapper for a mission node. Contains the basics common to all mission nodes.
 // Specifics of what the node does are contained in the "impl" field.
@@ -73,7 +74,6 @@ message Sequence {
     repeated Node children = 2;
 }
 
-
 // Run all children in order until a child succeeds.
 message Selector {
     // Forces the execution to always begin with the first child.  If false, and
@@ -83,6 +83,37 @@ message Selector {
     repeated Node children = 2;
 }
 
+// Run a specific child based on a specified pivot_value.
+//
+// This node exists because of a subtle implmentation detail in Selector(always_restart = true).
+// The astute reader might believe that they can construct a switch node by using a selector
+// with sequences & conditions as children.  This is ALMOST true, EXCEPT that a selector 
+// (with always_restart = true) can leave multiple children in the running state IF:
+//
+//  - A later selector child was RUNNING last tick
+//  - An eariler selector child returns RUNNING this tick
+//
+// Even though the later selector child won't be ticked, it will still be left in the running state
+// and not restart when the selector advances to it again later.  Sometimes this is desireable,
+// sometimes it isn't.  Switch is constrained to only have one child running, and if the switch ever
+// switches children and return to a previously running child, that child will be restarted.
+message Switch {
+    // Expresses an integer value that decides which child to run.
+    Value pivot_value = 1;
+
+    // If false, this node will read the pivot_value once when its starts, and execute
+    // the specified child until it finishes even if the pivot_value changes.
+    //
+    // If true, this node will read from the pivot_value every tick, and change
+    // which child it's ticking when an underlying blackboard variable changes.
+    bool always_restart = 2;
+
+    // List of all children to possibly run.
+    map<int32, Node> int_children = 3;
+
+    // If none of the above cases match, use this child
+    Node default_child = 4;
+}
 
 // Repeat a child node.
 message Repeat {
@@ -94,8 +125,13 @@ message Repeat {
 
     // If set, the node will write the start index to the blackboard.
     string start_counter_state_name = 5;
-}
 
+    // If set to false, this repeat node will keep running its child regardless of whether
+    // or not the child succeeds or fails.
+    // If set to true, this repeat node will only keep running its child when the child
+    // succeeds.  If the child fails, the repeat node will fail.
+    bool respect_child_failure = 6;
+}
 
 // Retry a child node until it succeeds, or exceeds a number of attempts.
 message Retry {
@@ -108,10 +144,9 @@ message Retry {
     string attempt_counter_state_name = 5;
 }
 
-
 // Run this child for a maximum amount of mission execution time.
 // Will exit with child's status if the child finishes early,
-// FAILURE if the child remains in RUNNING state for too long 
+// FAILURE if the child remains in RUNNING state for too long
 // and no timeout_child is specified, or the status of the
 // timeout_child.
 message ForDuration {
@@ -133,7 +168,6 @@ message ForDuration {
     Node timeout_child = 4;
 }
 
-
 // Run two child nodes together, returning the primary child's result when it completes.
 message SimpleParallel {
     // Primary node, whose completion will end the execution of SimpleParallel.
@@ -142,10 +176,8 @@ message SimpleParallel {
     Node secondary = 2;
 }
 
-
 // Checks a simple comparison statement.
 message Condition {
-
     // Options for where to retrieve values from.
     message Operand {
         oneof type {
@@ -159,7 +191,7 @@ message Condition {
     // Left-hand side of the comparison.
     Operand lhs = 1;
     // Right-hand side of the comparison.
-    Operand rhs  = 2;
+    Operand rhs = 2;
 
     // Comparison operator.
     enum Compare {
@@ -184,14 +216,13 @@ message Condition {
     // When comparing runtime values in the blackboard, some values might be "stale" (i.e too old).
     // This defines how the comparator should behave when a read value is stale.
     enum HandleStaleness {
-       HANDLE_STALE_UNKNOWN = 0; // acts like READ_ANYWAY for backwards compatibility.
-       HANDLE_STALE_READ_ANYWAY = 1; // ignore how stale this data is.
-       HANDLE_STALE_RUN_UNTIL_FRESH = 2;// return the RUNNING status until the data being read is not stale.
-       HANDLE_STALE_FAIL = 3; // return FAILURE status if stale data is read.
+        HANDLE_STALE_UNKNOWN = 0;      // acts like READ_ANYWAY for backwards compatibility.
+        HANDLE_STALE_READ_ANYWAY = 1;  // ignore how stale this data is.
+        HANDLE_STALE_RUN_UNTIL_FRESH = 2; // return the RUNNING status until the data being read is not stale.
+        HANDLE_STALE_FAIL = 3;  // return FAILURE status if stale data is read.
     }
     HandleStaleness handle_staleness = 6;
 }
-
 
 // Get state from the robot.
 message BosdynRobotState {
@@ -219,7 +250,6 @@ message BosdynDockState {
     string state_name = 4;
 }
 
-
 // Execute a RobotCommand.
 // These nodes will "succeed" once a feedback response is received indicating success. Any commands
 // that require an "end time" will have that information set based on the end time of the mission.
@@ -230,8 +260,8 @@ message BosdynRobotCommand {
     string host = 2;
     // The command to execute. See the RobotCommand documentation for details.
     RobotCommand command = 3;
+    
 }
-
 
 // Make a robot power request
 message BosdynPowerRequest {
@@ -242,7 +272,6 @@ message BosdynPowerRequest {
     // The request to make. See the PowerCommandRequest documentation for details.
     bosdyn.api.PowerCommandRequest.Request request = 4;
 }
-
 
 // Tell the robot to navigate to a waypoint.
 message BosdynNavigateTo {
@@ -266,7 +295,6 @@ message BosdynNavigateTo {
     // a blackboard variable with this name.
     string navigate_to_response_blackboard_key = 7;
 }
-
 
 // Tell the robot to navigate a route.
 message BosdynNavigateRoute {
@@ -333,10 +361,19 @@ message BosdynRecordEvent {
     // Host machine the service is running on.
     string host = 2;
     // The event to be logged. Note that everything should be populated except the id, start_time
-    // and end_time. The start and end time will be populated by the mission, using the node's start time.
-    // The id field shouldn't be set when the start and end times are the same.
+    // and end_time. The start and end time will be populated by the mission, using the node's start
+    // time. The id field shouldn't be set when the start and end times are the same.
     bosdyn.api.Event event = 3;
+    // If set to false, this node will wait for the RecordEvents rpc to complete.  If set to true,
+    // this node will send the RecordEventsRequest, and then return SUCCESS without waiting for
+    // the RecordEventsResponse.
+    bool succeed_early = 4;
+    // In addition to the parameters specified in the event field, this field can be used
+    // to specify events only known at runtime.  Map key will be parameter label, map value will be
+    // evaluated then packed into parameter value.
+    map<string, Value> additional_parameters = 5;
 }
+
 
 // Call out to another system using the RemoteMission service.
 message RemoteGrpc {
@@ -405,6 +442,48 @@ message Prompt {
     // Hint that Question posed by this Prompt is meant to be answered by some automated system.
     // See the Question message for details.
     bool for_autonomous_processing = 6;
+
+    // Severity for this prompt. Used to determine what sort of alerting
+    // this prompt will trigger.
+    // Here are guidelines for severity as it pertains to missions:
+    // INFO: Normal operation.  For example, waiting for charge; waiting on the dock for logs to download.
+    // WARN: Something went wrong, but the mission will try to recover autonomously.
+    // ERROR: Something went wrong, and the mission can't recover without human intervention.
+    // Intervention is not time sensitive and can be resolved when convenient.
+    // CRITICAL: Something went wrong, and the mission can't recover without human intervention.
+    // Human needs to rescue the robot before battery runs out because it's not charging.
+    AlertData.SeverityLevel severity = 7;
+}
+
+// Get the state of the gripper camera params from the robot.
+message BosdynGripperCameraParamsState {
+    // Name of the service to use.
+    string service_name = 1;
+
+    // Host machine the service is running on.
+    string host = 2;
+
+    // Child node. Children will have access to the state gathered by this node.
+    Node child = 3;
+
+    // Name of the bosdyn.api.GripperCameraParams object in the blackboard. For example, if this is
+    // set to "gripper_params", children can look up "gripper_params.camera_mode" in the blackboard.
+    string state_name = 4;
+}
+
+// Set gripper camera params
+message SetGripperCameraParams {
+    // Name of the service to use.
+    string service_name = 1;
+
+    // Host machine of the directory server that the gripper camera param service is registered
+    // with.
+    string host = 2;
+
+    oneof params {
+        string params_in_blackboard_key = 3;
+        bosdyn.api.GripperCameraParams new_params = 4;
+    }
 }
 
 // Point the PTZ to a specified orientation
@@ -443,8 +522,8 @@ message SpotCamStoreMedia {
     // Host machine of the directory server that the Spot CAM registered with.
     string host = 2;
 
-    // The rest of the fields are from bosdyn.api.spot_cam.logging.StoreRequest, see that message for
-    // details.
+    // The rest of the fields are from bosdyn.api.spot_cam.logging.StoreRequest, see that message
+    // for details.
     bosdyn.api.spot_cam.Camera camera = 3;
     // What type of media should be stored from this action.
     bosdyn.api.spot_cam.Logpoint.RecordType type = 4;
@@ -503,9 +582,10 @@ message Dock {
     string command_status_name = 5 [deprecated = true];
 
     // Name of the feedback status variable in the blackboard.  This is the feedback provided while
-    // docking is in progress.  Please refer to bosdyn.api.docking.DockingCommandFeedbackResponse.Status
-    // for a list of possible status values.  Children can use this name to look up docking status
-    // in the blackboard. If no name is provided, status will not be available.
+    // docking is in progress.  Please refer to
+    // bosdyn.api.docking.DockingCommandFeedbackResponse.Status for a list of possible status
+    // values.  Children can use this name to look up docking status in the blackboard. If no name
+    // is provided, status will not be available.
     //
     // DEPRECATED!  Use docking_command_response_blackboard_key and
     // docking_command_feedback_response_blackboard_key instead.
@@ -527,7 +607,7 @@ message Dock {
 message StoreMetadata {
     // Name of the service to use.
     string service_name = 1;
-   
+
     // Host machine of the directory server that the data acquisition service is registered with.
     string host = 2;
 
@@ -544,7 +624,7 @@ message StoreMetadata {
 }
 
 // Trigger the acquisition and storage of data.
-message DataAcquisition{
+message DataAcquisition {
     // Name of the service to use.
     string service_name = 1;
     // Host machine of the directory server that the data acquisition service is registered with.
@@ -553,7 +633,7 @@ message DataAcquisition{
     // Specification of the data and metadata to store.
     AcquireDataRequest request = 3;
 
-    enum CompletionBehavior{
+    enum CompletionBehavior {
         COMPLETE_UNKNOWN = 0;
         // Node is complete after all data has been saved.
         COMPLETE_AFTER_SAVED = 1;
@@ -567,10 +647,12 @@ message DataAcquisition{
     // Define a format string that will be used together with the blackboard to generate
     // a group name.  Values from the blackboard will replace the keys in braces {}.
     // Example: "telop-{date}", where "date" is a blackboard variable.
-    // Example: "{date}_loop_{loop_counter}", where "loop_counter" is a blackboard variable from a Repeat.
+    // Example: "{date}_loop_{loop_counter}", where "loop_counter" is a blackboard variable from a
+    // Repeat.
     string group_name_format = 5;
 
-    // If populated, name of the variable in the blackboard in which to store the AcquireDataRequest.
+    // If populated, name of the variable in the blackboard in which to store the
+    // AcquireDataRequest.
     string request_name_in_blackboard = 6;
 
 }
@@ -637,7 +719,8 @@ message FormatBlackboard {
     //                the power_state submessage has a charge percentage of 30.2148320923085
     //        Output: "battery charge is: 30.2158320923085"
     //
-    // Format String: "battery charge is: {state.power_state.locomotion_charge_percentage.value:.2f}"
+    // Format String: "battery charge is:
+    // {state.power_state.locomotion_charge_percentage.value:.2f}"
     //    Blackboard: "state" is a protobuf message in the blackboard from a BosdynRobotState, and
     //                the power_state submessage has a charge percentage of 30.2148320923085
     //        Output: "battery charge is: 30.21"
@@ -681,4 +764,14 @@ message ClearBehaviorFaults {
     // Name of a robot state message defined in the blackboard.
     // Usually provided by embedding this node in a [BosdynRobotState] node.
     string robot_state_blackboard_name = 3;
+    // Optional blackboard variable name.  If specified, this node will write the number of
+    // cleared behavior faults that had CAUSE_FALL.
+    string cleared_cause_fall_blackboard_name = 4;
+    // Optional blackboard variable name.  If specified, this node will write the number of
+    // cleared behavior faults that had CAUSE_HARDWARE.
+    string cleared_cause_hardware_blackboard_name = 5;
+    // Optional blackboard variable name.  If specified, this node will write the number of
+    // cleared behavior faults that had CAUSE_LEASE_TIMEOUT.
+    string cleared_cause_lease_timeout_blackboard_name = 6;
 }
+

@@ -4,11 +4,12 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-import pytest
 import math
 
-from bosdyn.api.geometry_pb2 import Quaternion
+import pytest
+
 from bosdyn import geometry  # noqa
+from bosdyn.api.geometry_pb2 import Quaternion
 
 
 def _is_near(x1, x2, thresh):

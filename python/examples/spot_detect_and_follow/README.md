@@ -22,7 +22,9 @@ This example depends on a Tensorflow model. As an example, the `faster_rcnn_ince
 The pre-trained models may not be good at detecting some classes when using the robot's cameras, as the fisheye distortion, low resolution, and black and white images affect image quality. For example, pre-trained models may not perform well at detecting "sports balls" due to the lack of color. The [ssd_mobilenet_v2_coco](http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz) and [faster_rcnn_inception_v2_coco](http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz) have been tested to work well at detecting humans.
 
 ### Installation (Only if you want to run without Docker)
+
 To install this example on Ubuntu 18.04, follow these instructions:
+
 - Install python3: `sudo apt-get install python3.6`
 - Install pip3: `sudo apt-get install python3-pip`
 - Install virtualenv: `python3 -m pip install virtualenv`
@@ -36,12 +38,15 @@ To install this example on Ubuntu 18.04, follow these instructions:
 - To exit the virtual environment, run `deactivate`
 
 ### Execution
+
 Prior to running the example, you will need to acquire estop access from another source such as from a connected laptop or tablet. This allows you to emergency stop the robot since this application does not have a GUI.
 This example follows the common pattern for expected arguments. It needs the common arguments used to configure the SDK and connect to a Spot:
+
 - hostname passed as the last argument
 - username and password should be set in the environment variables `BOSDYN_CLIENT_USERNAME` and `BOSDYN_CLIENT_PASSWORD`.
 
 On top of those arguments, it also needs the following arguments:
+
 - --model-path (required) argument that specifies the path of the Tensorflow model (a file in .pb format)
 - --detection-class (required) argument that specifies the detection class from the Tensorflow model to follow (a list of class codes can be found in COCO_CLASS_DICT in `spot_detect_and_follow.py`)
 - --detection-threshold (optional) argument that specifies the confidence threshold (0-1) to use to consider the Tensorflow detections as real detections. Lower values increase false positives. Higher values may lower detection rate; defaults to 0.7
@@ -50,34 +55,50 @@ On top of those arguments, it also needs the following arguments:
 - --max-processing-delay (optional) argument that specifies max delay in seconds allowed for each image before being processed; images with greater latency will not be processed; defaults to 7.0.
 
 The simple command to run with the default values is:
+
 ```
 python3 spot_detect_and_follow.py --model-path <path_to_pb> --detection-class <integer class id> ROBOT_IP
 ```
+
 For example, run the example with `--model-path` pointing to the `frozen_inference_graph.pb` file in the `faster_rcnn_inception_v2_coco_2018_01_28` folder created from untar-ing the model file downloaded from the instructions above, and with `--detection-classes` argument set to `1` to detect people in the camera images.
 
-
 #### Running in Docker
+
 Please refer to this [document](../../../docs/payload/docker_containers.md) for general instructions on how to run software applications on SpotCORE as docker containers.
 
 This example provides a Dockerfile for running in a container. This requires installing Nvidia Docker.
 You can follow the instructions at https://github.com/NVIDIA/nvidia-docker to install Nvidia Docker.
-Nvidia Docker is preinstalled on the Spot CORE AI.
+Nvidia Docker is preinstalled on the CORE I/O.
 
 To build the image, you'll need to first copy over the tensorflow detector file first:
+
 ```sh
 cp ../spot_tensorflow_detector/tensorflow_object_detection.py .
-sudo docker build -t spot_detect_and_follow .
+sudo docker build -t spot_detect_and_follow:x64 -f Dockerfile.x64 .
+```
+
+If you are building for the CORE I/O, run this instead:
+
+```sh
+# If you are building on an x64 machine
+sudo apt-get install qemu binfmt-support qemu-user-static # Install the qemu packages
+sudo docker run --rm --privileged multiarch/qemu-user-static --reset -p yes # This step will execute the registering scripts
+
+# Build the Docker image for L4T
+cp ../spot_tensorflow_detector/tensorflow_object_detection.py .
+sudo docker build -t spot_detect_and_follow:l4t -f Dockerfile.l4t .
 ```
 
 To run a container, replace ROBOT_HOSTNAME and <absolute_path_to_pb> with the full path to the pb model file in the command below:
+
 ```sh
-sudo docker run -it \
---network=host \
--v <absolute_path_to_pb>:/model.pb \
-spot_detect_and_follow \
---model-path /model.pb \
---detection-class 1
-ROBOT_HOSTNAME
+sudo docker run -it --network=host spot_detect_and_follow --username $USER --password $PASSWORD ROBOT_HOSTNAME
+```
+
+On CORE I/O:
+
+```sh
+sudo nvidia-docker run -it --network=host spot_detect_and_follow:l4t --username $USER --password $PASSWORD ROBOT_HOSTNAME
 ```
 
 To take advantage of GPU support if it is available on your system, add `--gpus all` in the command above.
