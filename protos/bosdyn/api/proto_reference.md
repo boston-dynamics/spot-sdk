@@ -1730,6 +1730,7 @@ An Element is the basic building block of the autowalk.
 | action_failure_behavior | [FailureBehavior](#bosdyn.api.autowalk.FailureBehavior) | Describes what to do if the robot fails to execute the action. |
 | is_skipped | [bool](#bool) | Set to true to skip element. |
 | battery_monitor | [BatteryMonitor](#bosdyn.api.autowalk.BatteryMonitor) | If the mission requires more than one battery, the robot needs to return to the dock and charge before it can complete the mission. This field defines the battery percentage thresholds that at which the robot should pause and resume mission execution. Considering using various thresholds depending on the target's distance from the dock |
+| action_duration | [google.protobuf.Duration](#google.protobuf.Duration) | Maximum duration of action execution time, including all wrappers. If they take longer than this duration, the action will be considered a failure. Not including, or including a zero duration will set the action to NOT have a timeout. |
 
 
 
@@ -1838,6 +1839,7 @@ These parameters apply to the entire autowalk.
 | should_autofocus_ptz | [bool](#bool) | If the mission contains SpotCAM PTZ actions, set this to true. At the start of the mission, the SpotCAM PTZ autofocus will be reset, thereby improving the quality of the subsequent PTZ captures. |
 | self_right_attempts | [int32](#int32) | The mission can automatically self-right the robot. Autonomous self-rights can damage the robot, its payloads, and its surroundings. If the user does not want the robot to self-right on its own, set this number to 0. If the user does want the robot to self-right itself, the user may set a maximum number of attempts so that the robot does not destroy itself by repeatedly falling and getting up and falling again. |
 | post_mission_callbacks | [Action.RemoteGrpc](#bosdyn.api.autowalk.Action.RemoteGrpc) | The callbacks that will be executed at the end of the mission. Functionality that is often found in post-mission callbacks includes uploading data to the cloud or sending an email. The callbacks will be executed serially (first in, first executed). |
+| skip_actions | [bool](#bool) | It can be useful to have the robot run a walk without collecting data. If this boolean is set to true, the compiled mission will still navigate to the target of each element, however it will not actually perform the associated action & action wrappers. |
 
 
 

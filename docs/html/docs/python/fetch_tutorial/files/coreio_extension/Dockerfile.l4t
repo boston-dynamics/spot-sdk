@@ -1,0 +1,22 @@
+# Use a base image provided by nvidia that already contains tensorflow 2.5
+FROM nvcr.io/nvidia/l4t-tensorflow:r32.6.1-tf2.5-py3
+
+# Do some basic apt and pip updating
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends python3-pip && \
+    apt-get clean
+
+# Copy over the python requirements file and our prebuilt models API library
+COPY docker-requirements.txt prebuilt/*.whl ./
+COPY models-with-protos models-with-protos
+
+# Install the python requirements
+RUN python3 -m pip install pip==21.3.1 setuptools==59.6.0 wheel==0.37.1 && \
+    python3 -m pip install -r docker-requirements.txt --find-links .
+
+# Copy over our main script
+COPY network_compute_server.py /app/
+WORKDIR /app
+
+# Set our script as the main entrypoint for the container
+ENTRYPOINT ["python3", "network_compute_server.py"]

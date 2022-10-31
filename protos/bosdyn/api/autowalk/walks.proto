@@ -11,7 +11,6 @@ package bosdyn.api.autowalk;
 option java_outer_classname = "WalksProto";
 
 
-import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
 import "bosdyn/api/mission/nodes.proto";
 import "bosdyn/api/mission/util.proto";
@@ -76,6 +75,12 @@ message GlobalParameters {
     // is often found in post-mission callbacks includes uploading data to the cloud or 
     // sending an email. The callbacks will be executed serially (first in, first executed).
     repeated bosdyn.api.autowalk.Action.RemoteGrpc post_mission_callbacks = 4;
+
+    // It can be useful to have the robot run a walk without collecting data.
+    // If this boolean is set to true, the compiled mission will still navigate to the
+    // target of each element, however it will not actually perform the associated
+    // action & action wrappers.
+    bool skip_actions = 5;
 }
 
 // The dock itself and the target associated with it
@@ -184,6 +189,12 @@ message Element {
     // should pause and resume mission execution.
     // Considering using various thresholds depending on the target's distance from the dock
     BatteryMonitor battery_monitor = 8;
+
+    // Maximum duration of action execution time, including all wrappers.
+    // If they take longer than this duration, the action will be considered a failure.
+    // Not including, or including a zero duration will set the action to NOT have a
+    // timeout.
+    google.protobuf.Duration action_duration = 9;
 }
 
 // A Target is the location the robot should navigate to.

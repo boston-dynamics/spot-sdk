@@ -20,15 +20,12 @@ Linux:
 
 ```
 python -m pip install -r requirements.txt
-sudo apt install python3-pyqt5 python3-pyqt5.qtopengl qt5-style-plugins
-python3 -m pip install PyQt5-sip --upgrade
 ```
 
 Windows:
 
 ```
 py.exe -3 -m pip install -r requirements.txt
-py.exe -3 -m pip install PyOpenGL pyqt5
 ```
 
 ## Running the Example

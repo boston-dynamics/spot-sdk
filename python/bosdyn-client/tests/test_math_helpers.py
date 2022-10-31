@@ -804,6 +804,56 @@ def test_vec3():
     assert b.cross(a).z == -12
 
 
+def test_vec3_cross():
+    a = Vec3(x=1, y=0, z=0)
+    b = Vec3(x=1, y=0, z=0)
+    assert a.cross(b).x == 0
+    assert a.cross(b).y == 0
+    assert a.cross(b).z == 0
+
+    b = Vec3(x=0, y=1, z=0)
+    assert a.cross(b).x == 0
+    assert a.cross(b).y == 0
+    assert a.cross(b).z == 1
+
+    b = Vec3(x=0, y=0, z=1)
+    assert a.cross(b).x == 0
+    assert a.cross(b).y == -1
+    assert a.cross(b).z == 0
+
+    a = Vec3(x=0, y=1, z=0)
+    b = Vec3(x=1, y=0, z=0)
+    assert a.cross(b).x == 0
+    assert a.cross(b).y == 0
+    assert a.cross(b).z == -1
+
+    b = Vec3(x=0, y=1, z=0)
+    assert a.cross(b).x == 0
+    assert a.cross(b).y == 0
+    assert a.cross(b).z == 0
+
+    b = Vec3(x=0, y=0, z=1)
+    assert a.cross(b).x == 1
+    assert a.cross(b).y == 0
+    assert a.cross(b).z == 0
+
+    a = Vec3(x=0, y=0, z=1)
+    b = Vec3(x=1, y=0, z=0)
+    assert a.cross(b).x == 0
+    assert a.cross(b).y == 1
+    assert a.cross(b).z == 0
+
+    b = Vec3(x=0, y=1, z=0)
+    assert a.cross(b).x == -1
+    assert a.cross(b).y == 0
+    assert a.cross(b).z == 0
+
+    b = Vec3(x=0, y=0, z=1)
+    assert a.cross(b).x == 0
+    assert a.cross(b).y == 0
+    assert a.cross(b).z == 0
+
+
 @pytest.mark.parametrize('x, y, angle', [
     (3, 7, 1.047198),
     (5, 5, -1.047198),

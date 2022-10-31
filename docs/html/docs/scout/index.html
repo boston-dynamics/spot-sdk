@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Scout API Docs &mdash; Spot 3.2.0 documentation</title>
+  <title>Scout API Docs &mdash; Spot 3.2.1 documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                3.2.0
+                3.2.1
               </div>
             
           
@@ -402,6 +402,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python/fetch_tutorial/fetch6.html">Part 6: Running the model on Core IO</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
@@ -420,6 +421,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../payload/robot_mounting_rails.html">Robot mounting rails</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../payload/configuring_payload_software.html">Configuring payload software</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../payload/docker_containers.html">Dockerize payload software</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
@@ -428,7 +430,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../payload/spot_core_vnc.html">Spot CORE VNC</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../protos/README.html">API Protocol</a><ul>
@@ -638,7 +639,58 @@ Development Kit License (20191101-BDSDK-SL).
 --><section id="scout-api-docs">
 <h1>Scout API Docs<a class="headerlink" href="#scout-api-docs" title="Permalink to this headline">¶</a></h1>
 <p>Scout collects, organizes, and stores data from every mission and teleoperation session executed by a Spot fleet - this information is open to Scout customers through a programmatic api called the Scout API.</p>
-<p>To learn more, see the <a href="docs.html">Scout API Reference</a></p>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<section id="resources">
+<h3>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h3>
+<p>The Scout API is a web api hosted on your sitehub. The API is interacted with by sending HTTPs requests to a number of resource endpoints. Each resource endpoint is prefixed with the api route <code class="docutils literal notranslate"><span class="pre">/api/v0/</span></code>. For example, a list of <code class="docutils literal notranslate"><span class="pre">run_events</span></code> can be retrieved by sending a <code class="docutils literal notranslate"><span class="pre">GET</span></code> request to <code class="docutils literal notranslate"><span class="pre">/api/v0/run_events</span></code>. A complete url would add this to the url of the Scout instance - e.g. <code class="docutils literal notranslate"><span class="pre">https://my-scout.com/api/v0/run_events/</span></code>.</p>
+</section>
+<section id="authentication">
+<h3>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h3>
+<p>Resources can only be requested by Scout users. In order to be authorized, cookies authenticated with a Scout account must be provided in each request.</p>
+<p>To obtain the cookies, make a request to the login endpoint at <code class="docutils literal notranslate"><span class="pre">/api/v0/login</span></code>:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">hostname</span> <span class="o">=</span> <span class="s2">&quot;YOUR SCOUT HOSTNAME&quot;</span>
+<span class="n">username</span> <span class="o">=</span> <span class="s2">&quot;YOUR SCOUT USERNAME&quot;</span>
+<span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;YOUR SCOUT PASSWORD&quot;</span>
+
+<span class="sd">&quot;&quot;&quot;Get a set of cookies to be authenticated.&quot;&quot;&quot;</span>
+<span class="n">cookies_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;https://</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">cookies</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">dict_from_cookiejar</span><span class="p">(</span><span class="n">cookies_response</span><span class="o">.</span><span class="n">cookies</span><span class="p">)</span>
+
+<span class="sd">&quot;&quot;&quot;Authenticates the cookies by issuing a login request.&quot;&quot;&quot;</span>
+<span class="n">login_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;https://</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s1">/api/v0/login&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
+    <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span>
+<span class="p">},</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x-csrf-token&#39;</span><span class="p">:</span> <span class="n">cookies</span><span class="p">[</span><span class="s1">&#39;x-csrf-token&#39;</span><span class="p">]},</span> <span class="n">cookies</span><span class="o">=</span><span class="n">cookies</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">login_response</span><span class="o">.</span><span class="n">ok</span><span class="p">:</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Authentication failed: </span><span class="si">{</span><span class="n">login_response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="n">exit</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Authenticated! Logged in as: </span><span class="si">{</span><span class="n">login_response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;username&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now the <code class="docutils literal notranslate"><span class="pre">cookies</span></code> are authenticated and can be used to request resources. When requesting, the cookie is provided as an argument:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Use the cookies to fetch some robots. The same authorization strategy is used for other http methods.&quot;&quot;&quot;</span>
+<span class="n">robots_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;https://</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s1">/api/v0/robots&#39;</span><span class="p">,</span> <span class="n">cookies</span><span class="o">=</span><span class="n">cookies</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">robots_response</span><span class="o">.</span><span class="n">ok</span><span class="p">:</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Encountered a problem while requesting robots: </span><span class="si">{</span><span class="n">robots_response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="n">robots_json</span> <span class="o">=</span> <span class="n">robots_response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fetched robots!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>An authenticated set of cookies must be provided in every request aside from the request to authenticate (<code class="docutils literal notranslate"><span class="pre">/api/v0/login</span></code>). If an unauthorized request is made, a <code class="docutils literal notranslate"><span class="pre">403</span></code> response will be issued. Likewise, if an api link is visited in the browser without the user having logged in, <code class="docutils literal notranslate"><span class="pre">Forbidden</span></code> will be shown.</p>
+<p>A session expires after 2 weeks. You can reauthenticate using the same method explained above.</p>
+</section>
+</section>
+<section id="learn-more">
+<h2>Learn More<a class="headerlink" href="#learn-more" title="Permalink to this headline">¶</a></h2>
+<p>For a complete list of resources and their methods, see the <a href="docs.html">Scout API Reference</a>.</p>
+</section>
 </section>
 
 

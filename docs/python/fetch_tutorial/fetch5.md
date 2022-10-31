@@ -15,7 +15,7 @@ Development Kit License (20191101-BDSDK-SL).
 <div class="section line-numbers">
 
 <p>
-<a href="fetch4.html"><< Previous Page</a>
+<a href="fetch4.html"><< Previous Page</a> | <a href="fetch6.html">Next Page >></a>
 </p>
 <hr />
 
@@ -533,21 +533,19 @@ Loaded models:
     <source src="videos/fetch_c.mp4" type="video/mp4">
 </video>
 </p>
+<p>
+    Once fetch is running from your laptop, you can move the model to run on the robot in Core IO, try it out in <a href="fetch6.html">Part 6</a>!
+</p>
+
 <hr />
 
-<h3>Next Steps</h3>
-<p>
-    Congratulations, you have successfully completed the tutorial and built fetch!  What you have learned provides you with a foundation you can expand upon.  We hope you had fun and we look forward to seeing the exciting new behaviors that you build!
-</p>
-<ul>
-    <li>Try changing the code to put the toy in a bucket on the back, using <a href="https://github.com/boston-dynamics/spot-sdk/tree/master/python/examples/arm_joint_move">the joint angle API.</a> This is how we built the <a href="https://www.youtube.com/watch?v=6Zbhvaac68Y">glove and laundry-pickup</a> parts of our Spot's Got an Arm video.</li>
-    <li>Collect more data in additional environments to tune your model.</li>
-</ul>
+<h2>Head over to <a href="fetch6.html">Part 6: Running the model on Core IO</a> >></h2>
 
 <hr />
 <p>
-<a href="fetch4.html"><< Previous Page</a>
+<a href="fetch4.html"><< Previous Page</a> | <a href="fetch6.html">Next Page >></a>
 </p>
+<hr />
 
 </div>
 

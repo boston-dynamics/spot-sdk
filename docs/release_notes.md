@@ -12,6 +12,37 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 3.2.1
+
+### Bug Fixes and Improvements
+
+Fixed issues relating to GraphNav Area Callbacks and loop closures where connections could be made in the middle of an Area Callback. These connections are now prohibited. Maps with incorrect connections must be re-recorded or reprocessed with the map processing service to re-create better loop closures.
+
+Updated Fetch tutorial with information to run on CORE I/O payload.
+
+Added [Getting Started](scout/index.md#getting-started) section in Scout documentation.
+
+Removed unused imports in the protobuf files `protos/bosdyn/api/autowalk/walks.proto`, `protos/bosdyn/api/graph_nav/area_callback.proto`, `protos/bosdyn/api/graph_nav/graph_nav.proto`, `protos/bosdyn/api/mission/nodes.proto`.
+
+Autowalk missions:
+
+- Added flag for skipping actions.
+- Added action duration field.
+
+Fixed a bug in our `Vec3` cross product in `python/bosdyn-client/src/bosdyn/client/math_helpers.py`
+
+### Known Issues
+
+Same as 3.2.0
+
+### Sample Code
+
+#### Updated
+
+[Replay Mission](../python/examples/replay_mission/README.md): Updated example to point to correct mission file.
+
+[Velodyne Client](../python/examples/velodyne_client/README.md): Fixed velodyne client PyQt dependency issue.
+
 ## 3.2.0
 
 ### New Features

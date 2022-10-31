@@ -1,0 +1,26 @@
+version: "3.5"
+services:
+  fetch_detector:
+    image: fetch_detector:l4t
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      # This package couldn't be installed, but putting it on the path allows required access to the protos.
+      - PYTHONPATH=/models-with-protos/research/
+    volumes:
+      # Mount payload credentials.
+      - /opt/payload_credentials/payload_guid_and_secret:/opt/payload_credentials/payload_guid_and_secret
+      # and ML models
+      - /data/.extensions/fetch_detector/data:/data
+    # The command below is partial because the docker image is already configured with an entrypoint.
+    command: >
+      -m /data/dogtoy-model/saved_model /data/dogtoy-model/label_map.pbtxt
+      -m /data/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8/saved_model /data/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8/mscoco_label_map.pbtxt
+      --payload-credentials-file /opt/payload_credentials/payload_guid_and_secret
+      192.168.50.3
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]

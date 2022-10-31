@@ -64,7 +64,7 @@ If the payload is on a robot, connect the client device to the robot’s network
 
 We recommend connecting to the payload through SSH, but if necessary, the payload provides a USB-C port and two USB-A ports for connecting a monitor and keyboard. To connect a monitor, use a USB-C to HDMI or USB-C to Displayport adapter.
 Desktop mode allows CORE I/O to be used without attaching to Spot.
-The payload comes with a 48V power adapter that can be used to power the payload while it is not attached to a robot.
+To use the payload in desktop mode, connect a [48V power adapter](https://www.digikey.com/en/products/detail/cui-inc/SDI65-48-UDC-P6/5425448) (not included in packaging).
 When operating the payload in desktop mode, the only available interface is a terminal. Graphical elements have been removed from the software to optimize for other use-cases.
 
 ### Network and SSH Configuration

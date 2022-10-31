@@ -192,7 +192,7 @@ class Vec3(object):
     def cross(self, other):
         if not isinstance(other, Vec3):
             raise TypeError("Can't cross types %s and %s." % (type(self), type(other)))
-        return Vec3(self.y * other.z - self.z * other.y, self.x * other.z - self.z * other.x,
+        return Vec3(self.y * other.z - self.z * other.y, self.z * other.x - self.x * other.z,
                     self.x * other.y - self.y * other.x)
 
     @staticmethod
@@ -887,11 +887,11 @@ class Quat(object):
             return (0.0, [0, 0, 1])
 
         mag = 1.0 - (self.w * self.w)
-        if mag <= 1e-3:
+        if mag <= 1e-12:
             return (0.0, [0, 0, 1])
 
         denom = math.sqrt(mag)
-        if denom < 1e-3:
+        if denom < 1e-12:
             return (0.0, [0, 0, 1])
 
         angle = 2.0 * math.acos(self.w)
@@ -961,7 +961,7 @@ class Quat(object):
         else:
             # If the problem is ill posed (i.e. z-axis of quaternion is [0, 0, -1]), then preserve old
             # behavior and always rotate 180 degrees around the y-axis.
-            return Quat(w=0, x=0, y=1, z=0)
+            return Quat(w=0, x=0, y=1, z=0) * self
 
     @staticmethod
     def slerp(a, b, fraction):

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.math_helpers &mdash; Spot 3.2.0 documentation</title>
+  <title>bosdyn.client.math_helpers &mdash; Spot 3.2.1 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                3.2.0
+                3.2.1
               </div>
             
           
@@ -400,6 +400,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch6.html">Part 6: Running the model on Core IO</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
@@ -418,6 +419,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_mounting_rails.html">Robot mounting rails</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Dockerize payload software</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
@@ -426,7 +428,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul>
@@ -822,7 +823,7 @@
 <div class="viewcode-block" id="Vec3.cross"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Vec3.cross">[docs]</a>    <span class="k">def</span> <span class="nf">cross</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Vec3</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t cross types </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
-        <span class="k">return</span> <span class="n">Vec3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+        <span class="k">return</span> <span class="n">Vec3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">z</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">x</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Vec3.from_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Vec3.from_proto">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -1517,11 +1518,11 @@
             <span class="k">return</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 
         <span class="n">mag</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">mag</span> <span class="o">&lt;=</span> <span class="mf">1e-3</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mag</span> <span class="o">&lt;=</span> <span class="mf">1e-12</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 
         <span class="n">denom</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mag</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">denom</span> <span class="o">&lt;</span> <span class="mf">1e-3</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">denom</span> <span class="o">&lt;</span> <span class="mf">1e-12</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 
         <span class="n">angle</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
@@ -1591,7 +1592,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># If the problem is ill posed (i.e. z-axis of quaternion is [0, 0, -1]), then preserve old</span>
             <span class="c1"># behavior and always rotate 180 degrees around the y-axis.</span>
-            <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="Quat.slerp"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.slerp">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">slerp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">fraction</span><span class="p">):</span>

@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>alerts.proto &mdash; Spot 3.2.0 documentation</title>
+  <title>alerts.proto &mdash; Spot 3.2.1 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.2.0
+                3.2.1
               </div>
             
           
@@ -403,6 +403,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch6.html">Part 6: Running the model on Core IO</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
@@ -421,6 +422,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_mounting_rails.html">Robot mounting rails</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Dockerize payload software</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
@@ -429,7 +431,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/coreio_documentation.html">CORE I/O Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul class="current">
@@ -3367,6 +3368,11 @@ when this behavior happens.</p>
 <td><a href="#bosdyn.api.autowalk.BatteryMonitor">BatteryMonitor</a></td>
 <td>If the mission requires more than one battery, the robot needs to return to the dock and charge before it can complete the mission. This field defines the battery percentage thresholds that at which the robot should pause and resume mission execution. Considering using various thresholds depending on the target's distance from the dock</td>
 </tr>
+<tr>
+<td>action_duration</td>
+<td><a href="#google.protobuf.Duration">google.protobuf.Duration</a></td>
+<td>Maximum duration of action execution time, including all wrappers. If they take longer than this duration, the action will be considered a failure. Not including, or including a zero duration will set the action to NOT have a timeout.</td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn.api.autowalk.FailureBehavior"></a></p>
 </section>
@@ -3505,6 +3511,11 @@ will sit down and power off. This is the safest option.</p>
 <td>post_mission_callbacks</td>
 <td><a href="#bosdyn.api.autowalk.Action.RemoteGrpc">Action.RemoteGrpc</a></td>
 <td>The callbacks that will be executed at the end of the mission. Functionality that is often found in post-mission callbacks includes uploading data to the cloud or sending an email. The callbacks will be executed serially (first in, first executed).</td>
+</tr>
+<tr>
+<td>skip_actions</td>
+<td><a href="#bool">bool</a></td>
+<td>It can be useful to have the robot run a walk without collecting data. If this boolean is set to true, the compiled mission will still navigate to the target of each element, however it will not actually perform the associated action &amp; action wrappers.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.autowalk.PlaybackMode"></a></p>

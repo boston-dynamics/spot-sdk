@@ -58,6 +58,7 @@ At the end, you'll have a fully-functional API example that enables Spot to auto
 * [Part 3: Evaluating the Model](fetch3.md)
 * [Part 4: Autonomous Pick Up](fetch4.md)
 * [Part 5: Detecting People and Playing Fetch](fetch5.md)
+* [Part 6: Running the model on Core IO](fetch6.md)
 
 <hr />
 <h2>Collect and Label Training Data</h2>
