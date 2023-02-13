@@ -130,7 +130,7 @@ Payload devices should use the following network configuration:
 - IP v4 host address 192.168.50.5 or 192.168.50.6 for either front or rear payload port
 - Do not use the same IP address for both front and rear payload port
 - Netmask 255.255.255.0
-- Default gateway gateway will be set to 192.168.50.3
+- Default gateway will be set to 192.168.50.3
 
 Devices on the payload network can reach the robot at 192.168.50.3 via port 443. Devices on the robot network can reach payload services as follows:
 

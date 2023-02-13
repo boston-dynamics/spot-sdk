@@ -50,7 +50,7 @@ class Resnet50Model:
         self.model = self.loadmodel(path)
 
         # Make sure we tell tensor flow that this is a different model.
-        self.graph = tf.get_default_graph()
+        self.graph = tf.compat.v1.get_default_graph()
 
         # Load the class label mappings
         if labels_path is None:
@@ -62,8 +62,7 @@ class Resnet50Model:
 
     def predict(self, X):
         """ Predict with this model. """
-        with self.graph.as_default():
-            return self.model.predict(X)
+        return self.model.predict(X)
 
 
 class KerasExec():

@@ -15,11 +15,10 @@ We have installed this tool **on** the Spot CORE to make system management a lit
 ## Prerequisites
 - Spot CORE must be powered on.
 - Spot CORE should be connected to the robot with a working Ethernet connection.
-- Spot CORE Software Release 2.1.0 or above must be installed.
 
 ## Setup
 
-This document will quickly cover the recommended features for Spot CORE users. Cockpit is readily available on forwarded port 21443. In the future, a direct link will be provided on the Admin Console Spot CORE Payloads page. Since 2.1.0, to access this port through the robot, use the following address: https://INSERT_ROBOT_IP:21443/. If a PC is connected to the robot over WiFi, go to https://192.168.80.3:21443/. Click "Advanced" and "Proceed ..." to reach the login page.
+This document will quickly cover the recommended features for Spot CORE users. Cockpit is readily available on forwarded port 21443. In the future, a direct link will be provided on the Admin Console Spot CORE Payloads page. To access this port through the robot, use the following address: https://INSERT_ROBOT_IP:21443/. If a PC is connected to the robot over WiFi, go to https://192.168.80.3:21443/. Click "Advanced" and "Proceed ..." to reach the login page.
 
 
 ![login](./images/cockpit/login.png)
@@ -129,13 +128,13 @@ The Services and Logs pages are helpful. The Boston Dynamics `velodyne_service` 
 1. Communicates with the Velodyne LiDAR VLP-16 model for enhanced Spot autonomy. 
 1. Provides automatic payload registration.
 
-For customers who are running into Spot CORE LiDAR or Payload registration problems, please contact support@bostondynamics.com. To quickly diagnose this issue, support may ask to SSH into the Spot CORE and check the status of the `velodyne_service` and grab logs. This task is easily achievable with the Cockpit interface. 
+If you are running into Spot CORE LiDAR or Payload registration problems, please [reach out to Support](https://support.bostondynamics.com/s/contactsupport) with log files. Log files are easily retrievable using the Cockpit interface as follows:
 
-Type "velodyne_service" into the search bar near the top right.
+Type `velodyne_service` into the search bar near the top right.
 
 ![login](./images/cockpit/services_search.png)
 
-And select the velodyne_service.
+And select the `velodyne_service`.
 
 ![login](./images/cockpit/services_velodyne.png)
 
@@ -143,13 +142,13 @@ On this page, notice the service is properly running and registered. A similar s
 
 ![login](./images/cockpit/logs_velodyne.png)
 
-Note you can still use the terminal to access system service status and logs. 
+Note: you can also use the terminal to access system service status and logs. 
 
-```
+```bash
 systemctl status velodyne_service
 ```
 or 
-```
+```bash
 journalctl -f -u velodyne_service
 ```
 

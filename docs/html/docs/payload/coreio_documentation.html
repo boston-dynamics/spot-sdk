@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CORE I/O Documentation &mdash; Spot 3.2.1.post1 documentation</title>
+  <title>CORE I/O Documentation &mdash; Spot 3.2.2 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.2.1.post1
+                3.2.2
               </div>
             
           
@@ -668,7 +668,7 @@ To disable this overlay, run the command <code class="docutils literal notransla
 <section id="admin-web-server-authentication">
 <h3>Admin Web Server Authentication<a class="headerlink" href="#admin-web-server-authentication" title="Permalink to this headline">¶</a></h3>
 <p>When attached to a robot, the CORE I/O web server will authenticate against the robot it’s attached to with the provided username and password.
-This will typically be the password printed in the battery compartment of the robot.</p>
+This will typically be the password printed in the battery compartment of the robot, but can be any other username/password combination that is valid for the robot, such as a user that has been added through the robot’s web interface.</p>
 <p>To disable authentication for the web server (needed if the payload is not attached to a robot),
 SSH to the CORE I/O (enter the password provided with the payload when prompted) and create the “skipAuth” file, then restart the web server:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ssh -o <span class="nv">IdentitiesOnly</span><span class="o">=</span>yes -p <span class="m">20022</span> spot@&lt;robot-ip&gt;
@@ -721,9 +721,13 @@ After password-based SSH has been disabled, copy the SSH key provided with the p
 </ul>
 <p>If these are not needed, they can be stopped by the user until the next boot by running <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">stop</span> <span class="pre">velodyne_service</span></code> or <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">stop</span> <span class="pre">bd-docker-containers.service</span></code>.</p>
 </section>
-<section id="passwords">
-<h3>Passwords<a class="headerlink" href="#passwords" title="Permalink to this headline">¶</a></h3>
-<p>At this time, the password for the <code class="docutils literal notranslate"><span class="pre">spot</span></code> user cannot be changed from the default provided with the payload. Users and groups also cannot be changed.</p>
+<section id="passwords-and-groups">
+<h3>Passwords and Groups<a class="headerlink" href="#passwords-and-groups" title="Permalink to this headline">¶</a></h3>
+<p>As of the 3.2.1 release of CORE I/O software, the password and groups on the payload can be modified by the user.
+To change the password for the <code class="docutils literal notranslate"><span class="pre">spot</span></code> user, log in to the payload as the <code class="docutils literal notranslate"><span class="pre">spot</span></code> user and run <code class="docutils literal notranslate"><span class="pre">passwd</span></code>.
+To add a new sudo user, run <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">useradd</span> <span class="pre">-m</span> <span class="pre">-G</span> <span class="pre">sudo</span> <span class="pre">&lt;username&gt;</span></code> and then <code class="docutils literal notranslate"><span class="pre">passwd</span> <span class="pre">&lt;username&gt;</span></code>.
+To add the <code class="docutils literal notranslate"><span class="pre">spot</span></code> user to an additional group, run <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">usermod</span> <span class="pre">-a</span> <span class="pre">-G</span> <span class="pre">&lt;group&gt;</span> <span class="pre">spot</span></code>.</p>
+<p>See <a class="reference external" href="https://linux.die.net/man/1/passwd">passwd</a>, <a class="reference external" href="https://linux.die.net/man/8/useradd">useradd</a>, and <a class="reference external" href="https://linux.die.net/man/8/usermod">usermod</a> for more information.</p>
 </section>
 </section>
 <section id="developing-on-the-core-i-o">
@@ -966,7 +970,7 @@ An example using Docker Compose and Spot Extensions has also been provided as a 
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2022 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2023 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

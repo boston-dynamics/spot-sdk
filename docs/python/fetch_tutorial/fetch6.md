@@ -11,14 +11,12 @@ Development Kit License (20191101-BDSDK-SL).
 <link href="prism.css" rel="stylesheet" />
 <script src="prism.js"></script>
 
-
 <div class="section line-numbers">
 
 <p>
 <a href="fetch5.html"><< Previous Page</a>
 </p>
 <hr />
-
 
 # Fetch Part 6: Running the model on CORE I/O
 
@@ -70,6 +68,7 @@ Development Kit License (20191101-BDSDK-SL).
 +   bosdyn.client.util.add_payload_credentials_arguments(parser, required=False)
     bosdyn.client.util.add_base_arguments(parser)
 ```
+
 <li>Modify the authentication to use the credentials if available.</li>
 
 ```diff
@@ -81,6 +80,7 @@ Development Kit License (20191101-BDSDK-SL).
 +   else:
 +       bosdyn.client.util.authenticate(robot)
 ```
+
 </ol>
 
 <h3>Prepare The Docker Image</h3>
@@ -90,9 +90,10 @@ mkdir -p coreio_extension
 cd coreio_extension
 </code></pre>
 
-In this folder, create (or <a href="files/coreio_extension/Dockerfile.l4t">download</a>) a <code>Dockerfile.l4t</code> and add the following commands. 
-<pre><code class="language-text wrap"># Use a base image provided by nvidia that already contains tensorflow 2.5
-FROM nvcr.io/nvidia/l4t-tensorflow:r32.6.1-tf2.5-py3
+In this folder, create (or <a href="files/coreio_extension/Dockerfile.l4t">download</a>) a <code>Dockerfile.l4t</code> and add the following commands.
+
+<pre><code class="language-text wrap"># Use a base image provided by nvidia that already contains tensorflow 2.7
+FROM nvcr.io/nvidia/l4t-tensorflow:r32.7.1-tf2.7-py3
 
 # Do some basic apt and pip updating
 RUN apt-get update && \
@@ -116,6 +117,7 @@ ENTRYPOINT ["python3", "network_compute_server.py"]
 </code></pre>
 
 Also create (or <a href="files/coreio_extension/docker-requirements.txt">download</a>) the <code>docker-requirements.txt</code> file and add the following
+
 <pre><code class="language-python wrap">bosdyn-api==3.2.0
     # via
     #   bosdyn-client
@@ -159,20 +161,24 @@ opencv-python==4.6.0.66
 </code></pre>
 
 If you don't already have Docker installed, you can install it by running:
+
 <pre><code class="language-bash wrap">sudo apt install docker.io
 </code></pre>
 
 Because we are going to cross compile for the CORE I/O's Arm64 platform, we need to enable emulation and cross compile support by running:
+
 <pre><code class="language-bash wrap">sudo docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 </code></pre>
 
 If everything is successful you should see a bunch of settings get set, including,
+
 <pre><code class="language-bash wrap">...
 Setting /usr/bin/qemu-aarch64-static as binfmt interpreter for aarch64
 ...
 </code></pre>
 
 Now we're ready to test build our Docker image. Copy over the required files and run Docker on the Dockerfile we created. We're going to tag it as `fetch_detector:l4t`.
+
 <pre><code class="language-bash wrap">cd ~/fetch/coreio_extension
 cp ../network_compute_server.py .
 cp -r ../models-with-protos .
@@ -193,6 +199,7 @@ A Spot Extension is a tar of a specific set of files. To be a valid extension it
 </ul>
 
 Let's prepare our extension by creating a `manifest.json` file (or <a href="files/coreio_extension/manifest.json">download</a> it).
+
 <pre><code class="language-bash wrap">{
     "description": "fetch_detector",
     "version": "3.2.0",
@@ -203,6 +210,7 @@ Let's prepare our extension by creating a `manifest.json` file (or <a href="file
 </code></pre>
 
 Also create (or <a href="files/coreio_extension/docker-compose.yml">download</a>) a <code>docker-compose.yml</code> file. You'll notice that we're going to mount volumes for the credentials file and the ML models. This is so that you can update the models without having to rebuild the docker image. The path to the files in the Spot Extension (`/data/.extensions/fetch_detector`) is detailed in the Spot Extension documentation.
+
 <pre><code class="language-bash wrap">version: "3.5"
 services:
   fetch_detector:
@@ -231,8 +239,9 @@ services:
               capabilities: [gpu]
 </code></pre>
 
-To make updating and building our extension easy, we're going to create a script that builds the extension. Make (or <a href="files/coreio_extension/create_extension.sh">download</a>) the following `create_extension.sh` script. 
+To make updating and building our extension easy, we're going to create a script that builds the extension. Make (or <a href="files/coreio_extension/create_extension.sh">download</a>) the following `create_extension.sh` script.
 You'll see this this script copies over the latest versions of the network compute script and the ML models. The models are put into a `data` folder that is included in the spot extension, then mounted in the Docker image at run time as specified in the `docker-compose.yml` file.
+
 <pre><code class="language-bash wrap">#!/bin/bash -e
 
 SCRIPT=${BASH_SOURCE[0]}
@@ -272,11 +281,13 @@ rm fetch_detector_image.tar.gz
 </code></pre>
 
 Don't forget to make the script executable.
+
 <pre><code class="language-bash wrap">cd ~/fetch/coreio_extension
 chmod +x create_extension.sh
 </code></pre>
 
 Lets build the Spot Extension!
+
 <pre><code class="language-bash wrap">cd ~/fetch/coreio_extension
 ./create_extension.sh
 </code></pre>
@@ -368,5 +379,3 @@ If everything is successful you should end up with a `fetch_detector.spx` file.
 </p>
 
 </div>
-
-

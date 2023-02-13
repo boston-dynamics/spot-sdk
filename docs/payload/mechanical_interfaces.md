@@ -9,7 +9,7 @@ Development Kit License (20191101-BDSDK-SL).
 # Mechanical Interfaces
 
 
-Payloads should be designed to interface correctly with a cable connector and mount to the top of Spot. Detailed CAD can be provided upon request.
+Payloads should be designed to interface correctly with a cable connector and mount to the top of Spot. Detailed CAD is available on the Support Center at https://support.bostondynamics.com/s/article/Defeatured-Spot-CAD-Models.
 
 
 ## Cable and connector interface
@@ -41,8 +41,6 @@ Payloads should incorporate a small ridge around the DB25 connector. This ridge 
 
 
 ![port sealing gland side view][mech-image4]
-
-For more information about payload cables and connectors, contact Boston Dynamics to request 3D CAD models.
 
 
 <!--- image and page reference link definitions --->

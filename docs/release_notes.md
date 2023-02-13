@@ -12,6 +12,31 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 3.2.2
+
+### Bug Fixes and Improvements
+
+Improved CORE I/O documentation on passwords, user specifications in Spot Extensions, and ports for incoming traffic.
+
+Updated [Data Acquisition Tutorial](python/daq_tutorial/daq1.md) documentation on udev rules to refrect changes on the automatic execution of udev rules during a Spot Extension installation.
+
+### Known Issues
+
+Same as 3.2.0
+
+### Sample Code
+
+#### Updated
+
+Updated Nvidia base docker image version in Dockerfile of the following:
+
+- [Fetch tutorial](python/fetch_tutorial/fetch1.md),
+- Crosswalk Lights and Look Both Ways [Area Callback examples](../python/examples/area_callback/README.md),
+- Fire Extinguisher Detector Network Compute Bridge worker [example](../python/examples/network_compute_bridge/fire_extinguisher_server/README.md),
+- [Ricoh Theta example](../python/examples/ricoh_theta/README.md)
+
+Updated [Fire Extinguisher Detector example](../python/examples/network_compute_bridge/fire_extinguisher_server/README.md) to work with the updated tensorflow version installed in the updated nvidia base docker image.
+
 ## 3.2.1
 
 ### Bug Fixes and Improvements
@@ -2019,7 +2044,7 @@ Robot command client will throw a new error if a frame is specified that the rob
 
 - **Depth image** extrinsics are fixed. In earlier 1.1.x releases, the extrinsics were incorrectly the same as the fisheye cameras.
 
-- **App Token expiration logging.**. The Python SDK object logs if the app token will expire in the next 30 days. New tokens can be requested at support@bostondynamics.com.
+- **App Token expiration logging**. The Python SDK object logs if the app token will expire in the next 30 days.
 
 ### Sample Code
 

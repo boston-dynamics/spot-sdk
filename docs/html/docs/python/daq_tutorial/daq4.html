@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Part 4: Deploying to the CORE I/O &mdash; Spot 3.2.1.post1 documentation</title>
+  <title>Part 4: Deploying to the CORE I/O &mdash; Spot 3.2.2 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.2.1.post1
+                3.2.2
               </div>
             
           
@@ -792,9 +792,8 @@ sed &quot;s/@ORIG_VIDEO_DEV/$orig_device/&quot; $SCRIPT_DIR/.env.tpl &gt; $SCRIP
 <h3>Create Extension and Install It on CORE I/O<a class="headerlink" href="#create-extension-and-install-it-on-core-i-o" title="Permalink to this headline">¶</a></h3>
 <p>Creating an Extension is very simple once we have the files created in the section above. Simply copy the files <code class="docutils literal notranslate"><span class="pre">battery_service.tgz</span></code>, <code class="docutils literal notranslate"><span class="pre">web_cam_image_service.tgz</span></code>, <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code>, <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code>, <code class="docutils literal notranslate"><span class="pre">1-sdk.camera.rules</span></code>, <code class="docutils literal notranslate"><span class="pre">setup_device_name.sh</span></code>, <code class="docutils literal notranslate"><span class="pre">.env.tpl</span></code> in a folder and create the Extension, which is a zipped tar file, with the command <code class="docutils literal notranslate"><span class="pre">tar</span> <span class="pre">zcfv</span> <span class="pre">daq_tutorial.spx</span> <span class="pre">*</span> <span class="pre">.env.tpl</span></code>. Then, follow these steps to install the Extension <code class="docutils literal notranslate"><span class="pre">daq_tutorial.spx</span></code> in the CORE I/O:</p>
 <ol class="simple">
-<li><p>Install Extension by drag-and-dropping it in the”Upload New Extension” section in the Extensions tab of the CORE I/O web portal. This process is also described in the SDK documentation section <a class="reference external" href="../../payload/docker_containers.html#install-extension">here</a>. This is the only step needed for installing most Extensions, but we need to run the following steps so the udev rules included in the Extension are applied correctly.</p></li>
 <li><p>Plug in USB web cam. This will execute the udev rule included in the Extension and create <code class="docutils literal notranslate"><span class="pre">/dev/video99</span></code> symlink and the <code class="docutils literal notranslate"><span class="pre">.env</span></code> file.</p></li>
-<li><p>Start the Extension manually in the CORE I/O web portal by clicking the “Start” button.</p></li>
+<li><p>Install Extension by drag-and-dropping it in the “Upload New Extension” section in the Extensions tab of the CORE I/O web portal. This process is also described in the SDK documentation section <a class="reference external" href="../../payload/docker_containers.html#install-extension">here</a>. The udev rules in the Extension will be automatically triggered when the Extension is installed.</p></li>
 </ol>
 <p>On other types of computational payloads, users can copy the docker images to the payload, load them and run <code class="docutils literal notranslate"><span class="pre">docker-compose</span></code> commands manually to start/stop/monitor the containers.</p>
 </section>
@@ -830,7 +829,7 @@ $ python3 plugin_tester.py <span class="nv">$ROBOT_IP</span> --service-name data
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2022 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2023 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

@@ -37,6 +37,15 @@ After implementing and testing the application on the development environment, t
 
 The `Dockerfile` files in the SDK examples contain instructions to create x86/AMD-based Ubuntu docker images. On top of `Dockerfile` files, SDK examples also contain `Dockerfile.l4t` for creating ARM-based Ubuntu docker images for the CORE I/O payloads.
 
+**Note:** Most of the Dockerfiles in the SDK examples use the default user provided by the base image. This user is usually the `root` user and is not recommended to be used for running applications on CORE I/O. In most cases, it is good practice to change this to a non-root user with limited privileges.
+Running as the `root` user bypasses certain limitations imposed on non-root users around resource utilization. This means that unintentional memory or thread leaks in a program running as the `root` user can crash the entire system or cause other undefined behavior.
+The `Dockerfile` files in the SDK examples do not change the user, but the user can be changed by adding the following lines to the `Dockerfile`:
+
+```dockerfile
+RUN useradd -ms /bin/bash <username>
+USER <username>
+```
+
 ### Build Docker Images
 
 This section describes the steps to create and run a docker image on the development environment. Docker images created to run on the same architecture as the development environment can be created with the simple `docker build` commands listed below.
@@ -97,6 +106,17 @@ In order to run a docker image created for a different architecture, add the `--
 
 ```
 sudo docker run -it --platform linux/arm64 --network=host {IMAGE_NAME} {ROBOT_IP} {APPLICATION ARGUMENTS}
+```
+
+### Ports For Incoming Traffic
+
+Both the CORE I/O and the Scout platforms uses firewall rules that control the ports on which incoming traffic is allowed. If a custom application needs to open a port for incoming traffic, for example when hosting a server that external clients can connect to, it must choose a port from within the port ranges below. Docker's host networking mode is used to simplify networking and allow deployed containers to communicate with each other. The port ranges below are allowed to accept incoming traffic on the host networking stack.
+
+```
+Allowed Port Ranges
+-------------------
+TCP: 21000-22000 (except 21443 on CORE I/O which is reserved for an internal use case)
+UDP: 21000-22000
 ```
 
 ## Manage Payload Software in CORE I/O
@@ -182,7 +202,7 @@ Extensions can also be installed by clicking the “Choose File” button, and s
 
 Extensions need to have a unique name in the system. The installation of an Extension first uninstalls an existing Extension with the same name. Locally, the Extensions are installed in the folder /data/.extensions/, and each Extension is installed in a separate folder in that location, with the folder name being the Extension name.
 
-For Extensions without udev rules, this is the only step needed for installation. For Extensions with udev rules, we need to run the following steps so the udev rules included in the Extension are applied correctly:
+For Extensions without udev rules, this is the only step needed for installation. For Extensions with udev rules, the udev rules will generally be triggered when the Extension is installed if the device is plugged in. This may not always apply. If this does not happen, the udev rules can be manually triggered by performing the following steps:
 
 1. After installing the Extension, plug in the device. This will execute the udev rule included in the Extension.
 2. Start the Extension manually in the CORE I/O web portal by clicking the "Start" button.

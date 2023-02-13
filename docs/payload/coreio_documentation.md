@@ -37,7 +37,7 @@ High level partition scheme:
 ### Admin Web Server Authentication
 
 When attached to a robot, the CORE I/O web server will authenticate against the robot it's attached to with the provided username and password.
-This will typically be the password printed in the battery compartment of the robot.
+This will typically be the password printed in the battery compartment of the robot, but can be any other username/password combination that is valid for the robot, such as a user that has been added through the robot's web interface.
 
 To disable authentication for the web server (needed if the payload is not attached to a robot),
 SSH to the CORE I/O (enter the password provided with the payload when prompted) and create the "skipAuth" file, then restart the web server:
@@ -100,9 +100,14 @@ By default, the CORE I/O runs a set of software provided by Boston Dynamics. Thi
 
 If these are not needed, they can be stopped by the user until the next boot by running `sudo systemctl stop velodyne_service` or `sudo systemctl stop bd-docker-containers.service`.
 
-### Passwords
+### Passwords and Groups
 
-At this time, the password for the `spot` user cannot be changed from the default provided with the payload. Users and groups also cannot be changed.
+As of the 3.2.1 release of CORE I/O software, the password and groups on the payload can be modified by the user.
+To change the password for the `spot` user, log in to the payload as the `spot` user and run `passwd`.
+To add a new sudo user, run `sudo useradd -m -G sudo <username>` and then `passwd <username>`.
+To add the `spot` user to an additional group, run `sudo usermod -a -G <group> spot`.
+
+See [passwd](https://linux.die.net/man/1/passwd), [useradd](https://linux.die.net/man/8/useradd), and [usermod](https://linux.die.net/man/8/usermod) for more information.
 
 ## Developing on the CORE I/O
 

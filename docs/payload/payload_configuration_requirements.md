@@ -71,7 +71,7 @@ Spot’s legs have a very wide range of motion as shown below. When the robot cl
 
 The robot’s legs can extend above and over the robot’s back.
 
-Note: A 3D Step model of the robot’s body including typical leg swing areas is available upon request. Send mail to [support@bostondynamics.com](mailto:support@bostondynamics.com).
+Note: A 3D Step model of the robot’s body including typical leg swing areas is available on the Support Center at https://support.bostondynamics.com/s/article/Defeatured-Spot-CAD-Models.
 
 
 ### Payload clearance with robot arm

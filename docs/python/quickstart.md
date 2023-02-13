@@ -164,10 +164,10 @@ $ python3 -m pip install --upgrade bosdyn-client bosdyn-mission bosdyn-choreogra
 Installing the `bosdyn-client`, `bosdyn-choreography-client` and `bosdyn-mission` packages will also
 install `bosdyn-api` and `bosdyn-core` packages with the same version. The command above installs
 the latest version of the packages. To install a different version of the packages from PyPI, for
-example 3.2.1.post1, use the following command.
+example 3.2.2, use the following command.
 
 ```shell
-$ python3 -m pip install bosdyn-client==3.2.1.post1 bosdyn-mission==3.2.1.post1 bosdyn-choreography-client==3.2.1.post1
+$ python3 -m pip install bosdyn-client==3.2.2 bosdyn-mission==3.2.2 bosdyn-choreography-client==3.2.2
 ```
 
 **Version incompatibility:**
@@ -176,7 +176,7 @@ If you see a version incompatibility error during pip install such as:
 
 ```shell
 ERROR: bosdyn-core <VERSION_STRING> has requirement bosdyn-api==<VERSION_STRING>, but you
-have bosdyn-api 3.2.1.post1 which is incompatible.
+have bosdyn-api 3.2.2 which is incompatible.
 ```
 
 Try uninstalling the bosdyn packages (Note: unlike install, you will need to explicitly list all 4 packages) and then reinstalling:
@@ -191,12 +191,12 @@ Make sure that the packages have been installed.
 
 ```shell
 $ python3 -m pip list --format=columns | grep bosdyn
-bosdyn-api                    3.2.1.post1
-bosdyn-choreography-client    3.2.1.post1
-bosdyn-choreography-protos    3.2.1.post1
-bosdyn-client                 3.2.1.post1
-bosdyn-core                   3.2.1.post1
-bosdyn-mission                3.2.1.post1
+bosdyn-api                    3.2.2
+bosdyn-choreography-client    3.2.2
+bosdyn-choreography-protos    3.2.2
+bosdyn-client                 3.2.2
+bosdyn-core                   3.2.2
+bosdyn-mission                3.2.2
 ```
 **Windows users:**
 ```shell
@@ -204,7 +204,7 @@ bosdyn-mission                3.2.1.post1
 ```
 
 If you don't see the 4 bosdyn packages with your target version, something went wrong during
-installation.  Contact support@bostondynamics.com for help.
+installation.
 
 Next, start the python interpreter:
 
@@ -239,7 +239,7 @@ ModuleNotFoundError: No module named 'bosdyn.client'
 
 If that's the case, run `python -m pip list` again to make sure that the Boston Dynamics Python packages are installed.
 
-If you can't import bosdyn.client without an error, you may have multiple instances of Python on your computer and have installed bosdyn to one while running the other.  Check the pathnames of your python executables. Are they where you'd expect them to be?  If not, this is a potential sign that you may have multiple python installs.  Consider using virtual environments (see above).  If all else fails, contact support@bostondynamics.com for help.
+If you can't import bosdyn.client without an error, you may have multiple instances of Python on your computer and have installed bosdyn to one while running the other.  Check the pathnames of your python executables. Are they where you'd expect them to be?  If not, this is a potential sign that you may have multiple python installs.  Consider using virtual environments (see above).
 
 ## Verify you can command and query Spot
 
@@ -387,4 +387,4 @@ But, if you also want to be a full-fledged Spot Programmer, you need to understa
 
 3.  Read through the [protocol buffer definitions](../protos/README) and the Spot Python SDK [source code documentation](../../python/README) to understand even more.
 
-If you have any questions, please email support@bostondynamics.com.
+If you have any questions, please [reach out to Support](https://support.bostondynamics.com/s/contactsupport).

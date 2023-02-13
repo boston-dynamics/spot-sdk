@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Spot CORE Cockpit - System Management Tool &mdash; Spot 3.2.1.post1 documentation</title>
+  <title>Spot CORE Cockpit - System Management Tool &mdash; Spot 3.2.2 documentation</title>
   
 
   
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                3.2.1.post1
+                3.2.2
               </div>
             
           
@@ -650,12 +650,11 @@ Development Kit License (20191101-BDSDK-SL).
 <ul class="simple">
 <li><p>Spot CORE must be powered on.</p></li>
 <li><p>Spot CORE should be connected to the robot with a working Ethernet connection.</p></li>
-<li><p>Spot CORE Software Release 2.1.0 or above must be installed.</p></li>
 </ul>
 </section>
 <section id="setup">
 <h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
-<p>This document will quickly cover the recommended features for Spot CORE users. Cockpit is readily available on forwarded port 21443. In the future, a direct link will be provided on the Admin Console Spot CORE Payloads page. Since 2.1.0, to access this port through the robot, use the following address: https://INSERT_ROBOT_IP:21443/. If a PC is connected to the robot over WiFi, go to https://192.168.80.3:21443/. Click “Advanced” and “Proceed …” to reach the login page.</p>
+<p>This document will quickly cover the recommended features for Spot CORE users. Cockpit is readily available on forwarded port 21443. In the future, a direct link will be provided on the Admin Console Spot CORE Payloads page. To access this port through the robot, use the following address: https://INSERT_ROBOT_IP:21443/. If a PC is connected to the robot over WiFi, go to https://192.168.80.3:21443/. Click “Advanced” and “Proceed …” to reach the login page.</p>
 <p><img alt="login" src="../../_images/login.png" /></p>
 <p>Log in using your standard Spot CORE account username &amp; password credentials. Ensure you select “Reuse my password for privileged tasks”. This will be required in order to adjust network settings for example.</p>
 <p>The landing page gives you an “Overview” of the Spot CORE. Notice near the top right corner there is a “Restart” option which is very handy if the Spot CORE is in a remote location. IMPORTANT NOTE: Do not adjust system time if you are using the Spot CORE EAP with the Velodyne LiDAR VLP-16.</p>
@@ -743,19 +742,19 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Communicates with the Velodyne LiDAR VLP-16 model for enhanced Spot autonomy.</p></li>
 <li><p>Provides automatic payload registration.</p></li>
 </ol>
-<p>For customers who are running into Spot CORE LiDAR or Payload registration problems, please contact support&#64;bostondynamics.com. To quickly diagnose this issue, support may ask to SSH into the Spot CORE and check the status of the <code class="docutils literal notranslate"><span class="pre">velodyne_service</span></code> and grab logs. This task is easily achievable with the Cockpit interface.</p>
-<p>Type “velodyne_service” into the search bar near the top right.</p>
+<p>If you are running into Spot CORE LiDAR or Payload registration problems, please <a class="reference external" href="https://support.bostondynamics.com/s/contactsupport">reach out to Support</a> with log files. Log files are easily retrievable using the Cockpit interface as follows:</p>
+<p>Type <code class="docutils literal notranslate"><span class="pre">velodyne_service</span></code> into the search bar near the top right.</p>
 <p><img alt="login" src="../../_images/services_search.png" /></p>
-<p>And select the velodyne_service.</p>
+<p>And select the <code class="docutils literal notranslate"><span class="pre">velodyne_service</span></code>.</p>
 <p><img alt="login" src="../../_images/services_velodyne.png" /></p>
 <p>On this page, notice the service is properly running and registered. A similar search process can be performed on the Logs page for more detailed information.</p>
 <p><img alt="login" src="../../_images/logs_velodyne.png" /></p>
-<p>Note you can still use the terminal to access system service status and logs.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">systemctl</span> <span class="n">status</span> <span class="n">velodyne_service</span>
+<p>Note: you can also use the terminal to access system service status and logs.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>systemctl status velodyne_service
 </pre></div>
 </div>
 <p>or</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">journalctl</span> <span class="o">-</span><span class="n">f</span> <span class="o">-</span><span class="n">u</span> <span class="n">velodyne_service</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>journalctl -f -u velodyne_service
 </pre></div>
 </div>
 </section>
@@ -777,7 +776,7 @@ Development Kit License (20191101-BDSDK-SL).
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2022 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2023 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 
