@@ -34,6 +34,7 @@ The complexity of payload integration with the Spot platform ranges from:
 - [Guidelines for robust payload design](guidelines_for_robust_payload_design.md)
 - [Robot electrical interface](robot_electrical_interface.md)
 - [CORE I/O Documentation](coreio_documentation.md)
+- [CORE I/O OpenVPN Extension](coreio_openvpn_extension.md)
 - [Configuring payload software](configuring_payload_software.md)
 - [Dockerize payload software](docker_containers.md)
 - [Pre-3.2 Spot CORE Documentation](spot_core_documentation.md)

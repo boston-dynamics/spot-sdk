@@ -12,6 +12,10 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 3.2.3
+
+No changes from 3.2.2.
+
 ## 3.2.2
 
 ### Bug Fixes and Improvements
